@@ -54,13 +54,11 @@ Here's the minimum mental model of a CPU — we'll go deeper in §4 (memory) and
 
 A CPU repeats one loop, billions of times a second — the **fetch–decode–execute cycle**:
 
-```
-        ┌─────────────────────────────────────────────┐
-        │   1. FETCH    next instruction from memory   │
-        │   2. DECODE   figure out what it means        │
-        │   3. EXECUTE  do it (add, compare, load…)     │
-        │   4. repeat                                   │
-        └─────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    A["1 · FETCH<br/>next instruction from memory"] --> B["2 · DECODE<br/>figure out what it means"]
+    B --> C["3 · EXECUTE<br/>do it: add, compare, load…"]
+    C -->|repeat, billions of times/sec| A
 ```
 
 - **Instructions** are tiny: "add these two numbers," "copy this value from memory to a register,"
@@ -143,20 +141,16 @@ that real-world languages compile to an **intermediate representation (bytecode)
 When people say "Python is interpreted," they're hiding two steps. Here's the real pipeline for
 **CPython** (the standard implementation — the `python` binary you almost certainly use):
 
-```
-   your_code.py                 (1) COMPILE              (2) INTERPRET
-   ┌──────────┐   ───────────────────────────────►   ┌────────────────┐
-   │  source  │      Python compiler turns source     │  CPython VM    │
-   │   text   │      into BYTECODE (.pyc), a compact   │ (a bytecode    │
-   └──────────┘      instruction set for a virtual     │  interpreter,  │
-                     machine — NOT your CPU             │  written in C) │
-                                                        └───────┬────────┘
-                                                                │ each bytecode op
-                                                                │ runs C code, which
-                                                                ▼ is already machine code
-                                                        ┌────────────────┐
-                                                        │   your CPU      │
-                                                        └────────────────┘
+```mermaid
+flowchart TD
+    S["your_code.py<br/>(source text)"]
+    BC["Bytecode (.pyc)<br/>a compact instruction set for an<br/>abstract Python machine — NOT your CPU"]
+    VM["CPython VM<br/>a bytecode interpreter,<br/>written in C"]
+    CPU["Your CPU"]
+
+    S -->|"(1) COMPILE<br/>Python compiler turns source into bytecode"| BC
+    BC -->|"(2) INTERPRET"| VM
+    VM -->|"each bytecode op runs C code,<br/>which is already machine code"| CPU
 ```
 
 So Python **is compiled** — just not to machine code. It's compiled to **bytecode**: instructions for an
@@ -253,20 +247,17 @@ state speed — which, note, is *another* flavor of the cold-vs-warm pattern you
 
 ## 7. The one-page mental model
 
-```
-LANGUAGE IMPLEMENTATIONS LIVE ON A SPECTRUM
-(who translates, and WHEN)
+```mermaid
+flowchart LR
+    A["<b>Pure compilation</b><br/>C, Rust, Go<br/>AOT → machine code<br/>─────<br/>⚡ fast runtime<br/>🐌 slow edit loop<br/>🔍 errors caught early"]
+    B["<b>Hybrid (the real world)</b><br/>Java, C#, Python/CPython<br/>AOT → bytecode → interpret<br/>─────<br/>📦 flexible + portable<br/>middling speed<br/>🐛 errors mostly at runtime"]
+    C["<b>JIT</b><br/>JS/V8, PyPy<br/>interpret, then compile hot paths<br/>─────<br/>warm-up cost,<br/>fast steady state"]
+    D["<b>Pure interpretation</b><br/>a naive tree-walker<br/>translate every line, every time<br/>─────<br/>maximum flexibility,<br/>slowest"]
 
-  pure compilation                 hybrid (the real world)                 pure interpretation
-  ───────────────────────────────────────────────────────────────────────────────────────────►
-  C, Rust, Go            Java, C#, Python(CPython)         JIT: JS/V8, PyPy        a naive tree-walker
-  (AOT → machine code)   (AOT → bytecode → interpret)      (interpret, then        (translate every
-                                                            compile hot paths)      line, every time)
-
-  FAST runtime,                  flexible + portable,                 maximum flexibility,
-  slow edit loop,                middling speed,                      slowest,
-  errors caught early            errors mostly at runtime             errors at runtime
+    A --- B --- C --- D
 ```
+
+*The arrow runs from "who translates everything up front" (left) to "who translates each line every time" (right).*
 
 **The five things to remember:**
 1. A CPU only runs **machine code**; everything else is translation on top of it.
