@@ -224,7 +224,7 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 
 | Module | Chapter | Status | Finalized section files | Notes |
 |---|---|---|---|---|
-| M01 Computers & OS | Ch1 Execution model | 🔵 | §1 `01-execution-model/01-source-to-running.md` (in progress, started 2026-06-08) | |
+| M01 Computers & OS | Ch1 Execution model | 🔵 | §1 `01-execution-model/01-source-to-running.md` ✅ (finalized 2026-06-08) | §1 done. Q&A applied AWS Lambda: ARM builds, polyglot/compiled langs, cold-start. Next: §2 call stack. |
 | M01 | Ch2 Memory | ⬜ | | |
 | M01 | Ch3 Concurrency | ⬜ | | |
 | M01 | Ch4 I/O & kernel | ⬜ | | |

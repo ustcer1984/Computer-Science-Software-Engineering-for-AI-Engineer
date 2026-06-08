@@ -3,7 +3,7 @@
 > **Module:** How Computers & Operating Systems Work
 > **Chapter:** The execution model
 > **Section:** Compilation, interpretation, and what Python *actually* does
-> **Status:** 🔵 in progress (draft generated 2026-06-08; will be finalized after our Q&A)
+> **Status:** ✅ finalized 2026-06-08 — personalized with applied notes from our Q&A (see §10).
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** You can read basic Python and a little C. No prior CS theory needed.
@@ -317,6 +317,66 @@ Bring the numbers to our chat if anything surprises you.
 
 ---
 
+## 10. Applied — captured from our session Q&A
+
+These are the real-world threads we worked through on 2026-06-08, distilled here so you can re-derive
+them later. Each is the execution model from §1–§6 hitting your actual AWS work.
+
+### 10a. "My laptop is x86-64 — how can it build an *ARM* Lambda?" (ties to §2, ISAs)
+
+Split "create a Lambda" into two things:
+- **Deploying** (CDK/CLI) is just **API calls + config** — architecture-independent. Your laptop tells
+  AWS "make a function, `Architectures: [arm64]`, here's the package." AWS runs it on its Graviton HW.
+- **The code artifact** is where ISA matters:
+  - **Pure Python is portable** — it isn't machine code; AWS's ARM-compiled interpreter runs your
+    source/bytecode (this is exactly §1's "late translation" point).
+  - **Native extensions are NOT portable** — `pydantic-core` (Rust), `psycopg`, `numpy` ship
+    pre-compiled `.so` for one ISA. x86 wheels won't load on ARM → `invalid ELF header` /
+    `ImportModuleError`.
+- **How an x86 host produces ARM artifacts:** download pre-built `aarch64` wheels (a *download*, no
+  execution), build under **QEMU-emulated Docker** (`--platform linux/arm64`; what CDK Docker bundling
+  does), or **cross-compile** (a compiler's output ISA is independent of the host it runs on).
+- **Principle:** *the architecture a binary runs on is set by the build target, not the build machine.*
+
+### 10b. "Does Lambda support compiled languages? Is Python the bottleneck?" (ties to §5)
+
+- Lambda is **polyglot**: managed runtimes (Python, Node, Java, .NET, Ruby), **custom runtime**
+  (`provided.al2023` + a `bootstrap` binary → Go, **Rust**, **C/C++** via the Lambda Runtime API), or
+  **container images** (anything, up to 10 GB). Go/Rust are native AOT — §1's left column.
+- **But check the bottleneck first.** Your backends are **I/O-bound** — they spend ~95% of wall-clock
+  *waiting* on the LLM, Postgres, S3, HF Hub. Python being slow *per CPU op* is irrelevant when the op
+  is "await a 3s LLM call." Rust can't make the remote call faster. And the CPU-heavy bits you do run
+  (Pydantic→Rust, JSON, crypto, numpy) are **already native** under Python (§5's conductor/orchestra).
+- **Switch a language only when CPU-bound or cold-start-bound** — and even then, Lambda is
+  per-function polyglot, so you'd rewrite *one* hot function, not the system.
+
+### 10c. Cold-start latency — why "slow first hit, fast refresh" (ties to §1's import cost)
+
+- A **cold start** = AWS provisions a container, then **INIT** (imports = compile-to-bytecode + run all
+  top-level code), then opens resources (DB conn, secrets), *then* runs your handler. A **warm**
+  invocation reuses all of that and jumps straight to the handler — your fast refresh.
+- **Low traffic makes it worse, not better:** idle containers get reclaimed, so most real users hit a
+  cold path. This was the arena leaderboard "UI hangs for seconds on first load" symptom.
+- **Diagnose before fixing:** CloudWatch `REPORT` → `Init Duration` (cold-only). And beware a **dev DB
+  that auto-pauses** (Aurora Serverless v2) — it produces the *same* symptom and no Lambda fix helps.
+
+### 10d. Cold-start mitigations (full plan in `temp/arena-cold-start-latency-plan.md`)
+
+- **Cache / precompute** the cacheable (e.g. leaderboard → scheduled job → S3/CloudFront): ms latency,
+  ~$0, no cold start. Best for read-heavy, staleness-tolerant endpoints.
+- **Trim init** (lazy imports, smaller package) — free; attacks INIT directly.
+- **SnapStart** (supports Python): snapshot the initialized runtime → big cold-start cut, low cost,
+  keeps Python. Re-init unique state (DB conns/RNG) in a restore hook.
+- **Provisioned Concurrency**: keep N envs pre-warmed → cold start *eliminated*, but **ongoing $$**
+  (~$9–11/mo for PC=2 @ 512 MB 24/7, x86; ~20% less on ARM; schedule it to cut cost). Use only where
+  SnapStart isn't enough.
+- **Frontend perceived performance** (loading skeletons + stale-while-revalidate via React Query/SWR) —
+  so a slow response never *feels* like a freeze.
+- **Architecture takeaway:** scale-to-zero serverless trades cold-start latency for cost; the answer is
+  *cache the cacheable, warm the latency-critical, never block the UI on a network call.*
+
+---
+
 ## References (optional, for depth)
 
 - Python docs — `dis` module (the authoritative bytecode reference): https://docs.python.org/3/library/dis.html
@@ -327,6 +387,6 @@ Bring the numbers to our chat if anything surprises you.
 ---
 
 ### What's next
-After we Q&A this and you say *"finalize"*, I'll rewrite this section to match how you actually think,
-then mark **M01 Ch1 §1 ✅** in `courses/plan.md`. The next section (**§2 — the call stack**) builds
+✅ **Finalized 2026-06-08.** This section is marked done in `courses/plan.md`; §10 captures the applied
+AWS threads from our discussion for future review. The next section (**§2 — the call stack**) builds
 directly on the "instructions and registers" idea from §2 here.
