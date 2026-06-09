@@ -68,6 +68,24 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-09 — M01 Ch1 §3 (machine code & the CPU) ✅ finalized → Ch1 COMPLETE.** He said up front
+  he *already understood most of the material* (machine code, memory hierarchy, pipelining, the clock
+  wall, SIMD/GPU), so the session ran almost entirely on **his own questions one layer past the text**,
+  all aimed at GPU/AI hardware: (1) on multi-core CPUs, what's private vs shared → got the full topology
+  (registers + L1/L2 private, L3 shared) and was given **cache coherence/MESI + false sharing + coherence
+  ≠ memory-ordering** as the bridge to Ch3. (2) **GPU memory hierarchy** — confirmed the same
+  private→shared→VRAM skeleton and grasped the key inversion (GPU hides latency by *thread
+  oversubscription + huge register file*, not caches; Shared Memory = software-managed scratchpad; ties
+  to tiling/FlashAttention and memory-bound LLM inference). (3) **What CUDA is** — cleanly separated
+  "CUDA core" (HW lane) from CUDA (software platform); took the PTX→SASS JIT as a §1 callback; understood
+  the CUDA *software* moat and that alternatives (OpenCL/Vulkan/SYCL/Triton/HIP) run on NVIDIA but funnel
+  through the NVIDIA driver/PTX. **Signal:** CPU/GPU hardware fundamentals are a genuine *strength*, not
+  a gap — likely from the physics/semiconductor background (device layer is second nature; he wanted the
+  *architecture* layer above it). His curiosity pulls consistently toward **AI/GPU hardware** — worth
+  weighting M12 (model landscape) and GPU/accelerator content. **Process feedback he gave:** course
+  References must carry **real, verified hyperlinks** (saved as a memory) — I now verify links before
+  finalizing. **Pattern still holds:** learns by pushing a model one question past where it's been
+  explained.
 - **2026-06-09 — M01 Ch1 §2 (the call stack) ✅ finalized.** Covered frames, call/return, LIFO,
   reading tracebacks bottom-up, recursion/stack-overflow, CPython frame objects. He drove the session
   almost entirely into **async/await ↔ the stack** and **tail-call optimization** — both via sharp,

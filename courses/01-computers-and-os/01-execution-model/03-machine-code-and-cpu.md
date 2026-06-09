@@ -3,8 +3,9 @@
 > **Module:** How Computers & Operating Systems Work
 > **Chapter:** The execution model
 > **Section:** Machine code & the CPU — what `call`/`ret` and your arithmetic *actually are* at the silicon level
-> **Status:** 🔵 draft 2026-06-09 — generated for study + Q&A. We'll finalize after our discussion and
-> I'll append a §-applied capturing the threads you drive into (as in §1 §10 / §2 §12).
+> **Status:** ✅ finalized 2026-06-09 — you knew most of the body already; the session ran almost
+> entirely on *your* questions one layer past it (multi-core cache/register topology, GPU memory
+> hierarchy, what CUDA actually is). §11 captures those threads in the form we worked them out.
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** §1 (machine code, ISA, registers, the fetch–decode–execute loop) and §2 (the call
@@ -373,29 +374,113 @@ surprising — especially the size of the gap in (a) — to our chat.
 
 ---
 
+## 11. Applied — captured from our session Q&A
+
+You already knew the section body, so the whole session was *you* pushing one layer past it — into how
+multiple cores share state, how a GPU's hierarchy differs, and what CUDA actually is. Distilled here so
+you can re-derive them.
+
+### 11a. Multi-core: what's private vs shared (ties to §3, §4)
+
+- **Registers — private per core**, and in fact per *hardware thread*. With **SMT/hyperthreading** one
+  physical core holds **two full architectural register sets** (so two logical threads don't clobber
+  each other's `rip`/`rax`) while *sharing the execution units* — which is why two hyperthreads ≠ 2×
+  throughput.
+- **Caches — split:** **L1 (and usually L2) are private** to each core; **L3 (the Last-Level Cache) is
+  shared** across all cores on the die. Mental model: `registers · L1 · L2` dedicated → `L3 · RAM`
+  shared. (Real chips vary — clustered L2, AMD's per-CCX L3 slices — but private-L1/L2, shared-LLC is
+  right ~90% of the time.)
+
+### 11b. Cache coherence — the consequence of private caches (ties to §4, foreshadows Ch3)
+
+- If two cores each cache the same address privately and one writes, the other's copy is stale. Hardware
+  fixes this *for you* with a **coherence protocol (MESI** and variants): cores **snoop** and
+  **invalidate** each other's copies so software sees one coherent memory — but it's maintained by real
+  bus/coherence traffic, not free.
+- Two things this plants for **Ch3 (concurrency)**: (1) **False sharing** — two cores writing *different*
+  variables that land in the *same 64-byte line* ping-pong that line via invalidations; fix is
+  padding/alignment. (2) **Coherence ≠ ordering** — everyone eventually agrees on a *single* location's
+  value, but the order writes to *different* locations become visible is the **memory-model** problem
+  (atomics, fences; Python's **GIL** sidesteps much of it by letting only one thread touch objects).
+
+### 11c. GPU memory hierarchy — same skeleton, inverted emphasis (ties to §4, §7)
+
+- **Terminology first:** **SM (Streaming Multiprocessor) ≈ a CPU core** (an H100 has ~130); a **CUDA
+  core = one ALU lane** (~128 per SM); a **warp = 32 threads in lockstep (SIMT)**. "16,000 CUDA cores" =
+  ~130 real cores × ~128 lanes.
+- **Same private→shared→DRAM ladder:** registers **private** (per-thread, partitioned from a *huge*
+  ~256 KB register file); **L1 + Shared Memory private to each SM**; **L2 shared** across all SMs; then
+  **VRAM** (HBM, ~3 TB/s on H100) shared by everything.
+- **The inversion (the key insight):** a CPU hides RAM latency with **big caches + out-of-order**; a GPU
+  hides it with **massive thread oversubscription** — thousands of threads resident at once (hence the
+  giant register file), and when a warp stalls on VRAM the scheduler swaps to a ready warp at **zero
+  context-switch cost** (all registers already resident). Term: **occupancy** — too many registers per
+  thread → fewer resident warps → less latency hiding. So GPU caches are *small relative to compute*; it
+  bets on bandwidth + parallelism, not on caching a working set.
+- **Shared Memory ≠ a cache:** it's a **software-managed scratchpad** threads in a block explicitly stage
+  VRAM data into (~100× faster than VRAM) — no clean CPU analogue (CPU caches are transparent).
+- **Why it lands on your AI work:** fast matmul **tiles** into Shared Memory so values are reused
+  (identical math, less data movement — §4's "layout beats big-O" at the limit); **FlashAttention** is
+  exactly this trick for attention. And **LLM decode is usually memory-bandwidth-bound** (you stream
+  billions of weights past half-idle cores) — which is why VRAM *bandwidth*, not just FLOPs, is the
+  headline spec and why **quantization** (less to move) speeds inference. The compute-bound/memory-bound
+  split is the framing for all GPU performance reasoning.
+
+### 11d. What CUDA is — software, not hardware (ties to §1, §2)
+
+- **CUDA is NVIDIA's proprietary software platform**, *not* hardware. The collision to keep straight:
+  **"CUDA core" = a hardware ALU lane** (marketing); **"CUDA" = the software stack**.
+- **The stack, top to bottom:** the CUDA C/C++ *language* extension (`__global__` kernels, `<<<...>>>`
+  launch) → the `nvcc` *compiler* → the *runtime + libraries* (**cuBLAS**, **cuDNN**, NCCL — the fast
+  kernels that actually matter) → the **driver** (the only genuinely "driver-like" layer, at the bottom,
+  talking to silicon).
+- **The §1 callback:** `nvcc` compiles kernels to **PTX** — a *virtual* GPU ISA (NVIDIA's bytecode) —
+  and the **driver JIT-compiles PTX → SASS** (the real, per-generation, undocumented machine code) at
+  run time. Same "portable IR + JIT" trick as CPython bytecode → native, one layer down; it's why an old
+  CUDA binary still runs on a new GPU.
+- **Name:** historically **"Compute Unified Device Architecture,"** but **NVIDIA dropped the expansion
+  ~2007–08** — today it's just a brand name.
+- **Can an NVIDIA GPU run other stacks? Yes at the top, no at the bottom.** Alternative *front ends*
+  exist and run on NVIDIA — **OpenCL, Vulkan compute, SYCL, OpenACC, OpenAI's Triton, AMD's HIP** — but
+  (1) the **driver is unavoidably NVIDIA's**, and (2) most of them still **compile down to PTX** and run
+  through it. So they're alternative front ends, not an independent stack. In practice AI uses CUDA
+  because cuBLAS/cuDNN + the PyTorch/TF ecosystem live there — the **"CUDA moat"** is *software* lock-in,
+  not hardware. Your real path: `model.to("cuda")` → PyTorch → cuDNN/cuBLAS → runtime → driver JIT
+  PTX→SASS → SMs.
+
+---
+
 ## References (optional, for depth)
 
-- **Brendan Gregg — "latency numbers every programmer should know"** / Jeff Dean's original table: the
-  cache-vs-RAM-vs-disk numbers in §4, kept current.
-- **Computerphile / Ben Eater (YouTube):** Ben Eater's "build an 8-bit CPU from logic gates" series is
-  the §1–§3 bridge made physical — likely satisfying given your device background.
-- **godbolt.org (Compiler Explorer):** source → assembly, instantly, for any ISA. The best way to *see*
-  §2–§3.
-- **"Computer Systems: A Programmer's Perspective" (Bryant & O'Hallaron):** chapters on machine-level
-  representation, the memory hierarchy, and processor architecture — the definitive treatment of this
-  whole section.
-- **Ulrich Drepper, "What Every Programmer Should Know About Memory"** (2007, free PDF): the deep dive on
-  §4 if caches grab you. Long but legendary.
-- **Spectre/Meltdown** (§5 aside): the original papers are readable overviews — but we'll cover the
-  security angle properly in M10, so optional now.
+*(All links verified live 2026-06-09.)*
+
+- **["Latency Numbers Every Programmer Should Know"](https://colin-scott.github.io/personal_website/research/interactive_latency.html)** —
+  Colin Scott's interactive version of Jeff Dean's classic table; slide the year to watch the
+  cache↔RAM↔disk gaps of §4 evolve. The single best feel for "how far away is RAM."
+- **[Ben Eater — "Building an 8-bit computer from scratch"](https://eater.net/8bit)** — the §1–§3 bridge
+  made physical: a working CPU built on breadboards from logic gates (clock, registers, ALU, program
+  counter, control logic). Likely satisfying given your device background.
+- **[godbolt.org — Compiler Explorer](https://godbolt.org/)** — paste C/C++/Rust, see the actual
+  x86-64 / ARM64 assembly instantly. The best way to *see* the `push`/`mov`/`call`/`ret` of §2–§3.
+- **[Computer Systems: A Programmer's Perspective (Bryant & O'Hallaron)](https://csapp.cs.cmu.edu/)** —
+  the definitive treatment: chapters on machine-level representation, the memory hierarchy, and
+  processor architecture cover this whole section in depth.
+- **[Ulrich Drepper, "What Every Programmer Should Know About Memory" (2007, PDF)](https://www.akkadia.org/drepper/cpumemory.pdf)** —
+  the deep dive on §4 (and the multi-core coherence we discussed) if caches grab you. Long but legendary.
+- **[Meltdown & Spectre — official site](https://meltdownattack.com/)** (§5 aside; papers:
+  [Meltdown](https://arxiv.org/abs/1801.01207) · [Spectre](https://arxiv.org/abs/1801.01203)) — readable
+  overviews of how speculative execution became a confidentiality hole. We'll cover the security angle
+  properly in M10, so optional now.
 
 ---
 
 ### What's next
-This closes Ch1's loop: source → bytecode/VM (§1) → the call stack (§2) → the silicon those instructions
-run on (§3). The big thread we keep deferring — **why one instruction stream uses one core, the GIL, and
-how `asyncio`/threads/processes actually share a CPU** — gets its full treatment in **Ch1 §3 concurrency
-in the *next chapter mapping*** (plan's M01 Ch3). After our Q&A I'll finalize this section, append the
-applied notes, and mark §3 ✅ in `courses/plan.md`. Tell me where you want to push — `call`/`ret` as
-silicon, the memory hierarchy, branch prediction/Spectre, the clock wall, or the SIMD/GPU bridge to your
-AI work.
+✅ **Finalized 2026-06-09.** Marked done in `courses/plan.md`; §11 captures the multi-core topology,
+GPU-hierarchy, and CUDA threads you drove the session into. This closes **Ch1** (the execution model):
+source → bytecode/VM (§1) → the call stack (§2) → the silicon (§3). The big deferred thread — **why one
+instruction stream uses one core, the GIL, false sharing/memory ordering, and how
+`asyncio`/threads/processes actually share a CPU** — gets its full treatment in **M01 Ch3
+(concurrency)**, which §11a–b now tee up directly. Per the Phase-1 plan, the next material steps sideways
+to **M04 Ch1 (reading code well)** and **M12 Ch1 (how modern models work)** — though given how naturally
+this session ran into GPU/CUDA internals, M12 Ch1 may be the more motivating next stop. Your call at the
+next "prepare today's material."
