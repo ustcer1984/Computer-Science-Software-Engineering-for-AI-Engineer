@@ -4,7 +4,8 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-08 (v2 — corrected after learner feedback; initial calibration from
+Last updated: 2026-06-09 (v3 — added reading-track progress + signals from the 2026-06-09 reading
+session). Prior: v2 (2026-06-08) corrected after learner feedback; initial calibration from
 self-description + code survey of `/home/zhangzhou/Desktop/Projects/aquarium-main` and
 `/home/zhangzhou/Desktop/Projects/arena-concept-experiment`).
 
@@ -88,6 +89,25 @@ learning surfaces.
   best when concepts are anchored to his own production systems. Next: §2 (call stack).
 - **How he learns (observed):** asks sharp, practical "why does my system do X" questions; prefers
   re-deriving principles over memorising; appreciates explicit cost/trade-off framing.
+
+## Learning progress (reading track)
+- **2026-06-09 — first reading entry ✅ finalized** (`upskill-readings/2026/06/09-async-concurrency-and-agent-context.md`):
+  (1) Python concurrency — async/await vs threading; (2) Anthropic *context engineering for agents*. He
+  drove both into strong Q&A. **Async/eval thread:** correctly reasoned that for CPU-bound work threads
+  beat async (async freezes the loop) but **initially stopped short of the GIL point** — needed the
+  correction that threads don't parallelize CPU either (GIL serializes; fix = processes / native libs
+  that drop the GIL / GPU); took the `run_in_executor(process_pool)` hybrid well. Also held a
+  **misconception that async clients get server-side optimization** — corrected: server can't tell, wire
+  requests identical, throughput ceiling is the rate limit not the client model. **Context-engineering
+  thread (his strongest contribution):** independently re-derived the Anthropic framework from his own
+  coding-agent practice — plan-first (= system-prompt-at-right-altitude), repo structure/READMEs/`docs/`
+  (= retrieval index + JIT retrieval), grep-vs-embeddings retrieval, and compaction strategies. His
+  Claude-Code-vs-Cursor observations were accurate; correct intuition that Cursor's faster retrieval is
+  architectural (embeddings outside the model loop) and that its instant compaction is amortised/avoided.
+  **Signals:** systems reasoning on concurrency/GIL is now strong and confirmed (consistent with §2);
+  **emerging real strength in *applied* context engineering / agent-ergonomics** — thinks about how to
+  set agents up to succeed (plans, structure, docs). Possible follow-ups he flagged: Cursor-vs-Claude
+  retrieval/compaction internals; an arena audit for sequential `await`s that should fan out.
 - **Active production concern surfaced:** `arena-concept-experiment` (just launched, low traffic) has
   **Lambda cold-start latency** hurting first-load UX (esp. leaderboard) — improvement plan written to
   his local `temp/arena-cold-start-latency-plan.md` (gitignored). May implement later. Suspected
