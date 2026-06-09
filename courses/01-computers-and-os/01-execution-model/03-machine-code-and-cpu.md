@@ -1,0 +1,401 @@
+# M01 · Ch1 · §3 — Machine Code & the CPU at a Glance
+
+> **Module:** How Computers & Operating Systems Work
+> **Chapter:** The execution model
+> **Section:** Machine code & the CPU — what `call`/`ret` and your arithmetic *actually are* at the silicon level
+> **Status:** 🔵 draft 2026-06-09 — generated for study + Q&A. We'll finalize after our discussion and
+> I'll append a §-applied capturing the threads you drive into (as in §1 §10 / §2 §12).
+
+**Estimated study time:** 2–3 hours including reflection.
+**Prerequisites:** §1 (machine code, ISA, registers, the fetch–decode–execute loop) and §2 (the call
+stack; `call`/`ret`). You can read basic Python and skim a little assembly — I'll always gloss it.
+
+---
+
+## Why this section exists (for *you*)
+
+This is the floor of the stack. §1 took you from source text down to "machine code runs on a CPU"; §2
+showed how `call`/`ret` and frames make functions work. This section opens the CPU itself and asks:
+**when the machine "executes an instruction," what is physically happening, and why does that shape
+everything above it?** You have an unfair advantage here — a PhD in applied physics and ten years in
+semiconductor failure analysis. You already know the *device layer* (transistors, doping, the silicon).
+What's been implicit is the **architecture layer** that sits between a transistor and `response =
+llm(prompt)`. This section fills exactly that gap: from logic gates up to "why my code is fast or slow."
+
+By the end, these everyday mysteries collapse into one model:
+
+- Why `numpy`/`torch` run ~100× faster than the same loop in pure Python — it's **not** just "C is
+  compiled" (§1's answer); it's **cache locality + SIMD**, and you'll see why.
+- Why CPU clock speeds **stopped climbing around 2005** (~3–4 GHz) and the industry pivoted to *more
+  cores* — which is the entire reason concurrency (Ch1 §3) became unavoidable rather than optional.
+- Why a **cache miss** can cost more than a thousand arithmetic instructions, and why "big-O" sometimes
+  loses to "the layout that the cache likes."
+- What `call`/`ret` from §2 *are* as silicon — and why a mispredicted branch (an `if` that surprises
+  the CPU) quietly throws away dozens of cycles of work.
+- The faint thread connecting **Spectre/Meltdown** (M10 security) to a performance trick the CPU plays
+  behind your back: speculative execution.
+
+A physics framing to hold onto: you spent a career reasoning about a device whose *bulk behavior*
+emerges from billions of identical small elements. A CPU is the same story one abstraction up — billions
+of transistors arranged so that their collective switching *computes*. We're going to stay at the
+"effective theory" level (architecture), the way you'd use a compact model instead of solving Poisson's
+equation for every carrier.
+
+---
+
+## 1. From transistor to instruction (the one layer you can skim)
+
+You know this floor better than I do, so just the bridge: a **transistor** is a voltage-controlled
+switch. Wire a few together and you get a **logic gate** (AND/OR/NOT). Wire gates together and you get
+two kinds of useful block:
+
+- **Combinational logic** — output is a pure function of the inputs (an *adder* that turns two 64-bit
+  numbers into their sum is just a big pile of gates).
+- **Sequential logic** — has *memory*, driven by a **clock**: flip-flops/registers that hold a value
+  until the next clock tick. This is what makes a CPU a *state machine* rather than a calculator.
+
+The **clock** is the heartbeat: a square wave at some frequency (say 3 GHz = 3 billion ticks/second).
+On each tick, the CPU's state advances — latch new values into registers, let the combinational logic
+settle, latch again. **A "cycle" is one clock tick**, and it's the natural unit of time for everything
+below. (Your semiconductor instinct is right: the ceiling on clock speed is fundamentally about how fast
+you can switch transistors and dissipate the heat — we'll cash that out in §6.)
+
+That's the whole bridge. From here up, we reason in terms of *instructions, registers, and cycles*, not
+electrons — the same move as using a SPICE-free compact model.
+
+---
+
+## 2. What an instruction *is*, concretely
+
+An instruction is a binary number that the CPU's **decoder** reads as "do this specific primitive
+operation." It splits into fields — an **opcode** (which operation) and **operands** (which registers /
+which memory address / an immediate constant). Example, in x86-64 assembly with its machine-code gloss:
+
+```asm
+addq %rax, %rbx     ; rbx = rbx + rax        (arithmetic, register→register)
+movq (%rsi), %rax   ; load: rax = memory[rsi] (a LOAD from RAM)
+movq %rax, (%rdi)   ; store: memory[rdi] = rax (a STORE to RAM)
+cmpq $0, %rax       ; compare rax with 0, set flags
+je   .L_done        ; if equal flag set, JUMP to label (a branch)
+call square         ; push return addr, jump to square   (§2!)
+ret                 ; pop return addr, jump back          (§2!)
+```
+
+Notice the entire vocabulary is roughly: **arithmetic/logic**, **load/store** (move between registers
+and memory), **compare**, **branch/jump**, and **call/return**. That's it. Every program you've ever
+run — your arena pipeline, Postgres, the Linux kernel — is *billions of these five kinds of thing*. The
+richness is in the composition, not the primitives. (This is the same humbling realization as §1: there
+are no "strings" or "functions" down here, only the abstractions we build.)
+
+Two ISA philosophies, worth knowing because it's your AWS bill:
+
+| | **CISC** (x86-64: Intel/AMD) | **RISC** (ARM64: Apple Silicon, AWS Graviton) |
+|---|---|---|
+| Instructions | Many, some complex/variable-length | Fewer, simple, fixed-length |
+| Decode | Harder (CPU cracks them into micro-ops internally) | Simpler, cheaper to decode |
+| Reputation | Legacy-rich, power-hungry | Power-efficient → cheaper, cooler |
+
+The line has blurred (modern x86 chips translate CISC instructions into RISC-like *micro-ops*
+internally), but the energy story is real and it's *why* Graviton Lambdas are cheaper per
+request: ARM does the same work for fewer watts. Same source, different machine code — §1's portability
+point, now with the "why it's cheaper" attached.
+
+---
+
+## 3. Inside the core: the datapath and the fetch–decode–execute loop, revisited
+
+§1 gave you the loop as a black box. Here's what's *inside* doing each step:
+
+```mermaid
+flowchart LR
+    PC["Program Counter<br/>(address of next instr)"] --> FE["FETCH<br/>read instr from<br/>instruction cache"]
+    FE --> DE["DECODE<br/>control unit reads<br/>opcode + operands"]
+    DE --> EX["EXECUTE<br/>ALU does math /<br/>compute address"]
+    EX --> MEM["MEMORY<br/>load or store<br/>if needed"]
+    MEM --> WB["WRITE-BACK<br/>result → register"]
+    WB -->|"PC advances<br/>(or branch sets it)"| PC
+```
+
+The cast:
+
+- **Program Counter (PC / instruction pointer, `rip` on x86)** — a register holding the *address of the
+  next instruction*. **Normal execution just increments it**; a **branch** or a `call`/`ret` is nothing
+  more exotic than *writing a new value into the PC*. That's the deep idea: control flow *is* "what we
+  put in the PC."
+- **Register file** — the handful of named registers from §1 (`rax`, `rbx`, …). The CPU's hands; the
+  fastest storage that exists (sub-nanosecond).
+- **ALU (Arithmetic Logic Unit)** — the combinational adder/comparator/logic block from §1. Does the
+  actual `+`, `&`, `<`.
+- **Control unit** — the decoder; turns the opcode into the right internal switch settings.
+
+Now connect it to §2 in one breath: **`call square`** = *push the current PC onto the stack (so `ret`
+can find it), then write `square`'s address into the PC.* **`ret`** = *pop that saved address off the
+stack and write it back into the PC.* The entire call-stack abstraction you built in §2 reduces, at this
+layer, to **"save the PC, jump; later restore the PC, jump back."** The stack pointer is just another
+register the CPU bumps. Nothing magic — it's PC arithmetic plus a memory convention.
+
+---
+
+## 4. The memory hierarchy — the single most important performance fact
+
+Here is the thing that, once internalized, explains more real-world performance than anything else in
+this course. **Not all memory is equally far away**, and the distances are *enormous*. The CPU is so
+fast that RAM, from its point of view, is in another time zone.
+
+```mermaid
+flowchart TD
+    R["Registers<br/>~1 KB · &lt;1 cycle"] --> L1["L1 cache<br/>~32–64 KB · ~4 cycles"]
+    L1 --> L2["L2 cache<br/>~256 KB–1 MB · ~12 cycles"]
+    L2 --> L3["L3 cache (shared)<br/>~8–64 MB · ~40 cycles"]
+    L3 --> RAM["Main memory (RAM)<br/>GBs · ~200–300 cycles"]
+    RAM --> DISK["SSD / network<br/>TBs · 10,000s–millions of cycles"]
+```
+
+Read those cycle counts again. If a register access is "reach into your hand" (1 second), then:
+
+| Level | ~cycles | Human-scale analogy (1 cycle ≈ 1 sec) |
+|---|---|---|
+| Register | <1 | now, in your hand |
+| L1 | ~4 | a note on your desk (~4 s) |
+| L2 | ~12 | a book on the shelf (~12 s) |
+| L3 | ~40 | walk to the next room (~40 s) |
+| **RAM** | **~200–300** | **drive across town (~4–5 min)** |
+| SSD | ~100,000+ | a multi-day shipment |
+
+**A RAM access can cost ~200+ cycles** — during which a modern core could have executed *hundreds* of
+arithmetic instructions. So the CPU spends staggering effort *avoiding* RAM by keeping recently/soon-used
+data in **caches** (small, fast, automatic copies). Two principles make caching work, both called
+**locality**:
+
+- **Temporal locality** — if you touched an address, you'll likely touch it again soon (keep it cached).
+- **Spatial locality** — if you touched an address, you'll likely touch its *neighbors* soon. So the
+  cache doesn't fetch one byte; it fetches a whole **cache line** (~64 bytes) at once.
+
+A **cache hit** is ~4 cycles; a **cache miss** drags in a line from RAM at ~200. So the layout of your
+data — *whether the next thing you need is already in the line you just pulled* — can dominate runtime.
+This is the secret behind a fact you've lived but maybe not explained:
+
+> **Why `numpy` crushes a Python loop, part 1 of 2.** A Python list of a million numbers is a million
+> *pointers* scattered across the heap (each pointing to a boxed `int` object — Ch1 §2's "names on the
+> stack, objects on the heap"). Walking it is a cache-miss minefield. A `numpy` array is **one
+> contiguous block** of raw numbers — so each 64-byte line the CPU fetches brings in the *next several
+> values you need*. Same algorithm, but one is cache-friendly and one is cache-hostile. (Part 2 is SIMD,
+> §7.) Note this is a *different* lever than §1's "compiled vs interpreted" — they stack.
+
+The actionable instinct: **contiguous, predictable, sequential access is fast; pointer-chasing and
+random access are slow** — often by more than the big-O difference would suggest. You'll meet this again
+in M03 (why B-tree indexes and sequential scans behave the way they do — disk has the same hierarchy
+shape, just shifted).
+
+---
+
+## 5. How a core does more than one instruction at a time
+
+Naively, one instruction per cycle. Real cores do *much* better by overlapping work — and the tricks
+have direct consequences for your code's behavior.
+
+**Pipelining.** The five stages in §3 (fetch, decode, execute, memory, write-back) use *different* parts
+of the CPU. So like a factory line, while instruction A is in "execute," B can be in "decode," C in
+"fetch." Steady-state throughput approaches **one instruction finished per cycle** even though each takes
+several cycles end-to-end.
+
+```mermaid
+flowchart LR
+    subgraph cyc["Pipelining — overlap, like an assembly line"]
+        direction TB
+        I1["instr A: FE→DE→EX→MEM→WB"]
+        I2["instr B:    FE→DE→EX→MEM→WB"]
+        I3["instr C:       FE→DE→EX→MEM→WB"]
+    end
+```
+
+**Superscalar + out-of-order.** Modern cores have *multiple* ALUs and can retire **several instructions
+per cycle**, and they'll **reorder** instructions that don't depend on each other to keep all units busy
+(then commit results in the original order so you never notice). The CPU is quietly a little scheduler.
+
+**The catch — branches.** Pipelining needs to know *which instruction comes next*. But a branch
+(`if`, loop test, the `je` in §2) isn't resolved until partway down the pipeline. So the CPU **guesses**
+with a **branch predictor** (a learned history of "which way did this branch go last time") and
+**speculatively executes** down the predicted path:
+
+- **Predicted right** (the common case — predictors hit >95% on typical code): free, no stall.
+- **Predicted wrong:** the CPU must **throw away** all the speculative work and refill the pipeline —
+  a **branch misprediction penalty** of ~15–20 cycles.
+
+The practical upshot: **predictable branches are nearly free; unpredictable ones are expensive.** A loop
+that runs a million times is trivially predictable; a branch that flips randomly on data defeats the
+predictor. This is why, occasionally, processing *sorted* data is faster than unsorted — same
+instructions, but the branches became predictable. You won't micro-optimize this in Python (the
+interpreter overhead dwarfs it), but it's the mechanism beneath "branchless code" and a lot of
+performance folklore.
+
+> **The security thread (M10 foreshadow):** speculative execution means the CPU *does work it might
+> throw away* — and that work can leave traces in the cache. **Spectre** and **Meltdown** (2018) were
+> the discovery that an attacker could *measure* those traces to read memory they shouldn't see. A
+> performance trick became a confidentiality hole. We'll come back to it in M10; for now just register
+> that "the CPU runs ahead speculatively" is a real, observable behavior, not a metaphor.
+
+---
+
+## 6. Why the clock stopped getting faster — and why you now have cores
+
+For ~30 years, chips got faster mostly by **raising the clock** (and shrinking transistors —
+Dennard scaling, which you know from the device side). Around **2004–2006 that wall hit**: power density.
+Dynamic power scales roughly with frequency × voltage², and you can only push so many watts through a
+few mm² before you can't remove the heat. (You've literally seen what excess current density does to
+silicon.) Clocks plateaued around **3–4 GHz** and have basically stayed there.
+
+The transistors kept coming (Moore's law had life left), so the industry spent them differently: instead
+of one faster core, **put many cores on one die.** Your laptop and your Lambda runtime have 4, 8, 16+
+cores. But here's the load-bearing consequence for everything you build:
+
+> **More cores do nothing for a single sequential instruction stream.** A program that's one straight
+> line of `call`/`ret`/arithmetic runs on **one** core and ignores the other fifteen. To use them, the
+> program must be split into *multiple* streams that run at once — **concurrency and parallelism.**
+
+That is *the* reason Ch1 §3 exists, and it ties straight to the threads you've already pulled on (§2
+§12a): a thread is one instruction stream → one core at a time; the GIL serializes Python bytecode so
+threads don't get you multi-core CPU parallelism; `multiprocessing` and native libraries that drop the
+GIL do. The hardware stopped handing us free speed in ~2005, and **that** is why "make it concurrent" is
+now a skill you have to own rather than a luxury. The free lunch is over; the kitchen gave you more
+stoves instead of a hotter one.
+
+---
+
+## 7. SIMD and the GPU — why your AI workloads are a different animal
+
+One more lever, and it's the one closest to your day job. Normal instructions are **SISD** — Single
+Instruction, Single Data: `addq` adds *one* pair of numbers. But a CPU core also has **SIMD** units —
+*Single Instruction, Multiple Data* — that apply one operation to a **whole vector** at once (e.g. add
+eight pairs of floats in one instruction: SSE/AVX on x86, NEON on ARM).
+
+> **Why `numpy` crushes a Python loop, part 2 of 2.** Beyond cache-friendliness (§4), `numpy`'s C
+> kernels are **vectorized** — they issue SIMD instructions that chew through 4/8/16 array elements per
+> instruction. Pure-Python `for x in list: total += x` does one boxed-int addition per *interpreter
+> loop iteration* (thousands of cycles of overhead each, §1). Contiguous memory (§4) + SIMD (§7) +
+> compiled-not-interpreted (§1) — three independent multipliers stacking — is the full answer to "why is
+> the library 100× faster than my loop."
+
+Now extrapolate. A **GPU** takes SIMD to its logical extreme: thousands of simple ALUs all running the
+*same* operation on *different* data — "SIMT," massively parallel. Matrix multiply (the core of every
+neural network) is *embarrassingly* parallel in exactly this way, which is why training and inference
+live on GPUs/TPUs, not CPUs. You don't need the silicon details yet (M12 covers how models map onto this
+hardware), but plant the flag: **the reason AI runs on accelerators is this section's punchline pushed to
+the limit — when the *same* arithmetic must run over *enormous* uniform data, you want many tiny ALUs,
+not a few clever ones.** The CPU optimizes latency for messy branchy code; the GPU optimizes throughput
+for uniform numeric crunching. Different tools, same root question of "how do we get more arithmetic done
+per unit time now that the clock won't budge."
+
+---
+
+## 8. The one-page mental model
+
+```mermaid
+flowchart TD
+    A["Transistors → gates → a clocked state machine.<br/>Time is measured in CYCLES (one clock tick)."]
+    A --> B["An instruction = opcode + operands.<br/>Whole vocabulary ≈ arithmetic · load/store · compare · branch · call/ret"]
+    B --> C["Core executes via fetch–decode–execute over registers + ALU.<br/>Control flow = writing the Program Counter. call/ret = save/restore the PC (§2)."]
+    C --> D["MEMORY HIERARCHY: registers≪L1≪L2≪L3≪RAM.<br/>RAM ≈ 200+ cycles. Caches + locality hide it. Layout can beat big-O."]
+    C --> E["The core overlaps work: pipelining, superscalar, out-of-order,<br/>+ branch prediction & speculation (mispredict ≈ 15–20 cycles; Spectre lives here)."]
+    D --> F["Clock plateaued ~2005 (power/heat) → MORE CORES, not faster ones.<br/>→ one stream = one core → concurrency is now mandatory (Ch1 §3)."]
+    E --> F
+    F --> G["SIMD/GPU: one instruction over many data.<br/>= why numpy/torch & AI accelerators are fast."]
+```
+
+**The six things to remember:**
+1. The CPU is a **clocked state machine**; the unit of time is the **cycle**, and the instruction
+   vocabulary is tiny — arithmetic, load/store, compare, branch, `call`/`ret`. Everything is built from
+   those.
+2. **Control flow is just writing the Program Counter.** `call`/`ret` from §2 = save the PC and jump /
+   restore the PC and jump back. No magic under the abstraction.
+3. The **memory hierarchy** is the dominant performance fact: RAM is ~200+ cycles away, caches hide it,
+   and **data layout / locality** can matter more than algorithmic big-O.
+4. A core does **more than one instruction at a time** (pipeline, superscalar, out-of-order) by
+   *guessing* branches; a **misprediction** throws the work away (~15–20 cycles) — and speculation is
+   where Spectre-class bugs come from.
+5. Clock speed **stopped scaling ~2005** (power/heat), so we got **more cores** — which is *the* reason
+   concurrency (Ch1 §3) is mandatory: more cores do nothing for a single instruction stream.
+6. **SIMD/GPU** = one instruction over many data → the real reason `numpy`/`torch` and AI hardware are
+   fast (stacking on top of cache-locality and compiled-not-interpreted).
+
+---
+
+## 9. Check your understanding
+
+Jot a one-line answer to each before our Q&A — we'll dig into whichever are fuzzy.
+
+1. In terms of the Program Counter and the stack, describe what `call square` and the later `ret`
+   actually do. (Tie §2 to §3.)
+2. You have two functions that compute the same sum over a million numbers — one walks a Python `list`,
+   one walks a `numpy` array. Name the **three independent** reasons the `numpy` version is faster, each
+   from a different section (§1, §4, §7).
+3. A colleague says "RAM is fast, it's basically instant." Push back quantitatively: roughly how many
+   arithmetic instructions could a core run in the time of one RAM access, and what hides that cost?
+4. Why did raising the clock frequency stop being the way chips get faster, and what's the direct
+   consequence for how you have to *write* programs to use a modern CPU?
+5. Explain how a branch misprediction wastes work, and give one reason processing **sorted** data can be
+   faster than unsorted even when the instructions are identical.
+6. (Stretch) In one sentence each: what problem is a **GPU** built to win at, and why is that the same
+   idea as SIMD rather than the same idea as multicore?
+
+## 10. Optional: get your hands dirty (15 min)
+
+You don't need assembly tools — Python can *show* you the layers.
+
+```python
+# (a) See the cache/locality effect WITHOUT leaving Python.
+#     numpy array (contiguous) vs Python list (pointer-chasing), same sum.
+import numpy as np, time
+n = 10_000_000
+py = list(range(n))
+nm = np.arange(n)
+
+t = time.perf_counter(); s1 = sum(py);        print("python list:", time.perf_counter()-t, s1)
+t = time.perf_counter(); s2 = int(nm.sum());  print("numpy array:", time.perf_counter()-t, s2)
+# Expect numpy to win by ~50–100×. That gap = compiled (§1) + contiguous/cache (§4) + SIMD (§7).
+
+# (b) See machine-ish code: Python's bytecode is the §1 layer; the REAL machine code
+#     is one level below it. dis shows you the VM instructions your CPU's instructions implement.
+import dis
+def f(a, b):
+    return a * b + 1
+dis.dis(f)   # LOAD_FAST / BINARY_OP / RETURN_VALUE — the interpreter's "instruction set"
+
+# (c) Count your cores — the things §6 says you must work to use.
+import os
+print("logical CPUs available:", os.cpu_count())
+```
+
+For the truly curious (no need to run): paste a tiny C function into <https://godbolt.org> (the Compiler
+Explorer) and watch it compile to **actual x86-64 / ARM64 assembly** — you'll see the `push`/`mov`/
+`add`/`call`/`ret` from this section and §2, for real, side by side with the source. Bring anything
+surprising — especially the size of the gap in (a) — to our chat.
+
+---
+
+## References (optional, for depth)
+
+- **Brendan Gregg — "latency numbers every programmer should know"** / Jeff Dean's original table: the
+  cache-vs-RAM-vs-disk numbers in §4, kept current.
+- **Computerphile / Ben Eater (YouTube):** Ben Eater's "build an 8-bit CPU from logic gates" series is
+  the §1–§3 bridge made physical — likely satisfying given your device background.
+- **godbolt.org (Compiler Explorer):** source → assembly, instantly, for any ISA. The best way to *see*
+  §2–§3.
+- **"Computer Systems: A Programmer's Perspective" (Bryant & O'Hallaron):** chapters on machine-level
+  representation, the memory hierarchy, and processor architecture — the definitive treatment of this
+  whole section.
+- **Ulrich Drepper, "What Every Programmer Should Know About Memory"** (2007, free PDF): the deep dive on
+  §4 if caches grab you. Long but legendary.
+- **Spectre/Meltdown** (§5 aside): the original papers are readable overviews — but we'll cover the
+  security angle properly in M10, so optional now.
+
+---
+
+### What's next
+This closes Ch1's loop: source → bytecode/VM (§1) → the call stack (§2) → the silicon those instructions
+run on (§3). The big thread we keep deferring — **why one instruction stream uses one core, the GIL, and
+how `asyncio`/threads/processes actually share a CPU** — gets its full treatment in **Ch1 §3 concurrency
+in the *next chapter mapping*** (plan's M01 Ch3). After our Q&A I'll finalize this section, append the
+applied notes, and mark §3 ✅ in `courses/plan.md`. Tell me where you want to push — `call`/`ret` as
+silicon, the memory hierarchy, branch prediction/Spectre, the clock wall, or the SIMD/GPU bridge to your
+AI work.
