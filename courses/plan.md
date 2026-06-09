@@ -224,7 +224,7 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 
 | Module | Chapter | Status | Finalized section files | Notes |
 |---|---|---|---|---|
-| M01 Computers & OS | Ch1 Execution model | 🔵 | §1 `01-execution-model/01-source-to-running.md` ✅ (finalized 2026-06-08) | §1 done. §2 `01-execution-model/02-the-call-stack.md` 🔵 draft generated 2026-06-08 — pending Q&A + finalize. Next after §2: §3 machine code & CPU. |
+| M01 Computers & OS | Ch1 Execution model | 🔵 | §1 `01-execution-model/01-source-to-running.md` ✅ (finalized 2026-06-08); §2 `01-execution-model/02-the-call-stack.md` ✅ (finalized 2026-06-09) | §1–§2 done. §2 Q&A went deep on async/await-vs-stack (await≠concurrency; coroutine=one-shot frame vs Task=result box; 1 native stack + N heap continuations) and TCO (Python's no-TCO by design; Scheme/Erlang opposite; multiple-recursion limit → stack-to-heap). Next: §3 machine code & CPU. |
 | M01 | Ch2 Memory | ⬜ | | |
 | M01 | Ch3 Concurrency | ⬜ | | |
 | M01 | Ch4 I/O & kernel | ⬜ | | |

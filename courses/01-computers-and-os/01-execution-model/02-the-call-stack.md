@@ -3,7 +3,9 @@
 > **Module:** How Computers & Operating Systems Work
 > **Chapter:** The execution model
 > **Section:** The call stack — how a program keeps track of "where am I and how do I get back?"
-> **Status:** 🔵 draft — generated 2026-06-08, pending our Q&A + finalize.
+> **Status:** ✅ finalized 2026-06-09 — personalized with applied notes from our Q&A (see §12).
+> The session went deep on **`async`/`await` and the stack** and on **tail-call optimization**, so §12
+> captures those threads in the form you re-derived them.
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** §1 (you know a CPU runs machine-code *instructions* and works in *registers*).
@@ -407,6 +409,91 @@ printout maps onto the bottom-up reading rule from §4.
 
 ---
 
+## 12. Applied — captured from our session Q&A
+
+The real threads we worked through on 2026-06-09, distilled so you can re-derive them. Most of the
+session pressed on §7 (async) and §5 (recursion/TCO) — these are the parts that earned their keep.
+
+### 12a. "One thread → one stack → one core" — right answer, sharper reasoning (ties to §2, §7)
+
+- Your conclusion holds: at any **instant** a thread runs on exactly **one** core, and can't spread
+  itself across cores. But the *cause* isn't the stack — it's that **a thread is a single sequential
+  instruction stream**, and a core runs one stream at a time. The single stack is the *companion
+  bookkeeping* of that single stream, not the thing pinning it to a core.
+- Nuances: "one core" means *at any instant* — the OS scheduler can migrate a thread between cores over
+  time (unless you set CPU affinity); and **SMT/hyperthreading** lets one physical core interleave two
+  threads as two *logical* CPUs, but your thread still occupies one logical CPU.
+- **The Python kicker (foreshadows Ch1 §3):** even with many threads, CPython's **GIL** runs only one
+  thread's *bytecode* at a time → threads give you **no multi-core parallelism for CPU-bound Python**;
+  that's what `multiprocessing` is for. For **I/O-bound** work (your arena: LLM/Postgres/S3 waits),
+  threads and `asyncio` shine, because a thread blocked on the network isn't using a core anyway.
+
+### 12b. `await` is *not* concurrency, and coroutine ≠ Task (ties to §7)
+
+- **`await` only exists inside `async def`** — `await` in a plain `def` is a compile-time `SyntaxError`
+  (the §1 "source → bytecode" step rejecting it).
+- **Calling** an `async def` returns a **coroutine object** (a *recipe*, not a result) — the body hasn't
+  run. The **call** creates the object; **`await`** *drives* it: "run this, suspend me until it's done,
+  plug the result in here." `f(1,2)` → coroutine; `await f(1,2)` / `asyncio.run(f(1,2))` → the value.
+- **`await` is sequential, not concurrent.** Two `await`s in a row run one-after-the-other — the second
+  call doesn't even *start* until the first finishes. So `await a(); await b()` is just two blocking
+  calls with extra steps (~2× wall-clock), **no faster** than the sync version. Concurrency comes from
+  **how many tasks are in flight**, not from the keyword: use `asyncio.gather(...)` or
+  `asyncio.create_task(...)` to launch both *before* awaiting → they overlap → ~1× = `max(a, b)`.
+  *(This is the #1 reason "we went async but it's not faster" — the calls were still awaited one at a
+  time. Worth auditing the arena turn-handling for independent model calls that could fan out.)*
+- **A coroutine object is single-use** — it *is* the frame. Drive it to `return` and it's spent;
+  `await`-ing it again → `RuntimeError: cannot reuse already awaited coroutine` (same one-shot nature as
+  an exhausted generator). A **Task/Future** is the opposite: a *result box* you can `await` many times
+  for the same cached value. That coroutine-vs-Task split is *why* `gather`/`create_task` exist.
+
+### 12c. Where async frames actually live — one live stack + N parked continuations (ties to §7, §8)
+
+- There is **one native call stack per thread**, with the event loop at the bottom. When a coroutine
+  *runs*, it runs **on that stack** — a chain `A await B await C` stacks up as normal frames. The CPU
+  never "executes from the heap."
+- At a **real suspension** (a Future yields to the loop on I/O), the whole chain **unwinds off the
+  native stack**, and each coroutine keeps its frame state **on the heap**, linked by `await` — a
+  *parked continuation*. The loop usually has **many** such parked chains (one per pending Task).
+- So the precise model — your "two stacks" intuition, corrected: **one live native stack (only one
+  chain mounted at a time) + N parked frame-chains on the heap, swapped by the event loop.** This is
+  textbook **cooperative multitasking / green threads**: switches happen *only* at `await` points.
+- Why it's a win for you: it's **concurrency without parallelism** — one core, but it stops sitting
+  idle while waiting on I/O. Does nothing for CPU-bound work (still one stack on one core).
+
+### 12d. Does Python discourage recursion? Yes, by design — and the opposite pole (ties to §5)
+
+- Python deliberately steers you to loops: the **~1000 recursion limit** (§5) and **no tail-call
+  optimization (TCO)**. Guido rejected TCO on purpose — eliminating frames would gut tracebacks, and
+  the traceback *is* the stack (§4). Caveat: Python discourages recursion *as a looping construct*;
+  shallow, genuinely-recursive shapes (tree of height ~log n, nested JSON) are fine.
+- **TCO mechanism:** a *tail call* is the last thing a function does (`return f(...)`). Its frame has
+  nothing left to do, so a TCO compiler **reuses the current frame** instead of pushing — million-deep
+  tail recursion runs in **one frame**, as cheap as a loop.
+- **The opposite pole:** **Scheme** *mandates* proper tail calls in its spec (recursion *is* the loop);
+  **Erlang/Elixir** have no `for` at all — you tail-recurse, and the BEAM guarantees TCO;
+  **Haskell/OCaml/F#** are recursion-first. JVM languages show the constraint: **Clojure** (`loop`/
+  `recur`) and **Scala** (`@tailrec`) had to bolt on explicit self-tail-recursion because the JVM lacks
+  TCO. The split is philosophical: immutable/expression-first languages *need* TCO and guarantee it;
+  loop-and-mutate languages (Python/Java/C/Go) traded it for debuggability.
+
+### 12e. TCO with *multiple* recursion (quicksort) — the real limit (ties to §5, §8)
+
+- TCO only optimizes the **single call in tail position**; a function can have **at most one** tail call
+  per return path. So multiple recursion gets **at most one branch flattened** — the rest must push
+  frames. (Textbook quicksort's last operation is the `+` concat, so *neither* call is even a tail call
+  until you restructure to put one recursion last.)
+- **Tree-shaped recursion is inherently non-tail** — you must "remember to come back and do the other
+  branch," so no TCO makes it constant-stack. The practical win is partial-but-real: recurse on the
+  **smaller** partition (real frame) and tail-loop the **larger** → stack depth bounded to **O(log n)**
+  even in the worst case.
+- To *fully* flatten it you **move the stack to the heap**: an explicit stack/worklist you `push`/`pop`,
+  or **CPS + trampoline** (make every call a tail call by passing "what to do next" as a continuation).
+  That's the *same stack→heap move as `await`* (12c) — the stack never vanishes, it relocates. **No free
+  lunch: something must hold the pending branch.**
+
+---
+
 ## References (optional, for depth)
 
 - Python docs — `traceback` module: https://docs.python.org/3/library/traceback.html
@@ -419,7 +506,8 @@ printout maps onto the bottom-up reading rule from §4.
 ---
 
 ### What's next
-🔵 **Draft — generated 2026-06-08.** After our Q&A I'll personalize this (capturing the applied threads
-from our discussion as a §12, the way §1 ended) and mark it ✅ in `courses/plan.md`. The next section
-(**§3 — machine code & the CPU at a glance**) zooms back down to what those `call`/`ret` instructions
-*are* at the silicon level, closing the loop from source (§1) through the stack (§2) to the metal.
+✅ **Finalized 2026-06-09.** Marked done in `courses/plan.md`; §12 captures the applied async/TCO threads
+from our discussion for future review. The next section (**§3 — machine code & the CPU at a glance**)
+zooms back down to what those `call`/`ret` instructions *are* at the silicon level, closing the loop
+from source (§1) through the stack (§2) to the metal. The **GIL / threads vs async** thread we opened in
+§12a gets its full treatment in **Ch1 §3 (concurrency)**.
