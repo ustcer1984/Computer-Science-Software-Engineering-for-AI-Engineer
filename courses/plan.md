@@ -187,7 +187,9 @@ course track and are estimates, not deadlines. **You can redirect at any phase b
 Start at the bottom of the stack, land one immediately-useful SWE skill, and open the AI thread.
 - **M01 Ch1–4** — how computers & OS work (execution, memory, concurrency, I/O)
 - **M04 Ch1–2** — reading code & decomposition *(your clearest gap; instantly useful)*
-- **M12 Ch1** — how modern models work *(motivating, conceptual)*
+- **M12 Ch2** — beyond text: image/diffusion, audio, video, TTS *(AI thread — recalibrated 2026-06-10:
+  M12 Ch1 LLM-fundamentals skipped as known; non-text models are the genuine AI gap. Pitched at frontier
+  level.)*
 
 ### Phase 2 — Systems, web & data foundations  *(~5 weeks)*
 - **M01 Ch5** — Linux vs macOS vs Windows
@@ -272,9 +274,9 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 | M11 | Ch2 JavaScript | ⬜ | | |
 | M11 | Ch3 React model | ⬜ | | |
 | M11 | Ch4 FE architecture | ⬜ | | |
-| M12 Model Landscape | Ch1 How models work | 🔵 | §1 `01-how-models-work/01-transformers-tokens-and-inference.md` 🔵 draft (2026-06-10) | §1 opens the AI thread in Phase 1 (balanced interleave; AI track was untouched). Covers next-token prediction, tokens/BPE (+ SEA multilingual cost), embeddings-as-geometry, transformer/attention as matmul (ties to FlashAttention from his GPU reading), training (pretrain→SFT→RLHF) vs inference (prefill compute-bound / decode memory-bound, KV cache, sampling). Draft awaiting Q&A → finalize. |
-| M12 | Ch2 Beyond text | ⬜ | | |
-| M12 | Ch3 Choosing a model | ⬜ | | |
+| M12 Model Landscape | Ch1 How models work | ⏭️ | | **SKIPPED — already known (recalibrated 2026-06-10).** His own decks (`temp/context-window-titans.pdf`, `temp/deepseek-review.pdf`) show LLM theory is a *strength*: transformers/attention math, KV-cache cost, efficient-attention lineage (sparse→linear/kernel-trick→linear-attn-as-RNN/RetNet→Titans), MoE/MLA/MTP/FP8/quantization, RLHF/R1 pipeline; he reads & *critiques* frontier papers. Draft §1 written then deleted (below his level). |
+| M12 | Ch2 Beyond text | 🔵 | §1 `02-beyond-text/01-diffusion-and-image-generation.md` 🔵 draft (2026-06-10) | **AI thread for Phase 1 onward (his stated gap + goal "understand all model types").** He has NOT read papers on image/diffusion, audio, video, TTS. Pitch at his level (frontier, architecture-deep, physics lens). §1 (diffusion/image): autoregressive-vs-diffusion, forward/reverse process, noise-pred≡score≡Langevin/SDE-ODE, DDPM/DDIM/distillation, latent diffusion (≈MLA instinct), cross-attn + CFG, U-Net→DiT→flow-matching, video preview. Awaiting Q&A → finalize. Planned: §2 video (DiT/Sora) · §3 audio/speech/TTS · §4 multimodal & representation (CLIP/VLMs, embeddings). |
+| M12 | Ch3 Choosing a model | ⬜ | | Mostly practitioner-known; keep light/fast. |
 | M13 Building w/ LLMs | Ch1 Prompting/output | ⬜ | | |
 | M13 | Ch2 RAG | ⬜ | | |
 | M13 | Ch3 Tool use | ⬜ | | |

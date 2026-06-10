@@ -32,6 +32,22 @@ initial calibration from self-description + code survey of
 - AI/LLM integration (practitioner) — multi-provider (Gemini/Vertex, SEA-LION, OpenAI-compatible/
   OpenRouter), structured JSON output, a deliberately framework-less "graph-lite" pipeline,
   multilingual translation, guardrails (SEA-Guard), Langfuse tracing.
+- **LLM theory & architecture — a genuine STRENGTH, not a gap (recalibrated 2026-06-10 from two of his
+  own technical decks).** He understands transformers, attention math (QKV, the O(n²) quadratic cost,
+  the explicit KV-cache VRAM scaling), tokenization, embeddings, and training-vs-inference *cold* — and
+  goes far beyond: efficient-attention lineage (prompt/semantic compression → sparse attention/BigBird →
+  linear attention via the kernel trick & associativity → linear-attention-as-RNN/RetNet → Titans
+  test-time-memory with surprise/forget gates, MAC/MAG variants); and frontier training internals (MLA
+  low-rank KV compression, DeepSeekMoE auxiliary-loss-free load balancing with bias-only top-k, MTP,
+  FP8 mixed-precision with FP32 master weights, block-wise quantization with power-of-2 scalers, RLHF /
+  rule-based-reward RL, R1-Zero/R1 pipeline, distillation). He reads and *critiques frontier papers*
+  (DeepSeek V3/R1, Titans, RetNet) and reasons about them at the level of a strong ML engineer. **Do NOT
+  teach him LLM fundamentals — pitch the AI-algorithm track at frontier/paper-critique level or skip it.**
+  **BUT (his own words, 2026-06-10): the strength is LLM-specific.** Real **gap in other model types —
+  image/diffusion, audio, video, TTS** — has not read papers on them. This is the genuine AI gap and
+  serves his stated goal ("understand all model types"). → **M12 Ch2 (Beyond text) is the AI thread to
+  keep and teach properly**, pitched at his level (frontier, architecture-deep, physics lens welcome).
+  M12 Ch1 (how LLMs work) = SKIP/known.
 - SQL — basic-solid; parameterized queries.
 
 **Gaps (consistent across BOTH repos = real signal):**
@@ -70,6 +86,26 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-10 — AI-knowledge recalibration from two of his own decks (`temp/context-window-titans.pdf`
+  22 Apr 2025; `temp/deepseek-review.pdf` 18 Feb 2025).** He asked me to assess his LLM knowledge by
+  reading them. Verdict: **his LLM theory is far ahead of where the plan assumed.** The draft M12 Ch1 §1
+  (tokens/embeddings/attention/training-vs-inference) is *entirely below his level* — he teaches this
+  material. **Context-window deck:** a rigorous survey of efficient attention — quadratic-cost VRAM math,
+  sparse attention, the linear-attention kernel trick (associativity reorder), linear-attention-as-RNN
+  (RetNet), and Titans (test-time neural memory, surprise/forget gates, MAC/MAG) — current to Jan 2025
+  papers. **DeepSeek deck:** deep architecture (MLA, aux-loss-free MoE, MTP, FP8 mixed precision, block
+  quantization) + a genuinely sharp *critical* analysis ("a mixture of achievements and lies"): separates
+  the "low cost" (V3/pretraining) from "best performance" (R1/post-training) claim, identifies the hidden
+  variable (high-quality CoT **data**, not the simple RL), spots the language-mixing/"aha-moment" tell,
+  and ends with intellectual honesty ("I do NOT know" where he can't prove it). **Signals confirmed/new:**
+  (1) LLM architecture/training is a real strength — move it OUT of the gap column. (2) His distinctive
+  edge again: **hardware-grounded reasoning** (the H800-vs-H100 FP-throughput/NVLink constraint analysis —
+  physics/semiconductor lens) and **skeptical "read between the lines" critical thinking** (the standout
+  meta-skill). (3) **How he learns/consolidates: by building critical, frontier-level presentations** —
+  so teach him by giving frontier material to *critique*, not fundamentals to absorb. **Action:** recalibrate
+  the AI-algorithm track (M12–M14) to frontier/paper level or skip; redirect the freed energy to his real
+  gaps (SWE decomposition/testing/types, CS internals, cloud, frontend, eval rigor). His own Osmani-mapping
+  read already pointed here.
 - **2026-06-10 — M04 Ch1 §1 (navigating an unfamiliar codebase) ✅ finalized.** He came in already
   using most of the strategies (three-altitude model, entry-point first, data-flow tracing, monolith
   navigation). Session added no new concepts — it *confirmed* existing practice and gave it names.
