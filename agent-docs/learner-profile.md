@@ -4,9 +4,10 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-09 (v3 — added reading-track progress + signals from the 2026-06-09 reading
-session). Prior: v2 (2026-06-08) corrected after learner feedback; initial calibration from
-self-description + code survey of `/home/zhangzhou/Desktop/Projects/aquarium-main` and
+Last updated: 2026-06-10 (v4 — added 2026-06-10 reading session: energy/thermal reframing of GPU
+perf + Osmani career-shift mapping). Prior: v3 (2026-06-09) added reading-track progress;
+v2 (2026-06-08) corrected after learner feedback; initial calibration from self-description + code
+survey of `/home/zhangzhou/Desktop/Projects/aquarium-main` and
 `/home/zhangzhou/Desktop/Projects/arena-concept-experiment`).
 
 ## Background
@@ -109,6 +110,33 @@ learning surfaces.
   re-deriving principles over memorising; appreciates explicit cost/trade-off framing.
 
 ## Learning progress (reading track)
+- **2026-06-10 — second reading entry ✅ finalized** (`upskill-readings/2026/06/10-gpu-performance-and-the-ai-era-engineer.md`):
+  (1) Horace He *Making Deep Learning Go Brrrr From First Principles* (compute/memory/overhead regimes,
+  arithmetic intensity, operator fusion); (2) Addy Osmani *The Next Two Years of Software Engineering*.
+  **Reading #1 — the standout signal:** he understood the article fast (operator fusion was the one new
+  piece) and immediately **reframed the whole time/speed framework onto the energy/power/heat axis** —
+  unprompted, his physics + semiconductor-failure-analysis lens. He worked the full picture: data
+  movement dominates energy even more than time (~600–1000× DRAM-vs-FLOP), the regimes remap (compute-
+  bound = most energy-efficient; memory-bound decode = wasteful; overhead-bound = doubly bad via leakage),
+  and — the genuinely sharp insight — **"time is the `max`, energy is the `sum`": overlap hides time but
+  not joules, so the roofline can mislead on power.** Took the three energy-only levers (static/leakage +
+  race-to-idle; the V²f cubic wall → slow-and-wide → why GPU beats CPU on perf/watt; precision as a
+  quadratic compute + linear movement win) and the thermal feedback loop (leakage↑ with T → throttle →
+  perf, spatial hotspots in memory/interconnect = his old failure-analysis world). **Confirms & sharpens
+  the prior signal:** GPU/AI-hardware is a real strength, and the *distinctive lens he brings* is
+  **energy/thermal/device physics** — he learns systems best by re-deriving them through the physics he
+  already owns. Flagged follow-ups: on-package HBM as an energy-per-bit (wire-length→capacitance) move;
+  energy-per-token back-of-envelope. **Reading #2:** he used it to check whether his **course plan**
+  follows the article's advice — it does, almost point-for-point (M07/M08/M09/M10 = Osmani's complementary-
+  skills list; M04–M06 = the "know when to distrust AI" verification skill; M14 = composer/orchestrator).
+  Two takeaways recorded: the alignment is **convergent not copied** (plan predates his reading it →
+  corroboration), and **he's *ahead* on the composer/agent-orchestration shift** (already builds framework-
+  less agent pipelines — consistent with the 06-09 applied-context-engineering signal; a real edge to lean
+  into). **Honest watch-item surfaced & accepted:** the "distrust AI" skill is a *doing*-skill that cashes
+  out in his weakest areas (testing/types/reading diffs); the plan front-loads *understand* and back-loads
+  *build/demonstrate* to Phase 6 — lever if it feels too theoretical is to pull real-code (arena/aquarium)
+  application forward. **Mild metacognitive note:** he sought some reassurance the path is correct (asked
+  twice if the courses match the recommendation) — worth periodically affirming the plan is on-track.
 - **2026-06-09 — first reading entry ✅ finalized** (`upskill-readings/2026/06/09-async-concurrency-and-agent-context.md`):
   (1) Python concurrency — async/await vs threading; (2) Anthropic *context engineering for agents*. He
   drove both into strong Q&A. **Async/eval thread:** correctly reasoned that for CPU-bound work threads

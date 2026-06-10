@@ -1,4 +1,4 @@
-# Daily Reading — 2026-06-10  🔵 draft (not yet finalized)
+# Daily Reading — 2026-06-10  ✅ finalized
 
 **Today's two readings (diversified):**
 1. **AI / systems — from first principles** — *Making Deep Learning Go Brrrr From First Principles* (Horace He) *(directly extends yesterday's M01 Ch1 §3 GPU work, and is the conceptual bridge into M01 Ch2 — Memory)*
@@ -6,7 +6,7 @@
 
 > Why these: in §3 you pushed the whole session into **GPU memory hierarchy, latency-hiding, FlashAttention, and why LLM inference is memory-bound**. Reading #1 is the canonical first-principles framework that *names* what you were circling — every kernel is **compute-bound, memory-bandwidth-bound, or overhead-bound** — and gives you the back-of-envelope test to tell which. It's the perfect on-ramp to M01 Ch2 (Memory) and to M12. Reading #2 deliberately switches scope: it's the clearest recent map of how the *engineer's role* shifts as agents do more of the typing — i.e. the job you're actually skilling up for.
 
-> **Note (draft):** the two **"What we worked out"** sections that will sit at the bottom get written when you say *finalize* — they're the durable takeaways from our Q&A. For now, read top-down.
+> **Finalized note:** the two **"What we worked out"** sections at the bottom are the durable takeaways from our Q&A — read those first on review; the source summaries above are the supporting detail. The big one (#1) is the **energy/power/heat reframing you drove** — the article is all about *time*, you asked what happens when the axis is *joules*.
 
 ---
 
@@ -74,9 +74,56 @@ flowchart TD
 
 ---
 
+## What we worked out — the same framework on the *energy* axis (you drove this)
+
+Operator fusion was the new piece for you; you understood the rest, then flipped the article from **time** to **energy/power/heat** — your physics/failure-analysis lens. The reframing that mattered:
+
+**The one fact:** a FLOP is nearly free; the joules are in *moving the bytes*. Horowitz's ladder (45 nm, order-of-magnitude): FP add ≈ 0.9 pJ · FP mult ≈ 3.7 pJ · on-chip SRAM read ≈ 5 pJ · 10 mm wire ≈ 26 pJ · **off-chip DRAM/HBM read ≈ 640 pJ**. So a DRAM fetch costs **~600–1000× a FLOP** — the energy bill is a *data-movement* bill, even more lopsidedly than the time bill. And the trend is *worse* in energy: per-FLOP energy keeps falling with each node, per-byte-moved energy barely does (same "compute outruns memory" asymmetry as the time roofline, starker).
+
+**The regimes remap cleanly:**
+- **Compute-bound = the *most energy-efficient* place** — high arithmetic intensity means the expensive DRAM read is amortized over many cheap FLOPs.
+- **Memory-bandwidth-bound = the energy-*wasteful* regime** — haul weights from HBM, do a trickle of math, discard. This is LLM **decode**: not just slow, but power-hungry per useful token.
+- **Overhead-bound = doubly bad** — the GPU sits idle *but still burns power* (leakage/static).
+
+⇒ **Operator fusion and FlashAttention are energy wins for the *same* reason they're speed wins** — they delete HBM round-trips, and each deleted trip saves ~1000× the energy of the math. **Arithmetic intensity (FLOPs/byte) is the master lever for *both* speed and perf/watt** — which is *why* the industry converges on it.
+
+**The one genuine divergence (the keeper):** **time is governed by the `max`; energy by the `sum`.** In time, compute and memory transfers *overlap* — wall-clock ≈ `max(compute_time, mem_time)`, so the smaller one is hidden (that's the whole roofline). Energy has **no hiding**: `E ≈ E_compute + E_movement + P_static·time` — you pay joules for every FLOP *and* every byte regardless of overlap. So an optimization that's "free" in time (hidden behind something slower) can still cost real power. **The roofline can mislead you about energy.**
+
+**Three levers energy adds that the time article doesn't foreground:**
+1. **Static/leakage power** → "overhead-bound" is worse in joules than seconds (paying to keep idle silicon hot). Motivates batching/high utilization, and **"race to idle"** (finish fast, power-gate — the `P_static·time` term shrinks with time even though the dynamic work-energy doesn't).
+2. **The cubic wall:** `P ∝ C·V²·f`, and higher `f` needs higher `V` ⇒ power scales ~`f³`. So **slow-and-wide beats fast-and-narrow** — the deep reason a GPU (thousands of slow lanes) crushes a CPU (few 5 GHz cores) on perf/watt. Ties straight back to §3 latency-hiding-via-parallelism.
+3. **Precision is a double win:** multiplier energy ~ (mantissa bits)², movement ~ bits (linear). FP16/FP8/INT8 cut compute energy quadratically *and* move fewer bytes ⇒ pushes the memory-bound decode regime back toward efficiency.
+
+**Heat = the same joules, plus a feedback loop.** ~100% of the electrical energy becomes heat, so power ≈ heat. Two things your old world already knows: (a) it's **spatial** — data-movement-heavy work lights up the **memory controllers / HBM stacks / interconnect**, not just the compute core → hotspots in exactly the structures the FLOPs-spec ignores (electromigration, thermal cycling). (b) **Thermal feedback couples energy back to performance** — leakage rises with temperature, and chips **thermally throttle** (`f`↓) when hot, sliding you back along the time roofline. So energy → heat → throttle → speed: the two axes aren't independent; they close a loop.
+
+**The synthesis:** speed and energy point the *same direction* (max arithmetic intensity, fuse to kill data movement) because data movement dominates both — but energy adds three knobs time hides (leakage/idle, the V²f cubic wall, the precision-squared win) and reframes the goal from *"hide the slow part"* to *"don't **do** the expensive part, because joules don't overlap away."* *(Possible follow-ups you flagged interest in: why on-package HBM is fundamentally an energy-per-bit move via wire length → capacitance; a back-of-envelope on the energy to generate one token.)*
+
+---
+
+## What we worked out — Osmani vs. your actual plan
+
+You checked whether your **course track** is following the article's advice. Verdict: **yes, almost point-for-point** —
+
+| Osmani's "practical takeaways for aspiring architects" | Your plan |
+|---|---|
+| Learn complementary skills: system design, cloud, DevOps, security | M07 · M08 · M09 · M10 — *literally his list* |
+| Own the hard 20% (architecture, design) | M07 (architect goal) · M04 decomposition |
+| "Know when to distrust AI" (verification) | M04 Ch1 · M05 types · M06 testing |
+| Understand the underlying logic, don't just accept AI output | M01–M03 fundamentals |
+| T-shaped: deep spike + broad base | interleaved breadth + your AI/LLM spike (M12–M15) |
+| Author → **composer** / orchestrate agents | M14 Agentic Systems |
+
+**Two things that came out of it:**
+1. **The alignment is *convergent*, not copied.** The plan was built 2026-06-08 from your own profile/gaps, *before* you read this. Two independent routes — your self-assessment and a frontier-watcher's forecast — landed on the same destination. That's the reassuring signal.
+2. **You're *ahead* on the "composer" shift, not catching up.** Most engineers must grow into orchestrating agents; you already build framework-less agent pipelines (+ yesterday's "applied context engineering" signal). That's a real edge, worth leaning into.
+
+**The honest watch-item (curriculum level):** Osmani's core skill — "know when to distrust AI" — is a *doing*-skill that cashes out in your two weakest areas (**testing, types, reading diffs critically**). The plan front-loads the *understand* half and parks the *build/demonstrate* half in Phase 6. Concept-first is right for how you learn — but the lever to pull if it ever feels too theoretical is to **pull real-code application (your arena/aquarium) forward** instead of waiting for the capstone. The reflection that stuck: *of the five shifts, which am I closing by reading vs. by doing?*
+
+---
+
 ## Sources
 - [Making Deep Learning Go Brrrr From First Principles — Horace He (2022)](https://horace.io/brrr_intro.html)
 - [FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness — Dao et al. (2022)](https://arxiv.org/abs/2205.14135)
 - [The Next Two Years of Software Engineering — Addy Osmani (Jan 2026)](https://addyosmani.com/blog/next-two-years/)
 
-*Study, then Q&A with me. Say "finalize" when done and I'll rewrite this to match how you actually think about it + update your learner profile.*
+*Finalized 2026-06-10. The two "What we worked out" sections are the durable record — the energy reframing (#1) is the part you'll want on review.*
