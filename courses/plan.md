@@ -272,7 +272,7 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 | M11 | Ch2 JavaScript | ⬜ | | |
 | M11 | Ch3 React model | ⬜ | | |
 | M11 | Ch4 FE architecture | ⬜ | | |
-| M12 Model Landscape | Ch1 How models work | ⬜ | | |
+| M12 Model Landscape | Ch1 How models work | 🔵 | §1 `01-how-models-work/01-transformers-tokens-and-inference.md` 🔵 draft (2026-06-10) | §1 opens the AI thread in Phase 1 (balanced interleave; AI track was untouched). Covers next-token prediction, tokens/BPE (+ SEA multilingual cost), embeddings-as-geometry, transformer/attention as matmul (ties to FlashAttention from his GPU reading), training (pretrain→SFT→RLHF) vs inference (prefill compute-bound / decode memory-bound, KV cache, sampling). Draft awaiting Q&A → finalize. |
 | M12 | Ch2 Beyond text | ⬜ | | |
 | M12 | Ch3 Choosing a model | ⬜ | | |
 | M13 Building w/ LLMs | Ch1 Prompting/output | ⬜ | | |
