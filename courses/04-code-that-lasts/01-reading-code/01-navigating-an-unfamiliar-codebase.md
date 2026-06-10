@@ -3,7 +3,9 @@
 > **Module:** Writing Code That Lasts
 > **Chapter:** Reading Code Well
 > **Section:** Navigating an unfamiliar codebase — how to orient fast, trace data flow, and not drown
-> **Status:** 🔵 in progress — 2026-06-10
+> **Status:** ✅ finalized 2026-06-10 — you already used most strategies; session confirmed git as
+> the main gap. Two real cases added in §11: environment leakage in a multi-step pipeline (Case 1)
+> and understanding-driven refactoring + copy-paste inheritance in an eval repo (Case 2).
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** none formal, but M01 Ch1 (especially §1 bytecode and §3 the datapath) gives useful
@@ -359,6 +361,68 @@ surprising to our Q&A.
 
 ---
 
+## 11. Applied — from your own experience
+
+You came to this session already using most of the strategies. The session surfaced two real cases that
+add texture the theory alone cannot give.
+
+### Case 1 — pipeline fragility from environment leakage
+
+A colleague vibe-coded a multi-step data pipeline, developing each step independently. It ran on his
+machine but broke on others. Root cause: some steps used relative paths; others hardcoded absolute
+paths. Each step assumed its own working-directory context instead of receiving paths as explicit
+inputs from a shared config.
+
+**The technique that found it:** data-flow tracing (§4), applied to artifact files rather than
+in-memory objects. You followed the JSON files that each step wrote and the next step read, and found
+where the path assumptions diverged. Same move as tracing a user request through a service — just
+the "data" was files on disk.
+
+**The pattern it names:** **environment leakage** — configuration (paths, environment variables,
+resource locations) embedded inside individual steps instead of managed at a higher level. The fix is
+a shared config that all steps read from. This principle has a formal name in the **twelve-factor app**
+methodology (factor 3: store config in the environment, not in code). We'll cover this properly in
+M09 DevOps; you've already paid the tuition.
+
+**The broader lesson you drew:** settings, resource paths, and environment variables must be managed
+at one level above the steps that use them. Steps should receive their environment; they should not
+assume it.
+
+### Case 2 — understanding-driven refactoring in an eval repo
+
+You were onboarded to a poorly documented eval repo (no docstrings, no type hints, minimal comments)
+and needed to add a new dataset/eval. Two moves stand out.
+
+**First move — add scaffolding before reading.** Your first PR used a Cursor agent to add docstrings,
+type hints, and comments to the existing code *before* you tried to understand it. This is a
+sophisticated technique: you generated the map the codebase should have had, then used that map to
+navigate. Most engineers either struggle through unreadable code or ask someone. You created the
+reading infrastructure first, then read. This is a real technique — sometimes called
+**understanding-driven refactoring** — and it scales well with AI agents precisely because generating
+documentation from code is something they do reliably.
+
+**Second move — orient + trace a similar example.** After the scaffolding PR, you used exactly the
+two-pronged approach from §1:
+1. Start from `main` → understand the overall pipeline (orchestration → inference → evaluation).
+2. Find an existing eval similar to yours → trace it as a worked example.
+
+This is the fastest path in any "add to an existing system" task: understand the shape, find the
+closest existing example, follow it.
+
+**What you found — copy-paste inheritance.** Class A was nominally a child of class B (which many
+other classes also used as a base), but the file that defined A had *copied* B's implementation
+instead of importing it. This is called **copy-paste inheritance** (or accidental duplication): it
+looks like inheritance from the outside but behaves like a fork. The danger is silent divergence —
+when B is fixed or updated, A's copy does not change. Your instinct to refactor it before building
+on top was exactly right. Building a new eval on a diverged copy of B would have been invisible
+tech debt from day one.
+
+**The sequence you used** — orient → find problems → fix problems → add your own work — is more
+disciplined than most developers follow, and it paid off: when the refactored code ran smoothly, you
+had real confidence to add your new eval.
+
+---
+
 ## References
 
 *(Links verified 2026-06-10.)*
@@ -380,12 +444,12 @@ surprising to our Q&A.
 
 ### What's next
 
-After today's session and Q&A, this section will be finalized and the plan updated. The natural follow-on
-paths:
+✅ **Finalized 2026-06-10.** Marked done in `courses/plan.md`. The main gap this session surfaced is
+**git as a reading and history tool** — you want a concept + feature survey, not command memorization.
+A dedicated reading entry is queued for an upcoming day.
 
-- **M04 Ch1 §2 (Tracing data flow in depth)** — a full session on sequence diagrams, async call
-  traces, and debugging by reading rather than print-statements.
+Upcoming course steps (Phase 1):
+- **M04 Ch1 §2 (Tracing data flow in depth)** — sequence diagrams, async call traces, debugging by
+  reading rather than by `print`.
 - **M12 Ch1 (How modern models work)** — the Phase 1 parallel track; especially motivated by the GPU
-  threads from M01 Ch1 §3.
-
-Your call on which to hit next.
+  thread from M01 Ch1 §3.

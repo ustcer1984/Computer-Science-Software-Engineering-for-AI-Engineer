@@ -4,10 +4,11 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-10 (v4 — added 2026-06-10 reading session: energy/thermal reframing of GPU
-perf + Osmani career-shift mapping). Prior: v3 (2026-06-09) added reading-track progress;
-v2 (2026-06-08) corrected after learner feedback; initial calibration from self-description + code
-survey of `/home/zhangzhou/Desktop/Projects/aquarium-main` and
+Last updated: 2026-06-10 (v5 — added M04 Ch1 §1 session: code-reading strategies mostly owned;
+git confirmed as gap; two real-world cases recorded). Prior: v4 (2026-06-10) reading session;
+v3 (2026-06-09) added reading-track progress; v2 (2026-06-08) corrected after learner feedback;
+initial calibration from self-description + code survey of
+`/home/zhangzhou/Desktop/Projects/aquarium-main` and
 `/home/zhangzhou/Desktop/Projects/arena-concept-experiment`).
 
 ## Background
@@ -69,6 +70,22 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-10 — M04 Ch1 §1 (navigating an unfamiliar codebase) ✅ finalized.** He came in already
+  using most of the strategies (three-altitude model, entry-point first, data-flow tracing, monolith
+  navigation). Session added no new concepts — it *confirmed* existing practice and gave it names.
+  **Gap confirmed: git as a reading and history tool** (`git log`, `git blame`, `git log -S`) — he
+  knows it exists but does not reach for it habitually. Wants a concept + feature survey (not command
+  memorization) → **git reading entry queued** for an upcoming reading day.
+  Two real-world cases he shared, now in §11: (1) **environment leakage** — a colleague's pipeline
+  broke on every machine but his because each step hardcoded its own path assumptions; he traced the
+  artifact data-flow to find the divergence. Lesson: config/paths must be managed at one level above
+  the steps that use them (twelve-factor principle). (2) **Understanding-driven refactoring** — when
+  onboarded to a poorly documented eval repo, his first PR used Cursor to add docstrings/type hints
+  as scaffolding *before* reading the code. Then found and fixed **copy-paste inheritance** (class A
+  nominally inheriting class B but actually holding a silent copy of it). **New signal:** he uses AI
+  agents deliberately as a reading/refactoring tool, not just a writing tool — a more mature
+  workflow than most at his experience level. **Confirmed prior signal:** orient → trace similar
+  example → fix → build is his natural sequence; disciplined and effective.
 - **2026-06-09 — M01 Ch1 §3 (machine code & the CPU) ✅ finalized → Ch1 COMPLETE.** He said up front
   he *already understood most of the material* (machine code, memory hierarchy, pipelining, the clock
   wall, SIMD/GPU), so the session ran almost entirely on **his own questions one layer past the text**,

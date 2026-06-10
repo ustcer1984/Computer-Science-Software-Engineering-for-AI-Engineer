@@ -238,7 +238,7 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 | M03 | Ch3 Graph/NoSQL design | ⬜ | | |
 | M03 | Ch4 Efficiency | ⬜ | | |
 | M03 | Ch5 Database security | ⬜ | | |
-| M04 Code That Lasts | Ch1 Reading code | 🔵 | §1 `01-reading-code/01-navigating-an-unfamiliar-codebase.md` 🔵 (2026-06-10) | In progress. §1: the three-altitude model, entry points, data-flow tracing, monolith navigation, git as a reading tool. |
+| M04 Code That Lasts | Ch1 Reading code | 🔵 | §1 `01-reading-code/01-navigating-an-unfamiliar-codebase.md` ✅ (2026-06-10) | §1 finalized. Already using most strategies; git confirmed as gap → reading entry queued. §11 has two real cases: environment leakage in a pipeline; understanding-driven refactoring + copy-paste inheritance in an eval repo. |
 | M04 | Ch2 Decomposition | ⬜ | | |
 | M04 | Ch3 Design patterns | ⬜ | | |
 | M04 | Ch4 Smells & naming | ⬜ | | |
