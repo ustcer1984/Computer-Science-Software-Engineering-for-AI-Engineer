@@ -6,7 +6,7 @@
 
 Author of plan: Claude (calibrated against your self-description + a survey of `aquarium-main` and
 `arena-concept-experiment`).
-Last updated: 2026-06-08
+Last updated: 2026-06-10
 
 ---
 
@@ -238,7 +238,7 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 | M03 | Ch3 Graph/NoSQL design | ⬜ | | |
 | M03 | Ch4 Efficiency | ⬜ | | |
 | M03 | Ch5 Database security | ⬜ | | |
-| M04 Code That Lasts | Ch1 Reading code | ⬜ | | |
+| M04 Code That Lasts | Ch1 Reading code | 🔵 | §1 `01-reading-code/01-navigating-an-unfamiliar-codebase.md` 🔵 (2026-06-10) | In progress. §1: the three-altitude model, entry points, data-flow tracing, monolith navigation, git as a reading tool. |
 | M04 | Ch2 Decomposition | ⬜ | | |
 | M04 | Ch3 Design patterns | ⬜ | | |
 | M04 | Ch4 Smells & naming | ⬜ | | |
