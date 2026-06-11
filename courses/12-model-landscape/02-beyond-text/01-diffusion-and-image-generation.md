@@ -5,8 +5,13 @@
 > **Section:** How image (and, by extension, video) generation actually works — the diffusion paradigm,
 > from the thermodynamic intuition through the score/SDE view to latent diffusion, guidance, and the
 > DiT/flow-matching frontier.
-> **Status:** 🔵 draft 2026-06-10 — recalibrated AI thread. You know LLMs cold; this is the *other*
-> generative paradigm you haven't read the papers on. Pitched at your level. Q&A → finalize.
+> **Status:** ✅ finalized 2026-06-10. You'd already read the DDPM paper and built a strong
+> physics-grounded mental model (signal/noise, SNR, the model as a noise filter). The session was a
+> high-level Q&A that *confirmed* the parts you had right (SNR as the native axis; non-sequential
+> training; coarse→fine) and corrected two mechanisms (sampling is **not** resonance/amplification →
+> it's **annealed Langevin descent on a learned energy landscape**; multi-step is **not** noise adding
+> detail → it's **integrating a curved trajectory**). Your editing analysis independently re-derived
+> production techniques. All captured in §13.
 
 **Estimated study time:** 3 hours (paper-grounded; budget extra if you follow the citations).
 **Prerequisites:** none new — your LLM/transformer knowledge transfers more than you'd expect (the modern
@@ -171,6 +176,27 @@ numerical integrator and take big steps). DDPM ≈ a particular SDE discretizati
 The "many steps because it's an SDE / few steps because it's an ODE" distinction maps directly onto
 stochastic-vs-deterministic integration — a thing you already understand.
 
+### The frame to hold: annealed descent on a learned energy landscape
+
+Since the score is `−∇(energy)`, **sampling is noisy gradient descent down a learned energy surface,
+with the noise level acting as temperature, cooled from hot to cold** — i.e. simulated annealing /
+annealed Langevin dynamics, which you already own from stat-mech. Start hot → the (smoothed) landscape
+`p_t` is flat and every state is reachable; cool slowly → you settle into one of many **basins**
+(image modes). *Which* basin you land in is set by the trajectory — and under the deterministic ODE,
+entirely by the **initial seed**. This is the rigorous replacement for "pure noise contains all
+signals and the filter amplifies a subset": the seed *selects* a basin, but the image content is
+**synthesized** by the learned dynamics, not linearly amplified out of frequency components sitting in
+the noise. The noise schedule literally *is* the temperature schedule.
+
+Two precise hooks worth carrying:
+- **Tweedie's formula:** the optimal one-shot denoiser output is the *posterior mean* `E[x₀ | xₜ]`. At
+  high noise that mean is a blurry average over all plausible images (hence "few steps → looks like a
+  house but no texture"); as noise drops it collapses to one specific, detailed sample. This is the
+  rigorous version of "extract the signal."
+- **Coarse→fine = low-freq→high-freq.** Natural images have ~1/f spectra; high-noise steps fix
+  low-frequency layout, low-noise steps paint high-frequency detail. The spectral reading of
+  "structure first, detail later" is correct.
+
 ---
 
 ## 5. Sampling — the latency story (the part that bites in production)
@@ -184,10 +210,28 @@ network evaluation. The progression of fixes:
 - **Distillation → consistency models (Song et al., 2023) / progressive distillation** — train a student
   to jump many steps at once → **1–4 steps**. This is the frontier of "real-time" image/video gen.
 
+### *Why* multiple steps — the correct reason (a Q&A correction worth pinning)
+
+It is **not** that each step re-injects noise to "add new detail." The clean disproof: the deterministic
+ODE samplers (DDIM, probability-flow ODE) add **zero** noise after the seed and still produce fully
+detailed images. The real reason is **numerical-integration accuracy**: the noise→data trajectory is
+**curved** (the score/velocity field is nonlinear in `x` *and* the target landscape sharpens as it
+cools), so one big linear step overshoots → blur/artifacts; many small steps track the curve. The
+"precision" that forces many steps is **step-size / truncation error**, not floating-point bit-width
+(FP16-vs-FP32 is a minor, separate effect).
+
+The proof that *curvature* is the cause: **consistency/distillation models reach 1–4 steps by learning
+the curved map directly** — if the bottleneck were noise re-injection or float precision, that couldn't
+work. And the stochastic samplers that *do* re-add noise (DDPM/SDE) use it only as **error-correction**
+("churn" that scrubs accumulated integration error — Karras et al.'s *EDM* analyzes exactly this); it is
+optional and never a detail-source.
+
 > **The mental model to carry:** diffusion trades a *single hard problem* (model `p(x)` directly, as a
 > GAN or autoregressive model must) for *many easy problems* (denoise a little, `T` times). The price is
 > the iterative sampling loop — and the last five years of diffusion research is largely about **paying
 > down that loop** (fewer, bigger steps), exactly as LLM serving is about paying down the decode loop.
+> The number of *inference* steps is decoupled from the "1000" training framing — you choose the
+> discretization of a continuous trajectory.
 
 ---
 
@@ -262,6 +306,18 @@ SD3 and Flux): reframe generation as learning a **velocity field** that transpor
 and straighter paths mean fewer integration steps → faster sampling. If you read one set of papers past
 this section, read these — they're where image/video generation is heading, and the ODE framing from §4 is
 the prerequisite you'll already have.
+
+### How an LLM produces images — decoupled vs unified
+
+Two regimes, and the distinction matters:
+- **Decoupled (the common production setup):** the LLM writes a rich text prompt; a *separate* diffusion
+  model renders it. **DALL·E 3** works this way — GPT and the image generator are different models with
+  no shared weights. The LLM is a prompt author, nothing more.
+- **Unified (the frontier):** one transformer carries both an autoregressive text objective *and* a
+  diffusion image objective. **Transfusion** (Zhou et al., 2024) and **Chameleon** are the reference
+  points; native image generation in GPT-4o / Gemini is the productized version. This is close to the
+  "one shared backbone, different generative heads" intuition — but it's the *frontier*, not how most
+  shipped systems work today.
 
 ---
 
@@ -341,25 +397,117 @@ for you.
 
 ---
 
-## 13. Applied — to your world (to be filled during our session)
+## 13. Applied — your own mental model (from the session)
 
-Placeholder for the Q&A. Likely threads given your background:
-- The physics reading of score matching / Langevin — where your intuition runs *ahead* of the ML framing,
-  and where the analogy breaks.
-- A critical-teardown angle on a "world model" video claim (your strongest mode).
-- Whether/where image or TTS generation is relevant to your SEA-LION / arena work, or purely knowledge.
+You came in having read the DDPM paper and built a physics-grounded model of diffusion. The session was
+a peer-level Q&A. Recording it because the *shape* of what you got right vs wrong is the real lesson.
+
+### What you had right (and sharper than most published explainers)
+
+1. **"It's all about SNR; the model is a noise filter that raises SNR."** Correct, and the SNR axis is
+   the *native* coordinate system of the rigorous theory — Kingma et al.'s **Variational Diffusion
+   Models** parameterizes the whole loss as an integral over log-SNR. Most blogs never say this.
+2. **"Step-by-step noising is just a way to generate samples at different SNR; training needn't be
+   sequential — i.i.d. {noisy, clean} pairs at well-distributed SNR would train the same model."**
+   Correct, *and that is literally how DDPM trains* (§3): sample a random `t`, jump to that noise level
+   via the closed form, one loss, backprop — no per-image chain. The Markov chain is a derivation
+   device, not a training procedure. You saw through a misconception many people hold.
+3. **"Few steps → looks like the category but lacks detail."** Correct — that's the posterior-mean blur
+   (Tweedie) and the low-freq-first / high-freq-later spectral order. Your spectral intuition holds.
+
+### The two mechanisms you had wrong — and the corrected versions
+
+1. **Not "resonance / amplification of signals present in the noise" → annealed Langevin descent on a
+   learned energy landscape (§4).** The denoiser is a nonlinear learned map; image content is
+   *synthesized*, not linearly amplified out of the seed's frequency components. What the seed *does*
+   set is which **basin** you fall into. Keep "the seed selects the sample"; drop "the filter amplifies
+   pre-existing signal."
+2. **Not "multi-step keeps adding noise to pick up new detail" → integrating a curved trajectory (§5).**
+   You corrected this yourself mid-session: the deterministic sampler adds *no* noise; multiple steps
+   are needed because the noise→data path is **curved** (nonlinear score field + an annealing target),
+   so one big linear step overshoots. The forcing "precision" is step-size/truncation error, not float
+   bit-width. Proof: distillation learns the curved map directly → 1–4 steps.
+
+### Where your engineering instinct re-derived real, shipping techniques
+
+- **"The encoder is a reusable image embedder; freeze it, repurpose it."** Real — diffusion features are
+  used for discriminative tasks (**DIFT** / "Emergent Correspondence"; diffusion features for
+  segmentation). Caveat: it's a *noise-conditioned* encoder, so which `t` you query matters. Correction:
+  a **U-Net ≠ YOLO** architecturally (YOLO = backbone + FPN/PAN neck + detection heads, not a symmetric
+  encoder–decoder); the true shared idea is "a multi-scale feature backbone is reusable across tasks."
+- **"Align image embeddings with text embeddings so the LLM can consume them."** That principle *is*
+  **CLIP** (contrastive image-text alignment), and it's how VLMs ingest images — though via a CLIP ViT,
+  not the diffusion encoder.
+- **Image-editing drift ("remove the glasses, but the hair changes too").** Your diagnosis was right:
+  standard diffusion editing (**SDEdit**: noise partway, regenerate) re-samples the *whole* image with
+  nothing pinning the untouched regions. And both your proposed fixes are production reality:
+  - **Proposal 1 (agentic loop with deterministic editors):** a real, growing product direction; plays
+    to your agent-orchestration strength.
+  - **Proposal 2 (instruction → mask which features to freeze → apply as mask):** you independently
+    re-derived **masked inpainting + grounded segmentation** — the dominant localized-edit pipeline.
+    The "draw the boundary from the instruction" model exists: **GroundingDINO / SAM / Grounded-SAM**
+    turn "the glasses" into a mask; inpainting regenerates only inside it. The attention-space cousin
+    (no explicit mask, edit the cross-attention maps from §7) is **Prompt-to-Prompt**; the
+    instruction-trained editor is **InstructPix2Pix** (which still drifts — *why* mask methods win).
+
+**Signal for future sessions:** teach him non-text models **through the physics he owns** (energy
+landscapes, annealing, SDE/ODE, spectra) and let him **stress-test the model until it breaks, then give
+the precise why** — that's where the real learning happened here. His instinct for *system architecture*
+(reusable embedders, mask-based control, agentic edit loops) runs ahead of the literature he's read.
 
 ---
 
 ## References
 
-*(arXiv links above are stable; full verification of any added blog/video links at finalize, per your rule.)*
+*(All links verified 2026-06-10. The OpenAI Sora report bot-blocks automated fetchers but resolves
+normally in a browser.)*
 
-- The six papers in §12 are the spine.
+**The spine — diffusion theory & architecture (dependency order):**
+- **[Ho et al. — Denoising Diffusion Probabilistic Models (DDPM)](https://arxiv.org/abs/2006.11239)** —
+  the simple noise-prediction loss.
+- **[Song et al. — Score-Based Generative Modeling through SDEs](https://arxiv.org/abs/2011.13456)** —
+  the unifying score / forward-SDE / reverse-SDE / probability-flow-ODE picture (§4).
+- **[Ho & Salimans — Classifier-Free Diffusion Guidance](https://arxiv.org/abs/2207.12598)** — the
+  guidance-scale knob (§7).
+- **[Rombach et al. — High-Resolution Image Synthesis with Latent Diffusion Models](https://arxiv.org/abs/2112.10752)** —
+  Stable Diffusion; diffuse in a compressed latent (§6).
+- **[Peebles & Xie — Scalable Diffusion Models with Transformers (DiT)](https://arxiv.org/abs/2212.09748)** —
+  the transformer backbone (§8).
+- **[Lipman et al. — Flow Matching for Generative Modeling](https://arxiv.org/abs/2210.02747)** +
+  **[Liu et al. — Rectified Flow](https://arxiv.org/abs/2209.03003)** — the current frontier (§8).
+
+**The session corrections:**
+- **[Kingma et al. — Variational Diffusion Models](https://arxiv.org/abs/2107.00630)** — the **SNR**
+  parameterization that confirms your axis.
+- **[Karras et al. — Elucidating the Design Space of Diffusion Models (EDM)](https://arxiv.org/abs/2206.00364)** —
+  separates the deterministic ODE path from optional **stochastic churn** (error-correction), the precise
+  version of "noise's real role" (§5).
+- **[Song et al. — Consistency Models](https://arxiv.org/abs/2303.01469)** — learn the curved map directly
+  → 1–4 steps; the proof that step-count is about *curvature*, not noise (§5).
+
+**Representation reuse & multimodal (your architecture instincts):**
+- **[Radford et al. — CLIP: Learning Transferable Visual Models from NL Supervision](https://arxiv.org/abs/2103.00020)** —
+  image-text embedding alignment; how VLMs ingest images.
+- **[Tang et al. — Emergent Correspondence from Image Diffusion (DIFT)](https://arxiv.org/abs/2306.03881)** —
+  diffusion encoder features used for discriminative tasks.
+- **[Zhou et al. — Transfusion: one multimodal transformer (AR text + diffusion images)](https://arxiv.org/abs/2408.11039)** —
+  the "unified" generation frontier (§8).
+
+**Editing — your two proposals, as shipping techniques:**
+- **[Meng et al. — SDEdit](https://arxiv.org/abs/2108.01073)** — the noise-then-regenerate editing that
+  causes the drift you diagnosed.
+- **[Kirillov et al. — Segment Anything (SAM)](https://arxiv.org/abs/2304.02643)** +
+  **[Liu et al. — Grounding DINO](https://arxiv.org/abs/2303.05499)** — instruction/text → mask, for
+  masked inpainting (your Proposal 2).
+- **[Hertz et al. — Prompt-to-Prompt (cross-attention editing)](https://arxiv.org/abs/2208.01626)** — the
+  mask-free, attention-space cousin.
+- **[Brooks et al. — InstructPix2Pix](https://arxiv.org/abs/2211.09800)** — the instruction-trained editor.
+
+**Explainers / video:**
 - **[Lilian Weng — "What are Diffusion Models?"](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)** —
-  the best single math-complete blog explainer; matches your depth preference.
-- **[Sora technical report (OpenAI)](https://openai.com/index/video-generation-models-as-world-simulators/)** —
-  the spacetime-patch DiT video story, for the §9 preview and your critical-test exercise.
+  the best single math-complete blog explainer.
+- **[Sora technical report — "Video generation models as world simulators" (OpenAI)](https://openai.com/index/video-generation-models-as-world-simulators/)** —
+  the spacetime-patch DiT video story, for §9 and your critical-test exercise.
 
 ---
 

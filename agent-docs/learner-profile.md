@@ -86,6 +86,25 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-10 — M12 Ch2 §1 (diffusion & image generation) ✅ finalized.** First section of the
+  recalibrated AI thread (non-text models). He'd already read the DDPM paper and built a physics-grounded
+  mental model; the session was a *peer-level* Q&A. **What he had right (sharper than most explainers):**
+  (1) "it's all about SNR; the model is a noise filter" — and SNR is literally the VDM parameterization;
+  (2) **training needn't be sequential** — i.i.d. {noisy,clean} pairs at distributed SNR train the same
+  model, which is exactly how DDPM trains (he saw through a common misconception); (3) few-steps→blur =
+  posterior-mean / low-freq-first. **Two mechanisms he had wrong, then corrected:** (a) sampling is NOT
+  "resonance amplifying signals present in the noise" → it's **annealed Langevin descent on a learned
+  energy landscape** (seed selects the basin; content is *synthesized*, not amplified); (b) multi-step is
+  NOT "noise added each step to pick up detail" → it's **integrating a curved trajectory** (he corrected
+  this himself mid-session: deterministic ODE adds no noise; forcing factor is step-size/truncation error,
+  not float precision; proof = distillation→1–4 steps). **Standout signal — his engineering instinct runs
+  ahead of the papers he's read:** he independently re-derived CLIP-style image-text alignment, diffusion-
+  feature reuse for discriminative tasks, and (for image editing) **masked inpainting + grounded
+  segmentation** (SAM/GroundingDINO) *and* the agentic deterministic-editor loop — all production reality.
+  **How to teach him (confirmed):** non-text models **through the physics he owns** (energy landscapes,
+  annealing, SDE/ODE, spectra); let him stress-test a model until it breaks, then give the precise why.
+  His architecture/systems intuition (reusable embedders, mask-based control, agent loops) is a strength
+  to lean on. Next: §2 video (Sora/world-model critique = his strongest mode).
 - **2026-06-10 — AI-knowledge recalibration from two of his own decks (`temp/context-window-titans.pdf`
   22 Apr 2025; `temp/deepseek-review.pdf` 18 Feb 2025).** He asked me to assess his LLM knowledge by
   reading them. Verdict: **his LLM theory is far ahead of where the plan assumed.** The draft M12 Ch1 §1
