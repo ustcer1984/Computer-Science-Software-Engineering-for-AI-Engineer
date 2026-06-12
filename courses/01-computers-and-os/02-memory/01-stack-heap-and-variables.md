@@ -1,0 +1,452 @@
+# M01 · Ch2 · §1 — The Address Space: Stack, Heap, and What a "Variable" Really Is
+
+> **Module:** How Computers & Operating Systems Work
+> **Chapter:** Memory
+> **Section:** The process address space — stack vs heap, and the truth about Python names, values, and references
+> **Status:** 🔵 draft 2026-06-12 — generated for today. We'll Q&A, then I'll rewrite it to match how you
+> actually think and mark it ✅ in `courses/plan.md`.
+
+**Estimated study time:** 2–3 hours including reflection.
+**Prerequisites:** Ch1 §2 (the call stack; frames; `call`/`ret`) and Ch1 §3 (the memory hierarchy;
+registers≪L1≪L2≪L3≪RAM; the line *"a Python list is a million pointers scattered across the heap; a numpy
+array is one contiguous block"*). This section pays off the IOU in that line: **what *is* the heap, what *is*
+the stack, and why is a Python name a pointer in the first place?**
+
+---
+
+## Why this section exists (for *you*)
+
+In Ch1 you went *down* the stack: source → bytecode → silicon. This chapter goes *sideways* into the one
+resource every layer fights over — **memory** — and §1 lays the map the rest of the chapter (garbage
+collection in §2, "out of memory" in §3) is drawn on.
+
+Here's the thing worth being honest about: you write Python all day and it has *no visible memory model*.
+There are no pointers, no `malloc`, no `free`, no `&x`. That convenience is exactly why a class of your bugs
+is invisible to you until it bites — **aliasing, mutable shared state, the mutable-default-argument trap, "I
+copied the dict but it still changed."** Every one of those is a memory-model fact wearing a disguise. By the
+end of this section those bugs stop being spooky and become *predictable*, because you'll be able to draw
+what's actually in memory.
+
+A physics framing to carry, since it's served you before: think of the difference between an **intensive**
+and an **extensive** description. C makes you track the extensive thing — the actual bytes, where they live,
+who owns them, when they're freed. Python hands you an *effective theory*: "names refer to objects." That
+effective theory is correct and usually sufficient — but like any effective theory it has a **domain of
+validity**, and the bugs above are exactly the boundary where the abstraction leaks and you have to drop down
+to the real picture. This section gives you both layers and the map between them.
+
+By the end, these collapse into one model:
+
+- Why `a = b` for two lists means *mutating `a` also mutates `b`* — but for two ints it doesn't.
+- Why `def f(x, cache={}):` is one of the most famous footguns in Python, and why it's not a bug in Python at
+  all once you see the memory.
+- What a **stack overflow** physically is (you met it in §2 as deep recursion — now see the wall it hits).
+- Why "passing a big object to a function is expensive in C but free in Python" — and why that's the *same*
+  fact as the aliasing bug, not a different one.
+- The groundwork for §2: if nobody frees heap objects in Python, **who does, and how does it know when?**
+
+---
+
+## 1. The map: a process's address space
+
+When the OS launches your program, it hands the process the illusion of a single, private, contiguous block
+of memory addressed from `0` up to a huge number — its **virtual address space**. (It's an illusion the
+kernel maintains; the *real* RAM underneath is shared, paged, and scattered — that's an M01 Ch4 / OS story.
+For now, trust the illusion; it's what your program sees.)
+
+That space is carved into regions, and the two that matter for *how you write code* sit at opposite ends and
+grow *toward each other*:
+
+```mermaid
+flowchart TD
+    subgraph AS["One process's virtual address space (low → high addresses)"]
+        direction TB
+        T["<b>Text / code</b><br/>the machine instructions (Ch1 §3)<br/>read-only, fixed size"]
+        D["<b>Data / BSS</b><br/>globals, constants, static data<br/>fixed size, lives for the whole run"]
+        H["<b>HEAP</b> — grows ↓ upward<br/>dynamically allocated objects<br/>size unknown until runtime"]
+        GAP["· · · free space both sides grow into · · ·"]
+        S["<b>STACK</b> — grows ↑ downward<br/>call frames (Ch1 §2): locals, args,<br/>return addresses<br/>LIFO, bounded"]
+    end
+    T --> D --> H --> GAP --> S
+```
+
+The whole section is really about the **heap** and the **stack**. The other two regions (your compiled code,
+your globals/constants) are fixed-size and boring in the best way — allocated once, sized at load time, gone
+when the process dies. The action is in the two dynamic regions, and they have *opposite personalities*.
+
+---
+
+## 2. The stack — fast, automatic, and bounded
+
+You already know the stack's *behavior* from Ch1 §2: every function call pushes a **frame** (its locals,
+arguments, and the return address); every return pops it; it's strictly **LIFO**. Now look at it as *memory*.
+
+Allocating on the stack is almost free: there's a register, the **stack pointer**, that just points at the
+current top. To "allocate" 200 bytes for a new frame, the CPU **subtracts 200 from the stack pointer** (it
+grows downward) — one arithmetic instruction. To free the whole frame on return, it **adds 200 back**. No
+search, no bookkeeping, no "find a free spot." That's why stack allocation is the fastest memory there is, and
+why it's *automatic* — deallocation is not a decision anyone makes, it's a consequence of `ret`.
+
+This buys three properties and one hard limit:
+
+- **Speed** — bump a pointer; done. And because frames are reused constantly, the top of the stack is almost
+  always hot in L1 cache (Ch1 §4) — a double win.
+- **Automatic lifetime** — a local variable lives exactly as long as its frame. You cannot leak stack memory.
+- **LIFO discipline** — you can only free the top. Which is the catch:
+- **It's bounded.** The stack is a *fixed, smallish* region (commonly ~1–8 MB per thread). Nest function
+  calls deep enough — or recurse without a base case — and the stack pointer runs off the end of the region
+  into a guard page. That fault is **stack overflow**. In §2 you saw Python raise `RecursionError` *before*
+  this happens — now you know what it's protecting you from: CPython caps the recursion depth (default ~1000)
+  precisely so your Python frames never march the *native* C stack into the wall and hard-crash the
+  interpreter. The limit is a railing in front of a real cliff.
+
+> **The deep "why" behind the limit:** every Python call is implemented by a C call inside the interpreter, so
+> a Python frame sits on top of one or more *real* C stack frames. The native stack is the bounded region in
+> the map above. `sys.setrecursionlimit()` moves the railing; it does not move the cliff — set it too high and
+> you trade a clean `RecursionError` for a `SIGSEGV` segfault. (This is also *why* tail-call optimization, the
+> §2 thread you pulled on, matters: TCO reuses one frame instead of stacking N, so it never approaches the
+> wall. Python deliberately doesn't do it; Scheme/Erlang make it the point.)
+
+**What goes on the stack?** Frames and their contents. In C, that includes the *actual values* of local
+variables — an `int x = 5;` is literally five-ish bytes living *in the frame*. Hold that thought, because in
+Python it is **not** true, and that difference is the whole back half of this section.
+
+---
+
+## 3. The heap — flexible, long-lived, and not free
+
+The stack can only hold things whose size and lifetime match the LIFO call pattern. But most real data doesn't:
+a list that grows, an object returned from a function and used by the caller, a cache that outlives the
+function that filled it, anything whose size isn't known until runtime. All of that lives on the **heap**.
+
+The heap is a large region managed by an **allocator** (`malloc`/`free` in C; in Python, a layered allocator
+called *pymalloc* that you never call directly). When you ask for memory, the allocator must **find** a free
+chunk of the right size, mark it used, and hand back its address. When you're done, that chunk must be
+returned. Compared to the stack's "subtract from a register," this is genuinely expensive work:
+
+- **Allocation costs a search.** The allocator tracks free chunks (free lists, size classes) and has to pick
+  one. Orders of magnitude slower than a stack bump — though pooled allocators like pymalloc amortize it hard
+  for the small objects Python makes constantly.
+- **Lifetime is not automatic.** A heap object lives until *something explicitly frees it*. In C, you. In
+  Python/Java/Go, the **garbage collector** (the whole subject of §2). Get it wrong and you get the two
+  classic failure modes: free too early → **dangling pointer / use-after-free** (a security catastrophe, → M10);
+  never free → **memory leak** (→ §3, "out of memory").
+- **It fragments.** Allocate and free chunks of varying sizes long enough and the free space becomes Swiss
+  cheese — enough *total* free memory, but no single *contiguous* hole big enough for your next request. The
+  stack, freeing only from the top, never fragments.
+- **It's cache-cold.** Heap objects are scattered by address, so walking them is the *pointer-chasing*
+  cache-miss minefield from Ch1 §4. **This is the other half of "why numpy beats a Python list"**: the list's
+  elements are heap objects all over the address space; numpy's are one contiguous heap block. Same fact you
+  met in §3, now you can see the heap underneath it.
+
+```mermaid
+flowchart LR
+    subgraph cmp["Stack vs Heap — opposite trade-offs"]
+        direction TB
+        ST["<b>STACK</b><br/>• allocate = bump a register<br/>• freed automatically on return<br/>• LIFO, bounded (~MBs)<br/>• cache-hot<br/>• holds: frames, (in C) local values"]
+        HP["<b>HEAP</b><br/>• allocate = allocator search<br/>• freed manually / by GC<br/>• any order, large (~GBs)<br/>• cache-cold, can fragment<br/>• holds: objects, dynamic data"]
+    end
+```
+
+Keep this table in your head; everything else in the chapter hangs off it.
+
+---
+
+## 4. The pivot: what a "variable" actually is
+
+Now the conceptual core — and where Python diverges hard from the C mental model, in a way that explains your
+bugs. The question is deceptively simple: **when you write `x = something`, what is `x`?**
+
+There are two completely different answers, and most languages pick one.
+
+### Model A — "a variable is a box" (value semantics: C, C++, Rust, Go structs, primitives in Java/JS)
+
+```c
+int x = 5;     // x IS a box in the current stack frame; the bytes 00000005 live there
+int y = x;     // COPY the bytes into y's box. Two independent boxes, both holding 5.
+y = 9;         // change y's box. x is still 5. They were never connected.
+```
+
+Here a variable *is* storage — a named location, usually in the stack frame, that *contains the value*.
+Assignment **copies the bytes**. `x` and `y` are independent from birth. If the value is big (a 1 KB struct),
+the copy genuinely moves 1 KB. To *share* instead of copy, C makes you ask explicitly with a **pointer**
+(`int *p = &x;` — "`p` holds the address of `x`'s box").
+
+### Model B — "a variable is a name tag tied to an object" (reference semantics: Python, and JS/Java for objects)
+
+This is the one to internalize, because it's Python's *entire* model and it's invisible from the syntax.
+
+In Python, **a name is not a box. It's a label, a sticky note, that points at an object living on the heap.**
+The object holds the value; the name just *refers* to it. This is the single most clarifying sentence in the
+language (it's Ned Batchelder's framing — reference below):
+
+> **Names refer to values; values do not live in names.** Assignment never copies a value — it points a name
+> at an object. `x = y` makes `x` and `y` two name tags on the *same* object.
+
+```python
+x = [1, 2, 3]    # create a list OBJECT on the heap; stick the name tag "x" on it
+y = x            # do NOT copy the list. Stick a SECOND name tag "y" on the SAME object.
+y.append(4)      # mutate the one shared object...
+print(x)         # [1, 2, 3, 4]   ← x "changed" because x and y were always the same object
+```
+
+```mermaid
+flowchart LR
+    subgraph names["Names (in the frame, on the stack)"]
+        X["x"]
+        Y["y"]
+    end
+    subgraph heap["The heap"]
+        OBJ["list object<br/>[1, 2, 3, 4]"]
+    end
+    X --> OBJ
+    Y --> OBJ
+```
+
+Two name tags, **one object**. There was never a second list to be out of sync with. Nothing copied. This is
+not a quirk — it is *exactly the same machinery* as C's pointers, with the pointer-ness hidden: a Python name
+is a pointer to a heap object, and assignment copies *the pointer*, never the pointee. The reason §3 could say
+"a Python list is a million pointers" is that **every** Python value is a heap object reached by reference —
+even a list's *elements* are pointers to other objects.
+
+> **"Everything is an object" — and the part that surprises people: this includes integers.** `n = 5` does not
+> put `5` in a box named `n`. It creates (or reuses) an `int` object holding `5` on the heap and points `n` at
+> it. You can verify it: `(5).bit_length()` works because `5` is a real object with methods. The reason
+> integers *feel* like value semantics is the next section.
+
+---
+
+## 5. Why this is invisible most of the time — mutability
+
+If Python copies nothing and everything is shared, why doesn't `a = b; a += 1` corrupt `b` the way the list
+example did? Because of one extra fact:
+
+> **Rebinding a name ≠ mutating an object.** `x = ...` (assignment) re-points the name tag. `x.foo()` /
+> `x[0] = ...` / `x += ...` *on a mutable object* changes the object in place.
+
+And critically: **some objects can't be mutated at all.** `int`, `float`, `str`, `bytes`, `tuple`, `frozenset`
+are **immutable** — there is no operation that changes them in place. So:
+
+```python
+a = 5
+b = a        # b and a point at the same int object 5
+a = a + 1    # 5 is immutable → this creates a NEW int object 6 and points a at it.
+             # b's name tag never moved. b is still 5.
+print(a, b)  # 6 5
+```
+
+There was no corruption because there was no mutation — `a + 1` couldn't change the `5` object even if it
+wanted to, so it had to make a new one and rebind. **Immutable types give you value-like *behavior* on top of
+reference *mechanics*.** That's why ints, strings, and tuples feel safe to pass around and lists/dicts/sets
+feel dangerous: same memory model, opposite mutability.
+
+This is the rule that resolves every "did it copy or share?" question:
+
+| You did… | On a **mutable** object (list, dict, set, your custom class) | On an **immutable** object (int, str, tuple) |
+|---|---|---|
+| `b = a` | both names → same object; mutating via either is seen by both (**aliasing**) | both names → same object, but neither can mutate it, so it's harmless |
+| `a = a + x` | new object made, `a` rebound, `b` unaffected | new object made, `a` rebound, `b` unaffected |
+| `a += x` | **mutates in place** (`list.__iadd__`), `b` sees it | rebinds to a new object, `b` unaffected |
+
+That last row is a genuine trap: `+=` does *different things* depending on mutability (`a += [1]` mutates a
+list; `a += 1` rebinds an int). Same operator, two memory behaviors, decided by the type.
+
+### `is` vs `==`, and the integer-cache gotcha
+
+Two operators that look similar and ask different questions:
+
+- `==` asks **"do these objects have equal value?"** (calls `__eq__`).
+- `is` asks **"are these two names pointing at the literally same object?"** (same heap address — it's
+  comparing `id(a) == id(b)`, and `id()` in CPython *is* the memory address).
+
+You'll see `is` used correctly only for singletons: `x is None`, `x is True`. Misusing it for values exposes an
+implementation detail that bites everyone once:
+
+```python
+a = 256; b = 256;  a is b   # True
+a = 257; b = 257;  a is b   # False (!) — in CPython, often
+```
+
+CPython **pre-creates and caches the small ints −5..256** as shared singletons (a speed optimization — these
+are constantly used). So `256` is always the *same* object; `257` gets freshly made each time. Nothing about
+this is in the language spec — it's a CPython detail leaking through `is`. Lesson: **compare values with `==`;
+reserve `is` for identity/singletons.** (And now you know `id()`, `is`, and the small-int cache all come from
+the same fact: names are pointers to objects, and sometimes the runtime shares the object.)
+
+---
+
+## 6. Where this actually bites *you*
+
+This isn't trivia — it's a recurring shape of bug in exactly the kind of code you write (pipelines passing
+`dict`s of state and config between steps). Three canonical ones:
+
+**1. The mutable default argument — the famous one.**
+
+```python
+def add_event(event, log=[]):     # ← the default [] is created ONCE, at def time
+    log.append(event)
+    return log
+
+add_event("a")     # ['a']
+add_event("b")     # ['a', 'b']   ← surprise: the SAME list persists across calls
+```
+
+The default value object is created **once, when the `def` runs**, and lives on the heap for the life of the
+function — every call that doesn't pass `log` reuses that one object. This isn't a Python bug; it's the
+reference model being perfectly consistent (the default is just another name tag on one heap object). The fix
+is the idiom you've seen without knowing why: `def add_event(event, log=None): log = log or []` — make a fresh
+object *inside* the call. Worth grepping your pipelines for `=[]`, `={}`, `=set()` in signatures.
+
+**2. Aliased shared state across pipeline steps.** If step A builds a `config` dict and passes it to steps B
+and C, and B does `config["mode"] = "fast"`, **C sees it too** — they hold name tags on one object. Sometimes
+that's the intent; often it's a spooky-action-at-a-distance bug where one step quietly reaches back and
+changes another's input. This is the *same mechanism* as the environment-leakage case you described in M04 Ch1
+(state managed at the wrong level, mutated where it shouldn't be) — now you can name the memory under it.
+
+**3. "I copied it but it still changed" — shallow vs deep copy.** `b = a.copy()` (or `dict(a)`, `list(a)`,
+`a[:]`) makes a **shallow** copy: a new outer object, but its elements are *the same nested objects* — new box,
+same name tags inside. So `b = a.copy(); b["user"]["name"] = "x"` still mutates `a`'s nested dict. To break
+*all* sharing you need `copy.deepcopy(a)`, which recursively rebuilds the whole object graph (and costs
+accordingly). The decision "shallow or deep?" is just "how far down do I want to stop sharing?" — a question
+that only makes sense once you see the object graph.
+
+> **The unifying reframe:** "passing a huge object to a function is free in Python" (you pass one pointer, not
+> a copy) and "mutating an argument leaks out to the caller" are **the same fact** stated as a feature and as a
+> bug. C makes you choose copy-vs-share at every call (value vs pointer); Python always shares and lets
+> *immutability* be your only built-in protection. That's the trade-off — and the reason `@dataclass(frozen=True)`,
+> tuples-over-lists, and "don't mutate your inputs" are recommended discipline, not pedantry.
+
+---
+
+## 7. The one-page mental model
+
+```mermaid
+flowchart TD
+    A["A process sees one virtual address space.<br/>Two dynamic regions grow toward each other: STACK and HEAP."]
+    A --> B["STACK: frames (Ch1 §2). Allocate = bump a register; freed on return.<br/>Fast, cache-hot, automatic, LIFO, BOUNDED → overflow / RecursionError."]
+    A --> C["HEAP: objects. Allocate = allocator search; freed manually or by GC.<br/>Large, any-order, but slower, can fragment, cache-cold (pointer-chasing)."]
+    B --> D["A Python NAME is not a box — it's a label pointing at a HEAP object.<br/>Assignment copies the POINTER, never the object. Everything is an object (even ints)."]
+    C --> D
+    D --> E["b = a → two names, ONE object → aliasing.<br/>Mutate via either name = both see it."]
+    E --> F["Mutability is the safety valve:<br/>immutable (int/str/tuple) → ops make NEW objects → value-like & safe.<br/>mutable (list/dict/set) → in-place changes → aliasing bugs."]
+    F --> G["Bites you as: mutable default args · shared-state aliasing · shallow vs deep copy.<br/>'== for value, is for identity'. → §2: who frees the heap objects? (GC)"]
+```
+
+**Seven things to remember:**
+1. A process has a **stack** (frames; fast; automatic; bounded) and a **heap** (objects; flexible; freed by GC;
+   slower, fragments, cache-cold) growing toward each other.
+2. **Stack allocation = bump the stack pointer; free = return.** Overflow it (deep/infinite recursion) and you
+   hit a real wall — `RecursionError` is CPython's railing in front of it.
+3. **Heap allocation costs a search and must be freed by someone.** That "someone" in Python is the GC (§2).
+4. A **Python name is a pointer to a heap object**, not a box of bytes. Assignment copies the pointer.
+   **Everything is an object**, integers included.
+5. `b = a` makes **two names for one object** → **aliasing**. Mutate through either, both see it.
+6. **Mutability is the only built-in protection.** Immutable types (int/str/tuple) behave value-like because
+   operations can't change them in place and so produce new objects; mutable types don't.
+7. The disguised bugs — **mutable default args, shared-state aliasing, shallow vs deep copy, `is` vs `==`** —
+   are all this one model showing through.
+
+---
+
+## 8. Check your understanding
+
+Jot a one-line answer to each before our Q&A — we'll dig into whichever are fuzzy.
+
+1. In terms of the address-space map, what *physically* happens when a function is called and when it returns,
+   and why can't you leak stack memory but you can leak heap memory?
+2. `a = [1, 2]; b = a; b.append(3)`. What does `a` print, and *why*, in terms of names and objects? Now change
+   line 1 to `a = (1, 2)` (a tuple) and `b.append` to `b = b + (3,)` — what does `a` print now, and what's the
+   one-word difference?
+3. Why is `def f(items=[]):` a bug-in-waiting? Where and when does that `[]` get created, and what's the
+   standard fix?
+4. You're told `numpy` beats a Python list partly because of "memory layout." Connect that to *this* section's
+   heap picture (not just Ch1 §4's cache line) — what's different about *where the actual numbers live* in the
+   two cases?
+5. Explain `a = 256; b = 256; a is b` being `True` but the same with `257` being `False`. What does it reveal
+   about `is`, and what should you use instead for comparing values?
+6. (Stretch) C makes you choose value-vs-pointer at every assignment; Python always shares and gives you
+   immutability instead. Name one concrete safety win and one concrete footgun that this trade buys you.
+
+---
+
+## 9. Optional: get your hands dirty (15 min)
+
+Python can *show* you everything in this section.
+
+```python
+# (a) Names are pointers: id() is the heap address in CPython. Watch aliasing directly.
+a = [1, 2, 3]
+b = a
+print(id(a), id(b), a is b)     # same address, same object
+b.append(4)
+print(a)                        # [1, 2, 3, 4] — one object, two names
+
+# (b) Mutable vs immutable: same code shape, opposite outcome.
+x = [1]; y = x; y += [2]; print("list:", x)   # [1, 2]  (in-place mutation, x sees it)
+m = 1;   n = m; n += 2;    print("int :", m)   # 1       (rebind, m unaffected)
+
+# (c) The famous footgun — run it and watch the default persist.
+def add(event, log=[]):
+    log.append(event); return log
+print(add("a"), add("b"))       # ['a'] ['a', 'b']  — same list reused
+
+# (d) The small-int cache leaking through `is`.
+print(256 is 256, 257 is 257)   # True (usually) False — implementation detail!
+
+# (e) Shallow vs deep copy.
+import copy
+orig = {"user": {"name": "z"}}
+shallow = orig.copy();           shallow["user"]["name"] = "X"; print("shallow leaked:", orig)
+orig = {"user": {"name": "z"}}
+deep = copy.deepcopy(orig);      deep["user"]["name"]    = "X"; print("deep isolated:", orig)
+
+# (f) See the stack wall from §2, now that you know what it is.
+import sys; print("recursion limit (the railing):", sys.getrecursionlimit())
+def boom(n=0):
+    return boom(n + 1)
+# boom()   # uncomment → RecursionError, NOT a segfault, because of the limit. Try lowering it first.
+
+# (g) How big is an object, really? (heap bookkeeping is visible)
+print(sys.getsizeof(0), sys.getsizeof([]), sys.getsizeof([1, 2, 3]))
+```
+
+**Best single tool for this section:** paste any of the above into **[pythontutor.com](https://pythontutor.com/)**
+and step through it — it *draws the names-and-objects diagram live*, frame by frame, exactly like the Mermaid
+sketches above. For the aliasing and copy examples it's worth more than any explanation. Bring anything
+surprising to our chat — especially whatever (b), (c), or (e) does that you didn't predict.
+
+---
+
+## References (optional, for depth)
+
+*(All links verified live 2026-06-12.)*
+
+- **[Ned Batchelder — "Facts and Myths about Python names and values"](https://nedbatchelder.com/text/names.html)**
+  — the single best treatment of §4–§5, by the author of coverage.py. The "names are not boxes" framing this
+  section is built on. There's a companion PyCon talk if you prefer video. Read this one.
+- **[Python Tutor (pythontutor.com)](https://pythontutor.com/)** — visualizes the stack/heap and names→objects
+  graph as your code runs, step by step. The hands-on companion to §4–§6; use it on the snippets above.
+- **[Python Language Reference — §3 "Data model"](https://docs.python.org/3/reference/datamodel.html)** — the
+  authoritative source for "every object has an identity, a type, and a value," mutability, and `id()`/`is`.
+  Dense but definitive; skim §3.1.
+- **[Computer Systems: A Programmer's Perspective (Bryant & O'Hallaron)](https://csapp.cs.cmu.edu/)** — for the
+  C-side, extensive picture of §1–§3 (the address space, stack frames, dynamic allocation, fragmentation). The
+  chapters on virtual memory and dynamic memory allocation are the deep version of this section; pairs with the
+  OS-internals story coming in M01 Ch4.
+
+---
+
+### What's next
+🔵 **Draft — generated 2026-06-12.** After our Q&A I'll rewrite this to fit how you actually reason and mark it
+✅ in `courses/plan.md`. This section laid the **map** (stack vs heap) and the **pivot** (names are pointers to
+heap objects). The two open IOUs it leaves are the rest of Chapter 2:
+- **§2 — Garbage collection:** if heap objects must be freed by *someone* and Python never makes you do it, who
+  does? CPython's **reference counting** (every object carries a count of name tags pointing at it; hits zero →
+  freed instantly) **plus a cycle collector** for the case ref-counting can't handle (`a` and `b` referring to
+  each other). This is also where the GIL from Ch1 re-enters — ref-count updates are why touching objects isn't
+  thread-safe without it.
+- **§3 — "Out of memory" for real:** what actually happens when the heap can't grow, the difference between a
+  *leak* and *legitimately too much*, the OOM killer, and why a 16 GB model won't load on a 12 GB GPU.
+
+Per the Phase-1 interleave, the parallel threads remain **M04 Ch1 §2 (tracing data flow)** on the SWE side and
+**M12 Ch2 §2 (video — DiT/Sora)** on the AI side — say the word if you'd rather advance one of those next
+instead of continuing M01 Ch2.
