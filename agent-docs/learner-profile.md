@@ -4,9 +4,13 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-11 (v6 — reading #3: git-archaeology + software-design; he reframed git
-delegation into a sharp agent-trust principle, and made a well-calibrated skim-not-study call).
-Prior: v5 (2026-06-10) M04 Ch1 §1 session (code-reading mostly owned; git confirmed as gap); v4 (2026-06-10) reading session;
+Last updated: 2026-06-12 (v7 — M01 Ch2 §1 memory session that turned into a software-DESIGN session:
+he drove it into pipeline state-management and proposed two class-based designs; strong instincts,
+real decomposition gaps surfaced. Caught a genuine bug in my small-int-cache example. Flagged
+`dataclass` as unfamiliar → reading queued.).
+Prior: v6 (2026-06-11) reading #3: git-archaeology + software-design; he reframed git
+delegation into a sharp agent-trust principle, and made a well-calibrated skim-not-study call.
+v5 (2026-06-10) M04 Ch1 §1 session (code-reading mostly owned; git confirmed as gap); v4 (2026-06-10) reading session;
 v3 (2026-06-09) added reading-track progress; v2 (2026-06-08) corrected after learner feedback;
 initial calibration from self-description + code survey of
 `/home/zhangzhou/Desktop/Projects/aquarium-main` and
@@ -87,6 +91,33 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-12 — M01 Ch2 §1 (address space: stack/heap & the Python object model) ✅ finalized.** Body
+  (stack vs heap, names-are-pointers, mutability/aliasing) was at/below his level — he absorbed it fast and
+  the session **turned into a software-DESIGN session**, which is the real signal. Arc: (1) sharp stack
+  question (do frames vary in size — yes, per-function, compile-time-fixed in C except VLA/`alloca`). (2) He
+  asserted, unprompted, that **passing mutable args through pipeline steps hurts readability/traceability** and
+  proposed making the pipeline a **class with state on `self`, mutated via methods**. Good instinct (he's
+  detecting a real smell) but **mis-attributed the cause** — I pushed back: moving state to `self` makes
+  mutation *more* implicit (temporal coupling; "globals with smaller scope"; monolith risk = his own 2.4k-LoC
+  gap). (3) He refined to a `PipeState` class with `read_state()`/`update_state(data)` — I named it a **shallow
+  module** (Ousterhout, his 06-11 reading: generic `update_state(data)` guards no invariant = wide interface in
+  disguise; `read_state()` returning the live object reopens aliasing). (4) Landed the keeper: **the axis is
+  explicit-and-returned vs implicit-and-mutated, not arg-vs-self** → flow immutable state through explicit
+  signatures, inject set-once deps on `self`, mutate nothing; a class earns mutable `self` only to protect a
+  real invariant behind a semantic interface. Gave him a **best-practice pipeline skeleton** (frozen dataclass
+  `State` + `Deps` DI + `Step` Protocol + uniform runner for one-place tracing/retry) — he asked to keep it in
+  the material (now §10b). **Signals:** (a) he *proactively* reasons about architecture/decomposition — engaged,
+  opinionated, iterates on designs — but this is exactly his #1 gap, so the instincts need calibration (he
+  reached twice for "encapsulate state in a class," the move that tends to *create* his monoliths; the
+  explicit-immutable-dataflow alternative was new to him and landed). (b) **Caught a real correctness bug in my
+  example** (one-line `a=257;b=257;a is b` is True via compile-time constant dedup, not False) — his "verify,
+  don't trust" instinct applied to *my* material; verified live with Python before fixing. (c) **`dataclass`/
+  `typing.Protocol` are unfamiliar** — notable given his Python strength; he vibe-codes and hasn't needed them.
+  → reading queued (below) + added to M05 Ch2 scope. (d) Good track-economy call again: "we can finalize here."
+  **How to teach the SWE track:** give him designs to critique and *pressure-test his proposals* the way he
+  pressure-tests concepts — he learns decomposition by having a plausible-but-flawed design taken apart, not by
+  rules. Lean on Ousterhout vocabulary (deep/shallow modules, define-errors-out-of-existence) — it's now shared
+  language. **M04 Ch2 (Decomposition) is the high-value next SWE stop** and should use *his* pipeline code.
 - **2026-06-10 — M12 Ch2 §1 (diffusion & image generation) ✅ finalized.** First section of the
   recalibrated AI thread (non-text models). He'd already read the DDPM paper and built a physics-grounded
   mental model; the session was a *peer-level* Q&A. **What he had right (sharper than most explainers):**
@@ -183,6 +214,13 @@ learning surfaces.
   re-deriving principles over memorising; appreciates explicit cost/trade-off framing.
 
 ## Learning progress (reading track)
+- **Queued readings (pick up on an upcoming reading day):**
+  - **Python `dataclass` + `typing.Protocol`** *(queued 2026-06-12 from M01 Ch2 §1)* — he flagged both as
+    unfamiliar when I used them in the best-practice pipeline skeleton. Cover: `@dataclass` (auto
+    `__init__`/`__repr__`/`__eq__`), `frozen=True` (immutability → kills aliasing bugs), `slots=True`,
+    `dataclasses.replace`, and structural typing via `Protocol`; compare dataclass vs Pydantic vs NamedTuple.
+    Ties to M05 Ch2 (now in scope there too) and directly supports his decomposition work. Ref:
+    <https://docs.python.org/3/library/dataclasses.html>.
 - **2026-06-11 — third reading entry ✅ finalized** (`upskill-readings/2026/06/11-git-archaeology-and-software-design.md`):
   (1) Git as a code-*reading*/history tool (Tekin pickaxe article + Julia Evans *Inside .git*) — the
   entry queued from M04 Ch1 §1; (2) Ousterhout *A Philosophy of Software Design* (deep modules /

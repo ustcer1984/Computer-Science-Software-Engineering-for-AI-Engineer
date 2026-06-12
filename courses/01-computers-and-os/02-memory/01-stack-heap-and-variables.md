@@ -3,8 +3,10 @@
 > **Module:** How Computers & Operating Systems Work
 > **Chapter:** Memory
 > **Section:** The process address space — stack vs heap, and the truth about Python names, values, and references
-> **Status:** 🔵 draft 2026-06-12 — generated for today. We'll Q&A, then I'll rewrite it to match how you
-> actually think and mark it ✅ in `courses/plan.md`.
+> **Status:** ✅ finalized 2026-06-12 — the body held up; the session ran almost entirely into a **software-design**
+> thread the §6 aliasing material opened (how to manage state in a pipeline). §10 captures that thread and the
+> best-practice pipeline skeleton you asked to keep. One example bug you caught (the small-int cache) is fixed
+> in §5/§9. `dataclass` queued as a reading + added to M05 Ch2 scope, since you flagged it as unfamiliar.
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** Ch1 §2 (the call stack; frames; `call`/`ret`) and Ch1 §3 (the memory hierarchy;
@@ -438,6 +440,151 @@ surprising to our chat — especially whatever (b), (c), or (e) does that you di
 
 ---
 
+## 10. Applied — captured from our session Q&A
+
+You knew the memory model; the session ran one layer *out* of it — first a clean stack question, then a long,
+sharp **software-design** thread that the §6 aliasing material opened up. Distilled here so you can re-derive it.
+
+### 10a. Do stack frames have the same size? (ties to §2, Ch1 §2)
+
+**No — frame size varies by function.** Each frame is sized to *that* function's needs (its locals, the args it
+passes on, saved registers, alignment padding), so `main`'s frame and a tiny `square(x)`'s frame differ.
+
+- **C / native:** the size is normally **fixed per function, computed at compile time** — the prologue does
+  `sub $N, %rsp` where `N` is that function's baked-in frame size; the epilogue adds it back (the §2
+  save/restore, now with a number on it). The exception is **C99 variable-length arrays / `alloca()`**, where
+  `N` is computed at runtime — and an attacker-controlled size can march `%rsp` off the end into the stack-overflow
+  cliff, which is why many codebases ban them.
+- **CPython:** a Python frame is itself a **heap object** (`PyFrameObject`); its size is quantized by the
+  compiler's per-code-object `co_stacksize` + `co_nlocals` (more locals/deeper expressions → bigger frame). The
+  callback to §4: those local slots hold **pointers to heap objects, not the values** — so a `list` local is one
+  pointer whether the list has 3 or 3 million elements. That's *why* passing a huge object into a function costs
+  nothing on the stack.
+
+### 10b. Managing state in a pipeline — the design thread you drove (→ M04 decomposition)
+
+This grew straight out of §6: if mutating a shared argument leaks across pipeline steps, what's the *right*
+structure? You proposed two refinements and we pressure-tested each — the keeper principles:
+
+1. **Your first instinct — make the pipeline a class, state on `self`, steps mutate via methods.** The catch:
+   moving mutable state onto `self` makes the mutation **more implicit, not less** — `def step(self)` advertises
+   nothing about what it reads or writes, and the step *ordering* becomes an invisible contract (**temporal
+   coupling**). A class whose methods all read/write a shared mutable `self` is *globals with a smaller scope*.
+   It's also a prime way a file grows into a 2,400-line monolith — your own documented gap, so worth naming.
+2. **Your second refinement — a `PipeState` class with `read_state()` / `update_state(data)`.** Cleaner in two
+   real ways (separated concern; one mutation choke-point), **but** `update_state(data)` that accepts arbitrary
+   data is a **wide interface wearing a trench coat** — it guards no invariant, so it's a *shallow module*
+   (Ousterhout, your 06-11 reading): indirection without hiding complexity. And `read_state()` returning the
+   *live* object reopens the §1 aliasing hole unless it returns a copy/immutable view. The dataflow is still
+   hidden; the disease is unchanged.
+3. **The axis that actually matters is not `arg` vs `self` — it's explicit-and-returned vs
+   implicit-and-mutated.** The principle we landed on: **flow immutable state through explicit signatures
+   (`state -> new state`); inject set-once dependencies via `self`; never mutate in place.** A class earns
+   mutable `self` only when it protects a **real invariant** behind a **semantic** interface (e.g.
+   `TurnState.advance_to(phase)` rejecting illegal transitions) — *then* it's a deep module worth the layer.
+
+#### The best-practice skeleton (the artifact you asked to keep)
+
+> **Note:** this uses `@dataclass` and `typing.Protocol`, which you flagged as unfamiliar — both are
+> **queued as a reading** and folded into **M05 Ch2** scope. Short version for now: `@dataclass` auto-generates
+> `__init__`/`__repr__`/`__eq__` from typed field declarations (so the class below is just "a typed record");
+> `frozen=True` makes instances **immutable** (assigning a field raises) — which is what kills the §1 aliasing
+> bugs; `dataclasses.replace(obj, field=...)` returns a **new** instance with one field changed; `Protocol` is a
+> structural type — "anything with this call signature counts as a `Step`," checked by the type checker.
+
+```python
+from dataclasses import dataclass, replace
+from typing import Protocol
+import logging
+
+log = logging.getLogger(__name__)
+
+
+# 1. FLOWING STATE — immutable. Each step returns a NEW state; nothing mutates in place.
+#    frozen=True kills the §6 aliasing bugs; slots=True saves memory + catches typo'd attributes.
+@dataclass(frozen=True, slots=True)
+class State:
+    raw_input: str
+    cleaned: str | None = None
+    result: dict | None = None
+    # ... fields accumulate as steps fill them in
+
+
+# 2. DEPENDENCIES — injected once, read-only for the whole run (dependency injection).
+#    Clients, config, model handles live here — NOT on the flowing state.
+@dataclass(frozen=True, slots=True)
+class Deps:
+    llm_client: object        # your provider client
+    config: dict              # settings, thresholds, model names
+    # ...
+
+
+# 3. THE STEP CONTRACT — every step has the SAME shape, so the runner can wrap them
+#    uniformly and the type checker enforces "state in, state out".
+class Step(Protocol):
+    __name__: str
+    def __call__(self, state: State, deps: Deps) -> State: ...
+
+
+# 4. STEPS — plain functions. Pure-ish: read what you need at the top (makes the real
+#    dependency visible), return replace() with only what you PRODUCE.
+#    Trivially unit-testable: call step(some_state, fake_deps), assert on the output.
+def clean_input(state: State, deps: Deps) -> State:
+    cleaned = state.raw_input.strip()        # ... real logic
+    return replace(state, cleaned=cleaned)
+
+def call_model(state: State, deps: Deps) -> State:
+    assert state.cleaned is not None         # precondition: clean_input ran first
+    result = ...                             # deps.llm_client.generate(state.cleaned)
+    return replace(state, result=result)
+
+
+# 5. THE RUNNER — the ONE place for cross-cutting concerns. Add timing, tracing,
+#    retries, structured logging here and EVERY step gets it for free.
+def run(steps: list[Step], state: State, deps: Deps) -> State:
+    for step in steps:
+        try:
+            state = step(state, deps)        # ← reassigned, never mutated
+            log.info("step.ok", extra={"step": step.__name__})
+        except Exception:
+            log.exception("step.failed", extra={"step": step.__name__})
+            raise                            # add context; let it propagate (or return a Result)
+    return state
+
+
+# 6. ASSEMBLY — this list IS the readable, top-to-bottom trace of the pipeline.
+PIPELINE: list[Step] = [
+    clean_input,
+    call_model,
+    # parse_result, validate, ...
+]
+
+def main(raw: str, deps: Deps) -> State:
+    return run(PIPELINE, State(raw_input=raw), deps)
+```
+
+**Why this shape (the review notes):**
+
+- **Frozen `State`, returned not mutated** → the §1/§6 aliasing & mutable-default bugs become *impossible*, not
+  merely discouraged. `replace()` is a cheap shallow copy; only changed fields differ.
+- **`Deps` separate from `State`** → the *legit* use of "state on an object": config/clients are set once and
+  read-only during the run. Flowing data stays explicit. This is the clean version of your class instinct.
+- **Uniform `(State, Deps) -> State` steps** → a runner can wrap *every* step with one tracing/retry/logging
+  block — the cure for the observability gap, in one place, not per-step boilerplate.
+- **`PIPELINE` as a list** → you read the sequence top-to-bottom and see the whole dataflow; reordering is a line
+  move and the type checker still enforces the `Step` contract.
+- **Steps are functions** → testable in isolation with a fake `Deps`; no object graph to construct.
+
+**The one trade-off to remember:** uniform `State -> State` steps buy composability + the free cross-cutting
+wrapper, but a step's signature doesn't advertise *which* fields it reads (mitigate by destructuring needed
+fields at the top, like `call_model`). If the pipeline is a **small fixed graph** rather than a long linear
+chain, prefer **explicit wiring** (`cleaned = clean_input(raw, deps); result = call_model(cleaned, deps)`) —
+heterogeneous signatures give maximum per-step contract clarity at the cost of the uniform runner. **Linear +
+want uniform tracing/retry → list-of-steps. Small fixed graph + want maximum contract clarity → explicit
+wiring.** Both beat mutating a shared `self`.
+
+---
+
 ## References (optional, for depth)
 
 *(All links verified live 2026-06-12.)*
@@ -454,13 +601,17 @@ surprising to our chat — especially whatever (b), (c), or (e) does that you di
   C-side, extensive picture of §1–§3 (the address space, stack frames, dynamic allocation, fragmentation). The
   chapters on virtual memory and dynamic memory allocation are the deep version of this section; pairs with the
   OS-internals story coming in M01 Ch4.
+- **[Python docs — `dataclasses`](https://docs.python.org/3/library/dataclasses.html)** (§10b skeleton) — the
+  reference for `@dataclass`, `frozen=True` (immutability), `slots=True`, and `replace()`. Skim now; the
+  proper treatment is queued as a reading and folded into M05 Ch2.
 
 ---
 
 ### What's next
-🔵 **Draft — generated 2026-06-12.** After our Q&A I'll rewrite this to fit how you actually reason and mark it
-✅ in `courses/plan.md`. This section laid the **map** (stack vs heap) and the **pivot** (names are pointers to
-heap objects). The two open IOUs it leaves are the rest of Chapter 2:
+✅ **Finalized 2026-06-12.** Marked done in `courses/plan.md`; §10 captures the stack-frame-size answer and the
+pipeline-design thread + skeleton. **`dataclass`/`Protocol` queued as a reading and added to M05 Ch2 scope** per
+your flag. This section laid the **map** (stack vs heap) and the **pivot** (names are pointers to heap objects).
+The two open IOUs it leaves are the rest of Chapter 2:
 - **§2 — Garbage collection:** if heap objects must be freed by *someone* and Python never makes you do it, who
   does? CPython's **reference counting** (every object carries a count of name tags pointing at it; hits zero →
   freed instantly) **plus a cycle collector** for the case ref-counting can't handle (`a` and `b` referring to
