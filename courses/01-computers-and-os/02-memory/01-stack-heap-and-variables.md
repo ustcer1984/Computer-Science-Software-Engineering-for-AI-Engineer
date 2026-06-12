@@ -259,18 +259,37 @@ Two operators that look similar and ask different questions:
   comparing `id(a) == id(b)`, and `id()` in CPython *is* the memory address).
 
 You'll see `is` used correctly only for singletons: `x is None`, `x is True`. Misusing it for values exposes an
-implementation detail that bites everyone once:
+implementation detail that bites everyone once. Type these as **separate lines in the REPL** (this matters —
+see the trap below):
 
-```python
-a = 256; b = 256;  a is b   # True
-a = 257; b = 257;  a is b   # False (!) — in CPython, often
+```pycon
+>>> a = 256
+>>> b = 256
+>>> a is b
+True
+>>> a = 257
+>>> b = 257
+>>> a is b
+False        # (!) in CPython
 ```
 
 CPython **pre-creates and caches the small ints −5..256** as shared singletons (a speed optimization — these
 are constantly used). So `256` is always the *same* object; `257` gets freshly made each time. Nothing about
-this is in the language spec — it's a CPython detail leaking through `is`. Lesson: **compare values with `==`;
-reserve `is` for identity/singletons.** (And now you know `id()`, `is`, and the small-int cache all come from
-the same fact: names are pointers to objects, and sometimes the runtime shares the object.)
+this is in the language spec — it's a CPython detail leaking through `is`.
+
+> **The trap that makes this hard to demo (and worth understanding):** put it all on *one line* —
+> `a = 257; b = 257; a is b` — and you get **`True`**, not `False`. That's a *second, different* sharing
+> mechanism: a single line is compiled to one **code object**, and the compiler stores the literal `257` once
+> in that object's constants table, so both `a` and `b` load the *same* constant. Separate REPL lines are
+> separate compilations, so each makes its own `257`. So there are **two** ways Python ends up sharing an
+> object behind your back — the *runtime* small-int cache (−5..256, always) and *compile-time* constant
+> dedup (literals within one code object). Both are CPython implementation details; neither is something to
+> rely on. (`257 is 257` won't even compile cleanly anymore — Python 3.8+ raises a `SyntaxWarning` for `is`
+> against a literal, precisely because the answer is an implementation artifact.)
+
+Lesson: **compare values with `==`; reserve `is` for identity/singletons** (`None`, `True`, sentinel objects).
+And now you know `id()`, `is`, and both sharing mechanisms come from the same fact: names are pointers to
+objects, and sometimes — at runtime *or* at compile time — the runtime hands two names the same object.
 
 ---
 
@@ -361,8 +380,9 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 4. You're told `numpy` beats a Python list partly because of "memory layout." Connect that to *this* section's
    heap picture (not just Ch1 §4's cache line) — what's different about *where the actual numbers live* in the
    two cases?
-5. Explain `a = 256; b = 256; a is b` being `True` but the same with `257` being `False`. What does it reveal
-   about `is`, and what should you use instead for comparing values?
+5. Typed as **separate REPL lines**, `a = 256; b = 256` gives `a is b → True` but `257` gives `False`. Explain
+   both — and the twist: why does putting `a = 257; b = 257; a is b` on *one line* flip it back to `True`?
+   What does all this reveal about `is`, and what should you use instead for comparing values?
 6. (Stretch) C makes you choose value-vs-pointer at every assignment; Python always shares and gives you
    immutability instead. Name one concrete safety win and one concrete footgun that this trade buys you.
 
@@ -389,8 +409,10 @@ def add(event, log=[]):
     log.append(event); return log
 print(add("a"), add("b"))       # ['a'] ['a', 'b']  — same list reused
 
-# (d) The small-int cache leaking through `is`.
-print(256 is 256, 257 is 257)   # True (usually) False — implementation detail!
+# (d) The small-int cache leaking through `is`. NOTE: we force fresh objects with int(str)
+#     to defeat compile-time constant dedup — otherwise the literals get shared and BOTH say True.
+a = 257; b = int("257"); print("257 (not cached):", a is b)   # False — fresh object each time
+c = 256; d = int("256"); print("256 (cached)    :", c is d)   # True  — shared small-int singleton
 
 # (e) Shallow vs deep copy.
 import copy
