@@ -4,8 +4,9 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-10 (v5 — added M04 Ch1 §1 session: code-reading strategies mostly owned;
-git confirmed as gap; two real-world cases recorded). Prior: v4 (2026-06-10) reading session;
+Last updated: 2026-06-11 (v6 — reading #3: git-archaeology + software-design; he reframed git
+delegation into a sharp agent-trust principle, and made a well-calibrated skim-not-study call).
+Prior: v5 (2026-06-10) M04 Ch1 §1 session (code-reading mostly owned; git confirmed as gap); v4 (2026-06-10) reading session;
 v3 (2026-06-09) added reading-track progress; v2 (2026-06-08) corrected after learner feedback;
 initial calibration from self-description + code survey of
 `/home/zhangzhou/Desktop/Projects/aquarium-main` and
@@ -182,6 +183,36 @@ learning surfaces.
   re-deriving principles over memorising; appreciates explicit cost/trade-off framing.
 
 ## Learning progress (reading track)
+- **2026-06-11 — third reading entry ✅ finalized** (`upskill-readings/2026/06/11-git-archaeology-and-software-design.md`):
+  (1) Git as a code-*reading*/history tool (Tekin pickaxe article + Julia Evans *Inside .git*) — the
+  entry queued from M04 Ch1 §1; (2) Ousterhout *A Philosophy of Software Design* (deep modules /
+  complexity) — his #1 gap. **Reading #1 — the standout thread (he drove it):** he quickly went past
+  "git log searches history" to *"can I just delegate `find when & why this code was added, whether
+  it's still needed, and is it safe to remove` to an agent?"* — and we worked out the keeper principle:
+  **that compound question is four sub-questions on different epistemic ground, and git history only
+  covers the past two.** Git records the *past* (when/why = ground truth, agent reads it well); "still
+  needed / safe to remove" is a *present-dependency-graph + future-runtime* question git is silent on,
+  and the agent answers all four in the **same confident voice**. Two traps he locked in: (a) the
+  **fabricated "why"** when commit hygiene is bad — agent invents intent from the diff; *defence: demand
+  the quoted commit/PR*; (b) **"safe to remove" = proving a universal negative** — grep/agent can't,
+  esp. in Python (dynamic `getattr` dispatch, decorator/framework entry points, external cross-repo
+  consumers); absence of evidence ≠ evidence of absence. **Discharge = falsify, not accept:** full test
+  suite + type checker for static callers, then **deprecation telemetry / canary in prod** for the
+  dynamic/external ones ("zero *observed* calls > zero *greppable* calls" — his physics "run the
+  experiment, don't trust the model" instinct again). His refined claim: *rely on agents for archaeology
+  (when + recorded why); never accept "safe to remove" without falsifying it* — a clean **composer split**
+  (agent owns retrieval, he owns the universal-negative safety judgment). **Signal:** his "know when to
+  distrust AI" reasoning is sharp and *specific* — he can name exactly which sub-claim is unverifiable
+  and why; this is his strongest meta-skill showing up again, now applied to agent delegation. Lands in
+  his real gaps (testing, observability) as the *remedy*. **Reading #2 — a metacognition signal:** he
+  recognised mid-read that the Ousterhout material overlaps the course track and asked whether he must
+  finish it. **Correct, well-calibrated call — chose to skim-not-master**; logged as a deliberate *primer
+  for M04 Ch2 (Decomposition)* + M07. Three keepers he's carrying now: **deep-not-just-small** (the
+  monolith fix is *deeper* modules, not merely more files — the bit most get wrong), **strategic-vs-tactical**
+  (agent = tactical tornado by default; the strategic ~15% is his job — same shape as the "safe to remove"
+  lesson), **"define errors out of existence"** (design the error away > handle it → bridge to M05 types +
+  his LLM-reliability gap). **Process note:** he's now comfortable *stopping a reading early* when the course
+  will cover it — good track-economy judgment; reading track is exposure/priming, course track is mastery.
 - **2026-06-10 — second reading entry ✅ finalized** (`upskill-readings/2026/06/10-gpu-performance-and-the-ai-era-engineer.md`):
   (1) Horace He *Making Deep Learning Go Brrrr From First Principles* (compute/memory/overhead regimes,
   arithmetic intensity, operator fusion); (2) Addy Osmani *The Next Two Years of Software Engineering*.

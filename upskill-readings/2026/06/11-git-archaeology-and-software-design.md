@@ -1,10 +1,12 @@
-# Daily Reading — 2026-06-11
+# Daily Reading — 2026-06-11  ✅ finalized
 
 **Today's two readings (diversified — deliberately *not* AI/GPU this time):**
 1. **CS / tooling** — Git as a *reading & history* tool: `blame` → `log -L` → the pickaxe (`-S` / `-G`) *(this is the entry queued from your M04 Ch1 §1 session — the one confirmed gap there)*
 2. **Software engineering / architecture** — *A Philosophy of Software Design* (Ousterhout): deep vs shallow modules, fighting complexity *(your #1 actionable gap — monolithic files — and the core architect skill)*
 
 > Why these, and why the pivot: the last two reading days (concurrency+agents, GPU+career) leaned hard into AI/systems — your spike. Today rebalances onto the **horizontal bar** of your T: a tool gap you explicitly flagged (git history) and the single most-cited gap in your profile (code decomposition / modularity). Both are *understanding*-skills, not typing-skills — which is exactly the lane you said you want to grow in. Reading #1 turns git from "save button" into a code-comprehension instrument; reading #2 gives you the vocabulary to *name why* a 2,400-line file is bad and what "better" actually means.
+
+> **Finalized note:** the **"What we worked out"** section after reading #1 is the durable takeaway — read it first on review. It's the strong thread from our Q&A: the **past-vs-present epistemic split** in delegating code questions to agents, and why **"safe to remove" is a universal-negative you must *falsify*, not accept.** Reading #2 you deliberately chose to **skim, not master** — it's logged below as a *primer for M04 Ch2 (Decomposition)*, with the three keepers worth carrying now.
 
 ---
 
@@ -111,6 +113,50 @@ quadrantChart
 
 ---
 
+## What we worked out — delegating "when/why/safe-to-remove" to an agent (you drove this)
+
+You moved past the article fast and landed on the real question: *can I just hand an agent "use git log to find when & why this code was added, whether it's still needed, and whether it's safe to remove"?* The reframing that mattered:
+
+**That one sentence is four questions on different epistemic ground — and git history only covers the first two.**
+
+> **Git history records the *past*. "When / why was this added" is a past question — history is ground truth and the agent reads it well. "Is it still needed / safe to remove" is a question about the *present dependency graph* and *future runtime* — git is silent on it.** The agent silently crosses that line and answers all four in the *same confident voice*. The skill is hearing the switch.
+
+| Sub-question | Domain | Agent reliability | Failure mode |
+|---|---|---|---|
+| **When** added | past — `git log -S --reverse` | **High** (mechanical) | squash/rebase rewrote "when"; original commit gone |
+| **Why** added | past — commit msg + PR/ticket | **Medium** | if the *why* isn't recorded, the agent **fabricates a plausible why from the diff** and states it as fact — rarely says "history doesn't say." *Tell: ask it to **quote** the commit/PR.* |
+| **Still needed** | *present* — reachability | **Low** | not a git question at all; in Python, static reachability is **undecidable in general** |
+| **Safe to remove** | *future* — runtime + external | **Lowest / dangerous** | "found no callers" ≠ "safe" |
+
+**The two traps (the keepers):**
+1. **The fabricated "why."** Bad commit hygiene (your own vibe-coded squash-merges) means the *why* often isn't in history; a confident agent invents it from the code. Retrieval and fabrication look identical in the output — so **demand the quoted source**.
+2. **"Safe to remove" = proving a universal negative.** To show code *is* needed you need **one** caller (positive evidence, easy). To show it's *safe to delete* you must prove **no caller exists anywhere, ever** — which grep/an agent can't, especially in Python: `getattr(mod, name)()` from a string, decorator-registered entry points the *framework* calls (`@app.route`, `@celery.task`), reflection/serialization, and **external consumers in other repos / API clients / cron**. Absence of evidence ≠ evidence of absence.
+
+**How you actually discharge "safe to remove" — falsify, don't accept** (lands in your testing + observability gaps):
+- **Empirical > static:** delete on a branch → run the **full test suite + type checker** (`mypy`/`pyright`). Catches every static caller automatically and exhaustively.
+- **For the dynamic/external callers tests can't reach — observe, don't guess:** ship a deprecation log/metric, watch production a release cycle. **Zero *observed* calls > zero *greppable* calls.** The canary/"scientist" pattern — your physics instinct: don't trust the model of the system, *run the experiment and measure.*
+
+**Your refined claim (the through-line):** *"I can rely on agents for the archaeology — the **when**, and the **recorded** why. I should never accept **'safe to remove'** from an agent without falsifying it."* That's the composer split exactly: agent owns **retrieval**, you own the **universal-negative safety judgment** — because the agent hands it to you wearing the same confident face as the easy parts. *(Also sharpened: `git log` does two different searches — `--grep` over **messages** vs. `-S`/`-G` over **code content across all history**; the pickaxe over diffs is the underrated superpower, not message search.)*
+
+---
+
+## What we worked out — reading #2 as a primer, not a study (your call)
+
+You correctly clocked that *A Philosophy of Software Design* overlaps the course track and chose to **skim, not master** it. Verdict: right call, well-calibrated — the depth is committed elsewhere:
+- **M04 Ch2 — Decomposition** ([plan.md:189](../../../courses/plan.md#L189)) covers deep modules / cohesion-coupling / *refactoring a monolith* against your *actual* 2,400-line files.
+- **M07 — Software Architecture** does the architect-altitude version.
+
+The reading track is **exposure/breadth**, not mastery — so reading even this much is **priming**: when M04 Ch2 arrives you'll *consolidate* a name you already hold, not meet it cold. Not wasted, just front-loaded.
+
+**The three keepers to carry now (actionable on your current vibe-coding, ahead of the course):**
+1. **Deep, not just small.** The fix for a monolith is *deeper* modules (simple interface, lots hidden), **not merely more files**. The bit most people get wrong — lock it in.
+2. **Strategic vs tactical programming.** The agent is a *tactical tornado* by default; the strategic ~15% (boundaries, interfaces, verification) is **your** job. The governance frame for working with agents — and it rhymes with the "safe to remove" lesson above: you own the part the agent won't.
+3. **"Define errors out of existence."** Design the error away > handle it — the reliability reframe, and the conceptual bridge into M05 (types: make illegal states unrepresentable) and your LLM-reliability gap.
+
+Everything else (the text-editor example, the comments debate, the complexity taxonomy) — the course does better, against your real code. Skipped guilt-free.
+
+---
+
 ## Sources
 - [Patterns for searching Git revision histories — Tekin Süleyman (2020)](https://tekin.co.uk/2020/11/patterns-for-searching-git-revision-histories)
 - [Inside `.git` — Julia Evans (2024)](https://jvns.ca/blog/2024/01/26/inside-git/)
@@ -119,4 +165,4 @@ quadrantChart
 - [Software Design: Deep Modules — dev.to](https://dev.to/gosukiwi/software-design-deep-modules-2on9)
 - [The Philosophy of Software Design — interview with John Ousterhout, Pragmatic Engineer](https://newsletter.pragmaticengineer.com/p/the-philosophy-of-software-design)
 
-*Study, then Q&A with me. Say "finalize" when done and I'll rewrite this to match how you actually think about it + update your learner profile.*
+*Finalized 2026-06-11. The first "What we worked out" section (delegating archaeology to an agent — the past-vs-present split + "safe to remove" = falsify-a-universal-negative) is the durable record; read it first on review. Reading #2 was a deliberate primer for M04 Ch2.*
