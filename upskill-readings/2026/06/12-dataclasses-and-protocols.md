@@ -1,4 +1,4 @@
-# Daily Reading — 2026-06-12  🔵 draft (for Q&A)
+# Daily Reading — 2026-06-12  ✅ finalized
 
 **Today's two readings (the pair you queued yesterday, while it's fresh):**
 1. **Python / data modeling** — `@dataclass`: the boilerplate-free data container, and what `frozen` / `slots` / `field()` / `replace()` actually do. *(plus the comparison you asked for: dataclass vs NamedTuple vs Pydantic vs attrs)*
@@ -127,6 +127,41 @@ flowchart LR
 
 ---
 
+## What we worked out — `frozen` vs `slots`: semantics vs storage (you drove this)
+
+You pressure-tested every flag combination with sharp yes/no hypotheses — your usual mode — and we ended with a clean mental model. The keepers:
+
+**The article's "a slots class may not have default values" is true only for *manual* `__slots__`.** That limitation is a name collision: a dataclass default lives as a **class variable** (`x = 5`), and `__slots__` wants to put a **member descriptor** at the same name — Python forbids the overlap. `@dataclass(slots=True)` (3.10+) sidesteps it by *building a new class* that lifts the defaults out of the body; it exists precisely to kill that footgun. So my skeleton's `slots=True` + defaults is fine; the article just predates the parameter.
+
+**`frozen` and `slots` are orthogonal — semantics vs storage layout.** This was the through-line you arrived at by the end:
+
+| | reassign a declared field | add a new attribute/method | mechanism |
+|---|---|---|---|
+| `frozen=True` | ❌ blocked | ❌ blocked | `__setattr__` raises on **every** write — "no writes, ever" |
+| `slots=True` | ✅ allowed | ❌ blocked | no `__dict__`; no storage cell for unknown names |
+
+- Your hypothesis "frozen lets me add new fields, only slots blocks it" was **half wrong**: `frozen` blocks adds too, because it bans *all* writes (not just reassignment of known fields). What's *unique* to `slots` is blocking new names **while still allowing mutation of existing ones** — the mutable-but-fixed-schema case `frozen` can't express.
+- **Typo-catching:** `frozen` stops write-typos only as a side effect of banning all writes; `slots`'s typo-catch is the distinctive one — it's for the **mutable** object, where it lets the real reassignment through and rejects only the misspelled new name (`AttributeError`). Read-typos always raise regardless.
+- **"Once `frozen=True`, is it safe to drop `slots=True`?" → Yes, no correctness/behavior harm.** With `frozen` present, `slots` is a pure perf/memory knob. Dropping it costs memory (only at high instance counts) and closes a deliberate `obj.__dict__[...] = ...` back-door (but `frozen` was never a hard security boundary anyway); it *gains back* `weakref` support and sheds the "slots builds a new class" footgun. Keep `slots` only when minting huge numbers of instances.
+- **Adding a method to an *instance* is blocked** (instances are sealed) — and the deeper point: a function assigned to an instance attribute isn't a bound method anyway (no `self` injection; the descriptor protocol only fires for functions on the **class**). To add behavior, put it on the class — `frozen`/`slots` govern instances, not the class object.
+
+**The one-liner:** `frozen` = *immutability (semantics)*; `slots` = *storage layout (a perf knob that also forbids unknown names)*. Reach for `frozen` to flow immutable state; add `slots` for footprint/typo-discipline on **mutable** objects.
+
+## What we worked out — how to check Protocol conformance (static-first)
+
+You asked the right question — "if `isinstance` doesn't work, how do I check?" — and the answer is a mindset shift:
+
+**You normally don't check at runtime at all.** A Protocol's home is the **static checker**: annotate the parameter as the protocol type, run mypy/pyright, and it verifies structural conformance *including signatures, parameter and return types* — before the code runs. That's the thorough check; at runtime you just rely on duck typing because the shape was already proven.
+
+**The runtime escape hatch (`@runtime_checkable` + `isinstance`) is real but shallow** — use it only when control flow genuinely needs capability detection, and know its three edges:
+1. **Signatures are ignored** — it checks only that a method *by that name exists*. A wrong-arity `run` still passes `isinstance`.
+2. **`issubclass` raises `TypeError`** for any protocol with non-method (data) members.
+3. **Opt-in & shallow** — without `@runtime_checkable`, `isinstance` refuses; with it, it's essentially bundled `hasattr` checks (presence, not correctness).
+
+**The clean split you landed on:** *Protocol = static contract; Pydantic = runtime validation.* Opposite ends on purpose. If you need runtime *signature/type* checking (which `isinstance` won't give you), that's Pydantic's job, at your boundaries — and it's covered later in **M05 Ch2** (as a typing/validation tool) and **M13 Ch1/Ch4** (as the LLM-output guardrail for your reliability gap). You chose to leave the plan as-is.
+
+---
+
 ## Sources
 - [Data Classes in Python — Real Python](https://realpython.com/python-data-classes/)
 - [`dataclasses` — Python documentation](https://docs.python.org/3/library/dataclasses.html)
@@ -136,4 +171,4 @@ flowchart LR
 - [PEP 544 — Protocols: structural subtyping (static duck typing)](https://peps.python.org/pep-0544/)
 - [Protocols and structural subtyping — typing documentation](https://typing.python.org/en/latest/reference/protocols.html)
 
-*Draft for Q&A. After we discuss, tell me to finalize and I'll rewrite this to match how you actually think about it + update the learner profile and the M05 Ch2 scope.*
+*Finalized 2026-06-12. The two "What we worked out" sections are the durable record — read them first on review: (1) `frozen` vs `slots` = semantics vs storage, orthogonal, and `slots` is droppable once `frozen` is present; (2) Protocol conformance is checked **statically** by default, with `@runtime_checkable` a shallow escape hatch — Protocol is the static contract, Pydantic the runtime validator. Primer for M05 Ch2.*

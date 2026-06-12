@@ -4,11 +4,15 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-12 (v7 — M01 Ch2 §1 memory session that turned into a software-DESIGN session:
+Last updated: 2026-06-12 (v8 — reading #4: dataclasses + typing.Protocol, the pair queued same-day
+from M01 Ch2 §1. Pure mechanics pressure-test in his signature mode; closed the flagged gap. Landed
+the orthogonality model frozen=semantics vs slots=storage, and Protocol=static-contract vs
+Pydantic=runtime-validator. Two of his hypotheses were half-wrong and got corrected cleanly.).
+Prior: v7 (2026-06-12) — M01 Ch2 §1 memory session that turned into a software-DESIGN session:
 he drove it into pipeline state-management and proposed two class-based designs; strong instincts,
 real decomposition gaps surfaced. Caught a genuine bug in my small-int-cache example. Flagged
-`dataclass` as unfamiliar → reading queued.).
-Prior: v6 (2026-06-11) reading #3: git-archaeology + software-design; he reframed git
+`dataclass` as unfamiliar → reading queued (now done in v8).
+v6 (2026-06-11) reading #3: git-archaeology + software-design; he reframed git
 delegation into a sharp agent-trust principle, and made a well-calibrated skim-not-study call.
 v5 (2026-06-10) M04 Ch1 §1 session (code-reading mostly owned; git confirmed as gap); v4 (2026-06-10) reading session;
 v3 (2026-06-09) added reading-track progress; v2 (2026-06-08) corrected after learner feedback;
@@ -225,12 +229,34 @@ learning surfaces.
 
 ## Learning progress (reading track)
 - **Queued readings (pick up on an upcoming reading day):**
-  - **Python `dataclass` + `typing.Protocol`** *(queued 2026-06-12 from M01 Ch2 §1)* — he flagged both as
-    unfamiliar when I used them in the best-practice pipeline skeleton. Cover: `@dataclass` (auto
-    `__init__`/`__repr__`/`__eq__`), `frozen=True` (immutability → kills aliasing bugs), `slots=True`,
-    `dataclasses.replace`, and structural typing via `Protocol`; compare dataclass vs Pydantic vs NamedTuple.
-    Ties to M05 Ch2 (now in scope there too) and directly supports his decomposition work. Ref:
-    <https://docs.python.org/3/library/dataclasses.html>.
+  - *(none currently — the dataclass/Protocol queue item was completed as the 2026-06-12 reading; see below.)*
+  - **Next reading day: swing back to the AI thread** (per the 06-12 diversification note — three CS/SWE-leaning
+    days in a row). Candidates: M12 Ch2 §2 video models (Sora/DiT — his strongest critique mode), or something
+    current. Reaffirm the plan is on-track if he asks (mild metacognitive watch-item from 06-10).
+- **2026-06-12 — fourth reading entry ✅ finalized** (`upskill-readings/2026/06/12-dataclasses-and-protocols.md`):
+  Python `dataclass` + `typing.Protocol` — the pair he flagged unfamiliar in the same-day M01 Ch2 §1 pipeline-skeleton
+  session, picked up immediately to consolidate while fresh. **Closed the gap cleanly.** The session was almost
+  entirely a **mechanics pressure-test in his signature mode** — sharp yes/no hypotheses about flag combinations
+  until the model broke, then the precise why. Keepers he landed: (1) the article's "a slots class may not have
+  default values" is true only for *manual* `__slots__` (class-var vs slot-descriptor name collision); `slots=True`
+  (3.10+) was added to kill exactly that footgun — *he caught the apparent contradiction with my skeleton and made
+  me resolve it* (verify-don't-trust again, now on Python mechanics). (2) **`frozen` and `slots` are orthogonal —
+  semantics vs storage**: `frozen` bans *all* writes (reassign AND add, via `__setattr__`); `slots` removes `__dict__`
+  so it blocks *unknown names while still allowing reassignment* — the mutable-but-fixed-schema case frozen can't
+  express. (3) once `frozen=True`, **`slots=True` is droppable with no correctness harm** — pure perf/memory knob
+  (he reasoned his way to this himself). (4) instance method-attachment is blocked, and instance-assigned functions
+  aren't bound methods anyway (descriptor protocol fires only on class-stored functions). (5) **Protocol conformance
+  is checked *statically* by default** (mypy/pyright verify signatures+types); `@runtime_checkable`+`isinstance` is a
+  shallow escape hatch (name-presence only, no signatures; `issubclass` breaks on data members). Clean split he
+  adopted: **Protocol = static contract, Pydantic = runtime validation, opposite ends on purpose.** **Signals:**
+  (a) two of his opening hypotheses were *half-wrong* ("frozen lets me add fields, only slots blocks"; "only slots
+  catches typos") and corrected without friction — his **macro/systems intuition is strong but local Python-semantics
+  precision is the gap** (consistent with the 06-12 course-session read: strong at design altitude, needs calibration
+  at micro-mechanics). (b) verify-don't-trust meta-skill showed up again — he flagged the article-vs-skeleton
+  contradiction unprompted. (c) good track-economy again: "we can finalize here," "no need to change the plan."
+  (d) `dataclass`/`Protocol` now move OUT of the unfamiliar column — he has a precise frozen/slots/defaults/methods
+  model and the static-vs-runtime Protocol philosophy. Solid primer for **M05 Ch2** (he declined to pull Pydantic
+  forward; it stays a section there + M13 Ch1/Ch4 for the LLM-output angle).
 - **2026-06-11 — third reading entry ✅ finalized** (`upskill-readings/2026/06/11-git-archaeology-and-software-design.md`):
   (1) Git as a code-*reading*/history tool (Tekin pickaxe article + Julia Evans *Inside .git*) — the
   entry queued from M04 Ch1 §1; (2) Ousterhout *A Philosophy of Software Design* (deep modules /
