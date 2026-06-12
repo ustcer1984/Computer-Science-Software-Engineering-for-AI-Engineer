@@ -4,9 +4,11 @@
 > **Chapter:** Memory
 > **Section:** The process address space — stack vs heap, and the truth about Python names, values, and references
 > **Status:** ✅ finalized 2026-06-12 — the body held up; the session ran almost entirely into a **software-design**
-> thread the §6 aliasing material opened (how to manage state in a pipeline). §10 captures that thread and the
-> best-practice pipeline skeleton you asked to keep. One example bug you caught (the small-int cache) is fixed
-> in §5/§9. `dataclass` queued as a reading + added to M05 Ch2 scope, since you flagged it as unfamiliar.
+> thread the §6 aliasing material opened, which you drove from a linear pipeline all the way to **graph (LangGraph-style)
+> state design**. §10 captures it: the best-practice pipeline skeleton (10b), the fixed-schema "can a step add a
+> key?" answer + frozen-is-shallow gotcha (10c), and the **two-part state for complex graphs** — stable `Core` +
+> open-but-typed `Artifacts` ("open values, closed shapes") with a full graph skeleton (10d). One example bug you
+> caught (the small-int cache) is fixed in §5/§9. `dataclass`/`Protocol` queued as a reading + added to M05 Ch2 scope.
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** Ch1 §2 (the call stack; frames; `call`/`ret`) and Ch1 §3 (the memory hierarchy;
@@ -582,6 +584,185 @@ chain, prefer **explicit wiring** (`cleaned = clean_input(raw, deps); result = c
 heterogeneous signatures give maximum per-step contract clarity at the cost of the uniform runner. **Linear +
 want uniform tracing/retry → list-of-steps. Small fixed graph + want maximum contract clarity → explicit
 wiring.** Both beat mutating a shared `self`.
+
+### 10c. Can a step add a *new* key to the state? (the schema question)
+
+You asked this directly. **No — and that's the feature.** With `frozen=True, slots=True` there's no instance
+`__dict__`, so an *undeclared* attribute can't be attached at all (even the lowest-level `object.__setattr__`
+raises `AttributeError`; verified). The set of fields is fixed at class-definition time — which is the point:
+`State` is a single typed contract, so you read the class and see *every* value that can ever flow through the
+pipeline (vs a dict, where any step can write any key and you can't know the shape without reading all of them).
+
+- **Right way to "add" data:** declare the field up front (`embeddings: list[float] | None = None`) and
+  `replace()` it when a step produces it. "I want a field that isn't there" is a signal to *add it to the
+  contract*, not to smuggle it in — a deliberate friction that keeps the state honest.
+- **Escape hatch + the §1 gotcha:** if you add `extra: dict[str, Any] = field(default_factory=dict)`, remember
+  **`frozen` is shallow** — it blocks *rebinding the attribute*, not *mutating the object it points at*. So
+  `state.extra["k"] = v` silently works and reopens the §6 aliasing bug. Update it functionally instead:
+  `replace(state, extra={**state.extra, "k": v})`. (`frozen` protects the names on the object, not the objects
+  those names point to — the §4 "two name tags, one object" fact again.)
+- If state is *fundamentally* open-ended (keys unknowable until runtime), a frozen dataclass is the wrong tool —
+  reach for a dict or a Pydantic model with `extra="allow"` and accept losing the static contract.
+
+### 10d. Scaling to a complex graph (LangGraph-style): the two-part state
+
+You then pushed to the real target — a **graph** pipeline (branches + loops, à la LangGraph), where you argued
+state needs two parts: **(1) stable data with a definite schema** (= `Core` above), and **(2) artifacts with
+dynamic structure** — a loop step stashing things for later, shapes that evolve as features change, so a fixed
+schema would keep breaking. Correct, and the resolving principle:
+
+> **Open set of values, closed set of shapes — fix the *grammar*, not the *vocabulary*.** Don't pre-declare
+> *which* artifacts exist (the vocabulary grows with features); *do* make each artifact a **typed record with
+> provenance**, and give the container a **fixed, disciplined interface**. A new feature = a new `Artifact`
+> subtype *beside its node* → purely additive, no central-schema edit, nothing breaks. A raw `dict[str, Any]`
+> gives open membership but zero shape discipline — the god-object again.
+
+Structurally this is LangGraph's **channels + reducers** (nodes return partial updates; a per-channel reducer
+merges them; loops use an *append* reducer) — but here every artifact is a typed object carrying provenance,
+which a loose `TypedDict` doesn't give you. The skeleton (verified — `frozen+slots` inheritance and loop
+accumulation both run):
+
+```python
+from __future__ import annotations
+from dataclasses import dataclass, field, replace
+from typing import Protocol, Callable, Mapping
+import logging
+
+log = logging.getLogger(__name__)
+
+# PART 1 — the stable CORE. Definite schema; the data you'd put in a DB row.
+@dataclass(frozen=True, slots=True)
+class Core:
+    raw_input: str
+    cleaned: str | None = None
+    result: dict | None = None      # add fields here ONLY for stable, first-class data
+
+# PART 2 — ARTIFACTS. Open set of values, closed set of shapes.
+# A new feature = a new Artifact subtype next to its node. No central edit.
+@dataclass(frozen=True, slots=True)
+class Artifact:
+    node: str                       # who produced it  → traceability
+    iteration: int = 0              # loop pass (0 if not in a loop)
+
+@dataclass(frozen=True, slots=True)
+class RetrievedDocs(Artifact):
+    docs: tuple[str, ...] = ()
+
+@dataclass(frozen=True, slots=True)
+class CritiqueNote(Artifact):
+    score: float = 0.0
+    note: str = ""
+
+@dataclass(frozen=True, slots=True)
+class Artifacts:
+    """Immutable, namespaced, APPEND-ONLY store. Open membership, fixed interface.
+    Append = a baked-in 'reducer' → loops accumulate. Functional updates only, so the
+    §1 'frozen is shallow' trap can't bite (tuples are immutable; we rebuild the dict)."""
+    _store: Mapping[str, tuple[Artifact, ...]] = field(default_factory=dict)
+    def add(self, key: str, art: Artifact) -> Artifacts:
+        prev = self._store.get(key, ())
+        return Artifacts({**self._store, key: prev + (art,)})    # returns a NEW store
+    def latest(self, key: str) -> Artifact | None:
+        seq = self._store.get(key, ()); return seq[-1] if seq else None
+    def all(self, key: str) -> tuple[Artifact, ...]:
+        return self._store.get(key, ())
+
+# THE STATE — two parts, two kinds of contract.
+@dataclass(frozen=True, slots=True)
+class State:
+    core: Core
+    artifacts: Artifacts = field(default_factory=Artifacts)
+
+@dataclass(frozen=True, slots=True)
+class Deps:                         # set-once dependencies (DI), read-only during the run
+    llm_client: object
+    config: dict
+
+# THE GRAPH — nodes transform state; routers pick the next node (→ branches & loops).
+END = "__end__"
+
+class Node(Protocol):
+    __name__: str
+    def __call__(self, state: State, deps: Deps) -> State: ...
+
+Router = Callable[[State], str]     # given state, return the next node's name (or END)
+
+@dataclass(frozen=True, slots=True)
+class Graph:
+    nodes: Mapping[str, Node]
+    edges: Mapping[str, Router]
+    entry: str
+
+def run(graph: Graph, state: State, deps: Deps, *, max_steps: int = 100) -> State:
+    """max_steps is the loop GUARD — the graph cousin of the recursion limit (§2):
+    a cyclic graph needs a termination railing just like recursion needs a base case."""
+    current = graph.entry
+    for step_no in range(max_steps):
+        if current == END:
+            return state
+        try:
+            state = graph.nodes[current](state, deps)        # ← reassigned, never mutated
+            log.info("node.ok", extra={"node": current, "step": step_no})
+        except Exception:
+            log.exception("node.failed", extra={"node": current, "step": step_no})
+            raise
+        current = graph.edges[current](state)                # branch / loop / END
+    raise RuntimeError(f"graph exceeded {max_steps} steps — non-terminating loop?")
+
+# NODES & ROUTERS — a retrieve→critique loop that ACCUMULATES artifacts.
+def retrieve(state: State, deps: Deps) -> State:
+    it = len(state.artifacts.all("docs"))                    # iteration = passes so far
+    docs = RetrievedDocs(node="retrieve", iteration=it, docs=(...,))
+    return replace(state, artifacts=state.artifacts.add("docs", docs))
+
+def critique(state: State, deps: Deps) -> State:
+    latest_docs = state.artifacts.latest("docs")
+    note = CritiqueNote(node="critique", score=..., note="...")
+    return replace(state, artifacts=state.artifacts.add("critique", note))
+
+def route_after_critique(state: State) -> str:
+    last = state.artifacts.latest("critique")
+    rounds = len(state.artifacts.all("critique"))
+    if isinstance(last, CritiqueNote) and last.score < 0.7 and rounds < 3:
+        return "retrieve"            # loop back — refine
+    return END                       # good enough, or hit the round cap
+
+GRAPH = Graph(
+    nodes={"retrieve": retrieve, "critique": critique},
+    edges={"retrieve": lambda s: "critique",                 # static edge
+           "critique": route_after_critique},                # conditional edge (loop or end)
+    entry="retrieve",
+)
+
+def main(raw: str, deps: Deps) -> State:
+    return run(GRAPH, State(core=Core(raw_input=raw)), deps)
+```
+
+**Why this answers the two worries:**
+- **"Feature change may break the schema"** — it can't, for artifacts. A new feature defines a new `Artifact`
+  subclass beside its node and calls `artifacts.add(...)`; you never touch `Core` or `Artifacts`. Only promoting
+  something *into* `Core` is a real schema change — and that should be deliberate.
+- **"A loop step keeps artifacts for future use"** — the store is **append-only and provenance-stamped**, so
+  pass *N* can read everything passes *0..N−1* produced (`artifacts.all("docs")`) and tell which pass made each
+  (`.iteration`, `.node`). Accumulation that stays immutable.
+
+**The discipline (all enforced by the types, not just advised):**
+1. **Open membership, never open *shape*** — `add` takes an `Artifact`, not `Any`; the collection grows, the
+   per-item type never degrades to soup. (Cost: `latest()`/`all()` return the base type, so consumers narrow
+   with `isinstance` — cheap, and the checker helps.)
+2. **Functional updates only** — `add` returns a *new* `Artifacts`; inner tuples are immutable → the §10c
+   "frozen is shallow" trap has no mutable dict to poke.
+3. **Loops need a guard** — `max_steps` is the direct analog of the recursion limit (§2): a cyclic graph with no
+   termination spins forever the way unbounded recursion overflows the stack. Same failure shape, same railing.
+4. **Provenance is mandatory** (`node`, `iteration`) → restores the traceability that mutating a shared dict
+   destroyed: who wrote what, in which pass, reconstructable from state alone.
+
+**Upgrade paths:** if artifact kinds need *different* merge semantics (not always append — "keep max score",
+"overwrite"), generalize `add` to take a per-key **reducer** `Callable[[tuple, Artifact], tuple]` — that's
+exactly LangGraph's channel model, a small change here. For untrusted/LLM-produced artifacts, swap the artifact
+dataclasses for **Pydantic** models — same shape, runtime validation on construction (an M05 / M13-reliability
+lever). This whole design is **M14 Ch2 (frameworks vs framework-less) / M07** territory — your framework-less
+graph-lite pipeline lives in exactly this space, and we'll come back to it there.
 
 ---
 

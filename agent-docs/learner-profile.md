@@ -106,10 +106,20 @@ learning surfaces.
   signatures, inject set-once deps on `self`, mutate nothing; a class earns mutable `self` only to protect a
   real invariant behind a semantic interface. Gave him a **best-practice pipeline skeleton** (frozen dataclass
   `State` + `Deps` DI + `Step` Protocol + uniform runner for one-place tracing/retry) — he asked to keep it in
-  the material (now §10b). **Signals:** (a) he *proactively* reasons about architecture/decomposition — engaged,
-  opinionated, iterates on designs — but this is exactly his #1 gap, so the instincts need calibration (he
-  reached twice for "encapsulate state in a class," the move that tends to *create* his monoliths; the
-  explicit-immutable-dataflow alternative was new to him and landed). (b) **Caught a real correctness bug in my
+  the material (now §10b). (5) **He then pushed the design all the way to a complex GRAPH pipeline (LangGraph-style)**
+  and proposed — correctly, unprompted — that graph state needs **two parts**: stable data with a definite schema,
+  and **dynamic "artifacts"** (loop steps stashing things; shapes that evolve with features, so a fixed schema keeps
+  breaking). A genuinely good, framework-designer-level intuition. Resolving principle we landed (now §10d):
+  **"open set of values, closed set of shapes — fix the grammar, not the vocabulary"** → don't pre-declare which
+  artifacts exist, but type each one + stamp provenance + give the container a fixed interface (append-only store =
+  a baked-in reducer; = LangGraph channels+reducers, but typed). **Signals:** (a) he *proactively* reasons about
+  architecture at a high level — engaged, opinionated, iterates fast — and his *systems/architecture* intuition
+  (two-part state, dynamic artifacts, graph loops) is a genuine STRENGTH; but the *local* decomposition mechanics
+  are the gap (he reached twice for "encapsulate state in a class," the move that tends to *create* his monoliths;
+  the explicit-immutable-dataflow alternative was new and landed). Net: strong at macro design, needs calibration
+  at micro (module boundaries, interface depth, mutation discipline). Strong pull toward agentic/graph-pipeline
+  architecture (his framework-less graph-lite work) → M14 Ch2/M07 will land well and should reuse THIS skeleton.
+  (b) **Caught a real correctness bug in my
   example** (one-line `a=257;b=257;a is b` is True via compile-time constant dedup, not False) — his "verify,
   don't trust" instinct applied to *my* material; verified live with Python before fixing. (c) **`dataclass`/
   `typing.Protocol` are unfamiliar** — notable given his Python strength; he vibe-codes and hasn't needed them.
