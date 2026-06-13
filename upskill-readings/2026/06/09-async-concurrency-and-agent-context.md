@@ -52,20 +52,29 @@ a, b, c = await asyncio.gather(
 )
 ```
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/09-async-concurrency-and-agent-context-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 gantt
     title Sequential await vs asyncio.gather (3 independent 100ms I/O calls)
     dateFormat X
     axisFormat %Lms
     section Sequential (≈300ms)
-    call A :0, 100
-    call B :100, 200
-    call C :200, 300
+    fetch A :0, 100
+    fetch B :100, 200
+    fetch C :200, 300
     section gather (≈100ms)
-    call A :crit, 0, 100
-    call B :crit, 0, 100
-    call C :crit, 0, 100
+    fetch A :crit, 0, 100
+    fetch B :crit, 0, 100
+    fetch C :crit, 0, 100
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **One thing the post doesn't stress — read it as a footnote.** Modern code increasingly prefers
 **`asyncio.TaskGroup`** (Python 3.11+) over `gather`: if one task fails, the group *cancels the rest*

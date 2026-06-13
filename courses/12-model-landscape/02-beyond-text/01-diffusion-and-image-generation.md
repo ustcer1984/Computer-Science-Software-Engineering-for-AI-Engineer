@@ -46,6 +46,12 @@ The one conceptual pivot to internalize up front:
 
 ## 1. The two generative paradigms, side by side
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/01-diffusion-and-image-generation-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     subgraph AR["Autoregressive (LLM, PixelCNN, early DALL·E)"]
@@ -57,6 +63,9 @@ flowchart LR
         d0["pure noise<br/>x_T"] --> d1["denoise"] --> d2["denoise"] --> d3["…"] --> d4["clean image<br/>x₀"]
     end
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 | | Autoregressive | Diffusion |
 |---|---|---|
@@ -96,11 +105,20 @@ So `xₜ = √(ᾱₜ)·x₀ + √(1−ᾱₜ)·ε`, with `ε ~ N(0, I)`. **This
 whole section** — it says any noisy version of an image is just a known blend of the clean image and a
 known Gaussian noise sample. Training will exploit exactly this.
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/01-diffusion-and-image-generation-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     x0["x₀ (clean)"] -->|"+ noise β₁"| x1["x₁"] -->|"β₂"| x2["x₂"] -->|"…"| xT["x_T ≈ N(0,I)<br/>(pure noise)"]
     xT -.->|"learned reverse: this is the hard part"| x0
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The forward process has **no learned parameters** — it's a fixed physics simulation. All the learning is
 in reversing it.
@@ -123,6 +141,12 @@ L = E_{x₀, ε, t}  ‖ ε − ε_θ(xₜ, t) ‖²
 
 That's it — a plain **MSE between true and predicted noise**. Training:
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/01-diffusion-and-image-generation-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     A["Sample clean image x₀ from data"] --> B["Sample random t ∈ {1…T} and noise ε~N(0,I)"]
@@ -131,6 +155,9 @@ flowchart TD
     D --> E["Loss = ‖ε − ε_θ‖²  → backprop"]
     E -.->|"repeat over millions of (image, t)"| A
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The model is trained to be a **denoiser at every noise level simultaneously** (`t` is fed in as a
 conditioning input, usually via a sinusoidal/time embedding — yes, the same positional-encoding idea you
@@ -245,6 +272,12 @@ practical with one move:
 2. Run the *entire* diffusion process in that compact latent space.
 3. Decode the final latent back to pixels once, at the end.
 
+<!-- DIAGRAM:START -->
+![Diagram 4](diagrams/01-diffusion-and-image-generation-4.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     IMG["image 512×512×3"] -->|"VAE encoder"| Z["latent 64×64×4<br/>(~48× smaller)"]
@@ -252,6 +285,9 @@ flowchart LR
     DIFF --> Zc["clean latent"]
     Zc -->|"VAE decoder"| OUT["image 512×512×3"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The compute saving is roughly the compression ratio — the difference between "needs a datacenter" and
 "runs on your GPU." Conceptually it's the same instinct as DeepSeek's MLA you analyzed: **do the expensive
@@ -336,6 +372,12 @@ just as it was for the H800 analysis.
 
 ## 10. The one-page mental model
 
+<!-- DIAGRAM:START -->
+![Diagram 5](diagrams/01-diffusion-and-image-generation-5.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     A["Two paradigms: autoregressive (sequential, discrete)<br/>vs DIFFUSION (parallel denoising, continuous)"]
@@ -346,6 +388,9 @@ flowchart TD
     E --> F["CONDITION: text via cross-attention; control via CFG guidance scale"]
     F --> G["BACKBONE: U-Net → DiT (transformer) → flow matching (frontier)"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **The seven things to carry:**
 1. Diffusion = **learn to reverse a noising process**; train a denoiser at all noise levels with a plain

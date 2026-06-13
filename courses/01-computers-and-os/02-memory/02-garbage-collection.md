@@ -66,6 +66,12 @@ collector *stops* and walks the object graph outward from a set of **roots** (gl
 marking everything it can reach. Anything it didn't reach is, by definition, unreachable → swept and freed in bulk.
 This is **mark-and-sweep**, and it runs *later*, in batches, not at the moment of last use.
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/02-garbage-collection-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TB
     subgraph RC["Reference counting — local, eager, continuous"]
@@ -85,6 +91,9 @@ flowchart TB
         T1 --> T2 --> T3 --> T4
     end
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The trade-off is sharp and worth memorizing, because it explains a lot of Python's behavior:
 
@@ -168,6 +177,12 @@ garbage. But each one's refcount is stuck at **1**, because they hold each other
 counts; it cannot tell that the two surviving references form a closed loop that nothing outside can enter. Pure
 refcounting would **leak this forever.**
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/02-garbage-collection-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     subgraph roots["Your program (roots)"]
@@ -182,6 +197,9 @@ flowchart LR
     end
     roots -. "nothing reaches in" .-> heap
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 This is not exotic. Cycles appear all the time in ordinary structures:
 
@@ -221,6 +239,12 @@ would be expensive. So the collector exploits the **weak generational hypothesis
 very young* (the temporary you made two lines ago) and the few that survive a while tend to live long. It keeps three
 **generations**:
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/02-garbage-collection-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     NEW["new container objects<br/>land in gen 0"] --> G0["Gen 0<br/>scanned OFTEN"]
@@ -230,6 +254,9 @@ flowchart LR
     G1 -. "freed if unreachable" .-> X1["reclaimed"]
     G2 -. "freed if unreachable" .-> X2["reclaimed"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 - New objects start in **gen 0**, scanned frequently and cheaply (it's small).
 - Survive a gen-0 collection → promoted to **gen 1**; survive that → **gen 2**.
@@ -253,6 +280,12 @@ gen-0 collections; gen 2 after 10 of those. You can watch and tune this with `gc
 
 Put the two together and you have CPython's actual memory manager:
 
+<!-- DIAGRAM:START -->
+![Diagram 4](diagrams/02-garbage-collection-4.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     OP["any operation that changes a reference<br/>(bind, pass, store, del, scope exit)"] --> RC["adjust refcount (INCREF / DECREF)"]
@@ -265,6 +298,9 @@ flowchart TD
     CYC -- "yes, found by collector" --> FREE2["finalize + free the cycle"]
     CYC -- "no" --> LIVE2["lives until refcount hits 0 normally"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 Refcounting does ~99% of the work, instantly and precisely. The cycle collector is the periodic correction term that
 mops up the one case refcounting provably can't.
@@ -301,6 +337,12 @@ So CPython needs every refcount mutation to be serialized. The brute-force way t
 lock that a thread must hold to touch *any* Python object** — the Global Interpreter Lock. The GIL is not primarily
 about your data structures; **it's the lock that makes reference counting thread-safe.** That's the bottom of it.
 
+<!-- DIAGRAM:START -->
+![Diagram 5](diagrams/02-garbage-collection-5.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TB
     subgraph problem["The race the GIL prevents"]
@@ -312,6 +354,9 @@ flowchart TB
         T2c --> LOST
     end
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 This is why the GIL is so stubborn to remove: refcounting is woven into *every object access*, so the naive fix —
 make every refcount a hardware atomic — would put an atomic operation on the hottest path in the interpreter and

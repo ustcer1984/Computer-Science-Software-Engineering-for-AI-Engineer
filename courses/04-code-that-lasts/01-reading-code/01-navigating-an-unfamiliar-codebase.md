@@ -43,6 +43,12 @@ The single biggest mistake novice readers make is treating source code as a docu
 edges that are *calls*. Most of the time you only need to traverse a small sub-graph — the path that
 a specific input travels to produce a specific output.
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/01-navigating-an-unfamiliar-codebase-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     EP["Entry point<br/>(route handler / main / CLI)"]
@@ -57,6 +63,9 @@ flowchart TD
     S1 -->|"calls"| EXT
     S2 -->|"calls"| DB
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 You do not read the whole graph. You find the *path* from the edge (a user action, an HTTP request, a
 cron job trigger) to the leaf that does the real work, and you read that path. Everything else is
@@ -116,6 +125,12 @@ Moves:
 3. **Name what each block does in one sentence** (mentally or literally). If you cannot, that is the
    question to ask next — not "let me read five more lines."
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/01-navigating-an-unfamiliar-codebase-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     R["Read file tree &amp; README<br/>(50k ft — ~5 min)"]
@@ -123,6 +138,9 @@ flowchart LR
     M --> F["Read function bodies on the hot path<br/>(500 ft — per function, as needed)"]
     F -->|"hit a question mark"| M
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The arrows go *both ways*: when a 500 ft detail raises a question ("what is this type?"), you zoom
 back to 5k to find the definition, answer it, and zoom back in. Experienced readers oscillate constantly.
@@ -169,6 +187,12 @@ codebase; you are reading one path through it.
 5. **Repeat** — at each node, note what data goes in and what comes out. You are building a mental
    sequence diagram:
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/01-navigating-an-unfamiliar-codebase-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 sequenceDiagram
     participant U as User (browser)
@@ -186,6 +210,9 @@ sequenceDiagram
     Svc-->>API: TurnResult
     API-->>U: 200 {turn_id, content}
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 You do not need to read every function to draw this diagram. You need to *name* each hop. When a hop
 is opaque (the function name does not tell you what it does), that is the node you drill into.
@@ -274,6 +301,12 @@ complex regex — comes *after* you have oriented with these five.
 
 ## 8. The one-page mental model
 
+<!-- DIAGRAM:START -->
+![Diagram 4](diagrams/01-navigating-an-unfamiliar-codebase-4.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     A["A codebase is a GRAPH of components.<br/>You navigate it; you do not read it."]
@@ -283,6 +316,9 @@ flowchart TD
     D --> E["git log / blame: read the WHY behind the code,<br/>not just the current WHAT."]
     E --> F["Stop when you have the answer.<br/>You don't need to read everything."]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **The six things to carry:**
 1. Code is a **graph**; read a *path*, not a document.

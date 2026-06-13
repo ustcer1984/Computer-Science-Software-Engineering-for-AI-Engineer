@@ -54,12 +54,21 @@ Here's the minimum mental model of a CPU — we'll go deeper in §4 (memory) and
 
 A CPU repeats one loop, billions of times a second — the **fetch–decode–execute cycle**:
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/01-source-to-running-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     A["1 · FETCH<br/>next instruction from memory"] --> B["2 · DECODE<br/>figure out what it means"]
     B --> C["3 · EXECUTE<br/>do it: add, compare, load…"]
     C -->|repeat, billions of times/sec| A
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 - **Instructions** are tiny: "add these two numbers," "copy this value from memory to a register,"
   "if this is zero, jump to instruction #5021." That's the whole vocabulary. No "loops," no "functions,"
@@ -141,6 +150,12 @@ that real-world languages compile to an **intermediate representation (bytecode)
 When people say "Python is interpreted," they're hiding two steps. Here's the real pipeline for
 **CPython** (the standard implementation — the `python` binary you almost certainly use):
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/01-source-to-running-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     S["your_code.py<br/>(source text)"]
@@ -152,6 +167,9 @@ flowchart TD
     BC -->|"(2) INTERPRET"| VM
     VM -->|"each bytecode op runs C code,<br/>which is already machine code"| CPU
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 So Python **is compiled** — just not to machine code. It's compiled to **bytecode**: instructions for an
 abstract "Python machine" (the CPython **Virtual Machine**). Then the VM — a big loop written in C —
@@ -247,6 +265,12 @@ state speed — which, note, is *another* flavor of the cold-vs-warm pattern you
 
 ## 7. The one-page mental model
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/01-source-to-running-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     A["<b>Pure compilation</b><br/>C, Rust, Go<br/>AOT → machine code<br/>─────<br/>⚡ fast runtime<br/>🐌 slow edit loop<br/>🔍 errors caught early"]
@@ -256,6 +280,9 @@ flowchart LR
 
     A --- B --- C --- D
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 *The arrow runs from "who translates everything up front" (left) to "who translates each line every time" (right).*
 

@@ -1,0 +1,8 @@
+{
+  "theme": "default",
+  "htmlLabels": false,
+  "flowchart": { "htmlLabels": false, "useMaxWidth": true },
+  "class": { "htmlLabels": false },
+  "er": { "useMaxWidth": true },
+  "sequence": { "useMaxWidth": true }
+}

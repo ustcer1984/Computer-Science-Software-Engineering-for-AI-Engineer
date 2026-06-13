@@ -7,3 +7,8 @@ CLAUDE.md
 
 # temp
 temp/
+
+# node tooling (diagram rendering, etc.)
+node_modules/
+# generated diagram scratch files
+*.tmp.mmd
