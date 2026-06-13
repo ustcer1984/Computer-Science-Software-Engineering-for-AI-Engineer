@@ -4,7 +4,13 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-12 (v8 — reading #4: dataclasses + typing.Protocol, the pair queued same-day
+Last updated: 2026-06-13 (v9 — M01 Ch2 §2 garbage collection. Body at/above level; session was his
+signature pressure-test mode aimed at the GC, anchored to concrete code + a real fab production leak.
+Surfaced a strong new orthogonality model — resource-lifetime ⊥ object-lifetime, "closing ≠ freeing" —
+and a war story (image-processing leak fixed with per-loop gc.collect()) that he used to probe for a
+better fix; landed "gc.collect() proves the leak is cyclic" + process-isolation as the robust pattern.
+Brings real production memory-debugging experience.).
+Prior: v8 (2026-06-12 — reading #4: dataclasses + typing.Protocol, the pair queued same-day
 from M01 Ch2 §1. Pure mechanics pressure-test in his signature mode; closed the flagged gap. Landed
 the orthogonality model frozen=semantics vs slots=storage, and Protocol=static-contract vs
 Pydantic=runtime-validator. Two of his hypotheses were half-wrong and got corrected cleanly.).
@@ -95,6 +101,34 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-13 — M01 Ch2 §2 (garbage collection: refcounting + cycle collector + the GIL) ✅ finalized.** Body
+  (refcounting, cycles, generational collector, refcounting-is-why-the-GIL-exists, PEP 703/683 free-threading) was
+  at/above his level — he absorbed it fast; the session was **his signature pressure-test mode now aimed at the GC**,
+  and notably **grounded in concrete code and a real production leak** rather than theory. Two threads (now §10):
+  **(1) Resource-vs-object lifetime.** He stress-tested the section's "use `with`, never the GC" rule by appending an
+  open file object to a list *inside* its `with` block, then asked the sharp version: **from the GC's point of view,
+  what's the difference between `with open()` and manual `f = open(); ...; f.close()`?** He drove to the precise
+  answer himself: **no GC difference** (both leave `f` bound, both freed identically by refcounting; `with` is not a
+  scope and not `del`), the difference is **exception-safety in resource-land, not memory-land**, and the real reframe
+  — **"closing is a resource operation, freeing is a memory operation, and the GC only does the second"** (resource
+  lifetime ⊥ object lifetime). Resolved the rule as **"1-or-2, never 3"** (3 = lean on `__del__`/GC to close the fd).
+  **(2) A fab war story (genuinely new signal — real production memory-debugging experience):** years ago a
+  colleague's custom image-processing script crashed after ~10 images (leak); he fixed it with a per-iteration
+  `gc.collect()` and asked for a better way *without touching the function.* Keepers he took: **`gc.collect()` working
+  is itself a diagnosis — it proves the leak is *cyclic*** (a strong-ref leak wouldn't respond); the **count-vs-bytes
+  threshold blindness** explains the "~10 images" crash (few-but-huge objects never trip the 700 object-count
+  threshold); and **process isolation** (`maxtasksperchild=1`; gunicorn/Celery `max_requests` pattern) is *strictly
+  stronger* than `gc.collect()` because it survives non-cyclic/C-level leaks too — **"`gc.collect()` cleans up a leak;
+  process isolation outlives it."** **Signals:** (a) **verify-don't-trust meta-skill again** — he pressure-tested the
+  *material's own prescription* ("never the GC") with a counterexample snippet until the precise scope of the rule
+  fell out (same instinct as catching the small-int-cache bug on 06-12, and the article-vs-skeleton contradiction).
+  (b) **Strong systems/OS intuition confirmed** — he reached for process isolation as the robust containment pattern
+  essentially unprompted; the GIL↔refcounting connection landed immediately (consistent with the 06-09 concurrency
+  strength). (c) **He brings real production debugging history** (fab image-processing) and learns best when the
+  abstraction is brought into contact with a concrete bug he's actually hit — anchor GC/OS/perf material to his
+  shipped systems. (d) Good track-economy again: finalized cleanly at the natural stopping point. **How to teach:
+  keep giving him the rule, then a snippet that seems to violate it** — he converges on the precise distinction by
+  attacking the boundary, faster than from the statement alone.
 - **2026-06-12 — M01 Ch2 §1 (address space: stack/heap & the Python object model) ✅ finalized.** Body
   (stack vs heap, names-are-pointers, mutability/aliasing) was at/below his level — he absorbed it fast and
   the session **turned into a software-DESIGN session**, which is the real signal. Arc: (1) sharp stack

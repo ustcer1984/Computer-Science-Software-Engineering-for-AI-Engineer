@@ -4,9 +4,13 @@
 > **Chapter:** Memory
 > **Section:** Automatic memory management — CPython's reference counting, the cycle collector it needs, and why
 > all of it is the deep reason the GIL exists.
-> **Status:** 🔵 **DRAFT for 2026-06-13** — generated for our Q&A. Read it, jot answers to §8, push on whatever
-> you want one layer deeper (the GIL/free-threading thread in §6 is built to be pushed on — it's your strongest
-> mode). I'll rewrite it to match how you actually think and add a §10 "Applied" once we talk, then mark ✅.
+> **Status:** ✅ **finalized 2026-06-13.** The body held up; the session was you pressure-testing the §7.2 rule
+> ("use `with`, never the GC") against concrete code and a real fab-era image-processing leak — your signature mode,
+> now aimed at the GC. §10 captures the two threads: **(10a)** resource-lifetime-vs-object-lifetime — `with` vs
+> manual `close()` vs GC *from the GC's point of view* (answer: no GC difference; closing ≠ freeing); and **(10b)**
+> the war story — why your `gc.collect()` fix was *also a diagnosis* (the leak must be cyclic), the count-vs-bytes
+> threshold blindness that explains the "~10 images" crash, and **process isolation** as the robust "outlive the leak
+> instead of cleaning it up" alternative.
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** §1 of this chapter (stack vs heap; **a Python name is a pointer to a heap object**; assignment
@@ -468,9 +472,88 @@ Bring anything surprising to our chat — especially whatever (b) vs (c) does, a
 
 ---
 
-## 10. Applied — captured from our session Q&A
+## 10. Applied — captured from our 2026-06-13 session
 
-*(To be written after we talk — this is where your questions and the threads you pull go, same as §1's §10.)*
+The body held; the session was you doing what you do — taking the section's prescriptions into contact with
+**concrete code** and a **real production leak**, and pressure-testing them until the precise distinction fell out.
+Two threads, distilled so you can re-derive them.
+
+### 10a. `with` vs manual `close()` vs the GC — resource lifetime is *not* object lifetime
+
+You started by stress-testing a snippet (appending the open file object to a list *inside* its `with` block), then
+sharpened to the real question: **from the GC's point of view, what is the difference between `with open(path) as f:`
+and `f = open(path); ...; f.close()`?**
+
+The keeper: **from the GC's point of view there is none.** Both create exactly one heap file object; both leave the
+name `f` *still bound* after the block (`with` is not `del`, and it introduces no new scope — `f` leaks into the
+enclosing function scope either way); and in both the *object* is freed at the identical moment — when `f`'s last
+reference drops, by reference counting (§2). **Neither `with` nor `close()` frees the object.**
+
+The reframe you pulled out of that — the sentence to keep:
+
+> **Closing is a *resource* operation; freeing is a *memory* operation — and the GC only ever does the second.**
+
+Two orthogonal lifetimes, which the single name `f` made it tempting to conflate:
+
+| | governed by | ends when |
+|---|---|---|
+| **resource** (open ↔ closed) | `with` / `close()` | block exit — deterministic, scope-bound |
+| **object** (alive ↔ freed) | reference counting | last reference drops |
+
+So after the close runs (implicitly in approach 1, explicitly in 2) you are left — in *both* — with a live, **closed**
+file object on the heap until `f` is collected. That's exactly the `my_list.append(f)` trap restated: a *live
+reference to a dead resource*. The trap isn't a GC bug; it's the two lifetimes diverging.
+
+Where the two approaches *do* differ is **not GC at all** — it's **exception safety**: `with` desugars to
+`try/finally`, so `close()` runs on *every* exit path (exception, `return`, `break`); the manual `close()` is skipped
+if the logic raises. Pure resource-land. The garbage collector is not involved in the difference.
+
+And that resolved why the section says *"use `with`, **never** the garbage collector"* — the rule targets a **third**
+approach that *neither* of yours is: `f = open(path)` with **no close at all**, leaning on the finalizer
+(`file.__del__`) to close the fd whenever the object eventually gets collected. *That* is "using the GC for cleanup":
+non-deterministic timing, broken on PyPy/tracing GC, delayed indefinitely by any lingering reference (a cycle, a
+logged traceback). Approaches 1 and 2 both *avoid* it; the choice between them is exception safety. So the rule isn't
+"1 vs 2" — it's **"1-or-2, never 3."**
+
+### 10b. The fab image-processing leak — your `gc.collect()` fix was also a *diagnosis*
+
+You brought a real one: years ago in the fab, a colleague's custom image-processing script crashed after ~10 images
+(a memory leak); you fixed it with a per-iteration `gc.collect()` and asked whether there's a better way **without
+touching the leaking function.**
+
+The first insight is that **your fix doubled as a diagnosis.** `gc.collect()` reclaims *only* cyclic garbage (§3). Had
+the leak been a growing strong reference — a module-level cache, an unclosed fd, a C-level `malloc` — `gc.collect()`
+would have done **nothing**. It *worked*, therefore the leak is **reference cycles created inside `process()`**, each
+small cycle pinning a **huge** image buffer (§7.6: a tiny cycle holds a giant array hostage).
+
+Why it crashed at ~10 images and not 10,000 — the §4 detail: the automatic collector triggers on object **count**
+(the `700` gen-0 threshold), **not bytes**. Image work allocates a *handful* of *enormous* objects per image, so the
+count threshold never trips before you exhaust *memory*. Your per-iteration `gc.collect()` is the brute-force
+correction for that count-vs-bytes blindness.
+
+Alternatives without touching `process()`, ranked by robustness:
+
+1. **Tune, don't force** — `gc.set_threshold(50, 5, 5)` makes automatic collection fire sooner. **Weaker than what
+   you already did**: still count-based, so it's guessing at the wrong variable and can still OOM on few-but-huge
+   objects. Your explicit per-loop collect is the *more reliable* form of the same idea, not a worse one.
+2. **Process isolation — the robust answer.** Run `process(image)` in a **child process**
+   (`ProcessPoolExecutor(max_tasks_per_child=1)`, or `multiprocessing.Pool(maxtasksperchild=1)`); when the child
+   exits, the OS reclaims **all** of its memory — *regardless of what kind of leak it is.* This is **strictly stronger
+   than `gc.collect()`**, which only worked *because* the leak happened to be cyclic; process isolation survives a
+   non-cyclic or C-level leak too. It's the standard production pattern for an un-fixable leaky worker (gunicorn
+   `max_requests`, Celery `worker_max_tasks_per_child`). The one knob — `maxtasksperchild` — trades a memory ceiling
+   against process-respawn + pickle overhead.
+
+The principle you landed on:
+
+> **`gc.collect()` *cleans up* a leak; process isolation *outlives* it.** When you can't touch the leaking code,
+> don't reclaim the garbage — contain the leak in something the OS will reap.
+
+A nice closing symmetry between the two threads: 10a is *"the GC won't free what you still reference"* (a reference
+keeps an object alive longer than you meant); 10b is *"the GC can't free what refcounting can't reach"* (a cycle
+keeps an object alive that nothing references). Both are the same lesson from opposite sides — **reclamation is
+governed by reachability, and your job is to control what's reachable**, whether by dropping references (10a) or by
+not building cycles / containing the blast radius (10b).
 
 ---
 
@@ -500,9 +583,9 @@ Bring anything surprising to our chat — especially whatever (b) vs (c) does, a
 ---
 
 ### What's next
-This draft is for our **2026-06-13** Q&A. After we talk I'll fold a §10 "Applied" in and mark it ✅ in
-`courses/plan.md`. With §1 (the map + the pointer model) and §2 (who frees the heap) done, the last IOU in Chapter 2
-is:
+✅ **Finalized 2026-06-13.** Marked done in `courses/plan.md`; §10 captures the `with`-vs-`close()`-vs-GC distinction
+(10a) and the fab image-leak war story + process-isolation fix (10b). With §1 (the map + the pointer model) and §2
+(who frees the heap) done, the last IOU in Chapter 2 is:
 - **§3 — "Out of memory" for real:** what physically happens when the heap can't grow; the difference between a
   *leak* and *legitimately too much*; virtual memory, paging, and the **OOM killer**; and the concrete one you feel —
   *why a 16 GB model won't load on a 12 GB GPU*, and what "CUDA out of memory" is actually telling you. That section
