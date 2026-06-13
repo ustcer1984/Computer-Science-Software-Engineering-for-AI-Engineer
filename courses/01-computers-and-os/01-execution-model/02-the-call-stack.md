@@ -82,6 +82,12 @@ continue, and `B` before `A`. Calls nest; they never cross.
 
 That "last-in, first-out" (**LIFO**) ordering is *exactly* what a **stack** data structure gives you:
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/02-the-call-stack-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     subgraph S["A stack: you only ever touch the TOP"]
@@ -91,6 +97,9 @@ flowchart TD
     end
     T -.->|"the last thing pushed is<br/>the first thing popped"| P
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 So the machine keeps the active frames in a region of memory used as a stack:
 
@@ -119,6 +128,12 @@ A single frame typically holds:
 
 Walking through `sum_of_squares(3, 4)` calling `square(3)`:
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/02-the-call-stack-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 sequenceDiagram
     participant CPU
@@ -134,6 +149,9 @@ sequenceDiagram
     CPU->>CPU: compute n*n = 16
     CPU->>Stack: POP, resume → 9 + 16 = 25
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 Notice the return address differs between the two calls — that's the whole point of §1. The same
 `square` code, two different "come back to here" notes, because the frame stores the answer
@@ -230,6 +248,12 @@ def factorial(n):
 
 `factorial(4)` stacks four frames before any returns:
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/02-the-call-stack-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     F4["factorial(4)  waiting on 4 * factorial(3)"]
@@ -239,6 +263,9 @@ flowchart TD
     F4 --> F3 --> F2 --> F1
     F1 -.->|"unwind: 1 → 2 → 6 → 24<br/>(pop frames as each returns)"| F4
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The stack is **finite** — a fixed-size memory region. Pile on too many frames and you run off the end:
 a **stack overflow**, which at the OS level is a hard crash (segmentation fault). Two safety nets:
@@ -332,6 +359,12 @@ the frame (stack-ish), but the *object* it points to (your dict, your list, even
 
 ## 9. The one-page mental model
 
+<!-- DIAGRAM:START -->
+![Diagram 4](diagrams/02-the-call-stack-4.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     A["A program isn't a straight line — it calls and returns.<br/>So it must remember: where do I go back to?"]
@@ -341,6 +374,9 @@ flowchart TD
     C --> E["Recursion = push per call → finite stack →<br/>too deep = RecursionError / stack overflow"]
     C --> F["Threads = one stack each · async/await + yield =<br/>SUSPEND a frame, stepping outside the simple model"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **The five things to remember:**
 1. The call stack exists to answer **"where do I return to, and with what local state?"** — one

@@ -26,3 +26,6 @@ and up-to-date AI. It is not a software product. Two parallel tracks:
 - **Keep the shared learner profile current.** [`learner-profile.md`](learner-profile.md) is the
   canonical record of the owner's skills/gaps/preferences. Read it for context; update it (not a
   private per-agent store) when a session reveals something new.
+- **Diagrams: author in Mermaid, commit rendered SVG.** Write ```` ```mermaid ```` blocks, then run
+  `npm run diagrams` and commit the generated SVGs alongside the doc. Mermaid alone does not render on
+  GitHub or most viewers. See [`diagrams.md`](diagrams.md) for the full convention and gotchas.

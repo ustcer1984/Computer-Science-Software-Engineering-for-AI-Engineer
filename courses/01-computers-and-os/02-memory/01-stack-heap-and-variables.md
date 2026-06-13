@@ -60,6 +60,12 @@ For now, trust the illusion; it's what your program sees.)
 That space is carved into regions, and the two that matter for *how you write code* sit at opposite ends and
 grow *toward each other*:
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/01-stack-heap-and-variables-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     subgraph AS["One process's virtual address space (low → high addresses)"]
@@ -72,6 +78,9 @@ flowchart TD
     end
     T --> D --> H --> GAP --> S
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The whole section is really about the **heap** and the **stack**. The other two regions (your compiled code,
 your globals/constants) are fixed-size and boring in the best way — allocated once, sized at load time, gone
@@ -142,6 +151,12 @@ returned. Compared to the stack's "subtract from a register," this is genuinely 
   elements are heap objects all over the address space; numpy's are one contiguous heap block. Same fact you
   met in §3, now you can see the heap underneath it.
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/01-stack-heap-and-variables-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     subgraph cmp["Stack vs Heap — opposite trade-offs"]
@@ -150,6 +165,9 @@ flowchart LR
         HP["<b>HEAP</b><br/>• allocate = allocator search<br/>• freed manually / by GC<br/>• any order, large (~GBs)<br/>• cache-cold, can fragment<br/>• holds: objects, dynamic data"]
     end
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 Keep this table in your head; everything else in the chapter hangs off it.
 
@@ -193,6 +211,12 @@ y.append(4)      # mutate the one shared object...
 print(x)         # [1, 2, 3, 4]   ← x "changed" because x and y were always the same object
 ```
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/01-stack-heap-and-variables-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     subgraph names["Names (in the frame, on the stack)"]
@@ -205,6 +229,9 @@ flowchart LR
     X --> OBJ
     Y --> OBJ
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 Two name tags, **one object**. There was never a second list to be out of sync with. Nothing copied. This is
 not a quirk — it is *exactly the same machinery* as C's pointers, with the pointer-ness hidden: a Python name
@@ -342,6 +369,12 @@ that only makes sense once you see the object graph.
 
 ## 7. The one-page mental model
 
+<!-- DIAGRAM:START -->
+![Diagram 4](diagrams/01-stack-heap-and-variables-4.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     A["A process sees one virtual address space.<br/>Two dynamic regions grow toward each other: STACK and HEAP."]
@@ -353,6 +386,9 @@ flowchart TD
     E --> F["Mutability is the safety valve:<br/>immutable (int/str/tuple) → ops make NEW objects → value-like & safe.<br/>mutable (list/dict/set) → in-place changes → aliasing bugs."]
     F --> G["Bites you as: mutable default args · shared-state aliasing · shallow vs deep copy.<br/>'== for value, is for identity'. → §2: who frees the heap objects? (GC)"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **Seven things to remember:**
 1. A process has a **stack** (frames; fast; automatic; bounded) and a **heap** (objects; flexible; freed by GC;

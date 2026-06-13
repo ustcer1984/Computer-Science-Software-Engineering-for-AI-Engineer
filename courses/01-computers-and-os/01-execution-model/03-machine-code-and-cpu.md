@@ -107,6 +107,12 @@ point, now with the "why it's cheaper" attached.
 
 §1 gave you the loop as a black box. Here's what's *inside* doing each step:
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/03-machine-code-and-cpu-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     PC["Program Counter<br/>(address of next instr)"] --> FE["FETCH<br/>read instr from<br/>instruction cache"]
@@ -116,6 +122,9 @@ flowchart LR
     MEM --> WB["WRITE-BACK<br/>result → register"]
     WB -->|"PC advances<br/>(or branch sets it)"| PC
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The cast:
 
@@ -143,6 +152,12 @@ Here is the thing that, once internalized, explains more real-world performance 
 this course. **Not all memory is equally far away**, and the distances are *enormous*. The CPU is so
 fast that RAM, from its point of view, is in another time zone.
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/03-machine-code-and-cpu-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     R["Registers<br/>~1 KB · &lt;1 cycle"] --> L1["L1 cache<br/>~32–64 KB · ~4 cycles"]
@@ -151,6 +166,9 @@ flowchart TD
     L3 --> RAM["Main memory (RAM)<br/>GBs · ~200–300 cycles"]
     RAM --> DISK["SSD / network<br/>TBs · 10,000s–millions of cycles"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 Read those cycle counts again. If a register access is "reach into your hand" (1 second), then:
 
@@ -200,6 +218,12 @@ of the CPU. So like a factory line, while instruction A is in "execute," B can b
 "fetch." Steady-state throughput approaches **one instruction finished per cycle** even though each takes
 several cycles end-to-end.
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/03-machine-code-and-cpu-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     subgraph cyc["Pipelining — overlap, like an assembly line"]
@@ -209,6 +233,9 @@ flowchart LR
         I3["instr C:       FE→DE→EX→MEM→WB"]
     end
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **Superscalar + out-of-order.** Modern cores have *multiple* ALUs and can retire **several instructions
 per cycle**, and they'll **reorder** instructions that don't depend on each other to keep all units busy
@@ -291,6 +318,12 @@ per unit time now that the clock won't budge."
 
 ## 8. The one-page mental model
 
+<!-- DIAGRAM:START -->
+![Diagram 4](diagrams/03-machine-code-and-cpu-4.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     A["Transistors → gates → a clocked state machine.<br/>Time is measured in CYCLES (one clock tick)."]
@@ -302,6 +335,9 @@ flowchart TD
     E --> F
     F --> G["SIMD/GPU: one instruction over many data.<br/>= why numpy/torch & AI accelerators are fast."]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **The six things to remember:**
 1. The CPU is a **clocked state machine**; the unit of time is the **cycle**, and the instruction

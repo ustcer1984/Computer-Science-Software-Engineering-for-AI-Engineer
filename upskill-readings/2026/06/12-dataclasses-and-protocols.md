@@ -43,6 +43,12 @@ This one line gives you: a real constructor, a readable `repr` (`PipeState(promp
 
 **The comparison you asked for — dataclass vs NamedTuple vs Pydantic vs attrs.** They look interchangeable; they are not. The axis that sorts them: **how much do you pay, and what do you get?**
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/12-dataclasses-and-protocols-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     Q["I need a typed data container.<br/>What do I actually need from it?"] --> V{"Do I need to VALIDATE / coerce<br/>untrusted external data<br/>(JSON, API input, LLM output)?"}
@@ -52,6 +58,9 @@ flowchart TD
     I -- "no, I want a real object" --> D["<b>@dataclass</b><br/>stdlib, zero deps, frozen+slots<br/>the default for internal/domain data"]
     D -. "need validators / converters /<br/>more power, still no JSON layer" .-> A["<b>attrs</b><br/>dataclass's more powerful ancestor"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 The sharp distinctions (from the attrs docs and the comparison piece, both linked):
 - **Pydantic is a *validation* library, not a container.** Its job is sanitizing untrusted input (it coerces `"3"` → `3`). Reach for it at your **boundaries** — exactly your **LLM-JSON-reliability gap**: a Pydantic model is how you make malformed model output a caught validation error instead of a downstream crash. But the attrs authors warn: don't use it for your *internal domain* objects — *"Is it really necessary to re-validate all your objects while reading them from a trusted database?"* Validation is a boundary tax you shouldn't pay everywhere.
@@ -94,6 +103,12 @@ class Translate:
 - **Nominal subtyping** (classic inheritance / ABCs): you're a `Step` *only if you declared* `class Translate(Step)`. Membership is **by name/lineage**.
 - **Structural subtyping** (Protocol): you're a `Step` *if you have the right methods with the right signatures*. Membership is **by shape**. "Two classes with the same methods are structural subtypes of one another."
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/12-dataclasses-and-protocols-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     subgraph Nominal["Nominal (ABC / inheritance)"]
@@ -111,6 +126,9 @@ flowchart LR
         note2["Steps know NOTHING about Step.<br/>Zero coupling. Retrofit anything."]
     end
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **Why this is the *right* tool for your `Step` (the keeper).** With an ABC, every step must `import Step` and inherit it — the steps now *depend on* the framework. With a Protocol, the dependency arrow **reverses**: the runner depends on the *shape* `Step`, and the step classes know nothing about it. This is **dependency inversion done with zero coupling** — exactly the "deep seam" / information-hiding instinct from your Ousterhout reading. It's also why Protocols are how Python's own "file-like" / "iterable" / "context manager" contracts are now typed.
 

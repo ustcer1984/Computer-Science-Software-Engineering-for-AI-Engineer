@@ -33,6 +33,12 @@
 | `git log -G "<regex>" -p` | Like `-S` but regex, and it **also catches lines that merely *moved*** (pickaxe `-S` only fires on net add/remove of an occurrence). Use when `-S` comes up empty. |
 | `git log --grep "<text>"` | Search **commit messages**, not code — find the PR/ticket discussion. |
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/11-git-archaeology-and-software-design-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     Q["I don't understand this code.<br/>What do I actually want to know?"] --> A{"Why does this exact<br/>line/block look like this?"}
@@ -42,6 +48,9 @@ flowchart TD
     A -- "what was the human intent?" --> M["git log --grep / read the<br/>commit message + linked PR"]
     Q -. "only as a starting pointer" .-> B["git blame<br/>(then escalate up the ladder)"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **The example that makes it click (from the article).** You find a weird `method_name`. `git blame` says "Alice, refactor, 3 months ago" — useless, it was just a rename. Instead: `git log -S "method_name" -p --reverse` walks you to the *original* commit that introduced it — often 2 years and 5 moves ago — with the diff and message explaining **why**. That's the answer you wanted.
 
@@ -79,6 +88,12 @@ flowchart TD
 
 > The counter-intuitive punchline: **more, smaller classes is not automatically better.** "Classitis" — chopping things into many shallow classes — *increases* total interface surface and can make a system harder to understand, not easier. Decomposition is about **depth**, not just line count. (Important nuance for you: the fix for your 2,400-line monolith isn't "split into 24 files of 100 lines" — it's "find the *deep seams*" where a simple interface hides a lot.)
 
+<!-- DIAGRAM:START -->
+![Diagram 2](diagrams/11-git-archaeology-and-software-design-2.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 quadrantChart
     title Module depth = functionality hidden vs. interface exposed
@@ -88,11 +103,14 @@ quadrantChart
     quadrant-2 "DEEP — the goal"
     quadrant-3 "Trivial (fine, but minor)"
     quadrant-4 "Worst: complex interface, hides nothing"
-    "Unix file I/O": 0.15 0.9
-    "Thin pass-through class": 0.45 0.15
-    "2400-line god-module": 0.9 0.85
-    "Well-named pure util": 0.2 0.25
+    "Unix file I/O": [0.15, 0.9]
+    "Thin pass-through class": [0.45, 0.15]
+    "2400-line god-module": [0.9, 0.85]
+    "Well-named pure util": [0.2, 0.25]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 *(The 2,400-line module is high-functionality but also high-interface — it leaks its internals everywhere it's used. The move is to push it left: same power, smaller surface.)*
 
 **Other ideas worth carrying (each is a one-liner you can apply):**

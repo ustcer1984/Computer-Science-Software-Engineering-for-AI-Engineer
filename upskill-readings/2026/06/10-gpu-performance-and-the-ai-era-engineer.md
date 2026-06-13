@@ -24,6 +24,12 @@
 
 **The diagnostic (the back-of-envelope you wanted in §3).** Compare your op's **arithmetic intensity** (FLOPs done per byte moved) against the hardware's ratio of `peak FLOPs ÷ memory bandwidth`. He uses an A100: **~19.5 TFLOP/s** of compute vs **~1.5 TB/s** of bandwidth. If your op does few FLOPs per byte (elementwise ops, activations, the decode step reading weights + KV cache), you're **memory-bound** — the compute units sit idle waiting for data.
 
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/10-gpu-performance-and-the-ai-era-engineer-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     A["A kernel is too slow.<br/>Which regime?"] --> B{"Achieved FLOPs<br/>near peak (~80%)?"}
@@ -33,6 +39,9 @@ flowchart TD
     D -- "No" --> F["MEMORY-BANDWIDTH-BOUND<br/>→ move fewer bytes:<br/>OPERATOR FUSION, keep data<br/>on-chip, fewer round-trips"]
     F -.->|"the FlashAttention move"| G["tile + fuse so attention<br/>never materializes the<br/>N×N matrix in HBM"]
 ```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **The single most impactful technique: operator fusion.** `x.cos().cos()` naively is *read x → write tmp → read tmp → write out* = 4 memory trips. Fused into one kernel it's *read x → write out* = 2 trips → ~2× faster, **for free**, with zero change in FLOPs. Key consequence that surprises people: a fused `x.cos().cos()` costs almost the same as a single `x.cos()` — so for memory-bound chains, *which* cheap elementwise op you pick barely matters; **how many memory round-trips you make is everything.**
 

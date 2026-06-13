@@ -1,0 +1,14 @@
+{
+  "name": "cs-swe-ai-upskilling",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tooling for the personal CS/SWE/AI upskilling workspace (diagram rendering, etc.)",
+  "type": "module",
+  "scripts": {
+    "diagrams": "node scripts/render-diagrams.mjs",
+    "diagrams:check": "node scripts/render-diagrams.mjs --check"
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.4.2"
+  }
+}
