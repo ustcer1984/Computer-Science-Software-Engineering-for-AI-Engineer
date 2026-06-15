@@ -5,9 +5,15 @@
 > **Section:** What physically happens when memory runs out — virtual address space vs. physical RAM, paging
 > and the OOM killer, leak vs. legitimately-too-much, the cgroup limit your cloud actually enforces, and the one
 > you feel daily: *why a 16 GB model won't load on a 12 GB GPU, and what "CUDA out of memory" is really telling you.*
-> **Status:** 🔵 **draft — 2026-06-14.** This is the study material for our session. The body is complete; §10
-> ("Applied") is a placeholder I'll fill on **finalize** from whatever you drive the Q&A into — likely a real OOM
-> you've hit (a Lambda dying with exit 137, a `CUDA out of memory` on a fine-tune, an RDS box thrashing). Bring one.
+> **Status:** ✅ **finalized 2026-06-14.** The body held; the entire session was you taking §7/§9.7 into contact
+> with **your own LLM-serving experience** — three threads, all of which turned out to be the *same* OS memory
+> playbook (§1–§7) reappearing one layer up in inference serving. §11 captures them: **(11a)** PagedAttention — your
+> "contiguous KV-cache is too huge to allocate" hypothesis caught the *smallest* of three wastes (external frag);
+> the dominant one is **forced over-reservation** (internal fragmentation), and fixed-size blocks kill external frag
+> *by construction*; **(11b)** vLLM `gpu_memory_utilization` — *not* paging cost; it's a **derating safety margin**
+> against an under-estimated, variable peak (the semiconductor framing that landed); **(11c)** llama.cpp offload —
+> **sequential, bandwidth-bound, and weights never move** (only ~8 KB activations cross PCIe). Pattern across all
+> three: *don't move/duplicate/over-reserve the big thing.*
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** §1 (the process **address space** as a map; stack vs. heap; the allocator searching the heap for
@@ -555,19 +561,108 @@ what your real deployment's `memory.max` in (e) turns out to be.
 
 ---
 
-## 11. Applied — captured from our session
+## 11. Applied — captured from our 2026-06-14 session
 
-*(Placeholder — to be filled on **finalize**, from wherever you drive the Q&A. Likely landing spots, given your
-history: a real OOM you've hit and want diagnosed by signature; a Lambda/ECS exit-137 you can now re-read as a cgroup
-limit; a fine-tune that died with `CUDA out of memory` and the VRAM budget that explains it; or a thrashing
-RDS/server story to pair with your fab image-leak war story from §2. We'll distill whatever you pressure-test into
-the keepers, your way.)*
+You never went near the CPU/host material — you took the section straight into **LLM serving**, the part you've
+actually operated (vLLM, llama.cpp), and pulled the *why* out of three rules-of-thumb you'd been handed. The
+satisfying punchline, which only emerged at the end: **all three are the §1–§7 OS memory playbook reappearing one
+abstraction up.** Distilled so you can re-derive them.
+
+### 11a. PagedAttention — what a *contiguous* KV-cache actually wastes (Q9.7)
+
+Your hypothesis: a single contiguous KV-cache is bad because it's "too huge to allocate → higher risk of no
+contiguous VRAM chunk." That names **external fragmentation** (§6/§7's "free but not contiguous") — real, but the
+**smallest** of three wastes, and mis-ranked. The correction:
+
+| Waste in a contiguous-per-sequence KV-cache | Magnitude | In your hypothesis? |
+|---|---|---|
+| **Internal fragmentation** — reserve `max_seq_len` up front, use a fraction | **dominant (≈60–80%)** | missed |
+| **Reservation slack** — slots for *this* request's future tokens, idle, unusable by others | large | missed |
+| **External fragmentation** — gaps between big contiguous chunks | smallest | ✓ your point |
+
+The crux you took away — **contiguity + dynamic growth forces reserve-for-the-worst-case.** A KV-cache grows one
+token per decode step to an unknown final length; "must stay contiguous" means you can't let the next request sit
+right behind you, so you reserve the whole `max_seq_len` block up front and then stop generating at token 60 of 2048.
+Measured: prior systems put only ~20–40% of KV memory to real token states. PagedAttention breaks **growth from
+contiguity** — grab any free fixed-size block (default 16 tokens) on demand, indirect through a block table — so:
+
+- **fixed-size blocks eliminate external fragmentation *by construction*** (the classic OS insight you'd half-
+  reached-for: when every unit is identical, *any* free block satisfies *any* request — there's no "big enough span"
+  to fail to find);
+- on-demand blocks eliminate the over-reservation (the dominant waste);
+- and the move opens a door your fragmentation framing couldn't predict — **block sharing via copy-on-write**
+  (parallel sampling / beam search share the prompt's KV blocks instead of duplicating them).
+
+The §1 mapping, confirmed: logical KV-cache = virtual address space · physical blocks = frames · block table = page
+table · grab-on-fill = demand paging · CoW sharing = `fork`ed/shared pages.
+
+> **Keeper:** the problem isn't "the chunk is too big to place" — it's "*contiguity forces you to reserve for the
+> worst case.*" Stop needing a big contiguous chunk, and external fragmentation vanishes as a **side effect**, not
+> the target.
+
+### 11b. vLLM `gpu_memory_utilization` — it's *derating*, not paging cost
+
+You'd been told to set it to 0.80–0.85, "just experience," and guessed the reason was that **paging isn't free**.
+The correction is an axis error: PagedAttention's cost (block-table walk, gather of non-contiguous blocks) is
+**compute/latency, paid *inside* the already-allocated pool** — kilobytes of block table, nanoseconds per step. It
+can't explain holding back *bytes* of VRAM. Wrong currency.
+
+What the knob actually is: a **ceiling.** vLLM pre-allocates the KV pool as `ratio × VRAM − weights − profiled-peak`,
+where the peak is an **estimate** from one profiling forward pass. The `(1 − ratio)` slice is an **explicit safety
+margin against a peak that is *variable* at serving time** — live batch composition (many long sequences hitting one
+decode step), CUDA-graph capture, cuBLAS/cuDNN workspaces, allocator fragmentation, NCCL buffers under tensor
+parallelism, other tenants on the card. Blow past it and there's **no swap to catch you** (§7): you get `CUDA out of
+memory` and the **server crashes mid-serving**. It's two-sided — too high risks the crash, too low wastes the pool
+(fewer concurrent requests, lower throughput) — hence a sweet spot, not "higher is better."
+
+> **The framing that landed (your world):** this is **derating.** You run a component below its max rating because
+> the real operating peak has variance and you want margin before catastrophic failure. `0.85` is derating the VRAM;
+> the 15% isn't waste, it's the safety factor. "Just experience" decodes to: *the exact safe ceiling depends on
+> model + GPU + traffic variance, so nobody derives it — they pick a conservative value that survives the bad days.*
+
+### 11c. llama.cpp partial offload — sequential, bandwidth-bound, and the weights never move
+
+You'd run `-ngl` offloading and noticed *low offload ratio ≈ tolerable*. The three questions, resolved:
+
+1. **Offloaded blocks are computed purely on CPU** — compute follows the weights. (Granularity note: `-ngl` offloads
+   whole decoder *blocks* — attention **+** FFN — not attention alone; `--override-tensor` is the tensor-level knob,
+   used to push MoE expert FFNs to CPU while keeping attention on GPU.)
+2. **Sequential, not parallel.** The transformer is a dependency chain (block *i+1*'s input is block *i*'s output),
+   so GPU blocks run, *then* CPU blocks — one device idle at a time. Latency is **additive**. And because decode is
+   **memory-bandwidth-bound**, a CPU block is ~10–40× a GPU block (RAM ≈ 50–100 GB/s vs VRAM ≈ 0.5–3 TB/s) → a few
+   CPU layers add little, but the penalty grows linearly with a big per-unit gap, so there's a **knee**: tolerable at
+   low ratio, cliff at high ratio. That's exactly the curve you observed.
+3. **Cross-bus traffic is tiny by design — the weights never move.** Each block's weights are pinned to one device at
+   load; only the **activation vector** (~`hidden_dim` × 2 B ≈ 8 KB/token) crosses PCIe, at a contiguous split's
+   1–2 boundaries, with KV staying local. Contrast the naïve alternative (stream a CPU layer's *weights* up each
+   token = hundreds of MB over ~16–32 GB/s PCIe = fatal). Caveat you logged: this is the **decode** story; **prefill**
+   is compute-bound, so CPU layers hurt more there in raw FLOPs ("first token slow, then fine").
+
+> **Keeper:** move the *small* thing (activations, O(`d`) per token), never the *big* thing (weights, O(`d²`) per
+> layer). The bus crossing is cheap *because the design refuses to put weights on it.*
+
+### The thread tying all three together
+
+Each rule-of-thumb is the OS memory playbook one level up:
+
+- **PagedAttention** = §1 **demand paging + fixed-size frames** applied to the KV-cache (kills over-reservation *and*
+  external fragmentation, enables sharing).
+- **`gpu_memory_utilization`** = **derating against an unpredictable peak** because the GPU has **no swap tier**
+  (§7) — the headroom is the missing safety net, made explicit.
+- **Offloading** = **keep the big static thing put, ship only the small dynamic thing** — the same "don't move
+  weights" instinct behind why §7's VRAM budget is dominated by the resident weights, not the traffic.
+
+> **The unifying principle, your sentence to keep:** *don't move, duplicate, or over-reserve the big thing.* Make the
+> scarce/contiguous/expensive resource into small fixed units, allocate them on demand, keep them where they are, and
+> share them when you can. PagedAttention, derating, and offloading are three faces of it — and so are paging,
+> pymalloc's pools (§2/§6), and copy-on-write `fork` (§3). Once you see it, LLM-serving memory stops being a bag of
+> tricks and becomes the OS course you just took, re-skinned.
 
 ---
 
 ## References (optional, for depth)
 
-*(Links to be re-verified live at finalize, per the repo's "references need valid links" rule.)*
+*(All links verified live 2026-06-14.)*
 
 - **[CSAPP — Virtual Memory chapter (Bryant & O'Hallaron)](https://csapp.cs.cmu.edu/)** — the language-agnostic
   foundation under §1–§3: address translation, the MMU/TLB, page tables, demand paging, and the allocator picture.
@@ -589,15 +684,23 @@ the keepers, your way.)*
   — the VRAM budget breakdown of §7 (weights + gradients + optimizer + activations) with measured numbers; the
   reference for the ~4×-for-training factor.
 - **[vLLM — PagedAttention / the paper "Efficient Memory Management for LLM Serving"](https://arxiv.org/abs/2309.06180)**
-  — the §7 "virtual memory for the KV-cache" claim, straight from the source; read it as demand paging (§1) applied
-  to VRAM. Right at your level.
+  — the §7 / §11a "virtual memory for the KV-cache" claim, straight from the source; read it as demand paging (§1)
+  applied to VRAM, and note its memory-waste breakdown (the internal-vs-external fragmentation ranking). Right at
+  your level.
+- **[vLLM docs](https://docs.vllm.ai/en/latest/)** — for §11b: the `gpu_memory_utilization` engine arg (the ceiling
+  that sizes the KV pool) and the conserving-memory guide. The operational companion to the paper.
+- **[llama.cpp (ggml-org)](https://github.com/ggml-org/llama.cpp)** — for §11c: `--n-gpu-layers` (`-ngl`) layer
+  offloading and `--override-tensor` (`-ot`) tensor placement; the README and `examples/` document the split. The
+  ggml backend is where "compute follows the weights" and "only activations cross the bus" actually live.
 
 ---
 
 ### What's next
-🔵 **Draft — 2026-06-14.** Marked in-progress in `courses/plan.md`. After our Q&A, say **"finalize"** and I'll fill
-§11 from the session, re-verify the reference links live, and flip Ch2 to ✅ — **completing Chapter 2 (Memory)**: §1
-the map, §2 who frees it, §3 the walls.
+✅ **Finalized 2026-06-14 — and with it, Chapter 2 (Memory) is COMPLETE**: §1 the map (address space, the pointer
+model), §2 who frees it (refcounting + cycle collector + the GIL), §3 the walls (OOM, paging, the VRAM budget). §11
+captures the three LLM-serving threads you drove (PagedAttention waste-ranking · `gpu_memory_utilization` as
+derating · llama.cpp offload mechanics) and the unifying principle — *don't move/duplicate/over-reserve the big
+thing.* Links re-verified live; `courses/plan.md` flipped to ✅.
 
 With Ch2 done, the Phase-1 interleave points three ways — your pick at the boundary:
 - **M01 Ch3 — Processes, threads & concurrency** (the natural next CS step; it cashes in the GIL keystone from §2 §6

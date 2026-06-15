@@ -4,7 +4,17 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-13 (v9 — M01 Ch2 §2 garbage collection. Body at/above level; session was his
+Last updated: 2026-06-14 (v10 — M01 Ch2 §3 out of memory → **Ch2 COMPLETE**. Body untouched in session;
+he drove the *entire* Q&A into **LLM-serving memory** from his own ops experience (vLLM, llama.cpp).
+**New signal: hands-on LLM inference-serving/deployment experience** (vLLM `gpu_memory_utilization` tuning,
+llama.cpp `-ngl` offloading) — a practitioner strength on the *serving/optimization* side, beyond the
+integration side already logged. His hypotheses followed a now-consistent pattern: plausible, capturing a
+real *secondary* effect, but **mis-ranking it against the dominant cause** (external- vs internal-fragmentation;
+paging-cost vs derating-margin) — both corrected cleanly. The semiconductor **derating** framing landed hard;
+hardware/bandwidth reasoning (PCIe, RAM-vs-VRAM bandwidth) is fluent. He probes for the *mechanism behind a
+rule-of-thumb* ("just experience" → "but why"). The session's payoff was a unifying systems principle he can
+now reuse — *don't move/duplicate/over-reserve the big thing.*).
+Prior: v9 (2026-06-13 — M01 Ch2 §2 garbage collection. Body at/above level; session was his
 signature pressure-test mode aimed at the GC, anchored to concrete code + a real fab production leak.
 Surfaced a strong new orthogonality model — resource-lifetime ⊥ object-lifetime, "closing ≠ freeing" —
 and a war story (image-processing leak fixed with per-loop gc.collect()) that he used to probe for a
@@ -47,6 +57,11 @@ initial calibration from self-description + code survey of
 - AI/LLM integration (practitioner) — multi-provider (Gemini/Vertex, SEA-LION, OpenAI-compatible/
   OpenRouter), structured JSON output, a deliberately framework-less "graph-lite" pipeline,
   multilingual translation, guardrails (SEA-Guard), Langfuse tracing.
+- **LLM inference serving / deployment (hands-on, surfaced 2026-06-14)** — has run models on **vLLM**
+  (tuned `gpu_memory_utilization`) and **llama.cpp** (CPU/GPU layer offloading via `-ngl`). Operates these
+  but wanted the *mechanisms* behind the rules-of-thumb (got: PagedAttention internal-vs-external
+  fragmentation, KV-pool sizing & derating, sequential bandwidth-bound offload). Pair the serving track
+  (M07/M08/M13) with this real experience; he learns it fastest anchored to a knob he's actually turned.
 - **LLM theory & architecture — a genuine STRENGTH, not a gap (recalibrated 2026-06-10 from two of his
   own technical decks).** He understands transformers, attention math (QKV, the O(n²) quadratic cost,
   the explicit KV-cache VRAM scaling), tokenization, embeddings, and training-vs-inference *cold* — and
@@ -101,6 +116,39 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-14 — M01 Ch2 §3 (out of memory: virtual memory, paging, OOM killer, the GPU/VRAM wall) ✅ finalized
+  → Ch2 (Memory) COMPLETE.** The body (address-space-vs-RAM, overcommit, the four OOM signatures, leak-vs-too-much,
+  the VRAM budget) went **untouched** — he absorbed it and spent the whole session pulling the *why* out of three
+  **LLM-serving** rules-of-thumb from his own ops experience. Three threads (now §11): **(1) PagedAttention** — he
+  hypothesized a contiguous KV-cache is bad because it's "too huge → no contiguous VRAM chunk" (**external
+  fragmentation**). Corrected: that's the *smallest* of three wastes; the dominant one is **internal fragmentation
+  from forced over-reservation** — contiguity + dynamic growth to an unknown length ⇒ you must reserve `max_seq_len`
+  up front (prior systems use only ~20–40% of KV memory); fixed-size blocks eliminate external frag *by construction*;
+  and he'd missed the **copy-on-write block-sharing** dimension entirely. §1 paging mapping confirmed. **(2) vLLM
+  `gpu_memory_utilization`** — he'd been told 0.80–0.85 "just experience" and guessed the reason was "paging isn't
+  free." Corrected (an **axis error**): paging cost is compute/latency paid *inside* the pool, not VRAM; the ratio is
+  a **ceiling**, and the `(1−ratio)` slice is a **safety margin against an under-estimated, *variable* peak** (batch
+  composition, CUDA graphs, fragmentation, NCCL, other tenants) — exceed it and, with **no GPU swap**, you get a
+  `CUDA OOM` *crash*. He took the **derating** framing (run below max rating for margin against a variable peak —
+  his semiconductor world) immediately. **(3) llama.cpp `-ngl` offload** — he'd observed "low offload ratio ≈
+  tolerable" and asked three sharp questions; answers: offloaded blocks are **purely CPU** (compute follows weights);
+  GPU/CPU run **sequentially** (transformer dependency chain → additive latency; decode is **bandwidth-bound** so a
+  CPU layer is ~10–40× a GPU layer → mild at low ratio, sharp **knee** at high); cross-bus traffic is tiny because
+  **weights are pinned per device and only ~8 KB of activations cross PCIe** (move the small thing, not the big
+  thing) — with a decode-vs-prefill caveat he logged. **Payoff:** all three collapsed to one principle he can reuse —
+  ***don't move, duplicate, or over-reserve the big thing***; PagedAttention / derating / offloading are the OS
+  memory playbook (§1–§7) re-skinned for serving. **Signals:** (a) **NEW — real LLM inference-serving/deployment
+  experience** (vLLM + llama.cpp ops), a practitioner strength on the *serving/optimization* side; moved into the
+  skill map. Anchor M07/M08/M13 serving content to knobs he's actually turned. (b) **Consistent hypothesis pattern,
+  now a confirmed teaching lever:** his guesses reliably capture a *real secondary effect* but **mis-rank it against
+  the dominant cause** (external-vs-internal frag; paging-cost-vs-margin) — same shape as the macro-strong/micro-needs-
+  calibration read from 06-12. The teaching value is *naming the dominant mechanism and re-ranking*; he integrates the
+  correction instantly. (c) **Hardware/bandwidth reasoning is fluent** (PCIe vs RAM vs VRAM bandwidth, bandwidth-bound
+  decode) — the GPU/AI-hardware strength again. (d) He **probes the mechanism behind a rule-of-thumb** ("just
+  experience" is unsatisfying to him) — give him the *why*, not the *what*. (e) Good track-economy: clean "finalize
+  here" at the natural stop. **How to teach him going forward:** let him state the plausible hypothesis, then re-rank
+  it against the dominant cause with the precise mechanism — and reach for **physics/semiconductor analogies**
+  (derating landed instantly) to lock concepts.
 - **2026-06-13 — M01 Ch2 §2 (garbage collection: refcounting + cycle collector + the GIL) ✅ finalized.** Body
   (refcounting, cycles, generational collector, refcounting-is-why-the-GIL-exists, PEP 703/683 free-threading) was
   at/above his level — he absorbed it fast; the session was **his signature pressure-test mode now aimed at the GC**,
