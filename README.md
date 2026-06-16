@@ -27,6 +27,12 @@ A systematic, foundations-first curriculum.
 ### 2. Reading track (`upskill-readings/`)
 Daily curated articles/papers/videos to stay current and broaden exposure.
 - Saved as `upskill-readings/{yyyy}/{mm}/{dd}-{topic}.md` (link + short summary per item).
+- Up to ~25% of readings may cover hobby subjects (see below).
+
+### Hobby track (`hobby/`)
+A side track for subjects studied purely for interest, one subfolder per subject, each with its own
+plan. Same study → Q&A → finalize flow as the course track, but material is sized for 1–2 hours.
+See [`hobby/README.md`](hobby/README.md). First subject: **Economy & Finance**.
 
 ## Repository layout
 
@@ -34,6 +40,7 @@ Daily curated articles/papers/videos to stay current and broaden exposure.
 |---|---|
 | [`courses/`](courses/) | Course track — `plan.md` plus generated material. |
 | [`upskill-readings/`](upskill-readings/) | Daily reading track, organised by date. |
+| [`hobby/`](hobby/) | Hobby track — for-interest subjects, one subfolder & plan per subject. |
 | [`prompts/`](prompts/) | Human-authored instructions to AI agents. **Read-only — agents must not edit.** |
 | [`agent-docs/`](agent-docs/) | Shared, cross-agent docs (rules + the canonical learner profile). |
 | `CLAUDE.md` | Entry-point guidance for Claude. |

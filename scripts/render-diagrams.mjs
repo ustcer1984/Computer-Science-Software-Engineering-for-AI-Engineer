@@ -22,7 +22,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const MMDC = join(ROOT, 'node_modules', '.bin', 'mmdc');
 const CONFIG = join(ROOT, 'scripts', 'mermaid.config.json');
 const PUPPETEER = join(ROOT, 'scripts', 'puppeteer.config.json');
-const DOC_ROOTS = ['courses', 'upskill-readings'];
+const DOC_ROOTS = ['courses', 'upskill-readings', 'hobby'];
 
 const argv = process.argv.slice(2);
 const CHECK = argv.includes('--check');
