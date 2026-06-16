@@ -68,33 +68,13 @@ The trap is treating them as more-vs-less of the same quantity. They are **indep
 - **Parallelism** is about the *machine's execution*: are two or more pieces literally executing **in the same clock cycle**, on different
   cores/units? This is a property of the *hardware + runtime*. It requires multiple physical execution resources.
 
-The 2×2 makes the independence concrete — and every cell is a real system you've touched:
+The 2×2 below makes the independence concrete — read the **rows** as *"did you structure concurrency?"* and the **columns** as *"is the
+hardware running pieces at the same instant?"* Every cell is a real system you've touched:
 
-<!-- DIAGRAM:START -->
-![Diagram 1](diagrams/01-concurrency-parallelism-and-the-gil-1.svg)
-
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart TB
-    subgraph Q["The two axes are independent — all four cells exist"]
-        direction TB
-        subgraph TOP[" "]
-            direction LR
-            C0["**Neither**<br/>one task, one core<br/>a plain synchronous script<br/>(your simplest Lambda handler)"]
-            C1["**Parallel, not concurrent**<br/>one task split across cores by the runtime<br/>NumPy/BLAS on a big matmul, SIMD<br/>(you didn't structure it; the library did)"]
-        end
-        subgraph BOT[" "]
-            direction LR
-            C2["**Concurrent, not parallel**<br/>many tasks, ONE core, interleaved<br/>**your single-thread asyncio arena**<br/>500 connections, 1 thread, 0 parallelism"]
-            C3["**Concurrent AND parallel**<br/>many tasks across many cores<br/>multiprocessing pool · a Go server<br/>· Rust rayon · C++ threads"]
-        end
-    end
-```
-
-</details>
-<!-- DIAGRAM:END -->
+|  | **Not parallel** — one execution unit at a time | **Parallel** — many units firing at once |
+|---|---|---|
+| **Not concurrent** — one task, no composition | **Neither** — a plain synchronous script (your simplest Lambda handler). | **Parallel, not concurrent** *(top-right)* — one task the *runtime* splits across cores: a `np.matmul`/BLAS call, SIMD. You wrote one conceptual task; the library found the parallelism. |
+| **Concurrent** — many independently-progressing tasks | **Concurrent, not parallel** *(bottom-left)* — many tasks, **one** core, interleaved: **your single-thread `asyncio` arena** — 500 connections, 1 thread, 0 parallelism. | **Concurrent AND parallel** — many tasks across many cores: a `multiprocessing` pool, a Go server, Rust `rayon`, C++ threads. |
 
 Two cells deserve a beat, because they're the ones that break the "it's all one slider" intuition:
 
@@ -131,7 +111,7 @@ Two cells deserve a beat, because they're the ones that break the "it's all one 
 | **Best for** | **CPU-bound** Python work | **I/O-bound** + blocking C calls that release the GIL | **I/O-bound at high fan-out** |
 
 <!-- DIAGRAM:START -->
-![Diagram 2](diagrams/01-concurrency-parallelism-and-the-gil-2.svg)
+![Diagram 1](diagrams/01-concurrency-parallelism-and-the-gil-1.svg)
 
 <details>
 <summary>Diagram source (Mermaid)</summary>
@@ -201,7 +181,7 @@ both.)
 Python bytecode**. Not "to run code" — to run *Python bytecode in this interpreter*. That scoping is everything:
 
 <!-- DIAGRAM:START -->
-![Diagram 3](diagrams/01-concurrency-parallelism-and-the-gil-3.svg)
+![Diagram 2](diagrams/01-concurrency-parallelism-and-the-gil-2.svg)
 
 <details>
 <summary>Diagram source (Mermaid)</summary>
@@ -210,8 +190,8 @@ Python bytecode**. Not "to run code" — to run *Python bytecode in this interpr
 flowchart TB
     START["Thread wants to make progress"] --> KIND{What is it about to do?}
     KIND -- "run Python bytecode<br/>(a loop, arithmetic, attr access)" --> HOLD["must HOLD the GIL<br/>→ serialized: only one thread here at a time"]
-    KIND -- "blocking I/O<br/>(socket recv, file read, DB call)" --> REL1["**RELEASES the GIL** before blocking<br/>→ other threads run bytecode meanwhile<br/>→ THIS is why threads help I/O"]
-    KIND -- "heavy C work in a good extension<br/>(NumPy matmul, zlib, hashlib)" --> REL2["C code **RELEASES the GIL**<br/>(Py_BEGIN_ALLOW_THREADS)<br/>→ real parallelism while in C"]
+    KIND -- "blocking I/O<br/>(socket recv, file read, DB call)" --> REL1["RELEASES the GIL before blocking<br/>→ other threads run bytecode meanwhile<br/>→ THIS is why threads help I/O"]
+    KIND -- "heavy C work in a good extension<br/>(NumPy matmul, zlib, hashlib)" --> REL2["C code RELEASES the GIL<br/>(Py_BEGIN_ALLOW_THREADS)<br/>→ real parallelism while in C"]
     HOLD --> SWITCH{"held ~5 ms<br/>(sys.getswitchinterval)<br/>or hit an I/O point?"}
     SWITCH -- "5 ms elapsed" --> YIELD["interpreter forces a GIL hand-off<br/>→ another waiting thread gets a turn"]
     SWITCH -- "still computing" --> HOLD
@@ -256,7 +236,7 @@ Here's the payoff. The agonising "processes or threads or async?" question is *m
 work spend its time?** — because §3 told you exactly what the GIL does in each case.
 
 <!-- DIAGRAM:START -->
-![Diagram 4](diagrams/01-concurrency-parallelism-and-the-gil-4.svg)
+![Diagram 3](diagrams/01-concurrency-parallelism-and-the-gil-3.svg)
 
 <details>
 <summary>Diagram source (Mermaid)</summary>
@@ -265,12 +245,12 @@ work spend its time?** — because §3 told you exactly what the GIL does in eac
 flowchart TD
     Q0["I need concurrency. Which model?"] --> Q1{"Is the work CPU-bound<br/>or I/O-bound?"}
     Q1 -- "CPU-bound<br/>(pure-Python compute:<br/>parsing, scoring, transforms)" --> CPU{"Is the hot loop<br/>in a C lib that<br/>releases the GIL?"}
-    CPU -- "no (pure Python)" --> PROC["**multiprocessing** / ProcessPoolExecutor<br/>→ N interpreters, N GILs, N cores<br/>(pay the pickle tax, get real parallelism)"]
-    CPU -- "yes (NumPy/Torch/etc.)" --> THRC["**threads** are fine — the C code<br/>already drops the GIL and uses cores"]
+    CPU -- "no (pure Python)" --> PROC["multiprocessing / ProcessPoolExecutor<br/>→ N interpreters, N GILs, N cores<br/>(pay the pickle tax, get real parallelism)"]
+    CPU -- "yes (NumPy/Torch/etc.)" --> THRC["threads are fine — the C code<br/>already drops the GIL and uses cores"]
     Q1 -- "I/O-bound<br/>(network, disk, DB, LLM API calls)" --> Q2{"How many concurrent<br/>operations? Library support?"}
-    Q2 -- "modest count, blocking libs<br/>(requests, a sync DB driver)" --> THR["**threads** / ThreadPoolExecutor<br/>→ GIL released during I/O,<br/>simplest path, no rewrite"]
-    Q2 -- "high fan-out (100s–1000s),<br/>async-native libs (aiohttp, httpx)" --> ASY["**asyncio**<br/>→ one thread, cheap tasks,<br/>massive concurrency"]
-    Q2 -- "mixed: mostly async,<br/>but a CPU-heavy step" --> HYB["**hybrid**: asyncio +<br/>run_in_executor(ProcessPool)<br/>for the CPU step (your 06-09 insight)"]
+    Q2 -- "modest count, blocking libs<br/>(requests, a sync DB driver)" --> THR["threads / ThreadPoolExecutor<br/>→ GIL released during I/O,<br/>simplest path, no rewrite"]
+    Q2 -- "high fan-out (100s–1000s),<br/>async-native libs (aiohttp, httpx)" --> ASY["asyncio<br/>→ one thread, cheap tasks,<br/>massive concurrency"]
+    Q2 -- "mixed: mostly async,<br/>but a CPU-heavy step" --> HYB["hybrid: asyncio +<br/>run_in_executor(ProcessPool)<br/>for the CPU step (your 06-09 insight)"]
 ```
 
 </details>
