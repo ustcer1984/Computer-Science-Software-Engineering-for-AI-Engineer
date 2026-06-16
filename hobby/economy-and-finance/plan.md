@@ -140,7 +140,7 @@ E02–E04). Tell me and I'll re-sequence.
 | Module | Section | Status | File | Notes |
 |---|---|---|---|---|
 | E01 Foundations | §1 How economists think | ✅ | [`01-foundations/01-how-economists-think.md`](01-foundations/01-how-economists-think.md) | Finalized 2026-06-16. Body held; §11 captures two Q&A threads (endogenous cost surface → equilibrium/GAN; optimality-condition vs search-dynamics). Spun off a **Game Theory** subject. |
-| E01 | §2 Supply, demand & prices | ⬜ | | |
+| E01 | §2 Supply, demand & prices | 🔵 | [`01-foundations/02-supply-demand-and-prices.md`](01-foundations/02-supply-demand-and-prices.md) | Draft ready to study (2026-06-16). Pitched as a coupled system: demand/supply = MB/MC response curves, equilibrium = stable fixed point (excess demand = restoring force; cobweb→learning-dynamics tie), price = shadow price/dual variable (tâtonnement = dual ascent), price controls as payoff. Not yet finalized. |
 | E01 | §3 Elasticity, surplus, market failure | ⬜ | | |
 | E01 | §4 Firms, costs & competition | ⬜ | | |
 | E02 Macroeconomics | §1 GDP & output | ⬜ | | |
