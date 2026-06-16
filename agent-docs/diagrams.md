@@ -1,6 +1,48 @@
 # Diagrams convention
 
-**Diagrams are authored in Mermaid but committed as rendered SVG.** Mermaid is
+> **Scope:** project-level — applies to **all tracks** (course, reading, hobby, and any future track).
+
+## The principle (this is the part that matters)
+
+**A diagram must display correctly in any plain viewer — GitHub, raw markdown, PDF/HTML
+export — so always commit a rendered image (SVG/PNG), not just source that needs a live
+engine to render.** That's the only hard requirement. *How* you produce the image is open.
+
+## You choose the tool — Mermaid is allowed, not mandatory
+
+- **Mermaid is fine** (and there's ready-made tooling for it below), but you are **not
+  obliged to use Mermaid only.**
+- **Other tools are welcome** — e.g. **draw.io / diagrams.net**, Excalidraw, Graphviz,
+  PlantUML, matplotlib, a hand-built SVG, etc. Pick whatever renders the idea clearest.
+- **You may also use an existing online diagram or image directly** — link or embed a
+  suitable public image/diagram instead of authoring one, when that's the best fit.
+  (For images that live remotely, prefer committing a local copy so the doc still renders
+  if the source disappears; keep the original URL in a caption or comment for provenance.)
+
+Whatever the source, keep an **editable source of truth** beside the rendered image where
+practical (the Mermaid/PlantUML/draw.io source in a collapsed `<details>` or a sibling
+file), so the diagram stays diffable and editable.
+
+## ALWAYS verify the rendered image visually
+
+**After generating any diagram — Mermaid or otherwise — open the produced image and look
+at it.** Render tools regularly emit images that *parse* fine but *look* wrong. Check for:
+
+- **overlap** — nodes/edges/labels colliding or sitting on top of each other;
+- **incorrect position / layout** — arrows crossing badly, clusters in the wrong place,
+  truncated or cut-off content;
+- **font too small / unreadable** — text that won't be legible at normal viewing size;
+- **missing or blank elements** — e.g. a stripped `<foreignObject>` leaving a blank box.
+
+Use the Read tool on the SVG/PNG (it renders images visually) to inspect it; if it looks
+wrong, fix the source (simplify the graph, shorten labels, bump font size, switch tools)
+and re-render until it's clean. **Do not commit a diagram you haven't looked at.**
+
+---
+
+## Mermaid path (one recommended option, with tooling)
+
+**When you choose Mermaid: author in Mermaid but commit the rendered SVG.** Mermaid is
 client-side rendered — it only shows up in viewers that ship a Mermaid JS engine
 (Cursor/VS Code with an extension). It does **not** render in most plain markdown
 viewers, in many PDF/HTML exports, and is unreliable on GitHub. So we keep the
@@ -42,9 +84,13 @@ flowchart LR
    `upskill-readings/`) or target one file: `node scripts/render-diagrams.mjs <file.md>`.
    This is **idempotent** — it re-renders from the Mermaid source and rewrites the
    wrappers, so it's safe to run repeatedly.
-3. **Commit both** the updated `.md` and the generated `.svg` files.
-4. **Verify (optional / pre-commit):** `npm run diagrams:check` confirms every block
-   is wrapped and every referenced SVG exists, without writing anything.
+3. **Look at the rendered SVG** (Read tool) and confirm it's clean — see "ALWAYS verify
+   the rendered image visually" above. This step is **required**, not optional.
+4. **Commit both** the updated `.md` and the generated `.svg` files.
+5. **Structural check (optional / pre-commit):** `npm run diagrams:check` confirms every
+   block is wrapped and every referenced SVG exists, without writing anything. Note this
+   is only a *structural* check — it does **not** catch overlap/layout/font problems, which
+   is why step 3 (looking at the image) is mandatory.
 
 ## Hard constraints (why the config is the way it is)
 
