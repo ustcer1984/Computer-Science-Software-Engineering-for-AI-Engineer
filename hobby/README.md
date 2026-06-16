@@ -27,4 +27,4 @@ course and reading tracks. Set up per [`prompts/001-hobby-setup.md`](../prompts/
 
 | Subject | Plan | Status |
 |---|---|---|
-| Economy & Finance | [`economy-and-finance/plan.md`](economy-and-finance/plan.md) | 🔵 plan ready, no sections yet |
+| Economy & Finance | [`economy-and-finance/plan.md`](economy-and-finance/plan.md) | 🔵 E01 §1 drafted, in study |

@@ -137,7 +137,7 @@ E02–E04). Tell me and I'll re-sequence.
 
 | Module | Section | Status | File | Notes |
 |---|---|---|---|---|
-| E01 Foundations | §1 How economists think | ⬜ | | |
+| E01 Foundations | §1 How economists think | 🔵 | [`01-foundations/01-how-economists-think.md`](01-foundations/01-how-economists-think.md) | Draft ready 2026-06-16; awaiting Q&A + finalize |
 | E01 | §2 Supply, demand & prices | ⬜ | | |
 | E01 | §3 Elasticity, surplus, market failure | ⬜ | | |
 | E01 | §4 Firms, costs & competition | ⬜ | | |
