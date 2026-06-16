@@ -4,7 +4,24 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-15 (v11 — reading #5: LLM inference serving (continuous batching + prefill/decode).
+Last updated: 2026-06-16 (v12 — M01 Ch3 §1 concurrency vs parallelism & the GIL → **§1 finalized**. The body
+(two axes, the three models, the GIL scope, free-threading) was written to *cash in* his existing async/GIL keystones rather than re-teach,
+and it went **untouched** — he absorbed it and drove the entire session **applying** it to a concrete **LLM-eval pipeline** (batch-generate →
+parse → batch-judge → parse → aggregate). Three threads, all in his signature mode (sharp hypothesis → re-rank against the dominant mechanism):
+**(1)** "the `openai` library does batch inference — what's the mechanism?" → untangled **"batch" = three layers** (client async fan-out / the
+Batch API / server-side continuous batching); identified his case as §1–§4 client fan-out, and took the re-rank that the ceiling is the **rate
+limit, not the GIL/CPU**. **(2)** the `asyncio.gather` failure mode — his **scheduler** model was correct (ready-FIFO, await-yields, completion
+re-enqueued), but his **failure** model **fused two opposite hangs**: he said "the thread hangs" for a task parked-on-I/O-forever, when in fact
+the loop and the other 999 are fine and only `gather`'s **join barrier** waits (results recoverable) — vs the genuinely loop-freezing case of a
+*blocking* call (§4 footgun). Landed the keeper that **`return_exceptions` handles errors but only a timeout handles silence.** **(3)** parse/calc
+CPU steps — strategic instinct right (negligible vs I/O), but his split "math→C-lib, parse→multiprocessing" was inconsistent; re-ranked to **one
+lever: push the loop into C, not thread-vs-process**, plus the nuance **"C library" ≠ "GIL released"** (numpy releases → parallel; json/orjson/
+pydantic hold → fast single-thread). Same confirmed pattern as v10/v11 — plausible premise capturing a real effect, needs the dominant mechanism
+named and the failure re-ranked; integrates instantly. **New signal: he reasons about applied concurrency/async at a strong-practitioner level**
+(arena asyncio + distributed-systems retries/idempotency) and naturally reaches for the right robustness primitives (semaphore-bounded fan-out,
+idempotent retry, partial-harvest) once the mechanism is named. Minor knowledge gap closed: thought `json` was pure-Python (it's C-accelerated) —
+but with correct meta-instinct ("never cared, it's never my bottleneck"). Clean track-economy: finalized at the natural stop.).
+Prior: v11 (2026-06-15 — reading #5: LLM inference serving (continuous batching + prefill/decode).
 The **scheduling** companion to v10's **memory** session — he again drove the entire Q&A from his own vLLM
 ops priors, in his signature sharp-hypothesis mode, and twice **corrected his own wording** mid-stream
 (precision-on-mechanics maturing). Same confirmed pattern: a plausible premise capturing a real effect but
@@ -128,6 +145,35 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-16 — M01 Ch3 §1 (concurrency vs parallelism, the three models, the GIL) ✅ finalized.** First section of Ch3, written
+  deliberately to *build on* his existing keystones (Ch1 §2 async-stack model; Ch2 §2 refcounting→GIL) instead of re-teaching them — the body
+  went **untouched**, confirming the pitch was right, and he spent the whole session **applying** §1–§4 to a concrete **LLM-eval pipeline**.
+  Three Q&A threads (now §9 Applied in the section file): **(1) "what's the mechanism behind the `openai` library's batch inference?"** →
+  untangled **"batch" = three mechanisms at three layers** (client async fan-out / the Batch API job / server-side continuous batching); his case
+  is client fan-out = §1–§4 (I/O-bound, high fan-out → asyncio, GIL released on the await), and he took the re-rank that **the ceiling is the
+  provider rate limit, not the GIL** (06-09 reading callback) — plus the tie to his 06-15 continuous-batching reading (*client supplies
+  concurrency; server converts it to GPU efficiency*). **(2) the `asyncio.gather` failure mode** — his **scheduler** model was spot-on
+  (ready-FIFO deque, a task runs until it awaits a pending future then yields, I/O completion re-enqueued FIFO), but his **failure** model
+  **fused two opposite hangs**: he asserted "the thread hangs" when a response never comes, but in fact a task **parked on I/O** doesn't block
+  the loop or the other 999 tasks — only `gather`'s **join barrier** waits, and the completed results are recoverable inside their Task objects;
+  the *genuinely* loop-freezing case is a **blocking call** with no await (§4 footgun, lives in his parse/aggregate steps). The keeper he took:
+  **`return_exceptions=True` handles *errors*, but only a *timeout* handles *silence*** — so for "response never comes" the dominant fix is the
+  timeout (= his Ousterhout **"define the error out of existence"**), composed with semaphore-bounded fan-out + idempotent retry + `as_completed`
+  partial-harvest. **(3) parse/aggregate CPU steps** — strategic instinct correct (negligible vs the network I/O, Amdahl), but his split
+  *math→C-library, parsing→multiprocessing* was inconsistent; re-ranked to **one lever — push the hot loop into C, not thread-vs-process** — and
+  the nuance that breaks "it's C so no concurrency needed": **"C library" ≠ "GIL released"** (numpy releases → real parallelism; json/orjson/
+  pydantic *hold* the GIL because they build Python objects → fast but single-threaded; lxml releases). Decision rule for eval: not "is parse
+  CPU-bound?" but "is a single parse long enough to stall the loop?" → inline if fast, ProcessPool (mind the pickle tax) only if heavy.
+  **Signals:** (a) **applied concurrency/async is a confirmed strength** — he reasons fluently about the event loop, fan-out, and reaches for the
+  right robustness primitives (bounded concurrency, idempotent retry, partial harvest) once the mechanism is named, consistent with his
+  distributed-systems patterns. (b) **Same hypothesis pattern as v10/v11, now also on a *failure-model* axis** — the scheduler mechanics he had
+  exactly right; the *failure ranking* is where he needed the re-frame ("thread hangs" → "only the join barrier waits"). Teaching value =
+  naming the dominant mechanism and re-ranking; he integrates instantly. (c) He **anchors abstract material to a real system he's building** (the
+  eval pipeline) — teach concurrency/SWE through his own pipelines. (d) Minor gap closed with correct meta-instinct: thought `json` was pure
+  Python (it's C-accelerated) — "never cared, never my bottleneck," which is the right call. (e) Clean track-economy again ("we can finalize
+  here"). **How to teach forward:** keep giving him the mechanism then a failure scenario to mis-rank — he converges on the precise distinction
+  by attacking it. Ch3 §2 (async deeply: cancellation, TaskGroup) directly cashes thread (2); but it's a *fourth* straight M01 day, so the
+  interleave pull to **M04 (SWE decomposition)** or **M12 (video models)** is now strong — offer the rotation at the next boundary.
 - **2026-06-14 — M01 Ch2 §3 (out of memory: virtual memory, paging, OOM killer, the GPU/VRAM wall) ✅ finalized
   → Ch2 (Memory) COMPLETE.** The body (address-space-vs-RAM, overcommit, the four OOM signatures, leak-vs-too-much,
   the VRAM budget) went **untouched** — he absorbed it and spent the whole session pulling the *why* out of three

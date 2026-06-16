@@ -6,9 +6,14 @@
 > and the three execution models that answer them differently: **processes**, **threads**, and **async**. The centrepiece is the
 > **GIL**: why it exists (it's the bill for §2's refcounting), what it actually locks, the asymmetry that makes it harmless for I/O
 > and fatal for CPU-bound threads, and how **free-threading** (PEP 703) is now paying it off.
-> **Status:** 🔵 **DRAFT — prepared 2026-06-16.** Body written to your level: it does *not* re-teach async/await (you built that model
-> in Ch1 §2) or the GIL-exists-because-of-refcounting keystone (Ch2 §2) — it **cashes them in** and pushes one layer past. §11
-> (Applied) is a placeholder to fill from our Q&A. We Q&A, then you say *finalize*.
+> **Status:** ✅ **finalized 2026-06-16.** The body held at your level — you absorbed §1–§4 and spent the whole session **applying** them to
+> an LLM-eval pipeline. §9 (Applied) captures the three threads you drove: **(9a)** "batch" is three mechanisms wearing one word
+> (client fan-out / Batch API / continuous batching), and the `openai` chat "batch" you use *is* §1–§4 — I/O-bound async fan-out, ceiling =
+> the rate limit not the GIL; **(9b)** the `asyncio.gather` failure mode — your scheduler model was right, but you fused two opposite "hangs":
+> a task **parked on I/O** doesn't hang the thread (only `gather`'s *join* waits; results recoverable), vs a **blocking call** that freezes the
+> loop (§4 footgun) — and the keeper that `return_exceptions` handles *errors* while **only a timeout handles silence**; **(9c)** parse/calc —
+> the lever is *push the loop into C*, not thread-vs-process, and *"C library" ≠ "GIL released"* (numpy releases, JSON holds). Clean
+> finalize at the natural stop.
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites — this section is built on three things you already own:**
@@ -437,7 +442,90 @@ Bring the numbers to our chat — especially (b) vs (c) (the GIL made visible) a
 
 ---
 
-## 9. References (optional, for depth)
+## 9. Applied — captured from our 2026-06-16 session
+
+You took the section straight into a concrete build: **an LLM-eval pipeline** (batch-generate → parse → batch-judge → parse → aggregate).
+You never re-litigated the body — you absorbed it and spent the whole session applying §1–§4 to the pipeline's three concurrency
+decisions. Same signature pattern as always: a sharp, mostly-right hypothesis that captured the real effect but **mis-ranked it against the
+dominant mechanism**, corrected cleanly each time.
+
+### 9a. "Batch inference via the `openai` library" — *which* batch? (§1–§4)
+
+You accepted "it's concurrent" fast; the value was untangling that **"batch" is three different mechanisms wearing one word**, at three
+layers:
+
+| What gets called "batch" | Where the concurrency lives | What it is |
+|---|---|---|
+| **Client-side fan-out** | *your* process | N independent HTTP requests overlapped — `AsyncOpenAI` + `asyncio.gather` |
+| **The Batch API** | the provider's job queue | an async *job* (upload JSONL, poll, ~50% cheaper, ≤24 h) |
+| **Continuous batching** | the inference *server*'s GPU | many users' requests merged per forward pass |
+
+The one you invoke for eval is **client-side fan-out**, and it *is* §1–§4 verbatim: the chat endpoint takes **one prompt per request** (only
+*embeddings* take a list = true server-side batch), so "batch over chat" = fan out N requests. `AsyncOpenAI` → `httpx.AsyncClient` → one
+event loop, one thread; each `create()` **`await`s the response, releasing the GIL** (§3); they overlap during the network wait and share a
+connection pool. It lands in §1's **bottom-left cell** — massive concurrency, zero parallelism, the same shape as your arena. The re-rank you
+took: **the ceiling isn't the GIL or your CPU — it's the provider rate limit** (your 06-09 reading again: "throughput ceiling is the rate
+limit, not the client"), so production fan-out = **bounded concurrency (`Semaphore`) + backoff on 429**, not max concurrency. And the tie to
+your 06-15 reading: your client fan-out and the server's **continuous batching** are two halves of one story — *you supply concurrency; the
+server converts it to GPU efficiency* — the word "batch" doing double duty across the network boundary.
+
+### 9b. The `asyncio.gather` failure mode — two different "hangs" (the core re-rank)
+
+Your **scheduler** model was correct (ready-FIFO `deque`; a task runs until it `await`s a *pending* future, then yields; I/O completion is
+marshalled back onto the same ready queue). Your **failure** model fused two failures that behave oppositely:
+
+- **Hang #1 — a task parked on I/O forever** (your scenario: "a response never comes"). Correction: this **does not hang the thread or the
+  loop.** The loop keeps spinning; the other 999 tasks finish and their results sit **completed inside their Task objects.** The *only* thing
+  stuck is **`gather`'s join barrier** — it resolves only when *every* child does — so your one collection point waits on the straggler while
+  holding 999 finished results hostage. Nothing is lost; it's behind a join, fully recoverable.
+- **Hang #2 — a task *blocking* the loop** (the §4 footgun): a sync/CPU call with no `await` (a sync DB driver, `time.sleep`, a heavy parse)
+  *does* freeze all 1000, because cooperative scheduling never regains control. This is the real "thread hangs," and it lives in your **parse
+  / aggregate** steps, not the inference await.
+
+**The sharp keeper — two fixes for two failures, not interchangeable:** `return_exceptions=True` handles **errors** (a coroutine that
+*raises* comes back as an exception object, index-aligned, batch completes); but for **silence** (no exception ever raised) it does nothing —
+**only a timeout** converts an infinite wait into a catchable `TimeoutError`. For your exact scenario, the dominant fix is the **timeout**,
+full stop — *"never `await` a network call without one,"* which is your Ousterhout **"define the error out of existence"**: make the infinite
+hang unrepresentable rather than hope to detect it. Robust eval shape you landed on: `Semaphore` (rate limit) + per-request `asyncio.timeout`
++ **capture-don't-propagate** (return the exception) + persist via `as_completed` so a crash at item 998 doesn't cost the first 997 +
+idempotent retry on the failed indices (your distributed-systems wheelhouse). `TaskGroup` is fail-fast (one error cancels siblings) — the
+*wrong* policy for eval, where you want partial harvest.
+
+### 9c. The CPU steps (parse, aggregate) — "push the loop into C," not "thread vs process"
+
+Your strategic instinct was right: in this pipeline parse/calc are **negligible vs the network I/O** (Amdahl — optimizing ~1% of runtime), so
+*usually no concurrency at all*. But your split — *math → C library, parsing → multiprocessing* — was inconsistent; both collapse to the
+**same first move: push the hot loop into a C/Rust library before reaching for processes.**
+
+- **Calc:** vectorize with numpy/pandas — but the dominant win isn't parallelism, it's removing **per-element Python interpreter overhead**
+  (boxing, refcount churn, bytecode dispatch — §2/§3); your 06-10 Horace-He *overhead-bound* regime. BLAS thread-parallelism is a bonus that
+  only fires on heavy linear algebra, which eval aggregation never reaches.
+- **Parse:** "convert response to format" is mostly JSON parse + validation, which has C/Rust engines exactly like math has numpy — `json`
+  (C-accelerated), `orjson` (Rust), `pydantic` v2 (Rust core), `lxml` (C). Multiprocessing is the **last** resort, for genuinely
+  hand-rolled pure-Python parsing only.
+
+**The GIL nuance that breaks "it's a C library, so no concurrency needed":** *"C library" ≠ "GIL released."* It depends on whether the C
+touches Python objects. **numpy** kernels crunch raw floats → **release** the GIL (real parallelism). **json / orjson / pydantic** spend their
+time *building Python objects* (dicts/models → refcounts → the §3 keystone) → **hold** the GIL (fast single-threaded, but threads won't
+parallelize them). **lxml** releases it during parse. So your blanket claim is right in *effect* but for a mechanism that flips per library:
+numpy removes the need *by parallelizing*; orjson/pydantic remove it *by being fast single-threaded.*
+
+**The eval decision rule** (not "is parse CPU-bound?" but): *is a single parse long enough to stall the loop while other responses wait?* If
+no (the normal sub-ms case) → parse **inline** in the coroutine, a brief GIL blip between awaits. If yes → `run_in_executor(ProcessPool…)`,
+but mind the **pickle tax** (for a fast parse the IPC overhead exceeds the work → multiprocessing would be *slower*).
+
+> **The ladder you keep (one rule for all CPU work in the pipeline):** (1) don't bother — it's dwarfed by the I/O; (2) push the loop into a
+> C/Rust lib (numpy/pandas · orjson/pydantic/lxml) — kills interpreter overhead; (3) *only* if a single item stalls the loop →
+> `ProcessPoolExecutor` via `run_in_executor` (threads won't help if the lib holds the GIL — most parsers do). The lever is *where the loop
+> runs (Python vs C)*, and C buys **parallelism** only when it **drops the GIL** (numpy yes, JSON no).
+
+*(Closing note: you learned `json` ships a C accelerator (`_json`) — you'd never looked because it was never your bottleneck, which is the
+correct instinct; the surprise only matters the day a parser *does* show up hot, and now you know the first question is "does it release the
+GIL?")*
+
+---
+
+## 10. References (optional, for depth)
 
 *(All links verified live 2026-06-16.)*
 
@@ -460,13 +548,16 @@ Bring the numbers to our chat — especially (b) vs (c) (the GIL made visible) a
 ---
 
 ### What's next
-🔵 **DRAFT prepared 2026-06-16.** This section deliberately *builds on* rather than repeats Ch1 §2 (your async-stack model) and Ch2 §2
-(refcounting → GIL); the new layer is the two-axes precision (§1), the per-case GIL scope (§3), the one decision rule (§4), and the
-free-threading payoff (§5). After our Q&A I'll write **§11 (Applied)** from whatever you drive it into — likely the arena async audit and
-your `run_in_executor` pattern — and flip `courses/plan.md` to ✅.
+✅ **Finalized 2026-06-16.** The body built on Ch1 §2 (your async-stack model) and Ch2 §2 (refcounting → GIL) rather than repeating them;
+§9 (Applied) captures the LLM-eval-pipeline session — *which* "batch" you actually invoke (9a), the two-different-hangs failure model and
+the timeout-vs-`return_exceptions` keeper (9b), and the "push the loop into C; C-lib ≠ GIL-released" ladder for the parse/aggregate steps
+(9c). Links verified live; `courses/plan.md` Ch3 row flipped to §1 ✅.
 
-Natural follow-ons inside Ch3 (your pick at finalize):
-- **Ch3 §2 — Async deeply / "your asyncio usage explained"** (the event loop, `gather` vs `create_task` vs `TaskGroup`, structured
-  concurrency, cancellation, the arena audit made concrete — the obvious next step if §1's footguns grabbed you).
+You finalized at a natural stop, having pulled the section into your real eval-pipeline design — so the follow-on threads almost pick
+themselves (your call at the next boundary):
+- **Ch3 §2 — Async deeply** (the event loop, `gather` vs `create_task` vs `TaskGroup`, **cancellation** — how `asyncio.timeout` throws
+  `CancelledError` *into* a stuck coroutine — and structured concurrency). Directly cashes 9b; the obvious next step if the failure modes
+  grabbed you.
 - **Ch3 §3 — Synchronization & races** (locks, queues, deadlock, the data races free-threading exposes — §5's "now it's your job").
-- Or rotate scope per the interleave: **M04 Ch1 §2** (data-flow tracing, SWE) or **M12 Ch2 §2** (video models, AI).
+- Or, since this was a fourth straight M01 day, **rotate scope** per the interleave: **M04 Ch1 §2** (data-flow tracing, SWE — your clearest
+  gap) or **M12 Ch2 §2** (video models, AI — your stated "all model types" goal).
