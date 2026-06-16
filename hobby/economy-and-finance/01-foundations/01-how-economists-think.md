@@ -174,11 +174,10 @@ flowchart LR
     subgraph PPF["Production Possibilities — 'guns vs butter'"]
         direction TB
         I["● Inside the frontier<br/>resources idle / wasted<br/>(inefficient — you can do better<br/>on BOTH goods)"]
-        F["● On the frontier<br/>efficient — every point is a<br/>valid choice; more of one good<br/>costs some of the other"]
+        F["● On the frontier — EFFICIENT<br/>every point is a valid choice;<br/>more of one good costs some of the other<br/>───────<br/>the trade-off lives HERE:<br/>slope = opportunity cost"]
         U["✕ Outside the frontier<br/>infeasible today<br/>(only growth moves it out)"]
     end
     I -->|"eliminate waste"| F
-    F -->|"the trade-off lives HERE:<br/>the slope = opportunity cost"| F
     U -.->|"needs more resources<br/>or better tech"| F
 ```
 
