@@ -1,4 +1,4 @@
-# Daily Reading — 2026-06-15  🔵 in progress
+# Daily Reading — 2026-06-15  ✅ finalized
 
 **Today's two readings (the *other half* of yesterday's course session):**
 1. **Continuous batching** — *iteration-level scheduling*: why a naïve batch wastes most of your GPU, and how injecting new requests per-forward-pass buys 8–24× throughput. The **scheduling** layer.
@@ -129,6 +129,32 @@ flowchart TB
 
 ---
 
+## What we worked out — the three threads you drove (read these first on review)
+
+You didn't engage the readings as written — you re-derived the engine from your own ops priors and pressure-tested each claim with sharp yes/no hypotheses, then corrected your *own* wording mid-stream. These are the durable keepers.
+
+### Thread 1 — "decode is bandwidth-bound, so the fix is to use more bandwidth." (corrected)
+Your premise was right; the conclusion needed a flip. **Being bandwidth-bound means you're *already* saturating bandwidth — there's no headroom to "use more."** The real lever is **tokens-per-byte-moved, not bytes-per-second.** The unlock: split "token rate" into two.
+- **Aggregate throughput** — decompose bytes/decode-step: `weight bytes (FIXED, shared by the whole batch) + KV bytes (scale with batch)`. At small batch, weight traffic dominates and is a fixed cost; **batching amortizes it across B sequences** → ~B× tokens for the same byte-traffic. Roofline framing (yours): you sit far left, memory-bound *with idle compute*; batching raises arithmetic intensity, moving you right toward the compute ridge. Throughput win = "amortize fixed weight traffic," **not** "use more bandwidth."
+- **Per-request latency (TPOT)** — batching does *not* help one lonely request; it's hard-capped at `bandwidth / bytes-per-token`. To speed a single stream you must **shrink bytes-per-token**: quantization (fewer bytes/weight), GQA/MQA (smaller KV), speculative decoding (multiple tokens per weight-load).
+- **The three walls** where batching stops winning: KV traffic (per-sequence, *unshared*) overtakes the shared weight traffic as batch×context grows; the compute roofline knee; KV-cache capacity (yesterday's ceiling).
+
+### Thread 2 — continuous batching vs PagedAttention are different layers (your separation was right; two wordings fixed)
+- **Continuous batching** = *policy*: iteration-level admit/evict to keep the **one** running batch full. Correction to your wording: the unit is **sequences within a batch** (not "active batches"), and the goal is **no idle slots**, not a *constant* count — the count is dynamic by nature.
+- **PagedAttention** = *mechanism*: fixed-size KV **blocks**, non-contiguous, allocated **on demand** via a block table (= OS page table; your yesterday analogy is exact). Correction to your wording: it does **not oversubscribe/overcommit VRAM** — every block is real. Its win is **ending over-*reservation*** (the naïve engine reserves `max_seq_len` contiguous KV per sequence; PagedAttention allocates blocks as tokens are actually generated → <4% waste vs yesterday's 60–80%).
+- **Where your "avg << max bet" actually lives:** at the **scheduler admission layer** (continuous batching), *enabled by* PagedAttention's fine-grained allocation — a statistical-multiplexing overcommit, hedged by **preemption**, not a gamble that crashes.
+- **Preemption cost (you asked: does the net degrade performance? — yes):** recompute (redo the victim's *entire* prefill → throw away paid-for compute) or swap (KV over PCIe, ~50–100× slower than HBM). **Rare = a bounded tax; chronic = thrashing** — repeated preempt/recompute, throughput falls off a cliff. This *is* yesterday's OS page-thrashing, one layer up (KV pool = RAM, preemption = page fault). **Operational signal:** preemptions in the vLLM log = you've over-admitted → lower `max_num_seqs` / cap `max_model_len`; note `gpu_memory_utilization` pulls *against* this (smaller pool → more preemption). Sweet spot = pinned just below preemption onset.
+
+### Thread 3 — "if disaggregation under-utilizes each GPU, how can it beat Sarathi?" → it's a TRADE-OFF, not strictly better (your headline takeaway)
+You spotted correctly that colocation (Sarathi/chunked-prefill) has **higher raw hardware utilization**. The flaw was the hidden premise *"efficiency = keep every unit busy."* The real objective is **goodput** (requests/sec meeting *both* TTFT and TPOT SLOs). Disaggregation trades unit-utilization for goodput, and it pays off because:
+1. **The "wasted" units were doing interference, not useful work.** Decode's idle compute was only ever filled by prefill chunks that *slowed the decodes*; removing them gives decode its best TPOT. And chunked prefill re-streams weights N times (one per chunk), so monolithic prefill on a dedicated GPU is *more* bandwidth-efficient — the prefill GPU's "idle bandwidth" is partly it doing prefill better.
+2. **Chunked prefill bounds the decode tax but doesn't remove it** — every hybrid-batch decode still runs slower than alone. Disaggregation = zero interference *by construction*.
+3. **Each phase runs its own optimal config** — colocation forces one shared parallelism degree / batch / memory split; the phases want opposite ones (prefill: TTFT-tuned parallelism, small batch; decode: huge batch, max KV). Disaggregation also **scales the two GPU pools independently** to match the workload's compute:bandwidth ratio.
+- **Cost that keeps it honest:** the KV-cache must physically cross prefill→decode over the interconnect (your reading-Q2 prediction) → DistServe places them "according to bandwidth" (keep the hop on NVLink).
+- **Regime rule (the keeper):** **few GPUs / single node / loose SLO → chunked prefill** (utilization matters, can't strand GPUs); **many GPUs / tight SLO / scale → disaggregation** (interference-free + per-phase tuning beats utilization). Newest 2025 work adaptively switches between them — which only makes sense once you see they're points on a spectrum, not rivals.
+
+---
+
 ## Sources
 - [How continuous batching enables 23x throughput in LLM inference while reducing p50 latency — Anyscale](https://www.anyscale.com/blog/continuous-batching-llm-inference)
 - [LLM Inference: Continuous Batching and PagedAttention — insujang](https://insujang.github.io/2024-01-07/llm-inference-continuous-batching-and-pagedattention/)
@@ -137,4 +163,4 @@ flowchart TB
 - [Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve (arXiv 2403.02310)](https://arxiv.org/abs/2403.02310)
 - [SARATHI: Efficient LLM Inference by Piggybacking Decodes with Chunked Prefills (arXiv 2308.16369)](https://arxiv.org/abs/2308.16369)
 
-*Drafted 2026-06-15. Pairs with the course track's M01 Ch2 §3 (out of memory, 2026-06-14): that session was the **memory** axis of LLM serving; this reading is the **scheduling** axis. Finalize after our Q&A.*
+*Finalized 2026-06-15. The three "What we worked out" threads are the durable record — read them first on review. Pairs with the course track's M01 Ch2 §3 (out of memory, 2026-06-14): that session was the **memory** axis of LLM serving; this reading is the **scheduling** axis. The headline keeper you landed on: **colocation maximizes hardware utilization, disaggregation maximizes goodput — a trade-off, not a strict improvement.***

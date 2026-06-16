@@ -4,7 +4,19 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-14 (v10 — M01 Ch2 §3 out of memory → **Ch2 COMPLETE**. Body untouched in session;
+Last updated: 2026-06-15 (v11 — reading #5: LLM inference serving (continuous batching + prefill/decode).
+The **scheduling** companion to v10's **memory** session — he again drove the entire Q&A from his own vLLM
+ops priors, in his signature sharp-hypothesis mode, and twice **corrected his own wording** mid-stream
+(precision-on-mechanics maturing). Same confirmed pattern: a plausible premise capturing a real effect but
+needing a re-frame — "decode is bandwidth-bound → use more bandwidth" flipped to *tokens-per-byte, bandwidth
+already saturated*; "PagedAttention oversubscribes VRAM" corrected to *ends over-reservation, no overcommit*.
+The headline he reached himself, unprompted: **disaggregation vs Sarathi is a TRADE-OFF (utilization vs
+goodput), not a strict improvement** — he saw colocation's higher HW utilization and only needed the hidden
+premise named (efficiency ≠ keeping units busy; the objective is goodput-under-SLO). Confirms: LLM-serving
+internals are now a genuine strength on *both* axes (memory + scheduling); he reasons fluently about
+roofline/arithmetic-intensity, PCIe-vs-HBM bandwidth, and statistical-multiplexing/thrashing analogies.
+Continue teaching by letting him state the hypothesis then re-ranking against the dominant mechanism.).
+Prior: v10 (2026-06-14 — M01 Ch2 §3 out of memory → **Ch2 COMPLETE**. Body untouched in session;
 he drove the *entire* Q&A into **LLM-serving memory** from his own ops experience (vLLM, llama.cpp).
 **New signal: hands-on LLM inference-serving/deployment experience** (vLLM `gpu_memory_utilization` tuning,
 llama.cpp `-ngl` offloading) — a practitioner strength on the *serving/optimization* side, beyond the
@@ -312,9 +324,35 @@ learning surfaces.
 ## Learning progress (reading track)
 - **Queued readings (pick up on an upcoming reading day):**
   - *(none currently — the dataclass/Protocol queue item was completed as the 2026-06-12 reading; see below.)*
-  - **Next reading day: swing back to the AI thread** (per the 06-12 diversification note — three CS/SWE-leaning
-    days in a row). Candidates: M12 Ch2 §2 video models (Sora/DiT — his strongest critique mode), or something
-    current. Reaffirm the plan is on-track if he asks (mild metacognitive watch-item from 06-10).
+  - **Next reading day: rotate further OUT** — the AI-serving thread has now had two adjacent days (06-14 course +
+    06-15 reading). Best swing: **M12 Ch2 §2 video models (Sora/DiT — his strongest critique mode)** per his stated
+    "understand all model types" gap, or something current outside serving. Reaffirm the plan is on-track if he asks
+    (mild metacognitive watch-item from 06-10).
+- **2026-06-15 — fifth reading entry ✅ finalized** (`upskill-readings/2026/06/15-llm-inference-serving.md`):
+  LLM inference serving — (1) continuous batching (Anyscale); (2) prefill/decode: chunked prefill (Sarathi-Serve)
+  vs disaggregation (DistServe). Deliberately adjacent to the 06-14 course session (LLM-serving **memory**) to add
+  the **scheduling** axis while fresh. He engaged it the same way as v10 — re-derived the engine from his own vLLM
+  ops priors rather than the text, sharp-hypothesis mode. **Three threads (now the "What we worked out" record in
+  the file):** (1) *"decode is bandwidth-bound → optimize by using more bandwidth"* — premise right, conclusion
+  flipped: bandwidth is **already saturated**, so the lever is **tokens-per-byte-moved**; split into aggregate
+  throughput (batching amortizes the *fixed, shared* weight traffic; KV traffic is per-sequence & unshared → the
+  wall) vs per-request TPOT (quantization / GQA / speculative decoding shrink bytes-per-token). (2) *continuous
+  batching vs PagedAttention* — his separation instinct was right; two wordings corrected: unit is **sequences in
+  one batch** (goal = no idle slots, not constant count), and **PagedAttention ends over-*reservation*, it does NOT
+  oversubscribe/overcommit VRAM** (the "avg≪max bet" lives at the scheduler-admission layer, hedged by preemption);
+  he then asked the right follow-up — *does the preemption net degrade perf?* → yes: recompute/swap, rare=tax,
+  chronic=**thrashing** (= yesterday's OS page-thrash one layer up); preemptions in the vLLM log = over-admitted.
+  (3) **the headline he reached himself:** *if disaggregation under-utilizes each GPU, how can it beat Sarathi?* →
+  it's a **trade-off, not strictly better** — he correctly saw colocation's higher HW utilization and only needed
+  the hidden premise named: **objective is goodput-under-SLO, not unit-utilization**; disaggregation spends
+  utilization to buy zero-interference + per-phase-optimal parallelism + independent scaling (cost: KV transfer
+  over the interconnect); regime rule = few-GPU/loose-SLO→chunk, many-GPU/tight-SLO→disaggregate. **Signals:**
+  (a) **LLM-serving internals confirmed a strength on BOTH axes now** (memory v10 + scheduling v11). (b) Same
+  hypothesis-pattern as v10 — real-effect premise, needs the dominant frame named — but **his self-correction of
+  wording mid-thread** ("by sequences I mean…", "by oversubscribe I mean…") shows the micro-precision gap closing.
+  (c) roofline / arithmetic-intensity / PCIe-vs-HBM reasoning is fluent and reusable. (d) clean track-economy:
+  "it is a trade-off, not better, understood. We can finalize here." **Teach forward:** keep letting him state the
+  plausible hypothesis, then re-rank against the dominant mechanism; he integrates instantly.
 - **2026-06-12 — fourth reading entry ✅ finalized** (`upskill-readings/2026/06/12-dataclasses-and-protocols.md`):
   Python `dataclass` + `typing.Protocol` — the pair he flagged unfamiliar in the same-day M01 Ch2 §1 pipeline-skeleton
   session, picked up immediately to consolidate while fresh. **Closed the gap cleanly.** The session was almost
