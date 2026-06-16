@@ -4,7 +4,35 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-16 (v12 — M01 Ch3 §1 concurrency vs parallelism & the GIL → **§1 finalized**. The body
+Last updated: 2026-06-16 (v13 — **first HOBBY-track session: Economy & Finance E01 §1 "how economists think"**
+✅ finalized. He left the body untouched and instead stress-tested the section's *core analogy* ("economics =
+constrained optimization") with two methodological objections imported straight from his ML/optimization world —
+exactly the predicted mode, and strong evidence the **physics/ML-analogy teaching lever works for non-CS subjects
+too.** Two threads (now §11 of the file): **(1) "the cost surface isn't fixed"** — he argued the econ value
+surface is heterogeneous, unobservable, and non-stationary (unlike a supervised loss `L(w)`), hence prediction is
+hard. All real; re-ranked to the **dominant** frame — the surface is **endogenous/coupled** (each agent's
+landscape is produced by the others' optimization) → solution concept is a **fixed point/equilibrium, not a
+minimum**. He'd *already* reached, unprompted, for **multi-agent RL / GANs** as the right analogy (vs supervised
+SGD) — confirms his LLM/ML-architecture strength generalizes to *systems/strategic* reasoning; I only added the
+names (reflexivity/Lucas; "the map rewrites the territory"). **(2) opportunity cost / rationality vs local
+minima — his signature hypothesis pattern again** (real effect, mis-ranked, integrates instantly on naming): he
+analogized "don't follow the first-order gradient → local min" to "an agent who flouts opportunity cost can still
+be rational." Re-rank that landed: first-order **optimality *condition*** (`MB=MC`, the intertemporal **Euler
+equation** — holds *at the global optimum too*) vs first-order **search *dynamics*** (greedy descent, what gets
+stuck). His short-vs-long example is **inside** the model (intertemporal optimization/NPV; **opportunity cost ≠
+short-termism**; myopia is a property of the *objective*, not of marginalism). Where his local-min point genuinely
+bites: **non-convexity** (lock-in, poverty traps, coordination failures) + **bounded rationality** (Simon's
+satisficing = limited-lookahead local search). The synthesis he was circling, in his own vocabulary: apparent
+irrationality (exploration/noise) = the **annealing temperature / ε-greedy term** that escapes local optima →
+*higher-order* rationality (explore/exploit). Closed with the falsifiability caveat (revealed-preference
+tautology). Clean track-economy: "we can finalize here." **NEW ACTION — he asked for "game theory + its math";**
+I judged it a **separate hobby subject** (`hobby/game-theory/plan.md`), not an econ add-on, because it
+**double-serves econ AND his AI career** (he himself bridged equilibria↔GANs/MARL; plus mechanism design,
+Shapley/SHAP). Offered to promote it to the main `courses/` track if he wants rigor/demonstrables. **Teach-forward
+(now confirmed across CS *and* a brand-new humanities-ish subject): let him state the plausible hypothesis, then
+re-rank against the dominant mechanism with the precise machinery, reaching for physics/ML analogies — he
+integrates instantly.**).
+Prior: v12 (2026-06-16 — M01 Ch3 §1 concurrency vs parallelism & the GIL → **§1 finalized**. The body
 (two axes, the three models, the GIL scope, free-threading) was written to *cash in* his existing async/GIL keystones rather than re-teach,
 and it went **untouched** — he absorbed it and drove the entire session **applying** it to a concrete **LLM-eval pipeline** (batch-generate →
 parse → batch-judge → parse → aggregate). Three threads, all in his signature mode (sharp hypothesis → re-rank against the dominant mechanism):
@@ -366,6 +394,27 @@ learning surfaces.
   best when concepts are anchored to his own production systems. Next: §2 (call stack).
 - **How he learns (observed):** asks sharp, practical "why does my system do X" questions; prefers
   re-deriving principles over memorising; appreciates explicit cost/trade-off framing.
+
+## Learning progress (hobby track)
+*(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-06-16 — Economy & Finance · E01 §1 (how economists think: scarcity, opportunity cost, incentives,
+  marginal thinking, trade-offs) ✅ finalized.** First hobby-track section. Body pitched through his
+  physics/optimization lens (scarcity=constraint, opportunity cost=shadow price/Lagrange multiplier,
+  MB=MC=derivative-to-zero, PPF=Pareto frontier, rational agent=spherical cow) and absorbed without challenge;
+  he spent the session **attacking the core analogy** with two ML-import objections (captured in §11 of the
+  file, summarized in the v13 header). Key takeaways for teaching this track: (a) the **physics/ML-analogy
+  lever transfers cleanly to economics** — he reasons about a social science as a coupled optimization system
+  and reached for **multi-agent RL / GANs** to model equilibria *unprompted*; (b) his **hypothesis→re-rank
+  pattern is subject-independent** (same shape as the CS/serving sessions); (c) he wants the *mechanism behind
+  the rule*, not the rule. **Spun off a new subject from this session — see below.**
+- **NEW SUBJECT created 2026-06-16 — Game Theory & Strategic Interaction** (`hobby/game-theory/plan.md`, no
+  sections yet). He asked for "game theory + related math." Judged it its own subject (not an econ add-on)
+  because it **double-serves the econ hobby AND his AI career** (GANs/MARL = learning-in-games; mechanism
+  design; Shapley value = SHAP). Plan is concept-first with the math woven in at his level (fixed-point
+  theorems, LP/minimax duality, Bayesian games, replicator/learning dynamics). **Open question for him:**
+  offered to **promote it to the main `courses/` track** if he wants rigor + demonstrables instead of hobby
+  framing — he hasn't answered; default stays hobby. Watch for his AI-vs-econ priority to pick the sequence
+  (an AI-fast path G01→G02→G07→G08→G09§2 is pre-drawn in the plan).
 
 ## Learning progress (reading track)
 - **Queued readings (pick up on an upcoming reading day):**

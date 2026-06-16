@@ -3,7 +3,8 @@
 > **Subject:** Economy & Finance *(hobby track)*
 > **Module:** E01 — Economic Foundations (Microeconomics)
 > **Section:** Scarcity, opportunity cost, incentives, marginal thinking, trade-offs
-> **Status:** 🔵 draft — study this, then we do Q&A; I'll personalize and finalize after.
+> **Status:** ✅ finalized 2026-06-16 — body held up at level; §11 captures the two methodological
+> threads you drove in our Q&A (the endogenous cost surface, and optimality-condition vs search-dynamics).
 
 **Estimated study time:** 1–1.5 hours including reflection.
 **Prerequisites:** None. If you can take a derivative and picture a constrained optimization, you already
@@ -325,6 +326,85 @@ Bring one article to our chat — we'll dissect it together and see how far five
 
 ---
 
+## 11. Applied — captured from our session Q&A (2026-06-16)
+
+You didn't quiz the body — you stress-tested the *core analogy* of this section ("economics is constrained
+optimization") with two sharp objections from your ML/optimization world. Both were right about a real
+effect; the value was in naming the dominant frame. Distilled here so you can re-derive them.
+
+### 11a. "The cost surface isn't fixed" — and it's worse than non-stationary (ties to §1, §5)
+
+Your objection: in model training the loss surface `L(w)` is fixed, so descent is well-posed. In economics
+the "cost"/value surface is **heterogeneous** (per individual), **unobservable** (you can't read someone's
+valuation mechanism), and **non-stationary** (it drifts) — and that's a big reason economic prediction is hard.
+
+All three are real and named. The economist's coping trick for the *unobservable* part is **revealed
+preference**: don't model the internal machinery, *infer* it from observed choices. Your non-stationarity
+point is exactly that trick's weak spot — it assumes preferences sit still.
+
+But the **dominant** difference we landed on is deeper than your three: the surface is **endogenous**. In
+supervised training `L(w)` is *exogenous* — handed to you by the data. In an economy, the landscape each
+agent faces is *produced by every other agent's optimization* (the price you optimize against is the output
+of everyone else's choices). So it isn't N independent descents on one fixed surface — it's a **coupled,
+self-referential system**, and the solution concept is not a *minimum* but a **fixed point / equilibrium**
+(Nash, general equilibrium).
+
+The keeper, in your vocabulary: **the honest ML analogy isn't supervised SGD — it's multi-agent RL / GANs**,
+where each player's loss depends on the others' current parameters. Their pathologies *are* macroeconomics:
+limit cycles, non-convergence, non-unique equilibria, blow-up under small perturbations. And one thing no
+physical potential does — **reflexivity** (Soros) / the **Lucas critique**: publish a good model of the
+surface, agents trade on it, and the surface moves. *The map rewrites the territory.* So prediction is hard
+not mainly because the surface is unknown — **there is no fixed surface to know; it's jointly authored by the
+predictors.** (This is the sharpened version of §5's "PPF as a Pareto frontier" physics lens.)
+
+### 11b. Opportunity cost vs. local minima — optimality *condition* ≠ search *dynamics* (ties to §2, §4)
+
+Your objection: just as following the first-order gradient lands you in a local minimum, an agent who doesn't
+strictly obey opportunity-cost / marginal reasoning may still be rational — he's trading short-term against
+long-term. The re-rank we landed on splits this cleanly.
+
+**The dominant distinction** (straight from your optimization world):
+- A first-order **optimality condition** — `MB = MC`, or dynamically the **Euler equation** — holds *at the
+  global optimum too* (`∇ = 0` everywhere optimal).
+- First-order **descent dynamics** — greedily following the local gradient — is what gets *stuck*.
+
+Economics' `MB = MC` is the **condition**, a description of the optimum/equilibrium, not a search algorithm.
+So "you can't just follow the gradient" is a critique of *adjustment dynamics / how agents search*, **not** of
+marginalism. Marginalism scales to the global problem fine.
+
+**Your short-vs-long-term example is *inside* the rational model, not a deviation from it:**
+- Opportunity cost is **horizon-agnostic** — the opportunity cost of spending now *is* the discounted future
+  return forgone. Saving / studying / investing = `MB = MC` where benefits are discounted future flows (NPV).
+- Formally it's the **intertemporal Euler equation** — a first-order condition on *lifetime* utility; the
+  economics of **optimal control / a Bellman equation**. Optimize the *integral over the whole trajectory*,
+  not the instantaneous term.
+- The misconception to kill: **opportunity cost ≠ short-termism.** Myopia is a property of the *objective you
+  plug in*, not of marginalism.
+
+**Where your local-minimum point genuinely bites** (here the static model *is* blind, and you're right):
+- **Non-convex landscapes** — increasing returns, network effects, lock-in (QWERTY, VHS), poverty traps,
+  coordination failures. Real local optima: an economy can sit in a stable *bad* equilibrium with a better one
+  across a barrier; `MB = MC` is locally satisfied and globally wrong.
+- **Bounded rationality** (Herbert Simon) — humans can't solve the global problem, so they **satisfice**:
+  limited-lookahead local search = greedy descent with a horizon cutoff.
+
+**The synthesis, in your language:** behaviour that *looks* irrational — exploration, novelty-seeking, even
+noise — is the **annealing temperature / ε-greedy term** that escapes local optima. *Apparent irrationality as
+higher-order rationality;* the agent who never deviated from the local rule is the one trapped in the local
+min. So "break the naive rule and still be rational" holds — but the sharpest justification is **explore /
+exploit**, not short-vs-long (which the model already absorbs).
+
+**The caveat that keeps the model honest** (your 11a worry, returning): if we may fold long-term payoffs,
+social image, warm-glow, and exploration into the objective, "rational" can rationalize *anything* — the
+**revealed-preference tautology**. Behavioural economics earns its keep by pinning down the *systematic,
+predictable* deviations (hyperbolic discounting, loss aversion) so the model still *forbids* something. **A
+model that forbids nothing predicts nothing.**
+
+> **Follow-on you asked for:** the equilibrium-as-fixed-point and learning-in-games (GAN convergence) threads
+> are game theory proper — now set up as its own hobby subject, [`../../game-theory/plan.md`](../../game-theory/plan.md).
+
+---
+
 ## References (optional, for depth)
 
 - *Naked Economics* — Charles Wheelan. The friendliest possible tour of exactly these intuitions; chapters 1–2
@@ -339,8 +419,10 @@ Bring one article to our chat — we'll dissect it together and see how far five
 ---
 
 ### What's next
-🔵 **Draft — not yet finalized.** Study this, then bring me your answers to §9 (and an article from §10 if you
-did it). We'll do the Q&A the same way as the main track; when you say *"finalize,"* I'll rewrite this to fit
-how you actually reasoned about it and add an "Applied" section capturing our threads. The next section
-(**§2 — supply, demand & how prices coordinate a market**) builds directly on incentives and the margin from
-here: a market price is just the system-level signal that pushes every agent to their MB = MC point.
+✅ **Finalized 2026-06-16.** Marked done in [`../plan.md`](../plan.md); §11 captures the two Q&A threads. Two
+follow-ons came out of this session: (1) the next section, **§2 — supply, demand & how prices coordinate a
+market**, builds directly on incentives and the margin — a market price is just the system-level signal that
+pushes every agent toward their `MB = MC` point (and, per §11a, the *endogenous* surface that price both
+reads and creates); (2) you asked for **game theory + its math** — now a separate hobby subject,
+[`../../game-theory/plan.md`](../../game-theory/plan.md), which picks up the equilibrium-as-fixed-point and
+learning-in-games threads from §11.

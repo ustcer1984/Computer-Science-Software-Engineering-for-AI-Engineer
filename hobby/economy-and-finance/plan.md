@@ -46,6 +46,8 @@ The modules below build toward all four; the mapping is called out in [Goal → 
 - §2 — Supply, demand & how prices coordinate a market.
 - §3 — Elasticity, surplus, and when markets fail (externalities, public goods, monopoly power).
 - §4 — Firms, costs & competition: how a business actually decides what to make and charge.
+  *(Strategic/oligopoly competition — Cournot, Bertrand — is treated properly in the sibling
+  [Game Theory](../game-theory/plan.md) subject; this section just flags where it bites.)*
 
 ### E02 — The Whole Economy (Macroeconomics) · `02-macroeconomics/`
 *Reading "the economy" — the indicators behind the headlines. (Goal 1.)*
@@ -137,7 +139,7 @@ E02–E04). Tell me and I'll re-sequence.
 
 | Module | Section | Status | File | Notes |
 |---|---|---|---|---|
-| E01 Foundations | §1 How economists think | 🔵 | [`01-foundations/01-how-economists-think.md`](01-foundations/01-how-economists-think.md) | Draft ready 2026-06-16; awaiting Q&A + finalize |
+| E01 Foundations | §1 How economists think | ✅ | [`01-foundations/01-how-economists-think.md`](01-foundations/01-how-economists-think.md) | Finalized 2026-06-16. Body held; §11 captures two Q&A threads (endogenous cost surface → equilibrium/GAN; optimality-condition vs search-dynamics). Spun off a **Game Theory** subject. |
 | E01 | §2 Supply, demand & prices | ⬜ | | |
 | E01 | §3 Elasticity, surplus, market failure | ⬜ | | |
 | E01 | §4 Firms, costs & competition | ⬜ | | |
