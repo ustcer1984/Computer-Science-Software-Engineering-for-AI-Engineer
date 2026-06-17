@@ -140,7 +140,7 @@ E02–E04). Tell me and I'll re-sequence.
 | Module | Section | Status | File | Notes |
 |---|---|---|---|---|
 | E01 Foundations | §1 How economists think | ✅ | [`01-foundations/01-how-economists-think.md`](01-foundations/01-how-economists-think.md) | Finalized 2026-06-16. Body held; §11 captures two Q&A threads (endogenous cost surface → equilibrium/GAN; optimality-condition vs search-dynamics). Spun off a **Game Theory** subject. |
-| E01 | §2 Supply, demand & prices | 🔵 | [`01-foundations/02-supply-demand-and-prices.md`](01-foundations/02-supply-demand-and-prices.md) | Draft ready to study (2026-06-16). Pitched as a coupled system: demand/supply = MB/MC response curves, equilibrium = stable fixed point (excess demand = restoring force; cobweb→learning-dynamics tie), price = shadow price/dual variable (tâtonnement = dual ascent), price controls as payoff. Not yet finalized. |
+| E01 | §2 Supply, demand & prices | ✅ | [`01-foundations/02-supply-demand-and-prices.md`](01-foundations/02-supply-demand-and-prices.md) | Finalized 2026-06-17. He'd seen S/D before (body easy); session attacked the *foundations* — §10 captures it: (10a) "assumes a free market" → forces vs solver; planned economies = §6 price-controls at scale + the calculation/knowledge problem; (10b) "assumes equilibrium forms" → optimality *condition* vs search *dynamics*; info lag → price dispersion (search theory) or cobweb non-convergence (his semiconductor cycle). Math converted to LaTeX per his new authoring rules. |
 | E01 | §3 Elasticity, surplus, market failure | ⬜ | | |
 | E01 | §4 Firms, costs & competition | ⬜ | | |
 | E02 Macroeconomics | §1 GDP & output | ⬜ | | |

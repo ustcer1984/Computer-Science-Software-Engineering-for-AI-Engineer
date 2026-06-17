@@ -408,7 +408,7 @@ model that forbids nothing predicts nothing.**
 ## References (optional, for depth)
 
 - *Naked Economics* — Charles Wheelan. The friendliest possible tour of exactly these intuitions; chapters 1–2
-  cover this section. https://wwnorton.com/books/9780393337648
+  cover this section. https://wwnorton.com/books/Naked-Economics
 - *The Economic Way of Thinking* — Heyne, Boettke & Prychitko. The whole book is "internalize these few tools."
 - Khan Academy — Microeconomics, "Introduction to economics": free, short videos with the PPF and opportunity
   cost worked visually. https://www.khanacademy.org/economics-finance-domain/microeconomics

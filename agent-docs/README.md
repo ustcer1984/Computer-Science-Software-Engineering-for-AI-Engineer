@@ -29,3 +29,7 @@ and up-to-date AI. It is not a software product. Two parallel tracks:
 - **Diagrams: author in Mermaid, commit rendered SVG.** Write ```` ```mermaid ```` blocks, then run
   `npm run diagrams` and commit the generated SVGs alongside the doc. Mermaid alone does not render on
   GitHub or most viewers. See [`diagrams.md`](diagrams.md) for the full convention and gotchas.
+- **Follow the authoring conventions when writing material.** [`authoring-conventions.md`](authoring-conventions.md)
+  records the learner's own rules for all tracks: use analogies (incl. the physics lens) sparingly and only
+  where they earn their place; show real charts/plots (prefer a good existing figure, or draw the actual
+  thing with dummy values) over prose; and always write math in LaTeX (`$...$`), never code backticks.

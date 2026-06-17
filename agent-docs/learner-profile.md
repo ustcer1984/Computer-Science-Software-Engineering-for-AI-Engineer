@@ -4,7 +4,37 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-16 (v13 — **first HOBBY-track session: Economy & Finance E01 §1 "how economists think"**
+Last updated: 2026-06-17 (v14 — **Economy & Finance E01 §2 "supply, demand & how prices coordinate a market"**
+✅ finalized + **durable authoring-style feedback that applies to ALL tracks**. He'd seen supply–demand before,
+found the body easy, and (signature move) went after the model's **foundational assumptions** rather than its
+content: he argued the whole apparatus rests on two pre-assumptions that "don't always hold" — **(1) a free
+market** and **(2) that the equilibrium actually forms** (everyone knows the price; info takes time). Both real;
+both **mis-ranked as "regimes where the model is falsified."** The re-rank he took (now §10 of the file):
+**(1)** separate the *forces* (scarcity, diminishing MB / rising MC — universal) from the *solver* (the price
+mechanism is one solver; central planning is another on the same problem). A planned economy doesn't repeal
+S/D — it overrides the price signal while scarcity remains = **§6 price-controls scaled up**, and its
+shortages/gluts are S/D reasserting through a non-price channel (USSR = confirming experiment, not
+counterexample). Why planning fails = the **socialist calculation / Hayek knowledge problem**, which is the §5
+"price = dual variable / distributed computation" point sharpened. Genuine residual where he's right =
+**market failure** (the *competitive* assumptions: no market power/externalities, exogenous preferences). **(2)**
+equilibrium is the optimality **condition** ($Z(P^*)=0$), not the search **dynamics** — *his own §1-era
+condition-vs-dynamics distinction returning*; info lag is about the *path*, leaves the fixed point intact;
+modelled as a friction it **predicts price dispersion** (search theory, Stigler 1961), and at the extreme
+(production lag + adaptive expectations) gives genuine **non-convergence** — the **cobweb / hog cycle**, which
+he immediately mapped to the **semiconductor cycle he lived through**. Same confirmed pattern: plausible
+premise capturing a real effect, needs the dominant frame named; integrates instantly. **NEW & IMPORTANT —
+he set three authoring rules for all future material** (now `agent-docs/authoring-conventions.md`): **(a) use
+the physics/analogy lens *sparingly*, only where it earns its place — deriving everyday results via heavy
+formalism (his example: full Lagrange for S/D) is overkill, and "not every physics PhD still remembers
+Lagrange after the classroom"; don't make the basics *depend* on advanced tools. (b) Show real charts/plots —
+prefer a good existing public figure, or if self-made draw the actual thing with dummy values (e.g. matplotlib
+curves), not just conceptual box-flowcharts; he explicitly asked "why explain the demand/supply curves in text
+only?" (c) Always write math in LaTeX (`$...$`), never code backticks.** This is a real calibration: the
+physics-lens lever (logged since v3) is genuine but I had been **over-applying** it. Teach-forward: keep the
+hypothesis→re-rank method and the lens for *genuinely hard* ideas, but dial back lens density, add real plots,
+and LaTeX all math. He scoped the §2 revision tightly ("just LaTeX the math, don't rewrite the rest, finalize")
+— good track-economy again. Also fixed a stale Wheelan/Norton ref link (404) in both §1 and §2 while verifying.).
+Prior: v13 (2026-06-16 — **first HOBBY-track session: Economy & Finance E01 §1 "how economists think"**
 ✅ finalized. He left the body untouched and instead stress-tested the section's *core analogy* ("economics =
 constrained optimization") with two methodological objections imported straight from his ML/optimization world —
 exactly the predicted mode, and strong evidence the **physics/ML-analogy teaching lever works for non-CS subjects
@@ -397,6 +427,22 @@ learning surfaces.
 
 ## Learning progress (hobby track)
 *(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-06-17 — Economy & Finance · E01 §2 (supply, demand & how prices coordinate a market) ✅ finalized.**
+  He'd seen S/D before → body easy, untouched; spent the session attacking the model's **foundational
+  assumptions** (free market; equilibrium-actually-forms) in his signature plausible-premise→re-rank mode. The
+  re-rank (now §10 of the file): **(10a)** *forces* (scarcity, MB/MC — universal) vs *solver* (price mechanism
+  is one solver; central planning another) → a planned economy = §6 price-controls at scale, its shortages are
+  S/D via a non-price channel, and *why* planning fails = the Hayek **calculation/knowledge problem** (= the §5
+  price-as-dual-variable point); genuine residual = **market failure** (competitive assumptions). **(10b)**
+  equilibrium = optimality *condition* not search *dynamics* (his own §1 distinction); info lag → **price
+  dispersion** (search theory) or, with production lags, **cobweb non-convergence** — which he mapped instantly
+  to the **semiconductor cycle**. **Headline for teaching this learner going forward (the v14 calibration):**
+  he gave **three durable authoring rules for all tracks** (`agent-docs/authoring-conventions.md`) — (1) **use
+  the physics/analogy lens sparingly**, only for genuinely hard ideas; full-Lagrange-for-S/D is overkill and he
+  may not recall deep classroom tools; (2) **show real charts/plots** (prefer existing figures, or draw actual
+  curves with dummy values) instead of text-only; (3) **always LaTeX for math**. Net: the lens lever is real but
+  I'd been over-using it — dial it back, plot more, LaTeX everything. Tight track-economy ("just LaTeX the math,
+  finalize"). Next: **§3 — elasticity, surplus & market failure** (his 10a objection lands right on it).
 - **2026-06-16 — Economy & Finance · E01 §1 (how economists think: scarcity, opportunity cost, incentives,
   marginal thinking, trade-offs) ✅ finalized.** First hobby-track section. Body pitched through his
   physics/optimization lens (scarcity=constraint, opportunity cost=shadow price/Lagrange multiplier,
