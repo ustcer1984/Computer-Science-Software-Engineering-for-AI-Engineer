@@ -8,6 +8,11 @@ CLAUDE.md
 # temp
 temp/
 
+# python env (uv-managed; matplotlib for plotting course figures, etc.)
+.venv/
+__pycache__/
+*.pyc
+
 # node tooling (diagram rendering, etc.)
 node_modules/
 # generated diagram scratch files
