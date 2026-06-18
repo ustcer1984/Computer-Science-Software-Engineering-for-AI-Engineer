@@ -3,7 +3,7 @@
 > **Scope:** project-level — applies to **all tracks** (course, reading, hobby, and any future track).
 > These are the learner's own instructions on how material should be written. Keep them in context
 > whenever you prepare or finalize a section/reading. Established 2026-06-17 from learner feedback on
-> Econ E01 §2.
+> Econ E01 §2; extended 2026-06-18 (rule 3) from feedback on M04 Ch2 §1.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -34,7 +34,29 @@ describing it in words. "Why explain demand and supply curves in text only when 
 - All the [`diagrams.md`](diagrams.md) rules still apply: commit a rendered image (never source-only), and
   **look at the rendered image** before committing.
 
-## 3. Always write math in LaTeX
+## 3. Teach comprehensively; ground examples in the real world, not the learner's repos
+
+*(Established 2026-06-18 from learner feedback on M04 Ch2 §1.)* Two reference repos
+(`aquarium-main`, `arena-concept-experiment`) were shared **once, to calibrate his level** so material
+isn't pitched too low. They are **not the goal of the course.** Do not write as if the point of a
+section is to improve those repos.
+
+- **Be comprehensive.** The CS/SWE/AI tracks should cover their subjects properly and durably, the way
+  a good course or textbook would — not as a thin wrapper around "fix file X." Cover the concept fully
+  even where it doesn't touch his code.
+- **Don't over-cite the repos.** A repo reference is fine occasionally when it genuinely illuminates,
+  but stop sprinkling `process_no_waiting.py` / `ArenaPage.jsx` / line counts through every section.
+- **A code snippet he shows in Q&A is usually a question, not an endorsement.** He often pastes code to
+  *ask your opinion*; it does **not** mean he wrote it, uses it, or thinks it's good. Never assume his
+  examples are his production code or label them "your bad code." Critique the design on its merits.
+- **Prefer real-world canonical good/bad examples, and teach failure modes he hasn't met.** His words:
+  "Let me know the failure mode I have not encountered before." Reach for well-known industry
+  exemplars — deep modules (Unix file API, Go `io.Reader`, `requests`), shallow/leaky ones (Java stream
+  wrappers, ORM N+1, TCP-over-IP), over-decomposition casualties (Segment, Prime Video monolith
+  reversals, `FizzBuzzEnterpriseEdition`) — over invented or repo-specific ones. They generalize and
+  they stretch him.
+
+## 4. Always write math in LaTeX
 
 Every mathematical expression, formula, equation, variable, sub/superscript, or operator goes in
 **LaTeX math** so it renders correctly and reads cleanly — **not** in inline code backticks or plain text.

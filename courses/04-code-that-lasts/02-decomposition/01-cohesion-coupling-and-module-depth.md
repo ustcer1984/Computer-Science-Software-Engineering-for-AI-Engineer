@@ -3,34 +3,33 @@
 > **Module:** Writing Code That Lasts
 > **Chapter:** Decomposition
 > **Section:** The real metric for a good boundary — cohesion, coupling, and module *depth* (not file length)
-> **Status:** 🔵 in progress — drafted 2026-06-18. This is the conceptual core of your clearest gap.
-> It deliberately reuses the **pipeline-state design thread** you drove in M01 Ch2 §1 (the `PipeState`
-> shallow-module diagnosis) and the **Ousterhout vocabulary** (deep/shallow modules) you primed on in
-> the 2026-06-11 reading, so it builds on language you already own.
+> **Status:** ✅ finalized 2026-06-18. Examples are drawn from well-known real-world systems and named
+> failure modes (Unix I/O, Go's `io.Reader`, Java's stream wrappers, Spolsky's leaky abstractions,
+> the Segment / Prime Video microservice reversals). §11 works a complete design case — organizing a
+> linear pipeline of independent steps — from a Q&A in this session.
 
 **Estimated study time:** 2–3 hours including reflection.
-**Prerequisites:** none formal. Strong tailwinds: M04 Ch1 §1 (a codebase is a graph), M01 Ch2 §1 §10
-(your pipeline-state design arc — we extend it here), and the *Philosophy of Software Design* primer
-from the 2026-06-11 reading.
+**Prerequisites:** none formal. Useful vocabulary: M04 Ch1 §1 (a codebase is a graph) and the
+*Philosophy of Software Design* primer from the 2026-06-11 reading.
 
 ---
 
-## Why this section exists (for *you*)
+## Why this section exists
 
-This is the centre of gravity of your whole upskilling plan. The survey of your repos found two files —
-`process_no_waiting.py` at **2,434 lines** and `ArenaPage.jsx` at **3,270 lines** — and decomposition
-is named as your *clearest, most actionable gap*. Everything in this chapter exists to fix that.
+Decomposition is the single skill that most separates code that lasts from code that rots. Every other
+topic in this module — reading code, design patterns, naming — is downstream of one question: **where do
+you draw the boundaries, and what makes a boundary good?** Get it right and a system stays changeable
+for years. Get it wrong and it calcifies into something nobody dares touch, regardless of how clever any
+individual function is.
 
-But here is the trap, and you walked right up to its edge in our M01 Ch2 §1 session. When you feel a
-file is "too big," the instinct is to **split it** — chop it into smaller files, or pull the state onto
-a class and mutate it through methods. You proposed exactly that (`PipeState` with `read_state()` /
-`update_state(data)`), and we found it made things *worse*: it turned explicit data flow into implicit
-mutation. **Splitting is not decomposition.** You can take one 2,400-line mess and turn it into twelve
-200-line messes that are *harder* to understand than the original, because now the mess is also spread
-across twelve files with tangled wires between them.
+Here is the trap this section disarms. When a file feels "too big," the reflex is to **split it** — chop
+it into smaller files, or hoist the state onto a class and mutate it through methods. **Splitting is not
+decomposition.** You can take one 2,000-line mess and turn it into ten 200-line messes that are *harder*
+to understand than the original, because the mess is now also smeared across ten files with tangled
+wires between them. Smaller is not the goal; *less to know* is the goal.
 
 So before any refactoring technique, you need the **metric** — the thing that tells you whether a
-boundary is good or bad. This section gives you three lenses that are really one idea:
+boundary earns its keep. This section gives you three lenses that turn out to be one idea:
 
 - **Cohesion** — does a module do *one* thing?
 - **Coupling** — how entangled is it with the *others*?
@@ -42,8 +41,8 @@ Get these right and "where do I draw the line" stops being taste and becomes a j
 
 ## 1. The wrong metric: "decomposition = smaller files"
 
-Let's kill the bad mental model first, because it's the one that produces your monoliths *and* would
-produce the bad fix.
+Kill the bad mental model first, because it's the one that produces monoliths *and* the bad fixes for
+them.
 
 A module — a function, a class, a file, a service; any unit with a boundary — has two parts:
 
@@ -52,14 +51,14 @@ A module — a function, a class, a file, a service; any unit with a boundary �
 - an **implementation**: everything inside that the caller does *not* need to know.
 
 The entire point of a boundary is that the interface is **much smaller** than the implementation. You
-learn `list.sort()` — one line — and never think about Timsort's galloping merge underneath. The cost
-you pay to *use* it is tiny; the work it does *for* you is large. That gap is the whole value.
+write `list.sort()` — one call — and never think about Timsort's galloping merge underneath. The cost to
+*use* it is tiny; the work it does *for* you is large. That gap is the whole value.
 
 "Split the big file into small files" optimises the wrong variable. It reduces lines-per-file (a number
 nobody experiences) while often *increasing* the total size of all the interfaces (the thing every
-reader pays for). If pulling out a helper means callers now have to understand the helper's five
-parameters, its call-ordering rules, and the three places it reaches back into shared state — you added
-a boundary and hid *nothing* behind it. You paid the cost of an interface and got no abstraction back.
+reader pays for). If pulling out a helper means callers now have to understand its five parameters, its
+call-ordering rules, and the three places it reaches back into shared state — you added a boundary and
+hid *nothing* behind it. You paid the cost of an interface and got no abstraction back.
 
 > The number that matters is not "lines per file." It is **how much you can ignore while still using
 > the thing correctly.**
@@ -68,15 +67,15 @@ a boundary and hid *nothing* behind it. You paid the cost of an interface and go
 
 ## 2. What you're actually fighting: complexity
 
-Ousterhout's framing (your 2026-06-11 reading) is the sharpest definition: **complexity is anything
-about the structure of a system that makes it hard to understand or modify.** It shows up as three
-concrete symptoms — learn to name them, because "this feels messy" is not actionable and these are:
+Ousterhout's framing is the sharpest definition: **complexity is anything about the structure of a
+system that makes it hard to understand or modify.** It shows up as three concrete symptoms — learn to
+name them, because "this feels messy" is not actionable and these are:
 
-| Symptom | What it feels like | Your monoliths |
+| Symptom | What it is | A real-world shape of it |
 |---|---|---|
-| **Change amplification** | a simple change touches many places | change the turn-scoring rule → edit it in 6 spots in `process_no_waiting.py` |
-| **Cognitive load** | you must hold a lot in your head to make *any* change safely | "what does line 1,900 assume about the dict built on line 300?" |
-| **Unknown unknowns** | it's not even clear *what* you must know to change it safely — the worst one | you change one branch and a feature three screens away silently breaks |
+| **Change amplification** | a simple change touches many places | **Y2K**: storing years as two digits was one decision, repeated across millions of lines — changing it cost an estimated \$300B+ globally |
+| **Cognitive load** | you must hold a lot in your head to make *any* change safely | a function with 15 positional parameters, or config read from a global half a file away from where it's used |
+| **Unknown unknowns** | it's not even clear *what* you must know to change safely — the worst one | a global mutable setting (process-wide locale/timezone, a monkeypatched method) silently changes behaviour in a distant, unrelated module |
 
 The third is the killer, and it's the one good decomposition exists to defeat. Change amplification
 wastes your time; unknown unknowns produce *bugs you can't predict*. A well-decomposed system has the
@@ -84,8 +83,8 @@ property that **to change one thing, you only need to understand one thing** —
 exactly what you can ignore.
 
 Complexity is also **incremental**: no single line creates it. It accretes — a special case here, a
-shared variable there — until one day the file is 2,400 lines and nobody dares touch it. That's why
-this is a *discipline*, not a one-time cleanup.
+shared variable there — until one day the file is unmaintainable. No one decision looks like the
+problem, which is precisely why this is a *discipline*, not a one-time cleanup.
 
 ---
 
@@ -97,19 +96,22 @@ module has one clear job and everything in it serves that job. Low cohesion = it
 There's a classic ladder from worst to best. You don't need to memorise the names, but you should be
 able to *smell* where a module sits:
 
-| Cohesion (worst → best) | The module's members are grouped because… | Smell |
+| Cohesion (worst → best) | The members are grouped because… | Smell |
 |---|---|---|
-| **Coincidental** | …no reason; someone dumped them together (`utils.py`) | the junk drawer |
-| **Logical** | …they're the same *category* (all "validation", all "handlers") | a switch on a "type" flag doing unrelated work |
-| **Temporal** | …they happen at the same *time* (`init()` doing ten unrelated setups) | "and then we also…" |
+| **Coincidental** | …no reason; someone dumped them together (`utils.py`, `helpers.py`) | the junk drawer |
+| **Logical** | …they're the same *technical category* (all "validators", all "I/O functions") | a `do(type, ...)` that switches on a kind flag |
+| **Temporal** | …they happen at the same *time* (`init()` doing ten unrelated setups) | "…and then we also…" |
 | **Sequential** | …one's output is the next one's input | getting warm |
 | **Functional** | …they all collaborate on **one** well-defined task | the goal ✅ |
 
-`process_no_waiting.py` is almost certainly **coincidental/temporal** at the top level: it's "all the
-stuff that happens when we process a turn," which is a *time* grouping, not a *task* grouping. The fix
-isn't to cut it at line 1,200; it's to find the handful of genuinely-separate *tasks* hiding inside
-(validate input, score the turn, persist the result, notify) and give each its own functionally-cohesive
-home.
+The most common real-world version of *logical* cohesion is **package-by-layer**: a codebase split into
+`controllers/`, `services/`, `repositories/` — grouped by technical role. To add one feature you edit a
+file in each layer, and no single directory tells you what the app *does*. The alternative,
+**package-by-feature** (`billing/`, `auth/`, `search/`, each holding its own controller + service +
+repo), groups by what changes together. Same lesson one level up from functions: organise by *purpose*,
+not by *technical type*. (Fowler lays out the trade-off in *PresentationDomainDataLayering* — there are
+real cases for layering, but "by layer" as the default is the smell.) We work a concrete instance of
+this — a pipeline grouped by I/O-vs-CPU — end-to-end in §11.
 
 A practical test: **describe the module in one sentence with no "and."** If you need "and" — "this
 validates the request *and* writes to the database *and* formats the response" — cohesion is low and
@@ -131,24 +133,27 @@ internals?**
 | **Common / global** | …shared mutable global state | both read/write a module-level `STATE` dict |
 | **Control** | …a flag B passes to tell A *how* to behave | `render(thing, mode="legacy")` with a big `if mode` inside |
 | **Stamp** | …a big object, of which it uses two fields | passing the whole `request` to get `request.user_id` |
-| **Data** | …a few explicit parameters and a return value | `score(turn) -> Score` | ✅ |
+| **Data** | …a few explicit parameters and a return value | `score(turn) -> Score` ✅ |
 
-Two of these are exactly the smells from your `PipeState` proposal. Putting state on `self` and mutating
-it through `update_state(data)` is **common coupling** — every step shares one mutable bag of state, so
-any step can be broken by any other step's writes, in an order you can't see. That's why we landed on
-*explicit, immutable data flow*: a step takes a typed `State` in and returns a new one out (**data
-coupling**, the best kind), so the dependency is visible in the signature and nothing acts at a distance.
+**Common coupling** is the one that quietly wrecks systems, because it *feels* convenient. The textbook
+case is the **global variable**, or its respectable-looking cousins — a shared mutable singleton, a
+process-wide config object, a module-level cache that several functions read and write. Everything can
+reach the shared thing, so any module can break any other through it, in an execution order you cannot
+read off the code. The cure is to make the dependency *visible in the signature*: pass what a function
+needs as parameters and return what it produces, so the wiring is the call graph, not a hidden bag of
+state. That's **data coupling** — the best kind — and it's the difference between a bug you can localise
+and one you can't.
 
 ### The decomposition U-curve
 
 Here's the part that defeats "split into smaller files." Coupling is *why* there's a sweet spot. As you
 break a system into more modules:
 
-- **too few modules** (the monolith): everything is internal, so coupling is "free" inside the blob —
-  but cohesion is terrible and the blob is one giant unknown-unknown;
+- **too few modules** (the god-object / monolith): everything is internal, so coupling is "free" inside
+  the blob — but cohesion is terrible and the blob is one giant unknown-unknown;
 - **too many modules** (over-decomposition): each piece is tiny, but they're so interdependent that
-  understanding *anything* means chasing calls across fifteen files. You've converted internal mess
-  into **inter-module coupling**, which is worse — it's spread out and wired together.
+  understanding *anything* means chasing calls across fifteen files. You converted internal mess into
+  **inter-module coupling**, which is worse — it's spread out and wired together.
 
 Total complexity is the sum of *within-module* complexity (falls as you split) and *between-module*
 complexity (rises as you split). Their sum is a **U**:
@@ -174,10 +179,10 @@ xychart-beta
 <!-- DIAGRAM:END -->
 
 *Red = total complexity (what you experience). Blue = within-module complexity (falls as you split).
-Green = between-module coupling (rises as you split). Your monoliths sit at the far **left**; "split it
-into twelve files without thinking about boundaries" slides you toward the far **right** — past the
-minimum, where coupling dominates. The skill is landing in the **valley**, and the valley's location is
-set by cohesion and coupling, not by a line count.*
+Green = between-module coupling (rises as you split). A god-object sits at the far **left**; reflexive
+over-splitting ("one class per everything") slides you to the far **right** — past the minimum, where
+coupling dominates. The skill is landing in the **valley**, and the valley's location is set by cohesion
+and coupling, not by a line count.*
 
 This is also the answer to "how small should a function be?" — small enough that it does one thing
 (cohesion), large enough that its interface earns its keep (the next idea).
@@ -190,47 +195,42 @@ This is the concept to walk away with. Ousterhout's measure of a *good* module i
 
 $$\text{depth} \;\approx\; \frac{\text{functionality hidden inside}}{\text{cost of the interface}}$$
 
-- A **deep module** has a *small* interface in front of a *large* implementation. `dict[key]` hides
-  hashing, bucket arrays, collision resolution, and dynamic resizing behind two characters. Huge
-  numerator, tiny denominator. You get a lot and pay almost nothing.
+- A **deep module** has a *small* interface in front of a *large* implementation. The canonical example
+  is the **Unix file abstraction**: `open`, `read`, `write`, `close` — four calls — sit in front of
+  filesystems, pipes, sockets, terminals, and device drivers. A handful of verbs, an ocean of
+  implementation. Go's `io.Reader` is even starker — *one* method, `Read(p []byte)`, and the entire
+  standard library composes around it. Python's `requests.get(url)` hides connection pooling, TLS,
+  redirects, chunked encoding, and retries behind one line. Huge numerator, tiny denominator.
 - A **shallow module** has an interface nearly as complex as its implementation. It makes you learn
-  about as much to *call* it as you'd need to just *do the work yourself*. The boundary costs more than
-  it saves.
+  about as much to *call* it as to do the work yourself. Ousterhout's own example is Java's stream
+  stack: to read a file you write
+  `new BufferedReader(new InputStreamReader(new FileInputStream(path)))` — three classes, and the
+  *caller* must know to add buffering or eat a syscall per byte. The decomposition is real but the
+  boundaries hide nothing; the common case isn't handled, it's *exposed*.
 
 The depth ratio is what makes cohesion and coupling *cash out*. High cohesion shrinks the interface (one
 job → one clear entry point). Low coupling shrinks it too (fewer wires poking through). A deep module is
-simply what you get when cohesion is high and coupling is low — it's the same property viewed from the
+simply what you get when cohesion is high and coupling is low — the same property viewed from the
 caller's side.
 
-And it explains, precisely, what was wrong with `PipeState`:
+It also gives you a precise way to catch a *bad* small module. Consider a one-line method like
+`update_state(self, data)` that just does `self._state.update(data)`. It's short, but it's **maximally
+shallow**: the interface is no simpler than the operation it wraps (`dict.update`), it accepts anything
+and guarantees nothing, so it hides no decision. That's *negative* depth — it adds a boundary and
+subtracts nothing from what the caller must know. Shortness is not depth.
 
-```python
-class PipeState:
-    def read_state(self):          # returns the live mutable bag
-        return self._state
-    def update_state(self, data):  # merges anything into the bag
-        self._state.update(data)
-```
-
-`update_state(data)` is a **maximally shallow** interface: it accepts *anything* and guarantees
-*nothing*. The interface (`update_state`) is no simpler than the operation (`dict.update`) — it's a
-one-line method wrapping a one-line builtin, so it adds a boundary and hides no decision. Worse,
-`read_state()` hands back the live object, so callers can mutate through it — the abstraction leaks on
-both sides. Negative depth: it *added* interface and *subtracted* clarity.
-
-The deep version is the skeleton we built: a `frozen` dataclass `State` (the data, with a real schema),
-steps with the signature `def step(state: State, deps: Deps) -> State`, and a runner that threads state
-through them. The interface of each step is one line and tells you everything — *here is what I read,
-here is what I produce* — while the implementation can be as rich as it needs to be. **Narrow door,
-big room.**
-
-> A blunt heuristic: if a method's body is about as long and complex as the call site that uses it,
-> and it doesn't make a *decision* the caller would otherwise have to make, it's probably a shallow
+> A blunt heuristic: if a method's body is about as long and complex as the call site that uses it, and
+> it doesn't make a *decision* the caller would otherwise have to make, it's probably a shallow
 > pass-through. Inline it or make it earn its boundary.
+
+The deep counterpart of the shallow `update_state` is the pattern in §11: a step with the signature
+`def step(state: State, deps: Deps) -> State`. The interface is one line and tells you everything —
+*here is what I read, here is what I produce* — while the implementation can be as rich as it needs to
+be. **Narrow door, big room.**
 
 ---
 
-## 6. The classic two structures, side by side
+## 6. The two structures, side by side
 
 Same functionality, two decompositions. The **❌ panel** is shallow modules + high coupling (thin
 wrappers all reaching into one shared state bag); the **✅ panel** is deep modules + data coupling (each
@@ -276,41 +276,61 @@ entire return on getting the boundary right.**
 ## 7. Information hiding & leaky abstractions
 
 The mechanism underneath "deep" is **information hiding**: a module's job is to *encapsulate a design
-decision* so that the decision can change without callers noticing. A good module hides a "what if we
-need to change X later" — the storage format, the retry policy, the wire protocol, the scoring formula.
+decision* so it can change without callers noticing — the storage format, the retry policy, the wire
+protocol, the scoring formula.
 
-The failure mode is the **leaky abstraction**: an interface that forces the caller to know the thing it
-was supposed to hide.
+The failure mode is the **leaky abstraction** (Joel Spolsky's law: *all non-trivial abstractions, to
+some degree, are leaky*). The interface forces the caller to know the very thing it was supposed to hide.
+Real ones you've almost certainly hit without naming:
 
-- `read_state()` returning the live dict leaks the fact that state is a mutable dict.
-- A `get_user(id)` that throws `KeyError` on a missing row leaks that it's backed by a dict; the same
-  function over SQL would throw something else — so callers now depend on the *implementation*, not the
-  *interface*. (This is exactly your **"define errors out of existence"** keeper from the reading: a
-  deep interface might return `None` or a typed `UserResult`, hiding the storage choice entirely.)
-- Control-coupling flags (`render(x, mode="legacy")`) leak internal branches into the signature.
+- **TCP over IP.** TCP sells you a reliable, ordered byte stream over an unreliable packet network. The
+  abstraction holds — until packet loss spikes and your "reliable stream" mysteriously stalls. The
+  unreliability leaks through as *latency* you can't see in the API.
+- **ORMs and SQL.** An ORM hides the database behind objects — until a loop over `user.orders`
+  silently fires one query per user (the **N+1 problem**) and the only fix is to understand the SQL the
+  abstraction was hiding. The query planner leaks too: the same `SELECT` is fast or catastrophic
+  depending on an index you can't see from the query.
+- **Network file systems.** NFS makes a remote disk look local — until the network is slow and every
+  `open()` blocks in ways a local file never would.
+- **Storage-specific errors.** A `get_user(id)` that raises `KeyError` leaks that it's backed by a dict;
+  swap it for SQL and it raises something else, so callers end up depending on the *implementation*.
+  (This is where the reading's **"define errors out of existence"** keeper pays off: a deep interface
+  returns `None` or a typed `UserResult`, hiding the storage choice entirely.)
 
-A quick litmus: **if I swapped the implementation for a totally different one (dict → Postgres,
-in-memory → HTTP), how many call sites would break?** Zero is the goal. Every break is a leak you're
-paying interest on.
+The point isn't that leaks are avoidable — Spolsky's law says they're not, fully. It's that a *deep*
+module leaks rarely and in the rare case; a *shallow* one leaks in the common case, which is just an
+un-abstraction with extra steps. A quick litmus: **if I swapped the implementation for a totally
+different one (dict → Postgres, in-memory → HTTP), how many call sites would break?** Zero is the goal;
+every break is a leak you're paying interest on.
 
 ---
 
-## 8. When *not* to decompose
+## 8. When *not* to decompose — and the failure modes at the far wall
 
-Decomposition has a cost, and the U-curve has a right-hand wall. Don't sprint past the valley.
+Decomposition has a cost, and the U-curve has a right-hand wall. Don't sprint past the valley. These are
+the failure modes of *too much* structure — the ones that bite teams who learned "split things up" as a
+rule rather than a judgement:
 
-- **Don't split what's read together.** If two pieces of code are *always* read and changed together,
-  a boundary between them just adds a wire you have to trace. Ousterhout: information and the code that
-  uses it want to live together. A boundary in the wrong place is *negative* value.
-- **Beware "classitis"** — the belief that more, smaller classes are automatically better. A class that
-  exists only to hold one method and pass data through is usually a shallow module; a plain function is
-  deeper.
-- **Don't decompose on speculation.** "We might need to swap this later" → you build a plugin
-  architecture for a thing that never changes. Decompose around the boundaries that *actually* shift
-  (you'll learn them by changing the code), not the ones you imagine might.
-- **Temporal coupling is a real reason to merge.** If step B genuinely cannot run without step A having
-  run first, hiding that ordering behind two innocent-looking public methods is *worse* than one method
-  that does both in the right order. Make the dependency impossible to get wrong.
+- **Don't split what's read together.** If two pieces of code are *always* read and changed together, a
+  boundary between them just adds a wire to trace. Information and the code that uses it want to live
+  together; a boundary in the wrong place is *negative* value.
+- **Classitis** — the belief that more, smaller classes are automatically better. The internet's running
+  jokes are real artifacts: Spring's actual `AbstractSingletonProxyFactoryBean`, and
+  *FizzBuzzEnterpriseEdition* (a parody repo that solves FizzBuzz across dozens of classes and
+  interfaces). Both are shallow-module sprawl — interfaces stacked on interfaces that each hide nothing.
+- **Premature microservices.** This is the U-curve's right wall at architecture scale, and it has famous
+  casualties. **Segment** consolidated 100+ microservices *back* into a monolith in 2018 because the
+  inter-service coupling (shared libraries, per-service ops, distributed failures) cost more than the
+  isolation bought. **Amazon Prime Video** (2023) moved a serverless/microservice media-monitoring
+  pipeline back to a monolith and cut cost ~90%, because the data shuffled *between* the tiny services
+  dwarfed the work inside them. Fowler's *MonolithFirst* is the rule of thumb: earn your boundaries by
+  living with the code, don't guess them up front.
+- **Don't decompose on speculation.** "We might need to swap this later" → a plugin architecture for a
+  thing that never changes. Decompose around boundaries that *actually* shift (you learn them by changing
+  the code), not ones you imagine might.
+- **Temporal coupling can be a reason to merge.** If step B genuinely cannot run before step A, hiding
+  that ordering behind two innocent-looking public methods is *worse* than one method that does both in
+  the right order. Make the dependency impossible to get wrong.
 
 The goal is never "maximum modules." It's the **valley**: the fewest boundaries that each hide a real
 decision behind a narrow interface.
@@ -322,14 +342,14 @@ decision behind a narrow interface.
 1. A colleague "cleans up" a 2,000-line file by cutting it into ten 200-line files, each calling the
    next and all sharing a module-level `STATE` dict. On the U-curve, which direction did they move, and
    did total complexity go up or down? Name the coupling type they introduced.
-2. Why is `update_state(data: dict)` a *shallow* interface even though it's only one line of code?
-   What single property would make a one-line method *deep* instead?
-3. You have `def get_config(key, *, env=None, default=None, cast=None, reload=False)`. Which cohesion/
-   coupling smell do the `cast` and `reload` flags hint at, and what's the deeper alternative?
+2. Why is a one-line `update_state(data: dict)` that does `self._state.update(data)` a *shallow*
+   interface? What single property would make a one-line method *deep* instead?
+3. A function is declared `def get_config(key, *, env=None, default=None, cast=None, reload=False)`.
+   Which cohesion/coupling smell do `cast` and `reload` hint at, and what's the deeper alternative?
 4. Give the one-sentence test for low cohesion, and the one-sentence test for a leaky abstraction.
-5. Your `score()` step currently reads `STATE["turn"]` and writes `STATE["result"]`. Rewrite its
-   *signature* (not body) to convert common coupling into data coupling. What does the new signature let
-   you do that the old one didn't?
+5. `score()` currently reads `STATE["turn"]` and writes `STATE["result"]`. Rewrite its *signature* (not
+   body) to convert common coupling into data coupling. What does the new signature let you do that the
+   old one didn't?
 
 <details>
 <summary>Answers</summary>
@@ -339,12 +359,11 @@ decision behind a narrow interface.
    Ten shallow modules wired through a global bag is the right-hand wall of the U-curve.
 2. Because the *interface* is no simpler than the *operation* — it accepts anything and guarantees
    nothing, so it hides no decision and the caller learns nothing they could ignore. A one-line method
-   is **deep** when it *makes a decision the caller would otherwise have to make* (e.g. picks the
-   storage key, validates an invariant, normalises an error) — i.e. it has a small interface over real
-   behaviour, however short.
-3. They smell of **control coupling** (flags telling the function *how* to behave → a big `if` inside)
-   and **low cohesion** (it's doing several jobs). Deeper: separate functions, or push the policy to the
-   caller and keep `get_config(key) -> Value` narrow.
+   is **deep** when it *makes a decision the caller would otherwise have to make* (picks the storage key,
+   validates an invariant, normalises an error) — a small interface over real behaviour, however short.
+3. **Control coupling** (flags telling the function *how* to behave → a big `if` inside) plus **low
+   cohesion** (it's doing several jobs). Deeper: separate functions, or push policy to the caller and
+   keep `get_config(key) -> Value` narrow.
 4. Low cohesion: **you can't describe the module in one sentence without "and."** Leaky abstraction:
    **swapping the implementation for a different one would break the callers.**
 5. `def score(state: State) -> State` (or `def score(turn: Turn) -> Score`). It makes the dependency
@@ -357,47 +376,138 @@ decision behind a narrow interface.
 
 ## 10. Optional: get your hands dirty (20–30 min)
 
-Pick **`process_no_waiting.py`** (or any monolith you have) and do a *paper* decomposition — no code
-changes, just the analysis. This is the skill; the editing comes in §2–§3.
+Pick any large function — from a codebase you work in, or an open-source one you're curious about — and
+do a *paper* decomposition. No code changes; the editing comes in §2–§3. This is the diagnostic skill.
 
-1. **Name the tasks.** Read the function top to bottom once and write down each *distinct task* it does,
-   one line each, no "and." Stop when you have the list. (Expect 4–8.)
-2. **Spot the shared bag.** Find every variable that's read or written across more than ~2 of those
-   tasks. That set *is* your coupling — it's what a clean decomposition has to turn into explicit
-   parameters and returns.
-3. **Draw the two structures** from §6 for *your* code: the current shared-state version, and a
-   deep-module version where each task is `state in → state out`. Count arrows crossing boundaries in
-   each.
+1. **Name the tasks.** Read it top to bottom once and write each *distinct task* it does, one line each,
+   no "and." Stop when you have the list. (Expect 4–8.)
+2. **Spot the shared bag.** Find every variable read or written across more than ~2 of those tasks. That
+   set *is* the coupling — what a clean decomposition has to turn into explicit parameters and returns.
+3. **Draw the two structures** from §6: the current shared-state version, and a deep-module version
+   where each task is `state in → state out`. Count arrows crossing boundaries in each.
 4. **Find one leaky abstraction** — a helper whose interface forces the caller to know something it
-   should hide (a returned mutable object, a raised storage-specific exception, a `mode=` flag).
-5. **Find one boundary you should *not* draw** — two chunks that are always read and changed together.
-   Note why merging beats splitting there.
+   should hide (a returned mutable object, a storage-specific exception, a `mode=` flag).
+5. **Find one boundary you should *not* draw** — two chunks always read and changed together. Note why
+   merging beats splitting there.
 
-You don't have to refactor anything. The deliverable is the *map*: the task list, the shared-state set,
-and the two diagrams. That map is what every later refactoring step executes against.
+The deliverable is the *map*: the task list, the shared-state set, and the two diagrams. That map is what
+every later refactoring step executes against.
 
 ---
 
-## 11. References
+## 11. Applied — organizing a pipeline of independent steps
 
-- John Ousterhout, *A Philosophy of Software Design* — chapters on complexity, deep modules, and
-  information hiding. The source of the "depth" framing and your shared vocabulary.
+A clean design case that exercises every idea above. The setup (common in data/ML and request-handling
+systems): a pipeline runs **several independent steps in a fixed linear order**. The steps split into
+two kinds — some **wait on a third-party service** (I/O-bound), some **don't** (CPU-only).
+
+**The tempting wrong move.** Group the files by that technical kind: one module for the waiting steps,
+one for the non-waiting steps; drop each new step into whichever matches. It feels tidy, but it's
+**logical cohesion** (§3) — the same anti-pattern as package-by-layer. The functions in "the I/O module"
+don't collaborate on one task; they merely share an execution property. To find the scoring step you
+first have to know whether it waits — the lookup axis is backwards.
+
+**Why "one file per step" isn't the fix either.** Splitting each function into its own file changes the
+*granularity* without changing the *organizing principle*. On the U-curve you slide right without moving
+toward the valley. The dissatisfaction is the right instinct (§1): file count was never the lever.
+
+**The real diagnosis: two axes were conflated.** File placement was answering two unrelated questions at
+once:
+
+| Axis | What it is | Where it belongs |
+|---|---|---|
+| **What a step does** | its purpose / domain | the *organizing axis* for source code (group by cohesion) |
+| **Whether it waits on I/O** | a runtime/scheduling property | the step's *interface* + the *runner* — not the directory |
+
+"I/O-bound" is something the **scheduler** cares about, not something a reader hunting for business logic
+cares about. Store it in the type system, where it can be acted on — not the filesystem, where it can't.
+
+**The layout that falls out:**
+
+```
+turn_pipeline/
+    contract.py     # the ONE shared shape: Step Protocol, State, Deps
+    pipeline.py     # PIPELINE = ordered registry: names, order, I/O flag   ← the short "catalog"
+    runner.py       # the ONE place that knows await-vs-call / fan-out
+    steps/          # one cohesive module per step — signature lives WITH its body
+        check_safety.py     # I/O  (async)
+        score_turn.py       # CPU
+        save_result.py      # I/O
+```
+
+```python
+# contract.py — one definition, no duplication
+class Step(Protocol):
+    name: str
+    io_bound: bool
+    def run(self, state: State, deps: Deps) -> State | Awaitable[State]: ...
+
+# pipeline.py — the catalog: every step at a glance, order explicit
+from .steps import check_safety, score_turn, save_result
+PIPELINE: list[Step] = [check_safety, score_turn, save_result]
+
+# steps/score_turn.py — interface and implementation TOGETHER
+class ScoreTurn:
+    name = "score_turn"
+    io_bound = False
+    def run(self, state: State, deps: Deps) -> State:
+        ...   # the actual logic
+```
+
+**Why this is three deep modules, not a shallow split.** A natural counter-proposal is a
+`process_interface.py` holding every step's signature, with bodies in a separate `process_logic/` folder
+— the C `.h`/`.c` split. In Python that's an **anti-pattern**: the signature already lives on the
+function, so re-stating it elsewhere is duplication (every signature change becomes a two-file edit that
+*will* drift), and it separates each step's interface from its body — exactly the leaky/shallow boundary
+of §7. The lesson worth keeping: **an "interface file" is not a list of signatures.** What earns a shared
+file is the *one contract every step shares* (`contract.py`) and the *catalog that wires them*
+(`pipeline.py`). A per-function signature is inseparable from its function and stays with it.
+
+**The bonus that the right interface unlocks.** Because the steps are *independent* and the I/O-ness now
+lives in the interface, the runner — the single place that cares — can do more than dispatch. Independent
+waiting steps shouldn't be `await`ed one-by-one; they should **fan out concurrently**:
+
+```python
+io  = [s for s in PIPELINE if s.io_bound]
+cpu = [s for s in PIPELINE if not s.io_bound]
+results = await asyncio.gather(*(s.run(state, deps) for s in io))   # independent → parallel
+```
+
+The very property that was mis-stored as a *file boundary* becomes, once it's in the type, a *scheduling
+lever*. That's the section in one example: organise by cohesion, hide the runtime property behind a deep
+interface, and let one runner own the coupling.
+
+---
+
+## References
+
+- John Ousterhout, *A Philosophy of Software Design* — complexity, deep modules, information hiding; the
+  source of the depth framing and the Java-streams shallow-module example.
   <https://web.stanford.edu/~ouster/cgi-bin/aposd.php>
-- Martin Fowler, *Reducing Coupling* — <https://martinfowler.com/ieeeSoftware/coupling.pdf>
-- Wikipedia, *Cohesion (computer science)* — the cohesion ladder, named.
-  <https://en.wikipedia.org/wiki/Cohesion_(computer_science)>
-- Wikipedia, *Coupling (computer programming)* — the coupling ladder, named.
+- Joel Spolsky, *The Law of Leaky Abstractions* —
+  <https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/>
+- Martin Fowler, *PresentationDomainDataLayering* (the by-layer vs by-feature trade-off) —
+  <https://martinfowler.com/bliki/PresentationDomainDataLayering.html>
+- Martin Fowler, *MonolithFirst* (earn your service boundaries) —
+  <https://martinfowler.com/bliki/MonolithFirst.html>
+- Alexandra Noonan / Segment, *Goodbye Microservices: From 100s of problem children to 1 superstar* —
+  <https://segment.com/blog/goodbye-microservices/>
+- Prime Video Tech, *Scaling up the Prime Video monitoring service and reducing costs by 90%* —
+  <https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90>
+- *FizzBuzzEnterpriseEdition* (classitis, as parody) —
+  <https://github.com/EnterpriseQualityCoding/FizzBuzzEnterpriseEdition>
+- Wikipedia, *Cohesion (computer science)* — <https://en.wikipedia.org/wiki/Cohesion_(computer_science)>
+- Wikipedia, *Coupling (computer programming)* —
   <https://en.wikipedia.org/wiki/Coupling_(computer_programming)>
-- Joel Spolsky, *The Law of Leaky Abstractions* — <https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/>
+- Martin Fowler, *Reducing Coupling* — <https://martinfowler.com/ieeeSoftware/coupling.pdf>
 
 ### What's next
 
 Two natural continuations inside Ch2:
-- **§2 — Refactoring a monolith, in moves:** the actual mechanics — extract function, introduce
-  parameter object, replace shared state with returned values, sprout/wrap — applied step by step to
-  `process_no_waiting.py` using the map you build in §10.
-- **§3 — Boundaries between modules and files:** packages, layering, dependency direction, and where the
-  seams in *your* repos should fall.
+- **§2 — Refactoring a monolith, in moves:** the actual mechanics — extract function, introduce parameter
+  object, replace shared state with returned values, sprout/wrap — applied to a real long function using
+  the map from §10.
+- **§3 — Boundaries between modules and files:** packages, layering, dependency direction, package-by-
+  feature in practice.
 
-Or rotate scope: you've now had a string of M01 days plus this SWE turn — the AI thread (**M12 Ch2 §2,
-video models**) is queued and is your strongest critique mode.
+Or rotate scope to the AI thread: **M12 Ch2 §2, video models** is queued.

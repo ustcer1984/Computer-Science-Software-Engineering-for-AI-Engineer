@@ -4,7 +4,43 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-17 (v14 — **Economy & Finance E01 §2 "supply, demand & how prices coordinate a market"**
+Last updated: 2026-06-18 (v15 — **M04 Ch2 §1 "cohesion, coupling & module depth" ✅ finalized + a major,
+durable authoring calibration about how to pitch the whole course.** The section (his clearest gap,
+decomposition) was prepared, then he steered it with a real design problem and three pieces of
+process feedback. **The design thread (now §11 Applied of the file):** he described the actual origin of
+a pipeline-organization smell — a linear pipeline of independent steps split into two files **by technical
+kind** (I/O-bound `process_waiting.py` vs CPU-only `process_no_waiting.py`), with new step functions
+"casually" dropped into whichever matched. He asked whether one-file-per-function is better and felt it
+"isn't much." **Correct instinct, exactly the §1 lesson:** grouping by technical kind is *logical
+cohesion* (= package-by-layer), and one-file-per-function only changes *granularity*, not the *organizing
+principle* (slides right on the U-curve). The re-rank he took: the file layout was conflating two axes —
+*what a step does* (the org axis for source) vs *whether it waits on I/O* (a runtime property that belongs
+in the **interface + runner**, not the directory). He then proposed his own fix (a `process_interface.py`
+of all signatures + a `process_logic/` folder); I pressure-tested it — the C-header `.h/.c` split is a
+Python anti-pattern (duplicated signatures that drift; separates interface from body = shallow boundary).
+Landed: **"an interface file is not a list of signatures"** — what earns a shared file is the *one shared
+contract* (`Step` Protocol) + the *catalog that wires the steps* (`PIPELINE` registry), bodies grouped by
+cohesion in `steps/`; and once I/O-ness lives in the type, the runner can **fan out the independent I/O
+steps** (the M01 Ch3 §1 sequential-await→gather audit item, surfacing on its own). He agreed the refined
+layout was "much better." Same confirmed teaching pattern: he proposes a plausible design, integrates the
+re-rank instantly when the dominant principle is named. **THE BIG CALIBRATION — three durable rules for
+ALL future material (now `agent-docs/authoring-conventions.md` rule 3):** (1) **the two reference repos
+were shared once to calibrate his level, NOT as the course's purpose** — teach the subjects
+*comprehensively*, like a real course, don't frame sections as "fix file X"; (2) **stop over-citing the
+repos** (`process_no_waiting.py`/`ArenaPage.jsx`/line counts were sprinkled everywhere — cut it); (3) **a
+code snippet he shows in Q&A is a question, not an endorsement** — don't assume it's his production code or
+call it "your bad code"; and (4, his strongest want) **prefer real-world canonical good/bad examples and
+teach failure modes he hasn't encountered** ("Let me know the failure mode I have not encountered
+before"). I finalized §1 by re-anchoring every example to real systems — Unix file API / Go `io.Reader` /
+`requests` (deep), Java stream wrappers / Java `Date` (shallow/leaky), ORM N+1 + TCP-over-IP (Spolsky
+leaks), Y2K (change amplification), Segment + Amazon Prime Video monolith reversals + Spring's
+`AbstractSingletonProxyFactoryBean` + FizzBuzzEnterpriseEdition (over-decomposition far-wall). **This
+recalibrates a standing bias in this profile and the plan:** many earlier notes lean hard on "his clearest
+gap is the 2,434/3,270-LoC files" and "use his pipeline code" — that framing was useful for *pitch level*
+but he does NOT want it as the course's organizing goal. Teach-forward: comprehensive coverage, real-world
+exemplars, repo references sparing and only when they truly illuminate, his snippets treated as
+discussion not confession.).
+Prior: v14 (2026-06-17 — **Economy & Finance E01 §2 "supply, demand & how prices coordinate a market"**
 ✅ finalized + **durable authoring-style feedback that applies to ALL tracks**. He'd seen supply–demand before,
 found the body easy, and (signature move) went after the model's **foundational assumptions** rather than its
 content: he argued the whole apparatus rests on two pre-assumptions that "don't always hold" — **(1) a free
@@ -203,6 +239,33 @@ learning surfaces.
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
 
 ## Learning progress (course track)
+- **2026-06-18 — M04 Ch2 §1 (cohesion, coupling & module depth) ✅ finalized.** First decomposition
+  section; rotated here off a run of M01 days. Body teaches the *metric* for a good boundary: decomposition
+  ≠ smaller files → complexity (change amplification / cognitive load / unknown-unknowns) → cohesion ladder
+  → coupling ladder + the **decomposition U-curve** (total = within-module ↓ + between-module ↑; the valley
+  is set by cohesion/coupling, not line count) → **module depth** ($\approx$ functionality/interface) as the
+  unifier → info hiding & leaky abstractions → far-wall failure modes. **He drove it with a real design
+  problem** (now §11 Applied): a pipeline of independent steps split into files **by technical kind**
+  (waiting/non-waiting) — he correctly sensed one-file-per-function "isn't much better." Re-rank he took:
+  that's **logical cohesion** (= package-by-layer); the layout conflated *what a step does* (→ file
+  organization) with *whether it waits* (→ interface + runner). He proposed a `process_interface.py` +
+  `process_logic/` split; I pressure-tested it (C-header `.h/.c` split = Python anti-pattern: duplicated
+  signatures + interface-severed-from-body = shallow boundary) → keeper **"an interface file is not a list
+  of signatures"** (the shared thing is the `Step` contract + the `PIPELINE` catalog; bodies grouped by
+  cohesion in `steps/`), and the bonus that once I/O-ness is in the type, the runner can **fan out the
+  independent I/O steps** (the long-flagged sequential-await→`gather` audit item, surfacing unprompted). He
+  agreed the refined layout was "much better." **Same confirmed pattern as the concept sessions, now on a
+  SWE-design axis:** he proposes a plausible design, integrates the re-rank instantly once the dominant
+  principle is named — so teach the SWE track by giving him designs to critique and pressure-testing his
+  proposals, not by stating rules. **MAJOR process calibration (durable, all tracks — `agent-docs/authoring-
+  conventions.md` rule 3):** the two repos were level-calibration, **not** the course's goal → teach
+  *comprehensively*; stop over-citing repos / line counts; his Q&A snippets are *questions, not
+  endorsements*; and **lead with real-world canonical good/bad examples + failure modes he hasn't met**
+  (his explicit ask). Acted on immediately — §1 was re-anchored to Unix I/O, Go `io.Reader`, Java stream
+  wrappers, ORM N+1 / TCP leaks, Y2K, and the Segment / Prime Video / Spring / FizzBuzzEnterpriseEdition
+  over-decomposition cases. **How to teach forward:** comprehensive coverage at his (already-high) level,
+  real-world exemplars over invented ones, repo mentions sparing. Next inside Ch2: §2 refactoring-in-moves
+  or §3 module/file boundaries; or rotate to **M12 Ch2 §2 video models** (his strongest critique mode).
 - **2026-06-16 — M01 Ch3 §1 (concurrency vs parallelism, the three models, the GIL) ✅ finalized.** First section of Ch3, written
   deliberately to *build on* his existing keystones (Ch1 §2 async-stack model; Ch2 §2 refcounting→GIL) instead of re-teaching them — the body
   went **untouched**, confirming the pitch was right, and he spent the whole session **applying** §1–§4 to a concrete **LLM-eval pipeline**.
