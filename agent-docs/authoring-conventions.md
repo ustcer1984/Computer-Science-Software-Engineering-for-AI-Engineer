@@ -78,6 +78,9 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     separator, so `$|\varepsilon|$` in a cell *silently shreds the whole table* into inline text. Write
     absolute value as `$\lvert\varepsilon\rvert$` (or `$\lVert\cdot\rVert$` for norms). Inline `$|\cdot|$`
     *outside* a table is fine.
+  - **Don't place two inline-math spans adjacent with no spaces** (`$MB$/$MC$`, `$x$$y$`). GitHub parses
+    the first and leaves the second literal (`MB/$MC$`). Merge into one span (`$MB/MC$`) or put text/space
+    between them.
   - Prefer plain `(...)` or `\left(...\right)` over `\big(`/`\!` micro-spacing in inline math — fewer
     macros, fewer surprises across renderers.
 - **Verify on GitHub, not just in the editor.** This repo is **public**, so after pushing you can open the
