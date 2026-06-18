@@ -53,7 +53,7 @@ shortages/gluts are S/D reasserting through a non-price channel (USSR = confirmi
 counterexample). Why planning fails = the **socialist calculation / Hayek knowledge problem**, which is the §5
 "price = dual variable / distributed computation" point sharpened. Genuine residual where he's right =
 **market failure** (the *competitive* assumptions: no market power/externalities, exogenous preferences). **(2)**
-equilibrium is the optimality **condition** ($Z(P^*)=0$), not the search **dynamics** — *his own §1-era
+equilibrium is the optimality **condition** ($Z(P^\ast)=0$), not the search **dynamics** — *his own §1-era
 condition-vs-dynamics distinction returning*; info lag is about the *path*, leaves the fixed point intact;
 modelled as a friction it **predicts price dispersion** (search theory, Stigler 1961), and at the extreme
 (production lag + adaptive expectations) gives genuine **non-convergence** — the **cobweb / hog cycle**, which

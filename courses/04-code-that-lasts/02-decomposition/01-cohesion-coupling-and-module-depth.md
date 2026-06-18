@@ -193,7 +193,7 @@ This is also the answer to "how small should a function be?" — small enough th
 
 This is the concept to walk away with. Ousterhout's measure of a *good* module is its **depth**:
 
-$$\text{depth} \;\approx\; \frac{\text{functionality hidden inside}}{\text{cost of the interface}}$$
+$$\text{depth} \approx \frac{\text{functionality hidden inside}}{\text{cost of the interface}}$$
 
 - A **deep module** has a *small* interface in front of a *large* implementation. The canonical example
   is the **Unix file abstraction**: `open`, `read`, `write`, `close` — four calls — sit in front of
