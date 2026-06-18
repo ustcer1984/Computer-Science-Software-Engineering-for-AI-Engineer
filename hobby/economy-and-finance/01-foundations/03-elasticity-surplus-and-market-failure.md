@@ -58,7 +58,10 @@ the *split* — does the adjustment show up mostly as a price move or mostly as 
 
 The headline one is the **price elasticity of demand**:
 
-$$\varepsilon_d \;=\; \frac{\%\,\Delta Q_d}{\%\,\Delta P} \;=\; \frac{\Delta Q_d / Q_d}{\Delta P / P} \;\xrightarrow[\text{small changes}]{}\; \frac{dQ_d}{dP}\cdot\frac{P}{Q_d}.$$
+$$\varepsilon_d = \frac{\Delta Q_d / Q_d}{\Delta P / P} \quad \xrightarrow{\text{small changes}} \quad \frac{dQ_d}{dP}\cdot\frac{P}{Q_d}.$$
+
+(The numerator $\Delta Q_d / Q_d$ is the percentage change in quantity, the denominator $\Delta P / P$ the
+percentage change in price — so this *is* the "ratio of percentage changes," made exact in the limit.)
 
 Because demand slopes down, $\varepsilon_d$ is negative; by convention people usually quote its absolute
 value $|\varepsilon_d|$ and talk about "how elastic" a good is. Three regimes, and they're the whole game:
@@ -135,14 +138,14 @@ its demand curve is pricing blind.
 
 ### The other elasticities (one line each — you'll meet them in the news and in 10-Ks)
 
-- **Income elasticity** $\varepsilon_Y = \%\Delta Q / \%\Delta\,\text{income}$. Positive → **normal good**;
+- **Income elasticity** $\varepsilon_Y = \dfrac{\Delta Q / Q}{\Delta Y / Y}$ (with $Y$ = income). Positive → **normal good**;
   negative → **inferior good** (instant noodles, bus travel — demand *rises* when incomes fall, which is
   why some businesses are "recession-resistant"). Greater than 1 → **luxury** (demand grows faster than
   income — the bet behind every premium brand).
-- **Cross-price elasticity** $\varepsilon_{xy} = \%\Delta Q_x / \%\Delta P_y$. Positive → **substitutes**
+- **Cross-price elasticity** $\varepsilon_{xy} = \dfrac{\Delta Q_x / Q_x}{\Delta P_y / P_y}$. Positive → **substitutes**
   (price of Pepsi up → Coke sales up); negative → **complements** (price of game consoles down → game
   sales up). This is the number that defines competitive sets and explains razor-and-blades pricing.
-- **Price elasticity of supply** $\varepsilon_s = \%\Delta Q_s / \%\Delta P$. Same idea on the sell side,
+- **Price elasticity of supply** $\varepsilon_s = \dfrac{\Delta Q_s / Q_s}{\Delta P / P}$. Same idea on the sell side,
   governed by how fast producers can ramp: high for a download (copy it instantly), low for beachfront
   land or a new chip fab (capacity takes years — your §2 §10b semiconductor cycle lives here).
 
@@ -151,8 +154,8 @@ its demand curve is pricing blind.
 > on a log–log scale — precisely a *susceptibility* in the linear-response sense (how strongly does the
 > output respond to a fractional change in the control field), made unit-free so different systems are
 > comparable. The reason it "slides" along a straight line is that a fixed *slope* $dQ/dP$ is not a fixed
-> *log-slope*: $\varepsilon = (dQ/dP)\,(P/Q)$, and $P/Q$ runs over the whole positive line as you traverse
-> the curve. If a relationship is a power law $Q = AP^{\,k}$, then $\varepsilon \equiv k$ everywhere — a
+> *log-slope*: $\varepsilon = (dQ/dP)\thinspace (P/Q)$, and $P/Q$ runs over the whole positive line as you traverse
+> the curve. If a relationship is a power law $Q = AP^{\thinspace k}$, then $\varepsilon \equiv k$ everywhere — a
 > *constant-elasticity* demand curve is exactly the straight line on a log–log plot, the same way a power
 > law is in physics. (Don't push the "steepness = elasticity" picture any further than two curves through
 > one shared point; beyond that it's the log-slope, not the slope, that you want.)
@@ -189,8 +192,8 @@ the welfare-maximizing quantity, with no one computing the welfare.** That is th
 from §2 §5, now visible as an area.
 
 > **Physics lens — surplus is an integral; equilibrium maximizes a potential.** Consumer surplus is
-> $\int_0^{Q^\ast}\big(MB(q) - P^\ast\big)\,dq$ and producer surplus is $\int_0^{Q^\ast}\big(P^\ast - MC(q)\big)\,dq$,
-> so total surplus is $W(Q) = \int_0^{Q}\big(MB(q) - MC(q)\big)\,dq$ — the **accumulated** gap between
+> $\int_0^{Q^\ast}\big(MB(q) - P^\ast\big)\thinspace dq$ and producer surplus is $\int_0^{Q^\ast}\big(P^\ast - MC(q)\big)\thinspace dq$,
+> so total surplus is $W(Q) = \int_0^{Q}\big(MB(q) - MC(q)\big)\thinspace dq$ — the **accumulated** gap between
 > marginal benefit and marginal cost, exactly like work done is the integral of a force. Maximizing it,
 > $\dfrac{dW}{dQ} = MB(Q) - MC(Q) = 0 \Rightarrow MB = MC$, recovers §1's marginal rule and §2's equilibrium
 > in one line. Total surplus is the **potential the market climbs**, and $Q^\ast$ is its stationary point —
@@ -239,11 +242,11 @@ so the price moves against it.
 > **Physics lens — two clean results you'll like.**
 >
 > 1. **Deadweight loss is second-order; incidence is an impedance match.** The DWL triangle has area
->    $\approx \tfrac12\,t\,\lvert\Delta Q\rvert$, and since $\Delta Q \propto t$ (for small $t$), the loss
+>    $\approx \tfrac12\thinspace t\thinspace \lvert\Delta Q\rvert$, and since $\Delta Q \propto t$ (for small $t$), the loss
 >    scales as $\mathbf{DWL \propto t^2}$ — **quadratic in the distortion.** This is the *envelope theorem*
 >    in disguise: at the optimum $Q^\ast$ the first-order change in total surplus is zero (you're at the top
 >    of the potential $W$), so the leading loss is the quadratic term — exactly the energy
->    $\tfrac12 k\,(\Delta x)^2$ of a harmonic well displaced by $\Delta x$. The policy reading is real and
+>    $\tfrac12 k\thinspace (\Delta x)^2$ of a harmonic well displaced by $\Delta x$. The policy reading is real and
 >    non-obvious: **doubling a tax roughly quadruples its deadweight loss**, so many small taxes beat one
 >    big one, and the first small tax in an undistorted market is nearly free at the margin. The size of
 >    $\lvert\Delta Q\rvert$ — hence of the whole triangle — is governed by the **elasticities** (flat,

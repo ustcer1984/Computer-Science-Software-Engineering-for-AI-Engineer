@@ -167,7 +167,7 @@ points down, below it the force points up. The equilibrium is **stable**.
 >    where two response functions are mutually consistent.
 > 2. **Excess demand is a restoring force.** $dP/dt \propto Z(P) = Q_d(P) - Q_s(P)$. Because $Z'(P) < 0$, this is
 >    a **gradient/relaxation dynamics with a stable fixed point** — linearize and you get
->    $dP/dt \approx Z'(P^\ast)\,(P - P^\ast)$ with $Z'(P^\ast) < 0$, i.e. exponential decay back to $P^\ast$. It's an overdamped system sliding to the
+>    $dP/dt \approx Z'(P^\ast)\thinspace (P - P^\ast)$ with $Z'(P^\ast) < 0$, i.e. exponential decay back to $P^\ast$. It's an overdamped system sliding to the
 >    bottom of a potential well. Walras called this groping-toward-equilibrium **tâtonnement** in 1874; it's
 >    a relaxation method.
 > 3. **Stability is not automatic — it's a condition on the slopes.** If supply sloped *down* steeper than

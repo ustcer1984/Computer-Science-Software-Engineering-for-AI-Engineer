@@ -66,8 +66,16 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
 - Use proper symbols: `\propto \approx \geq \leq \neq \partial \alpha \leftarrow \cdot`, subscripts
   `Q_d`, superscripts `P^*`. Don't leave `>=`, `P*`, `Q_d` in code font or raw text.
 - GitHub-flavoured markdown renders `$...$` and `$$...$$`, **but its math parser is more fragile than
-  Cursor's** — math that looks perfect in the editor can break on github.com. Two traps have actually
+  Cursor's** — math that looks perfect in the editor can break on github.com. These traps have actually
   bitten us; verify the *rendered GitHub page* (see below), don't trust the editor preview:
+  - **Never use a backslash followed by ASCII punctuation inside math** — `\,` `\;` `\:` `\!` `\%`.
+    CommonMark strips the backslash *before* the math reaches the renderer, so `\;`→`;`, `\,`→`,` (stray
+    semicolons/commas appear in the output), and `\%`→`%`, which MathJax treats as a **comment** that
+    silently eats the rest of the expression (this is how a whole `$$…$$` fraction vanished). Use the
+    **letter-named** equivalents, which survive because the backslash is followed by a letter:
+    `\thinspace` / `\medspace` / `\thickspace` / `\quad` for spacing; and **avoid `\%` entirely** —
+    reword to a fractional-change ratio like `\frac{\Delta Q / Q}{\Delta P / P}` (which *is* the
+    percentage-change ratio) instead of writing `\%\Delta Q`.
   - **Never put a literal `*` inside math** (`$P^*$`, `$Q^*$`). GitHub runs Markdown `*emphasis*` parsing
     *over* the `$...$` content, so the `*` is eaten (you get `$P^$`) and — worse — it pairs with the next
     real `*emphasis*` asterisk in the paragraph, turning text italic and corrupting *every other* `$...$`
