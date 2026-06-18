@@ -124,13 +124,13 @@ The same movement-vs-shift distinction applies:
 
 Put both curves on one graph. They cross at one point. That crossing is the **market equilibrium**:
 
-- the **equilibrium price** $P^*$ (also called the *market-clearing price*), and
-- the **equilibrium quantity** $Q^*$,
+- the **equilibrium price** $P^\ast$ (also called the *market-clearing price*), and
+- the **equilibrium quantity** $Q^\ast$,
 
-defined by $Q_d(P^*) = Q_s(P^*)$ — the price at which the quantity buyers want to buy exactly equals the
+defined by $Q_d(P^\ast) = Q_s(P^\ast)$ — the price at which the quantity buyers want to buy exactly equals the
 quantity sellers want to sell. **The market "clears": no unmet buyers, no unsold goods.**
 
-What makes $P^*$ special isn't that someone chose it — it's that it's the only price with **no pressure to
+What makes $P^\ast$ special isn't that someone chose it — it's that it's the only price with **no pressure to
 change**, and the prices around it actively push back toward it:
 
 <!-- DIAGRAM:START -->
@@ -155,23 +155,23 @@ The key is the **excess demand** $Z(P) = Q_d(P) - Q_s(P)$:
 
 - $Z(P) > 0$ (shortage) → competition among buyers bids the price **up**.
 - $Z(P) < 0$ (surplus) → competition among sellers pushes the price **down**.
-- $Z(P^*) = 0$ → equilibrium.
+- $Z(P^\ast) = 0$ → equilibrium.
 
 Price moves in the direction of excess demand. Since $Q_d$ slopes down and $Q_s$ slopes up, $Z(P)$ is
-*decreasing* in price — so the adjustment is **self-correcting (negative feedback)**: above $P^*$ the force
+*decreasing* in price — so the adjustment is **self-correcting (negative feedback)**: above $P^\ast$ the force
 points down, below it the force points up. The equilibrium is **stable**.
 
 > **Physics lens — three layers, each one you already own:**
 >
-> 1. **Equilibrium = intersection = fixed point.** $P^*$ solves $Q_d(P) = Q_s(P)$. Nothing chose it; it's
+> 1. **Equilibrium = intersection = fixed point.** $P^\ast$ solves $Q_d(P) = Q_s(P)$. Nothing chose it; it's
 >    where two response functions are mutually consistent.
 > 2. **Excess demand is a restoring force.** $dP/dt \propto Z(P) = Q_d(P) - Q_s(P)$. Because $Z'(P) < 0$, this is
 >    a **gradient/relaxation dynamics with a stable fixed point** — linearize and you get
->    $dP/dt \approx Z'(P^*)\,(P - P^*)$ with $Z'(P^*) < 0$, i.e. exponential decay back to $P^*$. It's an overdamped system sliding to the
+>    $dP/dt \approx Z'(P^\ast)\,(P - P^\ast)$ with $Z'(P^\ast) < 0$, i.e. exponential decay back to $P^\ast$. It's an overdamped system sliding to the
 >    bottom of a potential well. Walras called this groping-toward-equilibrium **tâtonnement** in 1874; it's
 >    a relaxation method.
 > 3. **Stability is not automatic — it's a condition on the slopes.** If supply sloped *down* steeper than
->    demand, $Z'(P^*) > 0$ and the fixed point would be *unstable* (the force points away). In discrete time
+>    demand, $Z'(P^\ast) > 0$ and the fixed point would be *unstable* (the force points away). In discrete time
 >    with a production lag — farmers set this year's acreage off last year's price — you get the **cobweb
 >    model**: the price spirals *in* (converges), orbits (limit cycle), or spirals *out* (diverges) purely
 >    from the ratio of the slopes $|\text{slope}_S| / |\text{slope}_D|$. This is a genuine discrete dynamical
@@ -184,12 +184,12 @@ points down, below it the force points up. The equilibrium is **stable**.
 
 ## 4. Comparative statics: reading shifts (this is most of the news)
 
-You almost never care about the *level* of $P^*$; you care about **how $P^*$ and $Q^*$ move when something
+You almost never care about the *level* of $P^\ast$; you care about **how $P^\ast$ and $Q^\ast$ move when something
 changes** — a tax, a shortage, a new technology, a demand shock. That's **comparative statics**: shift a
 curve, find the new intersection, compare. Four base cases, and they're worth memorizing as a reflex because
 half of business news is one of them:
 
-| What moves | $P^*$ | $Q^*$ | Real example |
+| What moves | $P^\ast$ | $Q^\ast$ | Real example |
 |---|---|---|---|
 | **Demand ↑** (curve shifts right) | ↑ | ↑ | AI boom → demand for GPUs ↑ → price ↑, quantity ↑ |
 | **Demand ↓** (shifts left) | ↓ | ↓ | Recession → demand for travel ↓ → fares ↓, trips ↓ |
@@ -205,8 +205,8 @@ The honest complication — and the reason §3 exists — is *by how much* each 
 just get the *directions* solid.
 
 > **Physics lens:** comparative statics is **perturbation theory / linear response**. You have an implicit
-> equilibrium condition $Z(P^*; \alpha) = 0$ where $\alpha$ is a parameter (a tax, an input cost). Differentiate via
-> the **implicit function theorem**: $dP^*/d\alpha = -(\partial Z/\partial \alpha)/(\partial Z/\partial P)$. The denominator $\partial Z/\partial P = Z'(P^*) < 0$ is
+> equilibrium condition $Z(P^\ast; \alpha) = 0$ where $\alpha$ is a parameter (a tax, an input cost). Differentiate via
+> the **implicit function theorem**: $dP^\ast/d\alpha = -(\partial Z/\partial \alpha)/(\partial Z/\partial P)$. The denominator $\partial Z/\partial P = Z'(P^\ast) < 0$ is
 > exactly the stability quantity from §3 — so the same slope that governs *stability* governs the *sign and
 > size of the response* to a shock. Steep curves (small $|Z'|$) → large price swings for a given shock;
 > flat curves → large quantity swings. That dichotomy *is* elasticity, and you've just derived why §3 is
@@ -222,13 +222,13 @@ Each buyer knows only their own marginal benefit. Each seller knows only their o
 knows the whole demand curve, the whole supply curve, or the global allocation problem** — and yet the
 market lands on the allocation where the good flows to the buyers who value it most, produced by the sellers
 who can make it most cheaply, in exactly the quantity where the *population's* marginal benefit equals its
-marginal cost. The coordinating variable is the single number $P^*$, and the mechanism is just §3's dynamics.
+marginal cost. The coordinating variable is the single number $P^\ast$, and the mechanism is just §3's dynamics.
 
 At equilibrium, two things are simultaneously true:
-- every buyer has pushed to their own $MB = P^*$, and
-- every seller has pushed to their own $MC = P^*$,
+- every buyer has pushed to their own $MB = P^\ast$, and
+- every seller has pushed to their own $MC = P^\ast$,
 
-so across the entire economy $MB = P^* = MC$. **The price equalizes everyone's margin.** A central planner
+so across the entire economy $MB = P^\ast = MC$. **The price equalizes everyone's margin.** A central planner
 trying to maximize total surplus would have to solve the whole constrained optimization and would arrive at
 the same allocation — but the market gets there with *no one holding the global problem*, each agent reading
 one number off a screen.
@@ -283,17 +283,17 @@ flowchart TB
 
 ## 6. The payoff in practice: what happens when you fight the price
 
-If $P^*$ is the price that clears the market, what happens when a government *forbids* it? This is the most
+If $P^\ast$ is the price that clears the market, what happens when a government *forbids* it? This is the most
 common policy collision in the news, and the model predicts it cleanly. (It's also §1's "incentives" and
 "there are no solutions, only trade-offs" cashing out.)
 
-- **Price ceiling** — a legal *maximum* below $P^*$ (e.g. **rent control**, fuel price caps). At the capped
+- **Price ceiling** — a legal *maximum* below $P^\ast$ (e.g. **rent control**, fuel price caps). At the capped
   price, quantity demanded exceeds quantity supplied → a **persistent shortage**. Because price can't ration
   the good, *something else* does: queues, waiting lists, "who you know," quality decay, black markets. Rent
   control (§1's example) is the canonical case — it helps the tenants who *have* a unit and quietly punishes
   everyone trying to *find* one, while killing the incentive to build or maintain. The shortage isn't a
   failure of the policy to work; it's the policy *working as the model predicts.*
-- **Price floor** — a legal *minimum* above $P^*$ (e.g. a **minimum wage**, agricultural price supports). At
+- **Price floor** — a legal *minimum* above $P^\ast$ (e.g. a **minimum wage**, agricultural price supports). At
   the floored price, quantity supplied exceeds quantity demanded → a **persistent surplus**. In a labour
   market the "good" is labour and the surplus is **unemployment** (the disputed, and empirically subtle, case
   — real labour markets aren't perfectly competitive, which is why the minimum-wage debate is live; flag it,
@@ -345,14 +345,14 @@ flowchart TD
    *demand* (the whole curve; other factors *shift* it).
 2. **Supply** is sellers' response $Q_s(P)$, upward-sloping because **marginal cost rises** — the MC curve
    read sideways. Same movement-vs-shift distinction.
-3. **Equilibrium** $P^*$ is the **fixed point** $Q_d = Q_s$; it's **stable** because excess demand acts as a
+3. **Equilibrium** $P^\ast$ is the **fixed point** $Q_d = Q_s$; it's **stable** because excess demand acts as a
    restoring force (shortage→price up, surplus→price down). Stability is a condition on the slopes (cobweb).
 4. **Comparative statics**: shift a curve, re-find the crossing. *Same-direction* P and Q ⇒ demand moved;
    *opposite* ⇒ supply moved. The *size* of the move is elasticity → §3.
-5. **Price is the coordination signal** — the **shadow price / dual variable** that makes $MB = P^* = MC$
+5. **Price is the coordination signal** — the **shadow price / dual variable** that makes $MB = P^\ast = MC$
    hold for everyone simultaneously, solving the global allocation problem with no one holding it. Hayek:
    a sufficient statistic for dispersed information; the price system is a distributed computer.
-6. **Fighting $P^*$** (ceilings/floors) doesn't repeal scarcity — it pins the multiplier away from optimum and
+6. **Fighting $P^\ast$** (ceilings/floors) doesn't repeal scarcity — it pins the multiplier away from optimum and
    forces the shortage/surplus into a worse rationing channel. Positive prediction $\neq$ normative verdict.
 
 ---
@@ -369,7 +369,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    each one just the §1 idea ($MB$/$MC$ at the margin) in disguise?
 3. A city caps rents 30% below the market-clearing level. Predict the *positive* consequences (what the model
    says *will* happen), then state — and **label as normative** — one argument for doing it anyway.
-4. The market has no auctioneer, yet it lands on $P^*$. Describe the *mechanism* that gets it there from a
+4. The market has no auctioneer, yet it lands on $P^\ast$. Describe the *mechanism* that gets it there from a
    too-high price, in terms of excess demand as a restoring force. Then say what property of the supply and
    demand *slopes* could make that adjustment fail to settle (oscillate or diverge).
 5. *(For your wheelhouse.)* I claimed the equilibrium price is "the Lagrange multiplier on the scarcity
@@ -382,11 +382,11 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 Pick any market with a price in the news right now — eggs, GPUs, air fares, a specific stock, HDB resale
 flats, electricity. For that market:
 
-- Sketch (mentally) the supply and demand curves and mark roughly where you think $P^*$ sits.
+- Sketch (mentally) the supply and demand curves and mark roughly where you think $P^\ast$ sits.
 - Identify **one recent shock** and decide: did it shift **demand** or **supply**, and which way?
 - Use the **same-way / opposite-way** heuristic on the reported price *and* quantity (volume) to check
   whether your shift diagnosis is consistent with the data.
-- Is there any **price control, tax, or subsidy** in this market pinning the price off $P^*$? If so, where's
+- Is there any **price control, tax, or subsidy** in this market pinning the price off $P^\ast$? If so, where's
   the shortage/surplus showing up (queues, gluts, black markets, waiting lists)?
 
 Bring one market to our chat — we'll run the comparative-statics and coordination story on it together.
@@ -408,12 +408,12 @@ Separate the **forces** from the **solver**:
 
 - The **forces** — scarcity, diminishing marginal benefit (downward demand), rising marginal cost (upward
   supply) — are facts about preferences and technology. They exist in *any* society. The curves are still there.
-- The **price mechanism** (letting price float to $P^*$) is just *one solver*. Central planning is a
+- The **price mechanism** (letting price float to $P^\ast$) is just *one solver*. Central planning is a
   *different solver on the same problem*.
 
 So a planned economy doesn't repeal supply and demand — it **overrides the price signal while scarcity is
 untouched**, which is §6 (price controls) scaled to the whole economy. Its prediction is exactly what planned
-economies produced: **persistent shortages** of goods priced below $P^*$ (bread queues, years-long waits) and
+economies produced: **persistent shortages** of goods priced below $P^\ast$ (bread queues, years-long waits) and
 **gluts** of goods priced above it. Those queues *are* supply and demand reasserting itself through a non-price
 rationing channel. The USSR is not a counterexample — it's the model's most expensive confirming experiment.
 
@@ -424,7 +424,7 @@ scale and, worse, needs information that *doesn't exist in transmittable form un
 (Hayek's "knowledge problem"). So the precise claim isn't "the model assumes free markets"; it's that **the
 model explains why the price-mechanism solver beats central planning on the same allocation problem.**
 
-**Where the objection genuinely survives:** the *competitive* (efficient-$P^*$) version assumes no market
+**Where the objection genuinely survives:** the *competitive* (efficient-$P^\ast$) version assumes no market
 power, no externalities, full information, and *exogenous* preferences. Drop those and equilibrium can be
 inefficient, or the curves themselves get distorted (a state can shape the demand curve; a monopolist faces
 the whole curve). That's real — but it's **market failure (§3)**, a narrower claim than "the model needs a
@@ -432,13 +432,13 @@ free market to exist." The framework is general; the *competitive* equilibrium i
 
 ### 10b. "It assumes the equilibrium forms / everyone knows the price"
 
-This is your own §1-era distinction returning: **equilibrium is the optimality *condition* ($Z(P^*)=0$), not
+This is your own §1-era distinction returning: **equilibrium is the optimality *condition* ($Z(P^\ast)=0$), not
 the search *dynamics*.** Your information-lag objection is entirely about the *path*, and leaves the fixed
 point's existence untouched. Three levels, increasingly in your favour:
 
 1. **Equilibrium is an *attractor*, not a state the market literally sits in.** Real markets are always in
-   disequilibrium, chasing a $P^*$ that itself keeps moving. "In equilibrium" is shorthand for "the restoring
-   force points at $P^*$" — the §3 dynamics $dP/dt \propto Z(P)$ *is* the model of the transient.
+   disequilibrium, chasing a $P^\ast$ that itself keeps moving. "In equilibrium" is shorthand for "the restoring
+   force points at $P^\ast$" — the §3 dynamics $dP/dt \propto Z(P)$ *is* the model of the transient.
 2. **Information lag doesn't break the model — it *extends* it, and the extension predicts price dispersion.**
    With info/transport costs the **law of one price** (arbitrage → identical price for identical goods) holds
    only in the frictionless limit; add the friction and the new equilibrium is **persistent price dispersion
@@ -488,7 +488,7 @@ it breaks" is **market failure** (§3) and **non-convergent dynamics** — not t
 ### What's next
 ✅ **Finalized 2026-06-17.** Marked done in [`../plan.md`](../plan.md); §10 captures your foundations thread
 (the two pre-assumptions and the re-rank). The natural sequel is **§3 — elasticity, surplus & market
-failure**, and your session points straight at it: §4 left *how much* $P^*$ and $Q^*$ move to elasticity (the
+failure**, and your session points straight at it: §4 left *how much* $P^\ast$ and $Q^\ast$ move to elasticity (the
 curve slopes), and your 10a objection lands exactly on §3's real frontier — the "clean case" first welfare
 theorem breaks under **market failure** (externalities, public goods, monopoly), which is where the
 coordination story genuinely fails (as opposed to the existence of the curves).

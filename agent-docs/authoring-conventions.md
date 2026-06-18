@@ -65,8 +65,22 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
 - Display (for anything you want set off): `$$dP/dt \propto Z(P) = Q_d(P) - Q_s(P)$$`.
 - Use proper symbols: `\propto \approx \geq \leq \neq \partial \alpha \leftarrow \cdot`, subscripts
   `Q_d`, superscripts `P^*`. Don't leave `>=`, `P*`, `Q_d` in code font or raw text.
-- GitHub-flavoured markdown renders `$...$` and `$$...$$`; verify long expressions read cleanly.
-- **Gotcha — never put a literal `|` inside math in a table cell.** The Markdown table parser reads
-  every `|` as a column separator, so `$|\varepsilon|$` in a cell *silently shreds the whole table*
-  into inline text. Write absolute value as `$\lvert\varepsilon\rvert$` (or `$\lVert\cdot\rVert$` for
-  norms) — they render identically and contain no pipe. Inline `$|\cdot|$` outside a table is fine.
+- GitHub-flavoured markdown renders `$...$` and `$$...$$`, **but its math parser is more fragile than
+  Cursor's** — math that looks perfect in the editor can break on github.com. Two traps have actually
+  bitten us; verify the *rendered GitHub page* (see below), don't trust the editor preview:
+  - **Never put a literal `*` inside math** (`$P^*$`, `$Q^*$`). GitHub runs Markdown `*emphasis*` parsing
+    *over* the `$...$` content, so the `*` is eaten (you get `$P^$`) and — worse — it pairs with the next
+    real `*emphasis*` asterisk in the paragraph, turning text italic and corrupting *every other* `$...$`
+    span between them (one stray `*` silently broke `$MB$`, `$MC$`, … on the same line). Write the
+    superscript star as `\ast`: `$P^\ast$`, `$Q^\ast$`. Same risk with `_` (subscript-underscore vs
+    `_emphasis_`) — keep `_` only inside `{}` like `Q_{d}` and you're safe.
+  - **Never put a literal `|` inside math in a table cell.** The table parser reads every `|` as a column
+    separator, so `$|\varepsilon|$` in a cell *silently shreds the whole table* into inline text. Write
+    absolute value as `$\lvert\varepsilon\rvert$` (or `$\lVert\cdot\rVert$` for norms). Inline `$|\cdot|$`
+    *outside* a table is fine.
+  - Prefer plain `(...)` or `\left(...\right)` over `\big(`/`\!` micro-spacing in inline math — fewer
+    macros, fewer surprises across renderers.
+- **Verify on GitHub, not just in the editor.** This repo is **public**, so after pushing you can open the
+  blob URL and check the math actually rendered — e.g. drive a headless browser (Playwright) to
+  `https://github.com/<owner>/<repo>/blob/main/<path>` and screenshot it. Cursor's preview is *not*
+  authoritative for math.

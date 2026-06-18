@@ -3,7 +3,7 @@
 > **Subject:** Economy & Finance *(hobby track)*
 > **Module:** E01 — Economic Foundations (Microeconomics)
 > **Section:** The *magnitude* §2 left open (elasticity), the *welfare* the market creates (surplus),
-> the *cost of pushing it off $P^*$* (deadweight loss, taxes), and the four classic ways the invisible
+> the *cost of pushing it off $P^\ast$* (deadweight loss, taxes), and the four classic ways the invisible
 > hand genuinely fails (externalities, public goods, monopoly, asymmetric information).
 > **Status:** 🔵 prepared 2026-06-18 — study first, then we do Q&A, then you say *"finalize"* and I
 > rewrite it to fit how you actually think (and add the session's §10). Math in LaTeX, quantitative
@@ -11,8 +11,8 @@
 
 **Estimated study time:** 1.5–2 hours including reflection.
 **Prerequisites:** §1 (marginal thinking, $MB$/$MC$, opportunity cost as a shadow price) and §2 (demand
-and supply as response functions $Q_d(P)$, $Q_s(P)$; equilibrium $P^*$ as a fixed point; comparative
-statics). §2 ended on a cliffhanger this section pays off twice: it left *how much* $P^*$ and $Q^*$ move
+and supply as response functions $Q_d(P)$, $Q_s(P)$; equilibrium $P^\ast$ as a fixed point; comparative
+statics). §2 ended on a cliffhanger this section pays off twice: it left *how much* $P^\ast$ and $Q^\ast$ move
 to **elasticity**, and it flagged that the clean "invisible hand" story holds only in a frictionless
 special case — this is where we map the **failures**.
 
@@ -34,7 +34,7 @@ fall out cleanly:
 1. **Why the competitive equilibrium is special** — it *maximizes total surplus*. This is the first
    welfare theorem from §2 §5, now drawn as an area you can see and a quantity you can compute.
 2. **Exactly what a distortion costs** — the **deadweight loss**, the surplus that simply vanishes when
-   the market is pushed off $Q^*$ (by a tax, a price control, or market power). For you specifically there's
+   the market is pushed off $Q^\ast$ (by a tax, a price control, or market power). For you specifically there's
    a clean punchline: that loss is **second-order** in the distortion — quadratic, like the energy of a
    spring displaced from its minimum — which is why small frictions are cheap and large ones are
    disproportionately expensive.
@@ -52,7 +52,7 @@ where the beautiful §2 coordination story earns its asterisks.
 
 ## 1. Elasticity: the magnitude that comparative statics left open
 
-§2's comparative statics told you a demand increase raises both $P^*$ and $Q^*$. **Elasticity** tells you
+§2's comparative statics told you a demand increase raises both $P^\ast$ and $Q^\ast$. **Elasticity** tells you
 the *split* — does the adjustment show up mostly as a price move or mostly as a quantity move? It is the
 **responsiveness** of one variable to another, expressed as a ratio of **percentage** changes.
 
@@ -167,47 +167,47 @@ supply-and-demand diagram, because §2 already told us the curves *are* the marg
 marginal-cost curves read sideways.
 
 - **Consumer surplus (CS).** Each buyer's marginal benefit is read off the **demand curve**; they pay only
-  $P^*$. The difference, summed over every unit bought, is the area **below demand and above the price** —
+  $P^\ast$. The difference, summed over every unit bought, is the area **below demand and above the price** —
   the value buyers capture beyond what they hand over. (Your willingness to pay \$8 for a coffee you got
   for \$4 is \$4 of consumer surplus.)
 - **Producer surplus (PS).** Symmetrically, each seller's marginal cost is read off the **supply curve**;
-  they receive $P^*$. The area **above supply and below the price** is the surplus producers capture beyond
+  they receive $P^\ast$. The area **above supply and below the price** is the surplus producers capture beyond
   their cost. (It is *not* profit — it ignores fixed costs — but it's the right welfare measure here.)
-- **Total surplus** $= CS + PS$ — the whole area between the demand and supply curves, from $0$ to $Q^*$.
+- **Total surplus** $= CS + PS$ — the whole area between the demand and supply curves, from $0$ to $Q^\ast$.
   This is the total gains-from-trade the market creates.
 
 <!-- FIGURE -->
 ![Consumer and producer surplus as the areas between price and the demand/supply curves](diagrams/03-elasticity-surplus-and-market-failure-fig3.svg)
 
-Now the result §2 promised. **The competitive equilibrium $Q^*$ maximizes total surplus.** Look at the
-figure: at $Q^*$ the two triangles fill the *entire* region between the curves — every trade where a
+Now the result §2 promised. **The competitive equilibrium $Q^\ast$ maximizes total surplus.** Look at the
+figure: at $Q^\ast$ the two triangles fill the *entire* region between the curves — every trade where a
 buyer values the unit more than it costs to make ($MB \geq MC$) actually happens, and no trade where
-$MB < MC$ does. Produce *less* than $Q^*$ and you leave profitable trades on the table (a buyer willing to
+$MB < MC$ does. Produce *less* than $Q^\ast$ and you leave profitable trades on the table (a buyer willing to
 pay \$7 and a seller who'd supply at \$5 fail to meet — \$2 of surplus unrealized). Produce *more* and you
 force trades that destroy value ($MC > MB$). Either way total surplus falls. **The market lands exactly on
 the welfare-maximizing quantity, with no one computing the welfare.** That is the **first welfare theorem**
 from §2 §5, now visible as an area.
 
 > **Physics lens — surplus is an integral; equilibrium maximizes a potential.** Consumer surplus is
-> $\int_0^{Q^*}\!\big(MB(q) - P^*\big)\,dq$ and producer surplus is $\int_0^{Q^*}\!\big(P^* - MC(q)\big)\,dq$,
-> so total surplus is $W(Q) = \int_0^{Q}\!\big(MB(q) - MC(q)\big)\,dq$ — the **accumulated** gap between
+> $\int_0^{Q^\ast}\big(MB(q) - P^\ast\big)\,dq$ and producer surplus is $\int_0^{Q^\ast}\big(P^\ast - MC(q)\big)\,dq$,
+> so total surplus is $W(Q) = \int_0^{Q}\big(MB(q) - MC(q)\big)\,dq$ — the **accumulated** gap between
 > marginal benefit and marginal cost, exactly like work done is the integral of a force. Maximizing it,
 > $\dfrac{dW}{dQ} = MB(Q) - MC(Q) = 0 \Rightarrow MB = MC$, recovers §1's marginal rule and §2's equilibrium
-> in one line. Total surplus is the **potential the market climbs**, and $Q^*$ is its stationary point —
+> in one line. Total surplus is the **potential the market climbs**, and $Q^\ast$ is its stationary point —
 > the same $MB = MC$ condition, now as $\nabla W = 0$.
 
 ---
 
-## 3. Deadweight loss: the cost of pushing the market off $Q^*$
+## 3. Deadweight loss: the cost of pushing the market off $Q^\ast$
 
-If $Q^*$ maximizes total surplus, then **any** policy or friction that moves the traded quantity away from
-$Q^*$ destroys some surplus. The chunk that vanishes — not transferred to anyone, simply *gone* because
+If $Q^\ast$ maximizes total surplus, then **any** policy or friction that moves the traded quantity away from
+$Q^\ast$ destroys some surplus. The chunk that vanishes — not transferred to anyone, simply *gone* because
 mutually-beneficial trades no longer happen — is the **deadweight loss (DWL)**. On the diagram it is always
-a **triangle** pointing at $Q^*$. We met the *mechanism* in §2's price controls; now we can measure it.
+a **triangle** pointing at $Q^\ast$. We met the *mechanism* in §2's price controls; now we can measure it.
 
 Take a **per-unit tax** $t$ — the cleanest case, and a perennial news item. The tax drives a **wedge**
 between the price buyers pay ($P_b$) and the price sellers keep ($P_s = P_b - t$). The traded quantity
-falls to $Q_{tax} < Q^*$:
+falls to $Q_{tax} < Q^\ast$:
 
 <!-- FIGURE -->
 ![A per-unit tax: the wedge, tax revenue, and the deadweight-loss triangle](diagrams/03-elasticity-surplus-and-market-failure-fig4.svg)
@@ -217,7 +217,7 @@ Three regions tell the whole story:
 - The **green rectangle** ($t \times Q_{tax}$) is **tax revenue** — surplus transferred from buyers and
   sellers to the government. Not destroyed, just moved; whether that's good depends on what the government
   does with it (a normative question — keep it separate, per §1 §6).
-- The **grey triangle** is the **deadweight loss** — the surplus on the trades between $Q_{tax}$ and $Q^*$
+- The **grey triangle** is the **deadweight loss** — the surplus on the trades between $Q_{tax}$ and $Q^\ast$
   that *used* to happen ($MB > MC$) and now don't. Nobody gets it. It is the pure efficiency cost of the
   tax.
 
@@ -241,7 +241,7 @@ so the price moves against it.
 > 1. **Deadweight loss is second-order; incidence is an impedance match.** The DWL triangle has area
 >    $\approx \tfrac12\,t\,\lvert\Delta Q\rvert$, and since $\Delta Q \propto t$ (for small $t$), the loss
 >    scales as $\mathbf{DWL \propto t^2}$ — **quadratic in the distortion.** This is the *envelope theorem*
->    in disguise: at the optimum $Q^*$ the first-order change in total surplus is zero (you're at the top
+>    in disguise: at the optimum $Q^\ast$ the first-order change in total surplus is zero (you're at the top
 >    of the potential $W$), so the leading loss is the quadratic term — exactly the energy
 >    $\tfrac12 k\,(\Delta x)^2$ of a harmonic well displaced by $\Delta x$. The policy reading is real and
 >    non-obvious: **doubling a tax roughly quadruples its deadweight loss**, so many small taxes beat one
@@ -254,7 +254,7 @@ so the price moves against it.
 >    precisely like a load dropping across two springs in series settles mostly on the stiffer one, or a
 >    signal depositing its energy into the matched (here, *mis*-matched) impedance.
 
-The same triangle is what a **price ceiling or floor** (§2 §6) costs: bind the price away from $P^*$,
+The same triangle is what a **price ceiling or floor** (§2 §6) costs: bind the price away from $P^\ast$,
 quantity falls to the short side of the market, and a deadweight-loss triangle opens. A tax and a binding
 control are the same geometry — both pin the system off its surplus-maximizing fixed point.
 
@@ -299,7 +299,7 @@ the gap is the externality.
 
 **Fixes — and they're a real menu, not one answer:**
 - A **Pigouvian tax** equal to the marginal external damage (a **carbon tax** is the headline modern
-  example) shifts private cost up to social cost, so the market's own optimization lands on $Q^*$. A
+  example) shifts private cost up to social cost, so the market's own optimization lands on $Q^\ast$. A
   positive externality gets a **Pigouvian subsidy**.
 - **Cap-and-trade** (the EU ETS, the original U.S. acid-rain $SO_2$ program) sets the *quantity* and lets a
   market discover the price of the externality — the dual choice to a tax.
@@ -450,9 +450,9 @@ flowchart TD
 2. **Total-revenue test:** inelastic → raising price raises revenue; elastic → raising price lowers it;
    unit elastic → revenue peaks. One question — *elastic or inelastic?* — answers a lot of pricing/policy.
 3. **Surplus** measures welfare on the S/D diagram: CS (below demand, above price) + PS (above supply,
-   below price). The competitive **$Q^*$ maximizes total surplus** — the first welfare theorem, as an area.
-4. **Deadweight loss** is the surplus *destroyed* by pushing trade off $Q^*$ (tax, price control, monopoly):
-   always a triangle at $Q^*$, and **quadratic** in the distortion (small frictions cheap, big ones
+   below price). The competitive **$Q^\ast$ maximizes total surplus** — the first welfare theorem, as an area.
+4. **Deadweight loss** is the surplus *destroyed* by pushing trade off $Q^\ast$ (tax, price control, monopoly):
+   always a triangle at $Q^\ast$, and **quadratic** in the distortion (small frictions cheap, big ones
    disproportionately costly), with its size set by **elasticity**.
 5. **Tax incidence** lands on the **more inelastic** side, whatever the law says — the side that "can't get
    out of the way" pays.
@@ -477,7 +477,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    but causes little deadweight loss. Then state who bears the burden and why.
 3. *(For your wheelhouse.)* I claimed deadweight loss is **second-order** — $\propto t^2$ — and tied it to
    the envelope theorem and a harmonic well. Reconstruct that argument: why is the *first*-order welfare
-   change zero at $Q^*$, and what's the policy implication of "doubling the tax quadruples the loss"? Where
+   change zero at $Q^\ast$, and what's the policy implication of "doubling the tax quadruples the loss"? Where
    does the quadratic approximation break down?
 4. Classify each by rivalry × excludability and name the failure: (a) a public beach at low tide vs at peak
    summer; (b) a new song on streaming; (c) the stock of bluefin tuna; (d) the formula for a newly
