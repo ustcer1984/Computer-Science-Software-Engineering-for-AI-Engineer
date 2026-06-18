@@ -366,7 +366,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    what *two* different stories could produce a price rise, and what extra fact (about *quantity*) would tell
    you which one happened.
 2. In your own words, why does the demand curve slope *down* and the supply curve slope *up* — and how is
-   each one just the §1 idea ($MB$/$MC$ at the margin) in disguise?
+   each one just the §1 idea ($MB/MC$ at the margin) in disguise?
 3. A city caps rents 30% below the market-clearing level. Predict the *positive* consequences (what the model
    says *will* happen), then state — and **label as normative** — one argument for doing it anyway.
 4. The market has no auctioneer, yet it lands on $P^\ast$. Describe the *mechanism* that gets it there from a

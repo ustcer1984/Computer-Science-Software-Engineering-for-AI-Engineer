@@ -10,7 +10,7 @@
 > relationships drawn as real curves, per [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
-**Prerequisites:** §1 (marginal thinking, $MB$/$MC$, opportunity cost as a shadow price) and §2 (demand
+**Prerequisites:** §1 (marginal thinking, $MB/MC$, opportunity cost as a shadow price) and §2 (demand
 and supply as response functions $Q_d(P)$, $Q_s(P)$; equilibrium $P^\ast$ as a fixed point; comparative
 statics). §2 ended on a cliffhanger this section pays off twice: it left *how much* $P^\ast$ and $Q^\ast$ move
 to **elasticity**, and it flagged that the clean "invisible hand" story holds only in a frictionless
