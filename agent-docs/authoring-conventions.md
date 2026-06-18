@@ -66,3 +66,7 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
 - Use proper symbols: `\propto \approx \geq \leq \neq \partial \alpha \leftarrow \cdot`, subscripts
   `Q_d`, superscripts `P^*`. Don't leave `>=`, `P*`, `Q_d` in code font or raw text.
 - GitHub-flavoured markdown renders `$...$` and `$$...$$`; verify long expressions read cleanly.
+- **Gotcha — never put a literal `|` inside math in a table cell.** The Markdown table parser reads
+  every `|` as a column separator, so `$|\varepsilon|$` in a cell *silently shreds the whole table*
+  into inline text. Write absolute value as `$\lvert\varepsilon\rvert$` (or `$\lVert\cdot\rVert$` for
+  norms) — they render identically and contain no pipe. Inline `$|\cdot|$` outside a table is fine.

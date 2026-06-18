@@ -63,7 +63,7 @@ $$\varepsilon_d \;=\; \frac{\%\,\Delta Q_d}{\%\,\Delta P} \;=\; \frac{\Delta Q_d
 Because demand slopes down, $\varepsilon_d$ is negative; by convention people usually quote its absolute
 value $|\varepsilon_d|$ and talk about "how elastic" a good is. Three regimes, and they're the whole game:
 
-| | $|\varepsilon_d|$ | Meaning | Examples |
+| | $\lvert\varepsilon_d\rvert$ | Meaning | Examples |
 |---|---|---|---|
 | **Elastic** | $> 1$ | quantity responds *more* than proportionally | airline seats, branded soda, restaurant meals, most discretionary goods |
 | **Unit elastic** | $= 1$ | quantity and price move proportionally | a knife-edge |
