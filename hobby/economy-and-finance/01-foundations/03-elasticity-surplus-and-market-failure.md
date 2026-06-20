@@ -5,9 +5,12 @@
 > **Section:** The *magnitude* §2 left open (elasticity), the *welfare* the market creates (surplus),
 > the *cost of pushing it off $P^\ast$* (deadweight loss, taxes), and the four classic ways the invisible
 > hand genuinely fails (externalities, public goods, monopoly, asymmetric information).
-> **Status:** 🔵 prepared 2026-06-18 — study first, then we do Q&A, then you say *"finalize"* and I
-> rewrite it to fit how you actually think (and add the session's §10). Math in LaTeX, quantitative
-> relationships drawn as real curves, per [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
+> **Status:** ✅ finalized 2026-06-20 — you studied the body, then in Q&A took it straight to a live policy:
+> **Singapore's sugar-sweetened-beverage measures** (Nutri-Grade labelling vs a sugar tax). §8 captures that
+> thread — the re-rank from "externality" to **information/internality**, the **shift-vs-slope** reason a
+> label beats a tax under inelastic demand, and the firms' strategic versioning response. Math in LaTeX,
+> quantitative relationships drawn as real curves; key terms glossed in 中文 (大陆/台灣), per
+> [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
 **Prerequisites:** §1 (marginal thinking, $MB/MC$, opportunity cost as a shadow price) and §2 (demand
@@ -503,8 +506,109 @@ carbon price, a congestion charge, drug pricing, a streaming price hike, a fishi
   otherwise-fine market? Name the assumption in play.
 - **Incidence:** who actually bears the cost, given the elasticities — and is that who the policy intended?
 
-Bring one market to our chat — we'll run the elasticity / surplus / failure story on it together, and that
-will seed the §10 we add at finalize.
+Bring one market to our chat — we'll run the elasticity / surplus / failure story on it together. That's
+exactly what we did with **Singapore's sugar policy**, written up in §8 below.
+
+---
+
+## 8. Applied — from our session Q&A (2026-06-20): Singapore's sugar policy
+
+You took the section straight to a live policy — Singapore's push to cut sugar in soft drinks "for public
+health" — and we stress-tested it end to end. The thread is worth keeping: two of your moves were the §3
+toolkit working cleanly, and two needed a re-rank.
+
+### 8a. What the policy actually is — and which failure it targets
+
+A factual reframe first, because it changes the diagnosis. Singapore didn't *mandate* a 20% sugar cut. The
+stack is a **2016 "War on Diabetes,"** a **2017 voluntary industry pledge** (≤12% sugar), and the binding
+piece — **Nutri-Grade** labelling from 2022: drinks graded A–D by sugar, grade **C/D must carry the label,
+grade D can't be advertised**, extended to **freshly-made drinks (bubble tea) in 2023**. A **sugar tax was
+considered and deliberately rejected.**
+
+You filed the rationale under **externality** (the public-health cost). The re-rank: a cost you impose on
+**yourself** (your own future diabetes) is *not* an externality — it's an **internality**, and the gap
+between what you'd choose informed vs uninformed is an **information failure** (§3's assumption (iv)). Only
+the slice landing on *shared/subsidised healthcare* is a true externality. The dominant failure is
+**information + behavioural internality** — which is *why the chosen tool is a label* (the matched fix for
+an information failure), not a tax (the matched fix for an externality). **The tool reveals the diagnosis.**
+
+### 8b. Demand shift vs price — and why you saw prices *rise*
+
+You correctly read the policy as **shifting demand left** (a less-sweet / labelled / un-advertisable drink
+is wanted less at each price) → lower $P^\ast$ and $Q^\ast$. One wire we uncrossed: that **direction comes
+from the shift, not from elasticity.** "Soft drinks are elastic, *therefore* $P^\ast$/$Q^\ast$ fall" mixes
+two things — elasticity sets the *magnitude split and incidence*, and for a *demand* shift the price-vs-
+quantity split actually leans on the **supply** slope. Elasticity is the right lens for "consumers can flee
+to substitutes," not for the *direction* of a shift.
+
+Your real-world puzzle — *prices rose, not fell* — is the **ceteris paribus** caveat, not a falsification.
+The demand-left effect was swamped by **supply-left cost-push** (2022–23 inflation, input costs, the GST
+rise to 9%), and branded-soda demand is **more inelastic** (habit, brand, caffeine) than "easily
+substituted" suggests. The model predicts the *partial* effect; field data is *mutatis mutandis*, and other
+shifts can dominate.
+
+### 8c. Why a label beats a tax here — your strongest argument, made exact
+
+The rigorous backbone is the **instrument-targeting (Tinbergen) rule**: use the tool that acts on the
+*actual* defect — information failure → information tool. On top of that:
+
+- **The elasticity gem (your insight, crystallized).** A **tax moves consumers *along* the demand curve**
+  (price channel), so under **inelastic** demand it delivers **big revenue, little behaviour change** —
+  ineffective *and* maximally resembling a revenue grab. A **label *shifts the curve itself*** (it lowers
+  net willingness-to-pay by internalising a perceived health cost), which works **regardless of the slope.**
+  So **price-inelasticity neuters the tax but is irrelevant to the label** — when the slope is your enemy,
+  *move the curve, don't pull the price lever.* That is §3's **shift-vs-slope** distinction turned into a
+  policy decision.
+- **Regressivity.** A flat sugar tax is **regressive** (累退) — a larger income share from poorer,
+  higher-consuming households; a label has no such effect. (The biggest real-world argument against sugar
+  taxes — the one you'd initially missed.)
+- **Autonomy & fiscal context.** A label is a **nudge** — it preserves choice and dodges the "nanny state"
+  critique; and fiscally strong Singapore doesn't *want* the tax's revenue, so the tax is all cost, no
+  valued upside. (Keep §1's split: *"a tax punishes"* is **normative**; *"voters will read it as a revenue
+  grab"* is a **positive** prediction — defend the second with evidence, flag the first as a value claim.)
+
+Two honest counterpoints that complete it: **(1)** a tax's *real* channel in practice is **producer
+reformulation** (the UK 2018 levy worked that way, not via consumer price response) — but Singapore
+secured reformulation through the **pledge + Nutri-Grade incentives**, capturing the tax's main benefit
+without its costs; **(2)** a pure label leaves the **externality slice unpriced** (the first welfare theorem
+says it persists), so the textbook first-best is *label + a small Pigouvian tax* — which is why Singapore
+kept the tax option open rather than ruling it out.
+
+### 8d. The firms' counter-move — strategy, not passivity
+
+You spotted the **zero-sugar twin** (Coke vs Coke Zero, same price) and called it a "game." Precisely: soft
+drinks are a **differentiated oligopoly** with **market power** (§4c), so firms respond strategically.
+Offering both versions at one price is **product-line versioning** that **internalises substitution** — you
+switch Coke→Coke Zero (the firm keeps you) instead of Coke→Pepsi/water (the firm loses you). The exact
+statement of your "less elastic portfolio" instinct is **less outside-option leakage** for the firm's own
+brand demand. **Same price** avoids cannibalising the regular line and signalling inferiority; and sweetener
+is often cheaper than sugar, so Zero can even carry a fatter margin. A quiet bonus for incumbents: the
+**grade-D advertising ban is a barrier to entry** (a newcomer can't advertise to build a brand). The
+"anticipate the rival" layer is genuine **game theory** — a clean hook into that sibling subject.
+
+Your **bubble tea** observation is good *quality-adjusted* substitution: reformulated cans got *worse*,
+while bubble tea offers a **free choice of sugar level** (marginal cost of sugar ≈ 0, so the shop hands each
+customer their preferred point and captures surplus). Two cautions you accepted: **correlation ≠ causation**
+(rising incomes, social-media culture, and a regional franchising boom drive most of it), and the escape is
+**closing** — Nutri-Grade now covers freshly-made drinks too.
+
+### The synthesis to carry
+
+| Your move | Verdict |
+|---|---|
+| The policy attacks a market failure | ✅ — but it's **information/internality**, not mainly externality (so the tool is a *label*, not a *tax*) |
+| Reformulation shifts demand left → lower $P^\ast$, $Q^\ast$ | ✅ direction right; ⚠ it's the **shift** (not elasticity) that fixes the direction |
+| Elastic ⇒ a tax barely cuts consumption | ✅ — and that's *why* a tax here = revenue without behaviour change |
+| A label shifts demand more effectively than a tax | ✅ the gem: **shift-the-curve beats slide-along-it** under inelastic demand |
+| Prices didn't fall as predicted | ✅ **ceteris paribus** — supply-side cost-push (inflation, GST) dominated |
+| The zero-sugar twin is a strategic "game" | ✅ **product-line versioning** to cut outside-option leakage (market power) |
+| Bubble tea is a substitute | ✅ quality-adjusted substitution; ⚠ mind causation; the escape is now closing |
+
+One line: **diagnose the failure before you pick the tool.** Singapore read sugary drinks as mostly an
+*information/internality* problem in a *price-inelastic, equity-sensitive, fiscally-strong* setting, so it
+chose the instrument that **shifts the demand curve (information) over the one that slides along it
+(price)** — and let firm-level **reformulation**, not consumer price-pain, do the heavy lifting. Your
+**shift-vs-slope** instinct was the key that unlocked the whole case.
 
 ---
 
@@ -568,6 +672,21 @@ between Mainland China (大陆) and Taiwan (台灣) that you'd actually trip ove
 | Principal–agent problem | 委托代理问题 | 委託代理問題 | |
 | Market for lemons | 柠檬市场（次品市场）| 檸檬市場 | |
 
+**Policy & the Singapore case study (§8)**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Sugar tax | 糖税 | 糖稅 | |
+| Sin tax | 罪恶税 | 罪惡稅 | 台灣 also 健康（福利）捐 for tobacco/alcohol |
+| Regressive tax | 累退税 | 累退稅 | |
+| Demerit / merit good | 有害品 / 有益品 | 有害財 / 有益財 | ⚠ 品 (大陆) vs 財 (台灣) |
+| Nudge | 助推 | 推力 | ⚠ Thaler's *Nudge*: 大陆《助推》vs 台灣《推力》 |
+| Paternalism / nanny state | 家长式作风 / 保姆国家 | 家長式（父權）/ 保姆國家 | |
+| Reformulation (cut sugar) | 配方改良（减糖）| 配方調整（減糖）| |
+| Nutri-Grade (SG scheme) | 营养等级标识 | 營養等級標示 | Singapore-specific A–D label |
+| Artificial sweetener | 人工甜味剂 | 人工甜味劑 | |
+| Product-line versioning | 产品线延伸 | 產品線延伸 | |
+
 > The recurring genuine splits worth memorizing: **信息↔資訊** (information), **物品↔財** (goods),
 > **垄断↔獨占** (monopoly), **收入↔所得** (income), **税↔租稅** (tax), and transliterated names
 > (**科斯↔寇斯**, **庇古↔皮古**). These show up far beyond this section.
@@ -595,10 +714,11 @@ between Mainland China (大陆) and Taiwan (台灣) that you'd actually trip ove
 ---
 
 ### What's next
-This is **§3 prepared**, not finalized — study it, then bring questions (and ideally one real market from
-§7) to our Q&A. On **"finalize"** I'll rewrite it to match how you actually think, add a **§10** capturing
-the session, and tick §3 ✅ in [`../plan.md`](../plan.md). The natural sequel is **§4 — Firms, costs &
-competition** (how a business actually decides what to make and charge): it opens up the *supply* side this
-section treated as a given curve — where $MC$ comes from (fixed vs variable costs, economies of scale), and
-the spectrum from perfect competition through monopoly that §4c only sampled. That closes Module E01 and
-sets up the jump to the whole economy in E02.
+✅ **Finalized 2026-06-20.** Marked done in [`../plan.md`](../plan.md); §8 captures the Singapore
+sugar-policy thread (the externality→information re-rank, the shift-vs-slope reason a label beats a tax, and
+the firms' versioning game). The natural sequel is **§4 — Firms, costs & competition** (how a business
+actually decides what to make and charge): it opens up the *supply* side this section treated as a given
+curve — where $MC$ comes from (fixed vs variable costs, economies of scale), and the spectrum from perfect
+competition through monopoly that §4c only sampled. That closes Module E01 and sets up the jump to the whole
+economy in E02. (A live hook for §4: §8d's *zero-sugar versioning* and *ad-ban-as-barrier-to-entry* are
+exactly the firm-strategy questions §4 — and the Game Theory subject — take up.)

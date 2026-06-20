@@ -27,5 +27,5 @@ course and reading tracks. Set up per [`prompts/001-hobby-setup.md`](../prompts/
 
 | Subject | Plan | Status |
 |---|---|---|
-| Economy & Finance | [`economy-and-finance/plan.md`](economy-and-finance/plan.md) | 🔵 E01 §1–§2 ✅ finalized; §3 🔵 prepared (study/finalize next) |
+| Economy & Finance | [`economy-and-finance/plan.md`](economy-and-finance/plan.md) | 🔵 E01 §1–§3 ✅ finalized; §4 (firms, costs & competition) next |
 | Game Theory & Strategic Interaction | [`game-theory/plan.md`](game-theory/plan.md) | 🔵 plan ready, no sections yet |
