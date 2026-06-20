@@ -494,6 +494,18 @@ learning surfaces.
 
 ## Learning progress (hobby track)
 *(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-06-20 — Economy & Finance · E01 §3 (elasticity, surplus & market failure) ✅ finalized.** Body taught
+  with 6 real matplotlib curves (per his rule 2) + a bilingual 中文 (大陆/台灣) glossary (his new rule —
+  see [[bilingual-chinese-glosses]] / conventions §5). Q&A was his signature **plausible-premise → re-rank**
+  applied to **Singapore's sugar policy** (now §8 of the file): he reached for *externality* → re-ranked to
+  **information/internality** (∴ the matched tool is *labelling*, not a *sugar tax*); his standout move was
+  the **shift-vs-slope** insight — a label *shifts* the demand curve so it beats a tax that only *slides
+  along* it precisely **when demand is price-inelastic** (he derived this himself, just needed the wording
+  tightened). Also strong: read the **zero-sugar twin** as strategic firm behaviour (product-line versioning)
+  and bubble tea as substitution; needed nudging on regressivity, ceteris-paribus (why prices *rose*), and
+  not routing the P\*/Q\* *direction* through elasticity. **Calibration:** he learns best by taking a fresh
+  concept straight to a **live real-world policy/market** and pressure-testing it — lead future econ sections
+  toward a current case to dissect. Bilingual glossing now standard. Next: **§4 — firms, costs & competition.**
 - **2026-06-17 — Economy & Finance · E01 §2 (supply, demand & how prices coordinate a market) ✅ finalized.**
   He'd seen S/D before → body easy, untouched; spent the session attacking the model's **foundational
   assumptions** (free market; equilibrium-actually-forms) in his signature plausible-premise→re-rank mode. The
