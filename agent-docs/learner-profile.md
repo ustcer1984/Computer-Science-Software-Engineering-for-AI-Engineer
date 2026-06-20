@@ -237,6 +237,10 @@ learning surfaces.
 - **Concept-first, light coding** — build mental models, learn to read/judge code; hands-on optional.
 - **Comparative framing** preferred where technologies compete (OSes, DB types, cloud providers, frameworks).
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
+- **Bilingual (English + Chinese).** Reads economy/business news and reports in Chinese as well as English.
+  Material stays in English but should **gloss key concepts/terms in Chinese**, giving **both Mainland (大陆,
+  简体) and Taiwan (台灣, 繁體)** forms and flagging genuine terminology differences (not just script). Rule
+  recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
 - **2026-06-18 — M04 Ch2 §1 (cohesion, coupling & module depth) ✅ finalized.** First decomposition

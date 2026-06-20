@@ -95,3 +95,21 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
   blob URL and check the math actually rendered — e.g. drive a headless browser (Playwright) to
   `https://github.com/<owner>/<repo>/blob/main/<path>` and screenshot it. Cursor's preview is *not*
   authoritative for math.
+
+## 5. Gloss key terms in Chinese (中文), with 大陆/台灣 both where they differ
+
+*(Established 2026-06-20 from learner feedback on Econ E01 §3.)* The learner reads economy/business **news
+and reports in Chinese as well as English**. Material stays **in English**, but **give the Chinese
+translation for key concepts and terms** so the vocabulary transfers to Chinese-language sources.
+
+- **Provide both Mainland China (大陆, 简体) and Taiwan (台灣, 繁體) terms.** They differ in two ways: usually
+  just **simplified vs traditional script**, but sometimes a **genuinely different word** — flag those
+  (the learner trips over them when reading across both). Recurring real splits seen so far: **信息↔資訊**
+  (information), **物品↔財** (goods), **垄断↔獨占** (monopoly), **寡头垄断↔寡占** (oligopoly), **收入↔所得**
+  (income), **税↔租稅** (tax), **价格歧视↔差別取價**, and transliterated names (**科斯↔寇斯** Coase,
+  **庇古↔皮古** Pigou). Don't assume a term is identical across the strait — check.
+- **How to gloss:** a **bilingual "Key terms" table** near the end of the section (English · 大陆 · 台灣,
+  with a note column marking ⚠ genuine differences) works well as a reference; optionally also gloss the
+  single most central term inline at first mention. Keep glosses to *key* concepts, not every word.
+- Applies to **all tracks**, but is most load-bearing for subjects whose payoff is *reading real-world
+  sources* (the Econ/Finance hobby track especially).

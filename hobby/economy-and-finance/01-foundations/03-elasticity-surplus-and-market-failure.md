@@ -508,6 +508,72 @@ will seed the §10 we add at finalize.
 
 ---
 
+## Key terms — English · 中文（中国大陆 / 台灣）
+
+So the concepts here carry over to Chinese-language news and reports. Most differences below are just
+**simplified vs traditional script** for the *same* term — but **⚠ marks a genuine terminology difference**
+between Mainland China (大陆) and Taiwan (台灣) that you'd actually trip over when reading across both.
+
+**Elasticity & revenue**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Elasticity | 弹性 | 彈性 | |
+| Price elasticity of demand | 需求价格弹性 | 需求價格彈性 | |
+| Elastic / inelastic | 富有弹性 / 缺乏弹性 | 富有彈性 / 缺乏彈性 | |
+| Unit elastic | 单位弹性 | 單位彈性 | |
+| Income elasticity | 收入弹性 | 所得彈性 | ⚠ income = 收入 (大陆) vs 所得 (台灣) |
+| Cross-price elasticity | 交叉价格弹性 | 交叉價格彈性 | |
+| Price elasticity of supply | 供给价格弹性 | 供給價格彈性 | |
+| Total revenue | 总收益 / 总收入 | 總收益 | |
+| Normal / inferior good | 正常品 / 劣等品 | 正常財 / 劣等財 | ⚠ good = 物品·品 (大陆) vs 財 (台灣) |
+| Substitutes / complements | 替代品 / 互补品 | 替代品 / 互補品 | |
+
+**Surplus, welfare & deadweight loss**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Consumer / producer surplus | 消费者剩余 / 生产者剩余 | 消費者剩餘 / 生產者剩餘 | |
+| Total surplus | 总剩余 | 總剩餘 | |
+| Marginal benefit / cost | 边际收益 / 边际成本 | 邊際效益 / 邊際成本 | |
+| (First) welfare theorem | 福利经济学第一定理 | 福利經濟學第一定理 | |
+| Deadweight loss | 无谓损失（净损失）| 無謂損失（社會損失）| both also 福利损失 |
+| Tax incidence | 税负归宿 | 租稅歸宿 | ⚠ tax = 税·税收 (大陆) vs 租稅·稅 (台灣) |
+| Subsidy | 补贴 | 補貼 | |
+| Price ceiling / floor | 价格上限 / 价格下限 | 價格上限 / 價格下限 | |
+
+**Market failure**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Market failure | 市场失灵 | 市場失靈 | |
+| Externality (negative / positive) | 外部性（负 / 正）| 外部性（負 / 正）| 大陆 also 外部效应; 台灣 also 外部效果 |
+| Pigouvian tax | 庇古税 | 皮古稅 | ⚠ Pigou = 庇古 (大陆) vs 皮古 (台灣) |
+| Coase theorem | 科斯定理 | 寇斯定理 | ⚠ Coase = 科斯 (大陆) vs 寇斯 (台灣) |
+| Public goods | 公共物品 | 公共財 | ⚠ 物品 (大陆) vs 財 (台灣) |
+| Common resource / the commons | 公共资源（公地）| 公共資源（公地）| |
+| Tragedy of the commons | 公地悲剧 | 公地悲劇 | |
+| Free-rider problem | 搭便车问题 | 搭便車問題 | |
+| Rivalrous / excludable | 竞争性（竞用性）/ 排他性 | 敵對性（競爭性）/ 排他性 | ⚠ rivalrous = 竞争性 (大陆) vs 敵對性 (台灣) |
+| Monopoly | 垄断 | 獨占 | ⚠ 大陆 垄断 vs 台灣 獨占 |
+| Oligopoly | 寡头垄断 | 寡占 | ⚠ 大陆 寡头垄断 vs 台灣 寡占 |
+| Market power | 市场势力 | 市場力量 | ⚠ 大陆 市场势力 vs 台灣 市場力量 |
+| Marginal revenue | 边际收益 | 邊際收益 | |
+| Price maker / taker | 价格制定者 / 价格接受者 | 價格決定者 / 價格接受者 | |
+| Antitrust | 反垄断 | 反托拉斯（公平交易）| ⚠ 大陆 反垄断 vs 台灣 反托拉斯 |
+| Price discrimination | 价格歧视 | 差別取價（價格歧視）| ⚠ 台灣 常用 差別取價 |
+| Natural monopoly / patent | 自然垄断 / 专利 | 自然獨占 / 專利 | |
+| Asymmetric information | 信息不对称 | 資訊不對稱 | ⚠ information = 信息 (大陆) vs 資訊 (台灣) |
+| Adverse selection / moral hazard | 逆向选择 / 道德风险 | 逆向選擇 / 道德風險 | |
+| Principal–agent problem | 委托代理问题 | 委託代理問題 | |
+| Market for lemons | 柠檬市场（次品市场）| 檸檬市場 | |
+
+> The recurring genuine splits worth memorizing: **信息↔資訊** (information), **物品↔財** (goods),
+> **垄断↔獨占** (monopoly), **收入↔所得** (income), **税↔租稅** (tax), and transliterated names
+> (**科斯↔寇斯**, **庇古↔皮古**). These show up far beyond this section.
+
+---
+
 ## References (optional, for depth)
 
 - *Naked Economics* — Charles Wheelan, ch. 3–4 (incentives, externalities, the limits of markets). The
