@@ -1,4 +1,4 @@
-# Daily Reading — 2026-06-16  🔵 prepared (not yet finalized)
+# Daily Reading — 2026-06-16  ✅ finalized
 
 **Today's two readings (one theme, two altitudes):**
 1. **How top labs actually train RL agents in 2026** — the mechanism. RLHF → **RLVR** (DeepSeek's verifiable rewards) → **LLM-as-judge** (RULER) → universal verifiers. The thread that ties it together: in **GRPO, only *relative* rankings matter** — which is the hinge the whole agent-RL stack now turns on.
@@ -122,9 +122,30 @@ flowchart LR
 
 ---
 
-## What we worked out (filled in at finalize)
+## What we worked out — the thread you drove (read this first on review)
 
-*Placeholder — after our Q&A I'll replace this with the durable threads you actually drove, in the 06-15 style (the corrections, the connections you pushed to, the keepers). Likely seams given your profile: how exactly your Arena maps onto GRPO's relative-ranking signal; where your eval/Arena rubric is reward-hackable and the deterministic-check fixes; and the cold-start ⇄ exploration ⇄ verification-gap connection.*
+You didn't pressure-test the readings' content — you did something better: you **mapped your own training course onto the RL-environment formalism** and asked whether it holds. It does, almost completely, and the seams where it *breaks* are the real lesson. The durable keepers:
+
+### The map holds — and `S` is the keystone you'd missed
+Your setup *is* an RL environment with you as the trainee (≈ the policy) and me as both task-generator and LLM-as-judge. The full `E = (T, H, V, S, C)` maps:
+- **T** (tasks) = the curriculum/scope in `courses/plan.md`
+- **H** (harness) = this Q&A conversation + tools (me, web)
+- **V** (verifier) = me judging your understanding
+- **S** (state) = **`agent-docs/learner-profile.md` + the progress tracker** — persistent state *across episodes*. This is the piece that turns a one-shot eval into a **curriculum**. Each session is an episode; the profile is what survives between them.
+- **C** (config) = the authoring conventions.
+
+Because **T adapts to your current frontier via S**, your setup is *adaptive-curriculum* RL (closer to RLER co-evolving the rubric with the policy), not a fixed environment — and your early "cold-start" sessions were literally the **exploration phase** (no profile signal yet → tasks couldn't be aimed at your ZPD).
+
+### "Scope / constitution / task" disentangled → the two keys are T and V's rubric
+You fused three words; they're distinct: **scope** = the task *distribution* T; **constitution** = the *rubric the verifier applies* (lives inside V — Constitutional AI's "a document of rules replaces the reward model"); **task** = one instance. So your "two keys" are correctly **T (what to learn)** and **V's rubric (how it's graded)** — define-the-distribution + define-the-grader.
+
+### Three seams where the analogy breaks (the lesson)
+1. **Your feedback channel is far richer than RL's — which flips sample efficiency.** A policy under GRPO learns from a *scalar* (R1-Zero: 15.6%→77.9% on a **binary** signal, no explanation). You can't learn reasoning from 0/1s — your signal is the *content* of the correction, not its magnitude. That makes you closer to **Reflexion** ([verbal reinforcement learning, arXiv 2303.11366](https://arxiv.org/abs/2303.11366)) — updating on natural-language self-feedback held in memory — than to gradient-on-a-scalar. Consequence: **one good explanation can move you more than 1,000 binary rewards move a policy.** Your bottleneck is feedback *bandwidth/quality*, not reward throughput.
+2. **You control your own verifier → you can reward-hack yourself.** A policy can't choose its reward function; you chose your scope *and* your judge. The human reward-hack is **"performing understanding"** — fluent, jargon-correct restatement that passes my judgment without the model actually forming. Compounding it: I'm playing **task-setter *and* judge at once**, which in RL is a known bias anti-pattern (the grader shouldn't author the test → risk of lenient grading / teaching to my own test). The fix is the reading's own law turned on yourself — **verifiable beats judgeable**: don't be graded only by "explain it back to Claude." Bake in checks reality enforces — **predict-then-run**, **apply it to a real repo (Arena/aquarium)**, **teach-it / build-or-break-it**.
+3. **Adaptive curriculum, not fixed environment** — see `S` above; the task distribution co-evolves with you.
+
+### Open exercise (carried forward — unanswered at finalize)
+The judge-mode question to sit with: *given you control your own verifier, design one **verifiable** (not judgeable) check for this material — RL-environment engineering — that you could not pass by fluently restating it.* The natural place to do it: apply the **T/V decomposition to your own stack** — make your Arena's judge rubric or your eval pipeline the object, and let *reality* (not me) grade the result. That's both the verifiable check and a real improvement to ship.
 
 ---
 
@@ -140,4 +161,4 @@ flowchart LR
 - [OpenReward: Learning to Reward Long-form Agentic Tasks via RL (arXiv 2510.24636)](https://arxiv.org/abs/2510.24636)
 - [Agentic Reinforced Policy Optimization (arXiv 2507.19849)](https://arxiv.org/abs/2507.19849)
 
-*Prepared 2026-06-16. Pairs with the AI thread: 06-15 (LLM serving) was the inference/ops axis; this is the training/economics axis. The reframe to hold: **the verifier is the moat, and a verifier is just an eval** — which makes your M15 gap the highest-leverage thing on your roadmap.*
+*Finalized 2026-06-16. The "What we worked out" thread is the durable record — read it first on review. Pairs with the AI thread: 06-15 (LLM serving) was the inference/ops axis; this is the training/economics axis. Two reframes to hold: **(1) the verifier is the moat, and a verifier is just an eval** — which makes your M15 gap the highest-leverage thing on your roadmap; **(2) this whole course is an adaptive-curriculum RL environment with you as the policy — so guard against reward-hacking your own learning by building verifiable (not just judgeable) checks into it.***

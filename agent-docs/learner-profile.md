@@ -4,7 +4,31 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-18 (v15 — **M04 Ch2 §1 "cohesion, coupling & module depth" ✅ finalized + a major,
+Last updated: 2026-06-21 (v16 — **reading #6: RL, verifiable rewards & environments ✅ finalized.** A
+**metacognitive** session, new in kind: he left the readings' content alone and instead **mapped the training
+course itself onto the RL-environment formalism** — he = trainee (≈ policy), me = task-generator + LLM-as-judge —
+and asked whether it holds. It does, and the session became about *where it breaks.* The durable threads (now in
+the reading's "What we worked out"): **(1)** the `E=(T,H,V,S,C)` map onto his setup, with the keystone he'd missed
+named — **`S` (state) = this very profile + the progress tracker**, the thing that makes the course an
+*adaptive curriculum* (T aimed at his frontier/ZPD) rather than a one-shot eval; his cold-start = the RL
+*exploration* phase. **(2)** disentangled his fused "scope/constitution/task" → the two keys are **T (task
+distribution)** and **V's rubric (the constitution / how it's graded)**. **(3)** three seams where the analogy
+breaks, all high-value: *(a)* his feedback channel is **natural-language explanation, not a scalar reward** → he's
+closer to **Reflexion / verbal-RL** than GRPO, so one good correction outweighs 1,000 binary rewards (his learning
+bottleneck is feedback *bandwidth/quality*, not throughput); *(b)* **he controls his own verifier → self-reward-
+hacking risk** ("performing understanding" = fluent jargon-correct restatement that passes my judgment without the
+model forming), compounded by my **task-setter+judge role-fusion** (an RL bias anti-pattern) — fix is *verifiable
+beats judgeable* turned on himself (predict-then-run, apply-to-real-repo, teach/build-break); *(c)* adaptive
+curriculum vs fixed env. **Signals:** (i) **strong metacognition / abstraction-transfer** — he spontaneously
+lifted a just-learned formalism and applied it reflexively to his own learning process; the self-as-system move,
+consistent with his physics/systems strength. (ii) **A concrete teaching lever falls out:** he himself flagged the
+"performing understanding" failure mode, so going forward **don't rely only on Q&A-judged understanding — give him
+verifiable checks** (predict-then-run, apply to Arena/aquarium, reconstruct-from-scratch) where reality grades, not
+me. (iii) Confirms the AI-thread rotation note: do swing out of AI next (databases / networking). Left him one
+**open exercise** (carried in the reading): design a verifiable, un-gameable self-check for this material by
+applying the T/V decomposition to his own Arena judge rubric / eval pipeline — doubles as a shippable improvement.
+Clean track-economy ("we can finalize here").).
+Prior: v15 (2026-06-18 — **M04 Ch2 §1 "cohesion, coupling & module depth" ✅ finalized + a major,
 durable authoring calibration about how to pitch the whole course.** The section (his clearest gap,
 decomposition) was prepared, then he steered it with a real design problem and three pieces of
 process feedback. **The design thread (now §11 Applied of the file):** he described the actual origin of
