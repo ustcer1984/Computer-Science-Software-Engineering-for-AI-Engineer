@@ -215,7 +215,7 @@ This is where the §1 correction ("multi-step = integrating a curved trajectory"
 
 Recall from §1: the DDPM reverse process is
 
-$$\mathbf{x}_{t-1} = \frac{1}{\sqrt{\alpha_t}}\!\left(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\,\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\right) + \sigma_t\,\mathbf{z}, \quad \mathbf{z}\sim\mathcal{N}(0,I).$$
+$$\mathbf{x}_{t-1} = \frac{1}{\sqrt{\alpha_t}}\left(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\thinspace\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\right) + \sigma_t\thinspace\mathbf{z}, \quad \mathbf{z}\sim\mathcal{N}(0,I).$$
 
 Each step injects fresh stochastic noise $\sigma_t\mathbf{z}$ — that's what makes the trajectory
 *curved and stochastic*. The step size must be small to keep the approximation valid: take too large
@@ -224,7 +224,7 @@ sampling steps.
 
 The **probability-flow ODE** (Song et al., 2021, from §1) removes the stochastic term:
 
-$$d\mathbf{x}_t = \left[ f(\mathbf{x}_t, t) - \frac{1}{2}g(t)^2\,\nabla_{\mathbf{x}}\log p_t(\mathbf{x}_t) \right] dt.$$
+$$d\mathbf{x}_t = \left[ f(\mathbf{x}_t, t) - \frac{1}{2}g(t)^2\thinspace\nabla_{\mathbf{x}}\log p_t(\mathbf{x}_t) \right] dt.$$
 
 This is deterministic and therefore more amenable to ODE solvers that can take larger steps — down
 to 20–50 steps for good quality. But the ODE still follows a *curved* path in latent space, because
@@ -238,7 +238,7 @@ question: what if the training target were a *straight-line* path from noise to 
 
 Define the interpolant:
 
-$$\mathbf{z}_t = (1-t)\,\boldsymbol{\epsilon} + t\,\mathbf{x}, \qquad \boldsymbol{\epsilon}\sim\mathcal{N}(0,I),\; \mathbf{x}\sim p_\text{data},\; t\in[0,1].$$
+$$\mathbf{z}_t = (1-t)\thinspace\boldsymbol{\epsilon} + t\thinspace\mathbf{x}, \qquad \boldsymbol{\epsilon}\sim\mathcal{N}(0,I),\thickspace \mathbf{x}\sim p_\text{data},\thickspace t\in[0,1].$$
 
 This is a linear interpolation: at $t=0$ we have pure noise, at $t=1$ we have data, and the path
 from one to the other is a straight line. The **conditional velocity** along this path is:
@@ -249,7 +249,7 @@ This velocity is **constant** along each individual trajectory — it does not d
 That is the key: if the target velocity is constant, a model that learns it can take *large* steps
 and still land correctly. The training loss is simply:
 
-$$\mathcal{L}_\text{FM} = \mathbb{E}_{t,\,\mathbf{x},\,\boldsymbol{\epsilon}}\,\bigl\| v_\theta(\mathbf{z}_t, t) - (\mathbf{x} - \boldsymbol{\epsilon}) \bigr\|^2.$$
+$$\mathcal{L}_\text{FM} = \mathbb{E}_{t,\thinspace\mathbf{x},\thinspace\boldsymbol{\epsilon}}\thinspace\left\lVert v_\theta(\mathbf{z}_t, t) - (\mathbf{x} - \boldsymbol{\epsilon}) \right\rVert^2.$$
 
 The catch: individual trajectories are straight, but the **marginal** velocity field $v_\theta$ (the
 expectation over all pairs $(\mathbf{x}, \boldsymbol{\epsilon})$ that produce the same $\mathbf{z}_t$)
