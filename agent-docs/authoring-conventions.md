@@ -71,11 +71,15 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
   - **Never use a backslash followed by ASCII punctuation inside math** — `\,` `\;` `\:` `\!` `\%`.
     CommonMark strips the backslash *before* the math reaches the renderer, so `\;`→`;`, `\,`→`,` (stray
     semicolons/commas appear in the output), and `\%`→`%`, which MathJax treats as a **comment** that
-    silently eats the rest of the expression (this is how a whole `$$…$$` fraction vanished). Use the
-    **letter-named** equivalents, which survive because the backslash is followed by a letter:
-    `\thinspace` / `\medspace` / `\thickspace` / `\quad` for spacing; and **avoid `\%` entirely** —
-    reword to a fractional-change ratio like `\frac{\Delta Q / Q}{\Delta P / P}` (which *is* the
-    percentage-change ratio) instead of writing `\%\Delta Q`.
+    silently eats the rest of the expression (this is how a whole `$$…$$` fraction vanished). Use a
+    **letter-named** equivalent, which survives because the backslash is followed by a letter — **but
+    only the ones GitHub's MathJax actually ships.** Verified on github.com (2026-06-21, M12 Ch2 §2):
+    **`\thinspace` and `\quad`/`\qquad` work** (they are base-TeX primitives); **`\thickspace` and
+    `\medspace` do NOT** — they are amsmath macros GitHub's MathJax build doesn't load, so they render
+    as the *literal text* `\thickspace` in the equation. So: use **`\thinspace`** for a small gap and
+    **`\quad`** for a larger separator; do **not** use `\thickspace`/`\medspace`. And **avoid `\%`
+    entirely** — reword to a fractional-change ratio like `\frac{\Delta Q / Q}{\Delta P / P}` (which
+    *is* the percentage-change ratio) instead of writing `\%\Delta Q`.
   - **Never put a literal `*` inside math** (`$P^*$`, `$Q^*$`). GitHub runs Markdown `*emphasis*` parsing
     *over* the `$...$` content, so the `*` is eaten (you get `$P^$`) and — worse — it pairs with the next
     real `*emphasis*` asterisk in the paragraph, turning text italic and corrupting *every other* `$...$`

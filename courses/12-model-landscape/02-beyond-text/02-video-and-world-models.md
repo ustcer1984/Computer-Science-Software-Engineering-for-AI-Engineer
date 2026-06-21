@@ -238,7 +238,7 @@ question: what if the training target were a *straight-line* path from noise to 
 
 Define the interpolant:
 
-$$\mathbf{z}_t = (1-t)\thinspace\boldsymbol{\epsilon} + t\thinspace\mathbf{x}, \qquad \boldsymbol{\epsilon}\sim\mathcal{N}(0,I),\thickspace \mathbf{x}\sim p_\text{data},\thickspace t\in[0,1].$$
+$$\mathbf{z}_t = (1-t)\thinspace\boldsymbol{\epsilon} + t\thinspace\mathbf{x}, \qquad \boldsymbol{\epsilon}\sim\mathcal{N}(0,I),\quad \mathbf{x}\sim p_\text{data},\quad t\in[0,1].$$
 
 This is a linear interpolation: at $t=0$ we have pure noise, at $t=1$ we have data, and the path
 from one to the other is a straight line. The **conditional velocity** along this path is:
