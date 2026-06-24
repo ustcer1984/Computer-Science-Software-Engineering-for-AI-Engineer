@@ -1,0 +1,481 @@
+# E02 · §1 — GDP & Measuring Output
+
+> **Subject:** Economy & Finance *(hobby track)*
+> **Module:** E02 — The Whole Economy (Macroeconomics)
+> **Section:** The pivot from *micro* (one market, one firm — Module E01) to *macro* (the whole economy at
+> once). It builds the single most-quoted number in economic news — **Gross Domestic Product** — from the
+> ground up: what it measures, the **three equivalent ways** to count it (production, expenditure, income),
+> the **$GDP = C + I + G + NX$** identity you'll meet in every release, the **nominal-vs-real** distinction
+> behind "the economy grew 2%," and — just as important — **what GDP misses** so you read the headline with
+> the right skepticism.
+> **Status:** 🔵 drafted 2026-06-24 — body ready to study; the session-Q&A section (§9) gets added after we
+> talk it through, as in the E01 sections. Math in LaTeX, quantitative relationships drawn as real curves,
+> key terms glossed in 中文 (大陆/台灣), per
+> [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
+
+**Estimated study time:** 1.5–2 hours including reflection.
+**Prerequisites:** Module E01 — especially **§2** (markets, prices, the circular idea that one party's
+spending is another's revenue) and **§4** (final vs intermediate goods, value added, the firm's revenue =
+price × quantity). No new math beyond growth rates and index numbers, both built here from scratch.
+
+---
+
+## Why this section exists (for *you*)
+
+Everything in Module E01 looked at **one market at a time**: the price of sugar, one firm's cost curves, one
+industry's structure. That's *micro*. But when the news says "**the US economy grew 2.8% in Q3**," "**India
+overtook the UK as the fifth-largest economy**," or "**Singapore's GDP rose 4.4%**," it is talking about an
+entire nation's output collapsed into **one number**. Moving from "one market" to "all markets at once" is
+the jump to **macroeconomics**, and the number that anchors the whole field is **Gross Domestic Product
+(GDP)**.
+
+This section is aimed squarely at your **Goal 1 — understand economy and business news.** Almost every
+macro headline is, underneath, a statement about GDP or one of its close relatives (growth, recession,
+GDP per capita, the deficit "as a share of GDP"). If you can build GDP from first principles — know exactly
+what it counts, how it's counted three different ways, and where it lies to you — then a *huge* fraction of
+economic news stops being jargon and becomes readable. It is also the foundation the *rest* of E02 stands
+on: inflation (§2) is what separates *real* from *nominal* GDP; unemployment (§3) and the business cycle
+(§4) are about GDP rising and falling.
+
+> **One framing to hold:** GDP is **the total market value of everything an economy produces in a period.**
+> The entire section is (a) unpacking each word of that sentence, (b) showing the three ways to add it up all
+> give the same number, and (c) listing what the number quietly leaves out.
+
+---
+
+## 1. What GDP is — one sentence, dissected
+
+> **Gross Domestic Product (GDP)** = the **market value** of all **final** goods and services **produced**
+> **within a country** **in a given period** (a quarter or a year).
+
+Every phrase is load-bearing. Take them one at a time, because almost every "gotcha" in reading GDP news is
+hiding in one of these words.
+
+- **"Market value"** — we add up apples and haircuts and software licences by their **dollar price**, because
+  that's the only common unit. A \$30,000 car contributes 10× what a \$3,000 motorbike does. This is also the
+  first limitation: things *without* a market price (unpaid housework, a free open-source library, clean air)
+  mostly **don't get counted** — we return to this in §5.
+- **"Final"** — only goods sold to their **end user** count. The flour a bakery buys is an **intermediate
+  good**; counting both the flour *and* the bread would **double-count**. The fix is the **value-added**
+  idea from E01 §4, and it's worth seeing as a picture:
+
+<!-- FIGURE -->
+![A bread supply chain: each stage adds value, and the sum of value added equals the final retail price](diagrams/01-gdp-and-measuring-output-fig1.svg)
+
+  Wheat (\$0.60) → flour (\$1.10) → loaf to the shop (\$2.00) → loaf on the shelf (\$2.50). If you naïvely
+  summed every sale you'd get \$6.20 for one loaf. The right answer is either **the final price (\$2.50)**
+  *or, equivalently,* **the sum of value added at each stage** (\$0.60 + \$0.50 + \$0.90 + \$0.50 = \$2.50). That
+  these two are equal is not a coincidence — it's the bridge to §2's "three ways to count."
+
+- **"Produced"** — GDP counts **production**, not transactions. Three traps fall out of this, and all three
+  show up in real reporting:
+  - **Second-hand sales don't count.** Selling a used car just moves an *existing* asset between people; no
+    new output. (The dealer's *service margin* does count — that's newly produced.)
+  - **Purely financial transactions don't count.** Buying a share or a bond is swapping money for a paper
+    claim; nothing was produced. (The broker's *fee* is a produced service, so it counts.) This is why
+    **"investment" in GDP is not what a stock-investor means** — see §3.
+  - **Transfer payments don't count.** A pension or unemployment cheque moves money around without producing
+    anything; it's excluded from the government's contribution to GDP (§3).
+- **"Within a country"** — GDP is **geographic**. A Toyota plant in the US adds to *US* GDP even though Toyota
+  is Japanese; an Apple design centre's output counts wherever the work physically happens. The alternative —
+  counting by *who owns the income* rather than *where it's produced* — is **GNI**, and the gap between them
+  is large and revealing for some countries (§5).
+- **"In a given period"** — GDP is a **flow**, measured *per quarter* or *per year*, not a stock you can hold.
+  This distinction trips up almost everyone, so it earns the one analogy of the section:
+
+> **Physics lens — GDP is a flow, not a stock.** GDP is a **rate**: dollars *per year*, like a current
+> (charge per second) or power (energy per second), **not** a reservoir. A country's accumulated **wealth**
+> (its capital stock, buildings, savings) is the *stock* — the analogue of total charge or stored energy.
+> GDP is the *flow that adds to that stock each year* (net of depreciation). Saying "the US economy is
+> \$28 trillion" is shorthand for "\$28 trillion **per year**." Confusing the flow with the stock is like
+> confusing the wattage of a tap with the volume of the bathtub — and it's exactly the error behind muddled
+> claims like "the national debt is bigger than GDP" (a *stock* compared to a *flow*; the honest comparison
+> is debt to *annual* GDP, which is why it's always quoted as a **ratio**, debt-to-GDP).
+
+---
+
+## 2. Three ways to count the same thing
+
+Here is the elegant part. GDP can be measured **three completely different ways**, and — by an accounting
+identity, not luck — they give the **same number**. Statistical agencies compute all three and reconcile
+them (the small leftover is the "statistical discrepancy").
+
+The reason they're equal is the **circular flow** of the economy, which is really just E01 §2's insight —
+*your spending is someone else's income* — drawn as a loop:
+
+1. **The production (output / value-added) approach.** Add up the **value added** by every firm — each
+   firm's sales minus what it bought from other firms. (That's the \$2.50 from Fig 1, summed across the whole
+   economy.) This counts GDP as it is **made**.
+2. **The expenditure approach.** Add up everything **spent** on final goods and services:
+   $GDP = C + I + G + NX$. This counts GDP as it is **bought**. (The big one — §3.)
+3. **The income approach.** Add up all the **income earned** producing it: wages + rent + interest + profit.
+   This counts GDP as it is **paid out**.
+
+> **Why all three are equal.** Every dollar of output is **sold** (so production = expenditure), and every
+> dollar received for a sale is **paid out** to someone — as wages, rent, interest, or profit (so
+> expenditure = income; profit is the residual that makes it balance exactly). Output made = output bought
+> = income earned. It's the same river measured at three points on its loop.
+
+> **Physics lens — it's a conservation law (continuity).** The three-way equality is **Kirchhoff's current
+> law** for the circular flow: in steady state, the flow measured across *any* cut of a closed loop is the
+> same. Production, expenditure, and income are three cuts through the one circulating flow of value, so they
+> must read equal — profit is the slack variable that enforces the conservation, exactly like a Lagrange
+> multiplier balancing a constraint.
+
+The practical payoff: news draws on **all three**. "Consumer spending drove growth" is the *expenditure*
+view; "corporate profits and wages rose" is the *income* view; "manufacturing output fell" is the
+*production* view. They're three windows onto one number.
+
+---
+
+## 3. The expenditure approach: $GDP = C + I + G + NX$
+
+This is the decomposition you'll see most, because each piece is a different *engine* of the economy and
+moves for different reasons. Learn what's in each bucket — and, just as important, what is **not**.
+
+| Term | Name | What it is | Classic confusions to avoid |
+|---|---|---|---|
+| $C$ | **Consumption** | Household spending: food, rent, cars, haircuts, streaming. Usually the **largest** share. | New **housing** is *not* here — it's in $I$. |
+| $I$ | **Investment** | **Business** spending on new capital — factories, machines, software — **plus new housing**, **plus the change in inventories**. | **Not** buying stocks/bonds (that's a financial swap, §1). "Investment" here = *real* capital formation. |
+| $G$ | **Government spending** | Government purchases of goods and services: salaries of teachers/soldiers, roads, defence kit. | **Excludes transfer payments** (pensions, welfare) — those aren't production, they're redistribution. |
+| $NX$ | **Net exports** | **Exports − imports.** Adds what foreigners buy from us; subtracts the import content already inside $C$, $I$, $G$. | Can be **negative** (a trade deficit). |
+
+The identity in one line — and the single most useful formula in macro news:
+
+$$GDP = C + I + G + NX = C + I + G + (\text{exports} - \text{imports}).$$
+
+**Why imports are *subtracted*.** $C$, $I$, and $G$ count *all* spending by residents and government —
+including spending on **imported** goods. But an imported phone wasn't produced *here*, so it shouldn't be in
+*our* GDP. Subtracting imports inside $NX$ cancels the import content that's already baked into $C/I/G$. (So
+imports don't "reduce" the economy — the minus sign is just **bookkeeping** that removes what was
+double-added. A common news-level error is to read a rising import bill as directly shrinking GDP; mostly
+it's just being netted back out.)
+
+The shares differ enormously across economies, and the *shape* tells you what kind of economy you're looking
+at:
+
+<!-- FIGURE -->
+![Stacked bars of C, I, G, NX as a share of GDP for the US, China, and Singapore, each totalling 100%](diagrams/01-gdp-and-measuring-output-fig2.svg)
+
+- **United States** — **consumption-driven** ($C$ ≈ 68%): the archetypal consumer economy, with a
+  small **trade deficit** ($NX < 0$). Notice $C + I + G$ slightly *exceeds* 100% — that overshoot is exactly
+  the import content that $NX$ subtracts back to 100% (the red tail past the line).
+- **China** — **investment-heavy** ($I$ ≈ 42%): decades of building factories, housing, and
+  infrastructure show up as an unusually large $I$ and a relatively *small* household $C$ — the statistical
+  fingerprint of "the news says China needs to rebalance toward consumption."
+- **Singapore** — **trade-driven** ($NX$ huge and positive): as a small, open entrepôt, exports dwarf the
+  domestic economy, so net exports are a *large* slice of GDP *(your local lens — this extreme openness is
+  why MAS targets the exchange rate rather than interest rates, which we'll meet in E03 §4).*
+
+> Numbers are **illustrative, rounded to the published shape** — the point is the silhouette (who leans on
+> $C$ vs $I$ vs $NX$), not the decimals, which get revised. You can pull the live figures from each country's
+> statistics office (see §8).
+
+---
+
+## 4. Nominal vs real: what "grew 2%" actually means
+
+Now the distinction that separates someone who *reads* GDP from someone who's fooled by it. Suppose a
+country produces the **exact same** basket of goods two years running, but every price rises 10%. Measured
+at **current prices**, GDP is up 10% — yet **nothing more was produced.** That rise is pure inflation, not
+growth. To strip it out we split GDP two ways:
+
+- **Nominal GDP** — output valued at **current** (this year's) prices. Moves with *both* quantity *and*
+  prices.
+- **Real GDP** — output valued at the prices of a fixed **base year**. Moves with **quantity only**. *This
+  is the one that matters*, and **"the economy grew 2%" always means real GDP.**
+
+<!-- FIGURE -->
+![Left: nominal GDP rising faster than real GDP, the gap being inflation. Right: nominal growth equals real growth plus inflation each year](diagrams/01-gdp-and-measuring-output-fig3.svg)
+
+The left panel shows nominal pulling away from real over time — **the entire gap is price change.** The
+right panel is the relationship to memorize:
+
+$$\text{nominal growth} \approx \text{real growth} + \text{inflation}.$$
+
+(It's exact in logs: $\ln(1+g_{\text{nom}}) = \ln(1+g_{\text{real}}) + \ln(1+\pi)$; for small rates the
+cross-term is negligible, so the simple sum is fine for reading news.) Rearranged, **real growth ≈ nominal
+growth − inflation** — which is *why* you can't judge growth without knowing inflation, and why the inflation
+section (§2) is the natural next stop.
+
+**The GDP deflator.** The price index implied by the two is the **GDP deflator**:
+
+$$\text{GDP deflator} = \frac{\text{nominal GDP}}{\text{real GDP}} \times 100.$$
+
+It's one of the broadest inflation measures (it covers *everything* in GDP, unlike the CPI's consumer
+basket — §2). When you see "the deflator rose 2.5%," that's economy-wide price growth.
+
+**Per-capita — the one extra division that changes the story.** A country can grow just by adding people.
+To measure **living standards**, divide by population:
+
+$$\text{real GDP per capita} = \frac{\text{real GDP}}{\text{population}}.$$
+
+This is why a country can post healthy *total* GDP growth while *per-person* income stagnates (much of
+the growth was just population). **Real GDP per capita** is the closest single number to "average material
+prosperity," and **growth in real GDP per capita** is the closest thing economics has to a measure of rising
+living standards over the long run.
+
+> ⚠ **Two reading-the-news traps worth burning in now.**
+> 1. **Annualized quarterly growth.** US releases (BEA) report quarterly growth **annualized** — the quarter's
+>    growth *compounded as if it ran a full year* (≈ 4× a small quarterly number). So "US GDP grew 2.8%" is an
+>    *annualized quarterly* rate. Many other countries (and most of Asia) quote the plain **year-on-year** or
+>    **quarter-on-quarter** rate instead. Same word, different arithmetic — check which before comparing
+>    countries.
+> 2. **Levels for size, growth for momentum, PPP for living standards.** *Nominal* GDP in a common currency
+>    ranks economies by **size** (US > China > Germany > …). But to compare **living standards** across
+>    countries you want **GDP per capita**, and often at **purchasing-power parity (PPP)** — adjusting for the
+>    fact that a haircut or a bowl of noodles is far cheaper in some countries, so a dollar buys more there.
+>    Market-exchange-rate comparisons understate poorer countries' real consumption; PPP corrects it.
+
+---
+
+## 5. What GDP misses — read the headline with the right skepticism
+
+GDP is the best single summary we have, but it is a **measure of market production, not of welfare** — and
+its inventor, Simon Kuznets, warned against exactly that confusion. Knowing the blind spots is what turns you
+from a headline-repeater into a critical reader.
+
+- **Non-market and household production is invisible.** Cook your own dinner, raise your own children, fix
+  your own fence — **zero GDP**. Pay someone to do the identical thing — **counts.** So GDP can *rise* when
+  unpaid work shifts into the market without any real change in output (a classic example: a country's
+  measured GDP rises when more parents enter paid work and pay for childcare).
+- **The informal / shadow economy is undercounted.** Cash-in-hand work, subsistence farming, and black
+  markets are huge in many developing economies and partly missing from GDP.
+- **It says nothing about distribution.** GDP per capita is an **average.** A country can post rising
+  average income while the median person stagnates — the gains can pool at the top. "GDP grew" ≠ "people
+  are better off."
+- **"Bads" can count as "goods."** Rebuilding after a hurricane, cleaning up a disaster, longer commutes
+  burning more fuel — all *add* to GDP. Destruction followed by reconstruction can *raise* measured output,
+  which is why GDP is a poor proxy for well-being.
+- **Externalities and depletion aren't netted out.** Pollution and resource depletion (E01 §3's
+  externalities) don't subtract from GDP; the output that *caused* them is counted in full. (Hence "green GDP"
+  and natural-capital accounting efforts.)
+- **Quality, variety, and free digital goods are hard to capture.** A \$1,000 phone today vastly outclasses a
+  \$1,000 phone a decade ago; free services (search, maps, open-source) deliver enormous value at a *zero*
+  market price, so they barely register in GDP even as they transform life.
+
+### GDP vs GNP / GNI — produced-here vs earned-by-residents
+
+The "**within a country**" in the definition has a famous twist. Two ways to draw the boundary:
+
+- **GDP** — output produced **inside the borders**, *whoever owns it* (a geographic measure).
+- **GNI** (Gross National Income; older name **GNP**) — income earned by a country's **residents/nationals**,
+  *wherever in the world* it's earned. Formally $GNI = GDP + (\text{income residents earn abroad}) -
+  (\text{income foreigners earn here}).$
+
+For most large economies the two are within a couple of percent. But where lots of production is
+**foreign-owned**, or where many citizens **work abroad and send money home**, the gap is dramatic and
+diagnostic:
+
+<!-- FIGURE -->
+![GNI as a percentage of GDP for Ireland, Singapore, the US, and the Philippines — below 100 means income flows out, above means it flows in](diagrams/01-gdp-and-measuring-output-fig4.svg)
+
+- **Ireland** — GNI far *below* GDP: multinationals book huge profits there for tax reasons, inflating *GDP*
+  while much of that income flows *out* to foreign owners. Irish economists watch a modified **GNI\*** instead
+  because raw GDP is so distorted — a real, cited case of "don't trust the headline GDP."
+- **Singapore** *(local lens)* — GNI somewhat *below* GDP: a lot of output comes from foreign-owned
+  multinationals whose profits ultimately accrue abroad, so income earned *by residents* is less than output
+  produced *on the island*.
+- **United States** — GNI slightly *above* GDP: Americans earn a bit more on their foreign assets than
+  foreigners earn in the US.
+- **Philippines** — GNI *above* GDP: millions of Filipinos work overseas and **remit** income home, so
+  national income exceeds domestic production.
+
+The lesson for reading news: **GDP tells you where production happens; GNI tells you whose income it is.**
+For a small, open, multinational-heavy economy like Singapore — or an extreme like Ireland — that distinction
+is not academic.
+
+---
+
+## 6. The one-page mental model
+
+<!-- DIAGRAM:START -->
+![Diagram 1](diagrams/01-gdp-and-measuring-output-1.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```mermaid
+flowchart TD
+    DEF["GDP = market value of all FINAL goods/services<br/>PRODUCED within a country, per period<br/>(a FLOW: $ per year, not a stock)"]
+    FINAL["FINAL not intermediate<br/>count value added once<br/>(bread = sum of stage value added)"]
+    THREE["THREE WAYS, ONE NUMBER<br/>(the circular flow)"]
+    PROD["PRODUCTION<br/>sum of value added<br/>(as it is MADE)"]
+    EXP["EXPENDITURE<br/>C + I + G + NX<br/>(as it is BOUGHT)"]
+    INC["INCOME<br/>wages+rent+interest+profit<br/>(as it is PAID OUT)"]
+    CIGNX["C consumption (largest)<br/>I business capital + housing + inventories (NOT stocks)<br/>G gov purchases (NOT transfers)<br/>NX exports - imports (can be < 0)"]
+    REAL["NOMINAL (current prices) vs REAL (base-year prices)<br/>'grew 2%' = REAL growth<br/>nominal ≈ real + inflation<br/>deflator = nominal/real x 100"]
+    PERCAP["PER CAPITA = / population<br/>living standards; use PPP to compare countries"]
+    MISS["WHAT IT MISSES<br/>unpaid work, informal economy, distribution,<br/>'bads' count, pollution, quality/free goods<br/>GDP (produced here) vs GNI (earned by residents)"]
+    DEF --> FINAL
+    DEF --> THREE
+    THREE --> PROD
+    THREE --> EXP
+    THREE --> INC
+    EXP --> CIGNX
+    THREE --> REAL
+    REAL --> PERCAP
+    DEF --> MISS
+```
+
+</details>
+<!-- DIAGRAM:END -->
+
+**The eight things to remember:**
+1. **GDP** = market value of all **final** goods and services **produced** **within** a country **per
+   period**. It's a **flow** (\$/year), not a stock of wealth.
+2. **Final, not intermediate** — count **value added** once (the bread chain), or you double-count.
+3. **Three ways, one number:** **production** (value added) = **expenditure** ($C+I+G+NX$) = **income**
+   (wages+rent+interest+profit). Your spending is someone's income — the circular flow.
+4. **$GDP = C + I + G + NX$.** $I$ is *real* capital (not stocks); $G$ *excludes* transfers; **imports are
+   subtracted** as bookkeeping. The mix ($C$- vs $I$- vs $NX$-driven) characterizes an economy.
+5. **Real vs nominal:** "grew 2%" always means **real** (quantity) growth. **nominal ≈ real + inflation**;
+   the **deflator** = nominal/real × 100.
+6. **Per capita** (÷ population) tracks living standards; use **PPP** to compare across countries; *levels*
+   rank economies by **size**.
+7. **Watch the arithmetic:** US quarterly growth is **annualized**; other countries often quote
+   year-on-year. Don't compare different conventions.
+8. **GDP ≠ welfare:** it misses unpaid work, the informal economy, distribution, environmental harm, and
+   quality/free goods — and counts some "bads." **GDP** (produced here) vs **GNI** (earned by residents) can
+   diverge sharply (Ireland, Singapore).
+
+---
+
+## 7. Check your understanding
+
+Per the "verifiable beats judgeable" note in your profile, several of these are **predict-then-check**: do
+the reasoning *before* looking anything up, then test it against a real release.
+
+1. **Final vs intermediate.** A bakery buys \$1.10 of flour and sells \$2.50 of bread; the miller bought
+   \$0.60 of wheat. How much does this chain add to GDP — and why isn't it \$0.60 + 1.10 + 2.50? State the
+   two equivalent ways to get the right answer.
+2. **What counts?** For each, say whether it's in this year's GDP and, if so, in which bucket ($C/I/G/NX$):
+   (a) you buy a newly built flat, (b) you buy a 10-year-old resale flat, (c) Singapore exports a cargo of
+   refined fuel, (d) the government pays out unemployment benefits, (e) you buy \$5,000 of Apple shares,
+   (f) a factory builds up unsold inventory.
+3. **Nominal vs real — predict, then check.** An economy's nominal GDP rose 7% while inflation (the deflator)
+   was 5%. Roughly what was *real* growth? Now find one real release (e.g. US BEA or Singapore MTI) and
+   identify the nominal figure, the real figure, and the deflator — do they line up with
+   nominal ≈ real + inflation?
+4. **The annualization trap.** US Q3 GDP is reported as "+2.8%." A friend says Singapore "only" grew 1.1%
+   the same quarter, so the US economy is growing nearly 3× faster. What's wrong with the comparison, and what
+   would you check before drawing any conclusion?
+5. **Read the mix.** Without looking it up, predict whether each is consumption-driven, investment-driven, or
+   trade-driven, and why: (a) the United States, (b) China, (c) Singapore. Then check one against its
+   statistics office's expenditure breakdown.
+6. **GDP vs welfare.** Give one way GDP could *rise* while most people are arguably *worse off*, and one way
+   life could genuinely *improve* with little or no rise in measured GDP. Name the blind spot each exploits.
+7. **GDP vs GNI.** Ireland's GDP is far above its GNI; the Philippines' GNI is above its GDP. Explain each in
+   one sentence using "produced here" vs "earned by residents." Which measure would you trust more to gauge
+   Irish residents' incomes, and why?
+
+## 8. Optional: read a real GDP release (15–20 min)
+
+Pick the most recent GDP release from a statistics office you care about and read it through this section's
+lens:
+
+- **Singapore — MTI / SingStat** (advance estimate quarterly): note the **headline real growth**, the
+  convention used (year-on-year vs quarter-on-quarter, seasonally adjusted annualized), and the
+  **sector/expenditure breakdown**. See how dominant **net exports** are. *(SingStat: data.gov.sg / singstat.gov.sg.)*
+- **United States — BEA** ("Gross Domestic Product, Q_ 20__"): note that growth is **annualized**, find the
+  **$C/I/G/NX$ contributions**, and locate the **GDP deflator** (or the related PCE price index) in the same
+  release.
+
+For each, answer: Is this **real or nominal**? Is the growth **annualized or year-on-year**? Which
+**component** drove the change? And what is the release *not* telling you about distribution or welfare
+(§5)? Bring one to our chat and we'll run the GDP story on it — the way we ran cost-and-competition on the
+frontier AI labs in E01 §4.
+
+---
+
+## Key terms — English · 中文（中国大陆 / 台灣）
+
+So the concepts carry over to Chinese-language economic news and statistics releases. Most differences are
+just **simplified vs traditional script**; **⚠ marks a genuine terminology difference** between Mainland
+China (大陆) and Taiwan (台灣) that you'd actually trip over — and this section has several big ones.
+
+**The headline aggregates**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Gross Domestic Product (GDP) | 国内生产总值 | 國內生產毛額 | ⚠ 大陆 **总值** vs 台灣 **毛額** — a major split; both abbreviate "GDP" |
+| Gross National Income (GNI) | 国民总收入 | 國民所得毛額 | ⚠ income 收入 (大陆) vs 所得 (台灣); + 总值/毛額 split |
+| Gross National Product (GNP) | 国民生产总值 | 國民生產毛額 | older name for GNI |
+| Macroeconomics | 宏观经济学 | 總體經濟學 | ⚠ 大陆 **宏观** vs 台灣 **總體** — you'll see both constantly |
+| Microeconomics | 微观经济学 | 個體經濟學 | ⚠ 大陆 **微观** vs 台灣 **個體** |
+| Economic growth | 经济增长 | 經濟成長 | ⚠ growth 增长 (大陆) vs 成長 (台灣) — load-bearing for news |
+| GDP per capita | 人均GDP / 人均国内生产总值 | 每人GDP / 平均每人GDP | ⚠ 大陆 **人均** vs 台灣 **每人/平均每人** |
+
+**Counting it three ways**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Final goods | 最终产品 | 最終財貨 | ⚠ goods 产品/物品 (大陆) vs 財貨 (台灣) |
+| Intermediate goods | 中间产品 | 中間財 | |
+| Value added | 增加值 | 附加價值 | ⚠ 大陆 **增加值** vs 台灣 **附加價值** |
+| Circular flow (of income) | 循环流转 | 循環流程 | |
+| Output / production approach | 生产法 | 生產面（生產法） | |
+| Expenditure approach | 支出法 | 支出面（支出法） | |
+| Income approach | 收入法 | 所得面（所得法） | ⚠ income 收入 vs 所得 |
+| Statistical discrepancy | 统计误差 | 統計誤差 | |
+
+**The expenditure identity ($C+I+G+NX$)**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Consumption | 消费 | 消費 | |
+| Investment (capital formation) | 投资（资本形成）| 投資（資本形成）| *real* capital, not financial |
+| Government spending | 政府支出 | 政府支出 | |
+| Net exports | 净出口 | 淨出口 | |
+| Exports / imports | 出口 / 进口 | 出口 / 進口 | |
+| Trade surplus / deficit | 贸易顺差 / 逆差 | 貿易順差 / 逆差 | |
+| Transfer payments | 转移支付 | 移轉性支付 | ⚠ 大陆 **转移支付** vs 台灣 **移轉性支付** |
+| Inventories | 存货 | 存貨 | |
+
+**Real vs nominal & living standards**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Nominal GDP | 名义GDP | 名目GDP | ⚠ nominal 名义 (大陆) vs 名目 (台灣) |
+| Real GDP | 实际GDP | 實質GDP | ⚠ real 实际 (大陆) vs 實質 (台灣) |
+| GDP deflator | GDP平减指数 | GDP平減指數 | |
+| Inflation | 通货膨胀（通胀）| 通货膨脹（通膨）| |
+| Purchasing power parity (PPP) | 购买力平价 | 購買力平價 | adjusts for price-level differences |
+| Depreciation (of capital) | 折旧 | 折舊 | "gross" in GDP = before this |
+| Recession | 经济衰退 | 經濟衰退 | falling real GDP (E02 §4) |
+| Standard of living | 生活水平 | 生活水準 | ⚠ 大陆 **水平** vs 台灣 **水準** |
+
+> Recurring genuine splits to memorize (beyond E01's list): **总值↔毛額** (the "Gross … Product"),
+> **宏观↔總體** (macro), **微观↔個體** (micro), **增长↔成長** (growth), **名义↔名目** (nominal),
+> **实际↔實質** (real), **增加值↔附加價值** (value added), **收入↔所得** (income),
+> **转移支付↔移轉性支付** (transfers), **水平↔水準** (level/standard).
+
+---
+
+## References (optional, for depth)
+
+- *Naked Economics* — Charles Wheelan, ch. on **"Keeping score: GDP and how we measure prosperity"** (often
+  ch. 6/9 depending on edition). The friendliest prose version of this whole section.
+  https://wwnorton.com/books/Naked-Economics
+- Khan Academy — Macroeconomics, **"GDP: Measuring national income"** unit — builds the three approaches, the
+  $C+I+G+NX$ identity, value added, and real-vs-nominal step by step, with practice.
+  https://www.khanacademy.org/economics-finance-domain/macroeconomics
+- Marginal Revolution University — short videos on **"What is GDP?"**, **real vs nominal GDP**, and the
+  **GDP deflator**. https://mru.org/courses/principles-economics-macroeconomics
+- *CORE Econ — The Economy 2.0*, unit **"The nation in the world economy"** / measurement sections — a
+  rigorous, free treatment with real data and the welfare critiques. https://books.core-econ.org/the-economy/
+- **Primary sources to practise on:** Singapore — **SingStat / MTI** GDP releases
+  (https://www.singstat.gov.sg, https://www.mti.gov.sg); United States — **BEA** GDP news release
+  (https://www.bea.gov); cross-country — **World Bank** GDP, GDP-per-capita and **GNI** data
+  (https://data.worldbank.org) — the source behind the GDP-vs-GNI figure.
+
+---
+
+### What's next
+🔵 **Drafted 2026-06-24 — body ready to study.** This opens **Module E02 — Macroeconomics** and goes
+straight at **Goal 1 (understand economy/business news):** you can now build GDP from scratch, count it three
+equivalent ways, read the $C+I+G+NX$ identity, separate real from nominal growth, and name what the number
+hides. The session-Q&A section (**§9**) will be added after we talk it through, as in the E01 sections —
+bring a real GDP release (§8) or a news headline and we'll run the model on it. The natural next step is
+**E02 §2 — Inflation & price indices**, which picks up the exact thread this section left open (the deflator,
+real-vs-nominal, "why a little inflation is the target") and is the other half of reading any growth number.
