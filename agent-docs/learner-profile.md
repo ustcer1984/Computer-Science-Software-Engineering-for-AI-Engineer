@@ -4,7 +4,29 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-21 (v16 — **reading #6: RL, verifiable rewards & environments ✅ finalized.** A
+Last updated: 2026-06-24 (v17 — **Econ E01 §4 "firms, costs & competition" ✅ finalized; Module E01 done.**
+He studied the body, then in Q&A drove it straight to a live case he cares about — **frontier AI labs
+(OpenAI/Anthropic) serving below AVC yet not shutting down** — and largely *self-derived* the resolution:
+huge FC+VC, price < per-token cost, kept alive by investors betting on future pricing power + falling
+hardware cost. Same confirmed pattern as every prior session: **he proposes a structurally-correct model and
+integrates the re-rank instantly when the dominant principle is named.** The thread (now §9 Applied of the
+file): the keystone re-rank is **static single-period shutdown rule → dynamic multi-period NPV** (capital
+markets relax the self-financing assumption); then (b) most of the "loss" is **training-FC/investment**, not
+below-AVC *serving*, and committed compute is fixed not variable (he'd fused them); (c) his "tech advance +
+scaling lowers cost" instinct = the **learning/experience curve = a *moving* LRAC**, named precisely vs §4's
+*static* economies of scale — a distinction he lacked the vocab for but had the intuition for; (d) it's a
+**race to build barriers to entry** (penetration pricing/blitzscaling, Amazon comp) to manufacture a §3
+monopoly. He explicitly asked for **failure modes** (his standing want): gave him commoditization →
+open-weight → §4 *airline* outcome, cost-declines-competed-away, and the Red-Queen FC race. **Signals:**
+(i) **strong dynamic/systems reasoning** — he intuitively reframed a static rule as a multi-period optimization
+under endogenous curves *before* being told, his physics/systems strength showing again (cf. v16's self-as-
+system move); (ii) he reasons natively about **AI-industry economics** — the examples that land hardest are
+AI/compute ones; (iii) gap surfaced & filled: he conflated *fixed vs variable* with *training vs serving*, and
+lacked the static-scale vs dynamic-learning-curve distinction — both now taught. No process/authoring feedback
+this session; the §3/§8-style "read material → Q&A → capture thread → finalize" loop is working well and he
+likes it ("finalize here"). Module E01 (micro foundations) complete; next is E02 macro (GDP) or a
+reports-first jump to E07.).
+Prior: v16 (2026-06-21 — **reading #6: RL, verifiable rewards & environments ✅ finalized.** A
 **metacognitive** session, new in kind: he left the readings' content alone and instead **mapped the training
 course itself onto the RL-environment formalism** — he = trainee (≈ policy), me = task-generator + LLM-as-judge —
 and asked whether it holds. It does, and the session became about *where it breaks.* The durable threads (now in

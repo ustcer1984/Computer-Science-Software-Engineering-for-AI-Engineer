@@ -7,8 +7,11 @@
 > (the $MR = MC$ rule, the shutdown rule)? Why are some industries a handful of giants and others a swarm
 > of small shops (economies of scale)? And the **spectrum of competition** — perfect competition →
 > monopolistic competition → oligopoly → monopoly — of which §3 only sampled the two endpoints.
-> **Status:** 🔵 drafted 2026-06-21 — closes Module E01. Math in LaTeX, quantitative relationships drawn as
-> real curves, key terms glossed in 中文 (大陆/台灣), per
+> **Status:** ✅ finalized 2026-06-24 — closes Module E01. You studied the body, then in Q&A took it to a
+> live case: **the frontier AI labs** (OpenAI/Anthropic) that serve below AVC yet don't shut down. §9
+> captures that thread — the static→dynamic shutdown re-rank, training-FC vs serving-VC, the learning curve
+> as a *moving* LRAC, the race to build barriers to entry, and the failure modes. Math in LaTeX,
+> quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
@@ -472,6 +475,115 @@ elasticity/surplus/failure story on Singapore's sugar policy in §3.
 
 ---
 
+## 9. Applied — from our session Q&A (2026-06-24): the frontier AI labs
+
+You took the section straight to a business that *looks* like it breaks the rule: **frontier AI labs**
+(OpenAI, Anthropic). Their structure, as you posed it: huge **FC** (R&D, model training) *and* huge **VC**
+(model serving), with plan prices widely believed to sit **below per-token cost** — i.e. $P < AVC$. §4 says
+that means *shut down*; they do the opposite, funded by investors betting on future profitability via
+**pricing power + falling hardware cost**. Your reconstruction had the right shape; the value was in four
+re-ranks and the failure modes. The headline: **nothing in §4 breaks — the labs have swapped "maximize this
+period's profit on fixed curves" for "maximize multi-period NPV while *bending* the curves."**
+
+### 9a. The core re-rank: the shutdown rule is *single-period and static*
+
+"$P < AVC \Rightarrow$ shut down" smuggles in three assumptions the labs deliberately relax: it maximizes
+**one period's** profit, on **fixed** cost/demand curves, with the firm **self-financing** each period. The
+labs maximize the **net present value of a multi-period trajectory** in which *today's output moves
+tomorrow's curves*, funded by **financing** cash flow (equity raises), not operating cash flow. So the rule
+isn't violated — it's the wrong rule for a dynamic game. The generalization:
+
+> **Dynamic shutdown rule:** keep operating, even at $P < AVC$ today, as long as the **discounted future
+> profits the activity unlocks** exceed today's burn. Shut down only when *that* NPV turns negative — a
+> forward-looking bet, not a this-quarter fact. (Capital-market access is what relaxes the self-financing
+> constraint the static rule assumed; the NPV machinery itself is formalized in E08–E09.)
+
+### 9b. Re-rank: be careful what you call "variable cost"
+
+A chunk of the apparent paradox is a **miscategorization**, and the precision matters:
+
+- **Training the next model is FC / R&D, not serving (variable) cost** — it builds a *future asset* (the
+  model, the know-how, the data flywheel). And FC is **sunk** the moment you ask "serve today?", so by §4's
+  *own* logic it doesn't enter the operate-now decision. Much of the "loss" is **investment**, not
+  below-AVC operating.
+- **Much "serving cost" is committed-fixed, not truly variable** — reserved GPU clusters and datacenter
+  commitments are paid regardless of the next token. The *avoidable* marginal cost of one more API token
+  (electricity + the GPU-second's opportunity cost) is plausibly **below** price — in which case $P >$ true
+  short-run AVC and the rule says *serve*. No paradox.
+- **Where you're right:** on **flat-rate consumer plans**, heavy power users very likely cost more than they
+  pay — but that's a deliberate **loss leader**, not the whole business. The honest read: **unit economics
+  differ by product line** — flat-rate consumer = loss-leader by design; metered API/enterprise = closer to
+  or above positive gross margin. Lumping training + power-user subsidies into one "AVC" is what manufactures
+  the "below cost everywhere" impression.
+
+### 9c. Re-rank: the cost decline you described is the *learning curve* — a moving LRAC
+
+This was the biggest enrichment, because §4's LRAC is a **snapshot** and your story is the snapshot
+**moving**. Distinguish two things the course bundles loosely:
+
+- **Economies of scale** (§3 here) — lower unit cost from being *bigger at one point in time*. Static.
+- **Learning curve / experience curve (Wright's law)** — lower unit cost from *cumulative output over
+  time*; each doubling of all-time volume cuts unit cost by a roughly constant fraction.
+
+Your "technology advance + mass-production scaling lowers hardware cost" **is** the learning curve. The
+right picture isn't "slide down a fixed U-shaped LRAC" — it's "**the whole LRAC shifts down each year**,"
+and serving heavily today *buys the cumulative volume and engineering reps that pull next year's curve
+down.* That is a genuine reason to operate below *today's* AVC: you're purchasing cost reduction you can't
+get otherwise. The static cost curves simply have no time axis; this is the one-notch generalization.
+
+### 9d. Re-rank: this is a *race to build barriers to entry* — the §4 end-state is the whole bet
+
+Your "become a price maker, then profit" maps exactly onto §4: they are spending now to **build the
+barriers to entry** that §4 says are what let economic profit *survive* — **economies of scale + huge MES**
+(the Boeing/Airbus logic on compute), **network/data effects** (a §3 natural-monopoly flywheel), **switching
+costs / ecosystem lock-in**, and **brand/mindshare**. The recognized name for the play is **penetration
+pricing** (price below cost to take share) and its venture cousin **blitzscaling**; the canonical comp is
+**Amazon** (two decades of deliberately thin profit — the patron saint of "accounting loss ≠ economic
+failure"). The **free tier** is a textbook **loss leader**: a customer-acquisition funnel *and* a
+data-generation engine, monetized through paid API/enterprise (the **versioning** from §3 §8d). In one
+sentence: **they are burning money to manufacture a future §3-style monopoly out of a present that would
+otherwise commoditize.**
+
+### 9e. The failure modes (the part you asked for)
+
+"Sell below cost now, recoup later" is also the exact epitaph of businesses that *died*. The bet has three
+load-bearing assumptions, each able to fail:
+
+1. **"Become a price maker" may never arrive — commoditization.** Pricing power needs *durable,
+   firm-specific* differentiation (§5). If frontier models converge and **open-weight models** stay "good
+   enough," nobody gets a markup and the industry lands in §4's **airline outcome**: real product, fierce
+   competition, *permanent zero economic profit*, money never recouped. Credible open-weight rivals are the
+   single biggest threat to this step. **MoviePass / WeWork** had the burn and never got the moat.
+2. **Cost declines get *competed away*, not banked.** Pure §4 long-run logic: if the learning-curve drop is
+   *industry-wide* (everyone's GPUs cheapen; algorithms diffuse in months), competition passes the savings
+   to **customers**, not **profit**. Lower AVC becomes higher profit *only if the cost edge is proprietary
+   and durable* — much algorithmic progress is not. "AI gets cheaper" ≠ "labs get profitable."
+3. **The Red Queen race on FC.** "FC amortizes once training's done" assumes they *stop* climbing the
+   frontier — competition forbids it, and each generation's training bill has been *rising*. So FC may
+   **recur, larger**, every cycle. Compounded by **elastic demand** (§3: cheaper tokens → far more usage →
+   serving cost balloons — a Jevons effect), "costs will fall" is not the slam-dunk it sounds.
+
+### The synthesis to carry
+
+| Course tool (static) | The generalization the labs are using |
+|---|---|
+| Shutdown: $P<AVC \Rightarrow$ stop **this period** | **NPV over many periods**; capital-market financing relaxes self-funding, so "stop" → "stop only if the discounted trajectory is negative" |
+| Costs are **fixed curves**; AVC = per-token cost | Separate **training (FC, sunk)** from **serving (VC)**, and committed compute (fixed) from avoidable per-token cost; the whole **LRAC shifts down over time** via the **learning curve** |
+| Market structure is **given** | A **race to build barriers to entry** (scale, network, data, brand) — penetration pricing / blitzscaling — to convert today's burn into a future §3 monopoly |
+
+One line: **the frontier labs aren't breaking the shutdown rule — they swapped "maximize this period's
+profit on fixed curves" for "maximize NPV while bending the curves," and bet borrowed money that the
+industry ends in §3's monopoly (durable rents) rather than §4's airline (commoditized, zero economic
+profit).** Your three precision gains: most of the "loss" is **FC / investment**, not below-AVC serving; the
+cost-decline mechanism is the **learning curve** (a moving LRAC, not a slide along a fixed one); and the bet
+pays *only if the resulting cost/quality edge is proprietary and durable* — otherwise §4's long-run
+zero-profit pull eats all of it.
+
+*(Numbers deliberately omitted — lab unit economics and cost-per-token decline rates are unaudited or move
+fast; the structure is the durable lesson. Ask if you want current public estimates with sources.)*
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 So the concepts here carry over to Chinese-language business news and company reports. Most differences are
@@ -519,9 +631,26 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
 | Excess capacity | 过剩产能 | 過剩產能 | |
 | Tacit collusion | 默契合谋 | 默契勾結 | ⚠ collusion = 合谋 (大陆) vs 勾結 (台灣) |
 
+**Strategy & the AI-labs case study (§9)**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Net present value (NPV) | 净现值 | 淨現值 | the multi-period objective; formalized in E08–E09 |
+| Cash flow (operating / financing) | 现金流（经营 / 筹资）| 現金流（營運 / 籌資）| ⚠ 大陆 筹资 vs 台灣 籌資/融資 |
+| Burn rate | 烧钱速度（现金消耗率）| 燒錢速度（現金消耗率）| |
+| Penetration pricing | 渗透定价 | 滲透定價 | price below cost to take share |
+| Loss leader | 亏本引流商品（引流品）| 虧本招徠品 | ⚠ 大陆 引流 vs 台灣 招徠 |
+| Learning / experience curve | 学习曲线 / 经验曲线 | 學習曲線 / 經驗曲線 | Wright's law; a *moving* LRAC |
+| Network effect | 网络效应 | 網路效應 | ⚠ network = 网络 (大陆) vs 網路 (台灣) |
+| Switching cost | 转换成本 | 轉換成本 | |
+| Economic moat | 经济护城河 | 經濟護城河 | durable competitive advantage |
+| Commoditization | 商品化（同质化）| 商品化（同質化）| ⚠ 大陆 同质化 vs 台灣 同質化 |
+| Open-weight model | 开放权重模型 | 開放權重模型 | |
+
 > Recurring genuine splits to memorize (beyond §3's list): **可变↔變動** (variable),
 > **进入壁垒↔進入障礙** (barriers to entry), **盈亏平衡↔損益兩平** (break-even),
-> **垄断竞争↔獨占性競爭** (monopolistic competition), **经营↔營運** (operating).
+> **垄断竞争↔獨占性競爭** (monopolistic competition), **经营↔營運** (operating),
+> **网络↔網路** (network), **引流↔招徠** (loss-leader).
 
 ---
 
@@ -545,9 +674,12 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
 ---
 
 ### What's next
-🔵 **Drafted 2026-06-21.** This **closes Module E01 — Economic Foundations.** You now have the full micro
-toolkit: how individuals and firms decide (§1), how prices coordinate them (§2), how to measure welfare and
-diagnose failure (§3), and where supply itself comes from and how market structure shapes it (§4). The
+✅ **Finalized 2026-06-24.** §9 captures the session Q&A — fitting the **frontier AI labs** into the model
+(the static→dynamic shutdown re-rank, training-FC vs serving-VC, the learning curve as a *moving* LRAC, the
+race-to-build-barriers, and the commoditization/Red-Queen failure modes). This **closes Module E01 —
+Economic Foundations.** You now have the full micro toolkit: how individuals and firms decide (§1), how
+prices coordinate them (§2), how to measure welfare and diagnose failure (§3), and where supply itself comes
+from and how market structure shapes it (§4). The
 natural next step is the jump from the individual market to **the whole economy: Module E02 —
 Macroeconomics**, starting with **§1 — GDP & measuring output** ("what 'the economy grew 2%' really means").
 That's the pivot from *micro* to the indicators behind the headlines — straight at your Goal 1 (understand
