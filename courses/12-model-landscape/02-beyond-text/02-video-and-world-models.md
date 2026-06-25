@@ -5,7 +5,7 @@
 > **Section:** From image diffusion to video — temporal coherence, spacetime patch tokenization
 > (Sora/DiT), flow matching, the unified-model question (Transfusion), and what it means to
 > call a video model a *world simulator*.
-> **Status:** ✅ finalized 2026-06-21. Builds directly on §1 (diffusion, energy landscape,
+> **Status:** ✅ finalized 2026-06-25. Builds directly on §1 (diffusion, energy landscape,
 > score functions, latent diffusion, DiT). Math in LaTeX; real matplotlib plots; key terms
 > glossed in 中文 (大陆/台灣).
 
