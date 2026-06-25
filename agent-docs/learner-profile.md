@@ -4,7 +4,38 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-24 (v17 — **Econ E01 §4 "firms, costs & competition" ✅ finalized; Module E01 done.**
+Last updated: 2026-06-25 (v18 — **M12 Ch2 §2 "video generation & world models" ✅ finalized.** The body
+(temporal-coherence problem → 3D-U-Net era → DiT/Sora spacetime patches → flow matching → Transfusion →
+world models) was pitched at his frontier level and went mostly untouched; the whole Q&A was **one analogy,
+refined twice, in his signature plausible-premise→re-rank mode** (now §10 Applied + a new §4 callout "Is this
+just a better optimizer?"). First framing — *"FM optimizes the route from noise to data, like the optimizer
+in LLM training?"* — fused **two optimizations on two variables**: training (SGD/Adam over weights $\theta$,
+present in DDPM too → not the distinguishing feature) vs sampling (the ODE-integrated *route* over the latent
+$\mathbf{z}_t$); and the deeper correction that **FM doesn't *search* the route — the straight interpolant is a
+*prescribed* target and training is regression *matching* a known velocity**, the only genuine route-optimization
+being rectification→optimal-transport. Second, sharper framing (his real point) — *"the DDPM→FM step reduction
+feels like the SGD→Adam speed-up"* — is the **good** version: the **shared enemy is real** (both are first-order
+local steps along a path, $\mathbf{z}\leftarrow\mathbf{z}+hv_\theta$ / $\theta\leftarrow\theta-\eta\nabla L$,
+whose step size is capped by **curvature/conditioning** — Euler error $\sim h^2\lVert\ddot{\mathbf{z}}\rVert$,
+GD steps $\sim\kappa$ — so *fewer steps ⇐ less curvature*), **but they pull different levers**: Adam = a *smarter
+mover on a fixed path* (Lever 1; diffusion analogue = a better ODE sampler DDIM/DPM-Solver on the same model;
+higher-order solvers ↔ momentum/Newton) whereas FM = a *straighter path that lets a dumb Euler solver win*
+(Lever 2; **reconditioning the problem**, true analogue = **preconditioning / natural gradient**, and since
+rectification's straight paths are the OT geodesics, *"straighten via OT" ↔ "follow the geodesic via natural
+gradient"* is exact). He took the currency caveat (a better optimizer cuts *training* steps free; FM cuts
+*inference* steps but pays extra *training* via rectification). **Signals:** (i) the **optimization↔sampling
+bridge** (Euler-step ≈ gradient-step; solver-swap ≈ optimizer-swap; FM ≈ preconditioning) lands instantly
+because it's stated in the ML vocabulary he owns — keep teaching non-text generative models *through his
+optimization/ML lens*, not just the physics lens. (ii) Same confirmed pattern: a hypothesis that captures a
+**real structural parallel** but needs the **dominant distinction named** (here: which lever — solver vs problem
+geometry); integrates on naming. (iii) Clean track-economy ("finalize here"). **Process/tooling note this
+session:** verified the section's math on the **live GitHub blob with Playwright** (the screenshot is
+authoritative; a DOM-selector check gave a false all-clear) and caught two real render bugs — `\,`/`\;`/`\!`
+leaking literal punctuation (CommonMark strips the backslash) → fixed to `\thinspace`/`\quad`; and the discovery
+that **`\thickspace`/`\medspace` are NOT in GitHub's MathJax build** (they render as literal text — only base-TeX
+`\thinspace`/`\quad`/`\qquad` survive). `agent-docs/authoring-conventions.md` rule 4 corrected accordingly. Next
+in M12 Ch2: §3 audio/speech/TTS · §4 multimodal & representation (CLIP/VLMs, embeddings).).
+Prior: v17 (2026-06-24 — **Econ E01 §4 "firms, costs & competition" ✅ finalized; Module E01 done.**
 He studied the body, then in Q&A drove it straight to a live case he cares about — **frontier AI labs
 (OpenAI/Anthropic) serving below AVC yet not shutting down** — and largely *self-derived* the resolution:
 huge FC+VC, price < per-token cost, kept alive by investors betting on future pricing power + falling
@@ -289,6 +320,22 @@ learning surfaces.
   recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
+- **2026-06-25 — M12 Ch2 §2 (video generation & world models) ✅ finalized.** Second section of the AI
+  thread (non-text models), pitched at his frontier level. Body untouched; the whole Q&A was **one analogy
+  refined twice** — *"DDPM→FM fewer sampling steps ≈ SGD→Adam faster convergence?"* The re-rank (now a §4
+  callout + §10 Applied): the **shared enemy is real** (both = first-order steps along a path whose step size
+  is capped by **curvature/conditioning** → fewer steps ⇐ less curvature) **but two different levers** — Adam
+  is a *smarter mover on a fixed path* (≈ a better ODE sampler, DDIM/DPM-Solver; higher-order ↔ momentum/
+  Newton), whereas FM is a *straighter path that lets a dumb Euler solver win* (≈ **preconditioning / natural
+  gradient**; rectification's straight paths = OT geodesics, so "straighten via OT" ↔ "natural gradient" is
+  exact). FM is **not a better optimizer — it reconditions the problem**. Also corrected the earlier fused
+  framing (training-over-$\theta$ vs sampling-over-$\mathbf{z}$; FM *matches* a prescribed route, doesn't
+  *search* it). **Teach-forward:** non-text generative models land best **through his optimization/ML lens**
+  (the Euler-step≈gradient-step, solver-swap≈optimizer-swap, FM≈preconditioning bridge landed instantly),
+  not only the physics lens. **Tooling:** verified the math on the live GitHub blob with Playwright and fixed
+  two real render bugs (`\,`/`\;`/`\!` → `\thinspace`/`\quad`; discovered `\thickspace`/`\medspace` aren't in
+  GitHub's MathJax) — conventions rule 4 corrected. Next in M12 Ch2: §3 audio/speech/TTS · §4 multimodal
+  (CLIP/VLMs, embeddings).
 - **2026-06-18 — M04 Ch2 §1 (cohesion, coupling & module depth) ✅ finalized.** First decomposition
   section; rotated here off a run of M01 days. Body teaches the *metric* for a good boundary: decomposition
   ≠ smaller files → complexity (change amplification / cognitive load / unknown-unknowns) → cohesion ladder

@@ -269,6 +269,42 @@ stochastic perturbations at each step; the path curves and requires many small c
 matching targets the straight interpolant; the learned velocity is nearly constant along the path,
 so a few large steps suffice.
 
+### Is this just a better optimizer?
+
+A natural question: the jump from DDPM's ~1,000 steps to FM's 4–8 *feels* like the speed-up from
+picking a better optimizer (SGD → Adam) in training. The instinct is half right — and the half that's
+wrong is the half worth pinning down.
+
+**What's right — the shared enemy.** DDPM sampling and gradient descent are the *same kind* of
+process: take a local first-order step along a path — $\mathbf{z} \leftarrow \mathbf{z} + h\thinspace v_\theta$
+for the sampler, $\theta \leftarrow \theta - \eta\thinspace\nabla L$ for the optimizer. In both, the step
+size is capped by **curvature**. An Euler step's error grows like $h^2\thinspace\lVert\ddot{\mathbf{z}}\rVert$,
+so a bending trajectory forces small $h$; gradient descent on an ill-conditioned loss (condition
+number $\kappa$ large = long, narrow, curved valleys) needs $\sim\kappa$ steps to traverse them.
+*Fewer steps ⇐ less curvature* — and that lever is genuinely shared.
+
+**What's wrong — they pull different levers.** There are two distinct ways to cut the step count of
+any follow-a-path process, and these two improvements are *different ones*:
+
+| Lever | What changes | What stays fixed | Diffusion | Optimization |
+|---|---|---|---|---|
+| **1. Smarter mover** | the **solver** (how you step) | the path / landscape | DDIM, DPM-Solver, Heun | SGD → **Adam**, momentum, Newton |
+| **2. Straighter path** | the **problem geometry** (what you traverse) | the solver can stay dumb (Euler) | **Flow Matching** | preconditioning, natural gradient |
+
+SGD → Adam is **Lever 1**: same loss landscape, same minimum — Adam just moves through it more cleverly.
+DDPM → FM is **Lever 2**: it does *not* hand you a smarter sampler; it **reshapes the target
+trajectory to a straight line** so that even plain Euler can take 4–8 huge steps. So the true diffusion
+analogue of "swap SGD for Adam" is **swapping the ODE sampler** (DDIM/DPM-Solver) on the *same trained
+model* — and higher-order solvers ↔ momentum/Newton, both using curvature to step bigger. Flow matching's
+real optimization analogue is **preconditioning / natural gradient**: since rectification's straight
+paths are the optimal-transport geodesics, "straighten the route via OT" ↔ "follow the geodesic via
+natural gradient" is an exact correspondence. FM is not a better optimizer — it is a **reconditioning of
+the problem** so the existing solver barely has to work.
+
+One caveat the analogy hides: a better optimizer cuts **training** steps for free, whereas FM cuts
+**inference** steps and usually *pays more training compute* (rectification re-trains the model) to do
+it. Same "fewer steps" headline, opposite currencies.
+
 ### Flow matching and distillation
 
 The straightness of FM trajectories enables aggressive **distillation**: a large FM model with 8
@@ -496,4 +532,33 @@ The open research question that will drive the field for the next 2–3 years:
 
 ## 10. Applied (Q&A log)
 
-*This section is filled in after the study → Q&A session.*
+*(Q&A session: 2026-06-25.)*
+
+**(10a) "Is flow matching's step reduction like choosing a better optimizer?"** The session ran almost
+entirely on one sharp analogy, refined in two passes. First framing: *"FM optimizes the route from
+noise to data — like the optimizer in LLM training?"* Re-rank: that fuses **two optimizations on two
+variables** — training (SGD/Adam over weights $\theta$, present in DDPM too, so not the distinguishing
+feature) vs sampling (the ODE-integrated *route* over the latent $\mathbf{z}_t$). And FM doesn't *search*
+for the route — the straight interpolant $\mathbf{z}_t=(1-t)\boldsymbol{\epsilon}+t\mathbf{x}$ is a
+**prescribed** target; training is regression *matching* a known velocity, not optimization over paths.
+The only genuine "route optimization" is **rectification → optimal transport**.
+
+Second, sharper framing (his real point): *"the improvement DDPM→FM (fewer steps) feels like the
+improvement SGD→Adam (faster convergence)."* This is the good version, and the re-rank became the new
+**§4 callout** ("Is this just a better optimizer?"): **the shared enemy is real** — both are first-order
+local steps along a path ($\mathbf{z}\leftarrow\mathbf{z}+h\thinspace v_\theta$; $\theta\leftarrow\theta-\eta\thinspace\nabla L$)
+whose step size is capped by **curvature/conditioning** ($h^2\thinspace\lVert\ddot{\mathbf{z}}\rVert$;
+$\kappa$), so *fewer steps ⇐ less curvature* in both. **But they pull different levers:** SGD→Adam is a
+**smarter mover on a fixed path** (Lever 1; diffusion analogue = a better ODE sampler, DDIM/DPM-Solver,
+on the *same* model — and higher-order solvers ↔ momentum/Newton), whereas DDPM→FM is a **straighter path
+that lets a dumb Euler solver win** (Lever 2; reconditioning the problem). FM's true optimization analogue
+is **preconditioning / natural gradient** — and since rectification's straight paths are the OT geodesics,
+*"straighten the route via OT" ↔ "follow the geodesic via natural gradient"* is exact. Caveat he took: a
+better optimizer cuts **training** steps for free; FM cuts **inference** steps and usually *pays extra
+training* (rectification re-trains) to do it — same headline, opposite currencies.
+
+**Signal:** his signature mode again — a plausible hypothesis capturing a real structural parallel
+(curvature caps step count), needing the *dominant distinction* named (which lever: solver vs problem
+geometry); integrated instantly. The optimization↔sampling bridge (Euler step ≈ gradient step;
+solver-swap ≈ optimizer-swap; FM ≈ preconditioning) lands cleanly because it's stated in the ML
+vocabulary he already owns.
