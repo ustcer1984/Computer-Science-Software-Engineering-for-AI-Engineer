@@ -8,9 +8,12 @@
 > the **$GDP = C + I + G + NX$** identity you'll meet in every release, the **nominal-vs-real** distinction
 > behind "the economy grew 2%," and — just as important — **what GDP misses** so you read the headline with
 > the right skepticism.
-> **Status:** 🔵 drafted 2026-06-24 — body ready to study; the session-Q&A section (§9) gets added after we
-> talk it through, as in the E01 sections. Math in LaTeX, quantitative relationships drawn as real curves,
-> key terms glossed in 中文 (大陆/台灣), per
+> **Status:** 🔵 in progress — body drafted 2026-06-24; **§9 captures the live session Q&A (2026-06-26):**
+> the built-then-resold-house edge case (only new production counts; resale = capital gain + the agent's
+> service margin; the wealth-vs-GDP / stock-vs-flow corollary), and "GDP can be easily manipulated" —
+> calibrated into three tiers (definitional/rebasing, honest noise, fraud), Goodhart's-Law / reward-hacking
+> framing, and the cross-checks (three-way reconciliation, nighttime lights) that keep it honest. Math in
+> LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
@@ -388,6 +391,94 @@ frontier AI labs in E01 §4.
 
 ---
 
+## 9. Applied — from our session Q&A (2026-06-26)
+
+Two threads from working through the section: a precise edge case on the "production, not transactions" rule,
+and a sharp instinct about how trustworthy the number really is.
+
+### 9a. The house that's built, then immediately resold — what does GDP get?
+
+**Your question:** a house is built and sold new for \$1.0M, then resold the same year for \$1.1M. Is the
+contribution \$1.0M or \$1.1M?
+
+**Answer: \$1.0M, not \$1.1M.** Walk the two events through the §1 rule:
+
+1. **Built and sold new for \$1.0M** — genuine *new production* this year. It enters GDP as **residential
+   investment** (the $I$ bucket, *not* $C$). **+\$1.0M.** ✓
+2. **Resold for \$1.1M** — the house is now an **existing asset**; the sale just moves it between people, so
+   the \$1.1M itself adds **\$0**. The seller's \$0.1M gain is a **capital gain** — a transfer of value, not
+   production.
+
+> **The one footnote that makes it exact.** The resale isn't *entirely* invisible — but only the
+> **newly-produced services** wrapped around it count, never the asset's price: the **agent's commission**,
+> **legal/conveyancing fees**, mortgage origination. If the agent took 2% on the \$1.1M (≈ \$22k), that \$22k
+> is in GDP. The \$1.1M is not. Same logic as a used car: the car doesn't re-count, the dealer's markup does.
+
+> **The corollary worth keeping.** This is *why* a housing boom can make people feel far richer (rising
+> **wealth** — a *stock*) while barely moving **GDP** (a *flow* of new production) — the **flow-vs-stock**
+> distinction from §1's physics lens, now with money on it. Soaring resale prices inflate the value of the
+> *existing* housing stock, not the year's output. Counting the \$1.1M resale would be double-counting the
+> house — exactly what the final-goods / value-added rule exists to prevent.
+
+### 9b. "GDP can be easily manipulated" — calibrating a correct instinct
+
+You're right, and it's a sharper instinct than most — but the precise statement is: **GDP is gameable
+roughly in proportion to how little institutional independence sits behind it.** Three tiers, least to most
+dishonest:
+
+1. **Legitimate-but-flattering definitional choices (no fraud, big moves).**
+   - **Base-year rebasing:** **Nigeria (2014)** moved its base year 1990 → 2010 (capturing telecoms,
+     Nollywood) and GDP jumped **~89% overnight** — Africa's largest economy without a single extra naira
+     *that day*. India's 2015 methodology change similarly lifted its growth path and is still disputed.
+   - **Scope choices:** under EU rules (ESA 2010), **Italy and the UK began counting illegal drugs and
+     prostitution** in GDP (~+1% for Italy). Whether to capitalize R&D, how to impute owner-occupiers' rent —
+     defensible, but each moves the headline.
+2. **Honest measurement noise.** The informal economy, government output valued *at cost*, thin data — all
+   *estimated*, and estimates get **revised**. The first "advance" print in the news is provisional. *Never
+   trust a single GDP print too hard.*
+3. **Outright gaming and fraud (your "easily").**
+   - **The deflator channel — the subtle, powerful one.** Since $\text{real} = \text{nominal}/\text{deflator}$,
+     **understating inflation automatically overstates real growth.** **Argentina (2007–2015)** faked its CPI
+     so badly the **IMF formally censured it in 2013** (the first ever) — the GDP fraud rode in on the
+     *inflation* fraud.
+   - **Sub-national fabrication rewarded by promotion.** In **China**, provincial GDPs summed to *more* than
+     the national total for years; **Liaoning admitted fabricating data 2011–2014.** Premier Li Keqiang
+     reportedly trusted **electricity use, rail freight, and bank loans** instead (the "Li Keqiang index").
+   - **Composition gaming — produce measured-but-useless output.** **Roads to nowhere and ghost cities** are
+     *real* construction → *real* GDP, but no welfare. The cleanest link back to §5's **GDP ≠ welfare**.
+
+> **The law underneath all of it — Goodhart's Law:** *"when a measure becomes a target, it ceases to be a
+> good measure."* GDP is a target (elections, promotions), so it gets gamed. The Soviet nail-factory parable
+> is the cartoon: reward a factory on *tonnage* → one giant useless nail; on *count* → a million tiny useless
+> ones. Hit the metric, miss the point.
+
+> **Physics/ML lens — this is reward hacking.** GDP is a **proxy reward** for national welfare; optimize hard
+> against a proxy and policy diverges from the true objective — **specification gaming** in RL. Ghost cities
+> are an agent maximizing measured reward (GDP) while the true objective (well-being) flatlines. Same failure
+> mode you know from ML, different domain.
+
+**Why it *isn't* trivially fakeable in good systems** (the counterweight, so you don't over-discount honest
+numbers):
+
+- **Independent statistical agencies** (US BEA, UK ONS, Eurostat, Singapore's SingStat) with legal
+  independence and IMF data standards — fabrication is illegal and career-ending.
+- **The three-approaches reconciliation (§2) is a built-in audit:** fake one of production/expenditure/income
+  and the **statistical discrepancy balloons** — a visible tell.
+- **External proxies catch liars:** economists cross-check GDP against **satellite nighttime lights**,
+  electricity, freight, tax receipts. Martínez (2022) found **authoritarian regimes overstate GDP growth by
+  ~35%** versus what their night-lights imply. Lights are hard to fake from orbit.
+
+| The instinct | The calibration to carry |
+|---|---|
+| "GDP can be easily manipulated" | True **in proportion to the lack of institutional independence**; a *single print* from a regime *rewarded for the number* is the weakest case |
+| It's just one number | It's **three numbers that must reconcile** (production = expenditure = income) — fabrication leaves a trail |
+| The headline is the truth | **Cross-check the trio** (high real growth + implausibly low inflation ⇒ suspect the deflator), prefer **per-capita / GNI**, treat advance estimates as provisional, and ask **"what's the composition?"** (productive investment vs ghost cities vs disaster-rebuild) |
+
+**One line to keep:** GDP is most trustworthy as a **trend from an independent agency, cross-checked against
+physical proxies**, and least trustworthy as a **single headline print from a regime rewarded for it.**
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 So the concepts carry over to Chinese-language economic news and statistics releases. Most differences are
@@ -445,6 +536,18 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over — and this se
 | Recession | 经济衰退 | 經濟衰退 | falling real GDP (E02 §4) |
 | Standard of living | 生活水平 | 生活水準 | ⚠ 大陆 **水平** vs 台灣 **水準** |
 
+**Manipulation & data quality (§9)**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Capital gain | 资本利得（资本收益）| 資本利得 | a transfer, *not* production — excluded from GDP |
+| Base-year rebasing | 基期轮换（重订基期）| 基期輪換（重訂基期）| Nigeria 2014: +~89% overnight |
+| Shadow / informal economy | 影子经济 / 非正规经济 | 地下經濟 / 非正式經濟 | ⚠ 大陆 **影子/非正规** vs 台灣 **地下/非正式** |
+| Statistical agency | 统计局 | 統計處（主計總處）| ⚠ TW national body = 行政院主計總處 |
+| Data fabrication | 数据造假 | 數據造假 | China/Liaoning, Argentina INDEC |
+| Goodhart's Law | 古德哈特定律 | 古德哈特定律 | measure becomes target → ceases to measure well |
+| Nighttime lights (proxy) | 夜间灯光（卫星）| 夜間燈光（衛星）| ⚠ satellite 卫星 (大陆) vs 衛星 (台灣) |
+
 > Recurring genuine splits to memorize (beyond E01's list): **总值↔毛額** (the "Gross … Product"),
 > **宏观↔總體** (macro), **微观↔個體** (micro), **增长↔成長** (growth), **名义↔名目** (nominal),
 > **实际↔實質** (real), **增加值↔附加價值** (value added), **收入↔所得** (income),
@@ -468,14 +571,19 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over — and this se
   (https://www.singstat.gov.sg, https://www.mti.gov.sg); United States — **BEA** GDP news release
   (https://www.bea.gov); cross-country — **World Bank** GDP, GDP-per-capita and **GNI** data
   (https://data.worldbank.org) — the source behind the GDP-vs-GNI figure.
+- **On manipulation & data quality (§9):** Luis R. Martínez, *"How Much Should We Trust the Dictator's GDP
+  Growth Estimates?"* (J. Political Economy, 2022) — the nighttime-lights cross-check showing authoritarian
+  overstatement. https://www.journals.uchicago.edu/doi/10.1086/720458 · Background on **Goodhart's Law** and
+  the **Li Keqiang index** (electricity, rail freight, bank loans) for quick orientation.
 
 ---
 
 ### What's next
-🔵 **Drafted 2026-06-24 — body ready to study.** This opens **Module E02 — Macroeconomics** and goes
-straight at **Goal 1 (understand economy/business news):** you can now build GDP from scratch, count it three
-equivalent ways, read the $C+I+G+NX$ identity, separate real from nominal growth, and name what the number
-hides. The session-Q&A section (**§9**) will be added after we talk it through, as in the E01 sections —
-bring a real GDP release (§8) or a news headline and we'll run the model on it. The natural next step is
-**E02 §2 — Inflation & price indices**, which picks up the exact thread this section left open (the deflator,
-real-vs-nominal, "why a little inflation is the target") and is the other half of reading any growth number.
+🔵 **Body drafted 2026-06-24; §9 session Q&A added 2026-06-26.** This opens **Module E02 — Macroeconomics**
+and goes straight at **Goal 1 (understand economy/business news):** you can now build GDP from scratch, count
+it three equivalent ways, read the $C+I+G+NX$ identity, separate real from nominal growth, name what the
+number hides — and (§9) place a tricky edge case (the built-then-resold house) and read GDP with the right
+skepticism about manipulation. The natural next step is **E02 §2 — Inflation & price indices**, which picks
+up the exact thread this section left open (the deflator, real-vs-nominal, "why a little inflation is the
+target") and is the other half of reading any growth number. The §9 deflator-channel point — that faking
+inflation is how you fake real GDP — is a direct on-ramp to it.
