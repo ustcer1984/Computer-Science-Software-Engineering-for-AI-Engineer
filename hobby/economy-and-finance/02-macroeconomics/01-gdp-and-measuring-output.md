@@ -8,11 +8,14 @@
 > the **$GDP = C + I + G + NX$** identity you'll meet in every release, the **nominal-vs-real** distinction
 > behind "the economy grew 2%," and — just as important — **what GDP misses** so you read the headline with
 > the right skepticism.
-> **Status:** 🔵 in progress — body drafted 2026-06-24; **§9 captures the live session Q&A (2026-06-26):**
-> the built-then-resold-house edge case (only new production counts; resale = capital gain + the agent's
-> service margin; the wealth-vs-GDP / stock-vs-flow corollary), and "GDP can be easily manipulated" —
+> **Status:** ✅ finalized 2026-06-26. Body drafted 2026-06-24; **§9 captures the live session Q&A:**
+> (a) the built-then-resold-house edge case (only new production counts; resale = capital gain + the agent's
+> service margin; the wealth-vs-GDP / stock-vs-flow corollary); (b) "GDP can be easily manipulated" —
 > calibrated into three tiers (definitional/rebasing, honest noise, fraud), Goodhart's-Law / reward-hacking
-> framing, and the cross-checks (three-way reconciliation, nighttime lights) that keep it honest. Math in
+> framing, and the cross-checks (three-way reconciliation, nighttime lights) that keep it honest; (c) China's
+> growth target is *real* (not nominal) — with the negative-deflator twist that makes nominal < real now; and
+> (d) why +3% can be a crisis for China yet +1% is fine for Singapore (the break-even/treadmill growth rate,
+> convergence, and China's declining potential). Math in
 > LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -393,8 +396,9 @@ frontier AI labs in E01 §4.
 
 ## 9. Applied — from our session Q&A (2026-06-26)
 
-Two threads from working through the section: a precise edge case on the "production, not transactions" rule,
-and a sharp instinct about how trustworthy the number really is.
+Four threads from working through the section: a precise edge case on the "production, not transactions" rule
+(9a), a sharp instinct about how trustworthy the number really is (9b), and two on reading China's headline
+growth — what the target actually measures (9c) and why a number that's still *positive* can be a crisis (9d).
 
 ### 9a. The house that's built, then immediately resold — what does GDP get?
 
@@ -477,6 +481,73 @@ numbers):
 **One line to keep:** GDP is most trustworthy as a **trend from an independent agency, cross-checked against
 physical proxies**, and least trustworthy as a **single headline print from a regime rewarded for it.**
 
+### 9c. When China targets "around 5% growth," is that nominal or real?
+
+**Real GDP — always.** The annual target the Premier announces in the **Government Work Report (政府工作报告)**
+at the "Two Sessions" (两会) is **real, inflation-adjusted GDP growth**, reported **year-on-year (同比)**. This
+is the universal convention from §4: *any* government or agency saying "GDP grew X%" means **real** growth —
+nominal is essentially never the headline, because it's contaminated by inflation.
+
+Two things make China the instructive case:
+
+- **It's a *target*, not just a forecast** — politically set at the start of the year, and the realized number
+  then tends to land suspiciously close to it. That's the §9b **Goodhart / credibility** issue in the flesh:
+  read "around 5%" as *the number they intend to produce*, cross-checked against physical proxies.
+- **Right now China is the rare economy where nominal < real.** Normally nominal ≈ real + inflation, and with
+  positive inflation **nominal growth exceeds real.** But in **2023–24 China's GDP deflator turned slightly
+  negative** (mild economy-wide deflation), so the ordering flipped:
+  $$\text{nominal growth} \approx \text{real growth} + \text{(negative) deflator} \quad<\quad \text{real growth},$$
+  giving roughly **5.0% real but only ~4.2% nominal** in 2024. This matters because revenues, tax receipts,
+  and debt-to-GDP all track **nominal** GDP (§9b's deflator channel, §9d's debt point) — so a falling deflator
+  makes the economy *feel* materially weaker than the flattering 5% real headline. A clean on-ramp to **§2
+  (inflation & price indices).**
+
+### 9d. Why is +3% a *crisis* for China when Singapore is fine at +1%?
+
+Your instinct ("even +3% is still growth — why is it bad?") points at the single most important reframe in
+growth economics: **judge growth against the rate the economy needs *just to stand still*, never against
+zero.** Positive-but-below-that is a **"growth recession"** — it feels like a downturn (rising joblessness,
+idle capacity) while GDP still rises.
+
+> **The gem — the break-even (employment-stabilizing) growth rate.** An economy must grow by
+> $$\text{break-even growth} \approx \text{labour-force growth} + \text{productivity growth}$$
+> just to keep unemployment **flat** — it has to absorb new workers *and* offset the fact that each worker
+> produces more each year (so the same output needs fewer of them). Picture a **treadmill**: break-even is the
+> belt speed; you run that fast merely to stay in place.
+
+- **China's belt runs fast (~5%):** rapid catch-up productivity gains plus (historically) a growing,
+  urbanizing workforce. At **+3% China runs *below* belt speed → it slides backward → unemployment rises**,
+  even with GDP up. +3% is a **2-point shortfall below trend** — the felt-equivalent of a developed economy
+  going from +1% to **−1%**, an outright recession.
+- **Singapore / US / Japan's belt barely moves (~0–1.5%):** flat or shrinking workforces, slow *frontier*
+  productivity. So **+1% is at or above their break-even → stable employment, no crisis.** Singapore looks
+  "low" only because it's already rich and at the technological frontier.
+
+**Why China's potential is structurally high:** **convergence (catch-up) growth** — poorer economies grow
+faster by copying existing technology and shifting labour out of low-productivity farming; a frontier economy
+has already done that and can only grow at the slow pace of *inventing* new productivity.
+
+**Why a shortfall becomes a *crisis* specifically in China — three amplifiers:**
+1. **An investment/property-heavy model with momentum** (recall the composition figure: investment ≈ 42% of
+   GDP, much of it property/construction). The model needs continuous high growth to justify continuous
+   investment; when growth slows, investment *falls*, cutting growth further — a vicious circle that idles
+   construction workers and craters local-government land revenue.
+2. **High debt serviced from *nominal* GDP** — the **$g$ vs $r$** condition: if growth $g$ falls below the
+   interest rate $r$, debt-to-GDP snowballs and defaults rise (Evergrande, LGFVs). And with the negative
+   deflator (9c), *nominal* growth is even lower than the real headline, squeezing debtors harder.
+3. **A social-contract redline** — rapid rising living standards in exchange for one-party rule makes high
+   growth a *political* anchor. Hence a round-number redline that has stepped down over time: **"保八"
+   (bǎo bā, "protect 8%")** pre-2012 → ~6.5% → ~5% now.
+
+> **The kicker:** the redline is a **moving target.** China's *potential* growth is itself falling — a
+> shrinking workforce (demographics), urbanization largely peaked, and **diminishing returns to investment**
+> (only so many useful bridges before you're building §9b's ghost cities). That's *why* the line drifted
+> 8% → 6% → 5%, and most economists expect it to keep falling toward developed-country rates.
+
+**One line to keep:** it's not "+3% growth" — it's "+3% **when you need ~5% just to hold employment
+steady.**" This is the heart of **§4 (the business cycle)**: potential vs actual output, the **output gap**,
+and **Okun's law** linking the growth-shortfall to unemployment.
+
 ---
 
 ## Key terms — English · 中文（中国大陆 / 台灣）
@@ -548,6 +619,19 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over — and this se
 | Goodhart's Law | 古德哈特定律 | 古德哈特定律 | measure becomes target → ceases to measure well |
 | Nighttime lights (proxy) | 夜间灯光（卫星）| 夜間燈光（衛星）| ⚠ satellite 卫星 (大陆) vs 衛星 (台灣) |
 
+**Growth, potential & the China case (§9c–9d)**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Year-on-year / quarter-on-quarter | 同比 / 环比 | 年增率 / 季增率 | ⚠ 大陆 **同比/环比** vs 台灣 **年增率/季增率** |
+| Government Work Report | 政府工作报告 | 政府工作報告 | where the annual real-growth target is set (两会) |
+| Potential / trend growth | 潜在增长率 | 潛在成長率 | the "treadmill speed" |
+| Output gap | 产出缺口 | 產出缺口 | actual − potential output |
+| Growth recession | 增长型衰退 | 成長型衰退 | positive but below-trend growth |
+| Convergence / catch-up growth | 趋同 / 追赶式增长 | 趨同 / 追趕式成長 | why poorer economies grow faster |
+| "Protect 8% / 5%" (redline) | 保八 / 保五 | 保八 / 保五 | political growth floor over time |
+| Demographic dividend | 人口红利 | 人口紅利 | its fading lowers potential growth |
+
 > Recurring genuine splits to memorize (beyond E01's list): **总值↔毛額** (the "Gross … Product"),
 > **宏观↔總體** (macro), **微观↔個體** (micro), **增长↔成長** (growth), **名义↔名目** (nominal),
 > **实际↔實質** (real), **增加值↔附加價值** (value added), **收入↔所得** (income),
@@ -579,11 +663,12 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over — and this se
 ---
 
 ### What's next
-🔵 **Body drafted 2026-06-24; §9 session Q&A added 2026-06-26.** This opens **Module E02 — Macroeconomics**
-and goes straight at **Goal 1 (understand economy/business news):** you can now build GDP from scratch, count
-it three equivalent ways, read the $C+I+G+NX$ identity, separate real from nominal growth, name what the
-number hides — and (§9) place a tricky edge case (the built-then-resold house) and read GDP with the right
-skepticism about manipulation. The natural next step is **E02 §2 — Inflation & price indices**, which picks
-up the exact thread this section left open (the deflator, real-vs-nominal, "why a little inflation is the
-target") and is the other half of reading any growth number. The §9 deflator-channel point — that faking
-inflation is how you fake real GDP — is a direct on-ramp to it.
+✅ **Finalized 2026-06-26.** This opens **Module E02 — Macroeconomics** and goes straight at **Goal 1
+(understand economy/business news):** you can now build GDP from scratch, count it three equivalent ways, read
+the $C+I+G+NX$ identity, separate real from nominal growth, and name what the number hides. **§9** captures the
+live session — the built-then-resold-house edge case, GDP manipulability (calibrated, not cynical), and the
+two China threads (the target is *real*; why +3% can still be a crisis). Several deliberate cliffhangers feed
+the rest of the module: the **deflator / real-vs-nominal** thread and the negative-deflator twist point
+straight at **§2 — Inflation & price indices** (the natural next step); the **break-even / potential-growth /
+output-gap / Okun's-law** material from §9d is the seed of **§4 — The business cycle**; and the
+unemployment-vs-growth link opens **§3 — Unemployment & the labour market.**
