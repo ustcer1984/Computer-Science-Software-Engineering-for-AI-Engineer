@@ -9,8 +9,10 @@
 > concurrency** (why `TaskGroup` exists and what the unstructured `go`-statement world cost us), and — the centrepiece, and the direct
 > cash-in of your 06-16 session — **cancellation**: how it's an *exception injected into a parked coroutine*, why it only lands at an
 > `await`, why `CancelledError` is a `BaseException` you must re-raise, and how `asyncio.timeout` is built entirely on top of it.
-> **Status:** 🔵 **DRAFT — 2026-06-25.** Body pitched one level past §1, assuming you own the §1 GIL model and the Ch1 §2 async-stack
-> model. We'll Q&A, then I'll finalize to fit how you actually think and capture the session in §11.
+> **Status:** ✅ **finalized 2026-06-25.** The body held at your level and went untouched — you drove a single, sharp Q&A thread into the
+> §5 cancellation mechanism via check-question 8.5 (a timeout wrapped around a non-yielding CPU loop). This time the hypothesis wasn't
+> mis-ranked — you named the **dominant** reason correctly ("the timeout will never fire"), and we made it precise into the **two
+> independent reasons** it can't work. §10 captures it.
 
 **Estimated study time:** 2–3 hours including reflection.
 
@@ -523,11 +525,43 @@ visible), and (c) (the timeout that can't fire).
 
 ---
 
-## 10. Applied — captured from our session
+## 10. Applied — captured from our 2026-06-25 session
 
-*(Placeholder — this is where I'll capture the threads you drive in our Q&A, the same way §9 of §1 captured the eval-pipeline session.
-Likely seeds, given where §1 left off: cancellation during cleanup in the arena's shutdown path; whether your turn-handler has serial
-`await`s that should be a `gather`; and the `TaskGroup`-vs-harvest choice for any fan-out in your real code.)*
+A short, clean session: the body held at your level and you took the whole exchange into **one question — check-question 8.5** — *a
+coroutine stuck in `while True: x += 1` (no `await`), wrapped in `asyncio.timeout(5)`: does the timeout fire?* You committed to a
+hypothesis — **"this timeout will never fire"** — and, notably, this time it wasn't your usual sharp-but-mis-ranked guess: you'd named the
+**dominant** mechanism correctly. The value was in sharpening *why* into two layers.
+
+### 10a. The confirmation, and the two independent reasons (the §5 mechanism, made precise)
+
+Your conclusion is right: **the timeout never fires; the program hangs forever** (only `Ctrl-C` breaks it). What we pinned down is that
+**two separate things** each independently doom it — and you'd zeroed in on the first, which is the one that actually decides the outcome:
+
+- **Reason 1 — the dominant one: the loop itself is wedged, so the timer can never run.** The crux you spotted: `asyncio.timeout(5)` is
+  **not a separate watchdog thread** — it's a timer scheduled *on the same event loop* (`loop.call_at(deadline, …)`, whose callback calls
+  `task.cancel()`). Your `while True` runs *inside* the Task's `__step` callback; `coro.send(None)` enters the loop and **never returns**,
+  so `__step` never returns, so `_run_once` never completes its tick (§1), so the loop never reaches the step where it would fire the
+  due timer. The deadline passes unnoticed in the `_scheduled` heap and **`task.cancel()` is never even called.** The timeout machinery is
+  frozen *on the very loop it's trying to interrupt* — this is the §1/§6 "blocking the loop" footgun in its purest form.
+- **Reason 2 — independent, would bite even if Reason 1 didn't: cancellation needs an `await` to land.** Granting Reason 1 away (say
+  `cancel()` were somehow called from another thread), cancellation is an exception **injected at the next resume-from-`await`**
+  (`coro.throw(CancelledError)`, §5). With no suspension point anywhere in the coroutine, there's nowhere to deliver it — the CPU loop is
+  *intrinsically* uncancellable. So the work is doubly unreachable: the cancel is never **sent** (R1) and would have nowhere to **land**
+  (R2).
+
+The `Ctrl-C` exception to the rule is the tell that it's specifically the *Python/loop* level that's stuck: `SIGINT` is delivered at the C
+level and raises `KeyboardInterrupt` into the running bytecode without the loop's cooperation, which is exactly why it works when the
+timeout can't.
+
+> **The keeper:** *a timeout protects against an `await` that hangs (silence on I/O — your 9b case), never against CPU-bound code that
+> refuses to yield.* The two failure modes look identical from outside ("it's stuck") but have opposite fixes: silence → wrap the `await`
+> in `asyncio.timeout`; a non-yielding hot loop → there's nothing for a timeout to grab, so the fix is to get the work **off the loop**
+> (`run_in_executor` → a process pool, §1 §4). Diagnosing "stuck" therefore starts with one question — *is it parked at an `await`, or
+> burning CPU with no `await`?* — and only the first is a timeout's job.
+
+*(Closing note: this is the same boundary as your 06-16 9b re-rank, seen from the other side. There you separated "a task parked on I/O"
+(recoverable, the loop is fine) from "a blocking call freezing the loop" (everyone starves). 8.5 is the second case taken to its limit —
+the thing freezing the loop is also the thing the timeout would need the loop to interrupt, so the timeout joins the victims.)*
 
 ---
 
@@ -557,9 +591,11 @@ Likely seeds, given where §1 left off: cancellation during cleanup in the arena
 
 ---
 
-### What's next (after we finalize)
-This section drops one level below §1 into the loop, the task model, and cancellation — and cashes the 9b timeout keeper into its
-mechanism (§5). Natural follow-ons, your call at the boundary:
+### What's next
+✅ **Finalized 2026-06-25.** This section dropped one level below §1 into the loop, the task model, and cancellation — and cashed the 9b
+timeout keeper into its mechanism (§5). §10 captures the 8.5 thread: the timeout-on-a-CPU-loop, your correct "never fires," and the
+two-independent-reasons sharpening (loop wedged · cancellation needs an await). Diagrams verified, links live; `courses/plan.md` Ch3 row
+flips §2 to ✅. Natural follow-ons, your call at the boundary:
 - **Ch3 §3 — Synchronization & races** (locks, `queue.Queue`/`asyncio.Queue`, deadlock, the data races free-threading exposes — §1 §5's
   "now it's your job"). The third leg of the chapter; pairs with the shared-mutable-state warning.
 - **Ch3 §4 — *(if we add it)* the producer/consumer & backpressure patterns** that the queue primitives enable — straight into M07 scaling
