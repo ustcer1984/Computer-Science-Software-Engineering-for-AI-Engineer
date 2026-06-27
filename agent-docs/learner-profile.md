@@ -4,7 +4,43 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-25 (v18 — **M12 Ch2 §2 "video generation & world models" ✅ finalized.** The body
+Last updated: 2026-06-28 (v19 — **reading #7: databases — storage engines & isolation ✅ finalized.**
+Prepared as the deliberate swing out of AI (storage + concurrency foundations, ahead of M02/M03). He read
+both topics but **left §2 (isolation/MVCC/snapshot-vs-serializable/write-skew) for course M03 Ch2 — explicitly
+flagging it as hard "without a database-design background."** That confirms the standing CS-fundamentals/DB-design
+gap and sets the sequence: **M03 Ch1 (relational model) must precede Ch2 (transactions/isolation)** or the
+isolation material won't land. He drove the **entire** session off §1's storage-engine framing, in three hops, into
+a **real production architecture decision** — his signature abstract→own-system move. Threads (now the reading's
+"What we worked out"): **(1) "what data structure suits a graph DB?"** — keystone re-rank: splits into *storage
+engine* (still B-tree/LSM underneath) vs *access method* (the real answer: **index-free adjacency** = embedded
+pointer-based adjacency lists; Neo4j = fixed-size records + doubly-linked relationship lists; hop = $O(1)$/$O(\deg)$
+local pointer-chase vs relational hop = JOIN = B-tree probe $O(\log n)$ growing with *total* $n$); plus the
+**adjacency-matrix/GraphBLAS SpMV** view for whole-graph analytics (landed via his linear-algebra fluency); caveats
+he took = still needs a B-tree at the entry point, and pointer-chasing = random access → RAM-bound (his working-set/
+OOM point). **(2) "so Postgres can be a graph DB — edge-tables = simulating a graph on relational?"** — his instinct
+**correct and well-ranked on the first try** (edge table IS an adjacency list as rows; hop = JOIN = index probe;
+recursive CTE = the simulation); keystone he took: **a graph query *language* ≠ a graph *access method*** (Apache AGE
+= openCypher on Postgres tables → still JOIN-per-hop, no index-free adjacency); "**has relationships ≠ needs a graph
+DB**"; SQL/PGQ (SQL:2023) + GQL (ISO 2024) standardized graph-over-relational. **(3) the payoff — his aquarium
+`nexus` Neptune-vs-RDS cost call.** Hypothesis ("use the existing RDS only, to save cost") was **right and stronger
+than he framed it.** Repo dive (he asked): **Neptune Serverless** (openCypher) beside a **Postgres 17** RDS; the
+`nexus` knowledge graph = ~8 relationship types and **every query a fixed-depth star/chain (1–3 hops)** — only one
+variable-length query (`SUPERSEDES*0..`, a short version chain → trivial recursive CTE). Verdict: consolidate —
+Neptune Serverless floors at 1 NCU and never scales to zero (~$100+/mo per env) vs ≈$0 marginal on the RDS — but the
+**bigger win is removing the RDS↔Neptune dual-write** (a two-store consistency problem = §2's isolation theme
+returning *applied*, so §2 wasn't wasted). Steelman/caveats given (roadmap = real knowledge graph / GraphRAG?,
+schema churn, migration cost); wrote him a **discussion memo in `temp/`** (gitignored) with the full relational
+target schema + recursive-CTE replacement, for the colleague discussion. **Signals:** (i) **confirmed again: he
+metabolizes new CS/systems theory by immediately applying it to his own production stack** (here aquarium; before:
+the eval pipeline, vLLM ops) — teach DB/systems through his real systems + a real decision, not abstractly.
+(ii) **his hypotheses are sharpening** — both the "edge-table = relational simulation" and "just use the RDS" calls
+were correctly ranked first-try, needing *naming* (language-vs-access-method; the dual-write as the real prize) not a
+dominant-mechanism re-rank. (iii) **new gap named by him: database design / relational modeling** — the genuine next
+DB step (M03 Ch1→Ch2). (iv) **strong cost-aware / consolidation reasoning** — he intuited the "just use Postgres"
+thesis unprompted; distributed-systems strength generalizing to system-design/cost. (v) clean track-economy
+("finalize here"). **Next:** M03 Ch1 (relational model) → Ch2 (transactions/isolation, with him explicitly), or
+continue the reading rotation.).
+Prior: v18 (2026-06-25 — **M12 Ch2 §2 "video generation & world models" ✅ finalized.** The body
 (temporal-coherence problem → 3D-U-Net era → DiT/Sora spacetime patches → flow matching → Transfusion →
 world models) was pitched at his frontier level and went mostly untouched; the whole Q&A was **one analogy,
 refined twice, in his signature plausible-premise→re-rank mode** (now §10 Applied + a new §4 callout "Is this

@@ -1,4 +1,4 @@
-# Daily Reading — 2026-06-26  🔵 draft (awaiting Q&A)
+# Daily Reading — 2026-06-26  ✅ finalized
 
 **Today's two readings (one theme — "what your database actually does with your bytes" — two altitudes):**
 1. **How a database stores your data on disk — B-tree vs LSM-tree.** The mechanism, one layer under SQL. Why PostgreSQL/MySQL update *in place* (a B-tree) while Cassandra/RocksDB/ScyllaDB/TiKV *append and merge* (an LSM-tree), and the single law that makes this a permanent trade-off rather than a solved problem: the **RUM conjecture** — you can optimize *read*, *update*, or *space*, but only two at once.
@@ -176,9 +176,29 @@ Databases have several genuine Mainland/Taiwan term splits (not just simplified-
 
 ---
 
-## What we worked out — the thread you drove
+## What we worked out — the thread you drove (read this first on review)
 
-*(To be filled after our Q&A, then this reading is finalized — as with prior readings, this section is the durable record. Read it first on review.)*
+You read both topics, and **parked §2 (isolation levels / MVCC / write skew / serializability) for course M03 Ch2** — you flagged it as hard *without a database-design background*, which is the right call: isolation only makes sense once the relational model (M03 Ch1) is in place, so we'll ground it there. Instead you took §1's storage-engine framing and drove it, in three hops, all the way to a **real production architecture decision** — your signature move (abstract idea → your own system).
+
+### 1. "What data structure suits a graph database?" — it's two layers, not one
+The keystone re-rank: the question splits into **storage engine** vs **access method**, and conflating them is the usual trap.
+- **Storage engine** (how bytes hit disk): graph DBs don't invent a third engine — underneath they still use **B-tree or LSM** (§1 holds).
+- **Access method** (how you get from a node to its neighbours): *this* is the real answer — **index-free adjacency** (无索引邻接 / 無索引鄰接). A native graph DB (Neo4j) stores each node with **direct physical pointers to its adjacent edges** — an adjacency list persisted as **fixed-size records + doubly-linked relationship lists**, so a hop is pointer-chasing at $O(1)$/$O(\text{degree})$, *independent of total graph size*. Contrast the relational hop: a `JOIN` = a B-tree index probe at $O(\log_{b} n)$ that grows with the **whole** dataset $n$, and compounds over depth × fan-out.
+- The second data structure worth knowing (landed well via your linear-algebra fluency): the **adjacency matrix + sparse matrix–vector multiply (GraphBLAS)** — BFS as iterated SpMV — which suits *whole-graph analytics* where pointer-chasing suits *local OLTP traversals*. Same RUM-flavoured "no structure wins everything."
+- Two caveats you took: index-free adjacency still needs a **B-tree at the entry point** (find the start node by property), and pointer-chasing is **random access** → it loves RAM and degrades when the hot subgraph spills past memory (your working-set/OOM point resurfacing).
+
+### 2. "So Postgres can be a graph DB — edge-tables = simulating a graph on relational tables?" — your instinct was right
+Confirmed and sharpened (and notably, **correctly ranked on the first try** — this needed naming, not a re-rank). An `edges(from_id, to_id, …)` table **is** an adjacency list stored as rows; a hop = a `JOIN` = an index probe; a `WITH RECURSIVE` CTE is the variable-depth "simulation." The keystone distinction you took: **a graph query *language* ≠ a graph *access method*.** Apache AGE gives you openCypher *inside* Postgres but still stores nodes/edges in ordinary tables → still JOIN-per-hop, **no index-free adjacency**. So Postgres can be a graph DB at the *API* layer, not the *storage* layer. And "**having relationships ≠ needing a graph DB**" — almost all relational data has relationships (that's what foreign keys are); a graph DB pays off only when the *access pattern* is graph-shaped. (Currency: **SQL/PGQ** in SQL:2023 and **GQL** as an ISO standard in 2024 have now standardized querying property graphs *over relational tables*.)
+
+### 3. The payoff — your aquarium `nexus` Neptune-vs-RDS cost call
+Your hypothesis — *"we can use the existing RDS only, to save cost"* — was **right, and stronger than you framed it.** From the repo (you asked me to look): a **Neptune Serverless** cluster (openCypher) sits beside a **Postgres 17** RDS. The `nexus` knowledge graph is ~8 relationship types (`TAGGED_WITH`, `PRODUCED_BY`, `LICENSED_UNDER`, `HAS_RAI_PROFILE`, `HAS_RECORD_SET`, `HAS_FIELD`, `CLASSIFIED_AS`, `SUPERSEDES`), and **every query is a fixed-depth star/chain (1–3 hops following the schema)** — i.e. a relational catalog drawn as a graph. The *only* variable-length query is `(:Dataset)-[:SUPERSEDES*0..]-(:Dataset)`, a short linear version chain → a trivial `WITH RECURSIVE` CTE.
+- **Verdict:** consolidate onto the RDS. Neptune Serverless floors at 1 NCU and **never scales to zero** (~$100+/mo per environment) vs ≈$0 marginal on the Postgres you already run.
+- **The bigger win (your §2 theme, applied):** today ingestion **dual-writes** metadata into Neptune while Postgres is the source of truth — a two-store consistency problem with no transaction spanning both, exactly the isolation hazard §2 is about. Consolidating *deletes that whole failure mode* — a correctness win, not just a cost one. (So §2 wasn't wasted; it came back as the decisive argument.)
+- **Steelman / caveats given:** keep Neptune only if the *roadmap* is graph-shaped — multi-hop "related datasets," recommendations, or GraphRAG for the chatbot — plus open-ended schema churn and a real one-time migration cost. Decision rule landed: *a dedicated graph DB earns its keep only for variable-depth traversal, graph algorithms, or a graph too large for recursive SQL.*
+- Output: a discussion memo (relational target schema + the recursive-CTE replacement + questions for the colleague) in `temp/graph-db-vs-rds-consolidation-memo.md` (gitignored), for you to take to the discussion.
+
+### Open / carried forward
+- **§2 (isolation, MVCC, snapshot-vs-serializable, write skew) → course M03 Ch2 (transactions)**, after M03 Ch1 (relational model) supplies the database-design foundation you flagged as missing. The reading's §2 stands as the primer to re-read going in.
 
 ---
 
@@ -194,4 +214,4 @@ Databases have several genuine Mainland/Taiwan term splits (not just simplified-
 - [Databases in 2025: A Year in Review — Andy Pavlo (CMU)](https://www.cs.cmu.edu/~pavlo/blog/2026/01/2025-databases-retrospective.html)
 - [It's 2026, Just Use Postgres — Raja Rao (TigerData)](https://www.tigerdata.com/blog/its-2026-just-use-postgres)
 
-*Draft prepared 2026-06-26. Swing out of AI into CS foundations (storage + concurrency), ahead of the M02/M03 course phases. Two reframes to carry: **(1) B-tree vs LSM is the RUM conjecture made physical — your "don't move the big thing" + SSD-endurance lens, on disk;** **(2) your advisory locks are hand-rolled serializability — isolation levels tell you exactly which anomaly you're defending against, and `SERIALIZABLE`+retry may be the declarative replacement.***
+*Finalized 2026-06-28. The "What we worked out" thread is the durable record — read it first on review. §1 (storage engines) landed and you carried it all the way to a real `nexus` Neptune-vs-RDS decision; §2 (isolation/MVCC) is deferred to course M03 Ch2 (needs the relational-design foundation first). Three reframes to keep: **(1) B-tree vs LSM is the RUM conjecture made physical — "don't move the big thing" + SSD-endurance, on disk; (2) a graph DB's defining data structure is index-free adjacency (pointer-based), but most "graph features" (edge-tables, Apache AGE) run on a B-tree and pay JOIN-per-hop — a graph *language* ≠ a graph *access method*; (3) "has relationships ≠ needs a graph DB" — for fixed-depth, follow-the-foreign-keys queries the relational DB you already run wins, and consolidating also kills the cross-store dual-write.***
