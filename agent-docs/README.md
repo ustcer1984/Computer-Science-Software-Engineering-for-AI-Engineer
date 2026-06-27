@@ -25,7 +25,13 @@ and up-to-date AI. It is not a software product. Two parallel tracks:
   wrong or unclear, raise it in conversation; you may suggest edits but must not make them.
 - **Keep the shared learner profile current.** [`learner-profile.md`](learner-profile.md) is the
   canonical record of the owner's skills/gaps/preferences. Read it for context; update it (not a
-  private per-agent store) when a session reveals something new.
+  private per-agent store) when a session reveals something new. **It is split by access pattern to
+  stay readable in one load:** the main file holds *current state* (background, skill map, gaps,
+  preferences, per-track progress) plus the latest ~2–3 session notes; the full append-only `vN`
+  changelog lives in [`learner-profile-history.md`](learner-profile-history.md). **On each finalize:**
+  (1) distil the durable signal into the main file's current-state sections, (2) prepend the new `vN`
+  note to the TOP of the history file, (3) keep only the newest ~2–3 notes mirrored in the main file.
+  This keeps the hot path roughly constant in size instead of growing every session.
 - **Diagrams: author in Mermaid, commit rendered SVG.** Write ```` ```mermaid ```` blocks, then run
   `npm run diagrams` and commit the generated SVGs alongside the doc. Mermaid alone does not render on
   GitHub or most viewers. See [`diagrams.md`](diagrams.md) for the full convention and gotchas.
