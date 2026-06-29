@@ -129,10 +129,12 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     `<math-renderer>` (so the grep passes) and **still fail to typeset** — e.g. the `_`-in-`\text{}` trap
     above was counted as math yet rendered a red `'_' allowed only in math mode` error. The grep said "fine";
     the page was broken.
-  - **(2) Typesetting check — Playwright (authoritative; catches what grep can't).** Playwright **is available
-    in this environment** even though it isn't a dep of this repo: import it from a sibling project
-    (`/home/zhangzhou/Desktop/Projects/arena-concept-experiment/node_modules/playwright`) and the browsers are
-    cached under `~/.cache/ms-playwright`. Load the blob URL (`waitUntil: 'networkidle'`, then a ~2.5 s pause
+  - **(2) Typesetting check — Playwright (authoritative; catches what grep can't).** Playwright is installed
+    **globally** (v1.58.2), so any project on this machine can use it: the CLI is on `PATH` (`playwright
+    --version`), import the library via the global root — `import { chromium } from
+    '<npm root -g>/playwright/index.mjs'` (resolve `<npm root -g>` with `npm root -g`; currently
+    `/home/zhangzhou/.nvm/versions/node/v24.14.1/lib/node_modules`), and the browsers are cached under
+    `~/.cache/ms-playwright`. Load the blob URL (`waitUntil: 'networkidle'`, then a ~2.5 s pause
     so MathJax runs), then **(a)** screenshot the formula region and *look at it*, and **(b)** assert
     `body.innerText` contains none of MathJax's error strings — `'allowed only in math mode'`,
     `'Undefined control sequence'`, `'Misplaced'`, `'Math input error'`. Note GitHub does **not** reliably
