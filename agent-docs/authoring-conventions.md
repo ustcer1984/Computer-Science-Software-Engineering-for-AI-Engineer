@@ -3,7 +3,8 @@
 > **Scope:** project-level — applies to **all tracks** (course, reading, hobby, and any future track).
 > These are the learner's own instructions on how material should be written. Keep them in context
 > whenever you prepare or finalize a section/reading. Established 2026-06-17 from learner feedback on
-> Econ E01 §2; extended 2026-06-18 (rule 3) from feedback on M04 Ch2 §1.
+> Econ E01 §2; extended 2026-06-18 (rule 3) from feedback on M04 Ch2 §1; extended 2026-06-29 (rule 4: bare
+> sub/superscripts and `$$`-in-lists traps) from a GitHub math-render bug in Econ E02 §2.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -84,8 +85,19 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     *over* the `$...$` content, so the `*` is eaten (you get `$P^$`) and — worse — it pairs with the next
     real `*emphasis*` asterisk in the paragraph, turning text italic and corrupting *every other* `$...$`
     span between them (one stray `*` silently broke `$MB$`, `$MC$`, … on the same line). Write the
-    superscript star as `\ast`: `$P^\ast$`, `$Q^\ast$`. Same risk with `_` (subscript-underscore vs
-    `_emphasis_`) — keep `_` only inside `{}` like `Q_{d}` and you're safe.
+    superscript star as `\ast`: `$P^\ast$`, `$Q^\ast$`.
+  - **Always brace subscripts/superscripts — never a *bare* `_` or `^` in math** (`$P_t$`, `$x_i$`,
+    `$\pi_t$`). Same mechanism as the `*` trap: GitHub runs `_emphasis_` parsing over `$...$`, so a bare `_t`
+    is read as an underscore-emphasis marker — it pairs with the next `_` in the expression (or paragraph),
+    *italicizes the LaTeX as literal text, and the math never renders at all* (this actually shipped: `$$\text{rate}_t = \frac{\text{index}_t - \text{index}_{t-1}}{\dots}$$` rendered as raw italic `$$…$$` on
+    github.com, E02 §2 2026-06-26). Always wrap the script in `{}`: `$P_{t}$`, `$x_{i}$`, `$\pi_{t}$`,
+    `$Q_{d}$`. A one-line pre-push grep catches every bare subscript: `grep -nE '_[^{]' <file>` (and
+    `grep -nE '\^[^{\\]' <file>` for superscripts) — both should return nothing inside math.
+  - **Don't put a `$$…$$` display block on an indented list-continuation line.** GitHub renders display math
+    only as a *standalone block* (its own paragraph, column 0, blank line on each side). A `$$…$$` indented
+    under a `-`/`1.` list item is left as literal text. Either lift the equation out to a standalone block
+    after the list, or use **inline** `$…$` (which *does* work inside list items) — both fixes were needed in
+    E02 §2. Standalone `$$…$$` in ordinary body prose (as in E02 §1) is fine.
   - **Never put a literal `|` inside math in a table cell.** The table parser reads every `|` as a column
     separator, so `$|\varepsilon|$` in a cell *silently shreds the whole table* into inline text. Write
     absolute value as `$\lvert\varepsilon\rvert$` (or `$\lVert\cdot\rVert$` for norms). Inline `$|\cdot|$`
@@ -99,6 +111,13 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
   blob URL and check the math actually rendered — e.g. drive a headless browser (Playwright) to
   `https://github.com/<owner>/<repo>/blob/main/<path>` and screenshot it. Cursor's preview is *not*
   authoritative for math.
+  - **Lightweight check when there's no browser** (verified working E02 §2 2026-06-26): `curl -sL` the blob
+    URL and grep the HTML — GitHub wraps every *recognized* expression in `<math-renderer>` and counts them
+    as `js-inline-math` / `js-display-math`. So `grep -oE 'js-(inline|display)-math' blob.html | sort |
+    uniq -c` should roughly match your `$…$` / `$$…$$` counts, and the specific formula should appear
+    *inside* `…<math-renderer …>$…$</math-renderer>…`, not leaked into the prose. **Do not** use the
+    `POST /markdown` REST API for this — it does **not** enable the math extension (returns zero math spans
+    even for valid input), so it gives a false negative.
 
 ## 5. Gloss key terms in Chinese (中文), with 大陆/台灣 both where they differ
 
