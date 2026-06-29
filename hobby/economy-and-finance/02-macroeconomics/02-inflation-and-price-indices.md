@@ -10,9 +10,15 @@
 > price index to deflate any nominal figure into real terms, **why every index is biased**, and the question
 > that anchors all monetary policy to come: **why central banks target a little inflation (≈2%) rather than
 > zero.**
-> **Status:** 🔵 **draft — body complete, awaiting the live session.** Drafted 2026-06-26. **§9 is reserved**
-> for the session Q&A (same pattern as §1's §9). Math in LaTeX, quantitative relationships drawn as real
-> curves, key terms glossed in 中文 (大陆/台灣), per
+> **Status:** ✅ **finalized 2026-06-29.** Body drafted 2026-06-26; **§9 captures the live session** — two
+> threads that both began as a *moral* unease, not a mechanics question: (9a) "inflation punishes thrift" —
+> calibrated to the precise truth (mild inflation taxes *idle cash*, not saving; the real defect is
+> distributional) and then *relocated* to where it actually bites (growth-dependence, **unpriced environmental
+> externalities** = E01 §3 redux, the **discount rate**, the entropy/throughput lens); and (9b) a from-scratch
+> reconstruction of the **money-and-growth loop** + a hand-built **steady-state** thought experiment, sharpened
+> with credit money, the **debt-deferral** (Minsky) and **MPC demand-gap** corrections, and Daly's
+> scale/distribution/allocation answer to "why the market can't reach a stationary state." Math in LaTeX,
+> quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
@@ -418,11 +424,176 @@ in §1.
 
 ---
 
-## 9 (reserved). Applied — from our session Q&A
+## 9. Applied — from our session Q&A (2026-06-29)
 
-*Reserved, to be filled after the live session — same pattern as §1's §9. This is where the threads you pull
-on while working through the section get written up (the edge cases, the re-rankings, the "what's the failure
-mode I haven't met" questions).*
+Two long threads, and both started from a moral discomfort rather than a mechanics question — the rare and
+valuable kind. (9a) *"Inflation rewards spending over saving — isn't that against the old virtue of thrift?"*
+which, chased to the bottom, turned out **not to be about inflation at all**. And (9b) a from-scratch
+reconstruction of the **money-and-growth loop** and a hand-built **steady-state** thought experiment, with the
+sharp closing question: *why can't the market mechanism ever reach a stable, no-growth state?* These are
+genuinely deep — among the best we've done — so they're written up in full; several deliberately point forward
+to **E03 (money & central banks)** and **§4 (the business cycle)**, where the machinery lives.
+
+### 9a. "Inflation punishes thrift" — a correct unease, aimed at the wrong target
+
+**Your worry:** inflation encourages spending over saving; even granting that spending stabilizes the economy,
+*nudging people away from thrift* offends an old virtue. And the usual rebuttal ("saving just becomes
+investment, which is also productive") doesn't escape it — investment only changes *what* is bought, and since
+investment seeks a **return**, it is just **deferred, larger future spending**. It feels like a system with no
+"off" switch, and you connected that to the market not being optimized for **sustainable resource use**.
+
+**The correction that dissolves the *inflation* part: mild inflation doesn't tax thrift — it taxes idle
+*cash*.** The hidden slip is equating *saving* with *holding money*; they're different:
+
+- **Saving** = not consuming everything you produce (deferring consumption).
+- **Holding cash** = parking that deferred purchasing power in **non-interest-bearing** money.
+
+A saver who *lends* their savings (deposit, bond) earns the **nominal** interest rate, which by the Fisher
+relation (§4) already contains compensation for expected inflation — so their **real** purchasing power
+*grows*. What inflation erodes is specifically money under the mattress, the one "saving" that funds nobody's
+activity. And the **old virtue was never about hoarding**: Adam Smith praised *parsimony* precisely because it
+releases resources for investment ("what is annually saved is as regularly consumed… but by a different set of
+people"); 勤儉 / the Protestant ethic prize *productive* thrift, not buried silver. Mild inflation pushing cash
+out of the mattress and into the loanable-funds pool is, if anything, *aligned* with the deep virtue.
+
+> **The honest caveat (where the unease re-earns its keep).** This is **regressive**. The poor and the
+> financially unsophisticated hold more wealth in cash and low-yield accounts; the wealthy hold real-return
+> assets. The 2010s — 2% target, near-zero deposit rates, soaring asset prices — was a decade of negative real
+> returns for cautious savers and fine returns for asset-holders. So the genuine inflation-side defect is
+> **distributional** (cash-holders vs asset-holders), *not* a war on thrift.
+
+**Why the deeper point survives — and where it actually bites.** Your "investment is just deferred bigger
+spending" is right in the **accounting** ($S = I$; investment *is* the $I$ in $C+I+G+NX$; a return is a claim
+on higher future output). But two distinctions stop it being "throughput all the way down":
+
+1. **Financial flow ≠ physical throughput.** Planetary limits bind on *matter and energy*, not dollars. A
+   return can be earned by **more** output (your model), by the **same** output with **fewer** inputs
+   (efficiency — throughput-*reducing*), or by **different**, near-dematerialized output (services,
+   intangibles). So "investment seeks return" entails ever-more *value*, not ever-more *stuff* — *if* value can
+   keep decoupling from resources.
+2. **Decoupling — the real, contested frontier.** **Relative** decoupling (less resource per unit GDP) is real
+   and ongoing; **absolute** decoupling (total resource use *falling* while GDP rises) is what sustainability
+   needs, and the evidence is mixed — partly **offshored** (consumption-based accounting claws it back), and
+   rarely fast enough.
+
+> **The failure mode you asked for — Jevons paradox (rebound).** When Jevons studied coal in 1865, *more
+> efficient* steam engines *raised* total coal use: efficiency made coal-power cheaper, so people used far
+> more. Efficient cars → more driving; cheap compute → bigger models. Efficiency gains partly (sometimes
+> wholly) **rebound** into more throughput — which is exactly why naïve "efficiency will save us" optimism is
+> suspect, and why your worry doesn't just evaporate.
+
+**Relocating the critique onto its real targets (both already in your coursework):**
+
+- **It's not inflation — it's growth-*dependence*.** The system doesn't merely *like* growth, it
+  *structurally requires* it: debt is serviced out of growth (the $r$ vs $g$ point from §1's §9d), and
+  employment needs growth just to hold steady (the break-even "treadmill," §1 §9d). The 2% target is a
+  **lubricant** in that machine, not its engine.
+- **It's the *missing price* on environmental externalities — E01 §3, at planetary scale.** The market "isn't
+  optimized for sustainability" because finite sinks (the atmosphere as a carbon dump) are priced at **≈\$0**,
+  so they're overused — the **externality / tragedy of the commons** from §3. The market is *faithfully*
+  optimizing against an **incomplete price vector**: if CO₂ is free, an efficient market will cook the planet
+  *because the signal says it's free.* The discipline's fix is to **complete the prices** — a **carbon tax**
+  (a **Pigouvian tax**, the very tool from your §3 sugar discussion), cap-and-trade, natural-capital
+  accounting — not to abolish the market. And GDP hides the damage (§1's §5: it counts the polluting output in
+  full and never nets out depletion → "green GDP").
+
+> **The deepest version — the discount rate.** A positive **time preference** (a dollar today > a dollar
+> tomorrow) is *why* capital demands a return — but a positive **discount rate** systematically **devalues the
+> future**, where almost all environmental costs sit. The entire **Stern vs Nordhaus** climate-policy split is
+> an argument over *which discount rate*: Stern's near-zero pure rate ⇒ "act hard now"; Nordhaus's market-like
+> ~3% ⇒ "act gradually." Same physics, opposite policy — because the discount rate is a **quasi-ethical
+> parameter smuggled into a technical model.** This is where your unease is most *precisely* correct.
+
+> **Physics lens (earned, used once).** The reason the blind spot is easy to miss is baked into the **circular
+> flow** diagram (§1): we draw a **closed loop** of value circulating between households and firms. But that's
+> thermodynamically false — the economy is an **open throughput system**: it ingests **low-entropy** energy and
+> ordered matter and excretes **high-entropy** waste heat and disorder, irreversibly. The closed loop hides the
+> entropy gradient that powers everything. This is **Nicholas Georgescu-Roegen** (*The Entropy Law and the
+> Economic Process*, 1971), the root of **ecological economics**: no perpetual-motion economy on a finite
+> low-entropy stock. For a physicist it's the rigorous form of "throughput all the way down."
+
+**Was "spending all the way down" inevitable? No.** Keynes predicted in 1930 (*Economic Possibilities for our
+Grandchildren*) that by now we'd work ~15 hours a week, needs satiated. He was right about the productivity,
+wrong about *us*: we took the dividend almost entirely as **more consumption**, not **more leisure**. That was
+a **cultural choice, not a mechanical necessity** — which makes the outcome more contingent, and more
+changeable, than the machine makes it look.
+
+### 9b. The money-and-growth loop, and why the market can't reach a steady state
+
+**Your model (rebuilt from scratch — and largely correct):** the economy is a **loop** — money flow drives
+production, production drives money flow — with **high inertia**: once it slows, momentum is hard to regain.
+Production is **profit-driven**, so money is "sucked toward capital holders." Were money fixed, it would pool
+in a few hands and society would lose consumption power — but capital holders **lend and invest**, so money
+flows back to consumers and the **money supply grows**. Meanwhile **productivity rises without obvious limit**,
+yet an individual's consumption is **bounded** (three meals, one house, one car). If we stop buying, the loop
+breaks → crisis and job loss. Hence your snapshot: freeze technology and products, each year produce exactly
+what's needed and consume it all, money doing only efficient distribution, no one richer or poorer — stable,
+*but you can't see how the market could ever reach it.*
+
+**Each piece has a real name — you reconstructed live macro theory:**
+
+- **"A loop with high inertia; hard to restart."** Recessions are **coordination failures**: I cut spending
+  fearing for my job; my cut is your lost income, so you cut too — self-fulfilling. Keynes's **animal
+  spirits**; the **paradox of thrift** (individually prudent saving is collectively contractionary); and when
+  the damage is permanent (skills, investment lost), **hysteresis**. → **E02 §4 (the business cycle).**
+- **"Profit sucks money to capital holders → lost consumption power."** The **under-consumption** worry
+  (Malthus, Hobson, Keynes) and the **capital-vs-labour share**, modernized as Piketty's **$r > g$** (capital
+  outgrows the economy ⇒ wealth concentrates).
+- **"Capital holders lend → money flows back → money supply grows."** Sharp — **you reinvented credit money.**
+  In the modern system most money *is* created by **bank lending**, not state printing; the supply is
+  **elastic**. This is literally **E03 §1**, and it dissolves your own premise — money *isn't* fixed, so it
+  doesn't simply drain to the top and run dry.
+
+**Two corrections — each a hidden cost your model didn't yet price in:**
+
+1. **The "flows back via lending" is not benign — it converts a *distribution* problem into a *debt* problem.**
+   When wages stagnate but consumption must continue, the gap is filled by **borrowing**, not higher pay —
+   sustaining the loop while building a **debt stock** that must be serviced *back toward* the lenders. The
+   recycling **defers** under-consumption and makes the system **fragile**: precisely the run-up to 2008 (flat
+   median wages + rising household debt until it couldn't be serviced). The names are **Minsky** ("stability
+   breeds instability" → the *Minsky moment*) and Rajan's *Fault Lines* (inequality → cheap credit as a
+   political painkiller → crisis). → **E03.**
+2. **It's not that money "runs out" at the top — concentration lowers the economy's *propensity to consume*.**
+   The rich spend a smaller fraction of each extra dollar (**lower marginal propensity to consume, MPC**), so
+   as income concentrates, average spending out of income falls, opening a **demand gap**. Every real economy
+   fills it with some mix of four **plasters — debt** (US/UK), **exports** (Germany, China, Singapore — sell
+   what your own people won't buy), **government deficits** (E04), **asset bubbles** (wealth into stocks/
+   property, not goods). **All four are deferrals, none a cure** — a frame worth keeping.
+
+**Your steady state has a 175-year pedigree — and your "the market can't reach it" instinct is exactly right.**
+
+- The snapshot economy is **John Stuart Mill's "stationary state" (1848)** — which Mill *welcomed*, hoping a
+  society done "trampling, crushing, elbowing" would turn to the **art of living** — and **Herman Daly's
+  steady-state economy.**
+- **Why the market won't *choose* it (the core answer to your closing question):**
+  - **Profit-competition is a positive-feedback growth loop** — a firm that doesn't reinvest and grow is
+    out-competed (the "reinvest or die" Red Queen from E01 §4). No firm can unilaterally pick the stationary
+    state.
+  - **Debt needs growth** to be serviced ($r$ vs $g$ again).
+  - **Wants don't satiate** — answering your "but we only need three meals." The system **manufactures
+    dissatisfaction**: Galbraith's **dependence effect** (production *creates* the wants it then satisfies —
+    advertising, fashion, planned obsolescence) and Hirsch's **positional goods** (you don't want *a* house but
+    a *bigger* one than your neighbour — status competition is **unbounded** even when material need isn't). Your
+    fear that productivity outruns wants and snaps the loop also has a name — **secular stagnation** (Hansen
+    1938; Summers ~2013) — but the escape valve has been to keep *inventing* wants rather than to stop.
+
+> **The cleanest reconciliation (Daly) — and the real answer to "how can the market reach it?": it can't, and
+> it isn't supposed to.** Separate three jobs the market silently bundles: **scale** (how much total throughput
+> the biosphere can take) — set *politically* as a hard cap; **distribution** (who gets what) — set floors/
+> ceilings *politically*; **allocation** (which goods, by whom, at what price) — *here* let the market work,
+> because it's genuinely the best tool. The market is a brilliant **allocator** and a terrible **governor of
+> scale.** The steady state is reached by **capping scale and distribution exogenously and letting the market
+> optimize *within* the cap** — not by hoping the market discovers restraint, which it structurally cannot.
+
+**One line to keep:** what you've found isn't a flaw in inflation or even in markets-*as-allocators* — it's the
+**growth imperative**: institutions (debt, employment, profit-competition, manufactured wants) wired so the
+loop must accelerate or crash, with no stable cruising gear. Fixing it needs **different institutions around
+the market** (decouple jobs from growth, cap throughput, bound concentration), not a better market — and
+whether that's achievable without breaking what makes markets work is genuinely open. The schools to read for
+each side: **ecological economics / steady-state** (Daly, Georgescu-Roegen), **degrowth** (Hickel, Tim
+Jackson's *Prosperity Without Growth*, Kate Raworth's *Doughnut Economics*), vs **green-growth** (Nordhaus,
+the Stern Review). We pick the machinery back up in **E03 §1–3** (credit, money creation, how central banks
+keep the loop turning) and **E02 §4** (why the loop stalls and scars).
 
 ---
 
@@ -481,9 +652,26 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
 | Inflation target | 通胀目标 | 通膨目標 | the ≈2% |
 | Zero lower bound (ZLB) | 零利率下限 | 零利率下限 | disarms rate cuts in deflation |
 
+**Growth, sustainability & the money loop (§9)**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Externality | 外部性 | 外部性 | the unpriced cost (E01 §3); carbon ≈ \$0 |
+| Pigouvian tax | 庇古税 | 皮古稅 | ⚠ 庇古 (大陆) vs 皮古 (台灣); the carbon-tax fix |
+| Time preference / discount rate | 时间偏好 / 贴现率 | 時間偏好 / 折現率 | ⚠ discount 贴现 (大陆) vs 折現 (台灣); Stern vs Nordhaus |
+| Decoupling | 脱钩 | 脫鉤 | growth vs resource use; relative vs absolute |
+| Degrowth | 去增长 | 去成長 | ⚠ 增长↔成長 again |
+| Steady-state economy | 稳态经济 | 穩態經濟 | Mill's stationary state; Daly |
+| Paradox of thrift | 节俭悖论 | 節儉的矛盾 | prudent saving, collectively contractionary |
+| Marginal propensity to consume (MPC) | 边际消费倾向 | 邊際消費傾向 | why concentration opens a demand gap |
+| Capital / labour share | 资本 / 劳动收入份额 | 資本 / 勞動所得份額 | ⚠ 收入↔所得; Piketty $r > g$ |
+| Credit money / money creation | 信用货币 / 货币创造 | 信用貨幣 / 貨幣創造 | banks create money by lending (E03 §1) |
+| Secular stagnation | 长期停滞 | 長期停滯 | productivity outruns wants |
+
 > Recurring genuine splits to memorize (beyond §1's list): **物价水平↔物價水準** (price level),
 > **滞胀↔停滯性通膨** (stagflation), **居民消费价格指数↔消費者物價指數** (CPI), **工资↔薪資** (wage),
-> **刚性↔僵固性** (rigidity). Plus the §1 carry-overs that recur here: **名义↔名目**, **实际↔實質**.
+> **刚性↔僵固性** (rigidity), **庇古↔皮古** (Pigou), **贴现↔折現** (discount), **增长↔成長** (growth, again).
+> Plus the §1 carry-overs that recur here: **名义↔名目**, **实际↔實質**, **收入↔所得**.
 
 ---
 
@@ -505,18 +693,31 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
   (https://www.singstat.gov.sg, https://www.mas.gov.sg); United States — **BLS CPI** news release
   (https://www.bls.gov/cpi/) and the **BEA PCE price index** (https://www.bea.gov); cross-country inflation —
   **World Bank / IMF** data (https://data.worldbank.org).
+- **On the §9 sustainability / money-loop threads (the bigger debate):** Herman Daly, *Steady-State Economics*
+  and the **scale / distribution / allocation** split; Nicholas Georgescu-Roegen, *The Entropy Law and the
+  Economic Process* (1971) — the thermodynamic foundation of **ecological economics** (the physicist's entry
+  point). Tim Jackson, *Prosperity Without Growth*, and Kate Raworth, *Doughnut Economics* — the **degrowth /
+  post-growth** case; vs the **green-growth** mainstream in William Nordhaus's work and the **Stern Review** on
+  climate (the discount-rate debate). J.S. Mill on the **stationary state** (*Principles of Political Economy*,
+  1848, Bk IV ch. 6); J.K. Galbraith, *The Affluent Society* (the **dependence effect**); Fred Hirsch, *Social
+  Limits to Growth* (**positional goods**); Hyman **Minsky** (financial fragility) and Raghuram Rajan, *Fault
+  Lines* (inequality → credit → crisis); on **Jevons paradox**, W.S. Jevons, *The Coal Question* (1865).
 
 ---
 
 ### What's next
-🔵 **Draft complete, awaiting session (2026-06-26).** This pays off §1's cliffhanger — you now know what
-"real," the "deflator," and "nominal ≈ real + inflation" actually rest on: a **weighted basket**, a **family
-of indices** that disagree by construction, the **deflate-to-real** operation, the **upward bias** every index
-carries, and **why ≈2% is the deliberate target.** Deliberate cliffhangers feed the rest of the module and
-E03: the **Fisher relation** (real ≈ nominal − inflation) and **inflation expectations** point straight at
-**E03 §2 (interest rates & the time value of money)** and **§3 (monetary policy)**; the **zero-lower-bound**
-and **wage-rigidity** material is the *why* behind the whole central-bank toolkit; the **MAS core-inflation /
-imported-inflation** thread sets up **E03 §4 (the MAS exchange-rate model)**; and **unemployment** — which
-just appeared via wage rigidity and layoffs-as-the-alternative-adjustment — is the subject of **§3
-(unemployment & the labour market)**, with the inflation-unemployment trade-off (the Phillips curve) waiting
-in **§4 (the business cycle)**.
+✅ **Finalized 2026-06-29.** This pays off §1's cliffhanger — you now know what "real," the "deflator," and
+"nominal ≈ real + inflation" actually rest on: a **weighted basket**, a **family of indices** that disagree by
+construction, the **deflate-to-real** operation, the **upward bias** every index carries, and **why ≈2% is the
+deliberate target.** **§9** captured an unusually deep session — the thrift/inflation unease (relocated onto
+externalities, growth-dependence, and the discount rate) and the money-loop/steady-state reconstruction (credit
+money, debt-deferral, the MPC demand-gap, Daly's scale/distribution/allocation). Deliberate cliffhangers feed
+the rest of the module and E03: the **Fisher relation** (real ≈ nominal − inflation) and **inflation
+expectations** point straight at **E03 §2 (interest rates & the time value of money)** and **§3 (monetary
+policy)**; the **zero-lower-bound** and **wage-rigidity** material is the *why* behind the whole central-bank
+toolkit; the **MAS core-inflation / imported-inflation** thread sets up **E03 §4 (the MAS exchange-rate
+model)**; **unemployment** — via wage rigidity and layoffs-as-the-alternative-adjustment — is the subject of
+**§3 (unemployment & the labour market)**, with the inflation-unemployment trade-off (the Phillips curve) in
+**§4 (the business cycle)**; and §9's **credit-money / money-loop** thread is the explicit on-ramp to **E03 §1
+(what money is, and how banks create it)**, where the learner's "lending grows the money supply" insight gets
+its full treatment.
