@@ -61,7 +61,7 @@ The whole **working-age population** (usually 15+ or 16+) partitions cleanly:
 <!-- FIGURE -->
 ![A horizontal bar splitting the working-age population into Employed (~62%), Unemployed (~3%), and Not in the labour force (~35%); the labour force is bracketed as employed + unemployed (~65%), with the unemployment and participation rate formulas annotated](diagrams/03-unemployment-and-labour-market-fig1.svg)
 
-$$\text{labour force} = \text{employed} + \text{unemployed} \qquad (\text{the job-*seeking* population}).$$
+$$\text{labour force} = \text{employed} + \text{unemployed} \qquad (\text{the job-seeking population}).$$
 
 Everyone else of working age — students, retirees, full-time carers, the long-term sick, and **discouraged
 workers** who quit searching — is **NILF**. Note what's *excluded* on purpose: children, and (in the standard
