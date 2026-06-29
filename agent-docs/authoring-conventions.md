@@ -4,7 +4,8 @@
 > These are the learner's own instructions on how material should be written. Keep them in context
 > whenever you prepare or finalize a section/reading. Established 2026-06-17 from learner feedback on
 > Econ E01 §2; extended 2026-06-18 (rule 3) from feedback on M04 Ch2 §1; extended 2026-06-29 (rule 4: bare
-> sub/superscripts and `$$`-in-lists traps) from a GitHub math-render bug in Econ E02 §2.
+> sub/superscripts, `$$`-in-lists, emphasis-in-`\text{}` traps, and the two-level Playwright verification)
+> from GitHub math-render bugs in Econ E02 §2 and §3.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -93,6 +94,14 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     github.com, E02 §2 2026-06-26). Always wrap the script in `{}`: `$P_{t}$`, `$x_{i}$`, `$\pi_{t}$`,
     `$Q_{d}$`. A one-line pre-push grep catches every bare subscript: `grep -nE '_[^{]' <file>` (and
     `grep -nE '\^[^{\\]' <file>` for superscripts) — both should return nothing inside math.
+  - **Never put markdown emphasis (`*word*` / `_word_`) inside math — especially inside `\text{}`.** To
+    italicize a word that sits inside a formula, you can't use `*…*`: GitHub's emphasis parser (and many
+    markdown linters, which *auto-normalize* `*emphasis*` to `_emphasis_` on save) turn `\text{the job-*seeking*
+    population}` into `\text{the job-_seeking_ population}`, and a **bare `_` in MathJax *text* mode is illegal**
+    — the whole display equation dies with the red error **`'_' allowed only in math mode`** (this shipped in
+    E02 §3 2026-06-29; a linter flipped the `*` to `_` *after* the trap-grep passed). Fix: **drop the emphasis
+    inside math** (keep the word plain in `\text{}`), or move the emphasized prose *outside* the `$…$`. Catch
+    it pre-push with `grep -nE '\$[^$]*[_*][^$]*\$' <file>` (ignore the known-safe `^{\ast}`, `_{...}` hits).
   - **Don't put a `$$…$$` display block on an indented list-continuation line.** GitHub renders display math
     only as a *standalone block* (its own paragraph, column 0, blank line on each side). A `$$…$$` indented
     under a `-`/`1.` list item is left as literal text. Either lift the equation out to a standalone block
@@ -107,17 +116,29 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     between them.
   - Prefer plain `(...)` or `\left(...\right)` over `\big(`/`\!` micro-spacing in inline math — fewer
     macros, fewer surprises across renderers.
-- **Verify on GitHub, not just in the editor.** This repo is **public**, so after pushing you can open the
-  blob URL and check the math actually rendered — e.g. drive a headless browser (Playwright) to
-  `https://github.com/<owner>/<repo>/blob/main/<path>` and screenshot it. Cursor's preview is *not*
-  authoritative for math.
-  - **Lightweight check when there's no browser** (verified working E02 §2 2026-06-26): `curl -sL` the blob
-    URL and grep the HTML — GitHub wraps every *recognized* expression in `<math-renderer>` and counts them
-    as `js-inline-math` / `js-display-math`. So `grep -oE 'js-(inline|display)-math' blob.html | sort |
-    uniq -c` should roughly match your `$…$` / `$$…$$` counts, and the specific formula should appear
-    *inside* `…<math-renderer …>$…$</math-renderer>…`, not leaked into the prose. **Do not** use the
-    `POST /markdown` REST API for this — it does **not** enable the math extension (returns zero math spans
-    even for valid input), so it gives a false negative.
+- **Verify on GitHub, not just in the editor.** This repo is **public**, so after pushing, check the blob URL
+  `https://github.com/<owner>/<repo>/blob/<sha>/<path>`. Cursor's preview is *not* authoritative for math.
+  There are **two levels of check, and you need both** — the cheap one has a real blind spot:
+  - **(1) Recognition check — `curl` + grep (cheap, but only proves GitHub *parsed* it as math).** `curl -sL`
+    the blob URL and grep the HTML: GitHub wraps every *recognized* expression in `<math-renderer>` /
+    `js-inline-math` / `js-display-math`. `grep -oE 'js-(inline|display)-math' blob.html | sort | uniq -c`
+    should roughly match your `$…$` / `$$…$$` counts (each display block ≈ 2 markers), and the formula should
+    sit *inside* `<math-renderer …>$…$</math-renderer>`, not leak into prose. **Do not** use the `POST
+    /markdown` REST API — it doesn't enable the math extension (zero spans even for valid input → false
+    negative). **Blind spot:** this only checks *recognition*. A formula can be correctly wrapped in a
+    `<math-renderer>` (so the grep passes) and **still fail to typeset** — e.g. the `_`-in-`\text{}` trap
+    above was counted as math yet rendered a red `'_' allowed only in math mode` error. The grep said "fine";
+    the page was broken.
+  - **(2) Typesetting check — Playwright (authoritative; catches what grep can't).** Playwright **is available
+    in this environment** even though it isn't a dep of this repo: import it from a sibling project
+    (`/home/zhangzhou/Desktop/Projects/arena-concept-experiment/node_modules/playwright`) and the browsers are
+    cached under `~/.cache/ms-playwright`. Load the blob URL (`waitUntil: 'networkidle'`, then a ~2.5 s pause
+    so MathJax runs), then **(a)** screenshot the formula region and *look at it*, and **(b)** assert
+    `body.innerText` contains none of MathJax's error strings — `'allowed only in math mode'`,
+    `'Undefined control sequence'`, `'Misplaced'`, `'Math input error'`. Note GitHub does **not** reliably
+    emit classic `mjx-container` nodes (count came back 0 even when math rendered fine), so don't gate on that
+    selector — trust the screenshot and the error-string scan. This is the only check that would have caught
+    the E02 §3 bug (2026-06-29).
 
 ## 5. Gloss key terms in Chinese (中文), with 大陆/台灣 both where they differ
 
