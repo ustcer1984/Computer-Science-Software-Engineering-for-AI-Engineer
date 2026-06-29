@@ -58,9 +58,10 @@ Three precise statements, because the looseness here is where most confusion liv
   **not inflation.** Inflation is a *broad* rise across the whole basket of what people buy — it shows up as
   the **value of money falling**: each dollar buys a little less of *everything*.
 - **Inflation is a *rate*, not a *level*.** "The price level" is an index number (e.g. CPI = 117). **Inflation
-  is the percentage *change* in that index** over a year. This is exactly the **flow-vs-stock / value-vs-rate**
-  distinction from §1's physics lens, one rung up: the price level is the position, inflation is the velocity.
-  $$\text{inflation rate}_t = \frac{\text{price index}_t - \text{price index}_{t-1}}{\text{price index}_{t-1}} \times 100.$$
+  is the percentage *change* in that index** over a year — writing $P_{t}$ for the price index in period $t$,
+  the rate is $\pi_{t} = (P_{t} - P_{t-1}) / P_{t-1} \times 100$. This is exactly the **flow-vs-stock /
+  value-vs-rate** distinction from §1's physics lens, one rung up: the price level is the position, inflation
+  is the velocity.
 - **Three words the news uses precisely — learn the difference:**
   - **Inflation** — the price level is *rising* (positive rate). The normal state.
   - **Disinflation** — inflation is *still positive* but **slowing** (e.g. 8% → 4%). Prices are still rising,
@@ -100,8 +101,11 @@ costs over time.** The flagship is the **Consumer Price Index (CPI)**.
    share of spending.
 2. **Price the basket** in a chosen **base period** (set the index to 100 there, by convention).
 3. **Re-price the *same* basket** each later period at current prices.
-4. **The index** is the cost of the basket now relative to the base:
-   $$\text{CPI}_t = \frac{\text{cost of the base-period basket at period-}t\text{ prices}}{\text{cost of the base-period basket at base-period prices}} \times 100.$$
+4. **The index** is the cost of the basket now relative to the base.
+
+Written out, with the base-period basket held fixed:
+
+$$\text{CPI}_{t} = \frac{\text{cost of the fixed basket at period-}t\text{ prices}}{\text{cost of the fixed basket at base-period prices}} \times 100.$$
 
 The weights are the heart of it — **inflation is a *weighted* average**, so a price jump matters in
 proportion to how much of the budget that category eats:
