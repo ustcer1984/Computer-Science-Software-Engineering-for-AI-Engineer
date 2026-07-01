@@ -290,7 +290,7 @@ flowchart TD
    targets; seasonal is adjusted out. **Full employment ≠ zero.**
 6. **The headline understates slack:** **U-6** adds discouraged + involuntary part-time; the gap **widens in
    downturns**; gig/skill underemployment is invisible to every rate.
-7. **Okun's law** ($\Delta u \approx -0.5 (g - g^{\ast})$) is the **bridge to GDP (§1)**: grow below
+7. **Okun's law** — $\Delta u \approx -0.5 (g - g^{\ast})$ — is the **bridge to GDP (§1)**: grow below
    potential → unemployment rises (why "+3% can be a crisis").
 8. **Wages are sticky downward** (§2): demand shocks hit through **layoffs, not pay cuts**; the **NAIRU ↔
    Phillips-curve** link makes jobs and inflation two ends of one lever (→ §4, E03).

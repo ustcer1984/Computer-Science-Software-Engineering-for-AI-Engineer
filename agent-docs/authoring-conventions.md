@@ -5,7 +5,8 @@
 > whenever you prepare or finalize a section/reading. Established 2026-06-17 from learner feedback on
 > Econ E01 §2; extended 2026-06-18 (rule 3) from feedback on M04 Ch2 §1; extended 2026-06-29 (rule 4: bare
 > sub/superscripts, `$$`-in-lists, emphasis-in-`\text{}` traps, and the two-level Playwright verification)
-> from GitHub math-render bugs in Econ E02 §2 and §3.
+> from GitHub math-render bugs in Econ E02 §2 and §3; extended 2026-07-02 (rule 4: the `($…$)` open-paren
+> trap) from another Econ E02 §3 render bug.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -102,6 +103,15 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     E02 §3 2026-06-29; a linter flipped the `*` to `_` *after* the trap-grep passed). Fix: **drop the emphasis
     inside math** (keep the word plain in `\text{}`), or move the emphasized prose *outside* the `$…$`. Catch
     it pre-push with `grep -nE '\$[^$]*[_*][^$]*\$' <file>` (ignore the known-safe `^{\ast}`, `_{...}` hits).
+  - **Don't wrap inline math in literal parens when the math itself contains parentheses** — the nested
+    `(…$…(…)…$)` confuses GitHub's cmark-gfm delimiter matching and the whole `$…$` leaks as raw text. A
+    parenthetical aside like `**Okun's law** ($\Delta u \approx -0.5 (g - g^{\ast})$)` fails, but the *same*
+    math with no outer parens (`… $…-0.5 (g - g^{\ast})$, …`) renders fine, and outer parens around math with
+    *no* inner parens (`($\text{employed} / \text{pop}$)`) also render fine — you need **both** layers to trip
+    it. Because every other math span on the page renders, eyeball-only review misses it (shipped in E02 §3
+    2026-07-02: 1 leak out of 11 spans). Fix: drop the outer parens — use em-dashes (`— $…$ —`) or commas
+    (`, $…$,`) for the aside. Catch the risky pattern pre-push with `grep -nE '\(\$[^$]*\(' <file>` (open-paren,
+    then inline math that contains another open-paren); Playwright-verify to be sure.
   - **Don't put a `$$…$$` display block on an indented list-continuation line.** GitHub renders display math
     only as a *standalone block* (its own paragraph, column 0, blank line on each side). A `$$…$$` indented
     under a `-`/`1.` list item is left as literal text. Either lift the equation out to a standalone block
