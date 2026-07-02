@@ -15,10 +15,15 @@ IMPORTANT: Do NOT edit this section.
 
 ## What this repo is
 A personal **upskilling workspace** for the owner (an AI Engineer) to learn CS, software engineering,
-and up-to-date AI. It is not a software product. Two parallel tracks:
+and up-to-date AI. It is not a software product. Three parallel tracks:
 - **Course track** — roadmap & progress in [`courses/plan.md`](../courses/plan.md); daily material under
-  `courses/{NN}-{module}/{NN}-{chapter}/{NN}-{section}.md`.
+  `courses/{NN}-{module}/{NN}-{chapter}/{NN}-{section}.md`. Rigorous, textbook-depth teaching.
+- **Hobby track** — for-interest subjects under `hobby/` (first: Economy & Finance). Same rigorous
+  study→Q&A→finalize flow as the course track, lighter sections.
 - **Reading track** — daily curated readings under `upskill-readings/{yyyy}/{mm}/{dd}-{topic}.md`.
+  **NOT a pre-teach of upcoming course chapters** — see the reading-track rule in
+  [`authoring-conventions.md`](authoring-conventions.md) §6 for its "National Geographic / Discovery"
+  function and the 1-career + 1-hobby balance rule.
 
 ## Rules every agent must keep in context
 - **`prompts/` is human-authored and read-only.** Never edit any file in `prompts/`. If something is
