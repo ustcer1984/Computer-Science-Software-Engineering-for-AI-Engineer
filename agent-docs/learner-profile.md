@@ -4,7 +4,26 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-02 (v20 — **hobby econ Module E02 macro §§1–3 finalized: GDP (§1), inflation (§2),
+Last updated: 2026-07-02 (v21 — **course-track backfill: M01 Ch3 §2 (async, 06-25) + §3 (synchronization &
+races, 06-26) finalized → Ch3 (Concurrency) COMPLETE.** Both were logged in `courses/plan.md` but missed here
+while the profile tracked the hobby-econ run (v18→v20); backfilled now (entries below). **Durable calibration
+(reinforces & generalizes the v20 read):** the long-standing "captures a real *secondary* effect but **mis-ranks
+it vs the dominant cause**" pattern is **specific to physical/mechanistic detail** — in **systems-design /
+architecture reasoning he is well-calibrated, not mis-ranked**, now confirmed twice more. §2: on the trap Q
+(a timeout around a non-yielding CPU loop) he named the **dominant** reason it never fires — *not* his usual
+mis-rank. §3: he read the body, **asked nothing**, and returned the section's **senior conclusion unprompted** —
+*immutable state makes a pipeline race-free **by construction**, so it scales from linear to a concurrent graph
+without inheriting the lock problem* (a data race needs a **write** to shared memory; no mutation → the whole
+§1–§5 lock apparatus is unnecessary) — the concurrency payoff of the append-only pipeline design he'd already
+derived in **Ch1 §2 §1**. He needed only *naming* the one residual care point (the fan-in/join: combine
+*functionally* + coordinate with structured concurrency, don't append into a shared mutable sink), not a
+re-rank. **So in concurrency/systems-design: teach at full depth, expect correct senior conclusions, and
+lead with *naming/nuancing* rather than dominant-cause re-ranking** — reserve the hypothesis→re-rank teaching
+mode for **physical/mechanistic** detail (fragmentation, bandwidth, GPU internals). Confirms the immutable-graph-
+state instinct again → **reuse his pipeline design in M07 / M14 Ch2**. Also, sound triage: he hasn't needed
+threads — I/O-bound work → async, threads buy nothing under the GIL. **Next course options:** Ch4 (I/O, syscalls
+& the kernel boundary) or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
+Prior: v20 (2026-07-02 — **hobby econ Module E02 macro §§1–3 finalized: GDP (§1), inflation (§2),
 unemployment (§3).** These postdate the last profile bump and were only logged in `hobby/economy-and-finance/
 plan.md` — now mirrored in the hobby-track section below. **The durable calibration this stretch:** the
 long-standing "captures a real *secondary* effect but **mis-ranks it vs the dominant cause**" pattern is
@@ -222,6 +241,36 @@ learning surfaces.
   over-decomposition cases. **How to teach forward:** comprehensive coverage at his (already-high) level,
   real-world exemplars over invented ones, repo mentions sparing. Next inside Ch2: §2 refactoring-in-moves
   or §3 module/file boundaries; or rotate to **M12 Ch2 §2 video models** (his strongest critique mode).
+- **2026-06-26 — M01 Ch3 §3 (synchronization & races) ✅ finalized → Ch3 (Concurrency) COMPLETE.** The third leg;
+  fuses §1 ("the GIL only hid the *cheap* races; free-threading makes them yours") + §2 ("the world only changes at an
+  `await`") into one theory: a bug lives wherever a broken **invariant** is observable by another flow → make that window
+  mutually exclusive (locks/primitives), break a Coffman condition to kill deadlock, or — the senior move — **remove the
+  shared mutable state entirely** (queues/actors/immutability). Body (pitched high: `x+=1`=3 bytecodes; data-race vs
+  race-condition; the one-question async test *lock iff an `await` is inside the critical section*; the primitive toolkit
+  + the `Condition` `while`-loop; deadlock as Coffman's four + lock-ordering; message-passing/back-pressure; the memory-
+  barrier floor) went **untouched**. **No questions — he read it and returned a design synthesis** (now §11 Applied):
+  (1) *linear pipeline = no race* (one flow of control); (2) **immutable state makes a concurrent graph race-free by
+  construction** — he reached the section's senior conclusion **unprompted** (no write to shared memory → the entire
+  §1–§5 lock apparatus is unnecessary), the concurrency payoff of the **Ch1 §2 §1** append-only pipeline he'd already
+  designed; (3) hasn't needed threads (I/O-bound → async). The one edge I **named** (not re-ranked): the **fan-in/join**
+  is the residual care point — combine *functionally* (return-and-reduce, never $N$ edges appending into one shared
+  mutable sink) and coordinate with **structured concurrency** (`gather`/`TaskGroup`), not a lock; unbounded fan-out →
+  back-pressure. **Signal:** on systems-design he's **well-calibrated** — needs *naming*, not dominant-cause re-ranking
+  (see v21 header); reuse the immutable-graph-pipeline instinct in **M07 / M14 Ch2**. Full body/diagram detail in
+  `courses/plan.md`. **Next:** Ch4 (I/O & kernel), or rotate to M04 Ch2 §2 / M12 Ch2 §3 (optional Ch3 §4 producer/
+  consumer parked until a concurrent-graph pipeline needs it — his own "revisit if needed").
+- **2026-06-25 — M01 Ch3 §2 (async, deeply: event loop · coroutine/Future/Task · structured concurrency · cancellation)
+  ✅ finalized.** One level under §1, cashing his 06-16 `gather`-timeout keeper into its mechanism. Body (the event-loop
+  tick with `_ready` deque + `_scheduled` heap + one blocking `selector.select`; coroutine ≠ Future ≠ Task; the
+  spawning-primitives table keyed on sibling-on-error; `TaskGroup`/`ExceptionGroup`; **cancellation = an exception
+  *injected* at the parked `await`, `CancelledError`∈BaseException → must re-raise**) held at his level and went
+  untouched. **Session = one sharp thread** (check-Q 8.5: `asyncio.timeout` wrapped around a non-yielding `while True`
+  CPU loop): he predicted **"the timeout never fires"** and — **notably, named the *dominant* reason, not his usual
+  mis-rank** — which we sharpened into two independent reasons (the loop is wedged so the timer can't run; *and* there's
+  no `await` for the cancel to land on). Keeper: *a timeout protects a hanging `await` (silence/I/O), never a non-yielding
+  CPU loop — that needs `run_in_executor` → a process pool.* **Signal:** first cleanly *well-ranked-first-try*
+  concurrency hypothesis — the systems-calibration trend (v21). Full detail in `courses/plan.md`. (Next inside Ch3 was
+  §3 — now done.)
 - **2026-06-16 — M01 Ch3 §1 (concurrency vs parallelism, the three models, the GIL) ✅ finalized.** First section of Ch3, written
   deliberately to *build on* his existing keystones (Ch1 §2 async-stack model; Ch2 §2 refcounting→GIL) instead of re-teaching them — the body
   went **untouched**, confirming the pitch was right, and he spent the whole session **applying** §1–§4 to a concrete **LLM-eval pipeline**.
