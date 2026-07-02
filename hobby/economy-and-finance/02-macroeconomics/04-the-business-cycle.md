@@ -173,10 +173,8 @@ already built resurface.
   drop in spending cuts someone's income, who then cuts *their* spending, and so on. The total hit is a
   **geometric series**: with a **marginal propensity to consume** $c$ (the fraction of an extra dollar that
   gets spent, §2's MPC), a \$1 shock to demand ultimately moves output by
-
-  $$\Delta Y = \frac{1}{1 - c}\thinspace\Delta(\text{spending}),$$
-
-  the **multiplier** $1/(1-c)$. If $c = 0.6$, a shock is amplified $2.5\times$. This is exactly the
+  $\Delta Y = \frac{\Delta(\text{spending})}{1 - c}$ — the **multiplier** $1/(1-c)$. If $c = 0.6$, a shock is
+  amplified $2.5\times$. This is exactly the
   **paradox of thrift** the learner reconstructed in §2 §9b — everyone saving more at once *shrinks* the
   income they're trying to save out of.
 
