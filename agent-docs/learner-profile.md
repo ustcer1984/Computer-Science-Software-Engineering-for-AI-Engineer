@@ -4,7 +4,25 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-06-28 (v19 — **reading #7: databases — storage engines & isolation ✅ finalized.**
+Last updated: 2026-07-02 (v20 — **hobby econ Module E02 macro §§1–3 finalized: GDP (§1), inflation (§2),
+unemployment (§3).** These postdate the last profile bump and were only logged in `hobby/economy-and-finance/
+plan.md` — now mirrored in the hobby-track section below. **The durable calibration this stretch:** the
+long-standing "captures a real *secondary* effect but **mis-ranks it vs the dominant cause**" pattern is
+**specific to physical/mechanistic detail**. In **conceptual / systems / social-science reasoning he is
+well-calibrated, not mis-ranked** — E02 §2 he rebuilt *endogenous money* and a *steady-state* model from
+scratch and relocated his own "inflation punishes thrift" unease onto the right target (externalities/growth-
+dependence); E02 §3 (07-02 session, now §11) he pulled **one** mechanics question outward through a whole
+causal chain — *how is potential growth $g^{\ast}$ estimated?* → the **Fed's reaction function** (one lever,
+two targets; Taylor rule) → **central-bank independence** (time-inconsistency, fiscal dominance, the
+credibility paradox, Burns/Nixon) → a **live 2026 case he asked me to web-research** (Powell → Warsh, the
+17-Jun hold + hike bias, inflation past 4%). **So in systems/social-science domains: teach at full depth,
+expect substantive push-back, don't lead with re-ranking; and reach for a live current case + real-time
+research** (see [[authoring-rules-material]]). **Process/tooling:** two more GitHub-math render traps found &
+fixed via the live-Playwright check and documented in `authoring-conventions.md` rule 4 — the `($…(…)…$)`
+parens-wrapping-math-with-inner-parens leak, and inline math inside `*emphasis*` (`*… $x$ …*`) failing to
+render. **Next:** E02 §4 (the business cycle) closes the macro module; then the inflation-unemployment
+trade-off bridges into E03 (monetary policy).).
+Prior: v19 (2026-06-28 — **reading #7: databases — storage engines & isolation ✅ finalized.**
 Prepared as the deliberate swing out of AI (storage + concurrency foundations, ahead of M02/M03). He read
 both topics but **left §2 (isolation/MVCC/snapshot-vs-serializable/write-skew) for course M03 Ch2 — explicitly
 flagging it as hard "without a database-design background."** That confirms the standing CS-fundamentals/DB-design
@@ -428,6 +446,42 @@ learning surfaces.
 
 ## Learning progress (hobby track)
 *(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-07-02 — Economy & Finance · E02 §3 (unemployment & the labour market) ✅ finalized.** Body (4 real
+  matplotlib figs + a mermaid one-pager + bilingual glossary): the rate from its precise definition, the
+  labour-force accounting, participation/U-6/duration, the four types & NAIRU, Okun's law as the bridge back
+  to §1, wage rigidity from §2. **The session (now §11) is the headline signal:** from one buried mechanics
+  question — *how is potential growth $g^{\ast}$ actually estimated?* — he pulled a single thread outward
+  through the **entire monetary-policy chain**: $g^{\ast}$ is unobservable (methods + real-time-revision
+  failure modes) → the **Fed's reaction function** (one lever, two targets; Taylor rule; his premise "both
+  high → raise" corrected — high unemployment argues for *cutting*, and stagflation is a genuine conflict) →
+  **central-bank independence** (time-inconsistency/inflation-bias, fiscal dominance, the credibility paradox,
+  Burns/Nixon 1972) → **a live 2026 case he asked me to web-research** (Powell's chair term ended, **Kevin
+  Warsh** — Trump's own pick — held rates 12–0 and flipped the dot plot to a hike bias with inflation past 4%;
+  the "capture test" caveat). **Calibration:** in this conceptual/systems domain he is **well-calibrated, not
+  mis-ranked** — the corrections he needed were *naming/nuancing* (which world am I in? which gap dominates?),
+  not dominant-cause re-ranks. **He also wanted the abstraction grounded in live current events and explicitly
+  asked for real-time research** — lead econ/policy sections toward a current case and offer to look it up.
+  Next: **§4 — the business cycle** (closes Module E02; assembles cyclical unemployment + output gap + Okun +
+  NAIRU↔Phillips, then bridges to E03 monetary policy).
+- **2026-06-29 — Economy & Finance · E02 §2 (inflation & price indices) ✅ finalized.** Body (4 figs + one-
+  pager): inflation as the rate-of-change of the price level, CPI/basket/Laspeyres, the index family
+  (headline/core/PPI/PCE/deflator), real=nominal/index + Fisher, the upward biases, why ≈2%. **Session (§9)
+  was two deep threads, both starting from a *moral* unease** — his strongest mode. (9a) "inflation punishes
+  thrift" → he **relocated his own critique onto the right target** himself once the pieces were named (mild
+  inflation taxes *idle cash* not saving; the real defects are distributional, plus externalities/growth-
+  dependence/the discount rate). (9b) he **rebuilt the money-and-growth loop and a steady-state thought
+  experiment from scratch**, effectively reinventing *endogenous/credit money* unprompted; needed only two
+  corrections (debt-deferral/Minsky; the MPC demand-gap) + naming (Daly's steady-state, scale/distribution/
+  allocation). **Confirms: reconstructs macro theory from first principles; teach at full depth.** Next: §3.
+- **2026-06-26 — Economy & Finance · E02 §1 (GDP & measuring output) ✅ finalized — opens Module E02.** Body
+  (4 figs + one-pager + bilingual glossary): GDP from its one-sentence definition, the three approaches via
+  the circular flow, the $C+I+G+NX$ identity with a real cross-country composition plot, nominal vs real +
+  deflator + PPP, the welfare critiques + GDP-vs-GNI. **Session (§9):** the built-then-resold-house edge case
+  (only *new* production counts; wealth-stock vs GDP-flow); "GDP can be manipulated" calibrated into three
+  tiers (rebasing/noise/fraud) unified by **Goodhart's law** + the reward-hacking ML lens; China's growth
+  *target* is real not nominal; and **why "+3% can be a crisis for China yet +1% is fine for Singapore"** —
+  the break-even/treadmill growth rate + declining potential (the §3 Okun cliffhanger). Fast integration of
+  the re-frames; strong systems instinct. Next: §2 (inflation).
 - **2026-06-20 — Economy & Finance · E01 §3 (elasticity, surplus & market failure) ✅ finalized.** Body taught
   with 6 real matplotlib curves (per his rule 2) + a bilingual 中文 (大陆/台灣) glossary (his new rule —
   see [[bilingual-chinese-glosses]] / conventions §5). Q&A was his signature **plausible-premise → re-rank**

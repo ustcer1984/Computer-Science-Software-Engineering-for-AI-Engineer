@@ -9,6 +9,30 @@
 
 ---
 
+v20 (2026-07-02 — **hobby econ Module E02 macro §§1–3 finalized: GDP (§1, 06-26), inflation (§2, 06-29),
+unemployment (§3, 07-02).** These postdated v18/v19 and had only been logged in `hobby/economy-and-finance/
+plan.md`; now distilled into the main file's hobby-track section. **Durable calibration:** the standing
+"captures a real *secondary* effect but **mis-ranks it vs the dominant cause**" pattern is **specific to
+physical/mechanistic detail** — in **conceptual / systems / social-science reasoning he is well-calibrated,
+not mis-ranked.** E02 §2 (§9): rebuilt *endogenous/credit money* and a *steady-state* model from scratch and
+relocated his own "inflation punishes thrift" moral unease onto the right target (idle-cash vs saving;
+distributional defect; externalities/growth-dependence/discount-rate); needed only naming + two corrections
+(Minsky debt-deferral; MPC demand-gap), not a dominant-cause re-rank. E02 §3 (§11, the 07-02 session): pulled
+**one** buried mechanics question outward through the whole monetary-policy chain — *how is potential growth
+$g^{\ast}$ estimated?* (unobservable; production-function/filters; real-time-revision failure modes, Orphanides)
+→ the **Fed's reaction function** (one lever/two targets; Taylor rule; corrected his "both-high → raise" —
+high unemployment argues for *cutting*; stagflation is a genuine conflict) → **central-bank independence**
+(time-inconsistency/inflation-bias, fiscal dominance, credibility paradox, Burns/Nixon 1972) → **a live 2026
+case he asked me to web-research** (Powell's chair term ended 15 May; **Kevin Warsh**, Trump's own pick, held
+rates 12–0 and flipped the dot plot to a hike bias with inflation past 4%; the "capture-test" caveat). **How
+to teach forward (systems/social-science):** teach at full depth, expect substantive push-back, don't lead
+with re-ranking; ground the abstraction in a **live current case** and offer **real-time research** — he
+explicitly wanted it here. **Process/tooling:** two more GitHub-math render traps found via the live-Playwright
+check & documented in `authoring-conventions.md` rule 4 — `($…(…)…$)` (literal parens wrapping math that
+itself contains parens) and inline math inside `*emphasis*` (`*… $x$ …*`) both leak the raw `$…$`. **Next:**
+E02 §4 (business cycle) closes the macro module; the inflation-unemployment trade-off bridges to E03
+(monetary policy).).
+
 v19 (2026-06-28 — **reading #7: databases — storage engines & isolation ✅ finalized.**
 Prepared as the deliberate swing out of AI (storage + concurrency foundations, ahead of M02/M03). He read
 both topics but **left §2 (isolation/MVCC/snapshot-vs-serializable/write-skew) for course M03 Ch2 — explicitly
