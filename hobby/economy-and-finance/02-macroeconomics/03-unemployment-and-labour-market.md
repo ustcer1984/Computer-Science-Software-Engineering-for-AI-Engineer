@@ -9,8 +9,11 @@
 > zero** (the *natural rate*), **broad measures** (U-6) that expose hidden slack, **Okun's law** (the bridge
 > back to §1's GDP), and how **wages** clear — or fail to clear — this most unusual of markets, picking up
 > §2's **wage rigidity** thread.
-> **Status:** 🔵 **draft — body complete, awaiting the live session.** Drafted 2026-06-29. **§9 is reserved**
-> for the session Q&A (same pattern as §1/§2). Math in LaTeX, quantitative relationships drawn as real curves,
+> **Status:** ✅ **finalized 2026-07-02.** Body drafted 2026-06-29; **§11 captures the live session** — a
+> single mechanics question (how is potential growth $g^{\ast}$ estimated?) pulled outward into the whole
+> monetary-policy chain: the unobservable number, the Fed's **reaction function** (one lever, two targets),
+> **central-bank independence**, and a **researched 2026 case** (Powell → Warsh, a hike bias, inflation past
+> 4%). Math in LaTeX, quantitative relationships drawn as real curves,
 > key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -339,11 +342,148 @@ and we'll run the labour-market story on it, the way we ran GDP on China's growt
 
 ---
 
-## 11 (reserved). Applied — from our session Q&A
+## 11. Applied — from our session Q&A (2026-07-02)
 
-*Reserved, to be filled after the live session — same pattern as §1's and §2's §9. This is where the threads
-you pull on while working through the section get written up (the edge cases, the re-rankings, the "what's the
-failure mode I haven't met" questions).*
+This session started from a single mechanics question buried in §6 — *to apply Okun's law you need potential
+growth $g^{\ast}$; but how is $g^{\ast}$ actually calculated?* — and then walked *outward* along the chain that
+question opens: from the unobservable number, to the **central bank that has to act on it**, to the **politics
+of who controls that bank**, ending on a **live 2026 case** we researched together. Four threads, each the
+natural next link. Several point straight into **E03 (monetary policy & central banking)**, where this
+machinery gets its own module.
+
+### 11a. How is potential output actually measured? — the shaky number under Okun's law
+
+**The headline you should carry:** **potential output is not measured, it is *estimated*.** Actual GDP you can
+(roughly) count; **potential** — the level the economy could sustain at full employment without accelerating
+inflation — is a *counterfactual*, so every value of $g^{\ast}$ you'll ever see is a model output with a
+confidence band, not a fact. That's *why* Okun's threshold ("grow below $g^{\ast}$ and unemployment rises") is
+fuzzier in practice than the clean line in §6 suggests. Three ways it's estimated, from most intuitive to most
+used:
+
+1. **The back-of-envelope (keep this as the intuition).** Potential growth is just the growth of what the
+   economy *can supply* — how many people work times how productive each is:
+   $g^{\ast} \approx \text{growth of labour supply} + \text{growth of labour productivity}$.
+   This is why demographics dominate: an ageing, shrinking workforce drags $g^{\ast}$ down regardless of
+   policy. It's why estimated US potential drifted from ~3.5% toward ~1.8% after 2005 — boomers retiring (the
+   labour term falls) plus the post-2005 productivity slowdown (the productivity term falls).
+
+2. **The production-function approach (what agencies publish).** Formalize step 1 with a Cobb–Douglas
+   production function $Y = A \cdot K^{\alpha} L^{1 - \alpha}$, then plug in *trend* inputs: the capital stock,
+   the labour force at the natural rate $u^{\ast}$ (the NAIRU from §4), and trend **total factor productivity**
+   $A$. This is **growth accounting**, and it's how the **CBO** (US), **OECD**, and **IMF** build their series.
+   Note the soft spot: $A$ is itself the unexplained residual — "the measure of our ignorance" — so a big chunk
+   of $g^{\ast}$ rests on the least-understood term.
+
+3. **Statistical filters (quick and atheoretical).** Just smooth the actual GDP series and call the smooth part
+   "potential" — the **Hodrick–Prescott filter** is the classic. Central banks often blend this with the
+   production-function estimate and with the Phillips/Okun relations in a "multivariate filter" that pins down
+   potential and the NAIRU *jointly* (a Kalman filter).
+
+> **The failure mode you asked for — and it's a big one.** Because $g^{\ast}$ is estimated, three things bite.
+> **(i) Circularity:** some $g^{\ast}$ estimates *use* Okun and the Phillips curve as inputs, so "apply Okun"
+> and "estimate $g^{\ast}$" can chase each other's tails (serious work solves them jointly). **(ii) The
+> end-point problem:** filters are *least* reliable at the most recent data — exactly the point a policymaker
+> needs *now* (Hamilton's 2018 paper is bluntly titled *"Why You Should Never Use the Hodrick–Prescott
+> Filter"*). **(iii) Real-time revisions are brutal:** Orphanides showed the 1970s Fed thought the output gap
+> was large and eased — but potential had actually fallen, and that real-time mismeasurement helped cause the
+> **Great Inflation**; and pre-2008 potential was later revised down sharply, retroactively reclassifying how
+> much of the slump was cyclical. **Upshot:** reasonable economists disagree on the *current-year* $g^{\ast}$
+> by half a point or more — enough to flip the *sign* of Okun's predicted change in unemployment.
+
+### 11b. One lever, two targets — how a central bank turns these gauges into a rate
+
+You asked whether "the Fed sets rates on inflation and unemployment — if both are high it likely raises." The
+setup: the Fed has essentially **one tool** (the policy interest rate) and a **dual mandate** — price stability
+*and* maximum employment. The catch is that the one lever pushes the two targets in **opposite** directions:
+raising rates cools demand, which lowers inflation *but* raises unemployment; cutting does the reverse. This is
+the §3 punchline — *jobs and inflation are two ends of one lever (the NAIRU ↔ Phillips-curve link)* — with a
+hand now on the lever.
+
+"Sets rates on inflation and unemployment" has a formal name — a **reaction function**, the famous one being
+the **Taylor rule**:
+
+$$i = r^{\ast} + \pi + 0.5(\pi - \pi^{\ast}) + 0.5 \times (\text{output gap}),$$
+
+or, written to lean explicitly on the labour market (with the output gap mapped to the unemployment gap via
+Okun's law from §6):
+
+$$i = r^{\ast} + \pi^{\ast} + a(\pi - \pi^{\ast}) - b(u - u^{\ast}), \qquad a, b > 0.$$
+
+Read plainly: inflation above target $\pi^{\ast}$ pushes the rate **up**; unemployment above the natural rate
+$u^{\ast}$ pushes it **down**. So the premise hides two very different worlds:
+
+- **Overheating (a demand boom):** unemployment **low**, inflation **high** — both gaps say the same thing,
+  *cool it down* → **clear raise.** (Your intuition works *here* — but note unemployment is low, not high.)
+- **Stagflation:** inflation **and** unemployment both high — the gaps **conflict**, and one lever cannot fix
+  both. This is the signature of an **adverse supply shock** (an oil or tariff spike raises prices *and* costs
+  jobs) or of inflation expectations unanchoring. There is no free answer.
+
+> **How the Fed breaks the tie — and the archetype.** When the mandates conflict, modern doctrine favors
+> **inflation**, because a stable nominal anchor is the *precondition* for durable maximum employment.
+> **Volcker (1979–82)** is the case: inflation ~13%, he drove the funds rate toward ~19%, *caused* a recession
+> that pushed unemployment to ~10.8%, and broke inflation — raising *into* high unemployment to protect the
+> anchor. The opposite risk is **"looking through"** a shock you wrongly judge temporary: the 2021 "transitory"
+> bet was exactly this, and being wrong forced the abrupt 2022 hikes. **Verdict on your statement:** *partly*
+> right, but not because both-high both argue for raising — high unemployment argues for *cutting*. In real
+> stagflation the Fed *chooses* to prioritize inflation and sacrifice employment. The clean, unambiguous
+> "raise" case is the *other* one: high inflation with **low** unemployment.
+
+### 11c. Why the Fed resists the President — central-bank independence
+
+The recurring news pattern — a President (Trump, in both terms) publicly demanding cuts while the Fed holds or
+hikes — is a clean lens on **central-bank independence**. The two sides reason from different objectives:
+
+- **The President's case:** cheaper borrowing means stronger growth, more jobs, higher asset prices — good
+  politics, especially into an election. And a heavily indebted government has a direct fiscal motive: every
+  extra point of interest on ~$36T of US debt costs *hundreds of billions* a year, so low rates slash the
+  **debt-servicing bill**. Plus a genuine view that inflation is beaten and rates are needless drag.
+- **The Fed's case:** its mandate is price stability and employment, *not* to finance the deficit or serve the
+  White House. Cutting before inflation is durably at 2% risks re-igniting it — doubly so under a supply shock.
+
+The deep reason independence exists is **time inconsistency** (Kydland–Prescott, Barro–Gordon): a policymaker
+facing elections has a short-horizon temptation to over-stimulate, everyone anticipates it, and you end up with
+higher *average* inflation and no lasting employment gain — an **inflation bias**. Delegating money to an
+insulated, credibly low-inflation body fixes that; empirically, more-independent central banks have run lower
+inflation. The danger it guards against has a name — **fiscal dominance**, where an indebted government leans
+on the bank to hold rates down to fund itself, ending in inflation. The President's debt-servicing motive is
+textbook pressure *toward* fiscal dominance.
+
+> **The paradox, and the cautionary tale.** Pressure to cut can **backfire**: if markets doubt the Fed's
+> resolve, inflation expectations and *long*-term bond yields rise — so leaning on short rates can *tighten*
+> the long rates that actually drive mortgages. And the archetype of caving: Nixon pressured Chair **Arthur
+> Burns** to keep money loose before the **1972** election; the Fed arguably complied, feeding the 1970s Great
+> Inflation. That episode is *why* the independence norm hardened — and why chairs now guard it jealously.
+> There's a fair democratic-accountability critique of unelected technocrats, but the weight of evidence sits
+> firmly on independence: the times Presidents got their way are the textbook disasters.
+
+### 11d. The live case (researched together, 2026-07-02) — Trump, Powell → Warsh, and a hike bias
+
+We then checked the *current* state online, and it turned out to be almost a live experiment on 11c:
+
+- **Leadership changed.** Jerome **Powell's term as Chair ended 15 May 2026**; he stayed on as a *governor*
+  (two years left on that separate term). **Kevin Warsh** — **Trump's own nominee**, sold as *"someone who
+  believes in lower interest rates, by a lot"* — was confirmed **54–45** and sworn in **22 May 2026** (to
+  2030). So the President didn't just pressure the incumbent; he **replaced** him with an ally — the purest
+  test of independence-vs-capture.
+- **The twist.** At **Warsh's first meeting (17 June 2026)** the Fed did **not** cut: it **held** the target
+  range at **3.50–3.75%** on a **unanimous 12–0 vote**, *flipped its dot plot to a hike bias* (median year-end
+  now above today; 17 of 18 officials saw inflation risks to the upside), and **raised its 2026 inflation
+  forecast** (PCE to 3.6%). With headline inflation **topping 4%**, Warsh said "price stability" a dozen times
+  and pushed back on the pressure campaign, insisting independence "would not change." Notably, **Trump eased
+  off** — *"we have a very good guy over there now… I'm guided by what he wants"* — because demanding cuts with
+  inflation visibly at 4% is a losing hand into the November 2026 midterms.
+
+> **What it confirms — and the honest caveat.** It's a near-textbook vindication: even a chair installed *to*
+> cut held rates and steered a hike bias, because the inflation gap and the anchor's credibility dominated the
+> political preference — and market talk of the Fed *raising* to satisfy the "bond vigilantes" is the
+> credibility paradox made real. **But don't over-read one meeting.** Warsh's hand is essentially forced right
+> now — he *can't* credibly cut into 4% inflation on day one without torching his own credibility. The real
+> test comes *later*: if inflation falls back and Trump wants cuts to juice the midterm economy, does Warsh cut
+> *faster than the data warrant*? That's when we'll learn whether this is genuine independence or a capture
+> waiting for cover. **This is exactly the terrain E03 formalizes.**
+>
+> *Sources (retrieved 2026-07-02):* Fed FOMC statement 2026-06-17; CNN, StockTitan, CNBC, and PBS reporting on
+> the June decision, Warsh's confirmation and swearing-in, and Trump's shift in stance.
 
 ---
 
@@ -430,7 +570,7 @@ just **simplified vs traditional script**; **⚠ marks a genuine terminology dif
 ---
 
 ### What's next
-🔵 **Draft complete, awaiting session (2026-06-29).** This is the third macro headline after output (§1) and
+✅ **Finalized 2026-07-02.** This is the third macro headline after output (§1) and
 prices (§2): you can now build the unemployment rate from its real definition, read it against participation
 and U-6, type it (frictional/structural/cyclical/seasonal), place the **natural rate / NAIRU**, and connect it
 back to GDP through **Okun's law**. The deliberate cliffhangers all converge on **§4 (the business cycle)**:
