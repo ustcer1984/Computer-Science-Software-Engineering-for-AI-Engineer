@@ -9,7 +9,10 @@
 > async program still sometimes needs a lock, the full primitive set (`Lock`/`RLock`/`Semaphore`/`Event`/`Condition`/`Barrier` and their
 > `asyncio` twins), **deadlock** (the four conditions, lock ordering, the dining philosophers), and the escape hatch the rest of the
 > industry reaches for first — *don't share memory, pass messages* (queues, the actor model).
-> **Status:** 🔵 **draft — generated 2026-06-26.** Body pitched at your level for our Q&A; §10 (Applied) is a placeholder until we talk.
+> **Status:** ✅ **finalized 2026-06-26.** No questions on the body — you read it and returned a **design synthesis** (§11): a linear
+> pipeline can't race (one flow of control), and **immutable state lets you scale to a concurrent graph without inheriting the lock
+> problem** — the section's senior move, which you'd already half-derived back in Ch1 §2 §1. §11 captures it and sharpens the one residual
+> care point (the fan-in/join: combine functionally + coordinate with structured concurrency, don't append into a shared mutable sink).
 > This is the direct cash-in of **§1 §5** ("free-threading makes races *your* job") and **§2 §5** ("a yield point is the only place the
 > world changes underneath you") — hold both; this section fuses them into one rule.
 
@@ -575,7 +578,51 @@ Bring the numbers to chat — especially (a)/(b) (the same lost update in two sc
 
 ---
 
-## 11. Key terms (English · 大陆 简体 · 台灣 繁體)
+## 11. Applied — captured from our 2026-06-26 session
+
+No questions this time — you read the material and returned a **design synthesis** instead, which is the more valuable outcome. You landed
+exactly on the section's senior move (§6/§7), and it's worth recording precisely because it's the conclusion the whole section was built to
+produce. Your three statements, and where each is exactly right (with one edge sharpened):
+
+- **"My pipeline is linear, so there's no risk of racing."** ✅ Correct, and for the precise reason: a linear pipeline has **one flow of
+  control** — step $N+1$ starts only after step $N$ returns, so there is never a *second* flow to observe a half-updated invariant. This is
+  the top of the §3 decision tree ("is the state shared across more than one flow?" → **No** → no lock). Racing is a property of
+  *concurrency over shared mutable state*, not of pipelines; a sequential pipeline has neither the concurrency nor (if you follow the next
+  point) the shared mutable state.
+- **"Keeping state immutable removes the racing concern even if I complicate the pipeline into a graph with concurrent edges."** ✅ This is
+  the section's keeper, and you reached it independently. The mechanism, stated exactly: **a data race requires a *write* to shared memory
+  (§1); if the flowing state is never mutated, there is no write to race on, so the entire §1–§5 lock apparatus becomes unnecessary** — no
+  critical sections, no locks, no deadlock, by construction. Concurrent edges each *read* the shared immutable inputs (reads never race) and
+  each *produce a new value*. This is the same design you derived back in Ch1 §2 §1 (the append-only, provenance-stamped state store), now
+  with its concurrency payoff made explicit: **immutability is what lets you go linear → concurrent graph without inheriting the lock
+  problem.**
+- **The one edge to keep in view (not a correction — a sharpening):** immutability kills data races on the *flowing* state; the only place
+  care remains in a concurrent graph is the **fan-in / join node** — the point where several concurrent edges' results are *combined*. Two
+  clean rules keep it lock-free:
+  1. **Merge functionally, into a new value.** If the join does `merged = reduce(combine, [r1, r2, r3])` over the immutable results each edge
+     *returned*, you're still race-free — you created a new immutable value, mutated nothing shared. The trap is the opposite shape: $N$
+     concurrent edges each `shared_list.append(...)` or `shared_dict[k] = ...` into **one shared mutable sink**. That sink is shared mutable
+     state again, and the race is back — immutability of the *inputs* doesn't save a mutable *collector*. Return-and-reduce, don't
+     append-to-shared.
+  2. **The join is a *coordination* point, not a *locking* point.** "Wait for all incoming edges before combining" is **structured
+     concurrency** (`asyncio.gather` / `TaskGroup`, §2 §3–§4), not a lock — you await the set of upstream tasks and reduce their returned
+     values. So even the one remaining concern is solved with the §2 spawning primitives, not the §3 lock primitives. (And if edges fan out
+     without bound, the concern that *does* remain is memory/back-pressure — §6 — which is a capacity-design question, not a correctness
+     race.)
+- **"I haven't needed multiple threads yet; I'll revisit if needed."** ✅ Sound triage, and consistent with §1's decision rule: your work is
+  I/O-bound fan-out, where **async (one thread) is the right tool and threads buy nothing** (the GIL means threads don't parallelise your
+  Python anyway). Threads earn their place only for CPU-bound parallelism (→ processes, usually) or blocking libraries with no async
+  equivalent. Filing this away until a concrete need appears is correct — the material is here as reference for when a graph pipeline, a
+  shared cache, or a genuine thread pool makes it load-bearing.
+
+> **The keeper you leave with:** *the senior fix for racing is not a better lock — it's arranging not to have shared mutable state.*
+> Immutability + return-and-reduce lets a pipeline scale from linear to a concurrent graph while keeping the whole §1–§5 apparatus off the
+> table; the only residual care is the **join** (combine functionally, coordinate with structured concurrency) and **back-pressure** at
+> unbounded fan-out. You already had the design (Ch1 §2 §1); this section named *why* it's also the concurrency-safety design.
+
+---
+
+## 12. Key terms (English · 大陆 简体 · 台灣 繁體)
 
 ⚠ marks a *genuine* terminology difference across the strait, not just simplified/traditional script — these are the ones that trip you up
 reading across both.
@@ -600,7 +647,7 @@ reading across both.
 
 ---
 
-## 12. References (optional, for depth)
+## 13. References (optional, for depth)
 
 *(All links verified live 2026-06-26.)*
 
@@ -631,13 +678,16 @@ reading across both.
 ---
 
 ### What's next
-🔵 **Draft generated 2026-06-26.** This section fuses §1's "the GIL hides cheap races" and §2's "the world only changes at an `await`" into
-one theory of synchronisation: make the broken-invariant window mutually exclusive (locks/primitives), break a Coffman condition to kill
-deadlock, or — the senior move — remove the shared mutable state entirely (queues, actors, immutability). After our Q&A I'll fold the session
-into §10 and flip the `courses/plan.md` Ch3 row to ✅. Natural follow-ons, your call at the boundary:
-- **Ch3 §4 — Producer/consumer & back-pressure patterns** (the queue primitives of §6 taken into real pipeline/throughput design — straight
-  into M07 Ch2 scaling territory). The cleanest continuation.
-- **Ch3 wrap → move to Ch4 — I/O, syscalls & the kernel boundary** (blocking vs non-blocking I/O, what a syscall *is*, why I/O dominates
-  latency — the layer under both §2's `epoll` and this section's "lock held across I/O").
-- Or **rotate scope** per the interleave (this would be a sixth straight M01 day if taken now): **M04 Ch2 §2** (refactoring in moves, SWE) or
-  **M12 Ch2 §3** (audio/speech/TTS, AI — your "all model types" goal).
+✅ **Finalized 2026-06-26.** This section fused §1's "the GIL hides cheap races" and §2's "the world only changes at an `await`" into one
+theory of synchronisation: make the broken-invariant window mutually exclusive (locks/primitives), break a Coffman condition to kill
+deadlock, or — the senior move — remove the shared mutable state entirely (queues, actors, immutability). §11 captures your design synthesis
+(linear = no race; immutability scales a pipeline to a concurrent graph lock-free; the join is the one residual care point). **This completes
+the planned Ch3** (§1 GIL/models · §2 async · §3 synchronisation) → `courses/plan.md` Ch3 row flips to ✅. Natural follow-ons, your call at
+the next session:
+- **Ch4 — I/O, syscalls & the kernel boundary** (blocking vs non-blocking I/O, what a syscall *is*, why I/O dominates latency — the layer
+  under both §2's `epoll` and this section's "lock held across I/O"). The natural bottom-of-the-stack continuation of M01.
+- **Rotate scope** per the interleave (this was a fifth straight M01 topic): **M04 Ch2 §2** (refactoring in moves, SWE) or **M12 Ch2 §3**
+  (audio/speech/TTS, AI — your "all model types" goal).
+- **Optional Ch3 §4 — Producer/consumer & back-pressure** if you later want the queue primitives (§6) taken into real pipeline/throughput
+  design (→ M07 Ch2 scaling). Not required for Ch3 completeness; park it until a concurrent-graph pipeline makes it load-bearing (your own
+  "revisit if needed").
