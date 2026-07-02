@@ -344,8 +344,8 @@ and we'll run the labour-market story on it, the way we ran GDP on China's growt
 
 ## 11. Applied — from our session Q&A (2026-07-02)
 
-This session started from a single mechanics question buried in §6 — *to apply Okun's law you need potential
-growth $g^{\ast}$; but how is $g^{\ast}$ actually calculated?* — and then walked *outward* along the chain that
+This session started from a single mechanics question buried in §6 — to apply Okun's law you need potential
+growth $g^{\ast}$, but how is $g^{\ast}$ actually calculated? — and then walked *outward* along the chain that
 question opens: from the unobservable number, to the **central bank that has to act on it**, to the **politics
 of who controls that bank**, ending on a **live 2026 case** we researched together. Four threads, each the
 natural next link. Several point straight into **E03 (monetary policy & central banking)**, where this
