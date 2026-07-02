@@ -187,17 +187,22 @@ Discovery feature does — **not** to pre-teach, textbook-style, the chapters co
 earlier readings erred by being "future courses brought forward" (rigorous RTT/handshake mechanics, etc.);
 that is explicitly **not wanted**.
 
-- **Function:** wonder, breadth, and currency. **Related to** the coursework, but **much wider and deeper**
-  than any single chapter — the surrounding world, not the syllabus. Lead with **latest technologies, real
-  case studies, current popular topics and live debates**, recent news and events. Think *Quanta / The
-  Economist / a great Nat-Geo feature for a smart adult*, not a lecture. Story- and example-driven.
+- **Function:** wonder, breadth, and currency — the surrounding world, not the syllabus. Lead with **latest
+  technologies, real case studies, current popular topics and live debates**, recent news and events. Think
+  *Quanta / The Economist / a great Nat-Geo feature for a smart adult*, not a lecture. Story- and
+  example-driven.
 - **Pitch:** the *genre* is Discovery-channel-accessible, but the *intellect* is still his (PhD, frontier
   practitioner). Accessible and vivid ≠ dumbed down. Go deep on the interesting parts.
 - **NOT this:** derivations, problem-set rigor, "here is the mechanism one layer down, ahead of M0x." If it
   reads like a course section, it's wrong for this track. (Course/hobby tracks are where rigor lives.)
-- **Balance rule (new 2026-07-02):** each day's reading carries **two topics — exactly one tied to the
-  career course track (CS/SWE/AI) and one tied to the hobby course track (currently Economy & Finance).**
-  This replaces the old "one theme, two altitudes" structure. The two topics need not share a theme.
+- **Balance rule (new 2026-07-02):** each day's reading carries **two topics — one "career" and one
+  "hobby"** (replaces the old "one theme, two altitudes"; the two need not share a theme). **Neither has to
+  map to a course chapter or even the course subjects** (clarified 2026-07-02): the **career** topic is
+  anything with a plausible **positive effect on his career** (CS/SWE/AI, but also adjacent tech, industry,
+  tools, ways of working, science that feeds his work…); the **hobby** topic is anything **genuinely
+  interesting** — *use your judgment* on what he'd find fascinating (his known interests: economics/finance,
+  physics/semiconductors, AI frontier, geopolitics-of-tech, systems). Breadth is the point; don't cage it to
+  the syllabus.
 - **Keep the good production values** (they still apply): a "why this / why now" framing, real committed
   figures/diagrams (rule 2), verified hyperlinks ([[references-need-valid-links]]), any math in LaTeX
   (rule 4), and the bilingual 中文 glossary (rule 5). Just in service of a feature story, not a lecture.
