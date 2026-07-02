@@ -6,7 +6,7 @@
 > Econ E01 §2; extended 2026-06-18 (rule 3) from feedback on M04 Ch2 §1; extended 2026-06-29 (rule 4: bare
 > sub/superscripts, `$$`-in-lists, emphasis-in-`\text{}` traps, and the two-level Playwright verification)
 > from GitHub math-render bugs in Econ E02 §2 and §3; extended 2026-07-02 (rule 4: the `($…$)` open-paren
-> trap) from another Econ E02 §3 render bug.
+> trap and the math-inside-`*emphasis*` trap) from two more Econ E02 §3/§11 render bugs.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -103,6 +103,14 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     E02 §3 2026-06-29; a linter flipped the `*` to `_` *after* the trap-grep passed). Fix: **drop the emphasis
     inside math** (keep the word plain in `\text{}`), or move the emphasized prose *outside* the `$…$`. Catch
     it pre-push with `grep -nE '\$[^$]*[_*][^$]*\$' <file>` (ignore the known-safe `^{\ast}`, `_{...}` hits).
+  - **Don't wrap inline math in markdown emphasis either — `*… $x$ …*` / `**… $x$ …**` leaks the raw `$x$`.**
+    The flip side of the rule above: an italic or bold *run* that *contains* a `$…$` span stops GitHub's
+    math extension from opening the delimiter, so the raw LaTeX shows through — even though the *identical*
+    math renders fine when it isn't inside emphasis (shipped in E02 §11 2026-07-02: an italicized aside
+    `*…you need potential growth $g^{\ast}$…*` leaked while the same `$g^{\ast}$` in plain prose rendered).
+    Fix: **take the emphasis off the clause that holds the math** (emphasize the surrounding words instead),
+    or split so the `$…$` sits outside the `*…*`. Especially bite-y when the emphasis run also spans a soft
+    line-break. Eyeball-only review misses it; Playwright-verify.
   - **Don't wrap inline math in literal parens when the math itself contains parentheses** — the nested
     `(…$…(…)…$)` confuses GitHub's cmark-gfm delimiter matching and the whole `$…$` leaks as raw text. A
     parenthetical aside like `**Okun's law** ($\Delta u \approx -0.5 (g - g^{\ast})$)` fails, but the *same*
