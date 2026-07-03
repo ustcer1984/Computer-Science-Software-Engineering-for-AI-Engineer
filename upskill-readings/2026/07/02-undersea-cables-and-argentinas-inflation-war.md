@@ -61,7 +61,7 @@ The unnerving part is the **deniability**. Was it an anchor accidentally dragged
 
 🔗 **The live data (watch it fall):** [Argentina inflation — Trading Economics](https://tradingeconomics.com/argentina/inflation-cpi)
 🔗 **The debate — miracle or warning?** [Milei's inflation "miracle" is a warning to the world, not a blueprint — The Conversation](https://theconversation.com/javier-mileis-inflation-miracle-in-argentina-is-a-warning-to-the-world-not-a-blueprint-278840)
-🔗 **The man and the method:** [Javier Milei — Wikipedia](https://en.wikipedia.org/wiki/Javier_Milei) · [Argentina — BBC News](https://www.bbc.com/news/topics/crr7mlg0vr2t)
+🔗 **The man and the method:** [Javier Milei — Wikipedia](https://en.wikipedia.org/wiki/Javier_Milei) · [Argentina's inflation hits a 7-year low (Nov 2025) — Semafor](https://www.semafor.com/article/11/13/2025/argentinas-inflation-slows-again-following-years-of-crisis)
 
 **The setup.** Argentina is the country economics can't explain. A century ago it was among the *richest* nations on Earth; since then it has defaulted on its debt **nine times** and lived with chronic, morale-crushing inflation for generations. By the end of 2023, annual inflation hit **~211%** — prices more than tripling in a year. Argentines had long since stopped trusting the peso: they price big things in US dollars, and hold savings as physical greenbacks in safes and under mattresses.
 
@@ -134,6 +134,6 @@ It is, right now, the closest thing economics has to a live laboratory — every
 - [Argentina inflation — Trading Economics (live data)](https://tradingeconomics.com/argentina/inflation-cpi)
 - [Milei's inflation "miracle" is a warning, not a blueprint — The Conversation](https://theconversation.com/javier-mileis-inflation-miracle-in-argentina-is-a-warning-to-the-world-not-a-blueprint-278840)
 - [Javier Milei — Wikipedia](https://en.wikipedia.org/wiki/Javier_Milei)
-- [Argentina — BBC News](https://www.bbc.com/news/topics/crr7mlg0vr2t)
+- [Argentina's inflation hits a 7-year low (Nov 2025) — Semafor](https://www.semafor.com/article/11/13/2025/argentinas-inflation-slows-again-following-years-of-crisis)
 
 *Draft prepared 2026-07-02 — the first reading under the new format: two feature stories, one **career-track** (undersea cables / networking) and one **hobby-track** (Argentina / macroeconomics), in a "Nat-Geo / Discovery" register rather than a course pre-teach. Figures current to early 2026. On finalize I'll fold in any threads from our chat and re-verify the rendered page.*
