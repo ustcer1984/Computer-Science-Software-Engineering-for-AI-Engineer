@@ -9,6 +9,50 @@
 
 ---
 
+v22 (2026-07-02 — **reading-track redefined (`prompts/002`) + reading #8 finalized: undersea cables (career) ·
+Milei's Argentina (hobby).** Process: the **reading track is now National-Geographic/Discovery genre, NOT a course
+brought forward** (wonder/currency/case-studies/debates), and each day pairs **1 career + 1 hobby topic** that need
+**not** map to a course chapter (career = any positive-career-effect topic; hobby = anything genuinely interesting,
+agent's judgment). Rule → `authoring-conventions.md` §6; README updated; memory `reading-track-is-discovery-not-preteach`
+added. Standing instruction confirmed: **always commit & push material (drafts included)** — he reads on GitHub
+(memory `commit-directly-to-main` updated). **Calibration — one clean instance of each half of the v21 split in a
+single session.** *Story 1 — Starlink vs undersea cables (physical/systems):* his thesis "scale satellite count →
+satellites beat cables" was **well-calibrated on the systems/economics axis** (cheap launch via Starship = the real
+lever; distributed graceful degradation, 1-of-7000 ≪ 1-of-3-cables; seabed sabotage is uniquely easy — all credited)
+but **mis-ranked the physics**: his "phased array + laser comms → everyone shares the same bandwidth without
+interference → capacity scales freely" → re-ranked to (i) satellite↔ground RF = **spatial reuse of a shared, finite,
+ITU-regulated spectrum**, beam count capped by diffraction $\theta \approx \lambda/D$ + orbital geometry, so capacity
+scales **sub-linearly** vs fiber's **linear** private-waveguide scaling (lay another interference-free ~10 THz strand),
+and laser inter-satellite links add zero *ground-facing* capacity; (ii) the **demand-geometry crux** — satellite
+capacity is spread over geography by construction while demand + cables are concentrated (~450 Tbps whole constellation
+vs 250 Tbps one cable into one metro), so **dense areas are satellites' hardest case**, inverting his "grow into dense
+markets later" claim. Landed conclusion: **not replacement but a tiered system — fiber core + LEO edge & low-latency
+overlay** (latency is the one axis LEO wins: c-in-vacuum + straight laser mesh beats bent ⅔-c fiber); boundary slides
+satellite-ward as launch cheapens, ocean trunk stays glass. Corrected too: a cable **landing station ≠ a datacenter**
+(light infra), so his proposed "small centralized receiver site" is just a landing station/teleport and concedes fiber
+backhaul. Integrated instantly on naming — the signature pattern. *Story 2 — Milei's Argentina (social-science):*
+**well-calibrated**, as v20/v21 predict. His read ("mostly a success") rests on strong moves that **largely hold**:
+(1) the **malinvestment / flight-from-cash** framing (hyperinflation pumps forward-buying → some pre-Milei manufacturing
+demand was distortion, and its unwind is the cure working); (2) the **attribution correction** (Argentina's
+manufacturing was structurally uncompetitive behind ~70 yrs of import-substitution tariffs *before* Milei — blaming its
+fall on him confuses trigger with disease); (3) the **poverty rebound 53%→~32%** as evidence the pain is front-loaded,
+which the op-ed under-weights. Needed **naming/nuance, not a dominant-cause re-rank**: (a) the **real-exchange-rate
+anchor** — the tool that crushed inflation left the peso overvalued, which *fights* the export pivot he's counting on
+(**confidence ≠ competitiveness**; Convertibility 1991→2001 rhyme); (b) **trade is USD-invoiced**, so hyperinflation
+did *not* stop trade (Argentina kept exporting commodities, ran surpluses) — the **`cepo`** (capital controls + multiple
+FX rates) strangled it, and **Milei lifting the `cepo` (Apr 2025) is the genuine pro-trade win** his intuition pointed
+at; the real "confidence" channel is **trade finance / investment**, not willingness-to-hold-pesos; (c) the synthesis
+that reconciled it — **two export sectors on two clocks**: commodities (never stopped, dollar-priced, rate-exposed *now*,
+financing the whole stabilization) vs manufactured/new exports (need the stability precondition — his sequencing
+argument is right *there*). He **refined his own argument mid-thread** (the trade-under-hyperinflation sequencing point)
+— peer-level. Only over-rank: "the lost demand was all fake" — some was genuine immiseration (real-wage collapse), not
+only distortion unwinding. **Meta:** he now **drives readings with a thesis** (sparring, not passive intake) — the
+"expand my view" reading track is working. **Teach-forward re-confirmed:** physical/mechanistic → hypothesize-then-
+re-rank to the dominant mechanism; systems/social-science → full depth, lead with naming/nuance. **Process nit:** he
+caught a mis-cited link — a generic **BBC topics feed** labeled "Argentina — BBC News" showing irrelevant stories — →
+a citation must resolve to *fixed, on-topic content*, not a rolling feed (HTTP 200 ≠ valid citation); swapped to a
+dated Semafor article. **Next:** two fresh topics next reading day (1 career, 1 hobby), keep diversifying.).
+
 v20 (2026-07-02 — **hobby econ Module E02 macro §§1–3 finalized: GDP (§1, 06-26), inflation (§2, 06-29),
 unemployment (§3, 07-02).** These postdated v18/v19 and had only been logged in `hobby/economy-and-finance/
 plan.md`; now distilled into the main file's hobby-track section. **Durable calibration:** the standing

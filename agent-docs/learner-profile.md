@@ -4,7 +4,31 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-02 (v21 — **course-track backfill: M01 Ch3 §2 (async, 06-25) + §3 (synchronization &
+Last updated: 2026-07-02 (v22 — **reading-track REDEFINED + reading #8 finalized (undersea cables · Milei's
+Argentina).** Major process change from `prompts/002-reading-track-clarification.md`: the **reading track is now
+"National Geographic / Discovery" genre, NOT a course brought forward** — wonder / currency / case studies / live
+debates — and each day pairs **1 career-track topic + 1 hobby-track topic**; topics need **not** map to a course
+chapter (career = anything with a plausible positive career effect; hobby = anything genuinely interesting, *agent's
+judgment*). Rule now in `authoring-conventions.md` §6. Also standing this session: **always commit & push material,
+drafts included** (he reads on GitHub). **Calibration — one clean instance of *each half* of the v21 split in a single
+session:** *Starlink-vs-undersea-cables (physical/systems)* — his "scale satellite count → beats cables" thesis mixed
+**well-calibrated systems/economics** (cheap launch = the real lever; distributed graceful degradation; seabed-sabotage
+asymmetry — all credited) with a **physical-detail mis-rank** ("phased array + laser → same bandwidth, no interference →
+free scaling"), re-ranked to **spatial reuse of a shared, finite spectrum** capped by diffraction $\theta \approx
+\lambda/D$ + orbital geometry (sub-linear) vs fiber's linear private-waveguide scaling, plus the **demand-geometry crux**
+(satellite capacity spread over area; demand + cables concentrated → dense areas are satellites' *hardest* case, inverting
+his intuition) → landed **tiered system (fiber core + LEO edge/latency overlay), not replacement**; integrated instantly
+on naming. *Milei's Argentina (social-science)* — **well-calibrated**, as v20/v21 predict: a coherent pro-reform thesis
+(malinvestment/flight-from-cash; attribution — structural uncompetitiveness predates Milei; the 53%→~32% poverty rebound)
+that **largely holds**, needing **naming/nuance not re-rank** (the real-exchange-rate anchor → *confidence ≠
+competitiveness*; trade is USD-invoiced so hyperinflation didn't stop trade — the `cepo` did, and lifting it is the real
+win; the synthesis **two export sectors on two clocks**), and he **refined his own argument mid-thread** (the
+trade-under-hyperinflation sequencing point). **Re-confirms the durable rule: physical/mechanistic → let him hypothesize
+then re-rank to the dominant mechanism; systems/social-science → teach at full depth, lead with naming/nuance.** He now
+**drives readings with a thesis** (treats them as sparring, not passive intake). Minor: he caught a bad source link (a
+generic BBC *topics feed* mislabeled as an Argentina page) → sharpen the link rule (a citation must resolve to *fixed,
+on-topic content*, not a rolling feed; HTTP 200 ≠ valid citation). Full entry in the reading-track section below.).
+Prior: v21 (2026-07-02 — **course-track backfill: M01 Ch3 §2 (async, 06-25) + §3 (synchronization &
 races, 06-26) finalized → Ch3 (Concurrency) COMPLETE.** Both were logged in `courses/plan.md` but missed here
 while the profile tracked the hobby-econ run (v18→v20); backfilled now (entries below). **Durable calibration
 (reinforces & generalizes the v20 read):** the long-standing "captures a real *secondary* effect but **mis-ranks
@@ -579,12 +603,40 @@ learning surfaces.
   (an AI-fast path G01→G02→G07→G08→G09§2 is pre-drawn in the plan).
 
 ## Learning progress (reading track)
-- **Queued readings (pick up on an upcoming reading day):**
-  - *(none currently — the dataclass/Protocol queue item was completed as the 2026-06-12 reading; see below.)*
-  - **Next reading day: rotate further OUT** — the AI-serving thread has now had two adjacent days (06-14 course +
-    06-15 reading). Best swing: **M12 Ch2 §2 video models (Sora/DiT — his strongest critique mode)** per his stated
-    "understand all model types" gap, or something current outside serving. Reaffirm the plan is on-track if he asks
-    (mild metacognitive watch-item from 06-10).
+- **FORMAT (from 2026-07-02, `prompts/002` → `authoring-conventions.md` §6):** the reading track is **Nat-Geo /
+  Discovery genre, NOT a course pre-teach** — latest tech / case studies / debates / currency, wider & deeper than any
+  chapter. **Each day = 1 career topic + 1 hobby topic**, and **neither must map to a course chapter or subject**
+  (career = any plausible positive-career-effect topic; hobby = anything genuinely interesting, my judgment). The old
+  "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
+  links, LaTeX math, bilingual 中文 glossary).
+- **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
+  no specific item queued.
+- **2026-07-02 — reading #8 ✅ finalized** (`upskill-readings/2026/07/02-undersea-cables-and-argentinas-inflation-war.md`)
+  — **first reading under the new format.** Two feature stories: (1) **undersea cables** (career) — the physical internet
+  & the 2023–25 grey-zone sabotage front line; (2) **Milei's Argentina** (hobby) — the disinflation shock. *(A first
+  draft this day was a networking RTT/HTTP **pre-teach**; scrapped as wrong-genre per `prompts/002`.)* He **drove both
+  with a thesis** — treats readings as sparring, not passive intake. **Calibration — one clean instance of each half of
+  the v21 split in one session:** *Story 1 (Starlink-vs-cables, physical/systems)* — well-calibrated on the
+  systems/economics moves (cheap launch = the real lever; distributed resilience; seabed-sabotage asymmetry — credited),
+  **mis-ranked the physics** ("phased array + laser → same bandwidth, no interference → free scaling"): re-ranked to
+  **spatial reuse of a shared, finite spectrum** capped by diffraction $\theta \approx \lambda/D$ + orbital geometry
+  (sub-linear) vs fiber's **linear private-waveguide** scaling, plus the **demand-geometry crux** (satellite capacity is
+  spread over area; demand + cables are concentrated → **dense areas are satellites' *hardest* case**, inverting his
+  "grow into dense markets" intuition) → landed **tiered system: fiber core + LEO edge/latency overlay, not
+  replacement**; integrated instantly on naming. *Story 2 (Milei, social-science)* — **well-calibrated** (per v20/v21): a
+  coherent pro-reform thesis (**malinvestment / flight-from-cash**; **attribution** — structural uncompetitiveness
+  predates Milei, ~70 yrs of import-substitution; the **53%→~32% poverty rebound** supporting "pain front-loaded") that
+  **largely holds** and needed **naming/nuance, not a re-rank**: the **real-exchange-rate anchor** (*confidence ≠
+  competitiveness*), **trade is USD-invoiced** so hyperinflation didn't stop trade (the `cepo` did → **lifting it is the
+  real win**), and the synthesis **two export sectors on two clocks** (commodities never stopped & are rate-exposed now;
+  manufactured/new exports need the stability precondition — his sequencing applies *there*). **He refined his own
+  argument mid-thread** (the trade-under-hyperinflation sequencing point) — peer-level. Only over-rank: "the lost demand
+  was all fake" — some was genuine immiseration (real-wage collapse). **Teach-forward (re-confirmed):** physical/
+  mechanistic → let him hypothesize, then re-rank to the dominant mechanism; systems/social-science → full depth, lead
+  with naming/nuance. **Process:** he caught a mis-cited link (a generic **BBC topics feed** labeled as an Argentina
+  page) → a citation must resolve to *fixed, on-topic content*, not a rolling feed (HTTP 200 ≠ valid citation); swapped
+  to a dated Semafor article. Standing instruction confirmed this session: **always commit & push material (drafts
+  included).**
 - **2026-06-15 — fifth reading entry ✅ finalized** (`upskill-readings/2026/06/15-llm-inference-serving.md`):
   LLM inference serving — (1) continuous batching (Anyscale); (2) prefill/decode: chunked prefill (Sarathi-Serve)
   vs disaggregation (DistServe). Deliberately adjacent to the 06-14 course session (LLM-serving **memory**) to add

@@ -1,4 +1,4 @@
-# Daily Reading — 2026-07-02  🔵 draft
+# Daily Reading — 2026-07-02  ✅ finalized
 
 *A "National Geographic / Discovery" pair — one story from the **career** world (CS/networking), one from the **hobby** world (economics). Not course material; the wider, stranger, more current world around it.*
 
@@ -99,6 +99,25 @@ It is, right now, the closest thing economics has to a live laboratory — every
 
 ---
 
+## What we worked out — the threads you drove (read this first on review)
+
+You didn't just read these; you attacked both with a thesis. The durable record:
+
+### Story 1 — "Could Starlink replace the undersea cables?" Your thesis: yes, once satellite count scales.
+Your case was strong and shares the industry's actual bets: (1) **cheap launch (Starship) is the real lever** — full credit, it's the only reason the question is even open; (2) **graceful degradation** — losing 1 of ~7,000 sats ≪ losing 1 of ~3 cables on a route; (3) the **seabed is uniquely easy to sabotage** (no orbital anchor-drag); (4) **phased arrays + laser inter-satellite links do scale capacity with count** (Starlink already reached ~450 Tbps this way). Two re-ranks landed:
+- **Re-rank 1 — "same bandwidth, no interference, so it scales freely" is the load-bearing error.** Split the links: laser *inter-satellite* links are ~interference-free but add *zero ground-facing capacity*; the satellite↔ground RF link is **spatial reuse of a shared, finite, ITU-regulated spectrum**. Beam count is capped by diffraction ($\theta \approx \lambda/D$; a small aperture from ~550 km gives a spot ~10 km-plus wide) and orbital geometry. So capacity scales **sub-linearly against a shared commons**, whereas fiber scales **~linearly** by laying another interference-free ~10 THz strand. Different laws; no phased-array trick repeals $\lambda/D$.
+- **Re-rank 2 — the geometry mismatch (the real crux, independent of count).** Satellite capacity is **spread over geography by construction**; demand — and cables — are **concentrated**. The *whole* constellation ≈ 450 Tbps smeared over the planet; *one* cable dumps 250 Tbps into *one metro*. This **inverts the "grow into dense markets" intuition**: dense areas are the *hardest* case for satellites (most contention per beam footprint), which is exactly where cables are strongest and where the traffic actually is.
+- **Correction:** a cable **landing station is not a datacenter** — it's light infra (power-feed + line terminal + backhaul); your proposed "small centralized receiver/router site" *is* a landing station/teleport, and in dense areas it still hands off to terrestrial fiber, conceding the point.
+- **Conclusion we landed:** not replacement but a **tiered system — fiber core + satellite edge & low-latency overlay** (latency is the one axis LEO wins outright: c-in-vacuum + a straight laser mesh beats bent ⅔-c fiber). The boundary slides satellite-ward as launch cheapens; the ocean *trunk* stays glass. Your instinct about satellites' *rise* is right; it mis-ranked *which layer* they take.
+
+### Story 2 — Milei: you read it as "mostly a success," against the op-ed's caution. Largely defensible.
+Your strongest moves, credited: (1) the **malinvestment / flight-from-cash** framing — hyperinflation pumps forward-buying, so some pre-Milei manufacturing demand was distortion, and its disappearance is the *cure working*, not a cost of it; (2) the **attribution correction** — Argentina's manufacturing was structurally uncompetitive behind ~70 years of import-substitution tariffs *before* Milei, so blaming its weakness on him confuses trigger with disease; (3) the **poverty rebound (53% → ~32%)** is real evidence for your "pain is front-loaded" thesis, which the op-ed under-weights. Then two sharpenings:
+- **The premise fix (your refinement about trade under hyperinflation).** Hyperinflation doesn't actually stop trade, because **trade is USD-invoiced** — foreigners never held pesos; Argentina kept exporting commodities and ran surpluses throughout. What strangled commerce was the **`cepo`** (capital controls + multiple exchange rates), and **Milei lifting it (April 2025) is the genuine pro-trade win** your intuition was pointing at. The real "confidence" channel is **trade finance & investment**, not willingness-to-hold-pesos.
+- **The blind spot — real exchange-rate appreciation.** The exchange-rate *anchor* that crushed inflation left the peso **overvalued in real terms**, which *fights* the export pivot ("**confidence ≠ competitiveness**"). Historical rhyme: Convertibility 1991→2001 ended in exactly this trap.
+- **The synthesis that reconciled us — two export sectors on two clocks:** **commodities** (never stopped, dollar-priced, squeezed by the strong peso *now*, and financing the whole stabilization) vs **manufactured/new exports** (need the stability precondition first — your sequencing argument is right *here*). So the exchange rate isn't fully deferrable: the sector carrying the country is already living it. Net: your thesis holds on attribution and malinvestment; the one over-rank was "the lost demand was all fake" — some was genuine immiseration (real-wage collapse), not only distortion unwinding.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -136,4 +155,4 @@ It is, right now, the closest thing economics has to a live laboratory — every
 - [Javier Milei — Wikipedia](https://en.wikipedia.org/wiki/Javier_Milei)
 - [Argentina's inflation hits a 7-year low (Nov 2025) — Semafor](https://www.semafor.com/article/11/13/2025/argentinas-inflation-slows-again-following-years-of-crisis)
 
-*Draft prepared 2026-07-02 — the first reading under the new format: two feature stories, one **career-track** (undersea cables / networking) and one **hobby-track** (Argentina / macroeconomics), in a "Nat-Geo / Discovery" register rather than a course pre-teach. Figures current to early 2026. On finalize I'll fold in any threads from our chat and re-verify the rendered page.*
+*Finalized 2026-07-02 — the first reading under the new format: two feature stories, one **career-track** (undersea cables / networking) and one **hobby-track** (Argentina / macroeconomics), in a "Nat-Geo / Discovery" register rather than a course pre-teach. Figures current to early 2026. The **"What we worked out"** section is the durable record — read it first on review: two theses he drove (Starlink-vs-cables → tiered system; Milei-mostly-a-success → holds on attribution/malinvestment, with the real-exchange-rate + two-export-sectors sharpening).*
