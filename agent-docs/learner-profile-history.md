@@ -9,6 +9,39 @@
 
 ---
 
+v23 (2026-07-06 — **course: M01 Ch4 §1 (the kernel boundary & the system call) finalized → opens Ch4 (I/O,
+syscalls & the kernel boundary).** First section of Ch4; the bottom-up finale of M01. Cashes Ch3 §2's IOUs:
+`epoll_wait`/`selector.select` are *syscalls*; a blocking `read` parks the thread *in the kernel* (why the GIL is free
+across I/O); "the loop's one blocking call." **Body (pitched high) went untouched:** user vs kernel mode (rings;
+mode-switch ≠ context-switch; kernel = privileged library in every address space, not a process); the syscall as a
+guarded trap at the instruction level (`rax`/`rdi`… ABI, the one fixed `LSTAR` entry, `sys_call_table` dispatch,
+argument validation, `sysret`, `errno`) vs a function call; the cost ladder (fn ≪ syscall ≪ context switch) with a real
+log-scale latency figure + the two rules (batch crossings · park don't spin); Meltdown→KPTI (Ch1 §3 callback; `pti`
+active on this box); libc wrappers + the vDSO; a real captured `strace` walkthrough; `mmap`/`llama.cpp`; interrupts vs
+faults vs syscalls. 1 matplotlib fig + 1 Mermaid diagram (both visually verified); refs verified live; bilingual 中文
+key-terms table. **§9 Applied — he asked nothing about the body and drove two comparative *portability* threads past the
+material** (his signature "one layer past the text," both comparative = his stated preference): **(9a) "Are syscalls
+the same on Windows/Linux?"** → keeper *separate the hardware from the contract* — the two rings, the `syscall`/`sysret`
+trap, the cost ladder, even Meltdown/KPTI (Windows = KVA Shadow) are **hardware-universal**; per-OS is the **vocabulary**
++ the **stable-ABI location**: Linux freezes it *at the syscall* (num 0 = `read` forever; raw syscalls fine), **Windows
+one layer up in `ntdll`/`kernel32`** (numbers/SSDT private, shift per build); plus the **I/O model** — `epoll`
+readiness/reactor vs Windows **IOCP** completion/proactor (asyncio `Selector`- vs `Proactor`-EventLoop; `io_uring` =
+Linux converging). **(9b) "x86 vs ARM; why won't x86 Windows apps run on ARM Windows?"** → keeper *the ISA is the
+binary's mother tongue*: different ISA = different bytes → **native impossible**; CISC/RISC nuance (micro-ops,
+ISA-as-contract; fixed-4B vs 1–15B decode → power efficiency; 31 vs 16 registers); the sleeper = **strong x86-TSO vs
+weak-ARM memory ordering** → latent data races that "worked" on x86 break on Graviton (**Ch3 §3 hardware-floor
+callback**); emulation (Prism/Rosetta) bridges **user-mode only** and breaks at (a) ring-0 drivers, (b) perf, (c) mixing
+ISAs in one process; tied to his **Lambda/Graviton/Docker multi-arch** + **Python arch-neutral bytecode** (Ch1 §1
+callback). **Calibration (reinforces v21/v22):** conceptual/systems → **well-calibrated, not mis-ranked**; these were
+*open exploratory questions*, so value added = **structure + naming + wiring to owned material**, NOT dominant-cause
+re-ranking. **NEW durable signal — he reflexively tests a mechanism's *generality* ("is this Linux-only? does it hold on
+Windows/ARM?").** Feed it: **teach the universal principle first, then explicitly flag what's platform/arch-specific**;
+when material is written for one platform, mark hardware-universal vs OS/ISA-specific (acted on: added a §1 portability
+callout, and named the pattern in the status/why blocks). His **AWS cross-arch experience (Graviton/Lambda/Docker) is a
+live anchor** — the x86/ARM material landed on lived practice. **This session = a Ch1 §3 / Ch1 §5 trailer**; reopen the
+x86/ARM weak-memory hazard at M01 Ch5. **Next:** Ch4 §2 (blocking/non-blocking, `epoll`/`io_uring`, C10k) — direct
+continuation; or Ch4 §3 (I/O dominates latency); or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
+
 v22 (2026-07-02 — **reading-track redefined (`prompts/002`) + reading #8 finalized: undersea cables (career) ·
 Milei's Argentina (hobby).** Process: the **reading track is now National-Geographic/Discovery genre, NOT a course
 brought forward** (wonder/currency/case-studies/debates), and each day pairs **1 career + 1 hobby topic** that need

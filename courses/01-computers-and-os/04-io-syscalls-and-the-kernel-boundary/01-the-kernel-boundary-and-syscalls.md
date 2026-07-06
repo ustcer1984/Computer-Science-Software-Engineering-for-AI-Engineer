@@ -9,7 +9,12 @@
 > what it costs and why, and the two engineering rules that fall straight out of the cost (**batch your syscalls**, and **park — don't
 > spin — a task that's waiting**). It is the direct cash-in of every "the loop sleeps inside `epoll_wait`" / "one blocking syscall per
 > tick" claim from Ch3 §2, and it sets up §2 (blocking vs non-blocking I/O) and §3 (why I/O dominates latency).
-> **Status:** 🔵 **draft** — prepared 2026-07-02. Body below; the Applied section (§9) and finalize come after our Q&A.
+> **Status:** ✅ **finalized 2026-07-06.** The body held at your level and went untouched — you drove the whole session **past the edge
+> of the material**, testing its *portability*: first "are syscalls the same on Windows and Linux?" (the section is written Linux-first), then
+> "what's the difference between x86 and ARM, and why won't x86 Windows apps run on ARM Windows?" Both are your signature move — push one
+> layer past the text — and both are comparative, your stated preference. §9 captures them; §1 now carries a short callout flagging what here
+> is hardware-universal vs Linux-specific, because your first question showed the material shouldn't present the Linux vocabulary as if it
+> were the whole story.
 
 **Estimated study time:** 2–3 hours including reflection.
 
@@ -64,6 +69,15 @@ mainstream operating systems use exactly two of them:
   and the CPU raises a fault (a **general-protection fault**), which the kernel turns into a signal — this is one way a process gets
   `SIGSEGV`/`SIGILL`. User mode can do arithmetic, move data between its own registers and its own memory, call its own functions — and
   that's it. It cannot reach outside its own virtual address space (Ch2 §1).
+
+> **Is this Linux-only? What's universal vs what's just vocabulary (read this, then §9a).** This section is written Linux-first, but the
+> *idea* is not Linux's — it's the **CPU's**. The two privilege levels, the `syscall`/`sysret` trap, the cost ladder, and the two rules
+> (batch · park) are **hardware-enforced and identical on Windows and macOS** (and, on the same instruction set, on Intel and AMD alike).
+> What *is* Linux-specific is the **vocabulary and one architectural choice**: the names (`sys_call_table`, `LSTAR`, `epoll`, `strace`,
+> `/proc/cpuinfo`), and — the deep one — *where the stable contract lives.* On Linux the **syscall itself is the stable, public API** (call
+> number 0 is `read` forever); on **Windows the syscall boundary is a private implementation detail** and the stable contract sits one layer
+> up, in `ntdll.dll`/`kernel32.dll`. That single difference changes how you're *allowed* to call the kernel, and it's the thread you pulled
+> first this session — the full comparison (including the `epoll` readiness model vs Windows' IOCP completion model) is in **§9a**.
 
 Two things about this are worth pinning down, because they're commonly muddled:
 
@@ -330,15 +344,113 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 
 ---
 
-## 9. Applied — captured from our session
+## 9. Applied — captured from our 2026-07-06 session
 
-*(Placeholder — filled on finalize with the threads you drive in Q&A.)*
+You asked nothing about the body — you read it and immediately did the thing you always do: **pushed one layer past the text, and in the
+direction the text was weakest.** The section is written Linux-first, so your first instinct was to test its *generality* ("is this the same
+on Windows?"), and your second pulled the boundary all the way down to the silicon ("what's x86 vs ARM, and why won't an x86 Windows app run
+on ARM Windows?"). Both are comparative questions — your stated preference — and together they draw the two portability lines that sit under
+this whole chapter: **the OS line** (does the syscall look the same across kernels?) and **the ISA line** (does the compiled binary run on a
+different CPU?). They're the right two questions, and they turn out to have opposite answers.
+
+### 9a. Is the syscall the same on Windows and Linux? — separate the *hardware* from the *contract*
+
+The keeper: **split what the CPU enforces from what the OS chose.** Everything in §1–§3 that comes from the *hardware* is identical
+everywhere; everything that's a *name* or a *policy* is per-OS.
+
+- **Identical, because it's the CPU, not the kernel:** the two privilege levels (ring 0 / ring 3; ARM calls them EL1/EL0), the
+  `syscall`/`sysret` trap, the single fixed entry the kernel installs in `LSTAR`, the cost ladder (fn call ≪ syscall ≪ context switch), and
+  the two rules (batch · park). **Even Meltdown/KPTI has a Windows twin** — Microsoft shipped the same page-table-isolation mitigation under
+  the name **KVA Shadow**, with the same "syscalls got more expensive" effect. The §3 figure holds on all three OSes.
+- **The deep divergence you pulled first — *where the stable contract lives*.** This is the one worth remembering:
+
+  | | Linux | Windows |
+  |---|---|---|
+  | The stable, guaranteed ABI is at… | **the syscall boundary itself** | **a DLL layer *above* the syscall** |
+  | Syscall #0 is `read`… | …forever — numbers are public and frozen ("we do not break userspace") | …**not guaranteed** — numbers change between Windows versions/builds |
+  | Issue a raw syscall yourself? | Yes — Go's runtime does exactly this, no libc | **No** — you go through `ntdll.dll` / `kernel32.dll` |
+  | The dispatch table is called… | `sys_call_table` | the **SSDT** (System Service Descriptor Table), private |
+
+  On Linux, the narrow interface this section taught (`open`/`read`/`write`) *is* the durable contract. On Windows, `ReadFile` →
+  `kernel32.dll` → `ntdll!NtReadFile` (the stub holding the `syscall` instruction) → kernel; the promise is at `ReadFile`, and the number
+  underneath is an implementation detail that shifts under you. Consequences you can *see*: malware that hard-codes Windows syscall numbers
+  breaks after an update; endpoint-security tools hook inside `ntdll` rather than the kernel table. macOS is the same shape — the stable ABI
+  is `libSystem`, and Apple actively breaks direct syscalls (Go got bitten on Darwin and now routes through libc).
+- **The second real difference — the I/O model (this is the one that touches your async work).** §6 forward-refs `epoll`, which is a
+  **Linux** primitive and a **readiness** model ("tell me when the fd is *ready*, I'll do the read"). Windows was built around **IOCP (I/O
+  Completion Ports)**, a **completion** model ("start the read, tell me when it's *done*, bytes already in my buffer"). Academic names:
+  *reactor* vs *proactor*. You can see this leak into a tool you use daily — **`asyncio` picks a different event loop per OS**:
+  `SelectorEventLoop` (epoll) on Linux, `ProactorEventLoop` (IOCP) on Windows, same `async`/`await` on top. And Linux's **`io_uring`** (§2's
+  "modern answer") is Linux *adopting the completion model* — so the two designs are converging.
+- **Cosmetic but worth a line:** the file-descriptor-as-small-int-handle idea maps to Windows **`HANDLE`s** (same "handle, not the thing"),
+  but Unix's "**everything is a file**" (one `read` over files, sockets, pipes, even `epoll`) is a Unix *design choice*, much weaker on
+  Windows (sockets go through Winsock, files through `ReadFile`). And tooling: `strace`→`ptrace` is Linux; Windows is ProcMon/ETW, macOS is
+  `dtruss`/DTrace.
+
+> **Keeper (9a):** *the syscall mechanism is hardware and therefore universal; the syscall **interface** is a per-OS contract, and the single
+> biggest portability fact is that Linux freezes it at the syscall while Windows/macOS freeze it one layer up in a system DLL.* When you read
+> "Linux-specific" in this section, it's almost always the **name** or the **stable-ABI location** that's specific — not the idea.
+
+### 9b. x86 vs ARM, and why an x86 Windows app won't run on ARM Windows — the ISA is the binary's mother tongue
+
+Then you pushed below the OS entirely, to the CPU. The keeper here is that **question 2 is a corollary of question "what is an ISA."**
+
+**What actually differs (not just the CISC/RISC slogan).** They're different **ISAs** — the CPU's binary language — so the same `add` is
+different *bytes* on each. The differences that carry weight:
+
+| | x86-64 (Intel/AMD) | ARM (AArch64) |
+|---|---|---|
+| Instruction length | **variable, 1–15 bytes** | **fixed, 4 bytes** |
+| Memory operands | arithmetic can touch memory directly | **load/store** — compute on registers only |
+| Registers | 16 general-purpose | **31** (fewer spills) |
+| Memory ordering | **strong (TSO)** | **weak / relaxed** |
+| Vendors | two (Intel, AMD) | **licensed IP** — Apple, Qualcomm, **Amazon Graviton**, Ampere roll their own |
+
+Three of those have mechanisms behind them, and two are callbacks you'd already earned:
+
+- **Fixed vs variable length → the efficiency story, mechanically.** x86's variable length makes the *decoder* complex (you can't find
+  instruction N+1 until you've decoded N) — power-hungry and hard to parallelize; ARM's fixed 4-byte instructions let you decode many in
+  parallel (how Apple's M-series runs such a wide front-end). And the **CISC/RISC line is blurry**: modern x86 chips *decode into RISC-like
+  micro-ops* internally, so the **ISA is the contract, not the microarchitecture** — a direct Ch1 §3 callback.
+- **Memory ordering was the one that lit up for you (Ch3 §3 callback).** x86 is strongly ordered (mostly preserves your write order); ARM is
+  weakly ordered and reorders aggressively unless you insert **memory barriers** (acquire/release, `dmb`). So **concurrent code with a latent
+  data race that "worked" on x86 can start failing on ARM** — the §7 "hardware floor" of your synchronization section made real, and a
+  genuine hazard when teams move server code to Graviton. Same lesson as Ch3: don't lean on incidental ordering; use real atomics/locks.
+
+**Why the binary won't run — and the honest nuance.** A compiled `.exe` *is* machine code for one ISA; an ARM CPU can't decode x86 bytes, so
+**natively it's impossible** — no chip runs both. But the true answer is "not *natively* — and emulation has limits," because Windows-on-ARM
+ships an x86/x64 **emulator** (**Prism** on Windows 11 Copilot+ PCs, the same idea as Apple's **Rosetta 2**) that binary-translates x86 →
+ARM at runtime. So the failures cluster where emulation *can't* reach — and naming them is the keeper:
+
+1. **Kernel-mode code can't be emulated (the real killer).** A ring-0 **driver** (antivirus, VPN, anti-cheat) runs *beside* the ARM kernel;
+   you can't splice an emulated x86 blob into ring 0. Needs a native ARM64 driver or it simply won't work.
+2. **Performance cost** — translation is slower than native (Prism/Rosetta narrowed it, but you still pay); fine for an editor, painful for
+   a game or compiler.
+3. **You can't mix ISAs in one process** — a native ARM app can't load an x86 plugin/DLL into its address space (one ISA per address space),
+   so extensible apps break at the plugin boundary.
+
+**The tie-back to your world (Ch1 §1 callback).** You've lived the flip side on **AWS Lambda / Graviton**: you choose `x86_64` or `arm64`
+and must **build for the target** — a container image is `linux/amd64` *or* `linux/arm64` (hence Docker `buildx` multi-arch manifests). And
+notice *why Python travels cross-arch for free*: your `.py` isn't machine code, it's **arch-independent bytecode** — only the CPython
+**interpreter** is compiled per-arch. The portability you get for nothing in Python is exactly the portability a compiled `.exe` lacks. The
+exception is **native extensions** (numpy, anything with C) — those *are* machine code and must match the arch, which is why the odd
+`pip install` grabs the wrong wheel on ARM.
+
+> **Keeper (9b):** *native execution requires the same ISA — a binary speaks exactly one CPU's language; emulation (Prism/Rosetta) bridges
+> **user-mode** code at a cost, but breaks at (a) ring-0 driver code, (b) performance-critical paths, and (c) mixing ISAs in one process.*
+> And the reason interpreted/JIT'd runtimes dodge the whole problem is Ch1 §1: they ship arch-neutral bytecode over a per-arch engine.
+
+*(Meta-note for both threads: these were open exploratory questions, not hypotheses to re-rank — consistent with how you work in
+conceptual/systems domains. The value added was **structure and naming** (hardware-vs-contract; ISA-as-mother-tongue; the three emulation
+failure modes) and wiring the answers back to material you already own — Ch3 §3 memory ordering, Ch1 §1 bytecode, your Graviton/Docker
+practice. This whole session is really a **Ch1 §3 / Ch1 §5 trailer**; when we reach M01 Ch5 the OS-landscape comparison gets the full
+treatment, and the x86/ARM memory-model hazard is worth reopening then.)*
 
 ---
 
 ## 10. References (optional, for depth)
 
-*(All links verified live 2026-07-02.)*
+*(All links verified live 2026-07-06.)*
 
 - **[`man 2 syscall` — the calling convention](https://man7.org/linux/man-pages/man2/syscall.2.html)** — the authoritative per-architecture
   table of *which registers* carry the number and arguments (the x86-64 `rax`/`rdi`/`rsi`/… of §2). Short and worth reading once.
@@ -361,12 +473,22 @@ Bring your answers to our chat — especially where you have to *rank* the domin
   — the thin Python layer sitting directly on the syscalls, below the buffered `open()`. Useful for seeing where the boundary is in your
   own code.
 
+**For §9 (the portability threads you drove):**
+- **[Microsoft Learn — "How x86 & x64 emulation work on Arm"](https://learn.microsoft.com/en-us/windows/arm/apps-on-arm-x86-emulation)** —
+  the authoritative description of the Windows-on-ARM emulator (and Prism), including *why* kernel drivers must be native ARM64 (9b's real
+  killer) and the mixed-ISA loading rule.
+- **[j00ru — Windows System Call Tables](https://j00ru.vexillium.org/syscalls/nt/64/)** — the living proof of 9a's headline: the Windows
+  syscall *numbers* tabulated per build, visibly changing across versions. This is why you call `ntdll`, not the number.
+- **[Jeff Preshing — "Weak vs. Strong Memory Models"](https://preshing.com/20120930/weak-vs-strong-memory-models/)** — the clearest short
+  treatment of the x86-TSO-vs-ARM-weak divide from 9b (and the Ch3 §3 hardware floor); read it before porting concurrent code to Graviton.
+
 ---
 
 ### What's next
-🔵 **Draft prepared 2026-07-02.** This section drew the line the whole chapter stands on: user vs kernel mode, the syscall as a guarded
-trap (not a function call), its cost and the two rules that fall out (batch crossings · park a waiting task), and the `strace`/`mmap`/vDSO
-reality. Natural follow-ons, your call at the boundary:
+✅ **Finalized 2026-07-06.** This section drew the line the whole chapter stands on: user vs kernel mode, the syscall as a guarded trap
+(not a function call), its cost and the two rules that fall out (batch crossings · park a waiting task), and the `strace`/`mmap`/vDSO
+reality — plus §9's two portability lines (the OS line: syscall mechanism universal, contract per-OS; the ISA line: a binary speaks one
+CPU's language, emulation bridges only user-mode). Natural follow-ons, your call at the boundary:
 - **Ch4 §2 — Blocking vs non-blocking I/O & multiplexing** (blocking / non-blocking / `select`·`poll`·`epoll` / `io_uring`; the C10k
   problem; the model your event loop actually uses). The direct continuation, and it cashes the `epoll_wait` thread from Ch3 §2.
 - **Ch4 §3 — Why I/O dominates latency** (the right-hand side of this section's figure, made into latency budgets and pipelining).

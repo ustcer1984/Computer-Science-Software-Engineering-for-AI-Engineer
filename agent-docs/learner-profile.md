@@ -4,7 +4,29 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-02 (v22 — **reading-track REDEFINED + reading #8 finalized (undersea cables · Milei's
+Last updated: 2026-07-06 (v23 — **course: M01 Ch4 §1 (the kernel boundary & the system call) finalized → opens Ch4.**
+Body pitched high, went **untouched**; he drove the whole session **past the edge of the material, in the direction it was
+weakest** — the section is written Linux-first, so he stress-tested its *portability* twice (his signature "one layer past the
+text," and both **comparative**, his stated preference). **(9a) "Are syscalls the same on Windows/Linux?"** → keeper *separate
+the hardware from the contract*: rings, the `syscall`/`sysret` trap, the cost ladder, even Meltdown/KPTI (Windows = KVA Shadow)
+are **hardware-universal**; per-OS is the **vocabulary** + the **stable-ABI location** — Linux freezes it *at the syscall*
+(num 0 = `read` forever; raw syscalls fine), Windows one layer up in `ntdll`/`kernel32` (numbers/SSDT private, shift per build);
+plus `epoll` readiness/reactor vs Windows **IOCP** completion/proactor (asyncio `Selector`- vs `Proactor`-EventLoop; `io_uring` =
+convergence). **(9b) "x86 vs ARM; why won't x86 Windows apps run on ARM Windows?"** → keeper *the ISA is the binary's mother
+tongue*: different ISA = different bytes → **native impossible**; CISC/RISC nuance (micro-ops, ISA-as-contract; fixed-vs-variable
+decode → power; 31 vs 16 regs); sleeper = **strong x86-TSO vs weak-ARM memory ordering** → races that "worked" on x86 break on
+Graviton (**Ch3 §3 hardware-floor callback**); emulation (Prism/Rosetta) bridges **user-mode only**, breaks at ring-0 drivers /
+perf / mixing ISAs in one process; tied to his **Lambda/Graviton/Docker multi-arch** + **Python arch-neutral bytecode** (Ch1 §1).
+**Calibration — reinforces v21/v22:** in **conceptual/systems** domains he's **well-calibrated, not mis-ranked**; these were
+*open exploratory questions*, so value added = **structure + naming + wiring to owned material**, NOT dominant-cause re-ranking.
+**NEW durable signal — he reflexively tests a mechanism's *generality* ("is this Linux-only? does it hold on Windows/ARM?").**
+Feed it: **teach the universal principle first, then explicitly flag what's platform/arch-specific** — when material is written
+for one platform, mark hardware-universal vs OS/ISA-specific (acted on: added a portability callout to §1). His **AWS cross-arch
+experience (Graviton/Lambda/Docker) is a live anchor** — the x86/ARM material landed on lived practice. **This session = a Ch1 §3
+/ Ch1 §5 trailer** (reopen the x86/ARM weak-memory hazard at M01 Ch5). Full entry in the course-track section below. **Next:**
+Ch4 §2 (blocking/non-blocking, `epoll`/`io_uring`, C10k) — direct continuation; or Ch4 §3 (I/O dominates latency); or rotate to
+M04 Ch2 §2 / M12 Ch2 §3.).
+Prior: v22 (2026-07-02 — **reading-track REDEFINED + reading #8 finalized (undersea cables · Milei's
 Argentina).** Major process change from `prompts/002-reading-track-clarification.md`: the **reading track is now
 "National Geographic / Discovery" genre, NOT a course brought forward** — wonder / currency / case studies / live
 debates — and each day pairs **1 career-track topic + 1 hobby-track topic**; topics need **not** map to a course
@@ -222,6 +244,31 @@ learning surfaces.
   recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
+- **2026-07-06 — M01 Ch4 §1 (the kernel boundary & the system call) ✅ finalized → opens Ch4 (I/O, syscalls & the
+  kernel boundary).** The bottom-up finale of M01; cashes Ch3 §2's IOUs (`epoll_wait`/`selector.select` = *syscalls*; a
+  blocking `read` parks the thread *in the kernel* → why the GIL is free across I/O). **Body (pitched high) went untouched:**
+  user vs kernel mode (mode-switch ≠ context-switch; kernel = privileged library in every address space, not a process); the
+  syscall as a guarded trap (`rax`/`rdi`… ABI, one fixed `LSTAR` entry, `sys_call_table`, argument validation, `sysret`,
+  `errno`) vs a function call; the cost ladder (fn ≪ syscall ≪ context switch) with a real log-scale latency figure + the two
+  rules (batch crossings · park don't spin); Meltdown→KPTI (Ch1 §3 callback); libc wrappers + vDSO; a real captured `strace`;
+  `mmap`/`llama.cpp`; interrupts vs faults vs syscalls. **He asked nothing about the body — he drove two comparative
+  *portability* threads past the material** (§9): **(9a)** *are syscalls the same on Windows/Linux?* → keeper **separate the
+  hardware from the contract** — the trap mechanism/cost are hardware-universal (even Meltdown has a Windows twin, KVA Shadow),
+  but the **stable-ABI location** differs: Linux freezes it *at the syscall*, Windows one layer up in `ntdll`/`kernel32`
+  (syscall numbers private, shift per build); plus `epoll` readiness/reactor vs Windows **IOCP** completion/proactor (asyncio
+  picks `Selector`- vs `Proactor`-EventLoop; `io_uring` converging). **(9b)** *x86 vs ARM; why won't x86 Windows apps run on ARM
+  Windows?* → keeper **the ISA is the binary's mother tongue**: different ISA = different bytes → native impossible; CISC/RISC
+  nuance (micro-ops; fixed-vs-variable decode → power; 31 vs 16 regs); the sleeper = **strong x86-TSO vs weak-ARM memory
+  ordering** → races that "worked" on x86 break on Graviton (**Ch3 §3 hardware-floor callback**); emulation (Prism/Rosetta)
+  bridges **user-mode only** and breaks at ring-0 drivers / perf / mixing ISAs in one process; tied to his **Graviton/Lambda/
+  Docker multi-arch** + **Python arch-neutral bytecode** (Ch1 §1). **Calibration (reinforces v21/v22):** conceptual/systems →
+  **well-calibrated, not mis-ranked**; these were *open exploratory questions*, so the teaching value was **structure + naming +
+  wiring to owned material**, not dominant-cause re-ranking. **NEW durable signal:** he **reflexively probes a mechanism's
+  generality** ("is this Linux-only?") — so **teach the universal principle first, then flag what's platform/arch-specific**
+  (acted on: added a §1 portability callout). **Teach-forward:** his AWS cross-arch practice (Graviton/Lambda/Docker) is a live
+  anchor for CPU/OS-portability material; this session is a **Ch1 §3 / Ch1 §5 trailer** — reopen the x86/ARM weak-memory hazard
+  at M01 Ch5. Full body/diagram/Q&A detail in `courses/plan.md`. **Next:** Ch4 §2 (blocking/non-blocking, `epoll`/`io_uring`,
+  C10k) — direct continuation; or Ch4 §3 (I/O dominates latency); or rotate to M04 Ch2 §2 / M12 Ch2 §3.
 - **2026-06-25 — M12 Ch2 §2 (video generation & world models) ✅ finalized.** Second section of the AI
   thread (non-text models), pitched at his frontier level. Body untouched; the whole Q&A was **one analogy
   refined twice** — *"DDPM→FM fewer sampling steps ≈ SGD→Adam faster convergence?"* The re-rank (now a §4
