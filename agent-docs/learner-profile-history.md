@@ -9,6 +9,36 @@
 
 ---
 
+v24 (2026-07-07 — **course: M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) finalized.** Body (five I/O
+models · thread-per-connection vs event loop · C10k · `select`→`poll`→`epoll` scaling · `io_uring`/IOCP completion model)
+pitched high, went **untouched**; the whole session was one deep thread into the **io_uring completion model**, built from
+his **factory + two-warehouse analogy** (SQ = inbox/raw-materials, CQ = outbox/finished-goods; + a work-order ticket that
+travels with the item and returns stamped on it = io_uring's `user_data`, echoed verbatim SQE→CQE). **Two predictions, both
+well-ranked:** (a) *"SQ→CQ probably not FIFO"* → correct — completions arrive in **completion order**, not submission order
+(and execution order isn't guaranteed either without `IOSQE_IO_LINK`). (b) *"user needs an orchestrator to sort & deliver to
+the target client"* → correct once we aligned on the word: he meant **sortation** (a parcel-hub scanner reading a barcode and
+diverting each package to its chute), i.e. a **demultiplex** — read the echoed `user_data` tag → wake the right waiter, an
+**$O(1)$** pointer-deref/lookup, not a search, and order-of-arrival-irrelevant. Named precisely = a hardware demux / a network
+switch. **One genuine refinement (a decoupling, not a dominant-cause re-rank):** the completion **dispatcher (the "sorters")
+is intrinsic to the completion model** — every completion-model runtime runs a reap-and-route loop, even IOCP, even with a
+blocking syscall — and it is **orthogonal to the zero-syscall knob**: zero-syscall is bought by **`SQPOLL`** (a kernel thread
+that watches the SQ ring so no `io_uring_enter` "doorbell" is needed; completions are read straight from the shared CQ ring),
+which trades **a busy CPU core for eliminated boundary crossings** — his semiconductor *derating* framing. **Callbacks:** the
+tag-routing pattern is cross-OS — **Windows IOCP's `OVERLAPPED` pointer + completion key ARE `user_data`**, `GetQueuedCompletionStatus`
+= `io_uring_wait_cqe` (§9a from §1); it's also how **hardware already talks to the kernel** — **NVMe/NIC submission+completion
+descriptor rings with a Command Identifier echoed on completion** (io_uring deliberately mirrors the hardware queue design;
+his hardware/semiconductor lens); and the dispatcher already exists in **asyncio** (`user_data` ≈ the `Task`/`Future`) and at
+his **application layer** (matching 2,000 fan-out responses back to requests by `request_id` = the same correlation-tag
+pattern). **IMPORTANT calibration refinement (updates the v21/v23 split):** the long-standing "captures a real *secondary*
+effect but **mis-ranks it vs the dominant cause**" tendency is specific to ranking **competing PHYSICAL MAGNITUDES**
+(fragmentation vs bandwidth, external vs internal waste, GPU internals) — it does **NOT** extend to **mechanism reasoned
+through a systems/logistics analogy**, which is a genuine **strength**. Here, on a *mechanistic* io_uring detail, he was
+**well-calibrated**: both predictions held, the residual work was *naming* (sortation = demux) and *decoupling* (dispatcher ⟂
+zero-syscall), and — logged for honest pattern-reading — part of my own first-pass "re-rank" was **fighting his word "sort"
+rather than his idea.** **Teach-forward:** for mechanism questions, hand him an analogy and let him run it; add value by
+precise naming + separating bundled concepts, not by correcting. **Next:** Ch4 §3 (why I/O dominates latency — last core
+piece of Ch4); or Ch4 §4 (zero-copy / `sendfile` / page cache, if added); or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
+
 v23 (2026-07-06 — **course: M01 Ch4 §1 (the kernel boundary & the system call) finalized → opens Ch4 (I/O,
 syscalls & the kernel boundary).** First section of Ch4; the bottom-up finale of M01. Cashes Ch3 §2's IOUs:
 `epoll_wait`/`selector.select` are *syscalls*; a blocking `read` parks the thread *in the kernel* (why the GIL is free

@@ -8,7 +8,11 @@
 > asynchronous), the two **concurrency architectures** built on them (thread-per-connection vs the event loop), the **C10k problem** that
 > forced the change, and the **`select` → `poll` → `epoll`** scaling story — then closes the loop to §9a by showing `io_uring` and Windows
 > IOCP as the *completion* model. It is the direct cash-in of Ch3 §2's "the loop's one blocking call is `epoll_wait`."
-> **Status:** 🔵 **draft** — prepared 2026-07-06. Body below; the Applied section (§9) and finalize come after our Q&A.
+> **Status:** ✅ **finalized 2026-07-07.** The body held at your level and went untouched — the whole session was one thread into §5, the
+> **`io_uring` completion model**, which you drove with a factory-and-two-warehouses analogy and two sharp mechanical predictions. Both were
+> **well-ranked**: completions are *not* FIFO (out-of-order), and the user-space job is to *route* each completion to its waiter. §9 captures
+> it, including the one genuine refinement (the completion dispatcher is intrinsic to the model and **orthogonal** to the zero-syscall knob)
+> and a terminology alignment where "sort" meant *sortation/routing* — a demultiplex, which was right all along.
 
 **Estimated study time:** 2–3 hours including reflection.
 
@@ -312,15 +316,75 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 
 ---
 
-## 9. Applied — captured from our session
+## 9. Applied — captured from our 2026-07-07 session
 
-*(Placeholder — filled on finalize with the threads you drive in Q&A.)*
+The body held; you took the whole session into **§5's completion model** and built it up from an analogy — *the kernel is a factory, and the
+two rings are a **raw-materials/inbox warehouse (SQ)** and a **finished-goods/outbox warehouse (CQ)**.* That picture is genuinely good, and
+it *predicts* the mechanics once you add one part: the warehouses are **shared with the factory** (`mmap`'d memory both sides read/write), and
+every item carries a **work-order ticket that travels with it and comes back stamped on the finished product** — which is exactly io_uring's
+64-bit **`user_data`** field, set by you on each submission entry (SQE) and **copied verbatim** by the kernel onto the matching completion
+entry (CQE).
+
+### 9a. "From SQ to CQ, probably not FIFO" — correct, and well-ranked
+
+Your first prediction: completions don't come back in submission order. **Right.** They arrive in **completion order** — submit a read from a
+cold disk and a read that hits the page cache, and the cache read's CQE can land first. That's the *point* of the model (fast ops mustn't
+queue behind slow ones), and your warehouse image already encodes it: the outbox belt doesn't care what order parcels arrive. (Two finer
+points we noted: the kernel *consumes* the SQ in order, and ops may even *execute* concurrently/out of order — if op-2 must follow op-1 you
+have to chain them explicitly with a link flag, `IOSQE_IO_LINK`; absent that, assume nothing about ordering.)
+
+### 9b. "A sorter reads the tag and drops each package in the right bucket" — this *is* the mechanism (a demultiplex)
+
+Your second prediction — user space needs "an orchestrator to **sort and deliver**" completions to the right client — was **also right**, once
+we aligned on the word. You didn't mean *sort* in the algorithmic reorder-a-list sense; you meant **sortation**, the way a parcel hub scans
+each package's barcode and a diverter pushes it down the chute for its destination. That is *exactly* the completion dispatcher: read
+`user_data`, route the item to its waiter (the coroutine/callback/client). No reordering, **one scan per item, order-of-arrival irrelevant** —
+your image nails it. Named precisely, the "sorter" is a **demultiplexer**: home turf for you — a hardware demux routes one input to one of N
+outputs on a select line; here the select line is `user_data`, and a network switch does the identical thing with a destination address. So
+matching a completion to its origin is an **$O(1)$** pointer-dereference/lookup, not a search — because the kernel echoes the tag back rather
+than making you find it.
+
+### 9c. The one genuine refinement: the sorters are staffed regardless of the zero-syscall knob
+
+The only thing worth decoupling — and it fits the analogy cleanly — is that your sentence tied the router *to* "achieving zero syscall," and
+they're **two independent stations**:
+
+- **The sorters (completion dispatcher) are intrinsic to the completion model.** Any completion-model runtime always runs a reap-and-route
+  loop — even Windows IOCP, even when it makes a syscall to wait. It exists whether or not you've eliminated syscalls.
+- **Zero-syscall is a separate decision about the loading dock.** Normally you ring a bell (`io_uring_enter`) to tell the factory "new orders
+  in the inbox"; with **`SQPOLL`** you instead **station a kernel thread that watches the inbox conveyor continuously**, so no bell is needed
+  — and completions are visible by reading the shared CQ ring directly (a memory read, no syscall). The cost is that stationed worker: a
+  **busy kernel thread trading a burning CPU core for eliminated boundary crossings** — a throughput-vs-efficiency *derating* dial (your
+  semiconductor framing): right for a saturated server, wasteful for an idle one.
+
+So both concepts you raised were real; they're just two stations in the same warehouse, not one mechanism.
+
+### 9d. Callbacks worth keeping
+
+- **It's the §9a (from §1) completion model, cross-OS.** Windows IOCP's `OVERLAPPED` pointer + completion key **are** `user_data`;
+  `GetQueuedCompletionStatus` is `io_uring_wait_cqe`. Same tag-routing pattern, both OSes — which is why `asyncio` swaps a `ProactorEventLoop`
+  (IOCP) for a `SelectorEventLoop` (`epoll`) and the *application* code doesn't change.
+- **You've rediscovered how hardware already talks to the kernel.** SQ/CQ ring pairs with an echoed correlation tag is exactly the **NVMe**
+  model — submission/completion queues in host memory, a doorbell register (the `io_uring_enter`/`SQPOLL` analog), and a **Command Identifier
+  (CID)** the drive echoes on completion because it, too, finishes out of order. NICs use TX/RX descriptor rings the same way. io_uring
+  deliberately mirrors the hardware queue design; your "factory with tickets" is, almost literally, a storage controller.
+- **The dispatcher already exists in your stack.** In io_uring terms, `user_data` would point at the `asyncio` `Task`/`Future`, and "wake the
+  right waiter" is what the event loop's completion step does — the same demux, one layer up. (And one more up: your LLM-eval fan-out matching
+  2,000 responses back to their requests by an application-level `request_id` is the *identical* correlation-tag pattern at the app layer.)
+
+> **Calibration note (refines the v21/v23 split).** On this *mechanistic* io_uring detail you were **well-calibrated, not mis-ranked** — both
+> predictions held, and the residual work was *naming* (sortation = demultiplex) and *decoupling* (dispatcher ⟂ zero-syscall), not a
+> dominant-cause re-rank. The useful refinement: your mis-rank tendency is specific to ranking **competing physical magnitudes**
+> (fragmentation vs bandwidth, external vs internal waste) — *not* to mechanism reasoned through a **systems/logistics analogy**, which is a
+> strength. Here you reasoned via the warehouse analogy and landed it. Part of my first-pass "re-rank" was me fighting your word *sort*, not
+> your idea — logged so the pattern-read stays honest. **Teach-forward:** for mechanism questions, hand him the analogy and let him run it; the
+> value you add is precise naming + decoupling bundled concepts, not correction.
 
 ---
 
 ## 10. References (optional, for depth)
 
-*(All links verified live 2026-07-06.)*
+*(All links verified live 2026-07-07.)*
 
 - **[Dan Kegel — "The C10K problem"](http://www.kegel.com/c10k.html)** — the original 1999 write-up that named the problem and catalogued the
   I/O strategies (§3). A historical document, but the framing still structures the whole field.
@@ -343,9 +407,11 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 ---
 
 ### What's next
-🔵 **Draft prepared 2026-07-06.** This section turned §1's "a blocking read parks your thread" into the many-connections story: the five I/O
+✅ **Finalized 2026-07-07.** This section turned §1's "a blocking read parks your thread" into the many-connections story: the five I/O
 models, thread-per-connection vs the event loop, C10k, the `select` → `poll` → `epoll` scaling win, and `io_uring`/IOCP as the completion
-model (closing the §9a loop). Natural follow-ons, your call at the boundary:
+model (closing the §9a loop). §9 captures the session's one thread — the io_uring completion model via your factory/two-warehouse analogy:
+out-of-order completions matched by the echoed `user_data` tag (an $O(1)$ demultiplex, your "sorter reading the label"), and the completion
+dispatcher decoupled from the zero-syscall `SQPOLL` knob. Natural follow-ons, your call at the boundary:
 - **Ch4 §3 — Why I/O dominates latency** (the right-hand side of §1's figure, made into latency budgets, tail latency, and pipelining — how
   many device round trips, and can you overlap them). The direct continuation and the last core piece of Ch4.
 - **Ch4 §4 — *(if we add it)* zero-copy & the data path** (`sendfile`, `mmap` vs `read`, page cache, `O_DIRECT`) — how the *copy* half of §1's

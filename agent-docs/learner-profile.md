@@ -4,7 +4,27 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-06 (v23 — **course: M01 Ch4 §1 (the kernel boundary & the system call) finalized → opens Ch4.**
+Last updated: 2026-07-07 (v24 — **course: M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) finalized.** Body
+(five I/O models · thread-per-conn vs event loop · C10k · `select`→`poll`→`epoll` scaling · `io_uring`/IOCP completion
+model) pitched high, went **untouched**; the whole session was one deep thread into the **io_uring completion model**,
+which he built from a **factory + two-warehouse analogy** (SQ=inbox, CQ=outbox; + a work-order ticket = `user_data`).
+**Two predictions, both well-ranked:** (a) *"SQ→CQ probably not FIFO"* → correct (out-of-order completion order); (b)
+*"user needs an orchestrator to sort & deliver to the target client"* → correct once we aligned that **"sort" = sortation/
+routing = a demultiplex** (read the echoed `user_data` tag → wake the right waiter; $O(1)$, not a search). **One genuine
+refinement (a decoupling, not a re-rank):** the completion **dispatcher is intrinsic to the model** and **orthogonal** to
+the **zero-syscall** knob (`SQPOLL` = a kernel thread watching the ring = busy-core-for-syscalls *derating* trade).
+Callbacks: IOCP `OVERLAPPED`+key ≡ `user_data` (cross-OS, §9a); **NVMe/NIC descriptor rings + Command Identifier** — io_uring
+mirrors hardware queues (his semiconductor lens); the dispatcher already exists in asyncio (`user_data`≈`Task`) and at his
+app layer (`request_id` matching in the eval fan-out). **IMPORTANT calibration refinement (updates v21/v23):** the
+"captures-a-real-secondary-effect-but-mis-ranks-the-dominant-cause" tendency is specific to ranking **competing PHYSICAL
+MAGNITUDES** (fragmentation vs bandwidth, external vs internal waste) — it does **NOT** apply to **mechanism reasoned
+through a systems/logistics analogy**, which is a genuine strength: here, on a *mechanistic* io_uring detail, he was
+**well-calibrated**, and part of my first-pass "re-rank" was me **fighting his word "sort," not his idea** (logged for
+honesty). **Teach-forward:** for mechanism questions, hand him an analogy and let him run it — add value by *naming*
+(sortation = demux) and *decoupling bundled concepts* (dispatcher ⟂ zero-syscall), not by correcting. Full entry in the
+course-track section below. **Next:** Ch4 §3 (why I/O dominates latency — last core piece of Ch4); or Ch4 §4 (zero-copy /
+`sendfile` / page cache, if added); or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
+Prior: v23 (2026-07-06 — **course: M01 Ch4 §1 (the kernel boundary & the system call) finalized → opens Ch4.**
 Body pitched high, went **untouched**; he drove the whole session **past the edge of the material, in the direction it was
 weakest** — the section is written Linux-first, so he stress-tested its *portability* twice (his signature "one layer past the
 text," and both **comparative**, his stated preference). **(9a) "Are syscalls the same on Windows/Linux?"** → keeper *separate
@@ -244,6 +264,29 @@ learning surfaces.
   recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
+- **2026-07-07 — M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) ✅ finalized.** The payoff of §1; cashes Ch3 §2's
+  "the loop's one blocking call is `epoll_wait`" + §9a's readiness/completion split. **Body (pitched high) went untouched:**
+  the two phases of any I/O (wait/copy) → the five I/O models (blocking · non-blocking · multiplexing · signal-driven ·
+  async), synchronous-vs-async as the load-bearing line; thread-per-connection vs the event loop (costs from Ch2 overcommit
+  + §1 ladder + Ch3 GIL); the **C10k problem**; the `select`→`poll`→`epoll` scaling mechanism ($O(n)$ rescan vs
+  $O(\text{ready})$ via a kernel-kept interest list + a ready list maintained by per-fd callbacks; `FD_SETSIZE` wall; LT-vs-ET
+  footgun); `io_uring`/IOCP as the **completion** model (shared SQ/CQ rings) closing the §9a loop. **§9 — one deep thread into
+  the io_uring completion model**, built from his **factory + two-warehouse analogy** (SQ=inbox, CQ=outbox; + a work-order
+  ticket = `user_data`). **Two well-ranked predictions:** (a) *"SQ→CQ probably not FIFO"* → correct (out-of-order completion;
+  execution ordering needs `IOSQE_IO_LINK`); (b) *"user needs an orchestrator to sort & deliver to the target client"* →
+  correct once "sort" was read as **sortation/routing = a demultiplex** (read the echoed `user_data` tag → wake the right
+  waiter; $O(1)$ pointer-deref, = a hardware demux / network switch). **One genuine refinement (a decoupling, not a re-rank):**
+  the completion **dispatcher is intrinsic to the model**, **orthogonal** to the **zero-syscall** knob (`SQPOLL` = a kernel
+  thread watching the ring = a busy-core-for-syscalls *derating* trade). **Callbacks:** IOCP `OVERLAPPED`+key ≡ `user_data`
+  (§9a, cross-OS); **NVMe/NIC descriptor rings + Command Identifier echoed on completion** → io_uring mirrors hardware queues
+  (his semiconductor lens); the dispatcher already exists in asyncio (`user_data`≈`Task`) and at his app layer (`request_id`
+  matching in the eval fan-out). **Calibration — IMPORTANT refinement of v21/v23:** the mis-rank tendency is specific to
+  ranking **competing physical magnitudes** (fragmentation vs bandwidth), **not** to **mechanism reasoned via a
+  systems/logistics analogy** — a strength; here on a mechanistic detail he was **well-calibrated**, and part of my first-pass
+  "re-rank" was me *fighting his word "sort," not his idea* (logged for honest pattern-reading). **Teach-forward:** hand him an
+  analogy and let him run it; add value by *naming* (sortation = demux) + *decoupling bundled concepts* (dispatcher ⟂
+  zero-syscall), not by correcting. Full detail in `courses/plan.md`. **Next:** Ch4 §3 (why I/O dominates latency); or Ch4 §4
+  (zero-copy/`sendfile`/page cache, if added); or rotate to M04 Ch2 §2 / M12 Ch2 §3.
 - **2026-07-06 — M01 Ch4 §1 (the kernel boundary & the system call) ✅ finalized → opens Ch4 (I/O, syscalls & the
   kernel boundary).** The bottom-up finale of M01; cashes Ch3 §2's IOUs (`epoll_wait`/`selector.select` = *syscalls*; a
   blocking `read` parks the thread *in the kernel* → why the GIL is free across I/O). **Body (pitched high) went untouched:**
