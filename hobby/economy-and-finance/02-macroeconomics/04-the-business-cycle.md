@@ -172,7 +172,7 @@ already built resurface.
 - **The multiplier (the §2 §9b loop, named).** One agent's spending is another's income — so an initial
   drop in spending cuts someone's income, who then cuts *their* spending, and so on. The total hit is a
   **geometric series**: with a **marginal propensity to consume** $c$ (the fraction of an extra dollar that
-  gets spent, §2's MPC), a \$1 shock to demand ultimately moves output by
+  gets spent, §2's MPC), a one-dollar shock to demand ultimately moves output by
   $\Delta Y = \frac{\Delta(\text{spending})}{1 - c}$ — the **multiplier** $1/(1-c)$. If $c = 0.6$, a shock is
   amplified $2.5\times$. This is exactly the
   **paradox of thrift** the learner reconstructed in §2 §9b — everyone saving more at once *shrinks* the
@@ -376,7 +376,7 @@ then test against a real series.
    that wipes out household wealth; (c) a broad new import tariff; (d) a government slashing spending to cut
    its deficit. Which one(s) put a central bank in a genuine bind, and why?
 2. **The multiplier.** The marginal propensity to consume is $c = 0.75$. A recession cuts investment
-   spending by \$100 billion. Using $\Delta Y = \Delta(\text{spending}) / (1 - c)$, what's the total hit to
+   spending by 100 billion dollars. Using $\Delta Y = \Delta(\text{spending}) / (1 - c)$, what's the total hit to
    output? Now explain in one sentence how this *is* the paradox of thrift from §2.
 3. **Locate the economy.** Growth is running *above* potential, unemployment is *below* the NAIRU, and
    inflation is creeping up. What's the sign of the output gap, and — using Okun (§3) and the Phillips curve

@@ -132,6 +132,18 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
   - **Don't place two inline-math spans adjacent with no spaces** (`$MB$/$MC$`, `$x$$y$`). GitHub parses
     the first and leaves the second literal (`MB/$MC$`). Merge into one span (`$MB/MC$`) or put text/space
     between them.
+  - **Never use an escaped `\$` (a literal dollar sign, e.g. `\$1`, `\$100 billion`) on a line/paragraph that
+    also contains an inline `$…$` math span.** GitHub's math extension scans for `$` delimiters and treats
+    the *escaped* `\$` as an **opening** delimiter, so it pairs with the next real `$` — swallowing the prose
+    in between as a run-together italic math span and leaving your *actual* formula dumped as literal LaTeX
+    source with a stray trailing `$`. Shipped in E02 §4 2026-07-02: `a \$1 shock … moves output by
+    $\Delta Y = \frac{…}{1-c}$` rendered as the jammed italic `1shocktodemandultimatelymovesoutputby` followed
+    by literal `\Delta Y = \frac{…}` — the money sign, not the math, was the culprit. **Fix: spell the money
+    out** ("a one-dollar shock", "100 billion dollars") so there's no `$` sign on that line at all. Catch it
+    pre-push with `grep -nE '\\\$' <file>` and check each hit shares no line/paragraph with `$…$` math.
+    Eyeball-only review of the editor preview misses it (Cursor renders the escape correctly); Playwright the
+    GitHub blob — the `.js-display-math`/`.js-inline-math` span count coming up *short* of your `$…$` count is
+    the tell.
   - Prefer plain `(...)` or `\left(...\right)` over `\big(`/`\!` micro-spacing in inline math — fewer
     macros, fewer surprises across renderers.
 - **Verify on GitHub, not just in the editor.** This repo is **public**, so after pushing, check the blob URL
