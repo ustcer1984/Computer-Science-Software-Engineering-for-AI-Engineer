@@ -12,9 +12,13 @@
 > paid off), and the **leading / coincident / lagging indicators** the news uses to read the cycle in real
 > time. It ends pointing straight at **E03 (money & central banks)** — the policy that leans against all of
 > this.
-> **Status:** 🔵 **body drafted 2026-07-02**, awaiting the study + Q&A session (the live thread will be
-> added as a final "Applied" section on finalize, as in §§1–3). Math in LaTeX, quantitative relationships
-> drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
+> **Status:** ✅ **finalized 2026-07-07.** Body drafted 2026-07-02; **§10 captures the live session** — a
+> three-thread arc that started from the section's own *damping* idea and walked outward: **(a)** what
+> actually acts as a **shock absorber** in an economy (the oscillator lens pushed to its limit); **(b)** a
+> **live cycle read with the toolkit** — the **AI capex boom/bubble**, researched together (mid-2026 data);
+> and **(c)** the deepest question the cycle raises — **is capitalism *doomed* by it?** — Marxist crisis
+> theory vs the Keynesian synthesis, where the learner supplied his own original, correct counter-arguments.
+> Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
@@ -415,6 +419,167 @@ China's growth target (§1) and the labour market on the 2026 Fed (§3).
 
 ---
 
+## 10. Applied — from our session Q&A (2026-07-07)
+
+This session started from the section's own throwaway idea — the cycle as a *shocked, damped oscillator* (§4)
+— and walked outward in three deliberate steps: from **what damps a cycle**, to a **live cycle to read**
+(the AI capital boom), to the grandest question a cycle theory can pose — **whether the cycle is
+capitalism's death sentence** (Marx). Each thread reused the machinery of §§1–5 and reached back to earlier
+modules; the last is squarely a *history-of-economic-thought* discussion, teed up by §4's underconsumption
+propagation and §2 §9b.
+
+### 10a. What acts as a "damper" in an economy? — the oscillator lens, pushed
+
+The learner took the §4 **Frisch–Slutsky** framing (a cycle is the *impulse response of a shocked, damped
+system*) and asked the mechanical/electrical engineer's question: a mechanical shock is damped by a dashpot,
+an electrical one by an $RC$ network — so **what plays the damping role** in the economy? Writing the cycle as
+$m\ddot{x} + c\dot{x} + kx = F(t)$ with $x$ the output gap, $F$ the shocks (§3), and the
+**multiplier–accelerator loop** supplying the mass-plus-spring, the answer is a *stack* of dampers plus one
+crucial **anti-damper**:
+
+- **Automatic stabilizers = the passive dashpot.** Progressive taxes and transfers/unemployment insurance
+  act automatically, with no decision lag, proportional to the deviation — and their precise effect is to
+  **shrink the multiplier** $1/(1-c)$ by lowering the *effective* MPC (a GDP shock passes through to
+  disposable income only partly). In control terms, negative feedback that cuts the loop gain.
+- **Buffers and consumption smoothing = the more genuinely *velocity*-proportional damping.** Household
+  precautionary savings, bank capital, inventories, and habit-driven slow consumption adjustment all resist
+  the *rate* of change. *(Local lens: Singapore's reserves — drawn down in 2020 — are a national dashpot,
+  the buffer that lets a small open economy absorb a huge shock.)*
+- **Discretionary monetary/fiscal policy = an *active* damper — with a dangerous lag.** Powerful, but unlike
+  a passive dashpot it has recognition/decision/transmission lags (Friedman's "long and variable"). **A
+  damper applied at the wrong phase adds energy** — mistimed stimulus can destabilize. This is the entire
+  rules-vs-discretion debate and the reason automatic stabilizers are prized (no lag). The Taylor rule (§3
+  §11) is literally the feedback-control law for this active damper → **E03**.
+- **The anti-damper — leverage/finance (ties to §4 and §2 §9b).** The same financial system that buffers
+  flips, under leverage, into **positive feedback that pumps energy into the cycle** (asset prices ↑ →
+  collateral ↑ → borrow more → prices ↑; vicious in reverse → debt-deflation). In oscillator terms leverage
+  is **negative damping** ($c < 0$) — a stable system's oscillations *grow* until crisis (Minsky). That
+  reframes **macroprudential policy** (countercyclical capital buffers, LTV caps, margin rules) as
+  *engineering damping back in* to keep $c > 0$.
+- **Don't confuse the damper with the spring.** Price/wage *flexibility* is the restoring force ($kx$), not
+  a damper — and §2's *stickiness* makes that spring weak and slow (why gaps persist). It can even go
+  *negative*: flexible falling prices in a slump raise the real debt burden (debt-deflation). So price
+  flexibility is not a reliable stabilizer either.
+
+### 10b. AI boom or AI bubble? — a live cycle, read with the toolkit (researched 2026-07-07)
+
+The learner posed the current debate in *exactly* the section's language: **both the supply and demand curves
+are shifting rapidly** (so the price/quantity outcome is hard to predict, E01 §2), and the **hardware
+price-hike (GPU/HBM) is pulling in heavy manufacturing investment → a worry of future oversupply.** We pulled
+live mid-2026 data and I gave a ranked opinion. The keystone move: **it is not boom-XOR-bubble — separate
+three questions with different answers:**
+
+1. **Is AI demand real?** Yes, structurally — the datacenter market is *supply-constrained now* (~1%
+   vacancy, ~92% pre-committed; 2026 HBM output pre-booked by end-2025; hyperscaler capex ≈ 600–725 billion
+   dollars, +36–77% YoY). Not a demand mirage today.
+2. **Is there a financial bubble in the capital structure?** Clear late-boom signals: **circular financing**
+   (Nvidia funds OpenAI, which commits compute back to Nvidia/Microsoft/Oracle/CoreWeave), increasingly
+   **debt-funded** capex via SPVs/private credit, and a **depreciation mismatch** (GPUs have a ~1–2yr
+   economic life but are financed/depreciated over 5–6yr). Microsoft fell ~10% on a beat with no clear ROI.
+3. **Will hardware supply overshoot?** Almost certainly at some point — and here the learner's own
+   intuition was the right frame.
+
+On the oversupply worry, three toolkit frames did the work:
+
+- **It is the cobweb model** — the one the learner mapped to the *semiconductor cycle* back in E01 §2 §10b.
+  Capacity has a long build lag (Micron's fab: meaningful output only mid-2027; Samsung +50% HBM in 2026,
+  HBM4 ramping); everyone invests off *today's* shortage margins; supply lands *late and all at once*; if
+  demand growth has merely cooled by then (a plausible **2028–29 glut** per the sources), you overshoot.
+  Memory is the *canonical* cobweb/hog-cycle industry.
+- **The accelerator (§4)** — investment tracks the *change* in demand, so **AI demand can keep growing and
+  capex still crash**; it only takes deceleration. You don't need AI to fail.
+- **The bullwhip (§4)** — GPU/HBM is *derived demand*; a small wobble in end-use becomes a big swing in
+  component orders. And the **circular financing is the §10a negative damping** — the feature that inflates
+  the boom and amplifies the bust.
+
+Verdict, ranked by layer: **memory/HBM** most likely to have a textbook cyclical bust (but recovers — it's a
+commodity cycle); **model labs / circularly-financed layer** most financially fragile; **Nvidia margins**
+normalize (custom silicon competes them down — the E01 §4 §9 moat race); **datacenter/power** most durable
+(bottleneck migrating to electricity); **applications** = where the ROI must finally appear. Bottom line:
+**a real, durable technology transition financed partly by a speculative capital cycle that will have a
+painful overinvestment correction** — hardware overshoots, some debt/circular players blow up, the capacity
+is absorbed, the technology persists. **Telecom-fiber-2000, not tulips.** "Right about AI, wrong about the
+valuations/timing." Watch the *leading* indicators (§6): capex-guidance deceleration, memory book-to-bill,
+AI-debt credit spreads, vacancy > 5%, circular-deal unwinding.
+
+> *Sources (retrieved 2026-07-07):* IEEE ComSoc & Introl on 2026 hyperscaler capex and AI-infrastructure
+> debt; IEEE Spectrum, IDC, and TrendForce on the DRAM/HBM shortage and glut risk; Bloomberg and Noah Smith
+> on the circular-financing structure; INSEAD Knowledge on the bubble debate.
+
+### 10c. Is capitalism *doomed* by the cycle? — Marxist crisis theory vs the Keynesian synthesis
+
+The learner brought his pre-graduate Chinese schooling in **马克思主义政治经济学** (Marxist political
+economy): the claim that surplus value (剩余价值) concentrates wealth to capital owners until *total output
+exceeds total consumption capacity*, producing an **inevitable** crisis intrinsic to capitalism. He rejected
+*surplus value = exploitation* (剥削) but found the *crisis* argument hard to refute. Two sub-threads, plus
+his own original counter-arguments.
+
+**(i) On 剩余价值 = 剥削 — why rejecting it is right.** Exploitation here rests on the **labour theory of
+value** (劳动价值论 — labour is the *sole* source of value). Mainstream economics abandoned the LTV at the
+**marginal revolution (1870s)**: each factor is paid its **marginal product** (the E01 §4 hire-to-$MRP$
+rule), so capital's return is payment for a genuinely productive contribution + deferred consumption + risk,
+not pure extraction. **But** the honest steelman survives in a *different* form: under **monopsony** (§3),
+employers with wage-setting power pay *below* marginal product — so the modern, testable version of
+"exploitation" is bargaining-power/monopsony rents and the declining labour share, not the LTV.
+
+**(ii) On the crisis theory — separate the mechanism (right) from the inevitability (wrong).** The mechanism
+is the **underconsumptionist** demand gap: concentration → lower average MPC → $C$ falls short of $Y$ →
+glut. **This is exactly the model the learner rebuilt from scratch in §2 §9b**, and mainstream macro absorbed
+it — it is Keynes's *deficient effective demand*, Piketty's $r > g$, and *secular stagnation*. That is *why*
+it felt hard to argue. The error is the word **inevitable**, and five things break it:
+
+1. **The investment channel (the killer).** Output isn't only for consumption; the surplus can be *invested*,
+   and $I$ is itself demand. The gap opens only when **desired saving exceeds desired investment at full
+   employment** ($S > I$) — a *contingent* condition (animal spirits, returns, rates), not a mechanical
+   certainty. The crude story
+   smuggles its conclusion in by omitting investment.
+2. **The tendency is offset-able — and the offsets are the §10a dampers.** Redistribution (progressive tax +
+   transfers) raises the average MPC directly; inequality *fell* 1930s–70s and rose after ~1980, so
+   concentration is a **policy variable, not a law.** The existence of a cure refutes "inevitable."
+3. **The empirical scorecard.** Marx predicted immiseration + terminal collapse; reality delivered rising
+   real wages and *recurrent-but-survived* crises. Right about **cyclicality**, wrong about **terminality**.
+4. **Crises are multi-causal.** 2008 was financial, the 1970s and COVID were **supply shocks** — crisis with
+   inflation and *shortages*, the opposite of overproduction. A monocausal glut theory can't explain them.
+5. **It needs sticky prices to bite (§2)** — so the crisis is a *fixable coordination failure*, and ironically
+   depends on the very Keynesian insight that also supplies its cure.
+
+Synthesis: **Keynes is the resolution — same mechanism as Marx, opposite conclusion** (recurrent but
+manageable, not terminal). The deepest irony: capitalism didn't collapse *partly because it absorbed the
+critique* — the welfare state, countercyclical policy, and central banks are the **dampers** built in
+response to the crises the underconsumptionists correctly warned about.
+
+**(iii) The learner's own counter-arguments — precise about which pillar they kill.** He proposed two
+original objections to the *concentration* premise, and the key was to split **Marx into two claims**: **Pillar
+A** (the economic/crisis claim — concentration of the *capital share* → demand gap) and **Pillar B** (the
+sociological claim — a *permanent hereditary* capitalist class vs a permanent proletariat → revolution).
+
+- **Wealth dissipation (富不过三代).** Real mechanisms — partible inheritance, regression to the mean
+  (the exact Western twin: "shirtsleeves to shirtsleeves in three generations"), creative destruction
+  (创造性破坏), bankruptcy, estate taxes. **But individual/dynastic churn ≠ structural concentration:** the
+  top 1% can be different people every generation while the *share* they hold still rises (Piketty's data —
+  concentration up since 1980 *despite* churn). Historically the dissipation force needed **war or policy**
+  to overpower $r > g$ (the 1914–70 de-concentration was world wars + Depression + high taxes, not smooth
+  富不过三代). And two corrections: in a crash wealth is largely *destroyed*, not broadly redistributed to
+  society (workers lose *income* via unemployment; they don't receive the rich's lost paper wealth); and
+  downturns often **re-concentrate** on the recovery (2008 → QE inflated assets → top shares rose).
+- **Getting rich without inherited capital (Musk).** Correctly dents Marx's owner-only model — **human
+  capital** (人力资本) blurs the capital/labour line. But Musk is *skill → convert to capital → compound as
+  capital* (his wealth is overwhelmingly equity, not wages), so capital is still the engine, skill is the
+  entry ticket; plus **survivorship bias**, and the scalable knowledge economy's **winner-take-all** dynamic
+  (the network-effect moats of E01 §4 §9) is arguably **more** concentrating at the top. The **Great Gatsby
+  curve** shows measured mobility is *lower* than the folk story.
+
+**Landing (the learner's, and I agree):** across two sessions we dismantled Marx on **two axes** — the
+*inevitability of collapse* (offset-able tendency) and the *permanence of classes* (churn + human capital,
+which kill Pillar B — and Pillar B *is* wrong). What survives both is the same residue: a **real but
+manageable tendency** toward capital-share concentration and demand shortfall — worth genuine policy
+attention, but **not a destiny in either direction.** That last point is the deepest anti-Marx conclusion of
+all: concentration-vs-dissipation is a live tug-of-war *set by institutions and policy* — a **choice
+variable**, not a law of history. *(Flagged for the future: whether the dissipation force is empirically
+strong enough — the Great Gatsby / intergenerational-elasticity data — is the verifiable next probe.)*
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 So the concepts carry over to Chinese-language economic news. Most differences are just **simplified vs
@@ -476,6 +641,27 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 > **滞胀 ↔ 停滯性通膨** (stagflation), **收益率 ↔ 殖利率** (yield), **同步 ↔ 同時** (coincident),
 > **滞后 ↔ 落後** (lagging), **效应 ↔ 效果** (effect), **杠杆 ↔ 槓桿** (leverage).
 
+**From the session (§10) — political economy & the crisis debate**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Political economy | 政治经济学 | 政治經濟學 | Marxist-tradition framing |
+| Surplus value | 剩余价值 | 剩餘價值 | the Marxist crisis premise |
+| Exploitation | 剥削 | 剝削 | rests on the labour theory of value |
+| Means of production | 生产资料 | 生產資料 | capital owned by the capitalist |
+| Proletariat | 无产阶级 | 無產階級 | the property-less working class |
+| Labour theory of value | 劳动价值论 | 勞動價值論 | abandoned at the marginal revolution |
+| Marginal revolution | 边际革命 | 邊際革命 | value = marginal utility, not labour |
+| Underconsumption | 消费不足 | 消費不足 | the demand-gap crisis mechanism |
+| Overproduction | 生产过剩 | 生產過剩 | the "general glut" |
+| Automatic stabilizer | 自动稳定器 | 自動穩定器 | the fiscal "dashpot" (§10a) |
+| Macroprudential | 宏观审慎 | 總體審慎 | ⚠ 宏观 ↔ 總體 (as in §1); adds damping back |
+| Creative destruction | 创造性破坏 | 創造性破壞 | Schumpeter; incumbents displaced |
+| Social mobility | 社会流动性 | 社會流動性 | the 富不过三代 dissipation force |
+| Human capital | 人力资本 | 人力資本 | skill as a source of wealth |
+| Survivorship bias | 幸存者偏差 | 倖存者偏差 | ⚠ 幸 ↔ 倖; why "Musk" over-generalizes |
+| Capital share | 资本份额 | 資本佔比（份額）| ⚠ TW often **佔比**; the r>g variable |
+
 ---
 
 ## References (optional, for depth)
@@ -501,12 +687,14 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 ---
 
 ### What's next
-🔵 **Body drafted 2026-07-02; awaiting the study + Q&A session** (the live thread becomes a final "Applied"
-section on finalize, as in §§1–3). This section **closes Module E02**: with output (§1), prices (§2), jobs
+✅ **Finalized 2026-07-07 — this closes Module E02 (Macroeconomics).** With output (§1), prices (§2), jobs
 (§3), and now the **cycle** that ties them together, you can read a full macro headline and locate the
-economy in its boom-bust arc. The deliberate bridges all point into **E03 (money, banking & monetary
-policy)** — the **Phillips curve** (§5) and the **inflation-expectations** thread hand straight to a central
-bank's job of anchoring expectations; the **yield curve** (§6) is the E03 §2 term-structure preview; and the
-**demand-vs-supply / stagflation** distinction (§3–§5) is exactly the bind that makes monetary policy hard.
-E03 §1 starts one layer deeper still: **what money actually is, and how banks create it** — the thread the
-learner already began reinventing (endogenous/credit money) in §2 §9b.
+economy in its boom-bust arc. The live session (§10) stress-tested the whole module: the **dampers** that
+tame the cycle, a **live cycle** to read (the AI capex boom), and the grand question of whether the cycle is
+capitalism's *destiny* (Marx vs Keynes). The deliberate bridges all point into **E03 (money, banking &
+monetary policy)** — the **Phillips curve** (§5) and the **inflation-expectations** thread hand straight to a
+central bank's job of anchoring expectations; the **yield curve** (§6) and the **Taylor-rule-as-active-damper**
+(§10a) are the E03 term-structure and reaction-function previews; and the **demand-vs-supply / stagflation**
+distinction (§3–§5) is exactly the bind that makes monetary policy hard. **E03 §1** starts one layer deeper
+still: **what money actually is, and how banks create it** — the *endogenous/credit money* thread the learner
+already began reinventing in §2 §9b.
