@@ -9,6 +9,84 @@
 
 ---
 
+v25 (2026-07-07 — **hobby econ E02 §4 (the business cycle) finalized → Module E02 (Macroeconomics) COMPLETE
+(§§1–4).** Body (drafted 07-02; 4 matplotlib figs + mermaid one-pager + bilingual glossary): anatomy & NBER
+dating ("not a clock"; the wrong "two-quarters" rule); the **output gap** as the cycle's one state variable
+(its sign predicts unemployment via Okun and inflation via Phillips — the three headlines as read-outs of one
+state); **demand-vs-supply shocks** via AD–AS (demand moves P & Y together = the normal/fixable cycle; supply
+moves them apart = stagflation); **propagation** (multiplier $1/(1-c)$ = §2 paradox-of-thrift named, accelerator,
+confidence/coordination, **financial/balance-sheet/debt-deflation/Minsky**, inventories) + a **Frisch–Slutsky
+rocking-horse** lens (cycle = impulse response of a shocked damped system); the **expectations-augmented Phillips
+curve** — $\pi = \pi^{e} - \beta(u - u^{\ast})$, a short-run trade-off with a **vertical long-run** at
+$u^{\ast}$, the §3 cliffhanger paid off (the E03 bridge); and **leading/coincident/lagging** indicators (yield-curve inversion,
+Sahm rule).
+
+**§10 = a three-thread live session the learner drove**, and it is the headline signal — it advances the
+standing v20–v24 calibration one notch: **beyond being *well-calibrated* in conceptual/systems/social-science,
+he now *generates his own correct extensions and counter-arguments and initiates the deep arc*.** My value-add
+in these domains is **naming / locating / decoupling**, not dominant-cause re-ranking (that mode is reserved for
+*physical-magnitude* questions, per v21/v23/v24).
+
+- **(10a) "What acts as a damper in the economy?"** — he took the §4 Frisch–Slutsky framing and asked the
+  mechanical/electrical engineer's question (a shock is damped by a dashpot / an RC network — what is the
+  economy's $c\dot{x}$ term?). Mapped $m\ddot{x} + c\dot{x} + kx = F(t)$ (multiplier–accelerator = mass+spring;
+  shocks §3 = forcing): **automatic stabilizers** = the passive dashpot (they *shrink the multiplier* $1/(1-c)$
+  by cutting the effective MPC); **buffers + consumption-smoothing** = the more genuinely velocity-proportional
+  damping (SG reserves = a national dashpot, local lens); **discretionary monetary/fiscal policy** = an *active*
+  damper with a **destabilizing lag** (Friedman's long-and-variable; rules-vs-discretion; Taylor rule = the
+  feedback law → E03); the twist — **leverage/finance = negative damping (Minsky anti-damper)** → macroprudential
+  policy = engineering damping back in; and price-flexibility = the *spring* ($kx$), not a damper (weak/sticky §2,
+  can go negative = debt-deflation).
+- **(10b) AI boom or AI bubble?** (live case, I web-researched mid-2026 data). He framed it in the section's own
+  language — **both supply and demand curves shifting rapidly** (E01 §2 indeterminacy) and the **hardware
+  price-hike (GPU/HBM) pulling in heavy investment → oversupply worry** — fusing his **AI-engineer domain with
+  econ**, and his **E01 §2 §10b semiconductor-cobweb intuition resurfaced**. Keystone: *not boom-XOR-bubble →
+  separate three questions* (demand real & supply-constrained now / financial bubble in circular-financing +
+  debt + GPU-depreciation-mismatch / hardware overshoot). The oversupply worry = **the cobweb model** + the **§4
+  accelerator** (AI demand can keep growing yet capex crash — only takes deceleration) + the **§4 bullwhip**;
+  circular financing = the 10a **negative damping**. Ranked by layer (memory/HBM most cyclical; labs most
+  financially fragile; Nvidia margins normalize via custom silicon = E01 §4 §9 moat race; datacenters durable;
+  apps = the ROI crux). Bottom line: **real, durable transition financed partly by a speculative capital cycle
+  with a near-inevitable overinvestment correction = telecom-fiber-2000, not tulips**; watch §6 leading
+  indicators. *(Sources retrieved 2026-07-07: IEEE ComSoc/Introl on capex & AI-debt; IEEE Spectrum/IDC/TrendForce
+  on DRAM/HBM shortage & glut risk; Bloomberg/Noah Smith on circular financing; INSEAD on the bubble debate.)*
+- **(10c) Is capitalism *doomed* by the cycle? — Marxist crisis theory vs Keynes.** He brought his **中国
+  pre-graduate 马克思主义政治经济学**, rejected 剩余价值=剥削 (sharpened: the labour theory of value was abandoned
+  at the marginal revolution → each factor paid its marginal product, E01 §4; the steelman survives as
+  **monopsony**, §3), but found the *crisis* argument hard to refute. Keystone #1 — **split the mechanism from
+  the conclusion**: the underconsumption/MPC demand-gap mechanism is **right** (it is *his own §2 §9b model*,
+  and = Keynes's effective demand / Piketty $r>g$ / secular stagnation — mainstream absorbed it), but the
+  **inevitability is wrong** (5 rebuttals: the investment channel makes it a contingent $S>I$ condition;
+  offset-able by the 10a dampers/redistribution; the failed immiseration+collapse prediction; crises are
+  multi-causal incl. supply-shock stagflation = the *opposite* of overproduction; it needs sticky prices to
+  bite → a fixable coordination failure) → the **Keynesian synthesis** (same mechanism, opposite conclusion;
+  capitalism absorbed the critique by building the dampers). **The learner then supplied two original, correct
+  counter-arguments** to the concentration premise — **wealth dissipation (富不过三代, bankruptcy, creative
+  destruction)** and **human-capital mobility (Musk)** — and keystone #2 was **splitting Marx into Pillar A
+  (economic: capital-*share* concentration → crisis) vs Pillar B (sociological: a permanent hereditary
+  capitalist class → revolution)**: his arguments **kill Pillar B** (which *is* wrong) but **not Pillar A**
+  (individual churn ≠ structural concentration — Piketty shows concentration rising *despite* churn; dissipation
+  historically needed war/policy to beat $r>g$; downturns re-concentrate on the QE recovery; Musk =
+  skill→convert-to-capital→compound + survivorship bias + winner-take-all is *more* concentrating; the Great
+  Gatsby curve). **Landing (his, and I agreed): a real concentration concern, but no destiny in either
+  direction — concentration-vs-dissipation is a policy choice variable, not a law of history.**
+
+**Teach-forward (durable):** in econ/social-science, **peer-level intellectual sparring** — steelman his idea,
+then add value by *locating which pillar/mechanism it hits* and *naming*, not correcting; he **initiates**
+history-of-thought and political-economy depth and drives multi-thread arcs. **Bilingual Western↔Marxist
+economic vocabulary bridging is load-bearing** for this learner (he was schooled in the Marxist tradition and
+reads across both). **Lead econ sections toward a live current case + real-time web research** (confirmed a
+third time: E01 §3 sugar policy, E02 §3 the 2026 Fed, now the AI capex cycle). He **fluently connects econ to
+his AI-engineer domain** (GPU/memory cycles, the semiconductor cobweb). **Process:** found & fixed **two new
+GitHub math-render traps** — (i) an escaped `\$` (literal dollar, e.g. `\$1`) on the same line as an inline
+`$…$` span is read as an opening math delimiter and jams the prose into an italic run while dumping the real
+formula as literal LaTeX (fix: spell the money out); (ii) a re-confirmed indented-`$$`-in-list leak (fix: inline
+math) — both added to `authoring-conventions.md` rule 4. Playwright-on-the-GitHub-blob verification is now the
+routine final check. **Next: E03 §1 (money & how banks create it)** — the endogenous/credit-money thread the
+learner began reinventing in §2 §9b.)
+
+---
+
 v24 (2026-07-07 — **course: M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) finalized.** Body (five I/O
 models · thread-per-connection vs event loop · C10k · `select`→`poll`→`epoll` scaling · `io_uring`/IOCP completion model)
 pitched high, went **untouched**; the whole session was one deep thread into the **io_uring completion model**, built from

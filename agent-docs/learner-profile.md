@@ -4,7 +4,35 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-07 (v24 — **course: M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) finalized.** Body
+Last updated: 2026-07-07 (v25 — **hobby econ E02 §4 (the business cycle) finalized → Module E02
+(Macroeconomics) COMPLETE (§§1–4).** Body (4 matplotlib figs + mermaid one-pager): anatomy/NBER dating, the
+**output gap** as the cycle's state variable, **demand-vs-supply shocks** (AD–AS/stagflation), **propagation**
+(multiplier/accelerator/financial-Minsky + a Frisch–Slutsky rocking-horse lens), the **expectations-augmented
+Phillips curve**, and **leading/coincident/lagging** indicators. **§10 = a three-thread live session HE drove**,
+and it sharpens the standing calibration one more notch: not only is he **well-calibrated in
+conceptual/systems/social-science** (the v20–v24 rule), he now **generates his own correct extensions and
+counter-arguments and initiates the deep threads** — I add value by *naming / locating*, not re-ranking. The
+arc: **(a)** he pushed §4's damper/oscillator lens himself — "a mechanical shock has a dashpot, an electrical
+one an RC network; what is the economy's damping term?" (answer: automatic stabilizers = passive dashpot that
+shrinks the multiplier; buffers/consumption-smoothing = velocity damping; discretionary policy = a *laggy
+active* damper; **leverage = negative damping / Minsky** → macroprudential adds it back). **(b)** he brought the
+**live AI boom/bubble** debate framed in precise econ terms (both curves moving; hardware price-hike →
+investment → oversupply) — **his AI-engineer domain fused with econ, and his E01 §2 §10b semiconductor-cobweb
+intuition resurfaced**; I web-researched mid-2026 data (capex, HBM, circular financing) and gave a layered,
+ranked opinion (real transition + capital-cycle correction + hardware glut = telecom-2000). **(c)** he brought
+his **中国 pre-grad 马克思主义政治经济学** and proposed **two original, correct counter-arguments** to Marx's
+concentration→collapse thesis (wealth dissipation 富不过三代; human-capital mobility / Musk); the teaching move
+was to **split Marx into Pillar A (capital-*share* crisis) vs Pillar B (permanent hereditary class)** — his
+arguments kill B (correctly — it *is* wrong) but not A — and separately to split **mechanism (right:
+underconsumption = *his own §2 §9b model* = Keynes/Piketty) vs inevitability (wrong)**. **Teach-forward:**
+peer-level sparring — steelman then *locate which pillar/mechanism*, don't correct; he initiates
+history-of-thought & political-economy depth; **bilingual Western↔Marxist econ vocabulary bridging is
+load-bearing**; **lead econ with a live current case + real-time web research** (confirmed yet again).
+**Process:** found & fixed **two new GitHub math-render traps** — an escaped `\$` (literal dollar) colliding with
+an inline `$…$` span on the same line, plus a re-confirmed indented-`$$`-in-list leak — both documented in
+`authoring-conventions.md` rule 4; Playwright-on-the-GitHub-blob verification is now routine. **Next: E03 §1
+(money & how banks create it)** — the *endogenous/credit-money* thread he began reinventing in §2 §9b.)
+Prior: v24 (2026-07-07 — **course: M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) finalized.** Body
 (five I/O models · thread-per-conn vs event loop · C10k · `select`→`poll`→`epoll` scaling · `io_uring`/IOCP completion
 model) pitched high, went **untouched**; the whole session was one deep thread into the **io_uring completion model**,
 which he built from a **factory + two-warehouse analogy** (SQ=inbox, CQ=outbox; + a work-order ticket = `user_data`).
@@ -609,6 +637,39 @@ learning surfaces.
 
 ## Learning progress (hobby track)
 *(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-07-07 — Economy & Finance · E02 §4 (the business cycle) ✅ finalized → Module E02 (Macroeconomics)
+  COMPLETE.** Body (drafted 07-02; 4 matplotlib figs + mermaid one-pager + bilingual glossary): anatomy & NBER
+  dating ("not a clock"), the **output gap** as the cycle's one state variable, **demand-vs-supply shocks**
+  (AD–AS; demand moves P&Y together = fixable, supply moves them apart = stagflation), **propagation**
+  (multiplier $1/(1-c)$, accelerator, confidence/coordination, **financial/debt-deflation/Minsky**, inventories)
+  + a Frisch–Slutsky rocking-horse lens, the **expectations-augmented Phillips curve** (short-run trade-off,
+  vertical long-run at $u^{\ast}$ — the §3 cliffhanger; E03 bridge), and **leading/coincident/lagging**
+  indicators. **§10 = a three-thread live session HE drove** — the headline signal, and it advances the standing
+  read: beyond being *well-calibrated* in conceptual/social-science, he now **generates his own correct
+  extensions/counter-arguments and initiates the deep arc**; I add value by *naming/locating*, not re-ranking.
+  **(10a)** he pushed the section's own damper/oscillator lens — "what is the economy's damping term?" —
+  yielding automatic stabilizers (passive dashpot, shrinks the multiplier), buffers/consumption-smoothing
+  (velocity damping; SG-reserves local lens), discretionary policy (a *laggy active* damper → rules-vs-discretion,
+  Taylor rule → E03), and the twist **leverage = negative damping/Minsky** → macroprudential adds it back
+  (price-flexibility = the *spring* not a damper). **(10b)** he brought the **live AI boom/bubble** debate in
+  precise econ terms (both curves moving; hardware price-hike → investment → oversupply) — **AI-engineer domain
+  fused with econ; his E01 §2 §10b semiconductor-cobweb resurfaced**; I web-researched mid-2026 data (hyperscaler
+  capex, HBM shortage/glut risk, circular financing, GPU depreciation) → keystone *separate three questions*
+  (demand-real / financial-bubble / hardware-overshoot), oversupply = **cobweb + accelerator + bullwhip**,
+  circular financing = the 10a negative damping, ranked by layer, bottom line = real transition + capital-cycle
+  correction + hardware glut (telecom-2000). **(10c)** he brought his **中国 pre-grad 马克思主义政治经济学** and
+  proposed **two original, correct counter-arguments** to Marx's concentration→collapse thesis (wealth dissipation
+  富不过三代; human-capital mobility/Musk); teaching move = **split Marx into Pillar A (capital-share crisis) vs
+  Pillar B (permanent hereditary class)** — his arguments kill B (correctly) not A — plus **mechanism (right:
+  underconsumption = *his own §2 §9b model* = Keynes/Piketty $r>g$) vs inevitability (wrong: investment channel,
+  offset-able by the 10a dampers, failed immiseration prediction, multi-causal incl. stagflation, sticky-price
+  coordination failure)** → Keynesian synthesis. **Landing (his, agreed): real concentration concern, no destiny
+  either way — a policy choice variable. Teach-forward:** peer-level sparring (steelman → locate pillar/mechanism,
+  don't correct); he initiates history-of-thought/political-economy depth; **bilingual Western↔Marxist econ
+  bridging is load-bearing**; **lead econ with a live case + real-time web research** (confirmed again).
+  **Process:** 2 new GitHub math-render traps found+fixed (escaped `\$` colliding with inline `$…$`; indented
+  `$$`-in-list) → `authoring-conventions.md` rule 4. Next: **E03 §1 (money & bank credit)** — the
+  endogenous/credit-money thread from §2 §9b.
 - **2026-07-02 — Economy & Finance · E02 §3 (unemployment & the labour market) ✅ finalized.** Body (4 real
   matplotlib figs + a mermaid one-pager + bilingual glossary): the rate from its precise definition, the
   labour-force accounting, participation/U-6/duration, the four types & NAIRU, Okun's law as the bridge back
