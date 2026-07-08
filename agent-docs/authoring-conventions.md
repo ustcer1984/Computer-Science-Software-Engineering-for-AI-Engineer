@@ -247,16 +247,25 @@ the rule-2 precedence still governs *what kind* of visual a given need calls for
     screenshot — these are **fabrications**. For real specific subjects use a real licensed/public
     image with provenance (path 1). Generate only *generic/illustrative* subjects ("a large telescope
     dome at dusk," "a stylized data-center hall").
-  - **Don't rely on legible in-image text.** Z-Image Turbo is weak at rendering precise words/labels
-    inside the image. Keep generated images text-free (or near-so) and put labels/captions in the
-    markdown around them, not baked into the pixels.
+  - **Never bake text into the pixels — add it as an overlay layer instead.** Z-Image Turbo is weak at
+    rendering precise words/labels, so generate the picture **text-free** and then, *when the illustration
+    needs labels/arrows/highlight boxes/callouts*, draw them on top with **matplotlib or PIL** — a
+    deterministic, crisp overlay (the "generate, then annotate" two-layer workflow). This is how you put
+    trustworthy text on a generated image, and it lets a generated backdrop carry a precise labeled layer
+    (an *annotated scene*) when a plain Mermaid/matplotlib diagram would be too sterile. Recipe:
+    `comfyui-media` skill → `references/annotate.md`. (Text that only lives in the markdown caption around
+    the image is fine too — but a caption is not a substitute for an on-image label pointing at a feature.)
 - **Provenance is mandatory.** Every generated image gets a caption (or adjacent note) marking it
   AI-generated locally, e.g. *"Illustration — generated locally (ComfyUI + Z-Image Turbo)."* Readers
   must never mistake a generated illustration for a real figure/photo.
 - **Where they live & how to commit** — mirror the diagrams convention: put the PNG in an `images/`
   folder next to the doc (`images/<doc-basename>-<N>.png`), embed with `![alt](images/…)`, and record
   the **prompt** used in an HTML comment or a collapsed `<details>` beside the embed so the image is
-  regenerable/diffable (the prompt is the "source of truth," like Mermaid source for diagrams).
+  regenerable/diffable (the prompt is the "source of truth," like Mermaid source for diagrams). **If the
+  image was annotated** (the two-layer workflow above), also commit the **annotation script**
+  (`images/<doc-basename>-<N>-annotate.py`) beside it — the overlay's source of truth, exactly like a
+  matplotlib figure's `.py`. The committed PNG is the *annotated* result; provenance still marks the base
+  picture AI-generated (e.g. *"…generated locally (ComfyUI); labels added in matplotlib."*).
 - **ALWAYS look at the rendered image before committing** — same mandate as diagrams.md: `Read` the
   PNG and check it actually shows what you intended, with no garbled anatomy/text/artifacts. Generators
   routinely produce plausible-but-wrong output. Do not commit an image you haven't looked at. Regenerate

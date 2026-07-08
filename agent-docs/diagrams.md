@@ -22,6 +22,13 @@ engine to render.** That's the only hard requirement. *How* you produce the imag
   generate images locally** via the `comfyui-media` skill — but that's governed by its own rule:
   see [`authoring-conventions.md`](authoring-conventions.md) §7 (precedence, hard limits, provenance).
   This `diagrams.md` doc stays about *structural* diagrams and *data* figures.
+  - **Generated images can't render text** — so to put crisp **labels, arrows, highlight boxes, or
+    callouts** on a generated illustration, use the **two-layer workflow**: generate the text-free
+    picture with ComfyUI, then draw the annotations on top with **matplotlib or PIL** (a deterministic
+    overlay). Keep the **annotation script** beside the image as its source of truth (like a matplotlib
+    figure's `.py`), alongside the generation prompt. This is also how you make an *annotated scene*
+    (a generated backdrop carrying a precise labeled layer) when a plain Mermaid/matplotlib diagram
+    would be too sterile. Recipe: `comfyui-media` skill → `references/annotate.md`.
 
 Whatever the source, keep an **editable source of truth** beside the rendered image where
 practical (the Mermaid/PlantUML/draw.io source in a collapsed `<details>` or a sibling
