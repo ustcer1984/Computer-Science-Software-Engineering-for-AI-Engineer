@@ -17,6 +17,20 @@
 **Prerequisites:** none new — your LLM/transformer knowledge transfers more than you'd expect (the modern
 backbone is a transformer). Your physics is the *real* prerequisite, and you already have it.
 
+![Abstract generative art: a field of grainy random noise on the left coalescing across the frame into smooth, coherent swirling structure on the right — noise resolving into form, descending into an energy landscape.](images/01-diffusion-and-image-generation-1.png)
+
+*Noise resolving into form — the section's whole story in one frame (annealed descent into a learned energy landscape, §4). Fittingly, this
+image was itself produced by the technique the section explains. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> Abstract generative-art illustration of a coherent flowing form emerging out of random noise: dense grainy colorful static on the left
+> gradually coalescing across the frame into smooth elegant swirling structure on the right, evoking denoising and descent into an energy
+> landscape with soft valleys, deep indigo and violet with warm amber highlights, luminous, atmospheric, high detail, no text, no words, no labels
+
+</details>
+
 ---
 
 ## Why this section exists (for *you*)

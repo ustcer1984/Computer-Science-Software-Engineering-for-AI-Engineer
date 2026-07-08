@@ -325,6 +325,22 @@ every item carries a **work-order ticket that travels with it and comes back sta
 64-bit **`user_data`** field, set by you on each submission entry (SQE) and **copied verbatim** by the kernel onto the matching completion
 entry (CQE).
 
+![An isometric sortation-hub scene: conveyor belts carrying tagged parcels through a central scanner that diverts them down separate chutes, with an inbox loading dock on one side and an outbox dock on the other. Your io_uring analogy made concrete.](images/02-blocking-nonblocking-and-multiplexing-1.png)
+
+*Your analogy, made concrete: the inbox dock (SQ) feeds tagged parcels past a scanner (the kernel reading `user_data`) that routes each to its
+chute (the waiter it belongs to) and out the outbox dock (CQ) — a sortation/demultiplex, not a re-sort (§9b). — Illustration, generated locally
+(ComfyUI + Z-Image Turbo).*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> Stylized isometric flat illustration of an automated parcel sortation hub inside a large warehouse: conveyor belts carrying identical parcels
+> each marked with a small colored tag, a central scanner arch over the belt, parcels diverting down several chutes into different loading bays,
+> an inbox loading dock on the left and an outbox loading dock on the right, warm industrial lighting, clean modern vector illustration style,
+> no text, no words, no labels, high detail
+
+</details>
+
 ### 9a. "From SQ to CQ, probably not FIFO" — correct, and well-ranked
 
 Your first prediction: completions don't come back in submission order. **Right.** They arrive in **completion order** — submit a read from a

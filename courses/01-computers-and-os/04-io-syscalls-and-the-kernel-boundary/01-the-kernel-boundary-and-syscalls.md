@@ -110,6 +110,21 @@ Why build the wall at all? Three reasons, all of which you've already met from t
 > under controlled conditions, and hands the result back through the same airlock. The airlock is deliberately the *only* way through, and
 > it's deliberately a little slow — that's the safety property, not a bug.
 
+![A sealed glass-and-steel airlock vestibule with a single closed door in the centre — one guarded threshold between a clean interior and the outside. Illustration of the user/kernel boundary as a gowning airlock.](images/01-the-kernel-boundary-and-syscalls-1.png)
+
+*The syscall as a gowning airlock: one sealed, guarded door is the **only** way across the boundary, and every crossing goes through it under
+control. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> Stylized isometric technical illustration of a semiconductor cleanroom gowning airlock: a sealed glass and stainless-steel vestibule with a
+> single closed door in the center, a glowing pristine white cleanroom interior on one side, a darker industrial machine hall on the other
+> side, one guarded threshold between them, cool blue and white palette, soft volumetric lighting, clean minimalist vector illustration style,
+> no text, no words, no labels, high detail
+
+</details>
+
 ---
 
 ## 2. What a system call actually *is* — a deliberate, guarded trap
