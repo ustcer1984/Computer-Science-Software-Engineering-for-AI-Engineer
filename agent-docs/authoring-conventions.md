@@ -218,3 +218,51 @@ that is explicitly **not wanted**.
 - **Keep the good production values** (they still apply): a "why this / why now" framing, real committed
   figures/diagrams (rule 2), verified hyperlinks ([[references-need-valid-links]]), any math in LaTeX
   (rule 4), and the bilingual 中文 glossary (rule 5). Just in service of a feature story, not a lecture.
+
+## 7. Generated illustrations — you may create images locally (ComfyUI), but only where they earn their place
+
+*(Established 2026-07-08 from learner instruction.)* Beyond charts and diagrams, this machine can
+**generate/edit raster images locally** via the `comfyui-media` skill (installed ComfyUI + Z-Image
+Turbo on an RTX 4070; fast text-to-image, ~14 s per 832²/1024² image, no cloud API). You are cleared
+to use it to make **illustrations for any track's material.** But images are a garnish, not the meat —
+the rule-2 precedence still governs *what kind* of visual a given need calls for.
+
+- **Precedence — pick the right tool for the visual, in this order:**
+  1. **A real, canonical figure** (a published plot, a real photograph of a real thing, an official
+     diagram) — still the first choice per rule 2. Commit a local copy + keep the source URL.
+  2. **A drawn-from-data figure** (matplotlib/plotly → committed PNG/SVG) for any *quantitative*
+     relationship — a curve, distribution, trend. **Never** generate these as AI images; a model
+     paints a plausible-looking plot with wrong/meaningless numbers.
+  3. **A structural diagram** (Mermaid etc. per [`diagrams.md`](diagrams.md)) for architecture, flow,
+     state, hierarchy — boxes, arrows, pipelines.
+  4. **A generated illustration** (ComfyUI) — the right tool *only* for the remaining case: a
+     **conceptual, metaphorical, atmospheric, or scene-setting** visual where a picture aids
+     comprehension or engagement and **no real figure exists and the content isn't quantitative or
+     structural.** Examples that fit: a metaphor made concrete (a "shadow price" as a literal shadow),
+     a section/mascot header, a vivid scene for a reading-track feature (rule 6 — this genre benefits
+     most), an analogy illustration.
+- **Two hard limits — do not cross them (this is educational material; honesty of depiction matters):**
+  - **Never generate a picture of a *real, specific* thing and present it as that thing.** A generated
+    "photo of the Vera Rubin Observatory," a named person, a specific chip die shot, a real UI
+    screenshot — these are **fabrications**. For real specific subjects use a real licensed/public
+    image with provenance (path 1). Generate only *generic/illustrative* subjects ("a large telescope
+    dome at dusk," "a stylized data-center hall").
+  - **Don't rely on legible in-image text.** Z-Image Turbo is weak at rendering precise words/labels
+    inside the image. Keep generated images text-free (or near-so) and put labels/captions in the
+    markdown around them, not baked into the pixels.
+- **Provenance is mandatory.** Every generated image gets a caption (or adjacent note) marking it
+  AI-generated locally, e.g. *"Illustration — generated locally (ComfyUI + Z-Image Turbo)."* Readers
+  must never mistake a generated illustration for a real figure/photo.
+- **Where they live & how to commit** — mirror the diagrams convention: put the PNG in an `images/`
+  folder next to the doc (`images/<doc-basename>-<N>.png`), embed with `![alt](images/…)`, and record
+  the **prompt** used in an HTML comment or a collapsed `<details>` beside the embed so the image is
+  regenerable/diffable (the prompt is the "source of truth," like Mermaid source for diagrams).
+- **ALWAYS look at the rendered image before committing** — same mandate as diagrams.md: `Read` the
+  PNG and check it actually shows what you intended, with no garbled anatomy/text/artifacts. Generators
+  routinely produce plausible-but-wrong output. Do not commit an image you haven't looked at. Regenerate
+  (tweak the prompt/seed) until it's right.
+- **How to run it:** invoke the `comfyui-media` skill, or call its CLI directly —
+  `python3 ~/.claude/skills/comfyui-media/scripts/comfy_media.py txt2img --prompt "…" --out <name>
+  --width 1024 --height 1024`. It starts the server, generates, and prints the output PNG path (lands
+  in `ComfyUI/output/`); copy that into the doc's `images/` folder. The skill can also download
+  fitting open models for image *editing* or *video* when Z-Image can't do the task.

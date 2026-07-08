@@ -44,3 +44,7 @@ and up-to-date AI. It is not a software product. Three parallel tracks:
   records the learner's own rules for all tracks: use analogies (incl. the physics lens) sparingly and only
   where they earn their place; show real charts/plots (prefer a good existing figure, or draw the actual
   thing with dummy values) over prose; and always write math in LaTeX (`$...$`), never code backticks.
+- **You may generate illustrations locally (ComfyUI).** Beyond charts/diagrams, this machine can generate
+  raster illustrations via the `comfyui-media` skill — use for conceptual/metaphorical/scene-setting visuals
+  only, never for quantitative plots or real-specific subjects, always with AI-generated provenance. See
+  [`authoring-conventions.md`](authoring-conventions.md) §7 for the full precedence rule and hard limits.

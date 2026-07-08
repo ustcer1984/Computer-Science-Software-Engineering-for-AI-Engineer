@@ -18,6 +18,10 @@ engine to render.** That's the only hard requirement. *How* you produce the imag
   suitable public image/diagram instead of authoring one, when that's the best fit.
   (For images that live remotely, prefer committing a local copy so the doc still renders
   if the source disappears; keep the original URL in a caption or comment for provenance.)
+- **For non-diagram *illustrations* (conceptual/metaphorical/scene-setting art), you can also
+  generate images locally** via the `comfyui-media` skill — but that's governed by its own rule:
+  see [`authoring-conventions.md`](authoring-conventions.md) §7 (precedence, hard limits, provenance).
+  This `diagrams.md` doc stays about *structural* diagrams and *data* figures.
 
 Whatever the source, keep an **editable source of truth** beside the rendered image where
 practical (the Mermaid/PlantUML/draw.io source in a collapsed `<details>` or a sibling
