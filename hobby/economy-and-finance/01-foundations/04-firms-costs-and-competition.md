@@ -275,6 +275,21 @@ down** (the firm faces a more steeply downward-sloping demand curve for *its own
 profit survives only where barriers to entry keep new firms out.** Hold both; they're the engine of the
 rest of the section.
 
+![A fortified stone castle sits on a green island encircled by a wide water moat; the moat is the barrier that keeps the market defended.](images/04-firms-costs-and-competition-1.png)
+
+*The **economic moat** (Buffett's term, glossed in §9): a barrier to entry is the water around the castle — the wider the moat, the longer economic profit survives before entry competes it away. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> Stylized isometric conceptual illustration of a business as a fortified stone castle on a green hill,
+> surrounded by a wide protective blue water moat; the hilltop represents a profitable market; several small
+> competitor figures on the far bank unable to cross the moat; clean minimalist flat vector illustration
+> style, warm stone and cool blue palette, soft volumetric lighting, sense of a durable defended competitive
+> advantage, no text, no words, no labels, high detail
+
+</details>
+
 ### Perfect competition in the long run: the zero-profit pull
 
 This is the long-run result §3 didn't have room for, and it's the most important single mechanism in the

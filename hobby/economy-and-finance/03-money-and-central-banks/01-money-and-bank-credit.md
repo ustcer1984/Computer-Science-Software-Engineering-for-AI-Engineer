@@ -82,6 +82,21 @@ every trade becomes two easy half-trades — sell your bread *for money*, buy sh
 $n$ goods there are just $n$ prices, one per good in money terms. Money is, first and last, a
 **coordination technology** that collapses an $O(n^{2})$ matching problem to an $O(n)$ one.
 
+![In a bustling barter marketplace a baker holds out a loaf of bread to a cobbler, who raises a hand to refuse and points instead at a chicken he wants — the trade fails because their wants don't match.](images/01-money-and-bank-credit-1.png)
+
+*The **double coincidence of wants**: the baker has bread and wants shoes, but the cobbler wants a chicken, not bread — so the trade dies. Money dissolves this by being what *everyone* accepts. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> Stylized conceptual illustration of an ancient open-air barter marketplace: in the foreground a baker
+> holding a loaf of bread looks frustrated facing a cobbler who holds up shoes and gestures refusal while
+> pointing at a live chicken he wants instead; other traders barter assorted goods in the background stalls;
+> warm earthy palette, clean minimalist flat vector illustration style, soft daylight, sense of trades that
+> cannot find a matching partner, no text, no words, no labels, high detail
+
+</details>
+
 > **Which job is primary?** There's a genuine live debate. The textbook (and Adam Smith) story is that money
 > emerged from barter to grease *exchange* — medium of exchange first. Anthropologists and the "credit
 > theory of money" (Innes; later Graeber) argue the opposite: careful study finds **no evidence of a

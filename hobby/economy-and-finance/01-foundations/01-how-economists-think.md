@@ -91,6 +91,21 @@ isolation, only relative to the best alternative you passed up.
 > cost of capital is 8%," they're stating the multiplier on the capital constraint. You've computed these;
 > the word is just new.
 
+![A lone traveller stands where a path forks: the road they take is brightly lit and solid, while the road not taken curves away in shadow — the forgone alternative made visible.](images/01-how-economists-think-1.png)
+
+*Opportunity cost made concrete: the value of a choice is the **road not taken**, standing beside it like a shadow — the "shadow price" of the lens above. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> Stylized minimalist conceptual illustration: a lone traveler standing at a fork where a path splits into
+> two roads across a calm landscape at golden hour; one road is brightly lit, solid and chosen; the other
+> road is a translucent glowing ghosted path, the road not taken, cast like a faint shadow; warm and cool
+> palette contrast, soft cinematic lighting, clean flat vector illustration style, sense of a choice and its
+> forgone alternative, no text, no words, no labels, high detail
+
+</details>
+
 ---
 
 ## 3. The behavioural engine: people respond to incentives

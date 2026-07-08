@@ -227,6 +227,21 @@ dominant **propagation channel**:
 > a shocked, damped system** — which is exactly why they recur, why they're irregular, and why bigger
 > shocks or *weaker damping* (fragile balance sheets) make them worse.
 
+![A wooden rocking horse on its curved rocker, struck by several small arrows from different directions and rocking back and forth — a stable object that oscillates when it is kicked.](images/04-the-business-cycle-1.png)
+
+*Frisch's literal image: the economy is a **rocking horse** (a damped oscillator) and the shocks of §3 are the **kicks**. The horse's own build turns each random kick into a decaying rock — so cycles recur and are irregular, with no fixed period. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> Stylized conceptual illustration of a single wooden rocking horse mid-rock in a calm empty studio; several
+> small random impulse arrows strike it from different directions like kicks; curved motion lines show it
+> rocking back and forth in a decaying oscillation; clean minimalist flat vector illustration style, warm
+> wood tones with cool blue accents, soft lighting, sense of a stable system knocked into recurring irregular
+> waves, no text, no words, no labels, high detail
+
+</details>
+
 ---
 
 ## 5. The Phillips curve — the inflation–unemployment trade-off (the §3 payoff)
