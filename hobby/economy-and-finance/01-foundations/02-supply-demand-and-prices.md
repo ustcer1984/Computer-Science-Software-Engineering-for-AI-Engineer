@@ -424,7 +424,7 @@ scale and, worse, needs information that *doesn't exist in transmittable form un
 (Hayek's "knowledge problem"). So the precise claim isn't "the model assumes free markets"; it's that **the
 model explains why the price-mechanism solver beats central planning on the same allocation problem.**
 
-**Where the objection genuinely survives:** the *competitive* (efficient-$P^\ast$) version assumes no market
+**Where the objection genuinely survives:** the *competitive* (efficient-price $P^\ast$) version assumes no market
 power, no externalities, full information, and *exogenous* preferences. Drop those and equilibrium can be
 inefficient, or the curves themselves get distorted (a state can shape the demand curve; a monopolist faces
 the whole curve). That's real — but it's **market failure (§3)**, a narrower claim than "the model needs a

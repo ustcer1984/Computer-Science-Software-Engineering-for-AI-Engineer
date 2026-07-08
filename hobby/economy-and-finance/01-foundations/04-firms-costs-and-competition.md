@@ -502,7 +502,7 @@ period's profit on fixed curves" for "maximize multi-period NPV while *bending* 
 
 ### 9a. The core re-rank: the shutdown rule is *single-period and static*
 
-"$P < AVC \Rightarrow$ shut down" smuggles in three assumptions the labs deliberately relax: it maximizes
+The rule "shut down when $P < AVC$" smuggles in three assumptions the labs deliberately relax: it maximizes
 **one period's** profit, on **fixed** cost/demand curves, with the firm **self-financing** each period. The
 labs maximize the **net present value of a multi-period trajectory** in which *today's output moves
 tomorrow's curves*, funded by **financing** cash flow (equity raises), not operating cash flow. So the rule

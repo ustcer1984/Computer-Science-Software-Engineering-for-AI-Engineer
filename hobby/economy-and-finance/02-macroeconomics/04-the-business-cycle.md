@@ -531,7 +531,7 @@ his own original counter-arguments.
 
 **(i) On 剩余价值 = 剥削 — why rejecting it is right.** Exploitation here rests on the **labour theory of
 value** (劳动价值论 — labour is the *sole* source of value). Mainstream economics abandoned the LTV at the
-**marginal revolution (1870s)**: each factor is paid its **marginal product** (the E01 §4 hire-to-$MRP$
+**marginal revolution (1870s)**: each factor is paid its **marginal product** (the E01 §4 "hire to $MRP$"
 rule), so capital's return is payment for a genuinely productive contribution + deferred consumption + risk,
 not pure extraction. **But** the honest steelman survives in a *different* form: under **monopsony** (§3),
 employers with wage-setting power pay *below* marginal product — so the modern, testable version of

@@ -6,7 +6,9 @@
 > Econ E01 §2; extended 2026-06-18 (rule 3) from feedback on M04 Ch2 §1; extended 2026-06-29 (rule 4: bare
 > sub/superscripts, `$$`-in-lists, emphasis-in-`\text{}` traps, and the two-level Playwright verification)
 > from GitHub math-render bugs in Econ E02 §2 and §3; extended 2026-07-02 (rule 4: the `($…$)` open-paren
-> trap and the math-inside-`*emphasis*` trap) from two more Econ E02 §3/§11 render bugs.
+> trap and the math-inside-`*emphasis*` trap) from two more Econ E02 §3/§11 render bugs; extended 2026-07-08
+> (rule 7: locally-generated ComfyUI illustrations); extended 2026-07-09 (rule 4: the opening-`$`-glued-to-a-
+> quote-or-hyphen trap) from three shipped Econ render bugs found during a track-wide illustration pass.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -144,6 +146,18 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     Eyeball-only review of the editor preview misses it (Cursor renders the escape correctly); Playwright the
     GitHub blob — the `.js-display-math`/`.js-inline-math` span count coming up *short* of your `$…$` count is
     the tell.
+  - **Give an inline `$…$`'s *opening* `$` a clean left boundary — a space or an opening bracket `([{`, never
+    a glued `"` or a hyphen.** GitHub only opens an inline-math span when the opening `$` is flanked on the
+    left by whitespace or opening-bracket punctuation; a `$` glued directly to a **double-quote** (`"$P < AVC$"`)
+    or sitting inside a **hyphenated word** (`hire-to-$MRP$`, `efficient-$P^\ast$`) fails to open, so the whole
+    span renders as **literal LaTeX** (dollar signs visible). Found shipped in three econ sections 2026-07-09
+    (E01 §2 `efficient-$P^\ast$`, E01 §4 `"$P < AVC \Rightarrow$…`, E02 §4 `hire-to-$MRP$`) — every *other* span
+    on those pages rendered, so eyeball review of "the math works" misses it. Note the **closing** `$` glued to
+    a following `"` is *fine* (`$g^{\ast}$"` renders), and an opening `$` after `(` is fine — it's specifically
+    the *opening* `$` after a quote or hyphen that breaks. **Fix: reword so the opening `$` follows a space** —
+    `(efficient-price $P^\ast$)`, `"hire to $MRP$"`, `shut down when $P < AVC$`. Catch pre-push with
+    `grep -nE '"\$[A-Za-z\\]|[A-Za-z]-\$[A-Za-z\\]' <file>` (opening `$` glued to a quote or a hyphen-word).
+    Playwright-confirm: the raw `$…$` appears in the rendered `.markdown-body` innerText.
   - Prefer plain `(...)` or `\left(...\right)` over `\big(`/`\!` micro-spacing in inline math — fewer
     macros, fewer surprises across renderers.
 - **Verify on GitHub, not just in the editor.** This repo is **public**, so after pushing, check the blob URL
