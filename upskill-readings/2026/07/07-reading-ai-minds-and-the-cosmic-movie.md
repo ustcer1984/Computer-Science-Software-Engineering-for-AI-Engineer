@@ -16,6 +16,17 @@
 🔗 **The "why now":** [10 Breakthrough Technologies 2026 — MIT Technology Review](https://www.technologyreview.com/2026/01/12/1130697/10-breakthrough-technologies-2026/) · [The Urgency of Interpretability — Dario Amodei](https://www.darioamodei.com/post/the-urgency-of-interpretability)
 🔗 **Go deeper:** [Golden Gate Claude — Anthropic](https://www.anthropic.com/news/golden-gate-claude) · [On the Biology of a Large Language Model — Transformer Circuits](https://transformer-circuits.pub/2025/attribution-graphs/biology.html) · [Simon Willison's walkthrough](https://simonwillison.net/2025/Mar/27/tracing-the-thoughts-of-a-large-language-model/)
 
+![A translucent human head in profile, its interior a glowing neural network with one cluster of nodes lit bright gold as if isolated and scanned — a visual metaphor for "reading" a single feature inside a model.](images/07-reading-ai-minds-and-the-cosmic-movie-1.png)
+
+*The "MRI for AI," made concrete: a mind rendered as a network, with one feature-cluster lit up and isolated the way interpretability tools clamp and read a single feature. — Illustration, generated locally (ComfyUI + Z-Image Turbo); a generic concept image, not a real scan.*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> A glowing translucent human head in profile, its interior filled with an intricate three-dimensional web of luminous nodes and connecting filaments like a neural network, one dense cluster of nodes lit bright golden-orange as if isolated and scanned while the rest glow cool electric blue, faint concentric scan-grid lines suggesting a medical MRI, dark deep-blue background, cinematic conceptual digital illustration, clean modern style, highly detailed, no text, no words, no letters
+
+</details>
+
 **The problem, stated honestly.** Nobody *programmed* a language model the way you program a web server. You pour a large fraction of the internet through a network of billions of numbers, nudge those numbers until it predicts text well, and out the other end comes something that writes code and passes the bar exam. But *how* it does any particular thing is not written down anywhere — it's an emergent property of those billions of weights. This is genuinely new in engineering: we build these systems, ship them, and then have to do **natural science on our own artifact** to find out what it learned. That science now has a name — **mechanistic interpretability** — and it's having a moment.
 
 **Trap #1: a neuron is not a concept.** The obvious first idea — "find the neuron for *dog*" — fails, because individual neurons are **polysemantic**: one neuron lights up for a jumble of unrelated things (a bit of Chinese text, a bit of DNA, a bit of HTTP). The reason is **superposition**: the model has vastly more concepts to represent than it has neurons, so it packs them together, many concepts sharing overlapping sets of neurons — think $n_{\text{features}} \gg d_{\text{neurons}}$. So you can't read the model one neuron at a time, any more than you can understand a symphony by miking one violinist mid-orchestra.
@@ -71,6 +82,17 @@ flowchart LR
 🔗 **See it for yourself (do this — the zoomable first images are staggering):** [First imagery from Rubin Observatory](https://rubinobservatory.org/news/first-imagery-rubin) · [First-ever images, explained — Astronomy.com](https://www.astronomy.com/science/first-ever-images-released-by-the-vera-c-rubin-observatory/)
 🔗 **The "why now":** [Rubin begins its unprecedented 10-year survey — CNN (July 2026)](https://edition.cnn.com/2026/07/01/science/rubin-observatory-legacy-survey-space-and-time) · [Early Science & data releases — Rubin](https://rubinobservatory.org/for-scientists/resources/early-science)
 🔗 **Reference:** [Vera C. Rubin Observatory — Wikipedia](https://en.wikipedia.org/wiki/Vera_C._Rubin_Observatory)
+
+![A generic astronomical observatory dome on a dark mountaintop, its shutter open to a brilliant Milky Way sky with long star-trail arcs sweeping overhead.](images/07-reading-ai-minds-and-the-cosmic-movie-2.png)
+
+*Scene-setting for the survey — a generic dome under a star-trailed sky, the arcs standing in for the whole sky being swept every few nights. — Illustration, generated locally (ComfyUI + Z-Image Turbo). **Not** the actual Rubin Observatory (a real, specific building); for real images see the links above.*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> A large modern astronomical observatory dome silhouetted on a remote mountaintop at night, its shutter open toward a brilliant star-filled sky, the Milky Way arcing overhead, long faint concentric star-trail streaks suggesting the whole sky being swept and scanned, deep indigo and cool blue tones with a faint warm horizon glow, cinematic wide landscape, stylized digital illustration, highly detailed, no text, no words, no letters
+
+</details>
 
 **The machine.** High in the Chilean Andes sits an instrument that sounds made up. Behind an **8.4-metre** mirror is the **LSST Camera** — the largest digital camera ever built for astronomy: **3,200 megapixels** (3.2 gigapixels) across a mosaic of **189 individual sensors**, a device roughly **the size of a small car** weighing about **2,800 kg**. A single exposure covers a patch of sky as wide as **45 full Moons**. And unlike a normal telescope that stares at one target, Rubin's whole design is built for *speed*: it takes about **a thousand images a night** and, stitching them together, photographs the **entire visible southern sky once every three to four nights** — then does it again, and again, for **ten years**. Nobody has ever made a movie of the sky like this.
 

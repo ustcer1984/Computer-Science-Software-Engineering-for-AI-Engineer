@@ -17,6 +17,17 @@
 🔗 **Big Tech now builds its own:** [Project Waterworth — Engineering at Meta](https://engineering.fb.com/2025/02/14/connectivity/project-waterworth-ai-subsea-infrastructure/) · [Meta's cable "skirts conflict zones" — IEEE Spectrum](https://spectrum.ieee.org/undersea-internet-cables-meta-waterworth)
 🔗 **The new front line:** [NATO launches "Baltic Sentry"](https://www.nato.int/en/news-and-events/articles/news/2025/01/14/nato-launches-baltic-sentry-to-increase-critical-infrastructure-security) · [11 Baltic cables damaged in 15 months — Defense News](https://www.defensenews.com/global/europe/2025/01/28/11-baltic-cables-damaged-in-15-months-pushing-nato-to-boost-security/) · [Taiwan's Matsu Islands cut off — Foreign Policy](https://foreignpolicy.com/2025/01/23/taiwan-china-cables-internet-matsu-islands/) · [The web beneath the waves — Rest of World](https://restofworld.org/2025/web-beneath-waves-taiwan-underseas-cables/)
 
+![A slender submarine cable with a cylindrical inline repeater, its core glowing with light, suspended in the deep blue sea with faint light filtering from far above.](images/02-undersea-cables-and-argentinas-inflation-war-1.png)
+
+*The thing itself: a hair-thin bundle of glass fibres in a cable, with an inline repeater re-boosting the light, alone in the deep. — Illustration, generated locally (ComfyUI + Z-Image Turbo); a generic concept image, not a specific cable.*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> A single slender fibre-optic submarine cable resting on the dark ocean floor of the deep sea, a smooth cylindrical inline repeater unit along its length, the cable's core glowing faintly with threads of light, soft dim shafts of blue light filtering down from far above, fine drifting sediment and a sense of vast lonely depth and scale, cinematic underwater conceptual illustration, midnight-blue and teal palette, highly detailed, no text, no words, no letters
+
+</details>
+
 **The thing itself.** When you send a message from Singapore to a friend in London, it does not go "up to the cloud." The cloud is a metaphor; the reality is a **glass thread on the seabed**. Roughly **99% of all intercontinental internet traffic** — every video call, bank transfer, stock trade, and AI API request that crosses an ocean — runs through a network of about **600 submarine cables** totalling well over **1.4 million kilometres** (enough to loop the Earth ~35 times). Satellites, even Starlink, carry a rounding error by comparison. The deep-sea sections of these cables are astonishingly thin — **about the diameter of a garden hose** — because in the calm of the deep ocean the only thing you need to protect is a cluster of glass fibres each thinner than a human hair. Near shore, where anchors and trawlers roam, they're armoured up to the thickness of a soda can.
 
 Down the middle run the optical fibres, pulses of light bouncing along at ~200,000 km/s. But light *fades* over distance, so every **~50–100 km** the cable contains a **repeater** — an amplifier that re-boosts the signal — and to power thousands of kilometres of these, a **copper conductor** carries up to **~10,000 volts** along the whole cable from the shore stations at each end. A single modern cable can now move **hundreds of terabits per second**. It is one of the most extraordinary machines humanity has ever built, and almost nobody has seen one.
@@ -62,6 +73,17 @@ The unnerving part is the **deniability**. Was it an anchor accidentally dragged
 🔗 **The live data (watch it fall):** [Argentina inflation — Trading Economics](https://tradingeconomics.com/argentina/inflation-cpi)
 🔗 **The debate — miracle or warning?** [Milei's inflation "miracle" is a warning to the world, not a blueprint — The Conversation](https://theconversation.com/javier-mileis-inflation-miracle-in-argentina-is-a-warning-to-the-world-not-a-blueprint-278840)
 🔗 **The man and the method:** [Javier Milei — Wikipedia](https://en.wikipedia.org/wiki/Javier_Milei) · [Argentina's inflation hits a 7-year low (Nov 2025) — Semafor](https://www.semafor.com/article/11/13/2025/argentinas-inflation-slows-again-following-years-of-crisis)
+
+![A chainsaw cutting through stacks of blank banknotes and coins, with a red line-chart arrow plunging downward in the background — a metaphor for cutting inflation.](images/02-undersea-cables-and-argentinas-inflation-war-2.png)
+
+*The chainsaw, made concrete: cutting into the money supply as the inflation line collapses. — Illustration, generated locally (ComfyUI + Z-Image Turbo); a generic metaphor with blank banknotes — not any real currency or person.*
+
+<details>
+<summary>Image prompt (source of truth)</summary>
+
+> A conceptual editorial illustration of a large chainsaw slicing downward through a towering stack of generic blank banknotes with no faces and coins, cut blank bills scattering into the air, a bold red descending arrow sweeping down in the background like a collapsing chart line, dramatic side lighting, muted teal background with warm paper-currency tones, clean modern flat vector illustration style, highly detailed, no text, no words, no numbers, no letters, no logos
+
+</details>
 
 **The setup.** Argentina is the country economics can't explain. A century ago it was among the *richest* nations on Earth; since then it has defaulted on its debt **nine times** and lived with chronic, morale-crushing inflation for generations. By the end of 2023, annual inflation hit **~211%** — prices more than tripling in a year. Argentines had long since stopped trusting the peso: they price big things in US dollars, and hold savings as physical greenbacks in safes and under mattresses.
 
