@@ -4,7 +4,31 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-07 (v25 — **hobby econ E02 §4 (the business cycle) finalized → Module E02
+Last updated: 2026-07-10 (v26 — **reading 07-07 finalized (mechanistic interpretability · Vera Rubin).**
+Story 2 (Rubin) a read; **Story 1 he drove into a training-methodology thesis.** **NEW durable signal: he has
+model-eval-team background** (interp was on their plan but never prioritized — the *training* team didn't know how to
+turn it into a usable signal) **and strong, original opinions on how models *should* be trained.** His thesis, in its
+final sharpened form: **train an LLM like teaching a kid — make phase transitions CLOSED-LOOP, gated on readiness
+(eval + interpretability), not the OPEN-LOOP predetermined token budgets used today**; **explicitly NOT** replacing
+loss (loss stays as the dense pretraining signal — he was firm on that). **Calibration — textbook confirmation of the
+standing v20–v25 rule:** this is a **systems/conceptual** domain, so he is **well-calibrated and generative**, not
+mis-ranked — he produced the thesis himself and **corrected me twice** when I over-read it (first as "replace loss,"
+then as "just data scheduling"), sharpening it to a precise **control-theory open-loop→closed-loop reframe**. My value
+was **naming/locating, not re-ranking:** named the **RL precedent** (his exam-gate is *already real* in post-training —
+automatic/adaptive curricula = **Vygotsky's ZPD**, pass-rate-gated difficulty; and RLVR = grading-by-test, his own
+06-16 reading); the **three pretraining blockers** (LR-horizon coupling → **WSD** loosens it; mid-run eval
+noise/cost → **interp as the leading, smoother indicator**, LLC/induction-heads, and **Goodhart-milder because a
+promote/hold *gate* isn't a differentiable *target***; compute-predictability = an ops/economics gamble, not science);
+the **failure modes he hadn't met** (fine-grained curriculum ≈ shuffling at scale; the 10,000× **sample-efficiency
+gap** ⇒ the lever is the *learner* not the *syllabus*, BabyLM); and the **open question he surfaced** — the
+**remediation policy on a *failed* gate** (resequence vs hold). **Teach-forward: he is a peer-level sparring partner on
+AI training/methodology — steelman then *locate*, bring live 2026 research, don't correct.** His **eval background +
+control-theory framing** are live anchors; **hands-dirty follow-up = reproduce a developmental-interpretability
+phase-transition detection (devinterp/LLC) on a small model** (feasible on his RTX 4070). **Process:** ComfyUI image
+tool applied across the reading track 2026-07-09 — **4 path-4 illustrations** added to the two Discovery-register
+readings (07-02, 07-07), the **7 technical 06-xx readings deliberately skipped** (well-served by diagrams/code;
+§7 "only where they earn their place"). **Next:** continue the reading rotation, or a devinterp mini-repro.).
+Prior: v25 (2026-07-07 — **hobby econ E02 §4 (the business cycle) finalized → Module E02
 (Macroeconomics) COMPLETE (§§1–4).** Body (4 matplotlib figs + mermaid one-pager): anatomy/NBER dating, the
 **output gap** as the cycle's state variable, **demand-vs-supply shocks** (AD–AS/stagflation), **propagation**
 (multiplier/accelerator/financial-Minsky + a Frisch–Slutsky rocking-horse lens), the **expectations-augmented
@@ -761,7 +785,30 @@ learning surfaces.
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
 - **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
-  no specific item queued.
+  no specific item queued. *(Standing follow-up he'd enjoy: a hands-dirty **developmental-interpretability** mini-repro —
+  detect an induction-head/ICL phase transition on a small model, feasible on his RTX 4070.)*
+- **IMAGES (from 2026-07-09, `authoring-conventions.md` §7):** the **ComfyUI** local image tool (Z-Image Turbo) is now in
+  play for **path-4** illustrations (conceptual/metaphorical/atmospheric only — real figure → data plot → Mermaid →
+  generated image precedence still holds; no real-specific subjects; no baked-in text). Applied across the reading track:
+  **4 illustrations** in the two Discovery-register readings (07-02, 07-07); the **7 technical 06-xx readings deliberately
+  skipped** (diagrams/code already carry them — an image there would be filler). The reading genre benefits most.
+- **2026-07-10 — reading #9 ✅ finalized** (`upskill-readings/2026/07/07-reading-ai-minds-and-the-cosmic-movie.md`)
+  — Two feature stories: (1) **mechanistic interpretability / "the MRI for AI"** (career) — features, sparse autoencoders,
+  Golden Gate Claude, circuit tracing; (2) **the Vera C. Rubin Observatory / LSST** (hobby) — 3.2-gigapixel camera, the
+  20 TB/night firehose, the dark-matter link to Vera Rubin. **Story 2 was a read (no discussion); Story 1 he drove into a
+  full training-methodology thesis** off his **model-eval-team** background. **Thesis (final sharpened form):** train an LLM
+  like teaching a kid — **phase transitions should be CLOSED-LOOP, gated on readiness (eval + interp), not OPEN-LOOP token
+  budgets**; **NOT** loss-replacement (loss stays for pretraining — he was firm). **Calibration — the v20–v25 rule again:
+  systems/conceptual → well-calibrated + generative; he corrected me twice** (I over-read it as "replace loss," then "just
+  data scheduling") and sharpened it to a **control-theory reframe**. Value added = **naming/locating:** the **RL precedent**
+  (his exam-gate is already real in post-training — automatic curricula = **Vygotsky ZPD**; RLVR = grading-by-test); the
+  **three pretraining blockers** (LR-horizon coupling → **WSD**; eval noise → **interp as leading+smoother indicator**,
+  LLC/induction-heads, **Goodhart-milder because gate ≠ differentiable target**; compute-predictability = ops); the
+  **failure modes** (fine-grained curriculum ≈ shuffling at scale; the sample-efficiency gap ⇒ **learner not syllabus**,
+  BabyLM); and the **open question he surfaced** — the **remediation policy on a failed gate**. Full record in the reading's
+  "What we worked out" section (with devinterp/LLC/MDA follow-up links). **Teach-forward: peer-level sparring partner on AI
+  training/methodology — steelman + locate, bring live research.** *(2 ComfyUI path-4 illustrations added — the AI-mind
+  metaphor + a generic observatory dome.)*
 - **2026-07-02 — reading #8 ✅ finalized** (`upskill-readings/2026/07/02-undersea-cables-and-argentinas-inflation-war.md`)
   — **first reading under the new format.** Two feature stories: (1) **undersea cables** (career) — the physical internet
   & the 2023–25 grey-zone sabotage front line; (2) **Milei's Argentina** (hobby) — the disinflation shock. *(A first

@@ -9,6 +9,55 @@
 
 ---
 
+v26 (2026-07-10 — **reading 07-07 finalized (mechanistic interpretability · Vera C. Rubin Observatory).** Two
+Discovery-register feature stories; Story 2 (Rubin — 3.2-gigapixel camera, 20 TB/night firehose, dark-matter link)
+was a read with no discussion, **Story 1 (interpretability) he drove into a full training-methodology thesis.**
+**NEW durable signal — he has model-eval-team background** (mechanistic interp was on their roadmap but never
+prioritized; the *training* team didn't know how to convert it into a usable signal) **and holds strong, original
+views on how models *should* be trained.** His thesis, in its final sharpened form after I mis-framed it twice: **train
+an LLM the way you teach a kid — make the phase transitions CLOSED-LOOP, gated on a readiness exam (evals +
+interpretability), rather than the OPEN-LOOP predetermined token budgets used today.** Crucially **NOT** a proposal to
+replace the loss (he was explicit: loss stays as the dense pretraining signal); it's a **control-theory reframe** of
+*what triggers a phase change* — open-loop schedule → closed-loop feedback on a readiness signal, "like a year-end exam
+promoting a student." Side-observations he raised: human learning has **no clean pre/post split** (a child learns to
+speak and to follow instructions at once) and uses **prepared curricula, not a library dump**.
+**Calibration — a textbook confirmation of the standing v20–v25 rule (systems/conceptual → well-calibrated &
+generative, value = naming/locating not re-ranking):** he **produced the thesis himself** and **corrected me twice**
+(I first over-read it as "replace loss with evals," then as "you just mean data scheduling"), each time sharpening it
+back to the precise claim. My contribution was to *locate* it in the literature: **(1) the premise fix** — post-training
+*already* grades by outcome not loss (RLHF/DPO/**RLVR** = grading-by-test, his own 06-16 reading), so the field is
+half-way there; **(2) his exact closed-loop gate is already real in RL post-training** — automatic/adaptive curricula
+that sample tasks at the frontier of ability and promote on pass-rate = **Vygotsky's zone of proximal development**
+formalized; **(3) the three blockers that keep it out of *pretraining*, all plumbing not principle** — the LR schedule
+is welded to a fixed horizon (→ **WSD / Warmup-Stable-Decay** loosens it, MiniCPM), the mid-run exam is noisy/expensive
+(→ the strongest case *for* interp in the gate: a developmental signal like the **Local Learning Coefficient** flags the
+induction-head/ICL phase transition *earlier & smoother* than the benchmark it produces, and — key — a promote/hold
+**gate is Goodhart-milder than a differentiable target**, so his framing survives the gaming objection a naive
+interp-loss wouldn't), and labs need **predictable compute** (adaptive-length runs are an ops/economics gamble);
+**(4) failure modes he hadn't met** — fine-grained curriculum learning mostly **fails to beat a shuffled mix at scale**
+(IID batches are a brutal baseline; "difficulty" ill-defined for text), and the ~10,000× **sample-efficiency gap** (a
+child is fluent on ~100M words) says the lever is the **learner** (priors/embodiment/active learning — **BabyLM**), not
+the **syllabus**; and **(5) the open question his analogy surfaced** — a gate is only half a policy, the unexplored half
+is the **remediation rule on a *failed* exam** (feed more of the same? switch data? back up the mixture? = teacher who
+*resequences* vs one who merely holds back), which is where a pedagogy-shaped loop would earn its efficiency. Landed
+synthesis: **his closed-loop reframe is correct and under-exploited** — already real where the exam is cheap
+(RL post-training), absent from pretraining for LR-coupling + eval-noise + compute-predictability reasons *now partially
+solved*; the frontier version = **an adaptive controller that gates phase transitions on interp-confirmed readiness and
+carries a remediation policy for holds.** Full record in the reading's **"What we worked out"** section, with verified
+follow-up links (devinterp review, induction-heads, LLC, Mechanistic Data Attribution, Textbooks-Are-All-You-Need,
+BabyLM, emergent-abilities-mirage). **Teach-forward: he is a peer-level sparring partner on AI training/methodology —
+steelman then locate in the live literature, bring 2026 research, don't "correct."** His **eval-team background** and
+**control-theory framing** are live anchors; **hands-dirty follow-up = reproduce a developmental-interpretability
+phase-transition detection (devinterp/LLC) on a small model** on his RTX 4070.
+**Process/tooling — ComfyUI image generation entered the workflow (2026-07-08 authorized, 2026-07-09 applied):** the
+local `comfyui-media` skill (Z-Image Turbo) is now used for **path-4** illustrations under a strict precedence rule
+(real figure → matplotlib data plot → Mermaid diagram → generated image) and two hard limits (no real-*specific*
+subjects = fabrication; no baked-in text = generate-then-annotate). Reviewed the whole reading track and added **4
+illustrations** to the two Discovery-register readings (07-02: undersea cable + inflation-chainsaw; 07-07: AI-mind
+metaphor + generic observatory dome), **deliberately skipping the 7 technical 06-xx readings** (well-served by their
+diagrams/code — an image would be filler). Rule recorded in `authoring-conventions.md` §7. **Next:** continue the
+reading rotation, or the devinterp mini-repro.)
+
 v25 (2026-07-07 — **hobby econ E02 §4 (the business cycle) finalized → Module E02 (Macroeconomics) COMPLETE
 (§§1–4).** Body (drafted 07-02; 4 matplotlib figs + mermaid one-pager + bilingual glossary): anatomy & NBER
 dating ("not a clock"; the wrong "two-quarters" rule); the **output gap** as the cycle's one state variable

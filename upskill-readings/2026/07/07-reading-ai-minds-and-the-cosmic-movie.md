@@ -1,4 +1,4 @@
-# Daily Reading — 2026-07-07  📝 draft
+# Daily Reading — 2026-07-07  ✅ finalized
 
 *A "National Geographic / Discovery" pair — one story from the **career** world (AI), one from the **hobby** world (astronomy / physics). Not course material; the wider, stranger, more current world around it.*
 
@@ -126,6 +126,42 @@ flowchart LR
 
 ---
 
+## What we worked out — the thread you drove (read this first on review)
+
+Story 2 (Vera Rubin) we left as a read, no discussion. Story 1 you turned into a real thesis about **how models should be trained** — drawn from your stint on a model-eval team, where mechanistic interpretability was *on the plan but never prioritized* (the training team didn't know how to turn it into a usable signal). The durable record:
+
+### Your thesis — train an LLM like you teach a kid, and gate the grades on readiness
+The core claim, in its final sharpened form (after two rounds of me mis-framing it): **not** "replace loss with evals" — loss stays as the dense pretraining signal, you were explicit about that. The claim is a **control-theory** one:
+
+- Today's phase transitions (pretrain → anneal → RL, context-length extension, data-mixture changes) are **open-loop** — fired by a *predetermined token budget* ("2T tokens, then switch").
+- They **should be closed-loop** — fired by a **readiness gate** (eval **+** interpretability) that decides *when* the model is ready to be "promoted to the next grade," the way a year-end exam gates a student. Interp's job here is to *judge readiness*, not to become a loss term.
+
+This also picked up your side-observations that human learning has **no clean pre/post-training split** (kids learn to speak and to follow instructions at once) and uses **prepared curricula, not a library dump**.
+
+### Where it's already reality — and you were under-crediting the field
+- **Post-training already grades by outcome, not loss.** RLHF/DPO/**RLVR** optimize a reward/verifier, not token cross-entropy — that's "judge by the exam," and it's your own [16-rl-verifiers reading](../06/16-rl-verifiers-and-environments.md). The field is half-way to your world already.
+- **Your exact closed-loop gate exists in RL post-training.** Automatic / adaptive curricula sample tasks at the *frontier of current ability* and promote to the next difficulty tier only when pass-rate crosses a threshold — which is **Vygotsky's zone of proximal development** formalized. So your instinct is *validated* wherever the exam is cheap and un-gameable.
+- **"Textbooks, not a library" is a proven win:** [*Textbooks Are All You Need*](https://arxiv.org/abs/2306.11644) (phi) — small volumes of curated textbook-quality data beat models 10–50× larger. (Caveat you should hold: phi is also the poster child for *teaching to the textbook* → benchmark overfitting.)
+- Coarse, *open-loop* curriculum is standard (data scheduling + high-quality **annealing** near the end) — you already knew this, and correctly distinguished it from your adaptive proposal.
+
+### The three blockers that keep closed-loop gating out of *pretraining* (all plumbing, not principle)
+1. **LR schedule is welded to a fixed horizon.** Cosine decay needs the total token count up front, so you can't end a phase adaptively. **Fix that cuts your way:** **WSD (Warmup–Stable–Decay)** schedules ([MiniCPM](https://arxiv.org/abs/2404.06395)) hold LR flat for an arbitrarily long stable phase and decay only at the end — so you *can* "decay now" when a gate fires. This is what makes your idea feasible in 2026 in a way it wasn't in 2023.
+2. **The mid-run exam is noisy and expensive**, and eval scores are non-monotonic during training. → The strongest argument **for interp in the gate**: a developmental signal like the **Local Learning Coefficient** ([LLC](https://arxiv.org/abs/2308.12108)) flags the induction-head/ICL phase transition *earlier and more smoothly* than the benchmark it eventually produces. So the exam = **interp as leading indicator, eval as confirmation** — and this **dodges Goodhart**, because you're reading structure to *time a discrete decision*, not optimizing it as a target.
+3. **Labs need predictable compute** (rent N GPUs for M days; extrapolate fixed recipes) — an adaptive-length run is an ops/economics gamble, not a scientific objection.
+
+### The failure modes you hadn't hit
+- **Fine-grained curriculum learning mostly does *not* beat a shuffled mix at scale** (well-shuffled IID batches are a brutally strong baseline; "difficulty" is ill-defined for text). Wins survive only at the *phase* granularity, not per-example. Your "grade by grade" is right at the granularity of *terms*, not *lessons*.
+- **The sample-efficiency gap points at the *learner*, not the *syllabus*:** a child is fluent on ~100M words; LLMs need trillions. That 10,000× gap comes from priors + embodiment + *active* learning, not reading order — see the [BabyLM Challenge](https://babylm.github.io/). Curriculum order alone won't close it.
+- **Goodhart** is *the* reason interp isn't already a training target: make "look monosemantic to the SAE" an objective and SGD fakes it. Gating (a discrete promote/hold) is the Goodhart-*milder* use, which is why your framing survives where a naive interp-loss wouldn't.
+
+### The open question your analogy surfaces (your follow-up thread)
+A promotion gate is only half a policy. The unexplored half is the **remediation rule**: when the model *fails* the exam, do you feed more of the same, switch data, or back up the mixture? — the difference between a teacher who just holds a kid back and one who *resequences* the lesson. That reaction, not the gate itself, is where a pedagogy-shaped loop would earn its efficiency.
+
+### Where we landed
+Your closed-loop reframe is **correct and under-exploited**: already real in RL post-training (cheap gate), absent from pretraining for LR-coupling + eval-noise + compute-predictability reasons that are *now partially solved* (WSD, interp-as-leading-indicator). The frontier version of your idea isn't "add an exam" — it's **an adaptive controller that gates phase transitions on interp-confirmed readiness and carries a remediation policy for holds.** Hands-dirty next step (feasible on your RTX 4070): reproduce a **developmental-interpretability** phase-transition detection on a small model — [devinterp review](https://arxiv.org/abs/2508.15841), [induction-heads phase change](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html) — and, if you want the 2026 bleeding edge of *steering* which mechanisms form, [Mechanistic Data Attribution](https://arxiv.org/abs/2601.21996).
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -163,4 +199,4 @@ flowchart LR
 - [Early Science Program & data releases — Rubin Observatory](https://rubinobservatory.org/for-scientists/resources/early-science)
 - [Vera C. Rubin Observatory — Wikipedia](https://en.wikipedia.org/wiki/Vera_C._Rubin_Observatory)
 
-*Prepared 2026-07-07 (draft) — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (mechanistic interpretability / "the MRI for AI") and one **hobby-track** (the Vera C. Rubin Observatory / the LSST survey). Figures current to mid-2026. The **"What we worked out"** durable record gets added after we discuss it.*
+*Finalized 2026-07-10 — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (mechanistic interpretability / "the MRI for AI") and one **hobby-track** (the Vera C. Rubin Observatory / the LSST survey). Figures current to mid-2026. Illustrations added 2026-07-09 (ComfyUI). The **"What we worked out"** section is the durable record — read it first on review: he drove a thesis off Story 1 (train LLMs like teaching a kid → **closed-loop, readiness-gated phase transitions** using eval + interpretability, *not* replacing loss), which held as a control-theory reframe — already real in RL post-training (ZPD/automatic curricula), blocked from pretraining only by LR-horizon coupling + eval-noise + compute-predictability (now partially solved by WSD + interp-as-leading-indicator), with the "remediation policy on a failed gate" as the open follow-up. Story 2 was a read, not discussed.*
