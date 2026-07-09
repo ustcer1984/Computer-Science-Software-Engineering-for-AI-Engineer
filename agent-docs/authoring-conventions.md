@@ -255,20 +255,26 @@ the rule-2 precedence still governs *what kind* of visual a given need calls for
      structural.** Examples that fit: a metaphor made concrete (a "shadow price" as a literal shadow),
      a section/mascot header, a vivid scene for a reading-track feature (rule 6 — this genre benefits
      most), an analogy illustration.
-- **Two hard limits — do not cross them (this is educational material; honesty of depiction matters):**
+- **One hard limit — do not cross it (this is educational material; honesty of depiction matters):**
   - **Never generate a picture of a *real, specific* thing and present it as that thing.** A generated
     "photo of the Vera Rubin Observatory," a named person, a specific chip die shot, a real UI
     screenshot — these are **fabrications**. For real specific subjects use a real licensed/public
     image with provenance (path 1). Generate only *generic/illustrative* subjects ("a large telescope
     dome at dusk," "a stylized data-center hall").
-  - **Never bake text into the pixels — add it as an overlay layer instead.** Z-Image Turbo is weak at
-    rendering precise words/labels, so generate the picture **text-free** and then, *when the illustration
-    needs labels/arrows/highlight boxes/callouts*, draw them on top with **matplotlib or PIL** — a
-    deterministic, crisp overlay (the "generate, then annotate" two-layer workflow). This is how you put
-    trustworthy text on a generated image, and it lets a generated backdrop carry a precise labeled layer
-    (an *annotated scene*) when a plain Mermaid/matplotlib diagram would be too sterile. Recipe:
-    `comfyui-media` skill → `references/annotate.md`. (Text that only lives in the markdown caption around
-    the image is fine too — but a caption is not a substitute for an on-image label pointing at a feature.)
+- **Getting text into the image — three ways, pick by what the text is** (updated 2026-07-09). Z-Image
+  Turbo itself is still weak at legible text, so **don't ask Z-Image for words**; instead:
+  - **Labels/arrows/highlight boxes/callouts pointing at features → overlay (default).** Generate the
+    picture **text-free** with Z-Image, then draw the text on top with **matplotlib or PIL** — a
+    deterministic, crisp overlay (the "generate, then annotate" two-layer workflow). Sharpest and fully
+    controllable; the right tool for teaching annotations, and it lets a generated backdrop carry a precise
+    labeled layer (an *annotated scene*) when a plain Mermaid/matplotlib diagram would be too sterile.
+    Recipe: `comfyui-media` skill → `references/annotate.md`.
+  - **Text that must be *part of the rendered composition* (a sign, poster, logo, packaging, book cover,
+    UI mockup) → Ideogram 4** (`ideogram` command, installed & verified). Renders legible words *inside*
+    the picture. Slower (~80–90 s/image) and **non-commercial license** — fine for this personal upskilling
+    repo, just don't reuse the output commercially. Needs a structured JSON prompt (the skill explains it).
+  - **Text that's just a title/caption for the figure → leave it in the markdown** around the image. A
+    caption is fine — but it is not a substitute for an on-image label pointing at a specific feature.
 - **Provenance is mandatory.** Every generated image gets a caption (or adjacent note) marking it
   AI-generated locally, e.g. *"Illustration — generated locally (ComfyUI + Z-Image Turbo)."* Readers
   must never mistake a generated illustration for a real figure/photo.
@@ -287,5 +293,7 @@ the rule-2 precedence still governs *what kind* of visual a given need calls for
 - **How to run it:** invoke the `comfyui-media` skill, or call its CLI directly —
   `python3 ~/.claude/skills/comfyui-media/scripts/comfy_media.py txt2img --prompt "…" --out <name>
   --width 1024 --height 1024`. It starts the server, generates, and prints the output PNG path (lands
-  in `ComfyUI/output/`); copy that into the doc's `images/` folder. The skill can also download
-  fitting open models for image *editing* or *video* when Z-Image can't do the task.
+  in `ComfyUI/output/`); copy that into the doc's `images/` folder. For in-image text use the
+  `ideogram` subcommand instead (`… comfy_media.py ideogram --prompt '<JSON>' --out <name>`). The skill
+  can also download fitting open models for image *editing* or *video* when the installed models can't do
+  the task.
