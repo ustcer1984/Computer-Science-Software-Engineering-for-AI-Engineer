@@ -275,18 +275,20 @@ down** (the firm faces a more steeply downward-sloping demand curve for *its own
 profit survives only where barriers to entry keep new firms out.** Hold both; they're the engine of the
 rest of the section.
 
-![A fortified stone castle sits on a green island encircled by a wide water moat; the moat is the barrier that keeps the market defended.](images/04-firms-costs-and-competition-1.png)
+![A prosperous stone castle on a green island fully encircled by a wide water moat; competitor figures are stranded on the outer banks, unable to cross to reach it.](images/04-firms-costs-and-competition-1.png)
 
-*The **economic moat** (Buffett's term, glossed in §9): a barrier to entry is the water around the castle — the wider the moat, the longer economic profit survives before entry competes it away. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
+*The **economic moat** (Buffett's term, glossed in §9): a barrier to entry is the water around the castle — would-be entrants are stuck on the far bank, so economic profit survives the longer the moat is wide. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
 
 <details>
 <summary>Image prompt (source of truth)</summary>
 
-> Stylized isometric conceptual illustration of a business as a fortified stone castle on a green hill,
-> surrounded by a wide protective blue water moat; the hilltop represents a profitable market; several small
-> competitor figures on the far bank unable to cross the moat; clean minimalist flat vector illustration
-> style, warm stone and cool blue palette, soft volumetric lighting, sense of a durable defended competitive
-> advantage, no text, no words, no labels, high detail
+> Stylized isometric conceptual illustration: a prosperous fortified stone castle with golden banners
+> standing safely on a lush green island at the centre, completely encircled by a wide deep blue water moat;
+> on the OUTER far bank, several small competitor figures stand stranded at the water's edge, unable to cross
+> the moat to reach the castle, some looking up at it; clear separation between the defended inner island and
+> the outsiders on the outer shore; clean minimalist flat vector illustration style, warm stone and cool blue
+> palette, soft volumetric lighting, sense of a durable defended market that newcomers cannot enter, no text,
+> no words, no labels, high detail
 
 </details>
 
