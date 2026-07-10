@@ -243,6 +243,26 @@ caught a mis-cited link — a generic **BBC topics feed** labeled "Argentina —
 a citation must resolve to *fixed, on-topic content*, not a rolling feed (HTTP 200 ≠ valid citation); swapped to a
 dated Semafor article. **Next:** two fresh topics next reading day (1 career, 1 hobby), keep diversifying.).
 
+v21 (2026-07-02 — **course-track backfill: M01 Ch3 §2 (async, 06-25) + §3 (synchronization &
+races, 06-26) finalized → Ch3 (Concurrency) COMPLETE.** Both were logged in `courses/plan.md` but missed here
+while the profile tracked the hobby-econ run (v18→v20); backfilled now (entries below). **Durable calibration
+(reinforces & generalizes the v20 read):** the long-standing "captures a real *secondary* effect but **mis-ranks
+it vs the dominant cause**" pattern is **specific to physical/mechanistic detail** — in **systems-design /
+architecture reasoning he is well-calibrated, not mis-ranked**, now confirmed twice more. §2: on the trap Q
+(a timeout around a non-yielding CPU loop) he named the **dominant** reason it never fires — *not* his usual
+mis-rank. §3: he read the body, **asked nothing**, and returned the section's **senior conclusion unprompted** —
+*immutable state makes a pipeline race-free **by construction**, so it scales from linear to a concurrent graph
+without inheriting the lock problem* (a data race needs a **write** to shared memory; no mutation → the whole
+§1–§5 lock apparatus is unnecessary) — the concurrency payoff of the append-only pipeline design he'd already
+derived in **Ch1 §2 §1**. He needed only *naming* the one residual care point (the fan-in/join: combine
+*functionally* + coordinate with structured concurrency, don't append into a shared mutable sink), not a
+re-rank. **So in concurrency/systems-design: teach at full depth, expect correct senior conclusions, and
+lead with *naming/nuancing* rather than dominant-cause re-ranking** — reserve the hypothesis→re-rank teaching
+mode for **physical/mechanistic** detail (fragmentation, bandwidth, GPU internals). Confirms the immutable-graph-
+state instinct again → **reuse his pipeline design in M07 / M14 Ch2**. Also, sound triage: he hasn't needed
+threads — I/O-bound work → async, threads buy nothing under the GIL. **Next course options:** Ch4 (I/O, syscalls
+& the kernel boundary) or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
+
 v20 (2026-07-02 — **hobby econ Module E02 macro §§1–3 finalized: GDP (§1, 06-26), inflation (§2, 06-29),
 unemployment (§3, 07-02).** These postdated v18/v19 and had only been logged in `hobby/economy-and-finance/
 plan.md`; now distilled into the main file's hobby-track section. **Durable calibration:** the standing
