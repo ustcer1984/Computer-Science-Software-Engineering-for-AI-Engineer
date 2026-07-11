@@ -96,3 +96,54 @@ fig2.suptitle("Same 5 I/O-bound requests: overlapping the waits collapses Σ →
 fig2.tight_layout()
 fig2.savefig("03-why-io-dominates-latency-fig2.svg", bbox_inches="tight")
 print("wrote 03-why-io-dominates-latency-fig2.svg")
+
+# ----------------------------------------------------------------- fig 3
+# Applied (§9): anatomy of one cold request, from a real serverless latency
+# investigation (representative dev numbers). Every large slice is a round-trip
+# or a setup cost; the actual DB query — the only "real work" — is a sliver.
+# Segment = (name, ms, colour, which §4 lever attacks it). Levels are mapped
+# to the four levers in the §9 prose; here we label name + timing on the bar.
+segs = [
+    ("container init\n(imports, page-in)",     1400, "#7A1F16"),
+    ("init_db bootstrap\n(schema/seed check)", 1000, "#C0392B"),
+    ("first DB connect\n(TCP+TLS+auth)",        750, "#E9852E"),
+    ("cert fetch\n(1 RTT)",                     360, "#F0B429"),
+    ("DB query",                                 42, "#2E7D32"),
+]
+total = sum(s[1] for s in segs)
+
+fig3, ax3 = plt.subplots(figsize=(11.0, 3.2))
+left = 0
+for name, ms, colour in segs:
+    ax3.barh(0, ms, left=left, height=0.5, color=colour, zorder=3,
+             edgecolor="white", lw=1.2)
+    if ms >= 300:
+        # wide enough: name inside (white), ms above (coloured)
+        ax3.text(left + ms / 2, 0.0, name, ha="center", va="center",
+                 color="white", fontsize=8.6, linespacing=1.15)
+        ax3.text(left + ms / 2, 0.30, f"{ms} ms", ha="center", va="bottom",
+                 color=colour, fontsize=9.6, fontweight="bold")
+    left += ms
+
+# the sliver of real work is too thin to label in place — carry it on the arrow
+ax3.annotate(
+    "DB query — the actual work — is 42 ms:\n~1% of the wait. Everything else is a\nround-trip or a one-time setup cost.",
+    xy=(total - 21, 0.05), xytext=(total * 0.555, 1.02),
+    fontsize=9.4, color="#1E5E22",
+    arrowprops=dict(arrowstyle="->", color="#1E5E22", lw=1.5),
+    ha="left", va="center",
+)
+ax3.set_xlim(0, total * 1.02)
+ax3.set_ylim(-0.55, 1.35)
+ax3.set_yticks([])
+ax3.set_xlabel("wall-clock time within one cold request (ms)", fontsize=10.5)
+ax3.set_title(
+    f"Anatomy of a cold serverless request (~{total/1000:.1f} s): the compute is a sliver, the I/O and setup are everything",
+    fontsize=12, pad=10)
+ax3.grid(axis="x", ls=":", color="#CCCCCC", zorder=0)
+ax3.set_axisbelow(True)
+for s in ("top", "right", "left"):
+    ax3.spines[s].set_visible(False)
+fig3.tight_layout()
+fig3.savefig("03-why-io-dominates-latency-fig3.svg", bbox_inches="tight")
+print("wrote 03-why-io-dominates-latency-fig3.svg")

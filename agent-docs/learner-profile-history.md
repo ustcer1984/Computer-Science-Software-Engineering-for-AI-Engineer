@@ -9,6 +9,42 @@
 
 ---
 
+v27 (2026-07-12 — **course: M01 Ch4 §3 (why I/O dominates latency) finalized → core of Ch4 COMPLETE** (optional §4 zero-copy remains).
+Body (prepared 07-07: the round-trip as the unit of latency; latency ≠ throughput bridged by **Little's Law** $L = \lambda W$; the critical path;
+the **four levers** fewer/overlap/closer/hide; **tail-at-scale** Dean & Barroso $1 - p^{N}$; latency- vs bandwidth-bound + the bandwidth-delay
+product; 2 matplotlib figs + 1 Mermaid) went **untouched**. **§9 Applied was driven by a real production latency investigation he had run** on a
+low-traffic serverless service (AWS Lambda + always-on RDS) and brought to Q&A — I used it as a field test of the whole section, captured as four
+threads: **(9.1)** *the latency is the round-trips* — a new matplotlib **fig3** breaks a ~3.6 s cold request into container-init +
+init_db-bootstrap + first-DB-connect + Firebase-cert-fetch vs a **42 ms query = ~1%**, making §1/§7 visceral (the DB was never the bottleneck; the
+seconds were cold-start setup + network round-trips). **(9.2) Little's Law inverted** — the usual worry is *too much* $\lambda$; a cold start is
+the **low-$\lambda$ corner** ($\lambda$ so low the platform reclaims idle containers), so a "warmer" (timed pings) is best understood as
+**injecting synthetic $\lambda$**; and Little's Law *sizes* the fix — $N_{\text{warm}} \approx \lambda_{\text{peak}} \times W$, so a page that
+fans out briefly needs concurrency $> 1$ and a one-container warmer under-serves it. **(9.3) the four levers in prod** — persistent-connection
+reuse & module-cached certs = Lever 1 (pay the handshake once, amortize), **static file in object storage = Lever 3 taken to its limit** (the
+read path touches no Lambda/DB — the trip you don't make costs zero), background prefetch of a rare tab = Lever 4 (hide), and Lever 2 was already
+there but **fan-out over cold containers amplifies the tail** (§5, each concurrent call may cold-start its own container). **(9.4) latency ≠
+throughput decides the architecture** — cold-start latency is a **low-traffic pathology that self-heals as $\lambda$ rises**, so "we got popular"
+is the *wrong* trigger to leave serverless *for latency*; the real trigger is **cost at high utilization**, a point on the throughput/cost axis.
+**NEW durable signal — he does serious production ops/latency investigations:** log-only CloudWatch diagnosis with a confirmed zero-activity
+baseline, careful before/after validation, and an **honest revert of a fix that proved net-negative** (a cert-prewarm that made public endpoints
+fetch certs they never had). He **independently arrived at the right fixes** — warmer, static-S3, persistent connection, memory right-sizing —
+before this session. **His applied distributed-systems / cloud-ops is a confirmed STRENGTH, not a gap** (consistent with the "pragmatic
+distributed-systems patterns" skill-map entry, now with a concrete, well-executed exhibit). **Calibration — reinforces the standing v20–v26 rule
+on the applied-systems axis (well-calibrated & generative; value = naming/locating, not re-ranking):** here on a real ops problem he was
+generative and correct; my contribution was **(a)** mapping his ad-hoc fixes onto the **four-lever checklist** so they read as one discipline, and
+**(b)** naming two gaps he had not framed — the warmer's **single-container / fan-out-concurrency limit** (a low-$\lambda$ tool does not cover a
+concurrency spike; measure concurrent cold starts, not aggregate; use $N_{\text{warm}} = \lambda_{\text{peak}} \times W$), and the
+**latency-vs-cost axis confusion** in his "if we get popular, move Lambda→EC2" plan (latency self-heals with traffic → the trigger is cost; and
+**Fargate > raw EC2** for a lean non-profit team, **connection pooling (RDS Proxy/PgBouncer) > a bigger RDS instance** as the first DB lever, since
+his queries are tiny but persistent-connection-per-container multiplies connection count). **Teach-forward: bring his real production systems and
+investigations into the material as applied cases** — that is where he engages hardest and where his strength lives; steelman then *locate/name*,
+do not correct. **Process:** folded the session's opening question — **why it is called "Little's Law"** (the MIT operations researcher **John
+D. C. Little**, whose 1961 paper gave the first general proof) — into §2 as a short aside. Added **cold start / serverless** to the bilingual
+key-terms table. Introduced two GitHub math-render traps of my own in the new §9 prose (`$\lambda$` inside `**bold**`, and a hyphen-glued opening
+`$`) and caught/fixed both with the conventions rule-4 pre-push greps before commit. **Next:** optional Ch4 §4 (zero-copy / `sendfile` / page
+cache) to fully close Ch4; or open **M02 Networking** (Ch4 §3 leaned on RTTs/TCP windows/BDP — the natural continuation); or rotate to M04 Ch2 §2
+/ M12 Ch2 §3.).
+
 v26 (2026-07-10 — **reading 07-07 finalized (mechanistic interpretability · Vera C. Rubin Observatory).** Two
 Discovery-register feature stories; Story 2 (Rubin — 3.2-gigapixel camera, 20 TB/night firehose, dark-matter link)
 was a read with no discussion, **Story 1 (interpretability) he drove into a full training-methodology thesis.**

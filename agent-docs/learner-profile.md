@@ -4,7 +4,25 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-10 (v26 — **reading 07-07 finalized (mechanistic interpretability · Vera Rubin).**
+Last updated: 2026-07-12 (v27 — **course: M01 Ch4 §3 (why I/O dominates latency) finalized → core of Ch4 COMPLETE**
+(optional §4 zero-copy remains). Body (prepared 07-07) went **untouched**; the finalize was driven by **a real serverless cold-start latency
+investigation he ran on production** (AWS Lambda + always-on RDS, low-traffic) and brought to Q&A. I used it as a field test of the whole
+section — **§9 Applied, 4 threads:** (9.1) *the latency is the round-trips* (new matplotlib **fig3**: a ~3.6 s cold request is container-init +
+bootstrap + DB-connect + cert-fetch vs a **42 ms query = ~1%**); (9.2) **Little's Law inverted** — a cold start is the *low-λ corner*, a warmer =
+**injecting synthetic λ**, and N_warm ≈ λ_peak × W *sizes* the warm pool (a fan-out spike briefly needs >1); (9.3) **the four levers in prod**
+(connection-reuse & module-cached certs = amortize the handshake · **static-S3 = remove the trip entirely** · prefetch = hide · fan-out-over-cold
+**amplifies the tail**); (9.4) **latency ≠ throughput decides architecture** — cold-start latency **self-heals as traffic rises**, so the
+Lambda→server migration trigger is **cost/utilization, not "popular."** **NEW durable signal: he does serious production ops/latency
+investigations** — log-only CloudWatch diagnosis, before/after validation, and an honest **revert of a net-negative fix** — and **independently
+arrived at the right fixes** (warmer, static-S3, persistent connection). His **applied distributed-systems / cloud-ops is a confirmed STRENGTH**,
+not a gap. **Calibration — reinforces the v20–v26 rule on the applied-systems axis:** he's generative and well-calibrated here; my value was
+**mapping his fixes onto the lever checklist + naming two gaps he hadn't framed** — the warmer's **single-container / fan-out-concurrency limit**
+(a low-λ tool doesn't cover a concurrency spike) and the **latency-vs-cost axis confusion** in his migration plan (latency self-heals; *cost* is
+the real trigger; **Fargate > raw-EC2** for a lean non-profit team; **connection pooling > a bigger RDS** as the first DB lever). **Teach-forward:
+bring his real production systems/investigations into the material as applied cases** — that's where he engages hardest and where his strength
+lives; steelman + *locate/name*, don't correct. Folded the opening Q — **why it's called Little's Law** (John D. C. Little, 1961 general proof) —
+into §2. **Next:** optional Ch4 §4 (zero-copy) to fully close Ch4; or open **M02 Networking**; or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
+Prior: v26 (2026-07-10 — **reading 07-07 finalized (mechanistic interpretability · Vera Rubin).**
 Story 2 (Rubin) a read; **Story 1 he drove into a training-methodology thesis.** **NEW durable signal: he has
 model-eval-team background** (interp was on their plan but never prioritized — the *training* team didn't know how to
 turn it into a usable signal) **and strong, original opinions on how models *should* be trained.** His thesis, in its
@@ -56,26 +74,8 @@ load-bearing**; **lead econ with a live current case + real-time web research** 
 an inline `$…$` span on the same line, plus a re-confirmed indented-`$$`-in-list leak — both documented in
 `authoring-conventions.md` rule 4; Playwright-on-the-GitHub-blob verification is now routine. **Next: E03 §1
 (money & how banks create it)** — the *endogenous/credit-money* thread he began reinventing in §2 §9b.)
-Prior: v24 (2026-07-07 — **course: M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) finalized.** Body
-(five I/O models · thread-per-conn vs event loop · C10k · `select`→`poll`→`epoll` scaling · `io_uring`/IOCP completion
-model) pitched high, went **untouched**; the whole session was one deep thread into the **io_uring completion model**,
-which he built from a **factory + two-warehouse analogy** (SQ=inbox, CQ=outbox; + a work-order ticket = `user_data`).
-**Two predictions, both well-ranked:** (a) *"SQ→CQ probably not FIFO"* → correct (out-of-order completion order); (b)
-*"user needs an orchestrator to sort & deliver to the target client"* → correct once we aligned that **"sort" = sortation/
-routing = a demultiplex** (read the echoed `user_data` tag → wake the right waiter; $O(1)$, not a search). **One genuine
-refinement (a decoupling, not a re-rank):** the completion **dispatcher is intrinsic to the model** and **orthogonal** to
-the **zero-syscall** knob (`SQPOLL` = a kernel thread watching the ring = busy-core-for-syscalls *derating* trade).
-Callbacks: IOCP `OVERLAPPED`+key ≡ `user_data` (cross-OS, §9a); **NVMe/NIC descriptor rings + Command Identifier** — io_uring
-mirrors hardware queues (his semiconductor lens); the dispatcher already exists in asyncio (`user_data`≈`Task`) and at his
-app layer (`request_id` matching in the eval fan-out). **IMPORTANT calibration refinement (updates v21/v23):** the
-"captures-a-real-secondary-effect-but-mis-ranks-the-dominant-cause" tendency is specific to ranking **competing PHYSICAL
-MAGNITUDES** (fragmentation vs bandwidth, external vs internal waste) — it does **NOT** apply to **mechanism reasoned
-through a systems/logistics analogy**, which is a genuine strength: here, on a *mechanistic* io_uring detail, he was
-**well-calibrated**, and part of my first-pass "re-rank" was me **fighting his word "sort," not his idea** (logged for
-honesty). **Teach-forward:** for mechanism questions, hand him an analogy and let him run it — add value by *naming*
-(sortation = demux) and *decoupling bundled concepts* (dispatcher ⟂ zero-syscall), not by correcting. Full entry in the
-course-track section below. **Next:** Ch4 §3 (why I/O dominates latency — last core piece of Ch4); or Ch4 §4 (zero-copy /
-`sendfile` / page cache, if added); or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
+(v24, 2026-07-07 — M01 Ch4 §2 blocking/non-blocking I/O & multiplexing finalized — is archived in the history log; its detail is
+mirrored in the course-track section below.)
 
 Earlier entries (**v23 → initial calibration**, 2026-06-08 … 2026-07-06) are archived in
 [`learner-profile-history.md`](learner-profile-history.md), the append-only change log. Their durable
@@ -166,6 +166,27 @@ learning surfaces.
   recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
+- **2026-07-12 — M01 Ch4 §3 (why I/O dominates latency) ✅ finalized → core of Ch4 COMPLETE** (optional §4 zero-copy remains). The capstone of
+  Ch4's core: the round-trip as the unit of latency; **latency ≠ throughput** bridged by **Little's Law** ($L = \lambda W$); the critical path;
+  the **four levers** (fewer trips · overlap · move closer · hide); **tail-at-scale** (Dean & Barroso, $1 - p^{N}$); latency- vs bandwidth-bound +
+  the bandwidth-delay product. Body (prepared 07-07) went **untouched**. **§9 Applied was driven by a real production latency investigation he
+  ran** on a low-traffic serverless service (AWS Lambda + always-on RDS) and brought to Q&A — used as a field test of the whole section:
+  **(9.1)** *the latency is the round-trips* — a new matplotlib fig breaks a ~3.6 s cold request into container-init / init_db-bootstrap /
+  DB-connect / cert-fetch vs a **42 ms query (~1%)**, making §1/§7 visceral; **(9.2) Little's Law inverted** — a cold start is the **low-$\lambda$
+  corner** (λ so low the platform reclaims idle containers), a "warmer" = **injecting synthetic $\lambda$**, and $N_{\text{warm}} \approx
+  \lambda_{\text{peak}} \times W$ *sizes* the warm pool (a fan-out spike briefly needs $> 1$, so a one-container warmer under-serves); **(9.3) the
+  four levers in prod** — persistent-connection reuse & module-cached certs = Lever 1 (amortize the handshake), **static file in object storage =
+  Lever 3 taken to its limit** (remove the trip), background prefetch = Lever 4, and fan-out over cold containers **amplifies the tail** (§5);
+  **(9.4) latency ≠ throughput decides architecture** — cold-start latency **self-heals as traffic rises**, so the Lambda→server migration
+  trigger is **cost/utilization, not "popular."** **NEW durable signal — he does serious production ops/latency investigations** (log-only
+  CloudWatch diagnosis, before/after validation, honest revert of a net-negative fix) and **independently arrived at the right fixes** (warmer,
+  static-S3, persistent connection); **applied distributed-systems / cloud-ops is a confirmed STRENGTH.** **Calibration (reinforces the v20–v26
+  rule on the applied-systems axis):** generative and well-calibrated here — my value was **mapping his fixes to the lever checklist + naming two
+  gaps he hadn't framed**: the warmer's **single-container / fan-out-concurrency limit**, and the **latency-vs-cost axis confusion** in his
+  migration plan (latency self-heals; cost is the real trigger; **Fargate > raw-EC2** for a lean non-profit team; **connection pooling > a bigger
+  RDS instance** as the first DB lever). **Teach-forward: bring his real production systems into the material as applied cases** — steelman +
+  *locate/name*, don't correct. Folded the opening Q — **why "Little's Law"** (John D. C. Little, 1961 proof) — into §2. Full detail in
+  `courses/plan.md`. **Next:** optional Ch4 §4 (zero-copy) to fully close Ch4; or open **M02 Networking**; or rotate to M04 Ch2 §2 / M12 Ch2 §3.
 - **2026-07-07 — M01 Ch4 §2 (blocking/non-blocking I/O & multiplexing) ✅ finalized.** The payoff of §1; cashes Ch3 §2's
   "the loop's one blocking call is `epoll_wait`" + §9a's readiness/completion split. **Body (pitched high) went untouched:**
   the two phases of any I/O (wait/copy) → the five I/O models (blocking · non-blocking · multiplexing · signal-driven ·

@@ -8,7 +8,8 @@
 > overlap; the **latency ≠ throughput** distinction and **Little's Law** that connects them; the **four levers** for fighting latency (fewer
 > trips · overlap · move closer · hide); and the senior topic that decides real systems — **tail latency**, why averages lie, and how
 > **fan-out amplifies the tail** (the direct explanation of why your 2,000-call eval batch finishes when the *slowest* call returns).
-> **Status:** 🔵 **draft** — prepared 2026-07-07. Body below; the Applied section (§9) and finalize come after our Q&A.
+> **Status:** ✅ **finalized** 2026-07-12. Body prepared 2026-07-07; §9 (Applied) filled from the Q&A — a real serverless cold-start
+> investigation used as a field test of the whole section (round-trips dominate, Little's Law inverted, the four levers, latency ≠ throughput).
 
 **Estimated study time:** 2–3 hours including reflection.
 
@@ -84,6 +85,12 @@ is the average latency each request spends in the system. Rearranged, $\lambda =
 whole theory of your fan-out in one line — if each LLM call takes $W = 2$ s and you want $\lambda = 500$ calls/s of throughput, you *must* keep
 $L = \lambda W = 1000$ calls in flight at once. High per-call latency doesn't stop you reaching high throughput; it just sets *how much
 concurrency* you need to get there. (And §2 is what makes holding 1,000 in flight cheap: one thread, one `epoll`, not 1,000 threads.)
+
+> **Why "Little's Law"?** It's a *person*, not a comment on the law's size. The MIT operations researcher **John D. C. Little** published the
+> first general proof in 1961 ("A Proof for the Queuing Formula $L = \lambda W$"). The relation had long been used as a rule of thumb, but Little
+> showed it holds for almost *any* arrival pattern, service-time distribution, and queue discipline — and that sweeping generality is what earned
+> it the status of a law and his name. (A small irony worth keeping: the "little" law is one of the most powerful results in all of queuing
+> theory precisely because it assumes so little.)
 
 > The keeper: **latency is a property of one request; throughput is a property of the system; Little's Law says the only way to keep high
 > throughput despite high latency is to run enough requests concurrently.** Optimizing latency and optimizing throughput are *different jobs*
@@ -266,9 +273,68 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 
 ---
 
-## 9. Applied — captured from our session
+## 9. Applied — a real cold-start investigation (from our session)
 
-*(Placeholder — filled on finalize with the threads you drive in Q&A.)*
+In Q&A you brought a latency investigation you'd run on a low-traffic production service — a serverless stack (AWS Lambda in front of an
+always-on Postgres) where users complained pages felt slow. It turned out to be an almost perfect field test of this whole section, so here are
+the durable lessons it teaches. (The point isn't the specific system; it's that the theory above is exactly what a real diagnosis looks like.)
+
+### 9.1 "The latency is the round-trips" — confirmed in the wild (§1, §7)
+
+The investigation's headline verdict was that the *database was never the bottleneck*: the actual SQL query on every slow page was ~30–95 ms.
+The seconds of "slowness" were entirely **cold-start** cost — and when you break that cost down, every large piece is a **round-trip or a
+one-time setup**, exactly the §1 claim:
+
+<!-- FIGURE -->
+![Horizontal stacked bar titled 'Anatomy of a cold serverless request (~3.6 s): the compute is a sliver, the I/O and setup are everything.' Five segments laid end to end along a wall-clock-time axis in milliseconds: container init / imports & page-in (1400 ms), init_db bootstrap / schema-seed check (1000 ms), first DB connect / TCP+TLS+auth (750 ms), Firebase cert fetch / one network round-trip (360 ms), and finally a tiny green DB-query segment (42 ms). An arrow points to the thin green sliver with the caption 'DB query — the actual work — is 42 ms: ~1% of the wait. Everything else is a round-trip or a one-time setup cost.' The figure makes visceral that the only compute slice is ~1% of the request; the rest is setup and network I/O.](diagrams/03-why-io-dominates-latency-fig3.svg)
+
+Read it against §7's keeper: the compute is a rounding error, and the latency *is* the setup + round-trips. A junior instinct ("the DB is slow,
+scale it up") would have optimized the 1% and left the 99% untouched — the same critical-path mistake as caching the 1 ms permission lookup in
+§3. Finding *where the time goes first* is the entire discipline.
+
+### 9.2 Little's Law, inverted: a cold start is the low-traffic corner (small $\lambda$) (§2)
+
+Here's the conceptual twist the case surfaced. Your usual queuing worry is **too much** arrival rate — $\lambda$ so high the system saturates and
+$W$ blows up. A serverless cold start is the *opposite* failure: $\lambda$ so **low** that the platform reclaims idle containers, so the *next*
+arrival pays the full setup cost of fig 9.1. The standard fix — a "warmer" that pings the functions on a timer — is best understood through
+Little's Law as **injecting synthetic arrivals** (a made-up $\lambda$): fake traffic that keeps a container (and its warm connection + cert
+cache) alive so real requests never find it cold.
+
+And Little's Law does more than name the problem — it *sizes* the fix. "Is one warm container enough?" isn't a guess; it's
+$N_{\text{warm}} \approx \lambda_{\text{peak}} \times W$. If peak arrivals to an endpoint are $\lambda_{\text{peak}}$ and each holds a container
+for $W$, that's the concurrency you must keep warm. The trap in the case was a page that **fans out** several calls to the same function at once
+(§5): for that instant the required concurrency is $> 1$, so a one-container warmer still cold-starts the extras. Measure $\lambda_{\text{peak}}$
+and $W$ from logs and let the law tell you the number, rather than warming "one and hoping."
+
+### 9.3 The four levers, in production (§4)
+
+Every fix in the investigation was one of the four levers — a clean checklist in the wild:
+
+- **Lever 1 (fewer trips)** — the persistent-connection change: instead of a fresh `connect()` (TCP + TLS + auth handshake) *per query*, reuse
+  one connection across all warm invocations. That's the ~750 ms slice in fig 9.1 paid **once** and amortized, not per request. Module-caching
+  the auth certs is the same move applied to the ~360 ms cert fetch.
+- **Lever 3 (move closer)** — the biggest win, and the cleanest: data that changes at most once a day (a leaderboard) was moved to a **static
+  file in object storage**, so the read path touches *no Lambda and no DB at all*. This is "move closer" taken to its limit — the round-trip you
+  don't make costs zero, which beats any amount of making it faster. Anything with that read-heavy, rarely-changing profile is a candidate.
+- **Lever 4 (hide)** — a rarely-visited tab's data is **prefetched in the background** right after login, so the (cold-prone) call finishes
+  before the user ever clicks. The wait still happens; it's just moved off the user's critical path.
+- **Lever 2 (overlap)** was already in place — the page issues its calls concurrently. But note the §5 sting: overlapping calls *over cold
+  containers* **amplifies the tail**, because each concurrent call may spin up and pay for its *own* cold start. Fan-out is a latency win only
+  once the things you fan out to are warm.
+
+### 9.4 `latency ≠ throughput` decides the *architecture*, not just the code (§2)
+
+Finally, the forward-looking question: "if we get popular and get funding, do we move off Lambda onto servers?" The section's central
+distinction answers it. **Cold-start latency is a low-traffic pathology** — it self-heals as $\lambda$ rises, because sustained traffic keeps
+containers warm for free. So "we got popular" is precisely the *wrong* trigger to abandon serverless *for latency reasons*; the latency problem
+evaporates on its own. The real reason to move to always-on servers is **cost at high utilization** (a server is only cheaper once it would be
+busy most of the day) — a point on the *throughput/cost* axis, not the latency axis. Little's Law and the latency-vs-throughput split are what
+keep those two axes from being confused, and confusing them is how teams over-build for a problem that traffic would have solved.
+
+> **The applied keeper:** a real production system taught the same three things the theory did — (1) *measure where the time goes; it's the
+> round-trips, not the compute*; (2) *pull the levers in order — fewer trips, move closer, hide the wait beat micro-optimizing the trip you
+> already make*; and (3) *keep the latency axis separate from the throughput/cost axis*, because they move independently and often in opposite
+> directions with traffic.
 
 ---
 
@@ -297,9 +363,10 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 ---
 
 ### What's next
-🔵 **Draft prepared 2026-07-07.** This section turned §1's device tier into a discipline: the round-trip as the unit of latency, latency ≠
-throughput (Little's Law), the critical path, the four levers, tail-at-scale, and latency- vs bandwidth-bound. With §1 (the boundary) and §2
-(multiplexing), the **core of Ch4 is complete.** Natural next steps, your call at the boundary:
+✅ **Finalized 2026-07-12** (body prepared 2026-07-07). This section turned §1's device tier into a discipline: the round-trip as the unit of
+latency, latency ≠ throughput (Little's Law), the critical path, the four levers, tail-at-scale, and latency- vs bandwidth-bound — and §9 closed
+it by walking a real serverless cold-start investigation straight down that same ladder. With §1 (the boundary) and §2 (multiplexing), the
+**core of Ch4 is complete.** Natural next steps, your call at the boundary:
 - **Ch4 §4 — *(optional)* zero-copy & the data path** (`sendfile`, `mmap` vs `read`, the page cache, `O_DIRECT`) — how the *copy* half of §1's
   two phases gets optimized away; the bandwidth-bound counterpart to this section.
 - **Close Ch4 and open M02 — Networking & the Web** (Ch4 §3 leaned on RTTs, TCP windows, the bandwidth-delay product — M02 Ch1 "how a request
@@ -323,3 +390,5 @@ throughput (Little's Law), the critical path, the four levers, tail-at-scale, an
 | cache | 缓存 | 快取 | ⚠ genuinely different (缓存 vs 快取) |
 | prefetch | 预取 | 預取 | script only |
 | queue | 队列 | 佇列 | ⚠ genuinely different (from Ch3) |
+| cold start | 冷启动 | 冷啟動 | script only (§9) |
+| serverless | 无服务器 / Serverless | 無伺服器 / Serverless | 服务器↔伺服器 (server); English often kept |
