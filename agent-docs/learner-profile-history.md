@@ -9,6 +9,39 @@
 
 ---
 
+v28 (2026-07-15 — **course: M12 Ch2 §3 (audio, speech & TTS) finalized → non-text AI thread advances: image ✅ video ✅ audio ✅; §4
+multimodal remains.** Body (representation problem → classic TTS cascade → neural codecs/RVQ → codec-LM/AudioLM/VALL-E → flow-matching TTS →
+ASR/SSL/Whisper → native full-duplex; 2 matplotlib figs — waveform/spectrogram/mel + sequence-length; 3 Mermaid — RVQ cascade, cascade-vs-codec-LM,
+selection decision-tree; bilingual 中文 table; GitHub math verified) pitched high and went **untouched**. He affirmed it works **as a high-level
+reference** ("I cannot remember them all, but a good doc for reference") and made the session's load-bearing move: **"for audio I'm more likely to
+work on the application side,"** redirecting to **model *selection*.** I web-researched a **SOTA-plus-open audio model-selection cheatsheet by use
+case** — 12 use cases (TTS, cloning, streaming TTS, ASR, diarization, speech-to-speech, translation, audio LLMs, music, SFX, voice conversion,
+enhancement/separation), a decision-tree diagram, 2026-07 currency with license + RTX-4070 self-host flags — first as a standalone doc, then **merged
+into §3 as §9 at his instruction** (he didn't want it standalone). Then **three real use-case consults (§12 Applied):** **(a)** phone
+conference-recording cleanup — the teaching move was to **decompose the degradation into noise / reverb / bandwidth**, each a different tool, and flag
+**reverb as the ceiling** (denoisers don't touch it); hosted one-click (Adobe Enhance, ElevenLabs Voice Isolator) vs local on the 4070 (Resemble
+Enhance, DeepFilterNet3, ClearerVoice). **(b)** the **cocktail-party** problem (real-time focus + offline split-into-document) — two keepers:
+**competing speech ≠ noise** (identical statistics → denoisers useless) and **a mono phone mic is near worst-case → spatial capture
+(directionality/beamforming/get-closer) is the dominant lever, not an algorithm**; real-time (hardware > beamforming > target-speaker-extraction →
+streaming ASR; honest "no magic," a conversation-boost earbud/hearing-aid may beat a phone pipeline; frontier = UW *Look Once to Hear* target-speech
+earbuds) vs offline (separation → diarization → **LLM groups speakers into conversations by turn-taking + topic** → document; 2–3 circles plausible,
+packed room **beyond reliable capability**). **(c)** **V-log music** — reusable pattern **VLM (Gemini) watches footage → writes the music brief →
+music-gen consumes it**; hosted commercial-safe (ElevenLabs Music v2 cleared; Suno v5.5 w/ Content-ID caveat; Lyria 3) vs free/local (ACE-Step MIT on
+4070; Stable Audio Open); avoid MusicGen (NC weights) & Udio (downloads disabled); editors (CapCut/Resolve) bundle AI-music + auto-beat-sync;
+royalty-free as the pragmatic alt. **NEW durable signal — separate *understanding* from *use* for non-text models: audio is an APPLICATION domain for
+him** (consumer/integrator), NOT the peer-level paper-critiquing *builder* he is on LLM internals. On application/selection questions he wants
+**ranked, current, honest toolkits — dominant-lever + honest limits + license gate + self-host feasibility — not internals**; the value he
+acknowledged was the **reframes** (noise-vs-competing-speech; spatial-capture-as-lever; VLM→brief→generate) over enumerating models. Consistent with
+his practitioner/ops strength (arena cold-start, LLM serving) — engages hardest when abstract material meets a system he wants to build/use.
+**Teach-forward: for use-oriented non-text tracks, lead with lever/limit/license, pair SOTA-hosted with best-open, and flag currency (models churn
+monthly).** **Process:** the cheatsheet fan-out used a research subagent that spawned four child agents; the parent returned a placeholder mid-flow, so
+I **pulled the children's verified results directly** (they caught license traps — MusicGen/AudioGen/SeamlessM4T weights are non-commercial — and 2026
+successors like ElevenLabs Music v2 / Cartesia Sonic-3.5 / pyannote community-1) and web-verified the volatile facts; rumored-but-unconfirmed releases
+(Qwen3.5-Omni, AssemblyAI Universal-3.5, "Whisper v4") were explicitly flagged as such. Retired the standalone cheatsheet doc + its diagram after
+merging. **Next:** §4 multimodal & representation (CLIP/VLMs, embeddings), or rotate.)
+
+---
+
 v27 (2026-07-12 — **course: M01 Ch4 §3 (why I/O dominates latency) finalized → core of Ch4 COMPLETE** (optional §4 zero-copy remains).
 Body (prepared 07-07: the round-trip as the unit of latency; latency ≠ throughput bridged by **Little's Law** $L = \lambda W$; the critical path;
 the **four levers** fewer/overlap/closer/hide; **tail-at-scale** Dean & Barroso $1 - p^{N}$; latency- vs bandwidth-bound + the bandwidth-delay

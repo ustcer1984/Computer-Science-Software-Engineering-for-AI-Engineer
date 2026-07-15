@@ -4,7 +4,30 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-12 (v27 — **course: M01 Ch4 §3 (why I/O dominates latency) finalized → core of Ch4 COMPLETE**
+Last updated: 2026-07-15 (v28 — **course: M12 Ch2 §3 (audio, speech & TTS) finalized → non-text AI thread
+advances: image ✅ video ✅ audio ✅; §4 multimodal remains.** Body (representation problem → classic TTS cascade →
+neural codecs/RVQ → codec-LM/AudioLM/VALL-E → flow-matching TTS → ASR/SSL/Whisper → native full-duplex) pitched
+high and went **untouched** — he affirmed it works **as a reference** and made the session's load-bearing move:
+**"for audio I'm more likely to work on the application side,"** redirecting to **model *selection*.** I
+web-researched a SOTA-plus-open **audio model-selection cheatsheet by use case** (merged as **§9**: 2026-07
+currency, license + RTX-4070 self-host flags, a decision-tree diagram) and consulted on **three real use cases**
+(§12 Applied): **(a)** phone conference-recording cleanup — decompose into noise/reverb/bandwidth, **reverb is the
+ceiling**; **(b)** the **cocktail-party** problem — **competing speech ≠ noise → spatial capture is the lever, not
+an algorithm**; real-time (hardware/beamforming/TSE) vs offline (separation → diarization → **LLM-groups-speakers-
+into-conversations**) pipelines, with honest "beyond reliable capability" limits; **(c)** **V-log music** —
+**VLM-writes-the-brief → music-gen** (ElevenLabs Music v2 / ACE-Step; licensing gate). **NEW durable signal —
+separate *understanding* from *use* for non-text models: audio is an APPLICATION domain for him** (consumer/
+integrator), NOT the peer-level paper-critiquing *builder* he is on LLM internals. On application/selection
+questions he wants **ranked, current, honest toolkits — dominant-lever + honest limits + license gate + self-host
+feasibility — not internals**; the value he acknowledged was the **reframes** (noise-vs-competing-speech;
+spatial-capture-as-lever; VLM→brief→generate), not model enumeration. Consistent with his practitioner/ops strength
+([[arena-cold-start-concern]], LLM serving) — he engages hardest when abstract material meets a system he wants to
+build/use. **Teach-forward: for use-oriented non-text tracks, lead with lever/limit/license, pair SOTA-hosted with
+best-open, and flag currency (models churn monthly).** Process: the cheatsheet fan-out research had a flaky parent
+subagent (it spawned children that returned good *verified* data — license corrections, 2026 successors); I folded
+the child results in directly and web-verified the volatile facts. **Next:** §4 multimodal & representation
+(CLIP/VLMs, embeddings), or rotate.).
+Prior: v27 (2026-07-12 — **course: M01 Ch4 §3 (why I/O dominates latency) finalized → core of Ch4 COMPLETE**
 (optional §4 zero-copy remains). Body (prepared 07-07) went **untouched**; the finalize was driven by **a real serverless cold-start latency
 investigation he ran on production** (AWS Lambda + always-on RDS, low-traffic) and brought to Q&A. I used it as a field test of the whole
 section — **§9 Applied, 4 threads:** (9.1) *the latency is the round-trips* (new matplotlib **fig3**: a ~3.6 s cold request is container-init +
@@ -46,36 +69,8 @@ phase-transition detection (devinterp/LLC) on a small model** (feasible on his R
 tool applied across the reading track 2026-07-09 — **4 path-4 illustrations** added to the two Discovery-register
 readings (07-02, 07-07), the **7 technical 06-xx readings deliberately skipped** (well-served by diagrams/code;
 §7 "only where they earn their place"). **Next:** continue the reading rotation, or a devinterp mini-repro.).
-Prior: v25 (2026-07-07 — **hobby econ E02 §4 (the business cycle) finalized → Module E02
-(Macroeconomics) COMPLETE (§§1–4).** Body (4 matplotlib figs + mermaid one-pager): anatomy/NBER dating, the
-**output gap** as the cycle's state variable, **demand-vs-supply shocks** (AD–AS/stagflation), **propagation**
-(multiplier/accelerator/financial-Minsky + a Frisch–Slutsky rocking-horse lens), the **expectations-augmented
-Phillips curve**, and **leading/coincident/lagging** indicators. **§10 = a three-thread live session HE drove**,
-and it sharpens the standing calibration one more notch: not only is he **well-calibrated in
-conceptual/systems/social-science** (the v20–v24 rule), he now **generates his own correct extensions and
-counter-arguments and initiates the deep threads** — I add value by *naming / locating*, not re-ranking. The
-arc: **(a)** he pushed §4's damper/oscillator lens himself — "a mechanical shock has a dashpot, an electrical
-one an RC network; what is the economy's damping term?" (answer: automatic stabilizers = passive dashpot that
-shrinks the multiplier; buffers/consumption-smoothing = velocity damping; discretionary policy = a *laggy
-active* damper; **leverage = negative damping / Minsky** → macroprudential adds it back). **(b)** he brought the
-**live AI boom/bubble** debate framed in precise econ terms (both curves moving; hardware price-hike →
-investment → oversupply) — **his AI-engineer domain fused with econ, and his E01 §2 §10b semiconductor-cobweb
-intuition resurfaced**; I web-researched mid-2026 data (capex, HBM, circular financing) and gave a layered,
-ranked opinion (real transition + capital-cycle correction + hardware glut = telecom-2000). **(c)** he brought
-his **中国 pre-grad 马克思主义政治经济学** and proposed **two original, correct counter-arguments** to Marx's
-concentration→collapse thesis (wealth dissipation 富不过三代; human-capital mobility / Musk); the teaching move
-was to **split Marx into Pillar A (capital-*share* crisis) vs Pillar B (permanent hereditary class)** — his
-arguments kill B (correctly — it *is* wrong) but not A — and separately to split **mechanism (right:
-underconsumption = *his own §2 §9b model* = Keynes/Piketty) vs inevitability (wrong)**. **Teach-forward:**
-peer-level sparring — steelman then *locate which pillar/mechanism*, don't correct; he initiates
-history-of-thought & political-economy depth; **bilingual Western↔Marxist econ vocabulary bridging is
-load-bearing**; **lead econ with a live current case + real-time web research** (confirmed yet again).
-**Process:** found & fixed **two new GitHub math-render traps** — an escaped `\$` (literal dollar) colliding with
-an inline `$…$` span on the same line, plus a re-confirmed indented-`$$`-in-list leak — both documented in
-`authoring-conventions.md` rule 4; Playwright-on-the-GitHub-blob verification is now routine. **Next: E03 §1
-(money & how banks create it)** — the *endogenous/credit-money* thread he began reinventing in §2 §9b.)
-(v24, 2026-07-07 — M01 Ch4 §2 blocking/non-blocking I/O & multiplexing finalized — is archived in the history log; its detail is
-mirrored in the course-track section below.)
+(v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are
+archived in the history log; their durable signal is distilled into the sections below.)
 
 Earlier entries (**v23 → initial calibration**, 2026-06-08 … 2026-07-06) are archived in
 [`learner-profile-history.md`](learner-profile-history.md), the append-only change log. Their durable
@@ -123,7 +118,13 @@ read the history only for the chronological "how we got here" trail.
   image/diffusion, audio, video, TTS** — has not read papers on them. This is the genuine AI gap and
   serves his stated goal ("understand all model types"). → **M12 Ch2 (Beyond text) is the AI thread to
   keep and teach properly**, pitched at his level (frontier, architecture-deep, physics lens welcome).
-  M12 Ch1 (how LLMs work) = SKIP/known.
+  M12 Ch1 (how LLMs work) = SKIP/known. **Refined 2026-07-15 (v28): separate *understanding* from *use*.**
+  The conceptual bodies (image §1, video §2, audio §3) land well and go **untouched** — the *understanding*
+  gap is closing. But for models he'll **apply rather than build** — **audio especially, his own words
+  ("more likely to work on the application side")** — he wants **application-side model *selection***: ranked
+  SOTA-plus-open toolkits keyed on the **dominant lever + honest limits + license gate + self-host (RTX 4070)
+  feasibility**, NOT internals. This is the opposite of his LLM stance (peer-level paper-critiquing builder).
+  Pitch use-oriented non-text material accordingly; flag currency (these models churn monthly).
 - SQL — basic-solid; parameterized queries.
 
 **Gaps (consistent across BOTH repos = real signal):**
@@ -166,6 +167,26 @@ learning surfaces.
   recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
+- **2026-07-15 — M12 Ch2 §3 (audio, speech & TTS) ✅ finalized.** Third section of the non-text AI thread (image ✅ video ✅ audio ✅;
+  §4 multimodal remains). Body (representation problem → classic TTS cascade → neural codecs/RVQ → codec-LM/AudioLM/VALL-E →
+  flow-matching TTS → ASR/SSL/Whisper → native full-duplex; 2 matplotlib figs + 3 Mermaid) pitched high and went **untouched** — he
+  affirmed it works **as a reference** and redirected the session to **application-side model selection**. I web-researched a **SOTA+open
+  audio model-selection cheatsheet by use case** (merged as **§9**, 2026-07 currency, license + RTX-4070 self-host flags, decision-tree
+  diagram) and consulted on **three real use cases** (§12 Applied): **(a)** phone conference-recording cleanup — decompose into
+  noise/reverb/bandwidth, **reverb is the ceiling**, hosted (Adobe/ElevenLabs) vs local (Resemble Enhance/DeepFilterNet); **(b)** the
+  **cocktail-party** problem — keeper **competing speech ≠ noise → spatial capture (directionality/beamforming/get-closer) is the lever,
+  not an algorithm**; real-time (hardware > beamforming > target-speaker-extraction → streaming ASR; "no magic," a conversation-boost
+  earbud may beat a phone pipeline) vs offline (separation → diarization → **LLM groups speakers into conversations by turn-taking +
+  topic**), with honest "packed room is beyond reliable capability" limits; **(c)** **V-log music** — the **VLM-writes-the-brief →
+  music-gen** pattern (ElevenLabs Music v2 cleared / ACE-Step local; licensing + Content-ID gate; editor auto-beat-sync; royalty-free
+  as the pragmatic alt). **NEW durable signal — for non-text models, separate *understanding* from *use*: audio is an APPLICATION domain
+  for him** (consumer/integrator), NOT the paper-critiquing builder he is on LLM internals. On selection questions he wants **ranked,
+  current, honest toolkits — dominant-lever + limits + license + self-host feasibility — not internals**; the value he acknowledged was
+  the **reframes** (noise-vs-competing-speech; spatial-capture-as-lever; VLM→brief→generate), not model enumeration. **Teach-forward: for
+  use-oriented non-text tracks, lead with lever/limit/license, pair SOTA-hosted with best-open, flag currency.** Process note: the
+  cheatsheet research fanned out via a subagent that spawned children; the parent returned a placeholder, so I pulled the children's
+  **verified** results directly (they caught license traps + 2026 successors) and web-verified volatile facts. Full detail in
+  `courses/plan.md` M12 Ch2 row. **Next:** §4 multimodal & representation (CLIP/VLMs, embeddings), or rotate.
 - **2026-07-12 — M01 Ch4 §3 (why I/O dominates latency) ✅ finalized → core of Ch4 COMPLETE** (optional §4 zero-copy remains). The capstone of
   Ch4's core: the round-trip as the unit of latency; **latency ≠ throughput** bridged by **Little's Law** ($L = \lambda W$); the critical path;
   the **four levers** (fewer trips · overlap · move closer · hide); **tail-at-scale** (Dean & Barroso, $1 - p^{N}$); latency- vs bandwidth-bound +
