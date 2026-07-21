@@ -4,7 +4,31 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-15 (v28 — **course: M12 Ch2 §3 (audio, speech & TTS) finalized → non-text AI thread
+Last updated: 2026-07-21 (v29 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03
+(Money, Banking & Monetary Policy).** Body (drafted 07-07) went **untouched**; the finalize was driven
+entirely by a **self-directed 5-question reasoning chain** he built after reading solo, walking *outward
+from the section to the global dollar system*. **§10 Applied, 5 threads:** (a) he independently read the
+money multiplier as a *ceiling, not a floor* (correct — the BoE repair) and named **loan-demand as the
+throttle**; (b) *China M2 ≫ its GDP* → I reframed via **velocity / the M2-GDP ratio** = financial
+*structure* (bank- vs market-based finance, deposits-as-store-of-value), not wealth; (c) *do US aggregates
+count dollars abroad?* → **cash yes** (Fed can't track notes), **eurodollars no** (institution-location
+rule); (d) *FX-reserves buying Treasuries* → **~M2-neutral** (money recycles; effects land on foreign M2 +
+US yields); (e) his own **export-led-growth synthesis**. **NEW durable signal: strong, generative
+macro-synthesis instinct** — he chains trade → money-creation → inflation → **US–China symbiosis**
+unprompted, and reconstructs mechanisms correctly (multiplier-ceiling, stock-vs-flow, loan-demand throttle).
+**Calibration — textbook confirmation of the standing rule (econ/systems/conceptual = generative &
+well-calibrated):** my value was **correcting two precise mechanical errors + naming structures he was
+circling**, NOT re-teaching. Corrections: (1) "export-created M2 → inflation, as in China" is **wrong** —
+China's money was *sterilized* (RRR to ~21%) and flowed into *assets/overcapacity*; CPI stayed
+~2%/near-deflation, so the danger is an asset-bubble/debt overhang, not CPI; (2) *r→0 ≠ unlimited borrowing*
+— capital requirements + creditworthiness still bind. Structures named: **eurodollars, Bretton Woods II,
+exorbitant privilege, imported disinflation, velocity = 1/(M2÷GDP)**. Bilingual 中文 glosses landed (this
+track's payoff = reading CN/EN econ news). **Teach-forward: on econ he's a sparring partner — steelman,
+*locate/name*, correct only the one wrong step, bring real cross-border/current data; he prefers building a
+multi-turn reasoning chain over a single Q.** **Process:** clean finalize, body needed **no edits** (pitched
+right); all GitHub math render-trap greps clean. **Next:** E03 §2 (interest rates & TVM / yield curve), or
+rotate (M12 Ch2 §4 multimodal, M02 networking).)
+Prior: v28 (2026-07-15 — **course: M12 Ch2 §3 (audio, speech & TTS) finalized → non-text AI thread
 advances: image ✅ video ✅ audio ✅; §4 multimodal remains.** Body (representation problem → classic TTS cascade →
 neural codecs/RVQ → codec-LM/AudioLM/VALL-E → flow-matching TTS → ASR/SSL/Whisper → native full-duplex) pitched
 high and went **untouched** — he affirmed it works **as a reference** and made the session's load-bearing move:
@@ -45,32 +69,9 @@ the real trigger; **Fargate > raw-EC2** for a lean non-profit team; **connection
 bring his real production systems/investigations into the material as applied cases** — that's where he engages hardest and where his strength
 lives; steelman + *locate/name*, don't correct. Folded the opening Q — **why it's called Little's Law** (John D. C. Little, 1961 general proof) —
 into §2. **Next:** optional Ch4 §4 (zero-copy) to fully close Ch4; or open **M02 Networking**; or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
-Prior: v26 (2026-07-10 — **reading 07-07 finalized (mechanistic interpretability · Vera Rubin).**
-Story 2 (Rubin) a read; **Story 1 he drove into a training-methodology thesis.** **NEW durable signal: he has
-model-eval-team background** (interp was on their plan but never prioritized — the *training* team didn't know how to
-turn it into a usable signal) **and strong, original opinions on how models *should* be trained.** His thesis, in its
-final sharpened form: **train an LLM like teaching a kid — make phase transitions CLOSED-LOOP, gated on readiness
-(eval + interpretability), not the OPEN-LOOP predetermined token budgets used today**; **explicitly NOT** replacing
-loss (loss stays as the dense pretraining signal — he was firm on that). **Calibration — textbook confirmation of the
-standing v20–v25 rule:** this is a **systems/conceptual** domain, so he is **well-calibrated and generative**, not
-mis-ranked — he produced the thesis himself and **corrected me twice** when I over-read it (first as "replace loss,"
-then as "just data scheduling"), sharpening it to a precise **control-theory open-loop→closed-loop reframe**. My value
-was **naming/locating, not re-ranking:** named the **RL precedent** (his exam-gate is *already real* in post-training —
-automatic/adaptive curricula = **Vygotsky's ZPD**, pass-rate-gated difficulty; and RLVR = grading-by-test, his own
-06-16 reading); the **three pretraining blockers** (LR-horizon coupling → **WSD** loosens it; mid-run eval
-noise/cost → **interp as the leading, smoother indicator**, LLC/induction-heads, and **Goodhart-milder because a
-promote/hold *gate* isn't a differentiable *target***; compute-predictability = an ops/economics gamble, not science);
-the **failure modes he hadn't met** (fine-grained curriculum ≈ shuffling at scale; the 10,000× **sample-efficiency
-gap** ⇒ the lever is the *learner* not the *syllabus*, BabyLM); and the **open question he surfaced** — the
-**remediation policy on a *failed* gate** (resequence vs hold). **Teach-forward: he is a peer-level sparring partner on
-AI training/methodology — steelman then *locate*, bring live 2026 research, don't correct.** His **eval background +
-control-theory framing** are live anchors; **hands-dirty follow-up = reproduce a developmental-interpretability
-phase-transition detection (devinterp/LLC) on a small model** (feasible on his RTX 4070). **Process:** ComfyUI image
-tool applied across the reading track 2026-07-09 — **4 path-4 illustrations** added to the two Discovery-register
-readings (07-02, 07-07), the **7 technical 06-xx readings deliberately skipped** (well-served by diagrams/code;
-§7 "only where they earn their place"). **Next:** continue the reading rotation, or a devinterp mini-repro.).
-(v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are
-archived in the history log; their durable signal is distilled into the sections below.)
+(v26 2026-07-10 reading interp/Vera-Rubin, v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and
+v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived in the history log; their durable signal is
+distilled into the sections below.)
 
 Earlier entries (**v23 → initial calibration**, 2026-06-08 … 2026-07-06) are archived in
 [`learner-profile-history.md`](learner-profile-history.md), the append-only change log. Their durable
@@ -553,6 +554,23 @@ learning surfaces.
 
 ## Learning progress (hobby track)
 *(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-07-21 — Economy & Finance · E03 §1 (money & what banks create) ✅ finalized → opens Module E03
+  (Money, Banking & Monetary Policy).** Body (drafted 07-07): money as a *ledger of promises* (3 jobs,
+  double-coincidence), forms (commodity→representative→fiat, why fiat has value), the **nested aggregates**
+  (M0⊂M1⊂M2, base is small), the money-multiplier story **and why it's backwards** (*loans create deposits*,
+  BoE 2014; reserves follow lending; repayment destroys money), what *actually* limits lending (capital,
+  loan-demand, liquidity — **not** reserves), the two-tier system + bank-run fragility (SVB). Went
+  **untouched** — he read solo and brought a **self-directed 5-question chain** that walked outward to the
+  global dollar system → **§10 Applied, 5 threads:** (a) multiplier as **ceiling not floor** (his own
+  correct reading) + why r→0 doesn't unleash infinite credit (capital/creditworthiness bind); (b)
+  **China M2 ≫ GDP** = velocity / M2-GDP ratio = financial *structure* (bank- vs market-based), not wealth;
+  (c) **do US aggregates count dollars abroad?** cash yes / **eurodollars no** (institution-location rule);
+  (d) **FX-reserves → Treasuries** = ~M2-neutral (money recycles; real effects = foreign M2 + US yields);
+  (e) **export-led-growth synthesis** — I corrected the money→inflation step (China *sterilized*, money went
+  to *assets*, CPI stayed low/deflationary) and named the **US–China symbiosis (Bretton Woods II /
+  exorbitant privilege)**. **Calibration:** confirms the standing rule — on econ he's **generative &
+  well-calibrated**; teach by steelman + *locate/name* + correct only the one wrong mechanical step, not
+  re-teach. Clean finalize, no body edits. **Next:** E03 §2 (interest rates & TVM / yield curve), or rotate.
 - **2026-07-07 — Economy & Finance · E02 §4 (the business cycle) ✅ finalized → Module E02 (Macroeconomics)
   COMPLETE.** Body (drafted 07-02; 4 matplotlib figs + mermaid one-pager + bilingual glossary): anatomy & NBER
   dating ("not a clock"), the **output gap** as the cycle's one state variable, **demand-vs-supply shocks**

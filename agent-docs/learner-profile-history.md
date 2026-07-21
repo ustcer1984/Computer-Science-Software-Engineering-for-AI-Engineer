@@ -9,6 +9,40 @@
 
 ---
 
+v29 (2026-07-21 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03 (Money, Banking & Monetary Policy).**
+Body (drafted 07-07 — barter/double-coincidence, fiat value, nested aggregates M0⊂M1⊂M2, money-multiplier-and-why-it's-backwards /
+*loans create deposits* per BoE 2014, capital/loan-demand/liquidity as the real limits, two-tier system + SVB bank-run fragility; 3 SVGs,
+mermaid one-pager, bilingual 中文 table) went **untouched** — he read it solo and brought a **self-directed 5-question reasoning chain**
+that walked *outward from the section to the global dollar system*, which became **§10 Applied (5 threads):** (a) he independently read the
+money multiplier as a **ceiling, not a floor** (correct — the BoE repair) and named **loan-demand as the throttle**; refinements landed —
+the hidden "fixed M0" assumption (reserves follow lending, so the ceiling floats) and **r→0 ≠ unlimited borrowing** (the March-2020 zeroing
+retired a never-binding constraint; capital requirements + creditworthiness still bind; "afford the interest" ≠ creditworthy). (b) *China M2
+≫ its GDP while GDP is lower* → I reframed as **stock-vs-flow / the M2-GDP ratio = 1/velocity**, then explained the low velocity by financial
+**structure**: bank-based (loans→deposits→M2) vs market-based finance, ~40–45% savings parked as deposits, capital controls, debt-intensity —
+a measure of structure/leverage, **not wealth**. (c) *do US M0/1/2 count dollars used/saved abroad?* → organizing rule = **aggregates keyed to
+the institution's ledger location, not holder nationality**: physical **cash abroad IS counted** (Fed can't track notes; ~half of US paper,
+~⅔ of $100s, circulates abroad), **eurodollars are NOT** (offshore dollar deposits created by non-US banks — a ~13–16tn shadow stock outside
+US M2 and the Fed's grip → dollar swap lines; M3 dropped 2006 had captured some), foreigners' deposits *at US banks* mostly counted except
+foreign-official/foreign-bank balances. (d) *countries holding USD reserves buy Treasuries — effect on US M1/2?* → **~neutral**: Treasuries
+∉ M2, foreign-official ∉ M2, and the flows **transfer/recycle** money rather than create it (traced the importer→exporter→central-bank→Treasury
+loop as a perimeter in-out wash); real effects land on **foreign M2** (reserve accumulation = local-currency creation) and **US yields** (global
+savings glut, a price effect). (e) his **export-led-growth synthesis** — I affirmed the *unsustainable* claim (global accounting: surpluses sum
+to deficits; surplus = mirror of suppressed consumption, China household consumption ~38–40% of GDP) but **corrected the money→inflation step**:
+China is the clearest case of M2 exploding **without** CPI inflation (15–18%/yr M2 vs ~2% CPI, near-deflation by 2023–24) because it was
+**sterilized** (RRR to ~21% — §5's reserve tool used *actively*), channelled into **assets/overcapacity**, and absorbed by fast real growth +
+falling velocity; the QE-didn't-inflate point is primarily §4b (reserves aren't spendable M2), with **imported disinflation** a real *secondary*
+supply-side channel — the decisive test being **2021** (QE + *fiscal transfers to households* → worst inflation in 40y; imports didn't prevent
+it). Synthesis: the **US–China symbiosis / Bretton Woods II** (China suppresses consumption → surplus → recycles into Treasuries → cheap US
+goods + low US rates; dollar's **"exorbitant privilege"** lets the US run the matching deficit). **NEW durable signal: strong generative
+macro-synthesis instinct** — chains trade → money-creation → inflation → geopolitics unprompted, reconstructs mechanisms correctly
+(multiplier-ceiling, stock-vs-flow, loan-demand throttle), and this track's **payoff is reading CN/EN econ news** so bilingual glosses are
+load-bearing. **Calibration — textbook confirmation of the standing v20-rule:** econ/systems/conceptual = **well-calibrated & generative**;
+my value was **correcting two precise mechanical errors + naming the structures he was circling** (eurodollars, Bretton Woods II, exorbitant
+privilege, imported disinflation, sterilization, velocity=1/(M2÷GDP)), NOT re-teaching. **Teach-forward: on econ he's a peer sparring partner
+— steelman, locate/name, correct only the one wrong step, bring real cross-border/current data; he prefers building a multi-turn reasoning
+chain over a single Q.** **Process:** clean finalize, body needed **no edits** (pitched right); all GitHub math render-trap greps clean.
+**Next:** E03 §2 (interest rates & TVM / yield curve), or rotate (M12 Ch2 §4 multimodal, M02 networking).)
+
 v28 (2026-07-15 — **course: M12 Ch2 §3 (audio, speech & TTS) finalized → non-text AI thread advances: image ✅ video ✅ audio ✅; §4
 multimodal remains.** Body (representation problem → classic TTS cascade → neural codecs/RVQ → codec-LM/AudioLM/VALL-E → flow-matching TTS →
 ASR/SSL/Whisper → native full-duplex; 2 matplotlib figs — waveform/spectrogram/mel + sequence-length; 3 Mermaid — RVQ cascade, cascade-vs-codec-LM,

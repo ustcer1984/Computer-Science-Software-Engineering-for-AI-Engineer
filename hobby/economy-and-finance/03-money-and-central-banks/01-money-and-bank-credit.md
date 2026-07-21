@@ -13,9 +13,15 @@
 > the modern **endogenous / credit-money** picture. It ends pointing straight at **§2 (interest rates)** and
 > **§3 (monetary policy)** — because once you see that banks create money by lending, the central bank's job
 > becomes obvious: it doesn't ration the *quantity* of money, it sets its *price*.
-> **Status:** 🔵 **body drafted 2026-07-07.** Awaiting our live session (→ §10 Applied on finalize). The
-> body is written to be read on its own; bring questions and the section we'll turn it into a discussion the
-> way we did E02.
+> **Status:** ✅ **finalized 2026-07-21.** Body drafted 2026-07-07; **§10 captures the live session** — a
+> five-thread arc that ran the two-tier machine from *one bank's balance sheet* out to *the global dollar
+> system*: **(a)** the reserve fraction as a *ceiling, not a floor* (and why it isn't even the binding
+> constraint); **(b)** why **China's M2 dwarfs its GDP** — financial structure, not wealth; **(c)** whether
+> US aggregates count the world's dollars — **cash yes, eurodollars no**; **(d)** what foreign
+> **reserve-accumulation and Treasury-buying** do to US M2 (almost nothing — the money recycles); and
+> **(e)** the learner's own synthesis — **is export-led growth sustainable, and does it cause inflation?** —
+> where he correctly diagnosed the model's fragility and I corrected the money→inflation step (China's money
+> was *sterilized* and went into *assets*, not the CPI).
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -484,6 +490,133 @@ Bring one chart to our session and we'll run the money story on it — is broad 
 contracting, is that lending or base, and what would that imply the central bank should do — the way we ran
 the labour market on the 2026 Fed (E02 §3) and the cycle on the AI capex boom (E02 §4).
 
+## 10. Applied — from our session Q&A (2026-07-21)
+
+This session ran the two-tier machine *forward* — from the accounting on one bank's balance sheet out to
+the global dollar system — in five steps. It started where §4–§5 end (*what actually limits money
+creation*), then followed the money outward: to **why China's M2 dwarfs its GDP** (§3's aggregates as a
+mirror of financial structure), to **whether US aggregates even count the dollars circulating abroad**
+(§6's "whose ledger?" pushed across borders), to **what foreign reserve-accumulation and Treasury-buying do
+to US M2**, and finally to the learner's own macro synthesis — **is an export-led model sustainable, and
+does it cause inflation?** Every thread reused §4b's *loans-create-deposits* keystroke and reached back to
+E02.
+
+### 10a. The reserve fraction is a *ceiling*, not a *floor* — and it isn't even the binding one
+
+The learner read the money multiplier the right way on his own: with a *fixed* base and a binding reserve
+ratio $r$, $M2_{\max} = M0 / r$ is an **upper bound** on deposits, not the mechanism that fills it — "you
+cannot max out M2 on the reserve fraction if no one wants to borrow." That reframing
+(multiplier-as-ceiling, loan-demand-as-throttle) is exactly the repair the Bank-of-England view (§4b)
+makes. Two refinements landed:
+
+- **The hidden word is "fixed."** $M0$ is *not* fixed — the central bank commits to a *price* (the policy
+  rate) and supplies reserves elastically at it (§4b, §5). So the ceiling floats up to accommodate whatever
+  lending happens; "reserves follow lending." That is *why* the $M2/M0$ ratio is unstable (the post-2008
+  collapse) rather than a lever the central bank pulls.
+- **Zeroing $r$ does not open the floodgates.** The US cut reserve requirements to zero in March 2020
+  without unleashing infinite credit, because it retired a constraint that was *never binding*. The real
+  limits (§5) stay: **capital requirements** (资本 / 資本 — the Basel ratio that "actually bites"),
+  profitability, and liquidity. And "as long as they can afford the interest" is too weak — the bar is
+  **creditworthiness**, not affordability: a borrower willing to pay 20% may be *refused* precisely because
+  that rate signals default risk that swamps the return and burns scarce capital.
+
+### 10b. Why China's M2 dwarfs its GDP (and the US's) — structure, not wealth
+
+The learner noted China's M2 exceeds the US's while its GDP is lower. First sharpening: money is a
+**stock**, GDP a **flow** (E02 §1) — the meaningful object is the ratio $M2/\text{GDP}$, which is the
+inverse of the **velocity of money**: $M \cdot V = P \cdot Y$, so $M2/\text{GDP} = 1/V$. China sits near
+230%, the US near 74% — so the real question is *why Chinese money velocity is so low*. Four reinforcing
+reasons, all downstream of §3–§4:
+
+- **Bank-based vs market-based finance (the dominant one).** Since *loans create deposits* (§4b) and
+  deposits *are* M2, M2 is essentially a running tally of how much of the economy was financed **through
+  banks**. China finances investment overwhelmingly by **bank loans** (贷款 / 貸款) → huge M2. The US
+  finances heavily through **capital markets** (bonds, equity, money funds) that *don't* create deposits →
+  a far smaller M2 footprint for the same real activity.
+- **Savings rate + deposits as the store of value.** China saves ~40–45% of GDP, and with **capital
+  controls** and thin domestic alternatives, that wealth parks in **deposits** (= M2). US household wealth
+  sits in **securities** (equities, bonds, pension/mutual funds) that are *not* M2 — so Chinese wealth is
+  far more "money-shaped."
+- **Debt-intensity.** Property, infrastructure, and local-government-vehicle debt ballooned; since debt and
+  money are two sides of one coin (§4c), high leverage *is* high M2/GDP seen from the money side.
+
+What it does and doesn't mean: a high ratio measures **financial structure and leverage, not prosperity** —
+not "more money to spend." A *rising* ratio is a credit-intensity warning (more credit needed per unit of
+GDP). Caveats: M2 definitions differ across countries, and the within-country ratio dodges the
+exchange-rate distortion of comparing raw dollar levels.
+
+### 10c. Do US aggregates count the world's dollars? — cash yes, eurodollars no
+
+The organizing rule: US aggregates are keyed to **where the money's ledger sits (which institution)**, not
+the **holder's nationality** — §6's "whose IOU, whose ledger?" pushed across the border.
+
+- **Physical dollars abroad → counted.** M0's currency component is Fed notes in the public's hands, and
+  the Fed can't tell a Buenos Aires mattress from a New York wallet. Roughly *half* of US paper currency
+  (up to ~two-thirds of 100-dollar notes) circulates abroad, all lumped in.
+- **Eurodollars → not counted.** A **eurodollar** (an offshore dollar deposit — the prefix is historical,
+  nothing to do with the euro) is created when a *non-US* bank makes a dollar loan (the §4b keystroke, on a
+  foreign ledger). It functions as money worldwide but appears in *no* US aggregate — an offshore dollar
+  stock on the order of 13–16 trillion dollars, comparable to US M2 itself, beyond the Fed's measurement
+  and direct control.
+- **Foreigners' deposits *at US banks* → mostly counted** (domestic ledger), except deposits owed to
+  **foreign commercial banks and foreign official institutions**, which are excluded — a carve-out that
+  matters in 10d.
+
+Payoffs: US M2 *understates* the world's dollars, and the Fed's grip (§5) is looser still offshore — which
+is why it runs **dollar swap lines** as lender of last resort (§6) to a *global* dollar system. Footnote:
+the discontinued **M3** aggregate (dropped 2006) used to capture some eurodollars; M2 has this blind spot
+by construction.
+
+### 10d. Reserve accumulation and Treasury-buying — almost invisible in US M2
+
+When a surplus country accumulates dollar **foreign-exchange reserves** and buys US **Treasuries**, the
+direct effect on US M1/M2 is close to **nil**, for three reasons that stack: **Treasuries are not in M2** (a
+bond is a security, not money — buying one just swaps a deposit for a bond); **foreign-official balances are
+excluded from M2** (10c); and money is only **transferred, not created** by these flows. Tracing the loop —
+US importer pays exporter → exporter sells the dollars to its central bank for local currency → central
+bank buys a Treasury — the dollar *leaves* the M2 perimeter when it becomes a foreign-official holding and
+*re-enters* when the Treasury spends the proceeds (or a bond-seller banks them): a wash. The genuine effects
+land **elsewhere**:
+
+- **On the *foreign* money supply** — the central bank *creates local currency* to buy the dollars, so
+  reserve accumulation inflates the *home* country's M2. This is the direct mechanism behind 10b's
+  China-M2 puzzle.
+- **On US interest rates** — persistent Treasury demand bids bond prices up and long **yields down** (the
+  "global savings glut"): a *price* effect, the module's recurring theme, not a quantity-of-money effect.
+
+### 10e. Is export-led growth sustainable, and does it cause inflation? — the synthesis
+
+The learner argued that a forever-export-oriented model is neither feasible nor healthy, that
+export-driven money creation feeds inflation ("as in China"), and that heavy US imports partly explain why
+post-2008 QE didn't inflate. Sorting solid from shaky:
+
+- **Solid — export-led-forever is unsustainable.** Two rigorous reasons: **global accounting** (surpluses
+  must sum to deficits worldwide; not everyone can run one) and the fact that a persistent surplus is the
+  *mirror of suppressed domestic consumption* — Chinese household consumption is only ~38–40% of GDP, held
+  down by an undervalued currency and financial repression that transfer income from households to
+  exporters. The imbalance is internal, not merely external.
+- **Correction — export-created M2 did *not* become consumer inflation in China.** China is the clearest
+  case of M2 exploding *without* CPI inflation: M2 grew 15–18% a year for two decades while CPI averaged
+  ~2%, and by 2023–24 China was flirting with outright *deflation*. Three absorbers: **sterilization** (the
+  PBoC drains the liquidity it creates buying dollars — famously cranking the reserve-requirement ratio to
+  ~21% in 2011, using §5's reserve tool *actively*); the credit went into **asset prices (property) and
+  overcapacity**, not the consumer basket; and fast real growth plus falling velocity absorbed the rest
+  ($M \cdot V = P \cdot Y$ with booming $Y$ and falling $V$). So the danger is an *asset bubble and debt
+  overhang*, not runaway CPI.
+- **Refinement — QE and imports.** The primary reason post-2008 QE didn't inflate is §4b: QE made
+  *reserves*, banks don't lend reserves, so M2 barely grew. The learner's import channel is a *real but
+  secondary* supply-side effect — **imported disinflation** (the cheap-goods "China price" plus demand
+  leaking abroad through the deficit). The decisive test is **2021**: QE *paired with fiscal transfers
+  straight into households* did create spendable M2 and produced the worst US inflation in 40 years —
+  imports (still high, and supply chains disrupted) didn't prevent it. Inflation comes when money reaches
+  *spenders*, not from QE mechanics or imports alone.
+- **Synthesis — the US–China symbiosis.** The linkage the learner sensed has a name: **"Bretton Woods
+  II."** China suppresses consumption → runs a surplus → recycles dollars into Treasuries, simultaneously
+  keeping US goods **cheap** (disinflation) and US rates **low** (bond demand); the dollar's reserve status
+  — **"exorbitant privilege"** — lets the US run the matching deficit without a currency crisis. Both
+  threads reconcile: export-created money need not be domestic CPI inflation, and its fate — asset bubbles
+  in China, cheap goods and cheap borrowing in the US — depends on **where the credit is channelled**.
+
 ---
 
 ## Key terms — English · 中文（中国大陆 / 台灣）
@@ -539,6 +672,18 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 | Central bank digital currency | 央行数字货币 | 央行數位貨幣 | ⚠ 数字 ↔ 數位 (digital); e.g. e-CNY |
 | Stablecoin | 稳定币 | 穩定幣 | a private tier-2 competitor |
 
+**§10 applied threads — the global dollar system**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Velocity of money | 货币流通速度 | 貨幣流通速度 | GDP/M2 is its inverse; low in China → high M2/GDP |
+| Foreign-exchange reserves | 外汇储备 | 外匯儲備 | dollars a central bank holds |
+| Eurodollar | 欧洲美元 | 歐洲美元 | offshore dollar deposit — *not* in US M2 |
+| Government / Treasury bond | 国债 | 國債 | a security, not money (outside M1/M2) |
+| Sterilization | 冲销（对冲）| 沖銷（對沖）| draining money created by FX intervention |
+| Capital controls | 资本管制 | 資本管制 | limit cross-border money flows |
+| Imported disinflation | 输入性通缩 | 輸入性通縮 | cheap imports hold domestic prices down |
+
 > Recurring genuine splits to memorize: **供应 ↔ 供給** (supply), **信贷 ↔ 信用** (credit), **挤兑 ↔ 擠兌**
 > (bank run), **宽松 ↔ 寬鬆** (easing), **数字 ↔ 數位** (digital), **物物交换 ↔ 以物易物** (barter).
 
@@ -570,13 +715,14 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 ---
 
 ### What's next
-🔵 **Body drafted 2026-07-07 — opens Module E03 (Money, Banking & Monetary Policy).** With money defined (a
+✅ **Finalized 2026-07-21 — opens Module E03 (Money, Banking & Monetary Policy).** With money defined (a
 ledger of promises), measured (the nested aggregates), and — the payoff — *created by bank lending* rather
-than printed by the state, you now hold the object that all of monetary policy operates on. The deliberate
-bridges point straight ahead: because banks create money by lending and the central bank steers it by
+than printed by the state, you now hold the object that all of monetary policy operates on. The live session
+(§10) stress-tested that object from the single balance sheet out to the global dollar system — the
+reserve-fraction *ceiling*, the China-M2/GDP puzzle, the eurodollar blind spot, the reserve-and-Treasury
+recycle, and the export-led-growth-and-inflation synthesis. The deliberate bridges point straight ahead: because banks create money by lending and the central bank steers it by
 **price**, the natural next question is *how that price is set and what it means* — which is **E03 §2
 (interest rates & the time value of money)**, where the "penalty rate," the "policy rate," and the **yield
 curve** (the E02 §4 §6 recession signal) all get built properly; then **E03 §3** puts the central bank's hand
 on that lever (rate-setting, inflation targeting, QE — now that you know *why* QE didn't do what the
 multiplier predicted); and **E03 §4** contrasts it all with Singapore's unusual exchange-rate-based model.
-After our live session this section gets its **§10 Applied** and flips to ✅.
