@@ -704,8 +704,12 @@ learning surfaces.
   (career = any plausible positive-career-effect topic; hobby = anything genuinely interesting, my judgment). The old
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
-- **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
-  no specific item queued. *(Two standing hands-dirty follow-ups he'd enjoy, both RTX-4070-feasible: (a) a
+- **Queued / next reading day:** **reading #11 is PREPARED (created 2026-07-22), awaiting his read + Q&A → finalize**
+  (`upskill-readings/2026/07/22-programmable-kernels-and-redefining-the-second.md`): career = **eBPF / `sched_ext`**
+  (safe verified JIT programs injected into a running Linux kernel; the CPU scheduler is now hot-swappable) — a deliberate
+  step **off the LLM-internals axis** into systems breadth; hobby = **redefining the SI second on optical atomic clocks**
+  (NIST Al+ ion clock at ~$5.5\times10^{-19}$, the ~2030 redefinition roadmap, leap-second abolition by 2035). On finalize,
+  add the "What we worked out" section + prepend a vN note. *(Two standing hands-dirty follow-ups he'd enjoy, both RTX-4070-feasible: (a) a
   **developmental-interpretability** mini-repro — detect an induction-head/ICL phase transition on a small model; (b) NEW
   from reading #10 — a **block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM** ("how much serial-ness does
   reasoning need?"), testing whether a diffused chain-of-thought preserves the reasoning gain of an AR one.)*
