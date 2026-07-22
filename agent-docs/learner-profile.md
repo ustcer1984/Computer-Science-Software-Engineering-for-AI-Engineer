@@ -4,7 +4,7 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-22 (v30 — **reading #10 (07-22) finalized — diffusion LLMs (career) + the private fusion race
+Last updated: 2026-07-22 (v30 — **reading #10 finalized (created 2026-07-10, finalized 2026-07-22) — diffusion LLMs (career) + the private fusion race
 (hobby).** **UNUSUAL: both stories became deep discussions** (the hobby/physics story is normally just a read) → new signal
 that he now spars on *both* halves of a Discovery-register reading. **Career (AI) side — generative & correct on his core
 domain:** he **proposed the right serving-economics answer himself** — *diffusion's headline speed is a single-user/low-batch
@@ -27,8 +27,10 @@ different games," ICF won the science / MCF leads commercially / ITER lapped by 
 LLM-serving/architecture domain with live 2026 papers; steelman + *locate/name*, don't correct; on physical-magnitude /
 supply-chain questions, explicitly *rank the magnitudes*.** **NEW hands-dirty follow-up (RTX 4070):** a
 **block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM** — *"how much serial-ness does reasoning need?"* —
-joins the standing devinterp/LLC mini-repro. **Process:** caught & corrected my own **date error** (drafted 07-10 → today is
-07-22; renamed files + fixed internal dates); GitHub math render-trap greps clean; 2 ComfyUI path-4 illustrations + 1
+joins the standing devinterp/LLC mini-repro. **Process — reading-track dating rule (his correction, now standing):** the
+**filename + header use the CREATION date (2026-07-10)**; the **finalize date (2026-07-22) lives only in the footer + this
+progress log** (matches the reading-#9 / 07-07 pattern: file `07-…`, finalized 07-10). I initially over-corrected the filename to
+the finalize date and reverted. GitHub math render-trap greps clean; 2 ComfyUI path-4 illustrations + 1
 matplotlib $B^{4}$ plot + 1 Mermaid diagram. **Next:** continue the reading rotation, or either 4070 mini-repro.)
 Prior: v29 (2026-07-21 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03
 (Money, Banking & Monetary Policy).** Body (drafted 07-07) went **untouched**; the finalize was driven
@@ -712,7 +714,7 @@ learning surfaces.
   generated image precedence still holds; no real-specific subjects; no baked-in text). Applied across the reading track:
   **4 illustrations** in the two Discovery-register readings (07-02, 07-07); the **7 technical 06-xx readings deliberately
   skipped** (diagrams/code already carry them — an image there would be filler). The reading genre benefits most.
-- **2026-07-22 — reading #10 ✅ finalized** (`upskill-readings/2026/07/22-diffusion-llms-and-the-fusion-power-race.md`)
+- **2026-07-22 — reading #10 ✅ finalized** (`upskill-readings/2026/07/10-diffusion-llms-and-the-fusion-power-race.md`; created 2026-07-10, finalized 2026-07-22)
   — Two feature stories: (1) **diffusion language models** (career) — non-autoregressive, parallel-block text generation
   (Gemini Diffusion, Inception Mercury, open-weights DiffusionGemma); (2) **the private fusion race** (hobby) — HTS/REBCO
   compact tokamaks (SPARC/CFS), the $P \propto B^{4}$ law, and the AI-datacenter power deals funding it. **UNUSUAL: both
@@ -739,7 +741,8 @@ learning surfaces.
   block-diffusion LM (RTX 4070)** — *"how much serial-ness does reasoning need?"* — joins the standing devinterp/LLC mini-repro.
   **Teach-forward: pair his LLM-serving/architecture domain with live 2026 papers; steelman + locate/name; on
   physical-magnitude / supply-chain questions, *rank the magnitudes*.** Full record in the reading's "What we worked out"
-  section. **Process:** caught & fixed my own date error (drafted as 07-10 → corrected to 07-22, files renamed); GitHub math
+  section. **Process — reading-track dating rule (his correction):** filename + header = **creation** date (07-10); finalize
+  date (07-22) only in the footer + this log (as with reading #9: file `07-…`, finalized 07-10). GitHub math
   render-trap greps clean; 2 ComfyUI path-4 illustrations + 1 matplotlib $B^{4}$ plot + 1 Mermaid AR-vs-diffusion diagram.
   *(2 ComfyUI illustrations: a typewriter streaming glowing marks vs a block resolving from noise; a plasma torus in a magnet ring.)*
 - **2026-07-10 — reading #9 ✅ finalized** (`upskill-readings/2026/07/07-reading-ai-minds-and-the-cosmic-movie.md`)

@@ -1,4 +1,4 @@
-# Daily Reading — 2026-07-22  ✅ finalized
+# Daily Reading — 2026-07-10  ✅ finalized
 
 *A "National Geographic / Discovery" pair — one story from the **career** world (AI), one from the **hobby** world (physics / energy). Not course material; the wider, stranger, more current world around what you do.*
 
@@ -16,7 +16,7 @@
 🔗 **The "why now":** [DiffusionGemma (open-weights) — Google DeepMind](https://deepmind.google/models/gemma/diffusiongemma/) · [Inception's Mercury is 10× faster than the frontier — The New Stack](https://thenewstack.io/inception-labs-mercury-2-diffusion/)
 🔗 **Go deeper (the paper):** [Mercury: Ultra-Fast Language Models Based on Diffusion — arXiv 2506.17298](https://arxiv.org/abs/2506.17298)
 
-![A split conceptual scene: on the left a single glowing character struck one at a time on a typewriter (sequential); on the right a whole block of ordered light crystallizing at once out of a cloud of noise (parallel).](images/22-diffusion-llms-and-the-fusion-power-race-1.png)
+![A split conceptual scene: on the left a single glowing character struck one at a time on a typewriter (sequential); on the right a whole block of ordered light crystallizing at once out of a cloud of noise (parallel).](images/10-diffusion-llms-and-the-fusion-power-race-1.png)
 
 *The whole idea in one picture: autoregressive models type left-to-right, one token at a time (left); diffusion models resolve a whole block of text at once out of noise, refining it in a few passes (right). — Illustration, generated locally (ComfyUI + Z-Image Turbo); a generic concept image, no real text depicted.*
 
@@ -33,7 +33,7 @@
 
 <!-- fig1 -->
 <!-- DIAGRAM:START -->
-![Diagram 1](diagrams/22-diffusion-llms-and-the-fusion-power-race-1.svg)
+![Diagram 1](diagrams/10-diffusion-llms-and-the-fusion-power-race-1.svg)
 
 <details>
 <summary>Diagram source (Mermaid)</summary>
@@ -70,7 +70,7 @@ flowchart TB
 🔗 **The "why now":** [Google inks its first fusion power deal with Commonwealth Fusion Systems — TechCrunch](https://techcrunch.com/2025/06/30/google-inks-its-first-fusion-power-deal-with-commonwealth-fusion-systems/) · [Fusion power nearly ready for prime time — Fortune (Jan 2026)](https://fortune.com/2026/01/07/fusion-power-commonwealth-sparc-nuclear-fusion-pilot-ai-siemens-nvidia/)
 🔗 **Reference:** [Inside the race to power AI data centers with fusion — GeekWire](https://www.geekwire.com/2026/inside-the-race-to-power-ai-data-centers-with-fusion-energy-and-the-surprise-detours-along-the-way/)
 
-![A glowing donut-shaped torus of orange-white plasma confined inside a compact reactor hall, wrapped in curved superconducting magnet coils — a star captured in a magnetic bottle.](images/22-diffusion-llms-and-the-fusion-power-race-2.png)
+![A glowing donut-shaped torus of orange-white plasma confined inside a compact reactor hall, wrapped in curved superconducting magnet coils — a star captured in a magnetic bottle.](images/10-diffusion-llms-and-the-fusion-power-race-2.png)
 
 *Scene-setting for magnetic-confinement fusion — a glowing plasma torus held inside a compact ring of superconducting magnets, a "star in a bottle." — Illustration, generated locally (ComfyUI + Z-Image Turbo). A **generic** conceptual reactor, **not** the actual SPARC machine (a real, specific device); for real images see the links above.*
 
@@ -87,12 +87,12 @@ flowchart TB
 
 <!-- fig2 -->
 <!-- PLOT:START -->
-![Fusion power density versus on-axis magnetic field, showing the B-to-the-fourth-power law: ITER at about 5.3 T normalized to 1, SPARC at 12.2 T roughly 28 times higher.](images/22-diffusion-llms-and-the-fusion-power-race-2-plot.png)
+![Fusion power density versus on-axis magnetic field, showing the B-to-the-fourth-power law: ITER at about 5.3 T normalized to 1, SPARC at 12.2 T roughly 28 times higher.](images/10-diffusion-llms-and-the-fusion-power-race-2-plot.png)
 
 <details>
 <summary>Plot source (matplotlib)</summary>
 
-See [`images/22-diffusion-llms-and-the-fusion-power-race-2-plot.py`](images/22-diffusion-llms-and-the-fusion-power-race-2-plot.py). Power density normalized to ITER's on-axis field; the curve is $P \propto B^{4}$.
+See [`images/10-diffusion-llms-and-the-fusion-power-race-2-plot.py`](images/10-diffusion-llms-and-the-fusion-power-race-2-plot.py). Power density normalized to ITER's on-axis field; the curve is $P \propto B^{4}$.
 
 </details>
 <!-- PLOT:END -->

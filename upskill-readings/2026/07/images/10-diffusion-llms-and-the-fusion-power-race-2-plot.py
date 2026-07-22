@@ -63,6 +63,6 @@ fig.text(0.5, 0.005,
          ha="center", fontsize=7.5, color="#666", style="italic")
 
 fig.tight_layout(rect=(0, 0.03, 1, 1))
-out = __file__.rsplit("/", 1)[0] + "/22-diffusion-llms-and-the-fusion-power-race-2-plot.png"
+out = __file__.rsplit("/", 1)[0] + "/10-diffusion-llms-and-the-fusion-power-race-2-plot.png"
 fig.savefig(out, bbox_inches="tight", facecolor="white")
 print("wrote", out)

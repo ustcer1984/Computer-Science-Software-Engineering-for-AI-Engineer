@@ -9,7 +9,7 @@
 
 ---
 
-v30 (2026-07-22 — **reading #10 (07-22) finalized — `upskill-readings/2026/07/22-diffusion-llms-and-the-fusion-power-race.md`:
+v30 (2026-07-22 — **reading #10 finalized (created 2026-07-10, finalized 2026-07-22) — `upskill-readings/2026/07/10-diffusion-llms-and-the-fusion-power-race.md`:
 diffusion language models (career) + the private fusion race (hobby).** Two Nat-Geo/Discovery features on a "decades-old
 default cracking" through-line — text needn't be written left-to-right (diffusion LLMs); fusion needn't be stadium-sized/always
 30-years-away (HTS/REBCO magnets) — loosely linked by the AI-datacenter power crunch that funds the fusion startups (Google's
@@ -62,11 +62,13 @@ but softened since he probed rather than asserted. **NEW durable signals:** (1) 
 become sparring sessions**, not just reads; (2) confirmed **peer-level on AI architecture design**; (3) new **hands-dirty
 follow-up = a block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM (RTX 4070)**, joining the standing devinterp/LLC
 mini-repro. **Teach-forward: pair his LLM-serving/architecture domain with live 2026 papers; steelman + *locate/name*, don't
-correct; on physical-magnitude / supply-chain questions, explicitly *rank the magnitudes*.** **Process:** caught & corrected my
-own **date error** — drafted and first-committed the reading as `10-…`/2026-07-10 (I anchored to the *previous* reading's 07-10
-finalize date) when today is **2026-07-22**; renamed all six files via `git mv` (`10-`→`22-`), fixed internal date/slug
-references, re-rendered diagram + plot. GitHub math render-trap greps clean; Playwright typesetting check passed (no MathJax
-errors). **Next:** continue the reading rotation, or either RTX-4070 mini-repro.)
+correct; on physical-magnitude / supply-chain questions, explicitly *rank the magnitudes*.** **Process — reading-track dating
+rule (his correction, now standing):** the **filename + header carry the CREATION date (2026-07-10)**; the **finalize date
+(2026-07-22) belongs only in the footer + progress log** — exactly the reading-#9 pattern (file `07-reading-…`, header 07-07,
+finalized 07-10). This reading was created 07-10, sat, and was finalized 07-22 through this Q&A. I briefly over-corrected the
+filename to the finalize date (`22-…`) and reverted on his correction — record it so no agent re-makes the swap. GitHub math
+render-trap greps clean; Playwright typesetting check passed (no MathJax errors). **Next:** continue the reading rotation, or
+either RTX-4070 mini-repro.)
 
 v29 (2026-07-21 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03 (Money, Banking & Monetary Policy).**
 Body (drafted 07-07 — barter/double-coincidence, fiat value, nested aggregates M0⊂M1⊂M2, money-multiplier-and-why-it's-backwards /

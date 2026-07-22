@@ -232,6 +232,13 @@ that is explicitly **not wanted**.
 - **Keep the good production values** (they still apply): a "why this / why now" framing, real committed
   figures/diagrams (rule 2), verified hyperlinks ([[references-need-valid-links]]), any math in LaTeX
   (rule 4), and the bilingual 中文 glossary (rule 5). Just in service of a feature story, not a lecture.
+- **Dating & filenames (learner correction 2026-07-22):** the **filename `{dd}-{topic}.md`, its `{dd}` path
+  slug, and the H1 header date all use the day the reading was CREATED/prepared — never the day it was
+  finalized.** A reading is often prepared one day and finalized later (after he reads it and drives the Q&A);
+  the **finalize date belongs only in the footer (`*Finalized YYYY-MM-DD …*`) and in the profile's reading-track
+  progress log.** Precedent: reading #9 = file `07-reading-ai-minds-…`, header `2026-07-07`, but *finalized*
+  2026-07-10; reading #10 = file `10-diffusion-…`, header `2026-07-10`, *finalized* 2026-07-22. Do **not** rename
+  a prepared file to the finalize date on finalize.
 
 ## 7. Generated illustrations — you may create images locally (ComfyUI), but only where they earn their place
 
