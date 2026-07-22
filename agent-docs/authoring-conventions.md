@@ -146,6 +146,14 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     Eyeball-only review of the editor preview misses it (Cursor renders the escape correctly); Playwright the
     GitHub blob — the `.js-display-math`/`.js-inline-math` span count coming up *short* of your `$…$` count is
     the tell.
+  - **A prose `~` meaning "approximately" can trigger GFM strikethrough** (not a math trap, but the same
+    "GitHub pairs a delimiter and eats your prose" family). GitHub Flavored Markdown treats a **single** `~`
+    as a strikethrough delimiter (not only `~~`), so two unescaped `~` in one paragraph (`~5 T … ~12 T`, or
+    `scales ~linearly … ~$2N$`) get paired and everything between them renders **struck-through**. Shipped in
+    reading 07-10 (caught 2026-07-22, whole paragraphs of "~"-quantities struck out). **Fix: escape each as
+    `\~`** — it renders as a literal `~`, identical look — but **not** inside fenced code / mermaid blocks,
+    where `~` is already literal. Pre-push tell: outside code fences, an even count of unescaped `~` in a
+    paragraph; Playwright the blob and check for stray `<del>` elements.
   - **Give an inline `$…$`'s *opening* `$` a clean left boundary — a space or an opening bracket `([{`, never
     a glued `"` or a hyphen.** GitHub only opens an inline-math span when the opening `$` is flanked on the
     left by whitespace or opening-bracket punctuation; a `$` glued directly to a **double-quote** (`"$P < AVC$"`)
