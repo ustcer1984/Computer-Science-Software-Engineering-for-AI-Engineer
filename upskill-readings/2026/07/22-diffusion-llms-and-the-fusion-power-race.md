@@ -1,4 +1,4 @@
-# Daily Reading — 2026-07-10  ⏳ prepared (awaiting your read)
+# Daily Reading — 2026-07-22  ✅ finalized
 
 *A "National Geographic / Discovery" pair — one story from the **career** world (AI), one from the **hobby** world (physics / energy). Not course material; the wider, stranger, more current world around what you do.*
 
@@ -16,7 +16,7 @@
 🔗 **The "why now":** [DiffusionGemma (open-weights) — Google DeepMind](https://deepmind.google/models/gemma/diffusiongemma/) · [Inception's Mercury is 10× faster than the frontier — The New Stack](https://thenewstack.io/inception-labs-mercury-2-diffusion/)
 🔗 **Go deeper (the paper):** [Mercury: Ultra-Fast Language Models Based on Diffusion — arXiv 2506.17298](https://arxiv.org/abs/2506.17298)
 
-![A split conceptual scene: on the left a single glowing character struck one at a time on a typewriter (sequential); on the right a whole block of ordered light crystallizing at once out of a cloud of noise (parallel).](images/10-diffusion-llms-and-the-fusion-power-race-1.png)
+![A split conceptual scene: on the left a single glowing character struck one at a time on a typewriter (sequential); on the right a whole block of ordered light crystallizing at once out of a cloud of noise (parallel).](images/22-diffusion-llms-and-the-fusion-power-race-1.png)
 
 *The whole idea in one picture: autoregressive models type left-to-right, one token at a time (left); diffusion models resolve a whole block of text at once out of noise, refining it in a few passes (right). — Illustration, generated locally (ComfyUI + Z-Image Turbo); a generic concept image, no real text depicted.*
 
@@ -33,7 +33,7 @@
 
 <!-- fig1 -->
 <!-- DIAGRAM:START -->
-![Diagram 1](diagrams/10-diffusion-llms-and-the-fusion-power-race-1.svg)
+![Diagram 1](diagrams/22-diffusion-llms-and-the-fusion-power-race-1.svg)
 
 <details>
 <summary>Diagram source (Mermaid)</summary>
@@ -70,7 +70,7 @@ flowchart TB
 🔗 **The "why now":** [Google inks its first fusion power deal with Commonwealth Fusion Systems — TechCrunch](https://techcrunch.com/2025/06/30/google-inks-its-first-fusion-power-deal-with-commonwealth-fusion-systems/) · [Fusion power nearly ready for prime time — Fortune (Jan 2026)](https://fortune.com/2026/01/07/fusion-power-commonwealth-sparc-nuclear-fusion-pilot-ai-siemens-nvidia/)
 🔗 **Reference:** [Inside the race to power AI data centers with fusion — GeekWire](https://www.geekwire.com/2026/inside-the-race-to-power-ai-data-centers-with-fusion-energy-and-the-surprise-detours-along-the-way/)
 
-![A glowing donut-shaped torus of orange-white plasma confined inside a compact reactor hall, wrapped in curved superconducting magnet coils — a star captured in a magnetic bottle.](images/10-diffusion-llms-and-the-fusion-power-race-2.png)
+![A glowing donut-shaped torus of orange-white plasma confined inside a compact reactor hall, wrapped in curved superconducting magnet coils — a star captured in a magnetic bottle.](images/22-diffusion-llms-and-the-fusion-power-race-2.png)
 
 *Scene-setting for magnetic-confinement fusion — a glowing plasma torus held inside a compact ring of superconducting magnets, a "star in a bottle." — Illustration, generated locally (ComfyUI + Z-Image Turbo). A **generic** conceptual reactor, **not** the actual SPARC machine (a real, specific device); for real images see the links above.*
 
@@ -87,12 +87,12 @@ flowchart TB
 
 <!-- fig2 -->
 <!-- PLOT:START -->
-![Fusion power density versus on-axis magnetic field, showing the B-to-the-fourth-power law: ITER at about 5.3 T normalized to 1, SPARC at 12.2 T roughly 28 times higher.](images/10-diffusion-llms-and-the-fusion-power-race-2-plot.png)
+![Fusion power density versus on-axis magnetic field, showing the B-to-the-fourth-power law: ITER at about 5.3 T normalized to 1, SPARC at 12.2 T roughly 28 times higher.](images/22-diffusion-llms-and-the-fusion-power-race-2-plot.png)
 
 <details>
 <summary>Plot source (matplotlib)</summary>
 
-See [`images/10-diffusion-llms-and-the-fusion-power-race-2-plot.py`](images/10-diffusion-llms-and-the-fusion-power-race-2-plot.py). Power density normalized to ITER's on-axis field; the curve is $P \propto B^{4}$.
+See [`images/22-diffusion-llms-and-the-fusion-power-race-2-plot.py`](images/22-diffusion-llms-and-the-fusion-power-race-2-plot.py). Power density normalized to ITER's on-axis field; the curve is $P \propto B^{4}$.
 
 </details>
 <!-- PLOT:END -->
@@ -102,6 +102,41 @@ See [`images/10-diffusion-llms-and-the-fusion-power-race-2-plot.py`](images/10-d
 **The twist — it already has a buyer, and the buyer is an AI company.** SPARC is the prototype; the real product is **ARC**, CFS's first commercial plant, planned near **Richmond, Virginia**, at **~400 MW**, online in the **early 2030s**. And here's where this story loops back to Story 1: in **June 2025, Google signed a deal to buy 200 megawatts from ARC** — its first-ever fusion power purchase — explicitly because **AI and cloud data-center electricity demand is exploding** (Google's own forecast: data-center power demand roughly *doubling* by the end of the decade). Microsoft made a similar bet earlier, contracting **50 MW from Helion Energy by 2028** (Helion chases a different design — a pulsed field-reversed configuration aiming for near-aneutronic fuel and direct electricity conversion, no steam turbine). The pattern is unmistakable: the companies building the most compute-hungry systems on Earth are now **pre-ordering power from reactors that don't exist yet**, because they're betting the AI buildout will outrun the grid.
 
 > **The "huh, I didn't know that" file.** Fusion is having a genuine capital moment: private fusion companies have now raised well over **7 billion dollars** across roughly **fifty** firms, turning a government-lab science project into a venture race with real customers and IPO chatter. And note the delicious asymmetry — the thing that made compact fusion suddenly plausible wasn't a physics breakthrough in *fusion* at all; it was progress in **superconducting tape**, a materials-science advance from a neighboring field. The whole edifice of 100-million-degree plasma physics was waiting on a better ribbon of wire. (Separately, in December 2022 the US **National Ignition Facility** hit fusion *ignition* — more energy out than the laser delivered — using a completely different, inertial-confinement approach: brief proof that net-gain fusion is physically real, just not yet in a form you can plug into a grid.)
+
+---
+
+## What we worked out — the threads you drove (read this first on review)
+
+Unusually, **both** stories became real discussions this time (Story 2 is normally just a read). Five threads, and the through-line: on the AI side you were **generative and correct** (you proposed the right serving answer *and* an original architecture); on the fusion side the value was **ranking magnitudes** — separating the real-but-small risk from the actual wall.
+
+### Story 1 — diffusion LLMs
+
+**A. Is diffusion *inherently* worse than autoregressive (AR), or just slower?** The keeper: **the speed and the quality gap are the same coin.** The inherent reasons:
+- **Conditional-independence factorization tax** — parallel denoising samples co-generated tokens *independently* given the same context; the true joint isn't factorable ("New York"/"Los Angeles" → "New Angeles"). The speedup **is** the approximation. The dial: $k$ tokens/step = fast + lossy ↔ 1 token/step = exact but that's just AR (and slower, no KV cache).
+- **Objective is a variational bound (ELBO), not exact likelihood** — AR trains on exact per-token NLL (the objective *is* the metric); masked diffusion optimizes a looser surrogate → worse perplexity at equal compute.
+- **Any-order burden** — AR learns $N$ conditionals in one order; a masked model implicitly must handle ~all $2^{N}$ maskings with the same capacity.
+- **Reasoning fit** — AR + chain-of-thought gives *adaptive sequential test-time compute*; fixed-step, fixed-block diffusion is a poor structural match, and the 2026 frontier is reasoning-bound.
+- **Incumbency (the practical drawback now)** — KV cache, RLHF/RLVR, speculative decoding, and every serving stack are AR-tuned, and no one has spent a frontier-scale run on a diffusion LM.
+
+**B. Your call — diffusion's speed is a *single-user* win, not multi-user-efficient. (Correct.)** Roofline: AR at batch-1 is **bandwidth-bound** (idle FLOPs) → batching fills the FLOPs → throughput scales ~linearly. A single diffusion request **already sits near the compute roof** → it *pre-spends* the exact FLOP headroom AR banks for concurrency. So it's a **latency-at-low-load** win; at saturation it does more compute per token (~$S \cdot 2N$ vs AR's ~$2N$) → worse throughput/$. The twist to hold: diffusion is **memory-light** (little/no KV cache), so it can *pack* more users (memory-wise) but not *accelerate* them — the binding constraint flips from **HBM (AR)** to **FLOPs (diffusion)**. The real serving choice is a **crossover in the (load, latency-SLO) plane**, not a flat winner.
+
+**C. Your architecture proposal — one model, both modes; diffuse the *thinking* tokens, AR the *answer*.** Feasible, and it's where this subfield is already heading. The unifying fact: **AR = masked diffusion with a 1-token, left-to-right schedule and a causal mask** — so one transformer with a *configurable attention mask*, trained on both reveal schedules, does both. Already real:
+- **[Block Diffusion / BD3-LM (ICLR 2025 oral)](https://arxiv.org/abs/2503.09573)** — a block-size knob that *interpolates* AR (block = 1) ↔ full diffusion.
+- **[Esoteric LMs (Eso-LM)](https://arxiv.org/abs/2506.01928)** — fuses both in one model and is the *first to give diffusion a KV cache* (via causal attention exploiting the masked-diffusion ↔ any-order-AR equivalence).
+- **[DiffuLLaMA (ICLR 2025)](https://arxiv.org/abs/2410.17891)** — finetunes a pretrained AR model *into* a diffusion decoder (same weights) → proof the architecture is shared.
+
+**The deep catch to hold:** a **dependency mismatch.** Diffusion parallelizes best where token dependencies are *loosest*, but chain-of-thought's value is that it's *serial* (step $k{+}1$ conditions on step $k$). Naive "diffuse the whole CoT" parallelizes the one thing whose worth is being sequential → fast-but-incoherent reasoning that then **poisons the AR answer** built on it. The **reconciled design**: semi-AR/**block** diffusion for the CoT (sequential *between* reasoning steps, parallel *within*), full AR for the answer, and diffuse the **breadth** (enumeration/exploration) not the **depth** (the committed chain). Wrinkles you'd hit: **RL credit-assignment** through a diffused scratchpad is hard (no clean per-token logprob trajectory the way RLVR wants), and **CoT faithfulness/monitorability erodes** (07-07 interpretability callback — a non-sequentially-filled scratchpad is even *less* a causal trace).
+
+> **Open + 4070-testable (your kind of experiment).** *Does a diffused CoT preserve the reasoning **gain** of an AR CoT, or does the independence approximation destroy the very mechanism that makes CoT work?* → train a small block-diffusion LM, sweep **block size** on the reasoning span, and measure GSM8K-style accuracy vs block size — i.e. *"how much serial-ness does reasoning actually need?"* Complements the devinterp/LLC phase-transition mini-repro from 07-07.
+
+### Story 2 — the private fusion race
+
+**D. Is REBCO/HTS scaling exposed to China's rare-earth export controls?** Real kernel — **yttrium *and* gadolinium** (the two common REBCO rare earths) are *both* literally on China's **[April 2025 MOFCOM Announcement 18](https://www.csis.org/analysis/consequences-chinas-new-rare-earths-export-restrictions)** licensing list (oxides, compounds, magnets included). But the **magnitude defuses it**: the superconductor is a ~1–2 μm film, so a whole plant needs only ~**100–200 kg** of rare earth (≈ a couple of wind turbines' worth) — not a tonnage bottleneck. Three softeners: HTS magnets are **electromagnets** → they dodge the contested NdFeB/Dy *permanent-magnet* chain entirely; the element is **substitutable** (Y/Gd/Eu, vendor-dependent); and the dependency is **two-way** (China is a top HTS-tape maker *and* the most aggressive fusion state). Re-ranked dominant scaling constraints: **tritium fuel** (kg-scale global stock, self-breeding unproven — *the real wall*) ≫ **HTS tape-fab throughput** (~10,000 km/plant) ≫ **rare-earth refining/separation** (China ~90%, applies to the oxide regardless of ore source) ≫ raw ore. Net: the export controls are **friction / licensing / cost + a strategic lever, not a hard ceiling.**
+
+**E. State of the magnetic (MCF) vs laser-inertial (ICF) race.** They're winning **two different games**: ICF won the **scientific** race (NIF is the only machine ever to ignite; a **[record 8.6 MJ out for 2.08 MJ delivered, target gain 4.13, April 2025](https://www.ans.org/news/article-3169/national-ignition-facility-experiment-achieves-recordbreaking-yield/)**), while MCF is ahead **commercially**. Why the scientific leader isn't commercial: NIF's number is *target* gain — its lasers are ~1% wall-plug (≈40× net-negative at the wall), it fires a *few shots/day* vs a plant's ~10 Hz, and its targets are ~\$100k hand-made vs *millions/day* needed. MCF's edge is that a tokamak is **steady-state/long-pulse** (EAST held plasma >1000 s in 2025) and HTS gave it a concrete recent step-change. The market has voted — **[FIA 2025](https://www.fusionindustryassociation.org/fusion-industry-attracts-record-annual-funding-of-4-48bn-raising-total-to-14-24bn/)** (56 companies, \$14.2B): **magnetic 48% + magneto-inertial 14% (= 62% magnetic-family) vs inertial 21%.** Two nuances: ICF is **accelerating** (US IFE-STAR hubs; Xcimer/Marvel/Focused Energy; big pulsed-inertial rounds), and the binary is **dissolving into a spectrum** — steady-magnetic → pulsed-magnetic (FRC) → magneto-inertial (MagLIF/MTF) → pure inertial. The slow giant is public MCF: **ITER** slipped to ~2034 first plasma / ~2039 D-T — private fusion has *lapped the megaproject*. Read: **lasers proved a star can be lit; magnets are likelier to plug one into the grid first — but watch magneto-inertial for a winner that's neither pure category.**
+
+### Where we landed
+The reading sells two "decades-old default cracking" stories; the discussion added the honest *second half* of each. For diffusion: it's not a quality *ceiling* so much as a **speed↔quality↔serving-economics triangle** — matching AR quality costs back the speed, and the frontier answer to *"why flagships stay AR"* now has a **training** answer (A), a **serving** answer (B), and an **architecture** answer (C: dual-mode is feasible; the open frontier is whether reasoning survives parallelization). For fusion: the scary-sounding rare-earth dependency is **real but second-order** (D), and the genuine race is **two games at once** with the intergovernmental giant already lapped (E). Hands-dirty next step that ties it together: the **block-size-vs-reasoning-accuracy sweep** on your 4070.
 
 ---
 
@@ -139,4 +174,4 @@ See [`images/10-diffusion-llms-and-the-fusion-power-race-2-plot.py`](images/10-d
 - [Helion begins work on the plant that will power Microsoft by 2028 — Data Center Dynamics](https://www.datacenterdynamics.com/en/news/helion-begins-work-at-fusion-plant-expects-to-deliver-power-to-microsoft-by-2028/)
 - [Inside the race to power AI data centers with fusion — GeekWire](https://www.geekwire.com/2026/inside-the-race-to-power-ai-data-centers-with-fusion-energy-and-the-surprise-detours-along-the-way/)
 
-*Prepared 2026-07-10 — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (diffusion language models — non-autoregressive, parallel text generation) and one **hobby-track** (the private fusion race — HTS-magnet tokamaks and the AI-data-center power deals funding them). Figures current to mid-2026. Awaiting your read; the "What we worked out" durable-record section will be added on finalize if you drive a discussion.*
+*Finalized 2026-07-22 — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (diffusion language models — non-autoregressive, parallel text generation) and one **hobby-track** (the private fusion race — HTS-magnet tokamaks and the AI-data-center power deals funding them). Figures current to mid-2026. The **"What we worked out"** section is the durable record — read it first on review: unusually, **both** stories became live discussions. He drove **three AI threads** — (A) diffusion's quality gap is inherent and is the *same coin* as its speed; (B) his own correct call that diffusion's speed is a single-user/low-batch win, not multi-user-efficient (roofline: it pre-spends the FLOP headroom AR banks for concurrency; memory-light but FLOP-heavy); (C) his **original architecture proposal** (one dual-mode model; diffuse the thinking, AR the answer) — feasible (BD3-LM / Eso-LM / DiffuLLaMA), with the dependency-mismatch catch and a 4070-testable open question — and **two fusion threads**: (D) the REBCO rare-earth/China-export-control exposure is real but second-order (~100 kg/plant; tritium is the real wall), and (E) the MCF-vs-ICF race is "two different games" (ICF won the science, MCF leads commercially; ITER lapped). Illustrations generated locally (ComfyUI + Z-Image Turbo); the $B^{4}$ figure is matplotlib.*

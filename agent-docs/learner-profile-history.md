@@ -9,6 +9,65 @@
 
 ---
 
+v30 (2026-07-22 — **reading #10 (07-22) finalized — `upskill-readings/2026/07/22-diffusion-llms-and-the-fusion-power-race.md`:
+diffusion language models (career) + the private fusion race (hobby).** Two Nat-Geo/Discovery features on a "decades-old
+default cracking" through-line — text needn't be written left-to-right (diffusion LLMs); fusion needn't be stadium-sized/always
+30-years-away (HTS/REBCO magnets) — loosely linked by the AI-datacenter power crunch that funds the fusion startups (Google's
+200 MW ARC offtake). Prepared body: 2 ComfyUI path-4 illustrations (typewriter streaming glowing marks vs a block resolving
+from noise; a plasma torus in a magnet ring), 1 matplotlib $P \propto B^{4}$ plot (ITER 5.3 T → SPARC 12.2 T ≈ 28×), 1 Mermaid
+AR-vs-diffusion diagram, bilingual 中文 table (核聚变/核融合, 等离子体/電漿, 数据/資料 flagged as genuine CN/TW splits).
+**UNUSUAL: both stories became live discussions** — the hobby/physics story is normally just a read (cf. v26 Vera Rubin), so this
+is a new signal that on Discovery-register topics he now spars on *both* halves. **Five threads:**
+
+**Story 1 (diffusion LLMs) — he drove three, generative & correct on his core domain:**
+(A) *Is diffusion inherently worse than AR, or just slower?* Keeper: **the speed and the quality gap are the same coin.** Inherent
+reasons — **conditional-independence factorization tax** (parallel denoising samples co-generated tokens independently; the
+speedup *is* the approximation; dial: $k$/step fast+lossy ↔ 1/step = AR), **ELBO vs exact-likelihood** objective, **any-order
+burden** (~$2^{N}$ maskings vs $N$), **reasoning fit** (AR+CoT = adaptive sequential test-time compute), and **incumbency**
+(KV cache / RLHF-RLVR / serving stack all AR-tuned; no frontier-scale diffusion run). (B) **His own call, correct:** *diffusion's
+speed is a single-user/low-batch win, not multi-user-efficient.* Roofline framing — AR at batch-1 is bandwidth-bound (idle FLOPs)
+→ batching fills them → throughput scales; **one diffusion request already sits near the compute roof, pre-spending the FLOP
+headroom AR banks for concurrency** → latency-at-low-load win, worse throughput/$ at saturation (~$S\cdot 2N$ vs ~$2N$ FLOPs/token).
+The twist I added: **memory-light (no KV cache) → can *pack* more users but not *accelerate* them; binding constraint flips
+HBM→FLOPs;** real choice = a crossover in the **load × latency-SLO** plane. (C) **His original architecture proposal:** one
+**dual-mode AR+diffusion** model; **diffuse the thinking tokens, AR the answer.** Feasible — **AR = masked diffusion with a
+1-token LTR schedule + causal mask**; already real in **BD3-LM (block-size knob interpolates), Eso-LM (both modes + first KV
+cache for diffusion), DiffuLLaMA (finetune AR→diffusion, same weights).** The catch I located: a **dependency mismatch** —
+diffusion parallelizes weakest exactly where reasoning is most *serial*; naive "diffuse the whole CoT" → fast-but-incoherent
+reasoning that poisons the AR answer. Reconciled design: **semi-AR/block diffusion for CoT (sequential between steps, parallel
+within), AR answer, diffuse breadth not the chain.** Wrinkles: **RL credit-assignment through a diffused scratchpad** (no clean
+per-token logprob trajectory RLVR wants) and **CoT faithfulness/monitorability erodes** (07-07 interp callback). Open +
+4070-testable: *does a diffused CoT preserve the reasoning GAIN of an AR CoT?* → block-size-vs-GSM8K-accuracy sweep.
+
+**Story 2 (private fusion) — two threads, the physical-magnitude-ranking pattern recurred (v24 refinement):**
+(D) *REBCO/HTS exposure to China rare-earth export controls?* Real kernel — **yttrium + gadolinium are both on China's April-2025
+MOFCOM Announcement 18** licensing list (oxides/compounds/magnets). But **magnitude defuses it:** the superconductor is a ~1–2 μm
+film → **~100–200 kg RE/plant (≈ a couple of wind turbines)**, not a tonnage bottleneck. Three softeners: HTS = **electromagnets**
+(dodges the contested NdFeB/Dy permanent-magnet chain), **element-substitutable** (Y/Gd/Eu), **two-way dependency** (China is a
+top HTS-tape maker *and* the most aggressive fusion state). Re-ranked dominant wall: **tritium (kg-scale global stock,
+self-breeding unproven) ≫ HTS tape-fab throughput (~10,000 km/plant) ≫ RE refining/separation (China ~90%) ≫ raw ore.** Net:
+friction/licensing/strategic-lever, not a hard ceiling. **Softened calibration read: he *asked* rather than asserted a ranking.**
+(E) *MCF vs laser-ICF state?* Framed as **"two different games"** — ICF won the **science** (NIF only-ever ignition; 2025 record
+**8.6 MJ out / 2.08 MJ to target, gain 4.13**; but ~1% wall-plug, few shots/day vs 10 Hz, ~\$100k hand-made targets vs
+millions/day), MCF leads **commercially** (steady-state; HTS step-change; **FIA 2025: 48% magnetic + 14% magneto-inertial vs
+21% inertial**; **ITER slipped to ~2034/2039, lapped by privates**); the binary is dissolving into a **spectrum**
+(steady-magnetic → FRC → magneto-inertial/MagLIF → pure inertial).
+
+**Calibration — reinforces the standing v20+ rule on his strongest axis:** on **LLM internals / architecture / serving he is a
+peer-level generative sparring partner** (proposed the correct serving answer *and* an original, field-aligned architecture); my
+value throughout was **naming (roofline), locating the catch (dependency mismatch), and bringing live 2026 research (BD3-LM/Eso-LM/
+DiffuLLaMA)** — NOT re-ranking. This extends v26/v29's "generative in his domain" to **AI architecture *design*.** On the fusion
+side the **v24 physical-magnitude-ranking refinement held** (real secondary exposure flagged, dominant magnitude needed locating),
+but softened since he probed rather than asserted. **NEW durable signals:** (1) reading-track **hobby/physics stories now also
+become sparring sessions**, not just reads; (2) confirmed **peer-level on AI architecture design**; (3) new **hands-dirty
+follow-up = a block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM (RTX 4070)**, joining the standing devinterp/LLC
+mini-repro. **Teach-forward: pair his LLM-serving/architecture domain with live 2026 papers; steelman + *locate/name*, don't
+correct; on physical-magnitude / supply-chain questions, explicitly *rank the magnitudes*.** **Process:** caught & corrected my
+own **date error** — drafted and first-committed the reading as `10-…`/2026-07-10 (I anchored to the *previous* reading's 07-10
+finalize date) when today is **2026-07-22**; renamed all six files via `git mv` (`10-`→`22-`), fixed internal date/slug
+references, re-rendered diagram + plot. GitHub math render-trap greps clean; Playwright typesetting check passed (no MathJax
+errors). **Next:** continue the reading rotation, or either RTX-4070 mini-repro.)
+
 v29 (2026-07-21 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03 (Money, Banking & Monetary Policy).**
 Body (drafted 07-07 — barter/double-coincidence, fiat value, nested aggregates M0⊂M1⊂M2, money-multiplier-and-why-it's-backwards /
 *loans create deposits* per BoE 2014, capital/loan-demand/liquidity as the real limits, two-tier system + SVB bank-run fragility; 3 SVGs,

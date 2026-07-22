@@ -4,7 +4,33 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-21 (v29 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03
+Last updated: 2026-07-22 (v30 — **reading #10 (07-22) finalized — diffusion LLMs (career) + the private fusion race
+(hobby).** **UNUSUAL: both stories became deep discussions** (the hobby/physics story is normally just a read) → new signal
+that he now spars on *both* halves of a Discovery-register reading. **Career (AI) side — generative & correct on his core
+domain:** he **proposed the right serving-economics answer himself** — *diffusion's headline speed is a single-user/low-batch
+win, not multi-user-efficient* (roofline: one diffusion request already sits near the compute roof, so it **pre-spends the
+FLOP headroom AR banks for concurrency**; memory-light/no-KV-cache but FLOP-heavy → binding constraint flips **HBM→FLOPs**;
+real serving choice = a crossover in the **load × latency-SLO** plane) — and generated an **original, field-aligned
+architecture idea** (one **dual-mode AR+diffusion** model; **diffuse the thinking tokens, AR the answer**), feasible because
+**AR = masked diffusion with a 1-token LTR schedule** and **BD3-LM / Eso-LM / DiffuLLaMA** already interpolate. My value =
+**naming (roofline), locating the catch** (a **dependency mismatch** — diffusion parallelizes weakest exactly where reasoning
+is most *serial* → *diffuse breadth not the chain*; semi-AR blocks for CoT + AR answer; RL-credit-assignment + CoT-faithfulness
+wrinkles, the latter an **07-07 interp callback**), and **bringing live 2026 research** — NOT re-ranking. **Calibration —
+reinforces the standing v20+ rule on his strongest axis:** on **LLM internals / architecture / serving he is a peer-level
+generative sparring partner**; extend v26/v29's "generative in his domain" to **AI architecture *design***. **Fusion side —
+the physical-magnitude-ranking pattern recurred (the v24 refinement):** his China-rare-earth-export-control question flagged
+a **real secondary exposure** (yttrium+gadolinium *are* on China's April-2025 list) but the implicit ranking needed
+correcting — I **located the magnitude** (~100 kg RE/plant; a micron-thin REBCO film ≈ a couple of wind turbines) and
+**re-ranked the actual wall** (**tritium ≫ HTS tape-fab throughput ≫ RE refining/separation ≫ raw ore**); *softened* because
+he **asked rather than asserted**. (Second fusion thread — MCF vs laser-ICF — was a clean well-framed comparative: "two
+different games," ICF won the science / MCF leads commercially / ITER lapped by privates.) **Teach-forward: pair his
+LLM-serving/architecture domain with live 2026 papers; steelman + *locate/name*, don't correct; on physical-magnitude /
+supply-chain questions, explicitly *rank the magnitudes*.** **NEW hands-dirty follow-up (RTX 4070):** a
+**block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM** — *"how much serial-ness does reasoning need?"* —
+joins the standing devinterp/LLC mini-repro. **Process:** caught & corrected my own **date error** (drafted 07-10 → today is
+07-22; renamed files + fixed internal dates); GitHub math render-trap greps clean; 2 ComfyUI path-4 illustrations + 1
+matplotlib $B^{4}$ plot + 1 Mermaid diagram. **Next:** continue the reading rotation, or either 4070 mini-repro.)
+Prior: v29 (2026-07-21 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03
 (Money, Banking & Monetary Policy).** Body (drafted 07-07) went **untouched**; the finalize was driven
 entirely by a **self-directed 5-question reasoning chain** he built after reading solo, walking *outward
 from the section to the global dollar system*. **§10 Applied, 5 threads:** (a) he independently read the
@@ -51,27 +77,9 @@ best-open, and flag currency (models churn monthly).** Process: the cheatsheet f
 subagent (it spawned children that returned good *verified* data — license corrections, 2026 successors); I folded
 the child results in directly and web-verified the volatile facts. **Next:** §4 multimodal & representation
 (CLIP/VLMs, embeddings), or rotate.).
-Prior: v27 (2026-07-12 — **course: M01 Ch4 §3 (why I/O dominates latency) finalized → core of Ch4 COMPLETE**
-(optional §4 zero-copy remains). Body (prepared 07-07) went **untouched**; the finalize was driven by **a real serverless cold-start latency
-investigation he ran on production** (AWS Lambda + always-on RDS, low-traffic) and brought to Q&A. I used it as a field test of the whole
-section — **§9 Applied, 4 threads:** (9.1) *the latency is the round-trips* (new matplotlib **fig3**: a ~3.6 s cold request is container-init +
-bootstrap + DB-connect + cert-fetch vs a **42 ms query = ~1%**); (9.2) **Little's Law inverted** — a cold start is the *low-λ corner*, a warmer =
-**injecting synthetic λ**, and N_warm ≈ λ_peak × W *sizes* the warm pool (a fan-out spike briefly needs >1); (9.3) **the four levers in prod**
-(connection-reuse & module-cached certs = amortize the handshake · **static-S3 = remove the trip entirely** · prefetch = hide · fan-out-over-cold
-**amplifies the tail**); (9.4) **latency ≠ throughput decides architecture** — cold-start latency **self-heals as traffic rises**, so the
-Lambda→server migration trigger is **cost/utilization, not "popular."** **NEW durable signal: he does serious production ops/latency
-investigations** — log-only CloudWatch diagnosis, before/after validation, and an honest **revert of a net-negative fix** — and **independently
-arrived at the right fixes** (warmer, static-S3, persistent connection). His **applied distributed-systems / cloud-ops is a confirmed STRENGTH**,
-not a gap. **Calibration — reinforces the v20–v26 rule on the applied-systems axis:** he's generative and well-calibrated here; my value was
-**mapping his fixes onto the lever checklist + naming two gaps he hadn't framed** — the warmer's **single-container / fan-out-concurrency limit**
-(a low-λ tool doesn't cover a concurrency spike) and the **latency-vs-cost axis confusion** in his migration plan (latency self-heals; *cost* is
-the real trigger; **Fargate > raw-EC2** for a lean non-profit team; **connection pooling > a bigger RDS** as the first DB lever). **Teach-forward:
-bring his real production systems/investigations into the material as applied cases** — that's where he engages hardest and where his strength
-lives; steelman + *locate/name*, don't correct. Folded the opening Q — **why it's called Little's Law** (John D. C. Little, 1961 general proof) —
-into §2. **Next:** optional Ch4 §4 (zero-copy) to fully close Ch4; or open **M02 Networking**; or rotate to M04 Ch2 §2 / M12 Ch2 §3.).
-(v26 2026-07-10 reading interp/Vera-Rubin, v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and
-v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived in the history log; their durable signal is
-distilled into the sections below.)
+(v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
+v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived
+in the history log; their durable signal is distilled into the sections below.)
 
 Earlier entries (**v23 → initial calibration**, 2026-06-08 … 2026-07-06) are archived in
 [`learner-profile-history.md`](learner-profile-history.md), the append-only change log. Their durable
@@ -695,13 +703,45 @@ learning surfaces.
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
 - **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
-  no specific item queued. *(Standing follow-up he'd enjoy: a hands-dirty **developmental-interpretability** mini-repro —
-  detect an induction-head/ICL phase transition on a small model, feasible on his RTX 4070.)*
+  no specific item queued. *(Two standing hands-dirty follow-ups he'd enjoy, both RTX-4070-feasible: (a) a
+  **developmental-interpretability** mini-repro — detect an induction-head/ICL phase transition on a small model; (b) NEW
+  from reading #10 — a **block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM** ("how much serial-ness does
+  reasoning need?"), testing whether a diffused chain-of-thought preserves the reasoning gain of an AR one.)*
 - **IMAGES (from 2026-07-09, `authoring-conventions.md` §7):** the **ComfyUI** local image tool (Z-Image Turbo) is now in
   play for **path-4** illustrations (conceptual/metaphorical/atmospheric only — real figure → data plot → Mermaid →
   generated image precedence still holds; no real-specific subjects; no baked-in text). Applied across the reading track:
   **4 illustrations** in the two Discovery-register readings (07-02, 07-07); the **7 technical 06-xx readings deliberately
   skipped** (diagrams/code already carry them — an image there would be filler). The reading genre benefits most.
+- **2026-07-22 — reading #10 ✅ finalized** (`upskill-readings/2026/07/22-diffusion-llms-and-the-fusion-power-race.md`)
+  — Two feature stories: (1) **diffusion language models** (career) — non-autoregressive, parallel-block text generation
+  (Gemini Diffusion, Inception Mercury, open-weights DiffusionGemma); (2) **the private fusion race** (hobby) — HTS/REBCO
+  compact tokamaks (SPARC/CFS), the $P \propto B^{4}$ law, and the AI-datacenter power deals funding it. **UNUSUAL: both
+  stories became deep discussions** (hobby/physics story normally just a read) — a new signal that on Discovery-register
+  topics he now spars on *both* halves. **Career (AI) side — generative and correct, his core domain:** he **proposed the
+  right serving-economics answer himself** — *diffusion's speed is a single-user / low-batch win, not multi-user-efficient*
+  (roofline: a single diffusion request already sits near the compute roof, so it **pre-spends the FLOP headroom AR banks for
+  concurrency**; memory-light/no-KV-cache but FLOP-heavy → the binding constraint flips HBM→FLOPs; real choice = a crossover
+  in the load×latency-SLO plane) — and generated an **original, field-aligned architecture idea** (one dual-mode AR+diffusion
+  model; **diffuse the thinking tokens, AR the answer**), which is feasible (AR = masked diffusion with a 1-token LTR schedule;
+  **BD3-LM / Eso-LM / DiffuLLaMA** already interpolate). My value = **naming (roofline), locating the catch** (dependency
+  mismatch — diffusion parallelizes weakest exactly where reasoning is most serial → *diffuse breadth not the chain*, use
+  semi-AR blocks for CoT + AR answer; RL-credit-assignment + CoT-faithfulness wrinkles, the latter an **07-07 interp callback**),
+  and **bringing live 2026 research**. **Calibration — reinforces the standing rule on his strongest axis:** on LLM
+  internals/architecture/serving he is a **peer-level generative sparring partner**, not mis-ranked. **Fusion side — the
+  physical-magnitude-ranking pattern recurred (the v24 refinement):** his rare-earth-export-control question flagged a **real
+  secondary exposure** (yttrium+gadolinium *are* on China's April-2025 list) but the implicit ranking needed correcting — I
+  **located the magnitude** (~100 kg RE/plant, a micron-thin film ≈ a couple of wind turbines) and **re-ranked the real wall**
+  (**tritium ≫ tape-fab throughput ≫ RE-refining ≫ raw ore**); softened because he *asked* rather than asserted. Second fusion
+  thread (MCF vs laser-ICF): framed as **"two different games"** (ICF won the science — NIF, only ignition, 8.6 MJ/gain 4.13;
+  MCF leads commercially — FIA 62% magnetic-family; ITER lapped by privates). **NEW durable signals:** (1) reading-track
+  **hobby/physics stories now also become sparring sessions**; (2) confirmed **peer-level on AI *architecture design*** (generates
+  novel, correct directions); (3) new **hands-dirty follow-up = a block-size-vs-reasoning-accuracy sweep on a small
+  block-diffusion LM (RTX 4070)** — *"how much serial-ness does reasoning need?"* — joins the standing devinterp/LLC mini-repro.
+  **Teach-forward: pair his LLM-serving/architecture domain with live 2026 papers; steelman + locate/name; on
+  physical-magnitude / supply-chain questions, *rank the magnitudes*.** Full record in the reading's "What we worked out"
+  section. **Process:** caught & fixed my own date error (drafted as 07-10 → corrected to 07-22, files renamed); GitHub math
+  render-trap greps clean; 2 ComfyUI path-4 illustrations + 1 matplotlib $B^{4}$ plot + 1 Mermaid AR-vs-diffusion diagram.
+  *(2 ComfyUI illustrations: a typewriter streaming glowing marks vs a block resolving from noise; a plasma torus in a magnet ring.)*
 - **2026-07-10 — reading #9 ✅ finalized** (`upskill-readings/2026/07/07-reading-ai-minds-and-the-cosmic-movie.md`)
   — Two feature stories: (1) **mechanistic interpretability / "the MRI for AI"** (career) — features, sparse autoencoders,
   Golden Gate Claude, circuit tracing; (2) **the Vera C. Rubin Observatory / LSST** (hobby) — 3.2-gigapixel camera, the
