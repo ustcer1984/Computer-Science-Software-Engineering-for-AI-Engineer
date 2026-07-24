@@ -9,10 +9,13 @@
 > vision-language model is actually built, and the application layer you'll live in:
 > **choosing an embedding model** for retrieval/search (the RAG substrate → M13 Ch2).
 > **Plus §8 — an application-side embedding/VLM model-selection cheatsheet.**
-> **Status:** 🔵 prepared 2026-07-15, awaiting Q&A. Capstone of Ch2 "Beyond text";
-> builds on §1 (latent/diffusion), §2 (patch tokenisation, DiT) and §3 (discrete
-> tokens, semantic vs acoustic). Math in LaTeX; real matplotlib plots; key terms
-> glossed in 中文 (大陆/台灣). §9 Applied is a placeholder to fill after the session.
+> **Status:** ✅ finalized 2026-07-24. Capstone of Ch2 "Beyond text"; builds on §1
+> (latent/diffusion), §2 (patch tokenisation, DiT) and §3 (discrete tokens, semantic
+> vs acoustic). Body pitched high and went **untouched** (consistent with §1–§3) — he
+> drove straight into the **§6 projector** and generalised it twice, independently
+> re-deriving two real architectures (CALM-style cross-model reuse; LangBridge-style
+> cross-lingual encoder injection) → captured in §9 Applied. Math in LaTeX; real
+> matplotlib plots; key terms glossed in 中文 (大陆/台灣).
 
 **Estimated study time:** 2.5–3 hours (conceptual core is frontier-level; §8 is a practical
 reference you can skim and return to).
@@ -521,7 +524,81 @@ Living references — re-check before committing:
 
 ## 9. Applied (Q&A log)
 
-*(Placeholder — to be filled after the Q&A session, then this section flips to ✅ finalized.)*
+*(Q&A session: 2026-07-24.)* No questions on the §1–§8 body — consistent with every prior
+section in this chapter, he read it and drove straight into the **§6 projector**, which he
+correctly named as the load-bearing idea, then **generalised it twice — once across models, once
+across languages — reaching two real published architectures from first principles.** Three threads:
+
+**(9a) The projector as a universal adapter — cross-model representation reuse.** He proposed the
+projector "aligns the semantics of two signals," and generalised: the signals can be different
+modalities *or* text from different embedders, so **one LLM could consume another LLM's encoder via
+a trained projector.** Verdict: **correct in spirit, and a named pattern** — with one precision fix
+he took: "align" splits into *align-for-comparison* (CLIP's shared metric space, built to be
+*measured*) vs *adapt-for-consumption* (the projector = a learned **change of coordinates** into the
+consumer's operating basis, built to be *processed*). The projector does the second; the semantic
+alignment in a VLM emerges from CLIP-pretrained features + projector + instruction-tuning *together*,
+not the projector alone. The strong claim is instantiated in real systems: **model stitching**
+(Lenc & Vedaldi 2015; Bansal/Nakkiran/Barak 2021), **BLIP-2 Q-Former** (a bridge that's more than
+linear), **CALM** (arXiv 2401.02412 — two *frozen* LLMs joined by trained cross-attention connectors
+= his "one LLM uses another"), **relative representations** (arXiv 2209.15430 — independent latent
+spaces relate by ≈orthogonal maps, telling you *when* a linear bridge suffices), and **vec2vec /
+universal geometry** (arXiv 2505.12540 — unsupervised translation between embedder spaces, leaning
+on the Platonic Representation Hypothesis). **Bounds he took:** a projector only *reformats
+information that's present* (can't recover what the encoder discarded); connector complexity scales
+with how far apart the spaces are (linear → MLP → cross-attention → co-train); reusing another
+model's *input embedding table* is pointless — the value is reusing its *contextual output*
+(capability transfer). Keeper: **representations are interchangeable up to a learned transformation,
+to the degree they encode the same information in a compatible geometry — the projector *is* that
+transformation, and its required power measures the distance between the two spaces.**
+
+**(9b) "What is a patch grid?"** A definitional clarification cashing the §6 / Figure 3 language: a
+ViT cuts an image into non-overlapping patches (e.g. 14×14 px) and linearly projects each to one
+token → a spatial **grid** of per-patch vectors (224 px / 14 → 16×16 = 256 tokens). Distinguished
+the **patch grid** (all N vectors, spatial detail preserved — what a VLM ingests) from the
+**pooled/global vector** (one summary vector — what retrieval compares), tied back to the 9a bound
+(the pooled vector discards the detail; a projector can't recover it), to §2's spacetime patches,
+and to Figure 3's resolution-as-an-$O(L^{2})$-compute-knob.
+
+**(9c) His research idea — cross-lingual reasoning via an aligner + projector (an independent
+re-derivation of LangBridge).** He proposed: LLM pretraining is English/Chinese-biased, so
+low-resource-language (LRL) prompts underperform English on math/coding; **train a "CLIP between the
+LRL and English," then a projector to the LLM** — effectively a soft translate-to-English that
+preserves the LLM's peak capability. **Verdict: direction right, architecture right (encoder →
+projector → *frozen* LLM), objective wrong.** The correction he took: it's **not a CLIP** — (i)
+contrastive collapses the sentence to a comparison *gist*, discarding the operands/operators/
+identifiers math and code need (the 9a/9b bound again); (ii) cross-language contrastive isn't
+well-posed like image↔caption (translation isn't token-aligned; it optimises retrievability, not
+content-preservation); (iii) CLIP needs *parallel* data — the one thing an LRL by definition lacks.
+The corrected objective is a **content-preserving soft-translation** of the multilingual encoder's
+*hidden-state sequence* into the LLM's input space — which is exactly **LangBridge** (Yoon et al.,
+ACL 2024, arXiv 2401.10695): mT5 encoder + trainable linear projector + frozen reasoning LLM,
+trained on **English data only**, LRL ability emerging **zero-shot** (no parallel data — dodging the
+scarcity his CLIP version couldn't). Grounding: models internally **pivot through an English-ish
+concept space** (*Do Llamas Work in English?*, Wendler et al., arXiv 2402.10588), so "route to
+English" is a real lever, and his goal "preserve max capability" maps precisely onto "freeze the
+LLM, train only the bridge." His cross-domain leap is literally the title of a 2025 paper —
+*Languages are Modalities: Cross-Lingual Alignment via Encoder Injection* (arXiv 2510.27254).
+**Bounds he took:** capped by the encoder's LRL coverage; language-bound / culturally grounded tasks
+break under any English pivot (math/code are the language-neutral sweet spot — his example was
+well-chosen); the answer-back-in-LRL step degrades; frozen-vs-co-train erosion risk.
+
+**Calibration.** On **representation / multimodal *architecture* he is squarely the peer-level
+builder** of the LLM-internals column — *not* the application-consumer of the audio section (§3 / v28);
+that "understanding vs use" split is modality-specific, and here the understanding is generative.
+Within one session he **independently re-derived two real published architectures** — CALM-style
+cross-model reuse (9a) and LangBridge-style cross-lingual encoder injection (9c) — the same standout
+signal as his §1 re-derivation of inpainting + grounded segmentation. His signature mode held exactly:
+**propose a plausible generalisation/design, integrate the precise correction instantly**, and every
+correction this session was **objective/mechanism-level, never direction** (align-for-comparison vs
+-consumption; contrastive vs content-preserving; CLIP-needs-parallel-data). **NEW durable signal: he
+spontaneously reaches the "X is a modality" abstraction** — generalising the projector from multimodal
+→ cross-model → cross-lingual unprompted. **Teach-forward: hand him the mechanism, let him generalise,
+then add value by *naming + locating in the literature + bounding with failure modes*** — exactly the
+value he acknowledged (the align distinction, the LangBridge/CALM/vec2vec locations, the parallel-data
+catch). Live anchors: his **multilingual / SEA-LION** work (the LRL idea is his real problem space) and
+his **cost/serving lens** (compose frozen giants with cheap bridges). This thread is a **M13
+(embeddings/RAG) and M14 (composition/agentic) trailer** — reuse the projector-as-universal-adapter
+frame there.
 
 ---
 

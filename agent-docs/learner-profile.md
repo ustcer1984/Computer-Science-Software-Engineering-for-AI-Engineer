@@ -4,7 +4,39 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-22 (v30 — **reading #10 finalized (created 2026-07-10, finalized 2026-07-22) — diffusion LLMs (career) + the private fusion race
+Last updated: 2026-07-24 (v31 — **course: M12 Ch2 §4 (multimodal & representation) finalized → Ch2 "Beyond text"
+COMPLETE** (image ✅ video ✅ audio ✅ multimodal ✅). Body pitched high and went **untouched** (as §1–§3); he drove
+straight into the **§6 projector**, named it the load-bearing idea, and **independently re-derived two real published
+architectures** — **CALM**-style cross-model representation reuse and **LangBridge**-style cross-lingual encoder injection
+(same standout signal as his §1 inpainting+SAM re-derivation). §9 Applied, 3 threads: **(9a) projector = universal
+adapter** — his "one LLM can consume another LLM's encoder via a trained projector" is **correct + a named pattern**
+(model stitching / BLIP-2 Q-Former / CALM 2401.02412 / relative-representations 2209.15430 / vec2vec 2505.12540 /
+Platonic Representation Hypothesis); the one fix he took = **"align" splits into align-for-*comparison* (CLIP's shared
+metric space, built to be measured) vs adapt-for-*consumption* (the projector = a learned **change-of-basis** into the
+consumer's operating space, built to be processed)**; bounds — only reformats *present* info (can't recover what the
+encoder discarded), connector power ∝ space-distance (linear→MLP→cross-attn→co-train), reuse another model's *contextual
+output* not its input embedding table; keeper = *representations are interchangeable up to a learned transform, to the
+degree they share information in a compatible geometry — the projector is that transform*. **(9b) patch grid** — ViT grid
+(per-patch vectors, spatial detail, what a VLM ingests) vs pooled vector (retrieval compares); resolution = an $O(L^{2})$
+compute knob (fig3). **(9c) his low-resource-language (LRL) reasoning idea = an independent re-derivation of LangBridge**
+— encoder→projector→*frozen* LLM to route an LRL into the LLM's English-strong space; **direction + architecture right,
+objective wrong**: NOT a CLIP (contrastive collapses to a comparison gist, losing the token content math/code need, *and*
+needs the parallel data an LRL by definition lacks) → **content-preserving soft-translation = LangBridge (2401.10695),
+English-data-only, zero-shot, no parallel data**; grounded in the English-pivot finding (*Do Llamas Work in English?*
+2402.10588); his cross-domain leap = the literal title *Languages are Modalities* (2510.27254); his goal "preserve max
+capability" ⇒ "freeze the LLM, train only the bridge." **Calibration — IMPORTANT refinement of v28:** the
+"understanding-vs-use / application-consumer" read is **modality-specific to audio, NOT general to non-text** — on
+**representation/multimodal *architecture* he is squarely the peer-level builder** (generative, re-derives real papers
+from first principles). Every correction this session was **mechanism-level, never directional**. **NEW durable signal:
+he spontaneously reaches the "X is a modality" abstraction** — generalised the projector multimodal→cross-model→
+cross-lingual unprompted. **Teach-forward: hand him the mechanism, let him generalise, then add value by *naming +
+locating in the literature + bounding with failure modes*** — exactly the value he acknowledged (the align distinction,
+the CALM/LangBridge/vec2vec locations, the parallel-data catch). Live anchors: his **multilingual / SEA-LION** work (the
+LRL idea is his real problem space) + his **cost/serving lens** (compose frozen giants via cheap bridges). Trailer for
+**M13 (embeddings/RAG) & M14 (composition/agentic)** — reuse the projector-as-universal-adapter frame there. **Next:**
+M12 Ch3 (choosing a model — light/practitioner-known) or rotate — **M01 Ch5** (Linux/macOS/Windows), **M02**
+(networking), or **M04 Ch2 §2** (decomposition).)
+Prior: v30 (2026-07-22 — **reading #10 finalized (created 2026-07-10, finalized 2026-07-22) — diffusion LLMs (career) + the private fusion race
 (hobby).** **UNUSUAL: both stories became deep discussions** (the hobby/physics story is normally just a read) → new signal
 that he now spars on *both* halves of a Discovery-register reading. **Career (AI) side — generative & correct on his core
 domain:** he **proposed the right serving-economics answer himself** — *diffusion's headline speed is a single-user/low-batch
@@ -136,6 +168,13 @@ read the history only for the chronological "how we got here" trail.
   SOTA-plus-open toolkits keyed on the **dominant lever + honest limits + license gate + self-host (RTX 4070)
   feasibility**, NOT internals. This is the opposite of his LLM stance (peer-level paper-critiquing builder).
   Pitch use-oriented non-text material accordingly; flag currency (these models churn monthly).
+  **Refined again 2026-07-24 (v31): the understanding-vs-use split is MODALITY-SPECIFIC, not general to non-text.**
+  On **audio** he's an application-consumer (above); but on **representation / multimodal *architecture*** (CLIP,
+  contrastive learning, the projector, VLM fusion — M12 Ch2 §4) he is squarely the **peer-level builder** — he
+  independently re-derived two real published architectures in one session (CALM-style cross-model representation
+  reuse; **LangBridge**-style cross-lingual encoder injection). So: for non-text *understanding/architecture*, teach
+  at frontier/paper level and let him generalise (he spontaneously reaches "X is a modality"); reserve the
+  lever/limit/license *selection* treatment for the *use*-oriented slices (audio tools, embedding-model choice for RAG).
 - SQL — basic-solid; parameterized queries.
 
 **Gaps (consistent across BOTH repos = real signal):**
@@ -178,6 +217,31 @@ learning surfaces.
   recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
+- **2026-07-24 — M12 Ch2 §4 (multimodal & representation) ✅ finalized → Ch2 "Beyond text" COMPLETE** (image ✅ video ✅
+  audio ✅ multimodal ✅). Capstone unifying §1–§3 under one idea — *everything becomes an embedding; generation = decode,
+  understanding/search = align.* Body (representation-is-destiny → embedding geometry/anisotropy → **CLIP** contrastive
+  learning + the N×N similarity matrix + InfoNCE/temperature + free in-batch negatives → SigLIP + failure modes: modality
+  gap, bag-of-words relation-blindness, resolution blindness → the **dual-encoder-vs-VLM fork** → **VLM anatomy** (frozen
+  CLIP/SigLIP → projector → LLM; LLaVA vs Flamingo; native fusion; resolution as an $O(L^{2})$ knob) → ImageBind/CLAP/
+  ColPali → §8 embedding-model **selection cheatsheet** for RAG; 3 matplotlib figs + 3 Mermaid) pitched high and went
+  **untouched** — he drove straight into the **§6 projector** and **independently re-derived two real published
+  architectures**: CALM-style cross-model representation reuse and **LangBridge**-style cross-lingual encoder injection.
+  **§9 Applied, 3 threads:** (9a) *projector = universal adapter* — his "one LLM can consume another's encoder via a
+  trained projector" is correct + named (model stitching / BLIP-2 Q-Former / CALM / relative-representations / vec2vec /
+  Platonic Rep Hypothesis); the fix he took = **"align" = align-for-*comparison* (CLIP metric space) vs
+  adapt-for-*consumption* (projector = learned change-of-basis into the consumer's space)**; bounds (only reformats
+  present info; connector power ∝ space-distance; reuse *contextual output* not the input embedding table). (9b) *patch
+  grid* (ViT grid vs pooled vector; fig3 resolution knob). (9c) *his LRL-reasoning idea = independent re-derivation of
+  **LangBridge*** — direction/architecture right, objective wrong (not CLIP: contrastive loses token content + needs the
+  parallel data an LRL lacks → content-preserving soft-translation, English-only, zero-shot); grounded in the
+  English-pivot finding; his leap = the title *Languages are Modalities*. **Calibration — IMPORTANT refinement of v28:**
+  the understanding-vs-use / application-consumer read is **modality-specific to audio, NOT general to non-text** — on
+  **representation/multimodal *architecture* he is the peer-level builder**; corrections were all **mechanism-level, never
+  directional**; **NEW signal — he spontaneously reaches the "X is a modality" abstraction.** Teach-forward: hand him the
+  mechanism, let him generalise, add value by **naming + locating in the literature + bounding with failure modes**. Live
+  anchors: **multilingual/SEA-LION** work + **cost/serving** lens. Trailer for **M13 (embeddings/RAG) & M14
+  (composition/agentic)**. Full detail in `courses/plan.md` M12 Ch2 row. **Next:** M12 Ch3 (choosing a model — light) or
+  rotate (M01 Ch5 / M02 / M04 Ch2 §2).
 - **2026-07-15 — M12 Ch2 §3 (audio, speech & TTS) ✅ finalized.** Third section of the non-text AI thread (image ✅ video ✅ audio ✅;
   §4 multimodal remains). Body (representation problem → classic TTS cascade → neural codecs/RVQ → codec-LM/AudioLM/VALL-E →
   flow-matching TTS → ASR/SSL/Whisper → native full-duplex; 2 matplotlib figs + 3 Mermaid) pitched high and went **untouched** — he

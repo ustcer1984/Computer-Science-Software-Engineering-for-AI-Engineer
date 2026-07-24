@@ -9,6 +9,74 @@
 
 ---
 
+v31 (2026-07-24 — **course: M12 Ch2 §4 (multimodal & representation) finalized → Ch2 "Beyond text" COMPLETE**
+(image ✅ video ✅ audio ✅ multimodal ✅). Capstone unifying §1–§3 under one idea — *everything becomes an embedding;
+generation = decode, understanding/search = align.* **Body prepared this session** (representation-is-destiny → embedding
+geometry/anisotropy → **CLIP** contrastive learning, the N×N similarity matrix, symmetric InfoNCE + temperature, free
+in-batch negatives → **SigLIP** + failure modes (modality gap, bag-of-words relation-blindness, resolution blindness) →
+the **dual-encoder-vs-VLM fork** → **VLM anatomy** (frozen CLIP/SigLIP → **projector** → LLM; LLaVA projection-into-tokens
+vs Flamingo cross-attention; train-projector-then-instruction-tune; native/early-fusion GPT-4o/Gemini/Chameleon;
+resolution as an $O(L^{2})$ token/compute knob, tiling/AnyRes) → generalisation (ImageBind image-as-hub, CLAP, ColPali
+doc-image retrieval) → **§8 application-side embedding-model selection cheatsheet** for RAG (pick by task+language not MTEB
+average; Matryoshka; multilingual; license; self-host on 4070; always add a reranker); 3 matplotlib figs (CLIP similarity
+matrix · modality-gap scatter · visual-token/attention-cost vs resolution) + 3 Mermaid (CLIP dual-encoder · strategy fork
+· VLM anatomy), all visually verified; GitHub math-trap greps clean incl. Playwright typeset-check of both display
+equations; bilingual 中文 table). **Body pitched high and went UNTOUCHED (consistent with §1–§3)** — he read it and drove
+straight into the **§6 projector**, correctly naming it the load-bearing idea, then **generalised it twice and
+independently re-derived two real published architectures.** **§9 Applied, 3 threads:**
+**(9a) the projector as a universal adapter — cross-model representation reuse.** He proposed the projector "aligns the
+semantics of two signals," generalising: signals can be different modalities *or* text from different embedders, so **one
+LLM could consume another LLM's encoder via a trained projector.** Verdict: **correct in spirit + a named pattern.** The
+one precision fix he took: **"align" splits into align-for-*comparison* (CLIP's shared metric space — built to be
+*measured*) vs adapt-for-*consumption* (the projector = a learned **change-of-basis** into the consumer's operating space
+— built to be *processed*)**; the projector does the second, and a VLM's semantic alignment emerges from CLIP-pretrained
+features + projector + instruction-tuning *together*. Instantiated in: **model stitching** (Lenc & Vedaldi 2015;
+Bansal/Nakkiran/Barak 2021), **BLIP-2 Q-Former** (a bridge that's more than linear), **CALM** (arXiv 2401.02412 — two
+*frozen* LLMs joined by trained cross-attention connectors = his "one LLM uses another"), **relative representations**
+(arXiv 2209.15430 — independent latent spaces relate by ≈orthogonal maps → *when* a linear bridge suffices), **vec2vec /
+universal geometry** (arXiv 2505.12540 — unsupervised embedder-space translation, on the Platonic Representation
+Hypothesis). **Bounds he took:** a projector only *reformats present info* (can't recover what the encoder discarded);
+connector power ∝ space-distance (linear→MLP→cross-attention→co-train); reuse another model's *contextual output*, not its
+input embedding table. Keeper: *representations are interchangeable up to a learned transform, to the degree they share
+information in a compatible geometry — the projector is that transform, and its required power measures the distance
+between the two spaces.*
+**(9b) "what is a patch grid?"** — definitional; a ViT cuts an image into patches (14×14 px), linearly projects each to
+one token → a spatial **grid** of per-patch vectors (224/14 → 16×16 = 256 tokens). Distinguished the **patch grid** (all
+N vectors, spatial detail — what a VLM ingests) from the **pooled/global vector** (retrieval compares); tied to the 9a
+bound, §2 spacetime patches, and fig3's resolution-as-$O(L^{2})$-knob.
+**(9c) his low-resource-language (LRL) reasoning idea = an independent re-derivation of LangBridge.** He proposed: LLM
+pretraining is English/Chinese-biased so LRL prompts underperform English on math/coding; **train a "CLIP between the LRL
+and English," then a projector to the LLM** — effectively a soft translate-to-English preserving peak capability.
+**Verdict: direction right, architecture right (encoder → projector → *frozen* LLM), objective wrong.** The correction he
+took — it's **not a CLIP**: (i) contrastive collapses the sentence to a comparison *gist*, discarding the operands/
+operators/identifiers math and code need (the 9a/9b bound again); (ii) cross-language contrastive isn't well-posed like
+image↔caption (translation isn't token-aligned; optimises retrievability, not content-preservation); (iii) CLIP needs
+*parallel* data — the one thing an LRL by definition lacks. The corrected objective = **content-preserving
+soft-translation** of the multilingual encoder's *hidden-state sequence* into the LLM's input space = exactly
+**LangBridge** (Yoon et al., ACL 2024, arXiv 2401.10695): mT5 encoder + trainable linear projector + frozen reasoning LLM,
+**English data only, LRL ability zero-shot, no parallel data** — dodging the scarcity his CLIP version couldn't. Grounded
+in the English-pivot finding (*Do Llamas Work in English?*, Wendler et al., arXiv 2402.10588); his goal "preserve max
+capability" ⇒ "freeze the LLM, train only the bridge"; his cross-domain leap = the literal title *Languages are
+Modalities: Cross-Lingual Alignment via Encoder Injection* (arXiv 2510.27254). **Bounds he took:** capped by the encoder's
+LRL coverage; language-bound / culturally grounded tasks break under any English pivot (math/code = the language-neutral
+sweet spot, his example well-chosen); answer-back-in-LRL degrades; frozen-vs-co-train erosion risk.
+**Calibration — IMPORTANT refinement of v28.** The "understanding-vs-use / application-consumer" read is
+**modality-specific to audio, NOT general to non-text** — on **representation/multimodal *architecture* he is squarely the
+peer-level builder** of the LLM-internals column, generative and re-deriving real papers from first principles (same
+signal as his §1 inpainting+SAM re-derivation). His signature mode held exactly — **propose a plausible
+generalisation/design, integrate the precise correction instantly** — and every correction was **mechanism-level, never
+directional** (align-for-comparison vs -consumption; contrastive vs content-preserving; CLIP-needs-parallel-data). **NEW
+durable signal: he spontaneously reaches the "X is a modality" abstraction** — generalising the projector multimodal →
+cross-model → cross-lingual unprompted. **Teach-forward: hand him the mechanism, let him generalise, then add value by
+*naming + locating in the literature + bounding with failure modes*** — exactly the value he acknowledged. Live anchors:
+his **multilingual / SEA-LION** work (the LRL idea is his real problem space) + his **cost/serving lens** (compose frozen
+giants via cheap bridges). This thread is a **M13 (embeddings/RAG) & M14 (composition/agentic) trailer** — reuse the
+projector-as-universal-adapter frame there. **Process:** three arXiv IDs web-verified before citing (CALM 2401.02412,
+relative-representations 2209.15430, vec2vec 2505.12540; LangBridge 2401.10695, Do-Llamas 2402.10588). Date correction:
+initially stamped §4 as 2026-07-15 (mirroring §3) — actual finalize date is **2026-07-24**; fixed across the section file,
+plan.md, and this profile. **Next:** M12 Ch3 (choosing a model — light/practitioner-known) or rotate — M01 Ch5
+(Linux/macOS/Windows), M02 (networking), or M04 Ch2 §2 (decomposition).)
+
 v30 (2026-07-22 — **reading #10 finalized (created 2026-07-10, finalized 2026-07-22) — `upskill-readings/2026/07/10-diffusion-llms-and-the-fusion-power-race.md`:
 diffusion language models (career) + the private fusion race (hobby).** Two Nat-Geo/Discovery features on a "decades-old
 default cracking" through-line — text needn't be written left-to-right (diffusion LLMs); fusion needn't be stadium-sized/always
