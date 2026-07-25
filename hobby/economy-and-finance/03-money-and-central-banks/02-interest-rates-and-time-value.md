@@ -12,8 +12,15 @@
 > favourite recession signal (the cliffhanger from E02 §4 §6), and why **bond prices fall when yields rise**
 > (the mechanism that killed SVB in §1 §6). It sets up **§3** (the central bank's hand on the short-rate
 > lever) and **§4** (Singapore's exchange-rate model).
-> **Status:** 🔵 **body drafted 2026-07-21.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **finalized 2026-07-25.** Body drafted 2026-07-21; **§10 captures the live session** — a
+> three-step arc that started from *who actually sets US Treasury yields, the government or the Fed?* and
+> walked into the mechanics of the yield curve as a signal: **(a)** the three actors (Treasury *issues*, the
+> market *prices*, the Fed sets only the overnight rate); **(b)** the learner's sharp hypothesis that the
+> government might *manufacture* an inversion to pressure the Fed — the premise (government sets yields) was
+> wrong, but the instinct found the real lever: **issuance composition** and the 2024 **Activist Treasury
+> Issuance ("stealth QE") debate** — corrected as self-defeating for that purpose; and **(c)** the right
+> reading of the inversion itself — a *forecast*, not *pressure*; money-weighted positioning, not public
+> opinion; a **recession forecast** transmitted through the market predicting the Fed's *reaction function*.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -425,6 +432,87 @@ labour market on the 2026 Fed (E02 §3) and the money story on the aggregates (E
 
 ---
 
+## 10. Applied — from our session Q&A (2026-07-25)
+
+This session walked *outward* from a single, sharp question — **who actually sets US Treasury yields, the
+government or the Fed?** — into what the yield curve *is* as a signal, in three steps. It started at the
+plumbing (who sets a bond's rate), moved to the learner's own hypothesis (could the government *manufacture*
+an inversion to pressure the Fed?), and landed on the correct reading of the inversion itself. Each step
+reused §5's *long rate = expected average short rate + term premium* and reached back to the
+central-bank-independence thread from E02 §3 §11.
+
+### 10a. Who sets a Treasury yield — three actors, three jobs
+
+The load-bearing distinction: **nobody "sets" the long yield by decree.** Pull the three actors apart:
+
+- **The Treasury (the government) *issues*.** It chooses *how much* to borrow and at *what maturities* (the
+  bill/note/bond mix), then runs **auctions** — so it is a **price-taker at its own auctions**. It does not
+  set the yield.
+- **The market *prices*.** Every yield is set in continuous secondary trading, by §5's logic: a long yield
+  is the market's expected *average future short rate* over that horizon **plus a term premium**.
+- **The Fed sets exactly one rate** — the overnight **federal funds rate** — which anchors the *short* end.
+  Everything longer is downstream of it.
+
+So the short end tracks the Fed and the long end is a **market forecast the Fed does not control**. That is
+*why* the inversion is fundamentally a **Fed-vs-market** phenomenon: the Fed holds the short rate high
+(fighting inflation), the market prices in future cuts, and the long end falls below the short — no
+government hand required.
+
+### 10b. Could the government *manufacture* an inversion to pressure the Fed? — wrong premise, real lever
+
+The learner's hypothesis was sharp: *if the government sets bond rates, it could deliberately invert the
+curve to pressure the Fed to cut.* The **premise is the wrong step** — the government auctions yields, it
+does not set them, so that exact chain breaks. But the *instinct* — that the state can influence the curve —
+found a genuine, live lever once relocated:
+
+- **The real lever is issuance composition.** If the Treasury issues *fewer long bonds and more short bills*,
+  it shrinks the stock of duration the market must absorb → **compresses the term premium** (§4) → **long
+  yields fall.** This is not hypothetical: it is the 2024 **Activist Treasury Issuance (ATI)** debate
+  (Stephen Miran & Nouriel Roubini), who argued Treasury's tilt toward bills lowered the 10-year yield by
+  roughly a quarter-point — critics called it **"stealth QE."**
+- **But it is self-defeating for the stated purpose**, for three stacked reasons: **(1) direction** —
+  lowering long yields *is easing itself* (cheaper mortgages/credit), a **substitute** for a Fed cut, not a
+  reason the Fed should cut; **(2) a false signal** — an inversion manufactured by *supply* is one the Fed
+  reads *through*, because it asks *why* the curve inverted, and the term-premium distortion is visible;
+  **(3) it is not free** — more bills means rolling more debt at the **high, Fed-set short rate** (higher
+  interest cost and rollover risk).
+- **The real pressure channels** are the ones from E02 §3 §11 — **political jawboning**, **dovish
+  appointments** (the Powell→Warsh episode), and **fiscal dominance** (deficits large enough to make high
+  rates unbearable). Manufacturing curve shape is a roundabout, costly substitute for those.
+- **Footnote — the tool that *does* pin a long yield exists, but it is the central bank, not the
+  government:** **Yield Curve Control (YCC)**, where the central bank promises to buy unlimited bonds to hold
+  a chosen long yield. The **Fed ran a version 1942–51** (to finance WWII debt) and the **Bank of Japan**
+  ran explicit YCC 2016–24 — the *antithesis* of the market-pricing-plus-independence we started from.
+
+### 10c. "So the inversion is the market pressuring the Fed to cut?" — no: a forecast, not pressure
+
+The learner's natural compression — *inverted curve = public opinion pressuring the Fed to cut* — needed one
+verb and one noun swapped, and the swap changes the meaning:
+
+- **Forecast, not pressure.** The market cannot *make* the Fed do anything; it is **betting** that the Fed
+  *will* cut. "Pressure" implies agency and demand; the curve is a **prediction**, priced by traders trying
+  to be *right* (because wrong bets lose money).
+- **Money-weighted positioning, not public opinion.** It is closer to a **prediction market / betting line**
+  than a sentiment poll — capital staked on a forecast, disciplined by profit and loss, not vibes.
+- **What it really forecasts is a *recession*.** The chain is: market expects the economy to weaken →
+  expects the Fed to *respond* to weakness by cutting → prices lower future short rates → the curve inverts.
+  The "Fed will cut" piece is the market predicting the Fed's **reaction function** (the Taylor-rule logic of
+  E02 §3 §11), *not* ordering the Fed around. The primitive is the recession forecast; the rate-cut
+  expectation is its transmission.
+- **The grain of truth, and its limit.** The Fed *does* watch the curve as information and dislikes shocking
+  markets, so it often *validates* a strong consensus — which can look like the market moving the Fed. But
+  the cleanest counter-proof is **2022–23: the market kept pricing cuts that never came, the Fed went
+  "higher for longer," and the market lost.** **Expectation ≠ control.**
+
+> **The one line the learner landed on:** an inverted curve is the bond market *betting, with real money*,
+> that the economy will weaken enough that the Fed will *choose* to cut — a **forecast of recession + Fed
+> response**, not public opinion pressuring the Fed. The Fed listens, but decides for itself, and regularly
+> overrules the bet. (Which is exactly why **§3** matters next: to judge whether the market's forecast is
+> *right*, you need the Fed's actual decision rule and the transmission from that one overnight rate to the
+> whole curve.)
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 So the concepts carry over to Chinese-language economic news. Most differences are just **simplified vs
@@ -486,6 +574,17 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 > (duration), **名义 ↔ 名目** (nominal), **实际 ↔ 實質** (real), **溢价 ↔ 溢酬** (premium),
 > **通胀 ↔ 通膨** (inflation), **倒挂 ↔ 倒掛** (inversion).
 
+**§10 applied threads — who sets yields, and reading the inversion**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Treasury auction | 国债拍卖 | 公債標售 | ⚠ 拍卖 ↔ 標售; Treasury is a price-taker here |
+| Debt issuance | 债券发行 | 債券發行 | choosing quantity + maturity mix |
+| Activist Treasury Issuance | 主动型国债发行 | 主動型公債發行 | tilting to bills → lower long yields ("stealth QE") |
+| Yield curve control (YCC) | 收益率曲线控制 | 殖利率曲線控制 | ⚠ 收益率 ↔ 殖利率; central bank pins a long yield |
+| Reaction function | 反应函数 | 反應函數 | the Fed's decision rule (Taylor) the market forecasts |
+| Fiscal dominance | 财政主导 | 財政主導 | deficits that make high rates unbearable |
+
 ---
 
 ## References (optional, for depth)
@@ -510,14 +609,17 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 ---
 
 ### What's next
-🔵 **Body drafted 2026-07-21 — awaiting our live session.** With interest understood as *the price of time*
-and the time-value machinery in hand, you can now value any future cash flow, read the difference between
-real and nominal rates, decompose any yield into its premia, read the yield curve as the market's forecast
-(and its inversion as the recession signal E02 §4 §6 promised), and see exactly why bond prices fall when
-rates rise — the SVB mechanism from §1. The deliberate bridges point straight ahead: this section defined
-*the price*; **§3 puts the central bank's hand on it** — how the Fed actually sets the short-term policy rate,
+✅ **Finalized 2026-07-25.** With interest understood as *the price of time* and the time-value machinery in
+hand, you can now value any future cash flow, read the difference between real and nominal rates, decompose
+any yield into its premia, read the yield curve as the market's forecast (and its inversion as the recession
+signal E02 §4 §6 promised), and see exactly why bond prices fall when rates rise — the SVB mechanism from §1.
+The live session (§10) stress-tested the *institutions* behind the curve — who sets Treasury yields (issuer
+vs market vs the Fed's one overnight rate), whether the government could *manufacture* an inversion (the
+Activist-Treasury-Issuance lever, and why it is self-defeating), and the right reading of the signal itself
+(a *forecast* of recession-plus-Fed-response, not public opinion pressuring the Fed). The deliberate bridges
+point straight ahead: this section defined *the price*; **§3 puts the central bank's hand on it** — how the
+Fed actually sets the short-term policy rate, the **reaction function** the market was forecasting in §10c,
 the transmission mechanism from that one rate out to the whole curve and the economy, and how inflation
 targeting and QE work (now that §1 told you *why* QE didn't do what the multiplier predicted). Then **§4**
 contrasts the whole standard model with Singapore's unusual **exchange-rate-based** monetary policy — where
 the MAS steers the currency, not the interest rate, and the price it manages is a different one entirely.
-On finalize, a **§10 Applied** will capture whatever thread our session pulls on.

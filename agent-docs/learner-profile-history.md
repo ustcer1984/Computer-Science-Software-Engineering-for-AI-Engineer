@@ -9,6 +9,48 @@
 
 ---
 
+v32 (2026-07-25 — **hobby econ E03 §2 (interest rates & the time value of money) finalized → Module E03 half-built**
+(§1 money ✅, §2 rates ✅; §3 Fed model & §4 MAS remain). Body (drafted 07-21) went **untouched** again — pitched right.
+**§10 = the live session**, a three-step arc that started from one seed question — *who actually sets US Treasury yields,
+the government or the Fed?* — and walked outward into the yield curve *as a signal* (same "build a multi-turn chain from
+one question" mode as v29's 5-question chain). **(10a) who sets a yield** — three actors pulled apart: the **Treasury
+*issues*** (a price-taker at its own auctions), the **market *prices*** (long yield = expected avg future short rate +
+term premium, §5), the **Fed sets only the overnight rate** (anchors the short end) → so inversion is a **Fed-vs-market**
+phenomenon, no government hand needed. **(10b) his sharp hypothesis — could the government *manufacture* an inversion to
+pressure the Fed to cut?** — the **PREMISE was the wrong step** (government auctions yields, does not set them, so that
+exact chain breaks) **but the instinct found a real lever once relocated: issuance composition** → the 2024 **Activist
+Treasury Issuance ("stealth QE") debate** (Miran-Roubini; tilt to bills compresses the term premium, ~25bp lower 10y ≈
+~1pp of cuts). Corrected as **self-defeating for that purpose**: (1) lowering long yields *is easing itself* = a
+substitute for a cut, not a reason to cut; (2) a supply-manufactured inversion is a **false signal the Fed reads
+*through*** (it asks *why* the curve inverted); (3) not free — more bills = rolling debt at the high Fed-set short rate.
+Real pressure = **jawboning + dovish appointments + fiscal dominance** (E02 §3 §11 callback); footnote **YCC** *does* pin
+a long yield but that's the **central bank, not the government** (Fed 1942–51, BoJ 2016–24 — antithesis of independence).
+**(10c) the keystone reframe — "so the inversion = public opinion pressuring the Fed to cut?"** → swap one verb + one
+noun: it's a **FORECAST, not pressure** (the market *bets*, it cannot *force*); **money-weighted trader positioning, not
+public opinion** (a prediction market, not a poll); and fundamentally a **RECESSION forecast** transmitted through the
+market predicting the Fed's **reaction function** (Taylor, E02 §3 §11), *not* ordering it — the "Fed will cut" piece is
+the predicted *response* to expected weakness. Grain of truth (the Fed watches the curve, dislikes surprising markets)
+**but expectation ≠ control** — the clean proof: **2022–23 "higher for longer,"** the market kept pricing cuts that never
+came and lost. **Calibration — the SIGNATURE PATTERN again, in its "mis-*located*" variant:** he proposed a plausible
+mechanism (state manipulates the curve to pressure the Fed), had the right *intuition* (the state *can* affect the curve)
+but the wrong *mechanism* (decree vs issuance) — and **integrated the re-location instantly** once the real lever (ATI)
+was named. My value was **(i) correcting the premise, (ii) naming the real lever (issuance/ATI, YCC), (iii) swapping the
+frame (pressure→forecast, opinion→money-weighted bet), and (iv) bringing live 2024–26 institutional detail** — NOT
+re-teaching. This is the same shape as his mis-*ranked* physical-magnitude tendency (v24/v30) but on an *institutional
+mechanism* axis: right instinct, wrong locus, one clean correction. **Reinforces the standing econ rule (v29):** on
+economics he is a **generative sparring partner** — steelman his mechanism, *relocate/name* it, correct only the one
+wrong step, bring real cross-border/current data, and feed the **outward multi-turn chain from a single seed question**.
+**Process:** clean finalize, body needed **no edits**; math **GitHub-verified with Playwright** (curl+grep recognition:
+16 display markers = 2×8 blocks, 90 inline, no shortfall; Playwright typeset: zero MathJax errors, zero raw-LaTeX leaks;
+eyeballed the `\underbrace` anatomy + nested-fraction displays on the live blob); fixed **one real render trap during
+drafting** — two `$$…$$` display blocks indented under §2c list items would render as literal text on GitHub → converted
+to inline `$…$` (documents the standing rule-4 list-indent trap). 6 matplotlib figs (also fixed a matplotlib mathtext bug
+eating `$` in a label via `text.parse_math:False`, and a legend collision) + mermaid one-pager; bilingual glosses landed
+(收益率↔殖利率 yield, 久期↔存續期間 duration, 国债拍卖↔公債標售, YCC, 反应函数, 财政主导). **Next:** **E03 §3 (the Fed
+model — rate-setting, inflation targeting, QE, the transmission mechanism)** is the direct continuation (§10c's *reaction
+function* tees it up); then **§4 (the MAS exchange-rate model)**; or rotate to **M01 Ch5** (Linux/macOS/Windows), **M02**
+(networking), or **M04 Ch2 §2** (decomposition).)
+
 v31 (2026-07-24 — **course: M12 Ch2 §4 (multimodal & representation) finalized → Ch2 "Beyond text" COMPLETE**
 (image ✅ video ✅ audio ✅ multimodal ✅). Capstone unifying §1–§3 under one idea — *everything becomes an embedding;
 generation = decode, understanding/search = align.* **Body prepared this session** (representation-is-destiny → embedding

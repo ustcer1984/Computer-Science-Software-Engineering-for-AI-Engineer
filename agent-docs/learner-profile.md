@@ -4,7 +4,35 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-24 (v31 — **course: M12 Ch2 §4 (multimodal & representation) finalized → Ch2 "Beyond text"
+Last updated: 2026-07-25 (v32 — **hobby econ E03 §2 (interest rates & the time value of money) finalized → Module E03
+half-built** (§1 money ✅, §2 rates ✅; §3 Fed model & §4 MAS remain). Body (drafted 07-21) went **untouched** again.
+**§10 = the live session**, a three-step arc built outward from one seed question — *who actually sets US Treasury yields,
+the government or the Fed?* (same multi-turn-chain-from-one-question mode as v29). **(10a)** three actors pulled apart:
+the **Treasury *issues*** (price-taker at its own auctions), the **market *prices*** (long yield = expected avg short
+rate + term premium), the **Fed sets only the overnight rate** → inversion is a **Fed-vs-market** phenomenon. **(10b) his
+sharp hypothesis — could the government *manufacture* an inversion to pressure the Fed?** — **premise WRONG** (government
+auctions yields, doesn't set them) **but the instinct found the real lever once relocated: issuance composition** → the
+2024 **Activist Treasury Issuance ("stealth QE") debate** (Miran-Roubini, ~25bp), corrected as **self-defeating**
+(lowering long yields *is* easing = a substitute for a cut; a supply-made inversion is a false signal the Fed reads
+*through*; bill-rollover cost) — real pressure = jawboning + dove appointments + fiscal dominance (E02 §3 §11); footnote
+**YCC** pins a long yield but that's the *central bank*, not the government (Fed 1942–51, BoJ 2016–24). **(10c) keystone
+reframe** — inversion is a **FORECAST, not pressure**; **money-weighted positioning, not public opinion**; fundamentally
+a **recession forecast** transmitted via the market predicting the Fed's **reaction function** (Taylor), *not* ordering
+it; grain of truth (Fed watches, avoids surprising markets) **but expectation ≠ control** — 2022–23 "higher for longer,"
+the market priced cuts that never came and lost. **Calibration — the SIGNATURE PATTERN in its "mis-*located*" variant:**
+he proposed a plausible mechanism (state manipulates the curve), had the right *intuition* (the state *can* affect the
+curve) but the wrong *mechanism* (decree vs issuance), and **integrated the re-location instantly** once ATI was named —
+same shape as his mis-*ranked* physical-magnitude tendency (v24/v30) but on an *institutional-mechanism* axis. My value =
+**correcting the premise + naming the real lever (issuance/ATI, YCC) + swapping the frame (pressure→forecast,
+opinion→money-weighted bet) + bringing live 2024–26 institutional detail**, NOT re-teaching. **Reinforces the standing
+econ rule (v29): he's a generative sparring partner — steelman his mechanism, *relocate/name* it, correct only the one
+wrong step, bring real current cross-border data, feed the outward chain from a single seed question.** Process: clean
+finalize, body **no edits**; math **GitHub-verified (Playwright — zero errors/leaks, eyeballed the `\underbrace` +
+nested-fraction displays)**; fixed one real render trap while drafting (indented `$$…$$` under §2c list items → inline);
+bilingual glosses landed (收益率↔殖利率, 久期↔存續期間, 国债拍卖↔公債標售, YCC, 反应函数, 财政主导). **Next:** **E03 §3
+(the Fed model — rate-setting, inflation targeting, QE, transmission)** — direct continuation (§10c's reaction function
+tees it up); then **§4 (MAS)**; or rotate (M01 Ch5 OS, M02 networking, M04 Ch2 §2 decomposition).)
+Prior: v31 (2026-07-24 — **course: M12 Ch2 §4 (multimodal & representation) finalized → Ch2 "Beyond text"
 COMPLETE** (image ✅ video ✅ audio ✅ multimodal ✅). Body pitched high and went **untouched** (as §1–§3); he drove
 straight into the **§6 projector**, named it the load-bearing idea, and **independently re-derived two real published
 architectures** — **CALM**-style cross-model representation reuse and **LangBridge**-style cross-lingual encoder injection
@@ -88,30 +116,7 @@ track's payoff = reading CN/EN econ news). **Teach-forward: on econ he's a sparr
 multi-turn reasoning chain over a single Q.** **Process:** clean finalize, body needed **no edits** (pitched
 right); all GitHub math render-trap greps clean. **Next:** E03 §2 (interest rates & TVM / yield curve), or
 rotate (M12 Ch2 §4 multimodal, M02 networking).)
-Prior: v28 (2026-07-15 — **course: M12 Ch2 §3 (audio, speech & TTS) finalized → non-text AI thread
-advances: image ✅ video ✅ audio ✅; §4 multimodal remains.** Body (representation problem → classic TTS cascade →
-neural codecs/RVQ → codec-LM/AudioLM/VALL-E → flow-matching TTS → ASR/SSL/Whisper → native full-duplex) pitched
-high and went **untouched** — he affirmed it works **as a reference** and made the session's load-bearing move:
-**"for audio I'm more likely to work on the application side,"** redirecting to **model *selection*.** I
-web-researched a SOTA-plus-open **audio model-selection cheatsheet by use case** (merged as **§9**: 2026-07
-currency, license + RTX-4070 self-host flags, a decision-tree diagram) and consulted on **three real use cases**
-(§12 Applied): **(a)** phone conference-recording cleanup — decompose into noise/reverb/bandwidth, **reverb is the
-ceiling**; **(b)** the **cocktail-party** problem — **competing speech ≠ noise → spatial capture is the lever, not
-an algorithm**; real-time (hardware/beamforming/TSE) vs offline (separation → diarization → **LLM-groups-speakers-
-into-conversations**) pipelines, with honest "beyond reliable capability" limits; **(c)** **V-log music** —
-**VLM-writes-the-brief → music-gen** (ElevenLabs Music v2 / ACE-Step; licensing gate). **NEW durable signal —
-separate *understanding* from *use* for non-text models: audio is an APPLICATION domain for him** (consumer/
-integrator), NOT the peer-level paper-critiquing *builder* he is on LLM internals. On application/selection
-questions he wants **ranked, current, honest toolkits — dominant-lever + honest limits + license gate + self-host
-feasibility — not internals**; the value he acknowledged was the **reframes** (noise-vs-competing-speech;
-spatial-capture-as-lever; VLM→brief→generate), not model enumeration. Consistent with his practitioner/ops strength
-([[arena-cold-start-concern]], LLM serving) — he engages hardest when abstract material meets a system he wants to
-build/use. **Teach-forward: for use-oriented non-text tracks, lead with lever/limit/license, pair SOTA-hosted with
-best-open, and flag currency (models churn monthly).** Process: the cheatsheet fan-out research had a flaky parent
-subagent (it spawned children that returned good *verified* data — license corrections, 2026 successors); I folded
-the child results in directly and web-verified the volatile facts. **Next:** §4 multimodal & representation
-(CLIP/VLMs, embeddings), or rotate.).
-(v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
+(v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
 v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived
 in the history log; their durable signal is distilled into the sections below.)
 
@@ -628,6 +633,28 @@ learning surfaces.
 
 ## Learning progress (hobby track)
 *(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-07-25 — Economy & Finance · E03 §2 (interest rates & the time value of money) ✅ finalized → Module E03
+  half-built** (§1 money ✅, §2 rates ✅; §3 Fed model & §4 MAS remain). Body (drafted 07-21): interest = the *price of
+  time*; the **TVM master formula** run both ways ($FV=PV(1+r)^n$ compounding + Rule of 72; $PV=FV/(1+r)^n$ discounting —
+  the discount rate = the argued-over number, Stern-vs-Nordhaus callback; perpetuity/Gordon; **NPV**); **real vs nominal
+  / Fisher** + TIPS breakeven; **no single rate** (risk-free + term/credit/liquidity premia); the **yield curve**
+  (expectations + term premium; **inversion → recession**, the E02 §4 §6 leading indicator + 2022–24 case); **bonds
+  price↔yield inverse + duration** (finishes the SVB story). 6 matplotlib figs + mermaid one-pager. Went **untouched**;
+  the session was a **three-step outward chain from one seed question — *who sets US Treasury yields, government or Fed?***
+  → **§10 Applied:** **(10a)** three actors — Treasury *issues* (price-taker at auctions), market *prices* (long = exp
+  avg short + term premium), Fed sets only the overnight rate → inversion = Fed-vs-market; **(10b)** his hypothesis
+  *could the government manufacture an inversion to pressure the Fed?* — **premise wrong** (govt auctions, doesn't set
+  yields) **but instinct found the real lever: issuance composition** → 2024 **Activist Treasury Issuance ("stealth QE")**
+  (Miran-Roubini), corrected as self-defeating (lowering long yields *is* easing; false signal the Fed reads through; bill
+  rollover cost) — real pressure = jawboning/dove-appointments/fiscal-dominance (E02 §3 §11); footnote **YCC** = central
+  bank not govt (Fed 1942–51, BoJ); **(10c)** keystone reframe — inversion is a **forecast, not pressure**;
+  money-weighted positioning, not public opinion; a **recession forecast** via the market predicting the Fed's **reaction
+  function**; grain of truth but **expectation ≠ control** (2022–23 "higher for longer," market priced cuts that never
+  came). **Calibration:** the **signature pattern in its "mis-*located*" variant** — right intuition (state *can* affect
+  the curve), wrong mechanism (decree vs issuance), integrated the re-location instantly; value = correcting the premise
+  + naming the real lever + swapping pressure→forecast + live 2024–26 detail, not re-teaching. Reinforces the standing
+  econ-sparring rule (v29). Clean finalize, no body edits; math Playwright-verified. **Next:** E03 §3 (the Fed model —
+  rate-setting, inflation targeting, QE, transmission; §10c's reaction function tees it up), or §4 (MAS), or rotate.
 - **2026-07-21 — Economy & Finance · E03 §1 (money & what banks create) ✅ finalized → opens Module E03
   (Money, Banking & Monetary Policy).** Body (drafted 07-07): money as a *ledger of promises* (3 jobs,
   double-coincidence), forms (commodity→representative→fiat, why fiat has value), the **nested aggregates**
