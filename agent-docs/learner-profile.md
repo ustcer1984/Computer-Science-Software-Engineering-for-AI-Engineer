@@ -794,8 +794,21 @@ learning surfaces.
   (career = any plausible positive-career-effect topic; hobby = anything genuinely interesting, my judgment). The old
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
-- **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
-  no specific item queued. *(Three standing hands-dirty follow-ups he'd enjoy: (a) a **developmental-interpretability**
+- **Queued / next reading day:** **reading #12 is PREPARED (created 2026-07-27), awaiting his read + Q&A → finalize**
+  (`upskill-readings/2026/07/27-the-crypto-migration-and-the-shrinking-codebreaker.md`): career = **the post-quantum
+  cryptographic migration** (hybrid X25519+ML-KEM-768 already carrying over two-thirds of browser traffic; the *signature*
+  half still unsolved — ML-DSA's 15 kB handshake wall and Let's Encrypt's **Merkle Tree Certificates** answer of 3 June 2026;
+  **EO 14412** of 22 June 2026 with 2030/2031 federal deadlines; SIKE as the "post-quantum ≠ proven" cautionary tale; the
+  real deliverable = **cryptographic agility** / a CBOM); hobby = **the collapsing resource estimate for a codebreaking
+  quantum computer** (a billion physical qubits in 2012 → 20 M → under 1 M → under 100 k → **10,000 reconfigurable atoms**,
+  Cain et al. 30 Mar 2026 — five orders of magnitude from **theory, not hardware**: qLDPC codes, magic-state cultivation,
+  approximate residue arithmetic, and atom transport by optical tweezers; against the honest hardware state — Willow's
+  below-threshold $\Lambda = 2.14$, Caltech's 6,100-atom array, IBM Starling 2029). **A deliberate step into the security
+  track he asked for** (cyber security was an explicit request and this is its first reading-track appearance) while
+  keeping the hobby half in physics. **The pair is a live scissors** and the second story is *engineered as a
+  leverage-ranking bait* — the chart's two curves nearly touch but are different units, and the headline 10,000 comes with
+  a three-year runtime; per v33's teach-forward, see whether he re-ranks it himself. On finalize, add the "What we worked
+  out" section + prepend a vN note. *(Three standing hands-dirty follow-ups he'd enjoy: (a) a **developmental-interpretability**
   mini-repro — detect an induction-head/ICL phase transition on a small model (RTX 4070); (b) a **block-size-vs-reasoning-accuracy
   sweep on a small block-diffusion LM** (RTX 4070) — "how much serial-ness does reasoning need?"; (c) NEW from reading #11 —
   the **`scx_bpfland` / thermald / PL1-cap A/B** on his Meteor Lake ThinkPad, using the throttle-count delta + MangoHud as
