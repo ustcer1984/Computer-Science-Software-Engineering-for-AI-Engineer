@@ -4,7 +4,30 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-25 (v32 — **hobby econ E03 §2 (interest rates & the time value of money) finalized → Module E03
+Last updated: 2026-07-26 (v33 — **reading #11 finalized (created 2026-07-22, finalized 2026-07-26) — eBPF / `sched_ext`
+(career) + redefining the SI second on optical atomic clocks (hobby); a deliberate step off the LLM-internals axis into
+systems + physics breadth.** Story 2 (clocks) stayed a read (his call, "no question on the second topic"); **Story 1 became
+a LIVE HARDWARE DEBUG of his own Meteor Lake ThinkPad** — the most *applied* a reading has gotten, and a new signal that a
+career reading now works as a **launchpad for real work** (he's carrying the fix into a separate project). **Thread:** can
+`sched_ext` fix a Wine game that lags whenever one core pegs 100%? **Reframe** — one-core-100%/others-idle is a
+**serial-bottleneck signature**, not a scheduling-imbalance one (no scheduler parallelizes serial work). **He localized it
+to *thermal* by exemplary empirical method** (Psensor >90 °C → dust-clean → 70–80 °C → lag dropped = a clean natural
+experiment), **confirmed by the hardware introspection I ran:** per-core throttle counters ~2300 on exactly the two
+**favored 5.0 GHz P-cores**, zero elsewhere; **PL1 uncapped at 115 W** on a 28 W-nominal chip → the **boost↔throttle
+oscillation IS the stutter**; `thermald` off. **Calibration — the SIGNATURE mis-*ranking* pattern, now on a systems/hardware
+axis:** right **mechanism** (thermal throttle) but wrong **leverage ranking** of the remedy — his "migrate to a cooler core"
+is the *weakest* knob (laptop = shared cooling budget; cool cores are the slow cores; ~10 ms reheat), the same shape as
+v24/v30 (physical magnitudes) and v32 (institutional mechanism); re-ranked instantly. **On systems/hardware he's a strong
+empirical debugger** (hypothesis-driven, real tools, controlled perturbation); my value = **hardware introspection (throttle
+counters, RAPL), NAMING the oscillation, the counter-intuitive cap-to-go-faster, + a measurement rig** (throttle-count delta
++ MangoHud A/B). Honest verdict handed back: `sched_ext` — the reading's own shiny tool — is **not** the fix (can't add
+cooling; placement-only, a safe later experiment); real levers = `thermald` → cap PL1/freq → FPS cap → repaste.
+**Teach-forward: steelman his hypothesis, confirm with real introspection, then RANK the magnitudes/leverage of candidate
+fixes** — ranking, not mechanism, is his recurring gap. Clean finalize; "What we worked out" added (Story 1 only); math
+unchanged, render-trap greps clean; 2 ComfyUI illustrations + 1 matplotlib clock-accuracy plot + 1 Mermaid diagram; handoff
+note to local `temp/` (gitignored). **Next:** reading rotation open; standing hands-dirty follow-ups now include the
+**`scx_bpfland` / thermald / PL1-cap A/B on his ThinkPad**.)
+Prior: v32 (2026-07-25 — **hobby econ E03 §2 (interest rates & the time value of money) finalized → Module E03
 half-built** (§1 money ✅, §2 rates ✅; §3 Fed model & §4 MAS remain). Body (drafted 07-21) went **untouched** again.
 **§10 = the live session**, a three-step arc built outward from one seed question — *who actually sets US Treasury yields,
 the government or the Fed?* (same multi-turn-chain-from-one-question mode as v29). **(10a)** three actors pulled apart:
@@ -92,31 +115,7 @@ joins the standing devinterp/LLC mini-repro. **Process — reading-track dating 
 progress log** (matches the reading-#9 / 07-07 pattern: file `07-…`, finalized 07-10). I initially over-corrected the filename to
 the finalize date and reverted. GitHub math render-trap greps clean; 2 ComfyUI path-4 illustrations + 1
 matplotlib $B^{4}$ plot + 1 Mermaid diagram. **Next:** continue the reading rotation, or either 4070 mini-repro.)
-Prior: v29 (2026-07-21 — **hobby econ E03 §1 (money & bank credit) finalized → opens Module E03
-(Money, Banking & Monetary Policy).** Body (drafted 07-07) went **untouched**; the finalize was driven
-entirely by a **self-directed 5-question reasoning chain** he built after reading solo, walking *outward
-from the section to the global dollar system*. **§10 Applied, 5 threads:** (a) he independently read the
-money multiplier as a *ceiling, not a floor* (correct — the BoE repair) and named **loan-demand as the
-throttle**; (b) *China M2 ≫ its GDP* → I reframed via **velocity / the M2-GDP ratio** = financial
-*structure* (bank- vs market-based finance, deposits-as-store-of-value), not wealth; (c) *do US aggregates
-count dollars abroad?* → **cash yes** (Fed can't track notes), **eurodollars no** (institution-location
-rule); (d) *FX-reserves buying Treasuries* → **~M2-neutral** (money recycles; effects land on foreign M2 +
-US yields); (e) his own **export-led-growth synthesis**. **NEW durable signal: strong, generative
-macro-synthesis instinct** — he chains trade → money-creation → inflation → **US–China symbiosis**
-unprompted, and reconstructs mechanisms correctly (multiplier-ceiling, stock-vs-flow, loan-demand throttle).
-**Calibration — textbook confirmation of the standing rule (econ/systems/conceptual = generative &
-well-calibrated):** my value was **correcting two precise mechanical errors + naming structures he was
-circling**, NOT re-teaching. Corrections: (1) "export-created M2 → inflation, as in China" is **wrong** —
-China's money was *sterilized* (RRR to ~21%) and flowed into *assets/overcapacity*; CPI stayed
-~2%/near-deflation, so the danger is an asset-bubble/debt overhang, not CPI; (2) *r→0 ≠ unlimited borrowing*
-— capital requirements + creditworthiness still bind. Structures named: **eurodollars, Bretton Woods II,
-exorbitant privilege, imported disinflation, velocity = 1/(M2÷GDP)**. Bilingual 中文 glosses landed (this
-track's payoff = reading CN/EN econ news). **Teach-forward: on econ he's a sparring partner — steelman,
-*locate/name*, correct only the one wrong step, bring real cross-border/current data; he prefers building a
-multi-turn reasoning chain over a single Q.** **Process:** clean finalize, body needed **no edits** (pitched
-right); all GitHub math render-trap greps clean. **Next:** E03 §2 (interest rates & TVM / yield curve), or
-rotate (M12 Ch2 §4 multimodal, M02 networking).)
-(v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
+(v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
 v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived
 in the history log; their durable signal is distilled into the sections below.)
 
@@ -795,20 +794,39 @@ learning surfaces.
   (career = any plausible positive-career-effect topic; hobby = anything genuinely interesting, my judgment). The old
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
-- **Queued / next reading day:** **reading #11 is PREPARED (created 2026-07-22), awaiting his read + Q&A → finalize**
-  (`upskill-readings/2026/07/22-programmable-kernels-and-redefining-the-second.md`): career = **eBPF / `sched_ext`**
-  (safe verified JIT programs injected into a running Linux kernel; the CPU scheduler is now hot-swappable) — a deliberate
-  step **off the LLM-internals axis** into systems breadth; hobby = **redefining the SI second on optical atomic clocks**
-  (NIST Al+ ion clock at ~$5.5\times10^{-19}$, the ~2030 redefinition roadmap, leap-second abolition by 2035). On finalize,
-  add the "What we worked out" section + prepend a vN note. *(Two standing hands-dirty follow-ups he'd enjoy, both RTX-4070-feasible: (a) a
-  **developmental-interpretability** mini-repro — detect an induction-head/ICL phase transition on a small model; (b) NEW
-  from reading #10 — a **block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM** ("how much serial-ness does
-  reasoning need?"), testing whether a diffused chain-of-thought preserves the reasoning gain of an AR one.)*
+- **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
+  no specific item queued. *(Three standing hands-dirty follow-ups he'd enjoy: (a) a **developmental-interpretability**
+  mini-repro — detect an induction-head/ICL phase transition on a small model (RTX 4070); (b) a **block-size-vs-reasoning-accuracy
+  sweep on a small block-diffusion LM** (RTX 4070) — "how much serial-ness does reasoning need?"; (c) NEW from reading #11 —
+  the **`scx_bpfland` / thermald / PL1-cap A/B** on his Meteor Lake ThinkPad, using the throttle-count delta + MangoHud as
+  the instrument (see the reading's "What we worked out"; he's carrying this into a separate project).)*
 - **IMAGES (from 2026-07-09, `authoring-conventions.md` §7):** the **ComfyUI** local image tool (Z-Image Turbo) is now in
   play for **path-4** illustrations (conceptual/metaphorical/atmospheric only — real figure → data plot → Mermaid →
   generated image precedence still holds; no real-specific subjects; no baked-in text). Applied across the reading track:
   **4 illustrations** in the two Discovery-register readings (07-02, 07-07); the **7 technical 06-xx readings deliberately
   skipped** (diagrams/code already carry them — an image there would be filler). The reading genre benefits most.
+- **2026-07-26 — reading #11 ✅ finalized** (`upskill-readings/2026/07/22-programmable-kernels-and-redefining-the-second.md`; created 2026-07-22, finalized 2026-07-26)
+  — Two feature stories, a **deliberate step off the LLM-internals axis into systems + physics breadth**: (1) **eBPF / `sched_ext`**
+  (career) — safe, verifier-checked, JIT-compiled programs injected into a running Linux kernel; the CPU scheduler now hot-swappable
+  (Linux 6.12); (2) **redefining the SI second on optical atomic clocks** (hobby) — NIST Al+ ion clock at ~$5.5\times10^{-19}$, the
+  ~2030 roadmap, leap-second abolition by 2035. **Story 2 stayed a read (his call: "no question on the second topic"); Story 1 became
+  a LIVE HARDWARE DEBUG of his own Meteor Lake ThinkPad** — the most *applied* a reading has gotten, and a new signal that a career
+  reading now functions as a **launchpad for real work** (he carried the fix into a separate project). **The thread:** can `sched_ext`
+  fix a Wine game that lags whenever one core pegs 100%? **Reframe** = one-core-100%/others-idle is a **serial-bottleneck signature**,
+  not a scheduling-imbalance one (no scheduler parallelizes serial work). **He localized it to *thermal* by exemplary empirical method**
+  (Psensor >90 °C → dust-clean → 70–80 °C → lag dropped = a clean natural experiment), **confirmed by hardware introspection I ran**:
+  per-core throttle counters ~2300 on exactly the two **favored 5.0 GHz P-cores**, zero elsewhere; **PL1 uncapped at 115 W** on a
+  28 W-nominal chip → the **boost↔throttle oscillation IS the stutter**; `thermald` off. **Calibration — the SIGNATURE PATTERN again,
+  now on a *systems/hardware* axis:** right **mechanism** (thermal throttle), but he **mis-ranked the *leverage* of the remedy** — his
+  "migrate to a cooler core" is the *weakest* knob (laptop = shared cooling budget; cool cores are the slow cores; sustained load
+  reheats in ~10 ms), the *same* mis-*ranking* shape as v24/v30 (physical magnitudes) and v32 (institutional mechanism), and he
+  integrated the re-ranking instantly. **On systems/hardware he's a strong empirical debugger** (hypothesis-driven, real tools, controlled
+  perturbation); my value = **hardware introspection (throttle counters, RAPL), NAMING the oscillation, the counter-intuitive
+  cap-to-go-faster, and a measurement rig** (throttle-count delta + MangoHud A/B). Honest verdict handed back: `sched_ext` — the reading's
+  own shiny tool — is **not** the fix here (can't add cooling; placement-only, a safe later experiment). **Teach-forward: steelman his
+  hypothesis, confirm with real introspection, then RANK the magnitudes/leverage of candidate fixes** (ranking, not mechanism, is his
+  recurring gap). Process: clean finalize; "What we worked out" added (Story 1 only); math unchanged, render-trap greps clean; 2 ComfyUI
+  path-4 illustrations + 1 matplotlib clock-accuracy plot + 1 Mermaid diagram. Handoff note written to local `temp/` (gitignored).
 - **2026-07-22 — reading #10 ✅ finalized** (`upskill-readings/2026/07/10-diffusion-llms-and-the-fusion-power-race.md`; created 2026-07-10, finalized 2026-07-22)
   — Two feature stories: (1) **diffusion language models** (career) — non-autoregressive, parallel-block text generation
   (Gemini Diffusion, Inception Mercury, open-weights DiffusionGemma); (2) **the private fusion race** (hobby) — HTS/REBCO

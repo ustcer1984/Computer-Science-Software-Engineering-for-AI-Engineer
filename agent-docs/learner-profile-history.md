@@ -9,6 +9,52 @@
 
 ---
 
+v33 (2026-07-26 — **reading #11 finalized (created 2026-07-22, finalized 2026-07-26) — eBPF / `sched_ext` (career) +
+redefining the SI second on optical atomic clocks (hobby).** A deliberate step **off the LLM-internals axis** (the prior
+two readings were interpretability and diffusion LLMs) **into systems + physics breadth.** **Story 2 (optical clocks)
+stayed a read** — his explicit call, "no question on the second topic." **Story 1 became a LIVE HARDWARE DEBUG of his own
+machine** — the most *applied* a reading has ever gotten, and a new durable signal: **a career-track reading now functions
+as a launchpad for real work** (he is carrying the fix into a separate project, and asked for a standalone handoff doc).
+**The thread he drove:** his hardware is a **Lenovo ThinkPad, Intel Core Ultra 7 165H (Meteor Lake)**; a Wine game
+(`wine-nvidia`) lags intermittently, always when **one CPU core is near 100% while the rest idle**. He asked whether
+`sched_ext` (the reading's frontier topic) could help. **(A) The reframe:** one-core-100%/others-idle is a
+**serial-bottleneck signature**, not a scheduling-imbalance one — a scheduler chooses *which* core and *when*, but never
+splits one thread across cores, so if the hot thread genuinely needs more than a core, no scheduler helps. **(B) He
+localized it to *thermal* by exemplary empirical method:** Psensor showed >90 °C → he found and cleaned dust → temps fell
+to 70–80 °C → **the lag dropped** (a clean natural experiment implicating cooling), and he hypothesized per-core throttling.
+**Confirmed by the hardware introspection I ran on the machine:** the per-core **thermal-throttle counters** read **~2300 on
+exactly the two favored 5.0 GHz P-cores** (`cpu1`, `cpu2`) and **zero on all other cores**; Tjmax = 110 °C (the package
+*average* of ~80 °C masks a single core near its limit); **RAPL PL1 was set to 115 W** on a chip whose nominal TDP is 28 W,
+so **temperature is the only governor** → the CPU boosts to 5 GHz, the favored core slams into 110 °C, hardware hard-throttles
+it to ~2.5 GHz, it recovers, repeats — and **that boost↔throttle oscillation IS the stutter**; `thermald` was inactive.
+**(C) His proposed remedy — "migrate the thread to a cooler core" — is the weakest lever (the one correction):** it's a
+**laptop** (all 6 P-cores share one die / heatpipe / fan → a sustained load reheats a migrated core to the same steady state
+in ~10 ms; you can't rotate out of a shared thermal budget), the cool cores are the **slow** cores (4.7 GHz P-cores / 3.8 GHz
+E-cores) so migration trades throttle-stutter for lower single-thread speed, and the OS/HW already rotate the favored core.
+**(D) Real fixes, ranked:** enable `thermald` → **cap PL1 / max frequency** (the counter-intuitive keeper: *capping the CPU
+makes the game smoother* — a steady 4 GHz beats a bouncing 5.0↔2.5) → cap in-game FPS → **repaste (PTM7950)** to raise the
+ceiling; `sched_ext` lands **last** — it cannot add cooling, its only honest role here is *placement* (keep the hot thread on
+a P-core, don't stack its SMT sibling), a **safe** experiment (`scx_bpfland`, kernel 6.17 has sched_ext, falls back if it
+misbehaves) worth trying only after the thermal fixes. **(E) A measurement rig** handed over: throttle-count **delta** per
+session + **MangoHud** frametime graph, change one variable at a time. **Calibration — the SIGNATURE mis-*ranking* pattern
+recurs, now on a systems/hardware axis:** he found the right **mechanism** (thermal throttling) but **mis-ranked the leverage**
+of the candidate fixes (core migration is weak; the binding constraints are shared cooling + the uncapped power limit) — the
+*same shape* as v24/v30 (mis-*ranked physical magnitudes*: fusion rare-earth exposure, the $B^{4}$ law) and v32 (mis-*located
+institutional mechanism*: ATI vs decree), and as always **he integrated the re-ranking instantly.** **On systems/hardware he
+is a strong empirical debugger** — hypothesis-driven, uses real instruments (Psensor, system monitor), perturbs one variable
+(dust), re-measures. **My value = hardware introspection (throttle counters, RAPL power limits, hybrid topology), NAMING the
+oscillation as the stutter mechanism, the counter-intuitive cap-to-go-faster, and building the A/B rig** — not re-teaching.
+**Honest verdict handed back: `sched_ext`, the reading's own shiny object, is *not* the tool for this job — which is the more
+useful thing to know.** **Teach-forward: on systems/hardware, steelman his hypothesis, *confirm it with real introspection*,
+then RANK the magnitudes/leverage of the candidate fixes** (ranking, not mechanism, is his recurring gap across physics /
+institutions / hardware). **Process:** clean finalize; H1 marked ✅ finalized, footer updated (creation 07-22 / finalize 07-26
+per the dating rule), "What we worked out" added (Story 1 only, Story 2 was a read); the reading body/math were unchanged so
+the render-trap greps stayed clean; visuals 2 ComfyUI path-4 illustrations + 1 matplotlib clock-accuracy plot + 1 Mermaid
+diagram. The full diagnosis + commands were written to a local `temp/` handoff note (gitignored, so *not* linked from the
+public reading). **Next:** reading rotation open (two fresh topics, keep diversifying); standing hands-dirty follow-ups now
+number three — (a) devinterp/LLC induction-head phase-transition mini-repro, (b) block-diffusion reasoning-vs-block-size sweep,
+(c) NEW: the `scx_bpfland` / thermald / PL1-cap A/B on his ThinkPad.)
+
 v32 (2026-07-25 — **hobby econ E03 §2 (interest rates & the time value of money) finalized → Module E03 half-built**
 (§1 money ✅, §2 rates ✅; §3 Fed model & §4 MAS remain). Body (drafted 07-21) went **untouched** again — pitched right.
 **§10 = the live session**, a three-step arc that started from one seed question — *who actually sets US Treasury yields,
