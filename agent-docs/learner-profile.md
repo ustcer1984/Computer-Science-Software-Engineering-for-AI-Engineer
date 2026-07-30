@@ -4,7 +4,35 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-26 (v33 — **reading #11 finalized (created 2026-07-22, finalized 2026-07-26) — eBPF / `sched_ext`
+Last updated: 2026-07-30 (v34 — **course: M04 Ch2 §2 (refactoring a monolith, in moves) finalized** (body prepared
+2026-07-24; §1 was 06-18). Body went **untouched** — he **agreed with the strategy AND the technique, with no questions on
+the mechanics** (he already owns refactoring). The whole session drove **§7 (refactoring-with-an-AI-agent) one layer deeper
+into a meta-question about the TOOLING** (now **§10 Applied**): *do the coding harnesses (Claude Code / Cursor / Codex)
+enforce this discipline in the system instructions they inject before the user message?* Answer built together: **no —
+harness system prompts carry operational / tool-use hygiene, NOT software-engineering methodology** (verified by direct
+observation of Claude Code's OWN visible instructions this session — "match surrounding style," "report test outcomes
+faithfully," surgical-edit-over-rewrite, commit-only-when-asked, `/simplify` + `/code-review` skills = *ingredients*, not
+the Two-Hats / pin-first / one-move doctrine). Resolving model = **three layers**: *system prompt (mostly no doctrine) ·
+post-training (a **soft disposition** — the model knows Fowler/Feathers and often applies it, but it **degrades under vague
+or large asks**) · **project instructions = the deterministic lever HE controls** (`CLAUDE.md` / `.cursor/rules` /
+`AGENTS.md`)*. So §7's warning holds not because the harness is reckless but because **nothing in it STOPS a mixed-hat
+diff**, and the model's good instinct is probabilistic and weakest exactly on the big under-specified refactor. **NEW
+DURABLE SIGNAL — his engagement tilts to the *systems-of-work / agent-governance* layer** (how AI agents are actually
+steered/constrained via prompts, skills, rules), NOT the SWE *technique* he already owns; this **extends v28's "engages
+hardest when abstract material meets a system he wants to build/use"** up to the **agent-tooling meta-layer**, and fits his
+**architect goal + ops strength**. **Session artifact:** he had me author a **user-level (cross-project) Claude Code
+`refactor` skill** (`~/.claude/skills/refactor/`) operationalizing this section for the agent-as-ACTOR — Two Hats as the
+one rule; green-per-step loop (undo, never fix-forward, on red); **establish a safety net first, and pin behaviour with
+characterization tests + seams when tests are sparse**; **refuse the unverifiable refactor AND the ground-up rewrite**
+(Sprout/Wrap, Strangler Fig instead); + a review-mode "*does observable behaviour change anywhere?*". Structure = SKILL.md
+protocol + `references/moves.md` + `references/legacy-without-tests.md` (progressive disclosure); description tuned to
+trigger on refactor/decompose/clean-up and stay **distinct from `/simplify` & `/code-review`**. He will have a **Cursor
+agent build the `.cursor/rules` equivalent** later (his plan; same doctrine, Cursor's format). **Teach-forward: pair
+SWE-technique sections with the *agent-tooling / governance* angle** — show how to encode the discipline as project
+instructions or a skill; that is where he leans in hardest. Clean finalize; body no edits; GFM render-trap greps clean; the
+3 prepare-time Mermaid diagrams (refactoring loop · Sprout/Wrap · Strangler Fig) retained + visually verified. **Next:**
+**M04 Ch2 §3 (boundaries between modules & files)** — being prepared this session.)
+Prior: v33 (2026-07-26 — **reading #11 finalized (created 2026-07-22, finalized 2026-07-26) — eBPF / `sched_ext`
 (career) + redefining the SI second on optical atomic clocks (hobby); a deliberate step off the LLM-internals axis into
 systems + physics breadth.** Story 2 (clocks) stayed a read (his call, "no question on the second topic"); **Story 1 became
 a LIVE HARDWARE DEBUG of his own Meteor Lake ThinkPad** — the most *applied* a reading has gotten, and a new signal that a
@@ -87,35 +115,7 @@ LRL idea is his real problem space) + his **cost/serving lens** (compose frozen 
 **M13 (embeddings/RAG) & M14 (composition/agentic)** — reuse the projector-as-universal-adapter frame there. **Next:**
 M12 Ch3 (choosing a model — light/practitioner-known) or rotate — **M01 Ch5** (Linux/macOS/Windows), **M02**
 (networking), or **M04 Ch2 §2** (decomposition).)
-Prior: v30 (2026-07-22 — **reading #10 finalized (created 2026-07-10, finalized 2026-07-22) — diffusion LLMs (career) + the private fusion race
-(hobby).** **UNUSUAL: both stories became deep discussions** (the hobby/physics story is normally just a read) → new signal
-that he now spars on *both* halves of a Discovery-register reading. **Career (AI) side — generative & correct on his core
-domain:** he **proposed the right serving-economics answer himself** — *diffusion's headline speed is a single-user/low-batch
-win, not multi-user-efficient* (roofline: one diffusion request already sits near the compute roof, so it **pre-spends the
-FLOP headroom AR banks for concurrency**; memory-light/no-KV-cache but FLOP-heavy → binding constraint flips **HBM→FLOPs**;
-real serving choice = a crossover in the **load × latency-SLO** plane) — and generated an **original, field-aligned
-architecture idea** (one **dual-mode AR+diffusion** model; **diffuse the thinking tokens, AR the answer**), feasible because
-**AR = masked diffusion with a 1-token LTR schedule** and **BD3-LM / Eso-LM / DiffuLLaMA** already interpolate. My value =
-**naming (roofline), locating the catch** (a **dependency mismatch** — diffusion parallelizes weakest exactly where reasoning
-is most *serial* → *diffuse breadth not the chain*; semi-AR blocks for CoT + AR answer; RL-credit-assignment + CoT-faithfulness
-wrinkles, the latter an **07-07 interp callback**), and **bringing live 2026 research** — NOT re-ranking. **Calibration —
-reinforces the standing v20+ rule on his strongest axis:** on **LLM internals / architecture / serving he is a peer-level
-generative sparring partner**; extend v26/v29's "generative in his domain" to **AI architecture *design***. **Fusion side —
-the physical-magnitude-ranking pattern recurred (the v24 refinement):** his China-rare-earth-export-control question flagged
-a **real secondary exposure** (yttrium+gadolinium *are* on China's April-2025 list) but the implicit ranking needed
-correcting — I **located the magnitude** (~100 kg RE/plant; a micron-thin REBCO film ≈ a couple of wind turbines) and
-**re-ranked the actual wall** (**tritium ≫ HTS tape-fab throughput ≫ RE refining/separation ≫ raw ore**); *softened* because
-he **asked rather than asserted**. (Second fusion thread — MCF vs laser-ICF — was a clean well-framed comparative: "two
-different games," ICF won the science / MCF leads commercially / ITER lapped by privates.) **Teach-forward: pair his
-LLM-serving/architecture domain with live 2026 papers; steelman + *locate/name*, don't correct; on physical-magnitude /
-supply-chain questions, explicitly *rank the magnitudes*.** **NEW hands-dirty follow-up (RTX 4070):** a
-**block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM** — *"how much serial-ness does reasoning need?"* —
-joins the standing devinterp/LLC mini-repro. **Process — reading-track dating rule (his correction, now standing):** the
-**filename + header use the CREATION date (2026-07-10)**; the **finalize date (2026-07-22) lives only in the footer + this
-progress log** (matches the reading-#9 / 07-07 pattern: file `07-…`, finalized 07-10). I initially over-corrected the filename to
-the finalize date and reverted. GitHub math render-trap greps clean; 2 ComfyUI path-4 illustrations + 1
-matplotlib $B^{4}$ plot + 1 Mermaid diagram. **Next:** continue the reading rotation, or either 4070 mini-repro.)
-(v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
+(v30 2026-07-22 reading #10 diffusion-LLMs (career) + private-fusion (hobby) — UNUSUAL: both halves became deep discussions; he proposed the right serving-economics himself (diffusion = single-user/low-batch win, HBM→FLOPs, load×SLO crossover) + an original dual-mode AR+diffusion idea → confirms **AI architecture *design* is a peer-level generative axis**; fusion rare-earth question = the v24 physical-magnitude-rank pattern again (re-ranked tritium ≫ HTS-fab ≫ RE-refining ≫ ore); reading-track dating rule set here (filename/header = CREATION date, finalize date in footer only), v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
 v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived
 in the history log; their durable signal is distilled into the sections below.)
 
@@ -215,12 +215,39 @@ learning surfaces.
 - **Concept-first, light coding** — build mental models, learn to read/judge code; hands-on optional.
 - **Comparative framing** preferred where technologies compete (OSes, DB types, cloud providers, frameworks).
 - He's happy for the agent to set the learning sequence; he'll redirect mid-way as interests shift.
+- **He engages hardest at the *systems-of-work / agent-governance* layer** *(added 2026-07-30, M04 Ch2 §2)* — for
+  SWE-technique material he already owns (e.g. refactoring), the live question for him is not the technique but **how AI
+  agents are actually steered/constrained**: what's in a harness's injected system prompt vs post-training vs *his own*
+  project instructions, and how to **encode a discipline as a `CLAUDE.md` / `.cursor/rules` / `AGENTS.md` rule or a
+  reusable skill** so agents follow it by default. Extends the v28 read ("engages hardest when abstract material meets a
+  system he wants to build/use") up to the agent-tooling meta-layer; fits his **architect goal + ops strength**.
+  **Teach-forward:** pair a SWE-technique section with its agent-tooling angle (how to make an agent apply it reliably).
 - **Bilingual (English + Chinese).** Reads economy/business news and reports in Chinese as well as English.
   Material stays in English but should **gloss key concepts/terms in Chinese**, giving **both Mainland (大陆,
   简体) and Taiwan (台灣, 繁體)** forms and flagging genuine terminology differences (not just script). Rule
   recorded in [`authoring-conventions.md`](authoring-conventions.md) §5. *(Added 2026-06-20, Econ E01 §3.)*
 
 ## Learning progress (course track)
+- **2026-07-30 — M04 Ch2 §2 (refactoring a monolith, in moves) ✅ finalized** (body prepared 2026-07-24). The *mechanics*
+  that cash §1's *metric*: behaviour-preserving change; **Kent Beck's Two Hats**; the **green-per-step loop** (one named
+  move → test → green=commit / red=undo, never fix-forward); the **safety net & working without one** (Feathers' *"legacy
+  code is code without tests,"* **characterization/pinning tests** + **seams**); the **move catalog** mapped to §1 symptoms
+  (Extract Function, **Split Phase** = separate pure core from effects, Replace-shared-state-with-return, …); **Sprout/Wrap**;
+  the **Big-Rewrite trap** (Netscape) vs the **Strangler Fig**; a worked `process_order` → pure-core + thin-runner; §7 =
+  refactoring-with-an-AI-agent. **He agreed with strategy + technique, no questions on the mechanics** — the session drove
+  **§7 one layer deeper into a meta-question about the tooling** (now **§10 Applied**): *do coding harnesses (Claude Code /
+  Cursor / Codex) enforce this in the system prompts they inject?* Answer built with him: **no — harness system prompts carry
+  operational / tool-use hygiene, not SWE methodology** (verified against Claude Code's own visible instructions this
+  session); the **three-layer model** — *system prompt (mostly no) · post-training (soft disposition, degrades under vague or
+  large asks) · project instructions = the deterministic lever he controls* (`CLAUDE.md` / `.cursor/rules` / `AGENTS.md`).
+  **NEW durable signal — his interest tilts to the systems-of-work / agent-governance layer** (see Learning preferences),
+  NOT the SWE technique he already owns. **Session artifact:** he had me author a **user-level (cross-project) Claude Code
+  `refactor` skill** (`~/.claude/skills/refactor/`) operationalizing the section for the agent-as-actor (Two Hats,
+  green-per-step, pin-first, refuse the unverifiable refactor + the rewrite, review-mode "does behaviour change anywhere?";
+  SKILL.md + `references/moves.md` + `references/legacy-without-tests.md`, triggers distinct from `/simplify` &
+  `/code-review`); Cursor `.cursor/rules` equivalent to be built by a Cursor agent later (his plan). Body no edits; 3 Mermaid
+  diagrams; render-trap greps clean. Full detail in `courses/plan.md` M04 Ch2 row. **Next:** M04 Ch2 §3 (module/file
+  boundaries) — being prepared this session.
 - **2026-07-24 — M12 Ch2 §4 (multimodal & representation) ✅ finalized → Ch2 "Beyond text" COMPLETE** (image ✅ video ✅
   audio ✅ multimodal ✅). Capstone unifying §1–§3 under one idea — *everything becomes an embedding; generation = decode,
   understanding/search = align.* Body (representation-is-destiny → embedding geometry/anisotropy → **CLIP** contrastive

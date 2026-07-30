@@ -4,7 +4,11 @@
 > **Chapter:** Decomposition
 > **Section:** The actual mechanics — behaviour-preserving moves, the safety net, working without tests,
 > Sprout/Wrap, Strangler Fig, and how to drive an AI agent through a refactor without breaking things.
-> **Status:** 🔵 in progress — prepared 2026-07-24.
+> **Status:** ✅ finalized 2026-07-30 (body prepared 2026-07-24). He agreed with the strategy and the technique with no
+> questions on the mechanics; the whole session drove the §7 AI-agent warning one layer deeper —
+> *do the coding harnesses actually enforce this discipline?* — captured in §10 Applied, which
+> ends in a concrete artifact: a user-level Claude Code `refactor` skill that operationalizes this
+> section's protocol.
 > **Prerequisites:** M04 Ch2 §1 (cohesion, coupling, module depth — the *metric* this section executes
 > against). The §1 "paper decomposition" map (its §10) is the input to the workflow here.
 
@@ -532,6 +536,72 @@ experiment.
 
 ---
 
+## 10. Applied — does the harness enforce this? Where the discipline actually lives
+
+You agreed with the strategy and had no questions on the technique — so the session went where the
+real uncertainty was: **§7 says *you* must impose this discipline on the AI agent; but the agent runs
+inside a harness (Claude Code, Cursor, Codex) that injects its own system instructions before your
+message. Do those built-in instructions already contain the refactoring strategy?** The answer is a
+useful piece of "how the tools actually work," and it sharpens §7 into something actionable.
+
+**Short answer: no — not as an explicit refactoring doctrine.** The built-in system instructions of
+these harnesses are overwhelmingly about **operational safety and tool-use hygiene**, not
+**software-engineering methodology**. This is checkable, not a guess: running *inside* Claude Code
+for this session, its own visible operating instructions contain things like *"write code that reads
+like the surrounding code,"* *"report outcomes faithfully — if tests fail, say so,"* prefer a
+surgical edit over a wholesale rewrite, confirm before hard-to-reverse actions, commit only when
+asked — plus the existence of quality *skills* (`/simplify`, `/code-review`). Those are **ingredients**
+that overlap with this section (match style, minimal edits, run and honestly report tests, keep diffs
+reviewable), but they are framed as "be a careful tool user," **not** "here is how to refactor." The
+load-bearing doctrine — the **Two Hats**, **pin behaviour before touching legacy**, **one named move
+per green step** — is simply not there. (Cursor's and Codex's system prompts aren't officially
+published — what circulates is leaked/reverse-engineered and version-specific — but from what's public
+they share the same *character*: "make it runnable," "never leave the code broken," "don't revert the
+user's changes," minimal diffs. Operational, not methodological.)
+
+**The mental model that resolves it — three layers, and the harness is only one.** When an agent
+refactors well or badly, the behaviour comes from one of three places:
+
+| Layer | What it is | Carries the refactoring strategy? |
+|---|---|---|
+| **System prompt** (the harness) | injected before your message; proprietary; changes often | **Mostly no** — operational rules, not methodology |
+| **Post-training** (the model's weights) | what it absorbed from Fowler/Feathers/millions of diffs | **Yes, but as a *soft disposition*** — it *knows* the strategy and often applies it unprompted, but the tendency **degrades under pressure** ("just clean this up" on a big vague task → a large mixed-hat diff) |
+| **Project instructions** (yours) | `CLAUDE.md`, `.cursor/rules`, `AGENTS.md`, custom skills | **Only if you put it there** — the deterministic lever |
+
+So §7's warning is real not because the harness tells the agent to be reckless, but because
+**nothing in the harness *stops* it**, and the model's own good instinct is probabilistic, not a
+guaranteed protocol — and it's weakest exactly on the large, under-specified refactor where the
+stakes are highest. The harness gives the agent *capability and safety rails*; it does not supply
+*your engineering judgment*. That gap is the one you fill.
+
+**The actionable upshot: encode the doctrine in the layer you control.** If you want an agent to
+follow this strategy *by default* rather than only when you remember to ask for it, write it into the
+project-instructions layer. The same lever exists across tools — `CLAUDE.md` (Claude Code),
+`.cursor/rules` (Cursor), `AGENTS.md` (Codex) — which is the whole point: the discipline is *yours*
+to supply, so supply it once in a form every agent reads.
+
+**What we built from this (the session's artifact).** Rather than a per-repo note, we captured the
+protocol as a **reusable, user-level Claude Code skill** — `~/.claude/skills/refactor/` — available
+across *all* projects. It operationalizes exactly this section for the agent as *actor* (not reader):
+the Two Hats as the one non-negotiable rule; the green-per-step loop with *undo, never fix-forward* on
+red; **establish a safety net first**, and when tests are sparse, **pin behaviour with
+characterization tests + create seams before refactoring** (§2); **refuse the unverifiable refactor**
+and the **ground-up rewrite**, offering Sprout/Wrap or Strangler Fig instead; and a *review mode* that
+asks the only question that matters — *does observable behaviour change anywhere?* A skill's
+`description` is what makes the agent reach for it (it triggers on "refactor / decompose / clean up /
+this file is too big" and deliberately stays distinct from `/simplify` and `/code-review`); the body
+is the protocol; detailed material (the move catalog, the legacy-without-tests playbook) lives in
+`references/` and loads on demand. The equivalent Cursor skill (`.cursor/rules`) is the natural port —
+same doctrine, Cursor's format.
+
+**The through-line.** This is the course's premise made literal: your job with an AI agent is to
+supply *judgment* (which move, where — §1) and *discipline* (keep behaviour frozen while structure
+changes — §2), because the tool supplies neither by default. Writing the doctrine down once — as
+project instructions or a skill — is how you stop re-supplying it by hand every session, and how you
+turn "the model usually does the right thing" into "the model is *told* to."
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -547,6 +617,8 @@ experiment.
 | Dependency injection | 依赖注入 | 相依性注入 | ⚠ 依赖 ↔ 相依 |
 | Seam | 接缝 | 接縫 | Feathers' term for a substitution point |
 | Coupling / Cohesion | 耦合 / 内聚 | 耦合 / 內聚 | from §1 |
+| System prompt / instructions | 系统提示词 / 系统指令 | 系統提示詞 / 系統指令 | the harness-injected context (§10) |
+| Behaviour (observable) | 行为 | 行為 | ⚠ 为 vs 為 script only; the invariant a refactor preserves |
 
 ---
 

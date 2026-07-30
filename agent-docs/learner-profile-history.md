@@ -9,6 +9,34 @@
 
 ---
 
+v34 (2026-07-30 — **course: M04 Ch2 §2 (refactoring a monolith, in moves) finalized** (body prepared 2026-07-24; §1 was
+06-18). Body went **untouched** — he **agreed with the strategy AND the technique, with no questions on the mechanics** (he
+already owns refactoring). The whole session drove **§7 (refactoring-with-an-AI-agent) one layer deeper into a meta-question
+about the TOOLING** (now **§10 Applied**): *do the coding harnesses (Claude Code / Cursor / Codex) enforce this discipline in
+the system instructions they inject before the user message?* Answer built together: **no — harness system prompts carry
+operational / tool-use hygiene, NOT software-engineering methodology** (verified by direct observation of Claude Code's OWN
+visible instructions this session — "match surrounding style," "report test outcomes faithfully," surgical-edit-over-rewrite,
+commit-only-when-asked, `/simplify` + `/code-review` skills = *ingredients*, not the Two-Hats / pin-first / one-move
+doctrine). Resolving model = **three layers**: *system prompt (mostly no doctrine) · post-training (a **soft disposition** —
+the model knows Fowler/Feathers and often applies it, but it **degrades under vague or large asks**) · **project
+instructions = the deterministic lever HE controls** (`CLAUDE.md` / `.cursor/rules` / `AGENTS.md`)*. So §7's warning holds
+not because the harness is reckless but because **nothing in it STOPS a mixed-hat diff**, and the model's good instinct is
+probabilistic and weakest exactly on the big under-specified refactor. **NEW DURABLE SIGNAL — his engagement tilts to the
+*systems-of-work / agent-governance* layer** (how AI agents are actually steered/constrained via prompts, skills, rules),
+NOT the SWE *technique* he already owns; **extends v28's "engages hardest when abstract material meets a system he wants to
+build/use"** up to the **agent-tooling meta-layer**, and fits his **architect goal + ops strength**. **Session artifact:** he
+had me author a **user-level (cross-project) Claude Code `refactor` skill** (`~/.claude/skills/refactor/`) operationalizing
+this section for the agent-as-ACTOR — Two Hats as the one rule; green-per-step loop (undo, never fix-forward, on red);
+**establish a safety net first, and pin behaviour with characterization tests + seams when tests are sparse**; **refuse the
+unverifiable refactor AND the ground-up rewrite** (Sprout/Wrap, Strangler Fig instead); + a review-mode "*does observable
+behaviour change anywhere?*". Structure = `SKILL.md` protocol + `references/moves.md` + `references/legacy-without-tests.md`
+(progressive disclosure); description tuned to trigger on refactor/decompose/clean-up and stay **distinct from `/simplify` &
+`/code-review`**. He will have a **Cursor agent build the `.cursor/rules` equivalent** later (his plan; same doctrine,
+Cursor's format). **Teach-forward: pair SWE-technique sections with the *agent-tooling / governance* angle** — show how to
+encode the discipline as project instructions or a skill; that is where he leans in hardest. Clean finalize; body no edits;
+GFM render-trap greps clean; the 3 prepare-time Mermaid diagrams (refactoring loop · Sprout/Wrap · Strangler Fig) retained +
+visually verified. **Next:** **M04 Ch2 §3 (boundaries between modules & files)** — being prepared this session.)
+
 v33 (2026-07-26 — **reading #11 finalized (created 2026-07-22, finalized 2026-07-26) — eBPF / `sched_ext` (career) +
 redefining the SI second on optical atomic clocks (hobby).** A deliberate step **off the LLM-internals axis** (the prior
 two readings were interpretability and diffusion LLMs) **into systems + physics breadth.** **Story 2 (optical clocks)
