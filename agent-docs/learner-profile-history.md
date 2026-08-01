@@ -9,6 +9,40 @@
 
 ---
 
+v35 (2026-08-01 — **hobby econ E03 §3 (monetary policy — the standard Fed model) finalized → Module E03 nearly complete**
+(§1 money ✅, §2 rates ✅, §3 Fed model ✅; only §4 MAS remains). The module **centrepiece** and the longest E03 section.
+Body (drafted 07-25) went **untouched** again. **§10 = the live session**, a **four-step chain walking *outward* from one
+seed question — *how does the Fed actually create and drain reserves?*** — into the entire floor-system plumbing, ending
+(on his own reasoning) at the doorstep of §4. This is the **same "build a multi-turn outward chain from one question" mode
+as v29/v32**, and the calibration payoff is that **the SIGNATURE "mis-*located*" pattern recurred FOUR times in one
+session** — each time a right instinct/fact with a wrong-by-one-step locus, integrated instantly once the correct locus was
+named: **(10a)** *no reserve requirement → reserves are market-determined* → WRONG inference; reserves are a **closed
+system** (Fed sets the total; banks are price-takers — the "hot potato"; an individual bank offloads but the system can't;
+creation = the purchase keystroke, tier-1; QT = passive run-off, the public re-absorbs the bonds and reserves are
+extinguished; autonomous factors = currency/TGA/RRP); **(10b)** *do banks deposit reserves at the Fed to earn IORB?* →
+INVERSION; **reserves *are* a bank's deposit at the Fed**, IORB = interest on that balance, floors the rate by arbitrage
+(no one lends below the risk-free Fed rate), with the real wrinkle EFFR<IORB (FHLB/GSE **non-eligibility** for IORB) → the
+**ON RRP** sub-floor, plus the Fed's post-2022 **operating loss**; **(10c)** *does a bank withdraw/lend out reserves?* →
+SPLIT: paying cash = the one genuine exit (reserves→currency), but *lending to a customer does NOT use reserves* (loans
+create deposits, §1; customers can't hold reserves) — reserves are a **bank-only wholesale settlement layer** that only
+moves bank-to-bank; **(10d) his sharpest thread** — *which asset the Fed buys has micro effects; if it buys Treasuries the
+government gets the money?* → the **allocative insight is CORRECT and I validated it** (asset choice picks winners →
+*that's why* the Fed prefers market-neutral Treasuries; MBS→housing, BoJ ETFs), but the premise is WRONG: QE buys in the
+**secondary market**, so the *private seller* not the government gets the cash (the anti-**monetary-financing** firewall;
+ECB Art.123); indirect financing (yields + consolidated remittances) = the **fiscal-dominance** blur; and if Treasuries
+were scarce → buy other assets / **lend reserves via repo** / US debt-ocean makes it near-moot / the **pure bond-free
+version is the MAS FX model (§4)** — he reasoned his own way to the finale. **Calibration:** textbook confirmation of the
+standing rule — on econ he is a **generative mechanism-seeking sparring partner**; my value across all four threads was
+**correcting the mislocated premise + naming the structure (closed system / settlement layer / secondary-market
+neutrality) + *validating* his one correct original insight (allocative effects) + supplying the forward hook**, NOT
+re-teaching. The "mis-located variant" (right instinct, wrong *locus* — distinct from his v24/v30 physical-magnitude
+*mis-ranking*) is now firmly his established mode on **institutional-plumbing** questions; teach it by letting him propose
+the mechanism, then relocate + name. **Process:** clean finalize, body **no edits**; math grep-clean + **Playwright-verified
+on the GitHub blob** (the Taylor-rule display + inline spans; zero errors/leaks); 2 mermaid + 4 matplotlib figs all held.
+Glossary +§10 terms (一级↔初級 / 二级↔次級 markets, 债务货币化 debt-monetization, 结算, 自主性因素). **Next:** **E03 §4 —
+the MAS exchange-rate-based model** (closes Module E03; §10d + §4-channel already teed it up), then Module E03 is done and
+the track opens E04 (fiscal policy) or rotates.)
+
 v34 (2026-07-30 — **course: M04 Ch2 §2 (refactoring a monolith, in moves) finalized** (body prepared 2026-07-24; §1 was
 06-18). Body went **untouched** — he **agreed with the strategy AND the technique, with no questions on the mechanics** (he
 already owns refactoring). The whole session drove **§7 (refactoring-with-an-AI-agent) one layer deeper into a meta-question

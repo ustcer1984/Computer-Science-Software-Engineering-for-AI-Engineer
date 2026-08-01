@@ -4,7 +4,30 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-07-30 (v34 — **course: M04 Ch2 §2 (refactoring a monolith, in moves) finalized** (body prepared
+Last updated: 2026-08-01 (v35 — **hobby econ E03 §3 (monetary policy — the standard Fed model) finalized → Module E03
+nearly complete** (§1 ✅ §2 ✅ §3 ✅; only §4 MAS remains). The module centrepiece; body (drafted 07-25) went **untouched**.
+**§10 = the live session**, a **four-step chain built outward from one seed question — *how does the Fed actually create and
+drain reserves?*** — into the whole floor-system plumbing, ending on his own reasoning at the doorstep of §4 (same
+outward-chain mode as v29/v32). The calibration headline: **the signature "mis-*located*" pattern recurred FOUR times in
+one session** — right instinct/fact, wrong-by-one-step locus, integrated instantly on naming: **(10a)** *no reserve
+requirement → reserves market-determined* → reserves are a **closed system** (Fed sets the total, banks are price-takers /
+"hot potato"; creation = the purchase keystroke; QT = passive run-off; autonomous factors); **(10b)** *do banks deposit
+reserves to earn IORB?* → **reserves ARE deposits at the Fed**; IORB floors the rate by arbitrage; wrinkle EFFR<IORB
+(FHLB/GSE non-eligibility) → **ON RRP** sub-floor + Fed operating losses; **(10c)** *withdraw/lend out reserves?* → cash =
+the one real exit (→currency), but customer **lending creates deposits, not reserve outflow** (§1) — reserves are a
+**bank-only settlement layer** that moves only bank-to-bank; **(10d) his sharpest** — *asset choice has micro effects; does
+the govt get the money?* → the **allocative insight is CORRECT (validated → why the Fed picks *neutral* Treasuries; MBS→
+housing, BoJ ETFs)** but QE buys **secondary-market** so the *private seller* not the govt gets the cash (anti-**monetary-
+financing** firewall; ECB Art.123); indirect financing = the **fiscal-dominance** blur; scarce-Treasuries → other assets /
+repo-lending / the **bond-free MAS FX model (§4)**. **Calibration:** confirms the standing rule — on econ he's a
+**generative, mechanism-seeking sparring partner**; value = correcting the mislocated premise + naming the structure +
+*validating his one correct original insight* + the §4 forward-hook, NOT re-teaching. The **"mis-located" variant** (right
+instinct, wrong *locus* — distinct from his v24/v30 physical-magnitude *mis-ranking*) is now his established mode on
+**institutional-plumbing** questions: let him propose the mechanism, then relocate + name. Process: clean finalize, body
+**no edits**; math grep-clean + **Playwright-verified** (zero errors/leaks); 2 mermaid + 4 matplotlib figs held. Glossary
++§10 (一级↔初級 / 二级↔次級 markets, 债务货币化, 结算, 自主性因素). **Next:** **E03 §4 — the MAS exchange-rate model**
+(closes Module E03; §10d + the §4 FX channel already teed it up), then E04 (fiscal) or rotate.)
+Prior: v34 (2026-07-30 — **course: M04 Ch2 §2 (refactoring a monolith, in moves) finalized** (body prepared
 2026-07-24; §1 was 06-18). Body went **untouched** — he **agreed with the strategy AND the technique, with no questions on
 the mechanics** (he already owns refactoring). The whole session drove **§7 (refactoring-with-an-AI-agent) one layer deeper
 into a meta-question about the TOOLING** (now **§10 Applied**): *do the coding harnesses (Claude Code / Cursor / Codex)
@@ -83,39 +106,7 @@ nested-fraction displays)**; fixed one real render trap while drafting (indented
 bilingual glosses landed (收益率↔殖利率, 久期↔存續期間, 国债拍卖↔公債標售, YCC, 反应函数, 财政主导). **Next:** **E03 §3
 (the Fed model — rate-setting, inflation targeting, QE, transmission)** — direct continuation (§10c's reaction function
 tees it up); then **§4 (MAS)**; or rotate (M01 Ch5 OS, M02 networking, M04 Ch2 §2 decomposition).)
-Prior: v31 (2026-07-24 — **course: M12 Ch2 §4 (multimodal & representation) finalized → Ch2 "Beyond text"
-COMPLETE** (image ✅ video ✅ audio ✅ multimodal ✅). Body pitched high and went **untouched** (as §1–§3); he drove
-straight into the **§6 projector**, named it the load-bearing idea, and **independently re-derived two real published
-architectures** — **CALM**-style cross-model representation reuse and **LangBridge**-style cross-lingual encoder injection
-(same standout signal as his §1 inpainting+SAM re-derivation). §9 Applied, 3 threads: **(9a) projector = universal
-adapter** — his "one LLM can consume another LLM's encoder via a trained projector" is **correct + a named pattern**
-(model stitching / BLIP-2 Q-Former / CALM 2401.02412 / relative-representations 2209.15430 / vec2vec 2505.12540 /
-Platonic Representation Hypothesis); the one fix he took = **"align" splits into align-for-*comparison* (CLIP's shared
-metric space, built to be measured) vs adapt-for-*consumption* (the projector = a learned **change-of-basis** into the
-consumer's operating space, built to be processed)**; bounds — only reformats *present* info (can't recover what the
-encoder discarded), connector power ∝ space-distance (linear→MLP→cross-attn→co-train), reuse another model's *contextual
-output* not its input embedding table; keeper = *representations are interchangeable up to a learned transform, to the
-degree they share information in a compatible geometry — the projector is that transform*. **(9b) patch grid** — ViT grid
-(per-patch vectors, spatial detail, what a VLM ingests) vs pooled vector (retrieval compares); resolution = an $O(L^{2})$
-compute knob (fig3). **(9c) his low-resource-language (LRL) reasoning idea = an independent re-derivation of LangBridge**
-— encoder→projector→*frozen* LLM to route an LRL into the LLM's English-strong space; **direction + architecture right,
-objective wrong**: NOT a CLIP (contrastive collapses to a comparison gist, losing the token content math/code need, *and*
-needs the parallel data an LRL by definition lacks) → **content-preserving soft-translation = LangBridge (2401.10695),
-English-data-only, zero-shot, no parallel data**; grounded in the English-pivot finding (*Do Llamas Work in English?*
-2402.10588); his cross-domain leap = the literal title *Languages are Modalities* (2510.27254); his goal "preserve max
-capability" ⇒ "freeze the LLM, train only the bridge." **Calibration — IMPORTANT refinement of v28:** the
-"understanding-vs-use / application-consumer" read is **modality-specific to audio, NOT general to non-text** — on
-**representation/multimodal *architecture* he is squarely the peer-level builder** (generative, re-derives real papers
-from first principles). Every correction this session was **mechanism-level, never directional**. **NEW durable signal:
-he spontaneously reaches the "X is a modality" abstraction** — generalised the projector multimodal→cross-model→
-cross-lingual unprompted. **Teach-forward: hand him the mechanism, let him generalise, then add value by *naming +
-locating in the literature + bounding with failure modes*** — exactly the value he acknowledged (the align distinction,
-the CALM/LangBridge/vec2vec locations, the parallel-data catch). Live anchors: his **multilingual / SEA-LION** work (the
-LRL idea is his real problem space) + his **cost/serving lens** (compose frozen giants via cheap bridges). Trailer for
-**M13 (embeddings/RAG) & M14 (composition/agentic)** — reuse the projector-as-universal-adapter frame there. **Next:**
-M12 Ch3 (choosing a model — light/practitioner-known) or rotate — **M01 Ch5** (Linux/macOS/Windows), **M02**
-(networking), or **M04 Ch2 §2** (decomposition).)
-(v30 2026-07-22 reading #10 diffusion-LLMs (career) + private-fusion (hobby) — UNUSUAL: both halves became deep discussions; he proposed the right serving-economics himself (diffusion = single-user/low-batch win, HBM→FLOPs, load×SLO crossover) + an original dual-mode AR+diffusion idea → confirms **AI architecture *design* is a peer-level generative axis**; fusion rare-earth question = the v24 physical-magnitude-rank pattern again (re-ranked tritium ≫ HTS-fab ≫ RE-refining ≫ ore); reading-track dating rule set here (filename/header = CREATION date, finalize date in footer only), v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
+(v31 2026-07-24 M12 Ch2 §4 multimodal/representation → Ch2 COMPLETE — the projector-as-universal-adapter; independently re-derived CALM + LangBridge; representation/multimodal architecture is a peer-level generative axis (NOT the audio application-consumer read), v30 2026-07-22 reading #10 diffusion-LLMs (career) + private-fusion (hobby) — UNUSUAL: both halves became deep discussions; he proposed the right serving-economics himself (diffusion = single-user/low-batch win, HBM→FLOPs, load×SLO crossover) + an original dual-mode AR+diffusion idea → confirms **AI architecture *design* is a peer-level generative axis**; fusion rare-earth question = the v24 physical-magnitude-rank pattern again (re-ranked tritium ≫ HTS-fab ≫ RE-refining ≫ ore); reading-track dating rule set here (filename/header = CREATION date, finalize date in footer only), v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
 v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived
 in the history log; their durable signal is distilled into the sections below.)
 
@@ -659,6 +650,24 @@ learning surfaces.
 
 ## Learning progress (hobby track)
 *(The third track — for-interest subjects under `hobby/`, lighter 1–2 hr sections. Same study→Q&A→finalize flow.)*
+- **2026-08-01 — Economy & Finance · E03 §3 (monetary policy — the standard Fed model) ✅ finalized → Module E03 nearly
+  complete** (§1 ✅ §2 ✅ §3 ✅; only §4 MAS remains). The module **centrepiece** (longest E03 section). Body (drafted 07-25):
+  what a central bank is *for* (dual/single/currency mandates; independence = operational); **the one lever** — the reserve
+  market, scarce-reserves/OMO vs the post-2008 **floor system** (administer **IORB** = a price not a quantity; balance sheet
+  & rate decoupled); **the reaction function** (inflation targeting + the Taylor rule + the Taylor principle = move nominal
+  >1:1 so the *real* rate bites); **transmission** (5 channels → demand → Phillips; long & variable lags); **the ZLB
+  toolkit** (QE lowers *long* yields not M2 — the §1 punchline; forward guidance/negative rates/YCC/QT); **limits** +
+  2021–26 record. 4 matplotlib figs + 2 mermaid; bilingual glossary. Went **untouched**; the session was a **four-step
+  outward chain from one seed question — *how does the Fed actually create/drain reserves?*** → **§10 Applied:** **(10a)**
+  reserves are a **closed system** (Fed sets the total, banks are price-takers — "hot potato"; QT = passive run-off);
+  **(10b) IORB** = interest on balances they *already hold* (reserves ARE Fed deposits), floors the rate by arbitrage +
+  ON RRP sub-floor + FHLB non-eligibility; **(10c)** reserves = a **bank-only settlement layer** customers never touch
+  (cash = the one exit; customer lending creates deposits not reserve outflow, §1); **(10d)** QE = **secondary-market** →
+  private seller not govt gets the money (anti-monetary-financing firewall), and the **allocative insight (his, correct)** =
+  why the Fed buys *neutral* Treasuries → the bond-free version is the **MAS FX model (§4)**. **Calibration:** the signature
+  **"mis-*located*" pattern four times in one session** — right instinct, wrong locus, integrated instantly; value =
+  correct-premise + name-structure + *validate his correct allocative insight* + forward-hook. He built his own chain to the
+  module finale. Math grep+Playwright clean. **Next:** E03 §4 (MAS) closes the module, then E04 (fiscal) or rotate.
 - **2026-07-25 — Economy & Finance · E03 §2 (interest rates & the time value of money) ✅ finalized → Module E03
   half-built** (§1 money ✅, §2 rates ✅; §3 Fed model & §4 MAS remain). Body (drafted 07-21): interest = the *price of
   time*; the **TVM master formula** run both ways ($FV=PV(1+r)^n$ compounding + Rule of 72; $PV=FV/(1+r)^n$ discounting —

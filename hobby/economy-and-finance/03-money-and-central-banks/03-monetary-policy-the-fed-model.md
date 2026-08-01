@@ -12,8 +12,17 @@
 > toolkit: **QE**, forward guidance, and why QE didn't do what §1's multiplier predicted). It closes on the
 > limits and the live 2021–26 record. It sets up **§4**, where Singapore throws the whole playbook out and
 > steers the *exchange rate* instead.
-> **Status:** 🔵 **body drafted 2026-07-25.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **finalized 2026-08-01.** Body drafted 2026-07-25; **§10 captures the live session** — a
+> four-step chain that walked *outward* from one seed question, *how does the Fed actually create and drain
+> reserves?*, into the full plumbing of the floor system: **(a)** reserves are a **closed system** (the Fed
+> sets the total; banks are price-takers on the quantity — the "hot potato"); **(b)** **IORB** is interest
+> on balances banks *already hold* (reserves *are* deposits at the Fed), and it floors the rate by
+> arbitrage (with **ON RRP** as the sub-floor and EFFR trading just under IORB); **(c)** reserves are a
+> **bank-only settlement layer** customers never touch — cash withdrawal is the one real exit, customer
+> lending creates deposits, not reserve outflow (§1); **(d)** the Fed buys Treasuries in the **secondary
+> market**, so the *private seller*, not the government, gets the new money (the anti-monetary-financing
+> firewall) — and the choice of asset has **allocative** effects, which is *why* it prefers "neutral"
+> Treasuries. The chain ended, on the learner's own reasoning, at the doorstep of §4 (the FX-based model).
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -452,10 +461,95 @@ Bring one chart to our session and we'll read the stance of policy off it — is
 neutral, is the balance sheet draining, what is the market pricing for the next move — the way we ran the
 labour market on the 2026 Fed (E02 §3) and the yield curve on who-sets-Treasury-rates (E03 §2 §10).
 
-## 10. Applied — from our session Q&A
+## 10. Applied — from our session Q&A (2026-08-01)
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+This session was a four-step chain that walked *outward* from a single seed question — **how does the Fed
+actually create and drain reserves?** — into the complete plumbing of the floor system (§2), then to the
+doorstep of §4. The pattern was the learner probing the *mechanism* behind each rule and proposing a
+plausible inference, each of which was **right in instinct but mislocated by one step**; naming the correct
+locus made it click. All four threads reused §1's *loans-create-deposits* keystroke and §2b's floor system.
+
+### 10a. Reserves are a *closed system* — the Fed sets the quantity, banks are price-takers
+
+The learner reasoned: *the US has no reserve requirement, so the amount of reserves is market-determined.*
+The premise is right, the inference is the wrong step. The fix is a distinction between **the total quantity
+of reserves (set by the Fed) and any individual bank's desired holdings (a market question).**
+
+- **Creation is the purchase itself.** The Fed doesn't "create reserves" as a step separate from buying a
+  bond — it *pays* for the bond by crediting a bank's reserve account, issuing tier-1 money with a keystroke
+  (§1's keystroke, one tier up). Buying from a *non-bank* also creates a deposit → so QE bumps M2 by that
+  amount, but the deposit just sits (no lending cascade — the §1 punchline again).
+- **Reserves are a hot potato.** An individual bank can offload unwanted reserves (lend or buy), but they
+  only move to *another* bank — they never leave the system. So the banking system *as a whole* is **stuck**
+  with whatever total the Fed created; "no reserve requirement" removed the *minimum each bank must hold*, it
+  did **not** hand banks control of the aggregate. What makes them willing to hold the deliberate glut is now
+  the **IORB floor**, not a requirement.
+- **QT drains via passive run-off**, not mainly active selling: the Fed stops replacing maturing bonds, so
+  the Treasury must sell those bonds to the *public* instead; the public pays with reserves, which flow
+  through the Treasury's Fed account and are **extinguished** as the Fed's balance sheet shrinks. Net: the
+  public re-absorbs the bonds, reserves vanish. Plus the **autonomous factors** (currency withdrawn, the TGA,
+  ON RRP) move reserves around too — but every one is a shift *between lines on the Fed's own balance sheet*.
+
+### 10b. IORB is interest on balances banks *already hold* — and that's what floors the rate
+
+The learner asked whether banks *deposit* reserves at the Fed to earn IORB. Small inversion to flip:
+**reserves *are* a bank's deposit at the Fed** (tier-1 money) — there is no separate depositing step; holding
+reserves *is* having a balance in your Fed account, and IORB is simply the interest paid on it (itself paid
+by crediting more reserves — a keystroke).
+
+- **Why it's a floor.** A bank with spare reserves can earn **IORB risk-free** at the Fed, so it will never
+  lend them to another bank for *less*. IORB therefore puts a floor under the whole overnight market — raise
+  IORB and the policy rate rises regardless of the trillions in reserves. This *is* "price, not quantity"
+  (§2b) made concrete: IORB is the administered price.
+- **The wrinkle (why EFFR trades a few bp *below* IORB).** Not everyone with a Fed account earns IORB —
+  the **GSEs / Federal Home Loan Banks** don't, so they lend fed funds below IORB (anything beats zero), and
+  the arbitrage that should close the gap is blunted by banks' balance-sheet costs (leverage ratio, FDIC
+  fees). So the Fed runs a **sub-floor, ON RRP**, for non-banks, and EFFR settles in the band just under
+  IORB. The corridor: **discount rate (ceiling) > IORB (bank floor) > ON RRP (non-bank sub-floor).**
+- **The cost.** IORB on trillions runs to 100-plus billion dollars a year; since 2022 it has exceeded the
+  Fed's income on its old low-yield QE portfolio, so the Fed books an **operating loss** ("deferred asset") —
+  the politically touchy underside of the floor system.
+
+### 10c. Reserves are a bank-only *settlement* layer — customers never touch them
+
+The learner asked whether a bank "withdraws" reserves to pay a customer's cash or to lend out. The answer
+**splits**, and the split is the whole point:
+
+- **Paying cash → yes, a genuine withdrawal, and the one true exit.** The Fed debits the bank's reserve
+  account and ships banknotes; reserves *convert to currency*. This is the single case where reserves
+  actually **leave the banking system** (one Fed liability becomes another) — the currency autonomous factor
+  of 10a.
+- **"Lending out reserves" to a customer → category error (the §1 misconception).** A customer loan
+  **creates a deposit** (keystroke), it does not disburse reserves; the borrower gets a *deposit*, and
+  customers can't hold reserves anyway (no Fed account). A reserve only moves at **settlement** — when the
+  borrower *spends* the deposit to a customer at another bank, the bank ships reserves to settle. So reserves
+  are the **wholesale settlement medium between banks**, used in only three ways: convert to cash, settle net
+  interbank payments, or lend to another bank (fed funds). Customer lending isn't on the list — which is the
+  deepest reason QE's tier-1 reserves didn't cascade into tier-2 loans.
+
+### 10d. QE buys in the *secondary* market — the seller, not the government, gets the money
+
+The learner's sharpest thread: *which asset the Fed buys channels the new money somewhere, with micro
+effects — and if it buys Treasuries, doesn't the government get the money? What if the government issues
+fewer?* Two moves — validate the insight, correct the premise:
+
+- **The allocative insight is correct — and it's *why* they buy Treasuries.** The asset choice picks winners
+  (MBS → housing; corporate bonds → 2020 corporate credit; the **BoJ's ETF buying** made it a top equity
+  shareholder). The Fed prefers Treasuries precisely because they are the most **market-neutral** (deepest,
+  most liquid, no private-sector tilt). His instinct found the actual design principle.
+- **But the government does *not* get the money.** QE buys in the **secondary market** from *private*
+  holders; the government got its cash at original issuance (primary market) and is not a party to the Fed's
+  trade. The Fed is **legally barred from buying directly from the Treasury** — the anti-**monetary-financing
+  / debt-monetization** firewall (the ECB's Article 123 is the explicit version), built for exactly the worry
+  he raised. The financing effect is *indirect* (lower yields; the consolidated Fed-plus-Treasury view where
+  the public holds reserves instead of bonds and the Fed remits profits back) — which, done deliberately
+  during big deficits, is the **fiscal dominance** blur of §6, not a check handed to the Treasury.
+- **What if Treasuries were scarce?** The Fed isn't hostage to issuance: it can buy **other assets** (MBS,
+  agency, even corporate/equities as some central banks do — reviving the neutrality problem), or **create
+  reserves by *lending* against collateral** (repo / the Standing Repo Facility) rather than buying outright.
+  For the US it is near-moot (a ~36-trillion-dollar debt ocean), though it *was* genuinely debated in the
+  late-1990s surplus era. And the **pure bond-free version** — manage the monetary base via **FX** instead —
+  is exactly the **MAS model of §4**. He reasoned his own way to the module's finale.
 
 ---
 
@@ -513,6 +607,19 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 > **宽松 ↔ 寬鬆** (easing), **紧缩 ↔ 緊縮** (tightening), **传导 ↔ 傳導** (transmission), **规则 ↔ 法則**
 > (rule), **贴现 ↔ 重貼現** (discount), **收益率 ↔ 殖利率** (yield).
 
+**§10 applied threads — the reserve-system plumbing**
+
+| English | 中国大陆 (简体) | 台灣 (繁體) | Note |
+|---|---|---|---|
+| Bank reserves | （银行）准备金 | （銀行）準備金 | a bank's deposit *at* the Fed (tier-1) |
+| Reserve requirement | 存款准备金率 | 存款準備率 | zero in the US since 2020 |
+| Interbank / fed funds market | 银行间市场 | 銀行間市場 | where reserves are lent bank-to-bank |
+| Settlement | 结算／清算 | 結算／清算 | ⚠ 结算 ↔ 結算; moving reserves between banks |
+| Primary market | 一级市场 | 初级市场（初級市場）| ⚠ **一级 ↔ 初級** — issuance; govt gets the cash |
+| Secondary market | 二级市场 | 次级市场（次級市場）| ⚠ **二级 ↔ 次級** — where the Fed does QE |
+| Monetary financing / debt monetization | 债务货币化 | 債務貨幣化 | the firewall the Fed is barred from crossing |
+| Autonomous factors | 自主性因素 | 自主性因素 | currency, TGA, RRP — move reserves w/o QE |
+
 ---
 
 ## References (optional, for depth)
@@ -536,15 +643,18 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
 ---
 
 ### What's next
-🔵 **Body drafted 2026-07-25 — awaiting our live session.** You now hold the whole standard model: what a
-central bank is *for*, how it sets one price (the floor system — a **price, not a quantity**), how it chooses
-that price (inflation targeting + the Taylor rule, with the Taylor principle making the *real* rate bite),
-how that one rate reaches the economy (the five transmission channels, with **long and variable lags** as the
-core difficulty), and what it reaches for at the zero lower bound (QE and friends — extending price-setting
-along §2's curve, *not* printing M2). The bridge to the finale is deliberate: this entire section assumed a
-central bank steering the **interest rate**. **§4 — the MAS model** — is the mirror image: Singapore, a small
-open economy where the **exchange-rate channel** (channel 4 above) dwarfs all the others, gives up control of
-the interest rate entirely and steers the **currency** instead. Holding the two models side by side — the Fed
-targeting a domestic *price of time*, the MAS targeting an external *price of money* — is what makes the logic
-of *both* finally click, and closes Module E03. On finalize, a **§10 Applied** will capture whatever thread
-our session pulls on.
+✅ **Finalized 2026-08-01.** You now hold the whole standard model: what a central bank is *for*, how it sets
+one price (the floor system — a **price, not a quantity**), how it chooses that price (inflation targeting +
+the Taylor rule, with the Taylor principle making the *real* rate bite), how that one rate reaches the
+economy (the five transmission channels, with **long and variable lags** as the core difficulty), and what it
+reaches for at the zero lower bound (QE and friends — extending price-setting along §2's curve, *not* printing
+M2). The live session (§10) went one level *beneath* the policy rate into the **reserve-system plumbing** —
+reserves as a closed system, IORB as the arbitrage floor, the bank-only settlement layer customers never
+touch, and the secondary-market/neutrality logic of what the Fed buys — and the learner reasoned his own way
+to the finale. The bridge is deliberate: this entire section assumed a central bank steering the **interest
+rate**. **§4 — the MAS model** — is the mirror image: Singapore, a small open economy where the
+**exchange-rate channel** (channel 4 above) dwarfs all the others, gives up control of the interest rate
+entirely and steers the **currency** instead — the fully bond-free way to manage the monetary base that §10d
+landed on. Holding the two models side by side — the Fed targeting a domestic *price of time*, the MAS
+targeting an external *price of money* — is what makes the logic of *both* finally click, and closes
+Module E03.
