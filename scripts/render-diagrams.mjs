@@ -84,8 +84,23 @@ function renderSvg(src, outPath) {
     rmSync(tmp, { force: true });
   }
   // GitHub strips <foreignObject>; htmlLabels:false should prevent it, but verify.
-  if (readFileSync(outPath, 'utf8').includes('<foreignObject')) {
+  let svg = readFileSync(outPath, 'utf8');
+  if (svg.includes('<foreignObject')) {
     throw new Error(`${outPath} contains <foreignObject> — it will not render on GitHub. Check mermaid.config.json (htmlLabels:false).`);
+  }
+  // mmdc emits width="100%", so GitHub — which embeds the committed SVG as an
+  // <img> — stretches it to the full content width. For a WIDE diagram that just
+  // downscales (fine), but for a NARROW/tall one (e.g. a single-column flowchart)
+  // it UPSCALES to container width, ballooning the text several-fold. Pin the
+  // intrinsic width to the natural viewBox width and let max-width:100% do the
+  // responsive downscaling: narrow diagrams then render at authored size, wide
+  // ones still shrink to fit. (Idempotent: re-running reproduces the same value.)
+  const vb = svg.match(/viewBox="0 0 ([\d.]+) [\d.]+"/);
+  if (vb && /width="100%"/.test(svg)) {
+    const w = Math.round(parseFloat(vb[1]));
+    svg = svg.replace('width="100%"', `width="${w}"`)
+             .replace(/max-width:\s*[\d.]+px/, 'max-width: 100%');
+    writeFileSync(outPath, svg);
   }
 }
 
