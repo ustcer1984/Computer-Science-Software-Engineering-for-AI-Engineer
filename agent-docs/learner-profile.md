@@ -820,8 +820,26 @@ learning surfaces.
   (career = any plausible positive-career-effect topic; hobby = anything genuinely interesting, my judgment). The old
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
-- **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
-  no specific item queued. *(Reading #12 opened the **cyber-security** thread he asked for at kickoff; a natural follow-up
+- **Queued / next reading day:** **reading #13 is PREPARED (created 2026-08-03), awaiting his read + Q&A → finalize**
+  (`upskill-readings/2026/08/03-the-majority-machine-web-and-the-atom-thin-transistor.md`): career = **the majority-machine
+  web** (Cloudflare's measurements crossed to **57.5% of HTML requests from machines** on 3 June 2026, eighteen months ahead
+  of its own CEO's forecast; the crawl-for-referral bargain gone — **38,066 pages per referral** for the worst operator, and
+  the spread tracks *business model*, not politeness; the `robots.txt` paradox — Zhao & Berman measured publishers who
+  blocked LLM crawlers **losing \~7% of *human* traffic** in six weeks; and the replacement stack now being built into the
+  HTTP request itself: **Web Bot Auth**/RFC 9421 Ed25519 signatures for identity, Content Signals for per-purpose policy,
+  and **`402 Payment Required`** — reserved in 1997, unused for 29 years, now emitted **over a billion times a day** —
+  plus x402 settlement, with the **15 September 2026** default flip from allow to block); hobby = **the atom-thin
+  transistor** (imec + ASML + **TSMC**, 15 June 2026: complementary MoS₂/WSe₂ monolayer channels at **50 nm contacted poly
+  pitch on 300 mm**, 94% switching; why silicon has no escape — the $t^{6}$ ultrathin-body mobility collapse; and the
+  honest ranking of what is left: contacts/Fermi-level pinning, doping, ALD nucleation, and defect variability). **Two
+  deliberate baits for his known modes:** (i) the hobby half is pitched **into his own decade of semiconductor
+  materials/failure-analysis work** and ends on a *ranking* question (which of the four unsolved problems is genuinely
+  rate-limiting) — the v36 "credibility-ranked map" and v24/v30 physical-magnitude re-rank patterns both apply, and here he
+  may out-rank *me*; (ii) the career half's **layer-4 governance gap** (voting and dissent-preservation absent from all
+  five agent-interoperability protocols surveyed) lands directly on the **v34 agent-governance axis** — watch for him to
+  pull it toward "is this a protocol problem or a project-instructions problem." Also carries a **live decision he may
+  actually face** for his own deployed sites (how to configure Search/Agent/Training before 15 September). On finalize,
+  add the "What we worked out" section + prepend a vN note. *(Reading #12 opened the **cyber-security** thread he asked for at kickoff; a natural follow-up
   when the rotation comes round is the *defensive/appsec* side rather than cryptography again — supply-chain attacks, SBOM/
   provenance, or the agent-era attack surface (prompt injection as a real security discipline), which would also touch his
   day job. Three standing hands-dirty follow-ups he'd enjoy: (a) a **developmental-interpretability**
