@@ -4,7 +4,40 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-08-01 (v35 — **hobby econ E03 §3 (monetary policy — the standard Fed model) finalized → Module E03
+Last updated: 2026-08-03 (v36 — **reading #12 finalized (created 2026-07-27, finalized 2026-08-03) — the post-quantum
+cryptographic migration (career) + the collapsing resource estimate for a codebreaking quantum computer (hobby).** First
+reading-track outing for the **cyber-security** track he requested at kickoff. **Story 1 stayed a read; the whole session
+went to a question sitting *underneath* story 2** — not "is the estimate collapse real?" but ***"I am not familiar with
+quantum computing. What will be its real application beside hacking the password?"*** **NEW MODE: he stepped BACK from the
+material to ask the foundational what-is-this-for question** — the practitioner/architect instinct, not the physicist's.
+**NEW DURABLE SIGNAL — a rare self-declared domain gap:** quantum computing **as a technology** is genuinely novice ground
+for him *while the underlying physics is native* — Hilbert-space dimension, the **fermion sign problem**, DFT's
+multireference failure and logical-vs-physical clock rates all landed with zero scaffolding, but the technology's
+*economics* was entirely new. **⇒ teach the technology and its economics, never the physics.** **What worked was a
+CREDIBILITY RANKING, not a survey:** tier 1 quantum simulation (the only *structural* case — a substrate match, not a
+trick; FeMoco, and **semiconductor defect/dopant chemistry as the target nearest his own decade of failure analysis**),
+tier 2 optimization (most sales collateral, weakest evidence — Grover is only square-root-N against a ~12-order logical-clock
+deficit), tier 3 quantum ML on classical data (category error — the exponential dies at the I/O; Tang's dequantization),
+plus **quantum *sensing*** as the mature non-computing quantum tech (**NV-centre magnetometry is already a real IC
+failure-analysis tool** — a second hook into his old job). Tier-1 keeper, itself a ranking claim: ***quantum wins first
+against the method nobody uses (full CI), not the method everyone uses (CC/MP2/DFT)***. **CALIBRATION — the signature
+pattern in a THIRD variant, and the corrective move was a DECOUPLING, not a re-ranking.** His synthesis — *"so at least for
+now, quantum computing is not competing on anything classical computing is doing, right?"* — **fused two claims that had to
+be split**: the **practical** claim TRUE (no production workload picks quantum today), the **structural** claim FALSE
+(quantum solves a *subset* of classically solvable problems — same race, different exponent), and splitting them is what
+reveals that **quantum chemistry enters the most crowded field in HPC, not an empty one**. Family: v33/v24/v30 =
+mis-*ranked* magnitudes/leverage; v32/v35 = mis-*located* mechanism; **v36 = two claims FUSED needing decoupling** (kin: the
+v24 io_uring dispatcher ⟂ zero-syscall split). **⇒ STANDING REFINEMENT: the corrective move alternates — RE-RANK when he
+mis-orders two magnitudes, DECOUPLE when he bundles two claims into one sentence.** Also logged: the **classical-fights-back
+dynamic** (Sycamore 2019 → tensor networks; Tang) — *the most durable output of a quantum advantage claim is often a better
+classical algorithm* — **and this year's counter-update against his "for now": Quantum Echoes has so far SURVIVED** (an
+April 2026 tensor-network rebuttal attempt concluded the opposite). Landing analogy from his own world, and it did work
+prose could not: **a quantum computer is closer to a synchrotron beamline than to a server.** **Teach-forward (generalises
+v28): for ANY domain he is new to, deliver a credibility-ranked map with hype tiers separated and vendor incentives named,
+not a survey.** Process: clean finalize; one new Mermaid diagram (the four-tier map) built on finalize because the ranking
+*was* the artifact; 7 Q&A sources added + verified; **the footer math-in-italic trap bit again and was caught by the parser
+check, not the regex**. **Next:** reading rotation open; standing hands-dirty follow-ups unchanged.)
+Prior: v35 (2026-08-01 — **hobby econ E03 §3 (monetary policy — the standard Fed model) finalized → Module E03
 nearly complete** (§1 ✅ §2 ✅ §3 ✅; only §4 MAS remains). The module centrepiece; body (drafted 07-25) went **untouched**.
 **§10 = the live session**, a **four-step chain built outward from one seed question — *how does the Fed actually create and
 drain reserves?*** — into the whole floor-system plumbing, ending on his own reasoning at the doorstep of §4 (same
@@ -55,58 +88,7 @@ SWE-technique sections with the *agent-tooling / governance* angle** — show ho
 instructions or a skill; that is where he leans in hardest. Clean finalize; body no edits; GFM render-trap greps clean; the
 3 prepare-time Mermaid diagrams (refactoring loop · Sprout/Wrap · Strangler Fig) retained + visually verified. **Next:**
 **M04 Ch2 §3 (boundaries between modules & files)** — being prepared this session.)
-Prior: v33 (2026-07-26 — **reading #11 finalized (created 2026-07-22, finalized 2026-07-26) — eBPF / `sched_ext`
-(career) + redefining the SI second on optical atomic clocks (hobby); a deliberate step off the LLM-internals axis into
-systems + physics breadth.** Story 2 (clocks) stayed a read (his call, "no question on the second topic"); **Story 1 became
-a LIVE HARDWARE DEBUG of his own Meteor Lake ThinkPad** — the most *applied* a reading has gotten, and a new signal that a
-career reading now works as a **launchpad for real work** (he's carrying the fix into a separate project). **Thread:** can
-`sched_ext` fix a Wine game that lags whenever one core pegs 100%? **Reframe** — one-core-100%/others-idle is a
-**serial-bottleneck signature**, not a scheduling-imbalance one (no scheduler parallelizes serial work). **He localized it
-to *thermal* by exemplary empirical method** (Psensor >90 °C → dust-clean → 70–80 °C → lag dropped = a clean natural
-experiment), **confirmed by the hardware introspection I ran:** per-core throttle counters ~2300 on exactly the two
-**favored 5.0 GHz P-cores**, zero elsewhere; **PL1 uncapped at 115 W** on a 28 W-nominal chip → the **boost↔throttle
-oscillation IS the stutter**; `thermald` off. **Calibration — the SIGNATURE mis-*ranking* pattern, now on a systems/hardware
-axis:** right **mechanism** (thermal throttle) but wrong **leverage ranking** of the remedy — his "migrate to a cooler core"
-is the *weakest* knob (laptop = shared cooling budget; cool cores are the slow cores; ~10 ms reheat), the same shape as
-v24/v30 (physical magnitudes) and v32 (institutional mechanism); re-ranked instantly. **On systems/hardware he's a strong
-empirical debugger** (hypothesis-driven, real tools, controlled perturbation); my value = **hardware introspection (throttle
-counters, RAPL), NAMING the oscillation, the counter-intuitive cap-to-go-faster, + a measurement rig** (throttle-count delta
-+ MangoHud A/B). Honest verdict handed back: `sched_ext` — the reading's own shiny tool — is **not** the fix (can't add
-cooling; placement-only, a safe later experiment); real levers = `thermald` → cap PL1/freq → FPS cap → repaste.
-**Teach-forward: steelman his hypothesis, confirm with real introspection, then RANK the magnitudes/leverage of candidate
-fixes** — ranking, not mechanism, is his recurring gap. Clean finalize; "What we worked out" added (Story 1 only); math
-unchanged, render-trap greps clean; 2 ComfyUI illustrations + 1 matplotlib clock-accuracy plot + 1 Mermaid diagram; handoff
-note to local `temp/` (gitignored). **Next:** reading rotation open; standing hands-dirty follow-ups now include the
-**`scx_bpfland` / thermald / PL1-cap A/B on his ThinkPad**.)
-Prior: v32 (2026-07-25 — **hobby econ E03 §2 (interest rates & the time value of money) finalized → Module E03
-half-built** (§1 money ✅, §2 rates ✅; §3 Fed model & §4 MAS remain). Body (drafted 07-21) went **untouched** again.
-**§10 = the live session**, a three-step arc built outward from one seed question — *who actually sets US Treasury yields,
-the government or the Fed?* (same multi-turn-chain-from-one-question mode as v29). **(10a)** three actors pulled apart:
-the **Treasury *issues*** (price-taker at its own auctions), the **market *prices*** (long yield = expected avg short
-rate + term premium), the **Fed sets only the overnight rate** → inversion is a **Fed-vs-market** phenomenon. **(10b) his
-sharp hypothesis — could the government *manufacture* an inversion to pressure the Fed?** — **premise WRONG** (government
-auctions yields, doesn't set them) **but the instinct found the real lever once relocated: issuance composition** → the
-2024 **Activist Treasury Issuance ("stealth QE") debate** (Miran-Roubini, ~25bp), corrected as **self-defeating**
-(lowering long yields *is* easing = a substitute for a cut; a supply-made inversion is a false signal the Fed reads
-*through*; bill-rollover cost) — real pressure = jawboning + dove appointments + fiscal dominance (E02 §3 §11); footnote
-**YCC** pins a long yield but that's the *central bank*, not the government (Fed 1942–51, BoJ 2016–24). **(10c) keystone
-reframe** — inversion is a **FORECAST, not pressure**; **money-weighted positioning, not public opinion**; fundamentally
-a **recession forecast** transmitted via the market predicting the Fed's **reaction function** (Taylor), *not* ordering
-it; grain of truth (Fed watches, avoids surprising markets) **but expectation ≠ control** — 2022–23 "higher for longer,"
-the market priced cuts that never came and lost. **Calibration — the SIGNATURE PATTERN in its "mis-*located*" variant:**
-he proposed a plausible mechanism (state manipulates the curve), had the right *intuition* (the state *can* affect the
-curve) but the wrong *mechanism* (decree vs issuance), and **integrated the re-location instantly** once ATI was named —
-same shape as his mis-*ranked* physical-magnitude tendency (v24/v30) but on an *institutional-mechanism* axis. My value =
-**correcting the premise + naming the real lever (issuance/ATI, YCC) + swapping the frame (pressure→forecast,
-opinion→money-weighted bet) + bringing live 2024–26 institutional detail**, NOT re-teaching. **Reinforces the standing
-econ rule (v29): he's a generative sparring partner — steelman his mechanism, *relocate/name* it, correct only the one
-wrong step, bring real current cross-border data, feed the outward chain from a single seed question.** Process: clean
-finalize, body **no edits**; math **GitHub-verified (Playwright — zero errors/leaks, eyeballed the `\underbrace` +
-nested-fraction displays)**; fixed one real render trap while drafting (indented `$$…$$` under §2c list items → inline);
-bilingual glosses landed (收益率↔殖利率, 久期↔存續期間, 国债拍卖↔公債標售, YCC, 反应函数, 财政主导). **Next:** **E03 §3
-(the Fed model — rate-setting, inflation targeting, QE, transmission)** — direct continuation (§10c's reaction function
-tees it up); then **§4 (MAS)**; or rotate (M01 Ch5 OS, M02 networking, M04 Ch2 §2 decomposition).)
-(v31 2026-07-24 M12 Ch2 §4 multimodal/representation → Ch2 COMPLETE — the projector-as-universal-adapter; independently re-derived CALM + LangBridge; representation/multimodal architecture is a peer-level generative axis (NOT the audio application-consumer read), v30 2026-07-22 reading #10 diffusion-LLMs (career) + private-fusion (hobby) — UNUSUAL: both halves became deep discussions; he proposed the right serving-economics himself (diffusion = single-user/low-batch win, HBM→FLOPs, load×SLO crossover) + an original dual-mode AR+diffusion idea → confirms **AI architecture *design* is a peer-level generative axis**; fusion rare-earth question = the v24 physical-magnitude-rank pattern again (re-ranked tritium ≫ HTS-fab ≫ RE-refining ≫ ore); reading-track dating rule set here (filename/header = CREATION date, finalize date in footer only), v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
+(v33 2026-07-26 reading #11 eBPF/`sched_ext` + redefining the SI second — Story 1 became a LIVE HARDWARE DEBUG of his Meteor Lake ThinkPad (thermal throttle correctly localized by exemplary empirical method; the mis-*ranked* remedy — "migrate to a cooler core" is the weakest knob; real levers thermald → PL1 cap → FPS cap → repaste); a career reading now works as a LAUNCHPAD FOR REAL WORK, v32 2026-07-25 hobby econ E03 §2 interest rates — the mis-*located* variant (government can't decree Treasury yields, but the instinct relocates onto issuance composition → the 2024 ATI "stealth QE" debate; inversion is a FORECAST not pressure), v31 2026-07-24 M12 Ch2 §4 multimodal/representation → Ch2 COMPLETE — the projector-as-universal-adapter; independently re-derived CALM + LangBridge; representation/multimodal architecture is a peer-level generative axis (NOT the audio application-consumer read), v30 2026-07-22 reading #10 diffusion-LLMs (career) + private-fusion (hobby) — UNUSUAL: both halves became deep discussions; he proposed the right serving-economics himself (diffusion = single-user/low-batch win, HBM→FLOPs, load×SLO crossover) + an original dual-mode AR+diffusion idea → confirms **AI architecture *design* is a peer-level generative axis**; fusion rare-earth question = the v24 physical-magnitude-rank pattern again (re-ranked tritium ≫ HTS-fab ≫ RE-refining ≫ ore); reading-track dating rule set here (filename/header = CREATION date, finalize date in footer only), v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
 v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived
 in the history log; their durable signal is distilled into the sections below.)
 
@@ -213,6 +195,14 @@ learning surfaces.
   reusable skill** so agents follow it by default. Extends the v28 read ("engages hardest when abstract material meets a
   system he wants to build/use") up to the agent-tooling meta-layer; fits his **architect goal + ops strength**.
   **Teach-forward:** pair a SWE-technique section with its agent-tooling angle (how to make an agent apply it reliably).
+- **For a domain he is NEW TO, give a credibility-RANKED map — not a survey.** *(Added 2026-08-03, v36, from the quantum-computing
+  thread on reading #12; generalises the v28 audio-model-selection rule.)* When he says "I am not familiar with X," he is not asking
+  for an introduction to X — he is asking **what X is actually for and whether the claims are real.** What works: sort the
+  application areas into **tiers by strength of evidence**, state plainly which tier the marketing money sits in, **name the vendor
+  incentive** behind a forecast, and give the honest scoreboard of what has actually been demonstrated. What does not work: an
+  even-handed survey that treats every claimed application as equally likely. Note the two-layer case this revealed: a domain can be
+  **novice as a *technology* while native as *physics*** — pitch the economics and the engineering trade-offs, not the underlying
+  science he already owns.
 - **Bilingual (English + Chinese).** Reads economy/business news and reports in Chinese as well as English.
   Material stays in English but should **gloss key concepts/terms in Chinese**, giving **both Mainland (大陆,
   简体) and Taiwan (台灣, 繁體)** forms and flagging genuine terminology differences (not just script). Rule
@@ -830,21 +820,11 @@ learning surfaces.
   (career = any plausible positive-career-effect topic; hobby = anything genuinely interesting, my judgment). The old
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
-- **Queued / next reading day:** **reading #12 is PREPARED (created 2026-07-27), awaiting his read + Q&A → finalize**
-  (`upskill-readings/2026/07/27-the-crypto-migration-and-the-shrinking-codebreaker.md`): career = **the post-quantum
-  cryptographic migration** (hybrid X25519+ML-KEM-768 already carrying over two-thirds of browser traffic; the *signature*
-  half still unsolved — ML-DSA's 15 kB handshake wall and Let's Encrypt's **Merkle Tree Certificates** answer of 3 June 2026;
-  **EO 14412** of 22 June 2026 with 2030/2031 federal deadlines; SIKE as the "post-quantum ≠ proven" cautionary tale; the
-  real deliverable = **cryptographic agility** / a CBOM); hobby = **the collapsing resource estimate for a codebreaking
-  quantum computer** (a billion physical qubits in 2012 → 20 M → under 1 M → under 100 k → **10,000 reconfigurable atoms**,
-  Cain et al. 30 Mar 2026 — five orders of magnitude from **theory, not hardware**: qLDPC codes, magic-state cultivation,
-  approximate residue arithmetic, and atom transport by optical tweezers; against the honest hardware state — Willow's
-  below-threshold $\Lambda = 2.14$, Caltech's 6,100-atom array, IBM Starling 2029). **A deliberate step into the security
-  track he asked for** (cyber security was an explicit request and this is its first reading-track appearance) while
-  keeping the hobby half in physics. **The pair is a live scissors** and the second story is *engineered as a
-  leverage-ranking bait* — the chart's two curves nearly touch but are different units, and the headline 10,000 comes with
-  a three-year runtime; per v33's teach-forward, see whether he re-ranks it himself. On finalize, add the "What we worked
-  out" section + prepend a vN note. *(Three standing hands-dirty follow-ups he'd enjoy: (a) a **developmental-interpretability**
+- **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
+  no specific item queued. *(Reading #12 opened the **cyber-security** thread he asked for at kickoff; a natural follow-up
+  when the rotation comes round is the *defensive/appsec* side rather than cryptography again — supply-chain attacks, SBOM/
+  provenance, or the agent-era attack surface (prompt injection as a real security discipline), which would also touch his
+  day job. Three standing hands-dirty follow-ups he'd enjoy: (a) a **developmental-interpretability**
   mini-repro — detect an induction-head/ICL phase transition on a small model (RTX 4070); (b) a **block-size-vs-reasoning-accuracy
   sweep on a small block-diffusion LM** (RTX 4070) — "how much serial-ness does reasoning need?"; (c) NEW from reading #11 —
   the **`scx_bpfland` / thermald / PL1-cap A/B** on his Meteor Lake ThinkPad, using the throttle-count delta + MangoHud as
@@ -854,6 +834,36 @@ learning surfaces.
   generated image precedence still holds; no real-specific subjects; no baked-in text). Applied across the reading track:
   **4 illustrations** in the two Discovery-register readings (07-02, 07-07); the **7 technical 06-xx readings deliberately
   skipped** (diagrams/code already carry them — an image there would be filler). The reading genre benefits most.
+- **2026-08-03 — reading #12 ✅ finalized** (`upskill-readings/2026/07/27-the-crypto-migration-and-the-shrinking-codebreaker.md`; created 2026-07-27, finalized 2026-08-03)
+  — Two feature stories, and the **first reading-track outing for the cyber-security track he asked for at kickoff**: (1) **the
+  post-quantum cryptographic migration** (career) — hybrid X25519+ML-KEM-768 already carrying over two-thirds of browser traffic;
+  the *signature* half still open (ML-DSA's 15 kB handshake wall → Let's Encrypt's **Merkle Tree Certificates**, 3 June 2026);
+  **EO 14412** (22 June 2026) with 2030/2031 federal deadlines; SIKE as the "post-quantum ≠ proven" cautionary tale; the durable
+  deliverable is **cryptographic agility / a CBOM**; (2) **the collapsing codebreaker estimate** (hobby) — a billion physical
+  qubits (2012) → 20 M → under 1 M → under 100 k → **10,000 reconfigurable atoms** (Cain et al., 30 Mar 2026), five orders of
+  magnitude driven by **theory, not hardware**. **Story 1 stayed a read.** **The whole session went to a question sitting
+  *underneath* story 2** — ***"I am not familiar with quantum computing. What will be its real application beside hacking the
+  password?"*** **NEW MODE: he stepped BACK from the material to ask the foundational what-is-this-for question** (the
+  practitioner/architect instinct). **NEW DURABLE SIGNAL — a rare self-declared domain gap:** quantum computing **as a
+  technology** is novice ground *while the underlying physics is native* (the sign problem, Hilbert-space dimension, DFT's
+  multireference failure all landed unscaffolded) ⇒ **teach the technology and its economics, never the physics.** The answer
+  that worked was a **credibility ranking, not a survey** — tier 1 simulation (the only structural case; FeMoco; **semiconductor
+  defect/dopant chemistry as the target nearest his own decade of failure analysis**), tier 2 optimization (weakest evidence,
+  most sales collateral), tier 3 quantum ML on classical data (category error; Tang's dequantization), plus **quantum sensing**
+  as the mature non-computing quantum tech (**NV-centre magnetometry is already a real IC failure-analysis tool**). Keeper:
+  ***quantum wins first against the method nobody uses (full CI), not the method everyone uses (CC/MP2/DFT)***.
+  **Calibration — the signature pattern in a THIRD variant; the corrective move was a DECOUPLING, not a re-ranking:** his
+  synthesis *"for now quantum isn't competing on anything classical computing is doing"* **fused** a TRUE practical claim (no
+  production workload picks quantum today) with a FALSE structural one (quantum solves a *subset* of classically solvable
+  problems — same race, different exponent), and splitting them is what shows **quantum chemistry enters the most crowded field
+  in HPC, not an empty one**. ⇒ **Standing refinement: RE-RANK when he mis-orders magnitudes, DECOUPLE when he bundles two
+  claims.** Also logged: the **classical-fights-back dynamic** (Sycamore 2019 → tensor networks; Tang), **and the counter-update
+  that cuts against his "for now" — Quantum Echoes has so far SURVIVED** (an April 2026 tensor-network rebuttal concluded the
+  opposite). Landing analogy from his own world: **a quantum computer is closer to a synchrotron beamline than to a server.**
+  **Teach-forward (generalises v28): for ANY unfamiliar domain, give a credibility-ranked map with hype tiers separated and
+  vendor incentives named — not a survey.** Process: one **new Mermaid diagram** (the four-tier credibility map) built on
+  finalize because the ranking *was* the artifact; 7 Q&A sources added and verified; render-trap greps clean (**the footer
+  math-in-italic trap bit again and was caught by the parser check, not the regex**).
 - **2026-07-26 — reading #11 ✅ finalized** (`upskill-readings/2026/07/22-programmable-kernels-and-redefining-the-second.md`; created 2026-07-22, finalized 2026-07-26)
   — Two feature stories, a **deliberate step off the LLM-internals axis into systems + physics breadth**: (1) **eBPF / `sched_ext`**
   (career) — safe, verifier-checked, JIT-compiled programs injected into a running Linux kernel; the CPU scheduler now hot-swappable

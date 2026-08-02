@@ -1,4 +1,4 @@
-# Daily Reading — 2026-07-27
+# Daily Reading — 2026-07-27  ✅ finalized
 
 *A "National Geographic / Discovery" pair — one story from the **career** world (security / internet infrastructure), one from the **hobby** world (quantum physics / hardware). Not course material; the wider, stranger, more current world around what you do.*
 
@@ -187,6 +187,57 @@ flowchart TB
 
 ---
 
+## What we worked out — the thread you drove (read this first on review)
+
+Story 1 (the crypto migration) stayed a read. The whole session went to a question that sat *underneath* story 2 rather than inside it — not "is the estimate collapse real?" but the prior one: **"I am not familiar with quantum computing. What will be its real application besides hacking the password?"** That is the practitioner's question, not the physicist's, and it turns out to be the more useful one.
+
+**A. One small correction first: Shor does not crack passwords.** Passwords are protected by *hashing* — SHA-2, bcrypt, Argon2 — which is symmetric-flavoured. Grover only halves the effective bit strength, so you lengthen the key and move on. What breaks is **public-key** cryptography specifically: key exchange and signatures. That is exactly why story 1 is about TLS handshakes and certificate chains and not about your login.
+
+**B. The answer is a *ranking*, not a list — and credibility runs roughly inverse to marketing spend.**
+
+<!-- fig5 -->
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/27-the-crypto-migration-and-the-shrinking-codebreaker-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```mermaid
+flowchart TB
+    Q["WHAT IS A QUANTUM COMPUTER ACTUALLY FOR?<br/>credibility runs INVERSE to marketing spend"]
+    Q --> T1["TIER 1 — SIMULATING QUANTUM SYSTEMS<br/>the only STRUCTURALLY sound case<br/>catalysis, semiconductor defect chemistry,<br/>Fermi-Hubbard, batteries"]
+    Q --> T2["TIER 2 — OPTIMIZATION<br/>portfolio, logistics, scheduling<br/>most sales collateral, weakest evidence"]
+    Q --> T3["TIER 3 — QUANTUM ML ON CLASSICAL DATA<br/>mostly a CATEGORY ERROR"]
+    Q --> S["NOT COMPUTING AT ALL — QUANTUM SENSING<br/>atomic clocks, NV-centre magnetometry,<br/>gravimeters, inertial navigation"]
+    T1 --> R1["WHY: nature is quantum.<br/>2^N amplitudes, and the fermion SIGN PROBLEM<br/>blocks the classical escape hatch.<br/>Right substrate, not a clever trick."]
+    R1 --> C1["BUT two honest cuts:<br/>1. state-prep overlap can decay exponentially<br/>2. it beats FULL CI first — the method<br/>nobody can afford — not CC / MP2 / DFT"]
+    T2 --> R2["WHY NOT: Grover is only root-N.<br/>Logical clock lands in kHz-MHz vs GHz<br/>x billions of classical cores.<br/>Quadratic cannot repay that debt."]
+    T3 --> R3["WHY NOT: loading N classical numbers<br/>costs order-N. The exponential dies at the I/O<br/>before the algorithm starts. QRAM is assumed,<br/>not built. Tang DEQUANTIZED several claims."]
+    T3 --> X["EXCEPTION: when the data is ITSELF quantum<br/>which folds back into Tier 1"]
+    S --> R4["WHY IT SHIPS TODAY: exploits coherence<br/>WITHOUT needing error correction"]
+```
+
+</details>
+<!-- DIAGRAM:END -->
+
+The load-bearing detail in each tier: **Tier 1** is the only one where the advantage is a *substrate match* rather than an algorithmic trick — $N$ spin-orbitals span a $2^{N}$-dimensional Hilbert space, and the **fermion sign problem** is why quantum Monte Carlo cannot rescue you. The canonical target is the FeMo cofactor of nitrogenase: Haber–Bosch fixes nitrogen at roughly 450 °C and 200 atm and consumes on the order of 1–2% of world energy, while a soil bacterium does it at ambient temperature with an enzyme we still cannot model, because it is multireference and DFT simply picks a spin state and lies. **Tier 2** dies on arithmetic: a logical gate costs many error-correction cycles, so logical clock rates land in the kHz-to-MHz range against classical GHz across billions of cores — you begin roughly twelve orders of magnitude behind, and a $\sqrt{N}$ speedup never repays that. **Tier 3** dies on I/O before it begins.
+
+**C. The keeper from tier 1, and it is a ranking claim:** *quantum wins first against the method nobody uses, not the method everyone uses.* The MIT FutureTech analysis has quantum phase estimation beating **full CI** on tens-to-hundreds of atoms within a decade — but full CI is the exact, exponentially expensive method almost nobody can afford to run. Against coupled cluster, MP2 and DFT at the accuracy people actually need, classical stays ahead for at least a couple more decades.
+
+**D. Your synthesis — *"so for now quantum isn't competing on anything classical computing is doing"* — bundled two claims that need splitting.** This is the session's real correction, and it is a **decoupling** rather than a re-ranking:
+
+- **The practical claim is TRUE.** There is no production workload anywhere today where you would choose quantum hardware. Every result so far is a physics demonstration, not a service.
+- **The structural claim is FALSE.** Quantum computers solve a *subset* of classically solvable problems, not a disjoint set — any quantum circuit can be simulated classically, just with exponential slowdown. There is nothing quantum-solvable that is classically unsolvable. It is never a different sport; it is always the same race with a different exponent.
+- **Why that distinction pays:** it means quantum chemistry is not entering an empty field. Electronic structure is one of the largest consumers of HPC cycles on the planet, and that incumbent is *also* improving — which is exactly why the crossover in **C** sits where it does.
+
+**E. The dynamic you were half-sensing is real — the classical baseline fights back.** Google claimed 10,000 years of Summit time for Sycamore in 2019; IBM countered within days with about 2.5 days, and tensor-network methods later brought it to hours on a modest GPU cluster. Ewin Tang's dequantization erased several quantum-ML speedups the same way, by giving the classical algorithm the same sampling access the quantum one had quietly assumed. The recurring joke with real substance: **the most durable output of a quantum advantage claim is often a better classical algorithm.**
+
+**F. But this year's update cuts the other way — and it is the reason your "for now" is at its weakest right now.** Google's **Quantum Echoes** has so far *survived* the counterattack. In April 2026 a group tested **tensor networks with belief propagation** — the one strong classical method Google had not tried — and found it cannot reproduce the experiment, because the OTOC circuits generate enough entanglement to be essentially incompressible, which also rules out the broader Schrödinger-picture tensor-network family. That paper set out as a rebuttal and concluded the opposite. So the honest 2026 position is not "quantum isn't competing" but: **quantum has, for the first time, won one narrow head-to-head race on a task classical machines were genuinely trying to do, and the classical side has not yet taken it back.**
+
+> **Where we landed.** Your practical conclusion survives even though the reasoning under it needed adjusting. The set of things a quantum computer will *ever* win is a tiny sliver — far narrower than a GPU, which accelerates dense linear algebra that turns out to be everywhere. No database, web server, compiler, neural network or data pipeline will run on one. The mental model to keep, borrowed from your own world: **a quantum computer is closer to a synchrotron beamline than to a server.** You will not own one. You will apply for time on someone else's, to answer one specific question no other instrument can answer, and then go home and do the rest of your work on a normal machine. Which leaves exactly one way this technology reaches what you build — **your TLS stack** — and that is precisely why story 1 is the half of this reading that actually touches you. Two hooks that landed in your own professional territory: **NV-centre diamond magnetometry** is already a real IC failure-analysis tool for current-density mapping and fault localisation, and **semiconductor defect and dopant chemistry** — small, strongly-correlated clusters — is among the most defensible tier-1 targets there is.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -209,6 +260,16 @@ flowchart TB
 | algorithm | 算法 | 演算法 | ⚠ genuinely different word |
 | firmware / infrastructure | 基础设施 | 基礎建設 | ⚠ 设施 vs 建設 |
 | supply chain / bill of materials | 物料清单 | 物料清單 | script only |
+| quantum simulation | 量子模拟 | 量子模擬 | script only |
+| Hilbert space | 希尔伯特空间 | 希爾伯特空間 | script only |
+| density functional theory | 密度泛函理论 | 密度泛函理論 | script only |
+| catalysis | 催化 | 催化 | same |
+| nitrogen fixation | 固氮 | 固氮 | same |
+| optimization | 优化 | 最佳化 | ⚠ genuinely different word |
+| machine learning | 机器学习 | 機器學習 | script only |
+| sensor / sensing | 传感器 / 传感 | 感測器 / 感測 | ⚠ genuinely different word (传感 vs 感測) |
+| semiconductor | 半导体 | 半導體 | script only |
+| superconductivity | 超导 | 超導 | script only |
 
 ---
 
@@ -238,4 +299,13 @@ flowchart TB
 - [Oratomic launch announcement (31 Mar 2026)](https://www.oratomic.com/news/launch-announcement)
 - [IBM lays out a clear path to fault-tolerant quantum computing](https://www.ibm.com/quantum/blog/large-scale-ftqc)
 
-*Prepared 2026-07-27 — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (the post-quantum cryptographic migration — hybrid ML-KEM key agreement already carrying two-thirds of browser traffic, the signature-size wall, Merkle Tree Certificates, and EO 14412's 2030/2031 deadlines) and one **hobby-track** (the collapsing resource estimate for a cryptographically relevant quantum computer — from a billion physical qubits in 2012 to 10,000 reconfigurable atoms in March 2026, driven by qLDPC codes, magic-state cultivation and atom transport, against the honest state of the hardware). Figures current to July 2026. The **"What we worked out"** section will be added on finalize, after the discussion — leaving room for the threads worth pulling (natural sparring hooks: whether the harvest-now-decrypt-later clock is actually being priced correctly, or is mostly a compliance driver; the inverted urgency/difficulty asymmetry between key agreement and signatures, and whether Merkle Tree Certificates are a genuine fix or a cache with a fallback path that will bite; the "algorithmic Moore's law" claim and whether five orders of magnitude of theory imply a sixth; and the ranking question the scissors chart baits — how much of the remaining gap is qubit count versus everything else, which is exactly the leverage-ranking move from reading #11). Visuals: 2 ComfyUI path-4 illustrations (a vault door being re-keyed while open; a small bright lattice inside the ghost of a colossal machine) + 2 matplotlib figures (post-quantum TLS adoption 2024–2026; the scissors chart of estimates falling versus processors growing) + 2 Mermaid diagrams (the two halves of the TLS migration and their inverted clocks; the overhead stack from physical qubits to Shor's algorithm, with the three levers that cut it).*
+**Added during the Q&A (what a quantum computer is actually for):**
+- [*Elucidating reaction mechanisms on quantum computers* — Reiher et al., PNAS 2017 (arXiv 1605.03590)](https://arxiv.org/abs/1605.03590)
+- [*Evaluating the evidence for exponential quantum advantage in ground-state quantum chemistry* — Lee et al., *Nature Communications* 2023](https://www.nature.com/articles/s41467-023-37587-6)
+- [*Quantum advantage in computational chemistry?* — Gundlach, Thompson et al. (MIT FutureTech), arXiv 2508.20972](https://arxiv.org/abs/2508.20972)
+- [*Focus beyond quadratic speedups for error-corrected quantum advantage* — Babbush et al., PRX Quantum 2021 (arXiv 2011.04149)](https://arxiv.org/abs/2011.04149)
+- [*A quantum-inspired classical algorithm for recommendation systems* — Ewin Tang, arXiv 1807.04271 (the dequantization result)](https://arxiv.org/abs/1807.04271)
+- [A verifiable quantum advantage ("Quantum Echoes") — Google Research](https://research.google/blog/a-verifiable-quantum-advantage/)
+- [*Tensor networks with belief propagation cannot feasibly simulate Google's Quantum Echoes experiment* — arXiv 2604.15427 (Apr 2026)](https://arxiv.org/abs/2604.15427)
+
+*Finalized 2026-08-03 (created 2026-07-27) — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (the post-quantum cryptographic migration — hybrid ML-KEM key agreement already carrying over two-thirds of browser traffic, the signature-size wall, Merkle Tree Certificates, and EO 14412's 2030/2031 deadlines) and one **hobby-track** (the collapsing resource estimate for a cryptographically relevant quantum computer — from a billion physical qubits in 2012 to 10,000 reconfigurable atoms in March 2026, driven by qLDPC codes, magic-state cultivation and atom transport, against the honest state of the hardware). Figures current to July 2026. The **"What we worked out"** section is the durable record — read it first on review: **story 1 stayed a read**, and the whole session went to the question sitting *underneath* story 2 rather than inside it — *what is a quantum computer actually FOR, besides breaking crypto?* Delivered as a **credibility ranking**, not a survey: **tier 1 quantum simulation** (the only structural case — an exponentially large Hilbert space plus the fermion sign problem; FeMoco/nitrogenase, and semiconductor defect chemistry as the target nearest his own decade of failure analysis), **tier 2 optimization** (most sales collateral, weakest evidence — Grover is only square-root-N against a roughly twelve-order-of-magnitude logical-clock deficit), **tier 3 quantum ML on classical data** (a category error — the exponential dies at the I/O; Tang's dequantization), plus **quantum sensing** as the mature quantum technology that is not computing at all. Keeper: *quantum wins first against the method nobody uses (full CI), not the method everyone uses (CC/MP2/DFT)*. **His synthesis — "for now quantum isn't competing on anything classical computing is doing" — needed a DECOUPLING, not a re-ranking:** the practical claim is true (no production workload today), the structural claim is false (quantum solves a *subset* of classically solvable problems — same race, different exponent), which is why quantum chemistry enters the most crowded field in HPC rather than an empty one. Logged the classical-fights-back dynamic (Sycamore 2019; Tang) **and this year's counter-update**: Google's Quantum Echoes has so far *survived* — an April 2026 tensor-network rebuttal attempt concluded the opposite. Landing analogy from his own world: **a quantum computer is closer to a synchrotron beamline than to a server.** Visuals: 2 ComfyUI path-4 illustrations (a vault door being re-keyed while open; a small bright lattice inside the ghost of a colossal machine) + 2 matplotlib figures (post-quantum TLS adoption 2024–2026; the scissors chart of estimates falling versus processors growing) + 3 Mermaid diagrams (the two halves of the TLS migration and their inverted clocks; the overhead stack from physical qubits to Shor's algorithm; the four-tier credibility map of quantum applications, added on finalize).*

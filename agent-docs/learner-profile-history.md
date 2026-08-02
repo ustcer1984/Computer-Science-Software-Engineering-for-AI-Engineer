@@ -9,6 +9,52 @@
 
 ---
 
+v36 (2026-08-03 — **reading #12 finalized (created 2026-07-27, finalized 2026-08-03) — the post-quantum cryptographic
+migration (career) + the collapsing resource estimate for a codebreaking quantum computer (hobby).** First reading-track
+outing for the **cyber-security** track he explicitly requested at kickoff. **Story 1 (the crypto migration) stayed a read.**
+**The entire session went to a question sitting *underneath* story 2 rather than inside it** — not "is the estimate collapse
+real?" but the prior one: ***"I am not familiar with quantum computing. What will be its real application beside hacking the
+password?"*** **NEW MODE, and a useful one: he stepped BACK from the material to ask the foundational what-is-this-for
+question** — the practitioner/architect instinct, not the physicist's, and consistent with the cost/serving lens of v31.
+**NEW DURABLE SIGNAL — a self-declared domain gap, which is rare from him:** quantum computing **as a technology** is a
+genuine novice domain, *even though the underlying physics is native ground*. Every physics primitive landed with no
+scaffolding at all (Hilbert-space dimension, the **fermion sign problem**, DFT's multireference failure, logical-vs-physical
+clock rates), while the *technology's economics* was entirely new. **⇒ Teach the technology and its economics, never the
+physics.** **The answer that worked was a CREDIBILITY RANKING, not a survey** — four tiers with the hype separated and
+vendor incentives named: **tier 1 quantum simulation** (the only *structural* case — substrate match, not an algorithmic
+trick; FeMoco/nitrogenase; **semiconductor defect and dopant chemistry as the target nearest his own decade of failure
+analysis**), **tier 2 optimization** (most sales collateral, weakest evidence — Grover is only square-root-N against a
+roughly twelve-order-of-magnitude logical-clock deficit; Babbush 2021), **tier 3 quantum ML on classical data** (a category
+error — the exponential dies at the I/O; QRAM assumed not built; Tang's dequantization), plus **quantum *sensing*** as the
+mature quantum technology that is not computing at all (**NV-centre magnetometry is already a real IC failure-analysis
+tool** — a second hook straight into his old job). Tier-1 keeper, itself a ranking claim: ***quantum wins first against the
+method nobody uses (full CI), not the method everyone uses (CC/MP2/DFT)*** — the MIT FutureTech crossover analysis.
+**CALIBRATION — the signature pattern in a THIRD variant, and the corrective move was a DECOUPLING, not a re-ranking.** His
+synthesis — *"so at least for now, quantum computing is not competing on anything classical computing is doing, right?"* —
+**bundled two claims that had to be split**: the **practical** claim is TRUE (no production workload picks quantum today),
+the **structural** claim is FALSE (quantum solves a *subset* of classically solvable problems — any circuit is classically
+simulable with exponential slowdown; never a different sport, always the same race with a different exponent), and the
+payoff of splitting them is that **quantum chemistry enters the most crowded field in HPC, not an empty one, against an
+incumbent that is also improving**. Compare the family: v33/v24/v30 = mis-*ranked* magnitudes or leverage, v32/v35 =
+mis-*located* mechanism, **v36 = two claims FUSED that needed decoupling** (nearest prior kin: the v24 io_uring
+"dispatcher ⟂ zero-syscall" decoupling). **⇒ Standing refinement: the corrective move alternates — pick RE-RANKING when he
+mis-orders two magnitudes, DECOUPLING when he bundles two claims into one sentence.** Also logged for him: the
+**classical-fights-back dynamic** (Sycamore 2019's 10,000 years → IBM's 2.5 days → tensor networks to hours; Tang) — *the
+most durable output of a quantum advantage claim is often a better classical algorithm* — **and this year's counter-update
+that cuts against his "for now": Google's Quantum Echoes has so far SURVIVED**, an April 2026 tensor-network-with-belief-
+propagation paper having set out to rebut it and concluded the opposite. Landing analogy, deliberately borrowed from his own
+professional world and it did the work a paragraph of prose could not: **a quantum computer is closer to a synchrotron
+beamline than to a server** — you never own one, you apply for time on someone else's to answer one question no other
+instrument can answer. Closing tie-back he took: **cryptography is simultaneously the least economically useful and the most
+consequential application**, because breaking RSA need not clear any cost-benefit bar — the machine only has to exist once —
+which is exactly why security migrates a decade early while chemistry still argues about crossover points. **Teach-forward
+(generalises v28): for ANY domain he is new to, deliver a credibility-ranked map with the hype tiers separated and the
+vendor incentives named — not a survey** (v28's lever/limit/license shape for audio model *selection* is the special case).
+Process: clean finalize; "What we worked out" added (story 2's subject only); **one new Mermaid diagram** (the four-tier
+credibility map) built on finalize because the ranking *was* the session's artifact; 7 Q&A sources added and verified;
+render-trap greps clean — **the footer math-in-italic trap bit again and was caught by the parser check**, not the regex.
+**Next:** reading rotation open; standing hands-dirty follow-ups unchanged.)
+
 v35 (2026-08-01 — **hobby econ E03 §3 (monetary policy — the standard Fed model) finalized → Module E03 nearly complete**
 (§1 money ✅, §2 rates ✅, §3 Fed model ✅; only §4 MAS remains). The module **centrepiece** and the longest E03 section.
 Body (drafted 07-25) went **untouched** again. **§10 = the live session**, a **four-step chain walking *outward* from one
