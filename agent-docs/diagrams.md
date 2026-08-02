@@ -112,6 +112,20 @@ flowchart LR
   in-editor previews accept. Known gotchas already hit in this repo:
   - Gantt: `call` is a reserved keyword — don't name a task `call X` (use `fetch X` etc.).
   - quadrantChart: data points need bracketed coords — `"Label": [0.2, 0.8]`, not `0.2 0.8`.
+- **The width must come from the ROOT `<svg>` tag — the "10-pixel speck" trap.**
+  *(Found & fixed 2026-08-03 while finalizing reading #12.)* `mmdc` emits `width="100%"`, and
+  `scripts/render-diagrams.mjs` pins that to the diagram's natural width so GitHub doesn't upscale
+  narrow diagrams. It reads the width from the root `viewBox` — and Mermaid frequently emits a
+  **non-zero viewBox origin**, either a float epsilon (`0 -0.000003814697265625 …`) or a real offset
+  (`-50 -10 …`). An unanchored `/viewBox="0 0 …"/` therefore misses the root element and instead matches
+  the first **arrowhead `<marker viewBox="0 0 10 10">`**, pinning the whole diagram to `width="10"`.
+  The result is an **invisible 10×5 speck on GitHub** — while `npm run diagrams`, `diagrams:check`, a
+  local `<img>` at explicit width, and even a cairosvg conversion all look perfectly fine. **Nine
+  committed diagrams had silently shipped this way** across `courses/`, `hobby/` and a finalized
+  reading. The regex is now anchored to `<svg` with any numeric origin, plus a `w > 20` floor that
+  *throws* rather than writing a bogus width. **Detection, if you suspect it:** compare the root
+  `width="…"` against the viewBox width, or — the check that actually catches it — load the *rendered
+  GitHub blob* and read `naturalWidth` on the `<img>`; a `10x5` there means the speck.
 - **Tooling:** `@mermaid-js/mermaid-cli` (`mmdc`) via Puppeteer. The render script reuses
   the system Chrome (`/usr/bin/google-chrome-stable` etc.) so the heavy Chromium download
   is skipped on `npm install`. Set `PUPPETEER_EXECUTABLE_PATH` to override the browser.

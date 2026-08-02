@@ -95,9 +95,21 @@ function renderSvg(src, outPath) {
   // intrinsic width to the natural viewBox width and let max-width:100% do the
   // responsive downscaling: narrow diagrams then render at authored size, wide
   // ones still shrink to fit. (Idempotent: re-running reproduces the same value.)
-  const vb = svg.match(/viewBox="0 0 ([\d.]+) [\d.]+"/);
+  //
+  // TRAP (fixed 2026-08-03, found via reading #12): the width MUST be read from the
+  // ROOT <svg> tag. Mermaid's layout often emits a non-zero viewBox origin — either a
+  // float epsilon ("0 -0.000003814697265625 …") or a real offset ("-50 -10 …") — so an
+  // unanchored /viewBox="0 0 …"/ misses the root and then happily matches the FIRST
+  // arrowhead <marker viewBox="0 0 10 10">, pinning the entire diagram to width="10".
+  // That renders as an invisible 10x5 speck on GitHub while every local check passes.
+  // Nine committed diagrams had silently shipped that way. Anchor to <svg, accept any
+  // numeric origin, and sanity-floor the result so a marker can never win again.
+  const vb = svg.match(/<svg\b[^>]*\sviewBox="[-\d.]+ [-\d.]+ ([\d.]+) [\d.]+"/);
   if (vb && /width="100%"/.test(svg)) {
     const w = Math.round(parseFloat(vb[1]));
+    if (!(w > 20)) {
+      throw new Error(`${outPath}: refusing to pin width=${w} — the root viewBox width looks wrong. See the marker-viewBox trap above.`);
+    }
     svg = svg.replace('width="100%"', `width="${w}"`)
              .replace(/max-width:\s*[\d.]+px/, 'max-width: 100%');
     writeFileSync(outPath, svg);
