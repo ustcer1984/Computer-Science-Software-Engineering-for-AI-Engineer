@@ -5,7 +5,10 @@
 > **Section:** Zooming out from the function to the codebase — how to organize modules/packages,
 > which way dependencies should point, package-by-layer vs package-by-feature, keeping the import
 > graph acyclic, and dependency inversion. Where §2's *seams* become permanent *module edges*.
-> **Status:** 🔵 in progress — prepared 2026-07-30.
+> **Status:** ✅ finalized 2026-08-04 (body prepared 2026-07-30). Body went **untouched** — he had no
+> questions (as with §2's mechanics: this is SWE-decomposition doctrine he largely already owns, absorbed
+> as reference). This section **closes the core of Ch2 (Decomposition)**: §1 the metric, §2 the moves,
+> §3 the boundaries.
 > **Prerequisites:** §1 (cohesion, coupling, module depth) and §2 (the refactoring moves + seams).
 > This section applies the same cohesion/coupling ideas one level up, where a genuinely new concern
 > appears: the *direction and shape* of dependencies between modules.

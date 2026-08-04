@@ -9,6 +9,30 @@
 
 ---
 
+v37 (2026-08-04 — **course: M04 Ch2 §3 (boundaries between modules & files) finalized → Ch2 (Decomposition) COMPLETE**
+(§1 the metric · §2 the moves · §3 the boundaries; body prepared 2026-07-30). Body went **UNTOUCHED — he had no
+questions**, exactly as with §2's mechanics. The section is the **codebase-scale zoom-out**: package-by-feature vs
+-by-layer (screaming architecture; change-locality test; Rails-by-layer vs Django-app contrast); **the new concern =
+dependency DIRECTION** — the **Acyclic Dependencies Principle** (no cycles; the Python circular-import error as the tell;
+break a cycle by extract-shared-downward or invert-with-interface) + **Stable Dependencies / Dependency Inversion**
+(`infra → domain`, ports & adapters / hexagonal, Clean Architecture's dependency rule, the injected-`Protocol` repo
+example); **§5 seams-become-module-edges** (the unifying idea — §1's hidden decision, §2's test seam, and §3's module
+boundary are the SAME narrow-interface place); scale failure modes (`utils` junk-drawer hub, fat barrels, big ball of
+mud, **distributed monolith** = cyclic service graph, shotgun surgery); + a **§7 AI-agent-context angle** (good
+boundaries shrink an agent's context, cycles blow it up, encode boundary rules in `CLAUDE.md` / import-linter — honoring
+v34's agent-governance teach-forward). **CALIBRATION — reinforces v34 into a clear pattern: TWO SWE-decomposition
+sections in a row (§2, §3) with ZERO questions** → this doctrine is **at/below his working level**; consistent with the
+standing read that his decomposition "gap" is **applying it under time pressure / at scale, NOT knowing it** (the
+monolithic files were built fast, not from ignorance). He engaged hard on §2's *agent-governance novelty* but not on
+standard §3 doctrine. **Teach-forward: for remaining SWE-technique material, pitch higher / move faster, and lead with
+the NOVEL angle** — real failure modes he hasn't met, or the agent-tooling/governance layer — not textbook doctrine.
+**Process:** a run of SWE/hobby/reading finalizes lately → interleave pull, so **rotating course scope** — opened **M02
+Networking, Ch1 (How a request travels)**, a bottom-up CS-fundamentals thread that **cashes M01 Ch4's latency/round-trip
++ Little's-Law work** and touches his daily web-app practice. Clean finalize; body no edits; 3 Mermaid diagrams; GFM
+render-trap greps clean; plan.md Ch2 row flipped ✅. **Next:** M02 Ch1 being prepared this session; then M02 continues
+(HTTP · TLS · real-time), or M04 Ch3 design patterns (the port/adapter he built in §3 *is* Adapter + DI; inverting a
+cycle *is* DIP), or M01 Ch5 OS landscape.)
+
 v36 (2026-08-03 — **reading #12 finalized (created 2026-07-27, finalized 2026-08-03) — the post-quantum cryptographic
 migration (career) + the collapsing resource estimate for a codebreaking quantum computer (hobby).** First reading-track
 outing for the **cyber-security** track he explicitly requested at kickoff. **Story 1 (the crypto migration) stayed a read.**
