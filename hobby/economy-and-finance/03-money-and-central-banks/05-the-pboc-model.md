@@ -1,4 +1,4 @@
-# E03 · §5 — The PBoC Model: China's Managed Exchange Rate, Capital Controls & 强制结汇
+# E03 · §5 — The PBoC Model: China's Managed Exchange Rate, Capital Controls & Compulsory FX Surrender
 
 > **Subject:** Economy & Finance *(hobby track)*
 > **Module:** E03 — Money, Banking & Monetary Policy
@@ -8,7 +8,7 @@
 > currency and **gives up the rate**. The **People's Bank of China (PBoC)** takes the corner *neither* chose —
 > it keeps **both** an independent interest rate **and** a managed exchange rate, and pays the trilemma's bill
 > by giving up the third corner: **free movement of capital**. That single choice explains everything
-> downstream — **capital controls**, the historical **强制结汇 (compulsory FX surrender)** that built the
+> downstream — **capital controls**, the historical **compulsory FX surrender (强制结汇)** that built the
 > largest reserve pile in history, an FX regime that is neither a float nor a hard peg, and a monetary toolkit
 > that looks nothing like the Fed's. This is the exact inverse of the open-capital, freedom-of-contract
 > Singapore you met in §4 §10c. It closes E03 and points to E04 (fiscal policy) and E05 (exchange rates &
@@ -166,17 +166,17 @@ life.**
 
 ---
 
-## 4. 强制结汇 — compulsory FX surrender, and how it built the world's biggest reserve pile
+## 4. Compulsory FX surrender (强制结汇) — how it built the world's biggest reserve pile
 
 This is the piece you specifically asked about, and it is the most vivid single mechanism in the whole model.
-**强制结汇 (qiángzhì jiéhuì) = "compulsory foreign-exchange settlement/surrender."** For years, a Chinese
+**Compulsory FX surrender — 强制结汇 (qiángzhì jiéhuì).** For years, a Chinese
 exporter who earned US dollars was **not allowed to keep them** — it was *required* to sell (surrender) those
 dollars to a designated state bank, which passed them up to the PBoC, in exchange for yuan at the official rate.
 
 **Read what that machine does, step by step — it is §4's FX intervention, but *forced and automatic*:**
 
 1. **Exports earn dollars.** China's export engine runs a huge trade surplus, so a torrent of USD flows in.
-2. **The dollars are surrendered, not kept.** Under 强制结汇, exporters *must* convert them to yuan. So the
+2. **The dollars are surrendered, not kept.** Under compulsory surrender, exporters *must* convert them to yuan. So the
    foreign currency piles up on the **PBoC's** balance sheet — this is exactly how China built **foreign-exchange
    reserves that peaked near USD 4 trillion in 2014**, the largest hoard any country has ever held.
 3. **Creating the yuan to pay for them is base-money creation.** To buy all those dollars, the PBoC *issues
@@ -194,21 +194,22 @@ dollars to a designated state bank, which passed them up to the PBoC, in exchang
 
 The two charts above are the *same story* told twice. Reserves (fig 3) climbed to nearly USD 4 trillion because
 surrender funneled every export dollar to the PBoC; the RRR (fig 4) climbed to **21.5%** in 2011 because the
-PBoC had to *lock up* the tidal wave of yuan it created buying those dollars. **强制结汇 is the engine; the RRR
-was the brake.**
+PBoC had to *lock up* the tidal wave of yuan it created buying those dollars. **Compulsory surrender is the
+engine; the RRR was the brake.**
 
 **The history of the policy itself:**
 
-- **1994 — the foundation.** China unified its dual (official + market) exchange rates and instituted **强制结汇**
-  as a pillar of the new system. Combined with the peg, it gave the state complete control of FX and built the
+- **1994 — the foundation.** China unified its dual (official + market) exchange rates and instituted
+  **compulsory surrender** as a pillar of the new system. Combined with the peg, it gave the state complete control of FX and built the
   reserve war-chest.
-- **Gradual relaxation → 意愿结汇 (voluntary settlement).** As reserves grew embarrassingly large and China
+- **Gradual relaxation → voluntary settlement (意愿结汇).** As reserves grew embarrassingly large and China
   matured, compulsory surrender was progressively loosened through the 2000s and, by around **2007–2012**,
-  effectively replaced by **意愿结汇 (yìyuàn jiéhuì)** — *voluntary* settlement: firms may now choose to hold
+  effectively replaced by **voluntary settlement (意愿结汇, yìyuàn jiéhuì)**: firms may now choose to hold
   foreign-currency accounts rather than surrender everything.
 - **But the state's hand never left.** Even under "voluntary" settlement, SAFE guidance, the fixing mechanism,
-  and the standing option to tighten mean the PBoC still effectively steers the FX flow. 强制结汇 as a hard legal
-  mandate is largely historical; 强制结汇 as *the state controls the FX plumbing* very much is not.
+  and the standing option to tighten mean the PBoC still effectively steers the FX flow. Compulsory surrender as
+  a hard legal mandate is largely historical; compulsory surrender as *the state controls the FX plumbing* very
+  much is not.
 
 **Why it matters for reading China.** When you see "China's reserves rose/fell by USD X," you are reading the
 residue of this machine — now voluntary, but still steered. When you see "the PBoC cut the RRR," you are usually
@@ -311,7 +312,7 @@ completes it.
 | **Signature tool** | one policy rate (IORB) | the band: slope · width · level | the **RRR** + fix + relending (quantity→price) |
 | **Credit allocation** | **neutral** (Treasuries only, §3 §10) | n/a (targets FX) | **deliberately allocative** (relending, window guidance) |
 | **Independence** | operationally **independent** | statutory authority | **arm of the State Council** — not independent |
-| **How it built reserves** | — | leaning against SGD appreciation | **强制结汇** — compulsory surrender of export USD |
+| **How it built reserves** | — | leaning against SGD appreciation | **compulsory surrender** of export USD (强制结汇) |
 
 Read the middle three rows as a single sentence each economy completes differently: *"I keep ___ and ___, so I
 give up ___."* That is the trilemma, and the three central banks of E03 are its three possible answers. Nothing
@@ -334,7 +335,7 @@ flowchart TD
     CHOICE["THE THIRD CORNER (§1)<br/>China wants BOTH an independent rate AND a managed FX<br/>trilemma → must give up the third corner: FREE CAPITAL<br/>∴ CAPITAL CONTROLS are the price"]
     REGIME["THE FX REGIME (§2)<br/>not a float, not a hard peg → managed float<br/>daily CENTRAL PARITY (the 'fix') + ±2% band, vs a basket (CFETS)<br/>peg 8.28 → appreciate 2005-14 → 8·11 devalue 2015<br/>onshore CNY vs offshore CNH = the wall, made visible"]
     CONTROLS["CAPITAL CONTROLS (§3)<br/>SAFE + a USD 50k/yr personal quota + corporate approvals<br/>metered gates: QFII/RQFII · Stock Connect · Bond Connect<br/>severs the arbitrage → lets China keep rate AND FX"]
-    SURRENDER["强制结汇 — COMPULSORY SURRENDER (§4)<br/>exporters MUST sell USD to the state → PBoC piles up reserves (~USD 4tn peak 2014)<br/>PBoC issues yuan to buy them = base money ↑<br/>→ sterilize HARD via the RRR (peak 21.5% in 2011)<br/>now voluntary (意愿结汇) but still steered"]
+    SURRENDER["COMPULSORY FX SURRENDER (§4)<br/>exporters MUST sell USD to the state → PBoC piles up reserves (~USD 4tn peak 2014)<br/>PBoC issues yuan to buy them = base money ↑<br/>→ sterilize HARD via the RRR (peak 21.5% in 2011)<br/>now voluntary settlement but still steered"]
     POLICY["HOW POLICY IS RUN (§5)<br/>quantity tools (RRR, window guidance) → price tools (LPR/MLF/7d repo)<br/>+ ALLOCATIVE relending (opposite of the Fed's §3 neutrality)<br/>PBoC is NOT independent — an arm of the State Council"]
     STRESS["THE TRILEMMA BITES (§6)<br/>2015-16: capital flight → burned ~USD 1tn defending the yuan<br/>(MAS's §4 asymmetry, real & at scale) → re-tightened controls<br/>RMB internationalization (SDR 2016, CNH) kept on a leash"]
     COMPARE["THE COMPLETED TRIANGLE (§7)<br/>Fed = rate/float · MAS = FX/give-up-rate · PBoC = both/give-up-capital<br/>same job, three different corners"]
@@ -360,9 +361,9 @@ flowchart TD
 3. **The FX regime is a managed float:** a **daily central parity (the "fix") + a ±2% band**, against a basket
    (CFETS). History: hard peg at **8.28** → managed appreciation from 2005 → the **8·11 (2015) devaluation** →
    basket + "counter-cyclical factor."
-4. **强制结汇 (compulsory surrender)** forced exporters to sell their USD to the state — the engine that built
+4. **Compulsory FX surrender (强制结汇)** forced exporters to sell their USD to the state — the engine that built
    reserves to a **~USD 4 trillion** peak (2014) and created the yuan base money that had to be **sterilized**,
-   mainly via a rising **RRR** (peak **21.5%**, 2011). Now largely **voluntary (意愿结汇)** but still steered.
+   mainly via a rising **RRR** (peak **21.5%**, 2011). Now largely **voluntary settlement (意愿结汇)** but still steered.
 5. **The PBoC's toolkit is a quantity→price hybrid:** the **RRR** (actively used, unlike the US), window
    guidance, and credit quotas, shifting toward **LPR/MLF/7-day repo** rates — plus **allocative relending**.
 6. **It is deliberately *allocative*** (relending, targeted RRR, window guidance) — the **opposite** of the
@@ -382,7 +383,7 @@ Reason first; check against a source where noted.
 1. **The corner.** State China's trilemma choice as one sentence of the form *"keep ___ and ___, give up ___."*
    Then explain *why* capital controls are what makes keeping the first two *possible* (use the arbitrage /
    covered-interest-parity argument, and the CNY/CNH split as evidence).
-2. **The engine and the brake.** Explain, step by step, how **强制结汇** both (i) built China's FX reserves and
+2. **The engine and the brake.** Explain, step by step, how **compulsory surrender** both (i) built China's FX reserves and
    (ii) *created* domestic yuan — and why that forced the PBoC to raise the **RRR**. Which chart shows the
    engine and which shows the brake?
 3. **Reading the reversal.** China's RRR has fallen from 21.5% (2011) to about 9% today. Give *two* distinct
@@ -479,7 +480,7 @@ Reading **China/Asia** monetary news across both scripts. Most differences are *
 three** templates for how a central bank governs money — the trilemma's three corners: the **Fed** (§3 — keep
 the rate + open capital, **float**), **MAS** (§4 — keep open capital + a managed currency, **give up the
 rate**), and the **PBoC** (§5 — keep the rate + a managed currency, **give up free capital**, paid in *controls*
-and historically *强制结汇*). With money defined (§1), priced (§2), and *governed* three ways (§3–§5), **Module
+and historically *compulsory FX surrender*). With money defined (§1), priced (§2), and *governed* three ways (§3–§5), **Module
 E03 is complete** — you can read essentially any monetary-policy story on earth, from the mechanism up. The
 track now opens onto the **other half of macro policy — E04, fiscal policy** (taxes, spending, deficits, and the
 policy mix), and, when you want the FX and cross-border mechanics deepened, **E05 (exchange rates, the balance

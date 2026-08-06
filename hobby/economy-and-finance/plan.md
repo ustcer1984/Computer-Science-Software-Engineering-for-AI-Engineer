@@ -64,8 +64,8 @@ The modules below build toward all four; the mapping is called out in [Goal → 
   targeting, quantitative easing, the transmission mechanism.
 - §4 — The MAS model: Singapore's **exchange-rate-based** monetary policy — why it's unusual, and
   the comparison that makes the standard model click *(local lens)*.
-- §5 — The PBoC model: China's **managed exchange rate + capital controls + 强制结汇** — the trilemma's
-  third corner, completing the Fed/MAS/PBoC picture *(regional lens)*.
+- §5 — The PBoC model: China's **managed exchange rate + capital controls + compulsory FX surrender** — the
+  trilemma's third corner, completing the Fed/MAS/PBoC picture *(regional lens)*.
 
 ### E04 — Government & the Public Finances (Fiscal Policy) · `04-fiscal-policy/`
 *The other half of policy. (Goal 2.)*

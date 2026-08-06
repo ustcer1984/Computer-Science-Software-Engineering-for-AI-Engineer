@@ -279,7 +279,7 @@ flowchart TD
     FX["HOW IT'S RUN (§4)<br/>FX INTERVENTION: buy/sell SGD vs foreign currency<br/>too strong → sell SGD (base ↑, reserves ↑)<br/>base &amp; rate are ENDOGENOUS; reserves are FOREIGN"]
     COMPARE["THE MIRROR OF THE FED (§5)<br/>Fed: interest rate · domestic bonds · floats · 8 meetings<br/>MAS: exchange rate · FX reserves · gives up the rate · 2 meetings<br/>SAME job (price stability), opposite choices"]
     LIMITS["LIMITS (§6)<br/>no independent rate · only for a small open economy<br/>doesn't cool asset prices → macroprudential + fiscal do that"]
-    NEXT["→ §5 (China / PBoC) takes the THIRD trilemma corner<br/>capital controls + 强制结汇 — then E03 closes<br/>later: E04 fiscal policy · E05 exchange rates &amp; capital flows"]
+    NEXT["→ §5 (China / PBoC) takes the THIRD trilemma corner<br/>capital controls + compulsory FX surrender — then E03 closes<br/>later: E04 fiscal policy · E05 exchange rates &amp; capital flows"]
     OPEN --> TRILEMMA
     TRILEMMA --> BBC
     BBC --> FX
@@ -503,7 +503,7 @@ gravity** pull consumer and property pricing into SGD without ever needing a law
 currency, capital flows in and out freely* — because **China is the exact opposite corner of the trilemma**
 (§2). China keeps an *independent interest rate* **and** a *managed exchange rate*, which the trilemma says
 forces it to give up the third corner: **free capital movement**. So China runs **capital controls** and,
-historically, **强制结汇 (compulsory FX surrender)** — the state *requiring* exporters to hand over their foreign
+historically, **compulsory FX surrender (强制结汇)** — the state *requiring* exporters to hand over their foreign
 currency — the precise inverse of Singapore's "keep your USD, price in what you like." §5 builds that third
 model, and your 10c question is exactly the door into it.
 
@@ -585,7 +585,7 @@ steer the **exchange rate**, because a small ultra-open economy's inflation is i
 the **impossible trinity** that says *which* lever you can keep. Fed and MAS occupy **two corners** of that
 triangle — but the trilemma has **three**. **§5 (China / the PBoC)** takes the corner neither of them chose:
 keep *both* an independent interest rate *and* a managed exchange rate, and pay for it by giving up **free
-capital movement** — **capital controls**, and historically **强制结汇 (compulsory FX surrender)**. That's the
+capital movement** — **capital controls**, and historically **compulsory FX surrender (强制结汇)**. That's the
 exact inverse of the freedom-of-contract, open-capital Singapore you met in §10c, and it completes the
 central-bank picture before Module E03 closes. After §5, the track opens onto the **other half of macro
 policy — E04, fiscal policy**, and, when you want the FX mechanics deepened, **E05 (exchange rates, the
