@@ -4,7 +4,37 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-08-04 (v37 — **course: M04 Ch2 §3 (boundaries between modules & files) finalized → Ch2
+Last updated: 2026-08-06 (v38 — **hobby econ E03 §4 (the MAS model) FINALIZED and §5 (the PBoC model)
+PREPARED in one session → Module E03 down to its last section.** §4 body (drafted 08-01) went **untouched**
+again. **§4 §10 = the live session, three threads tracing the whole MAS machine:** **(10a)** he **derived the
+intervention asymmetry himself** — *unlimited* ammunition to hold the SGD down (print it) vs *finite* reserves
+to hold it up → **reserve growth = the fingerprint of chronic appreciation pressure** (he read the *direction*
+of market pressure off the *direction* of reserve flow); the one correction was **slope-is-MAS's-dial vs
+the-market-pressures-the-level**; then what actually pushes the SGD up (CA surplus ~15–20% GDP + net-creditor
+income + safe-haven inflows + Balassa–Samuelson) and **the twist that the appreciating slope IS the
+anti-inflation policy**; **(10b)** his second correct original insight — **offshore returns don't move the SGD
+unless *converted*** → recycling the surplus into offshore FX assets is itself the appreciation-release valve
+(+ the **OFR-vs-GIC-vs-Temasek** distinction, private USD ≠ reserves, NIRC as the conversion channel);
+**(10c)** currency-of-contract law (freedom of contract + no exchange controls; **legal-tender ≠
+pricing-currency**; GST-in-SGD the one hard hook) — **which he steered toward China, and which I made the
+deliberate hinge into §5**. **CALIBRATION — the standing econ-sparring read holds and *sharpens*: TWO of the
+three threads were his own correct generative insights** (the asymmetry; conversion-moves-the-rate), NOT
+mislocated premises needing relocation — so on MAS/FX material he is now **generating correct mechanism, and
+the value is *validating + sharpening + naming the structure*, not correcting**. He **alternates** between the
+v32/v35 *mis-located-premise* mode (propose a wrong locus → relocate + name) and this session's
+*right-mechanism* mode (propose correct mechanism → validate + sharpen); plan for both. **§5 (PBoC) prepared at
+his explicit request** ("how China's central bank works… exchange control & 强制结汇… full picture") — framed
+as **the trilemma's THIRD corner** (keep the rate + managed FX, give up free capital = **capital controls**),
+completing E03's **Fed/MAS/PBoC** three-model arc: controls sever the CIP arbitrage (the **CNY/CNH split**), the
+daily-fix + ±2% managed float, **强制结汇 → ~USD 4tn reserves → RRR-sterilization (peak 21.5%)**, the
+**allocative** PBoC (the *opposite* of the Fed's §3 §10 neutrality) that is *not* independent, and the 2015–16
+**~USD 1tn** drawdown = his own §4 §10a asymmetry at trillion-dollar scale. 4 matplotlib figs + mermaid;
+native-简体 glossary. **Process:** clean finalize; **re-framed §4 away from "closes the module"** (§4 now sets
+up §5); math `$`-balance clean (caught+fixed a bare `US$370bn`→`USD 370bn` trap I introduced in the new §10b
+table); §4 mermaid NEXT-node re-rendered. **Next:** **§5 awaits a live session → §10 on finalize, which CLOSES
+Module E03**; then **E04 fiscal policy** or rotate (course M02 Ch1 networking / M04 Ch3 patterns / M01 Ch5 OS
+also teed up).)
+Prior: v37 (2026-08-04 — **course: M04 Ch2 §3 (boundaries between modules & files) finalized → Ch2
 (Decomposition) COMPLETE** (§1 the metric · §2 the moves · §3 the boundaries; body prepared 2026-07-30). Body went
 **UNTOUCHED — he had no questions**, exactly as with §2's mechanics. The section is the **codebase-scale zoom-out**:
 package-by-feature vs -by-layer (screaming architecture; change-locality test); **the new concern = dependency

@@ -2,18 +2,21 @@
 
 > **Subject:** Economy & Finance *(hobby track)*
 > **Module:** E03 — Money, Banking & Monetary Policy
-> **Section:** The **finale of Module E03**, and the *local lens*. §3 built the standard model — a central
-> bank steering a domestic **interest rate**. This section is its mirror image: the **Monetary Authority of
-> Singapore (MAS)** gives up the interest rate entirely and steers the **exchange rate** instead. That's not
-> an exotic quirk to memorize — it's the cleanest possible way to *test whether you actually understood §3*,
-> because MAS makes the opposite choice at every fork (interest rate vs currency, 8 meetings vs 2, domestic
-> bonds vs FX reserves), and each opposite choice has a *reason* rooted in what an economy is. We build why
-> a small, ultra-open economy targets the currency, why the **impossible trinity** means it *cannot also*
-> keep an independent rate, the actual mechanism (the **BBC band** — basket, band, crawl), how MAS operates
-> it (FX intervention — the bond-free model §3 §10d landed on), and the side-by-side that makes *both* models
-> finally click. It closes E03 and points to E04 (fiscal policy) and E05 (exchange rates & capital flows).
-> **Status:** 🔵 **body drafted 2026-08-01.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Section:** the **second of three central-bank models** in E03, and the *local lens*. §3 built the standard
+> model — a central bank steering a domestic **interest rate**. This section is its mirror image: the
+> **Monetary Authority of Singapore (MAS)** gives up the interest rate entirely and steers the **exchange
+> rate** instead. That's not an exotic quirk to memorize — it's the cleanest possible way to *test whether you
+> actually understood §3*, because MAS makes the opposite choice at every fork (interest rate vs currency, 8
+> meetings vs 2, domestic bonds vs FX reserves), and each opposite choice has a *reason* rooted in what an
+> economy is. We build why a small, ultra-open economy targets the currency, why the **impossible trinity**
+> means it *cannot also* keep an independent rate, the actual mechanism (the **BBC band** — basket, band,
+> crawl), how MAS operates it (FX intervention — the bond-free model §3 §10d landed on), and the side-by-side
+> that makes *both* models finally click. Fed and MAS take **two corners of the trilemma**; **§5 (China / the
+> PBoC)** takes the **third** — capital controls — to complete the triangle before E03 closes and points to
+> E04 (fiscal policy) and E05 (exchange rates & capital flows).
+> **Status:** ✅ **finalized 2026-08-06** (body drafted 2026-08-01, went untouched). **§10 Applied** added from
+> our live session — three threads: the intervention asymmetry & what pushes the SGD up; what "reserves"
+> really are; and the currency-of-contract law that hinges into §5.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -276,7 +279,7 @@ flowchart TD
     FX["HOW IT'S RUN (§4)<br/>FX INTERVENTION: buy/sell SGD vs foreign currency<br/>too strong → sell SGD (base ↑, reserves ↑)<br/>base &amp; rate are ENDOGENOUS; reserves are FOREIGN"]
     COMPARE["THE MIRROR OF THE FED (§5)<br/>Fed: interest rate · domestic bonds · floats · 8 meetings<br/>MAS: exchange rate · FX reserves · gives up the rate · 2 meetings<br/>SAME job (price stability), opposite choices"]
     LIMITS["LIMITS (§6)<br/>no independent rate · only for a small open economy<br/>doesn't cool asset prices → macroprudential + fiscal do that"]
-    NEXT["→ closes MODULE E03<br/>next: E04 fiscal policy · E05 exchange rates &amp; capital flows"]
+    NEXT["→ §5 (China / PBoC) takes the THIRD trilemma corner<br/>capital controls + 强制结汇 — then E03 closes<br/>later: E04 fiscal policy · E05 exchange rates &amp; capital flows"]
     OPEN --> TRILEMMA
     TRILEMMA --> BBC
     BBC --> FX
@@ -361,8 +364,153 @@ who-sets-Treasury-rates (§2).
 
 ## 10. Applied — from our session Q&A
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+Our live session pulled on three threads, and together they trace the whole machine: **how MAS holds the
+band**, **what the reserves it piles up actually are**, and **what currency the economy underneath is even
+allowed to price in**. The last thread turns out to be the exact hinge into §5 (China does the opposite).
+
+### 10a — Controlling the slope, the intervention *asymmetry*, and what really pushes the SGD up
+
+You reasoned your way, correctly, to one of the deepest facts about any managed-FX regime — so let me record
+it as you built it, with the one vocabulary fix that sharpens it.
+
+**Your starting move — the asymmetry.** To hold the band, MAS sells SGD/buys foreign currency when the SGD is
+too strong, and buys SGD/sells reserves when it's too weak. You spotted that these two directions are *not
+symmetric*:
+
+- **Resisting appreciation** (sell SGD, buy USD): MAS *creates* the SGD it sells, so its ammunition is
+  effectively **unlimited**. 无限 (無限).
+- **Resisting depreciation** (sell USD, buy SGD): MAS can only spend the **finite** foreign reserves it holds.
+
+This asymmetry is exactly what breaks fixed-rate regimes from the *weak* side — 1997 Thailand, any peg defended
+until the reserves run dry — but never from the strong side. **A central bank can hold a currency down forever;
+it can only hold one up until the reserves are gone.**
+
+**Your inference — reserve growth is a fingerprint.** From that you drew the right conclusion: MAS's
+*ever-growing* reserve pile means MAS is *usually* on the "lean against a too-strong SGD" side — selling SGD,
+buying USD, accumulating reserves. If the market were chronically trying to *weaken* the SGD, reserves would be
+*shrinking* (spent on defence). **You read the direction of market pressure off the direction of reserve flow** —
+precisely the right way to read it.
+
+**The one fix — slope vs. level.** You called this "upward momentum pushing the slope." Sharpen it: the
+**slope** (the trend appreciation rate) is **MAS's policy dial**, not something the market pushes. What the
+market supplies is **pressure on the *level*** — the NEER wanting to sit above the band *today*. So the precise
+statement is: *the fundamentals push the SGD's level up harder than MAS's chosen slope, so MAS leans against it
+by selling SGD, and reserves accumulate.*
+
+**Your actual question — so what fundamentals push the SGD up?** Four structural forces, in order:
+
+1. **A gigantic, persistent current-account surplus** 经常账户盈余 (經常帳盈餘) — routinely **~15–20% of GDP**,
+   among the largest on earth. More foreign currency flows in (exports of goods, services, and investment
+   income) than out → continuous excess demand for SGD. It reflects a national **saving rate** (CPF, corporate
+   retained earnings, fiscal surpluses) running far ahead of domestic investment.
+2. **A huge net-creditor position throwing off income.** GIC, Temasek, MAS reserves, corporates → Singapore is
+   a massive net owner of foreign assets, whose returns feed the surplus in a *self-reinforcing* loop.
+3. **Safe-haven capital inflows** 避险资金 (避險資金) — AAA rating, rule of law, hub status pull in FDI,
+   portfolio, and private-wealth inflows: structural demand for SGD assets.
+4. **Balassa–Samuelson (productivity).** A fast-growing, high-productivity economy tends to see its *real*
+   exchange rate appreciate; a country delivers that either through domestic inflation or a rising nominal
+   currency — which is the bridge to the punchline.
+
+**The twist — the appreciating slope *is* the monetary policy.** Singapore is too small and open for the
+interest rate to be the main anti-inflation lever, so MAS *deliberately chooses* a gently appreciating slope to
+hold down imported inflation (§1). So the market's appreciation pressure and MAS's desired policy **point the
+same way** — MAS isn't fighting the upward momentum so much as *harnessing and metering* it (steepen when
+imported inflation runs hot, as in 2022; flatten when it cools).
+
+**The accounting that guarantees it all ties out.** A current-account surplus *must* be matched by net
+acquisition of foreign assets (a financial-account outflow). Singapore recycles its high-saving surplus into
+foreign assets — MAS reserves + GIC + Temasek — so the reserve growth isn't luck; it's the **mechanical
+counterpart** of the surplus.
+
+**The caveat on "unlimited."** Resisting appreciation isn't *free*: selling SGD injects SGD liquidity, which
+left alone would loosen policy and stoke inflation — defeating the purpose. So MAS **sterilizes** 冲销 (沖銷) —
+issuing MAS Bills / SGS, taking government deposits, doing reverse repos. Real cost and complexity, but — the
+key point — **not a hard ceiling** the way finite reserves are on the depreciation side. Your "unlimited on the
+strong side" holds; the binding constraint only bites in the rare crisis when MAS must defend a *weak* SGD, and
+the giant reserve stockpile exists precisely to win those rare fights decisively.
+
+### 10b — What "reserves" actually are, and why offshore returns don't move the SGD unless *converted*
+
+Two precise questions that tighten §4's loose "GIC, Temasek, MAS reserves" lumping.
+
+**(i) What counts as "foreign reserves"? Does my personal USD deposit count?** No — and the clean line runs
+through *three* different pools I had lumped together:
+
+| Pool | What it is | "Official foreign reserves"? |
+|---|---|---|
+| **MAS Official Foreign Reserves (OFR)** 官方外汇储备 (官方外匯儲備) | Foreign-currency assets held by the *monetary authority*, usable for FX intervention | **Yes** — the only pool that changes when MAS intervenes (~USD 370bn range) |
+| **GIC** | Manages the government's long-horizon financial assets abroad | No — not OFR, not published |
+| **Temasek** | A commercial holding company owning equity stakes | No — its own corporate balance sheet |
+
+So **"official reserves" = MAS only.** GIC and Temasek are part of Singapore's *national* net-creditor position
+净债权国 (淨債權國) but not "reserves" in the intervention sense. Your personal USD deposit is a **private**
+external asset — it counts toward the country's net international investment position (NIIP), not toward
+official reserves. So: correct, it doesn't count.
+
+**(ii) If a public-sector fund earns high returns abroad and keeps them in foreign currency, does that push the
+SGD up?** Your instinct was exactly right: **no — not unless it's *converted* into SGD.** An asset sitting in
+US equities is USD that never places an order in the SGD market. Upward pressure materializes *only* when
+someone sells foreign currency and buys SGD.
+
+And this is the key to 10a's puzzle. The balance-of-payments identity says the surplus *must* become foreign
+assets; the question is *who holds them and in what currency*. Singapore's answer — **recycle the surplus into
+offshore foreign-currency assets** (MAS + GIC + Temasek) rather than converting it to SGD — is itself an
+**appreciation-pressure release valve**. If the whole surplus had to be converted to SGD each year, no gentle
+slope could survive it. The sovereign-wealth-fund model isn't only about returns; it's *structurally* how
+Singapore keeps appreciation gentle despite enormous surpluses. Two honesty checks:
+
+- **Investment income still enlarges the surplus statistically** (it's primary income 投资收益 / 投資收益) — but
+  a *statistical* surplus is not *FX-market pressure*. Only conversion moves the rate.
+- **Where the offshore money finally touches the SGD:** the **Net Investment Returns Contribution (NIRC)** — the
+  government may spend up to ~50% of expected long-run returns from GIC/MAS/Temasek in its SGD budget. Funding
+  SGD outlays means converting some returns into SGD — real SGD demand, though smoothed and offsettable.
+
+### 10c — What currency is the economy even allowed to price in? (the hinge into §5)
+
+You noticed the split: firms invoice in **USD** all the time, yet the consumer and property markets are **purely
+SGD**. Is there a law? Could a condo carry a **USD** price tag?
+
+**The governing principle: freedom of contract, and no exchange controls.** Singapore abolished exchange
+controls in **1978** and has **no law requiring domestic transactions to be in SGD**. The default is **freedom
+of contract** 合同自由 (契約自由): parties may price, invoice, and settle in any currency, and Singapore courts
+will enforce a foreign-currency contract and even *give judgment* in a foreign currency. USD invoicing is
+completely legal — routine in trade, shipping, commodities, and B2B.
+
+**"Legal tender" ≠ "mandatory pricing currency."** Under the **Currency Act**, SGD notes/coins are **legal
+tender** 法定货币 (法定貨幣) — meaning only that *if an SGD debt is payable in Singapore, the creditor must accept
+SGD to discharge it*. It does **not** force prices to be in SGD (same reason a shop may refuse a large note or
+refuse cash: legal tender governs *discharge of a debt*, not *what you must price in*). So the consumer market
+being all-SGD is **economic gravity, not law** — wages, rents, CPF, and taxes are all SGD, so pricing consumer
+goods otherwise just dumps FX risk on the customer.
+
+**Could a developer put a USD tag on a condo?** No outright statutory ban on the *quote* — but the entire
+apparatus of a residential sale runs in SGD, so in practice it's SGD and a USD tag would be self-defeating:
+statutorily **prescribed** Option-to-Purchase / Sale-&-Purchase forms and progress-payment schedule; **stamp
+duties** (BSD/ABSD) assessed in SGD; MAS **loan rules** (LTV, TDSR) and SGD housing loans; **CPF** (SGD-only).
+A USD contract would pile FX risk onto a buyer whose loan, CPF, and salary are all SGD — nobody would sign it,
+and the paperwork converts to SGD anyway.
+
+**The one hard hook — and note what it's about.** Even a USD invoice for a domestic supply must show the
+**SGD-equivalent** for **GST** 消费税 (消費稅): IRAS requires GST to be *accounted for* in SGD. That's the
+closest thing to a "must use SGD" rule — and it's **tax accounting**, not a restriction on what you may price or
+contract in.
+
+**Mental model:** Singapore lets you *contract* in any currency (open economy, freedom of contract), reserves
+SGD's special status for the narrow legal-tender question of *discharging SGD debts*, and lets **practical
+gravity** pull consumer and property pricing into SGD without ever needing a law.
+
+**Why this is the hinge into §5.** Hold that picture — *no exchange controls, free choice of contract
+currency, capital flows in and out freely* — because **China is the exact opposite corner of the trilemma**
+(§2). China keeps an *independent interest rate* **and** a *managed exchange rate*, which the trilemma says
+forces it to give up the third corner: **free capital movement**. So China runs **capital controls** and,
+historically, **强制结汇 (compulsory FX surrender)** — the state *requiring* exporters to hand over their foreign
+currency — the precise inverse of Singapore's "keep your USD, price in what you like." §5 builds that third
+model, and your 10c question is exactly the door into it.
+
+*(Signature pattern, again: the value in each thread was not re-teaching the mechanism but* correcting the
+premise *and* naming the structure *— slope-vs-level, OFR-vs-GIC-vs-Temasek, legal-tender-vs-pricing-currency —*
+*and your own instincts (the intervention asymmetry, "returns don't move the SGD unless converted") were the
+load-bearing insights, integrated straight in.)*
 
 ---
 
@@ -430,14 +578,16 @@ The payoff section for reading **Singapore/Asia** monetary news across both lang
 ---
 
 ### What's next
-🔵 **Body drafted 2026-08-01 — awaiting our live session. This section closes Module E03.** You now hold
-*both* templates for how a central bank anchors the price level: the **Fed model** (§3 — steer the domestic
+✅ **Finalized 2026-08-06** (§10 Applied added from our live session). You now hold *two* of the three
+templates for how a central bank anchors the price level: the **Fed model** (§3 — steer the domestic
 **interest rate**, because a large closed-ish economy's inflation is domestic) and the **MAS model** (§4 —
 steer the **exchange rate**, because a small ultra-open economy's inflation is imported), tied together by
-the **impossible trinity** that says *which* lever you can keep. With money defined (§1), priced (§2), and
-now *governed* (§3–§4), **Module E03 is complete** — you can read essentially any monetary-policy story,
-Fed or MAS, from the mechanism up. The track now opens onto the **other half of macro policy — E04, fiscal
-policy** (taxes, spending, deficits, and the policy mix with the monetary tools you just learned) — and, when
-you want the FX mechanics deepened, **E05 (exchange rates, the balance of payments, and capital flows)**,
-where the trilemma, FX intervention, and Singapore-as-a-hub all return with full rigour. On finalize, a
-**§10 Applied** will capture whatever thread our session pulls on.
+the **impossible trinity** that says *which* lever you can keep. Fed and MAS occupy **two corners** of that
+triangle — but the trilemma has **three**. **§5 (China / the PBoC)** takes the corner neither of them chose:
+keep *both* an independent interest rate *and* a managed exchange rate, and pay for it by giving up **free
+capital movement** — **capital controls**, and historically **强制结汇 (compulsory FX surrender)**. That's the
+exact inverse of the freedom-of-contract, open-capital Singapore you met in §10c, and it completes the
+central-bank picture before Module E03 closes. After §5, the track opens onto the **other half of macro
+policy — E04, fiscal policy**, and, when you want the FX mechanics deepened, **E05 (exchange rates, the
+balance of payments, and capital flows)**, where the trilemma, FX intervention, and Singapore-as-a-hub return
+with full rigour.
