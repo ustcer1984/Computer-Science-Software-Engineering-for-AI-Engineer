@@ -9,6 +9,35 @@
 
 ---
 
+v39 (2026-08-07 — **hobby econ E03 §5 (the PBoC model) FINALIZED → Module E03 (Money, Banking & Monetary
+Policy) COMPLETE — §1–§5 all ✅.** Body (drafted 08-06) went **untouched** again — the 4th straight econ section
+with zero body edits. **§10 = the live session, two map-building threads:** **(10a) the PBoC mandate** — he had
+the Fed (dual) and MAS (single) pinned and asked China's; the hook is that the legal *"stability of the value of
+the currency → and thereby growth"* has a **dual internal + external** reading (the price level AND the exchange
+rate), so **the mandate IS the trilemma choice restated as a legal duty**, and in practice it's
+**multi-objective (多目标制)** and **not independent** (the State Council prioritizes). **(10b) at his request,
+the whole world mapped onto the trilemma triangle** — Group 1 Fed-model floaters (ECB single-mandate, BoE
+hierarchical, BoJ deflation/YCC/QQE, BoC/RBA/RBNZ/Riksbank/Norges/BoK), the two instructive **hybrids** (**SNB**
+= a floater using MAS's appreciation-fighting FX tool; **India/RBI** = parked *between* Fed & PBoC with partial
+controls), Group 2 MAS-corner (HKMA currency-board hard peg, GCC/Saudi & Denmark/euro pegs), Group 3 PBoC-corner
+(Vietnam PBoC-lite, crisis-driven EM controls) — then **he asked for the acronyms spelled out**, so I added an
+institutions + tools abbreviation key (OMO/QE/QT/IORB/ON RRP/APP/PEPP/TLTRO/TPI/YCC/QQE/NIRP/RRR/LPR/MLF/CRR/SLR/
+NEER/ERM II/CFETS). **CALIBRATION — a new *mode*, not a new gap: he now uses the three-model framework as a LENS
+on the whole world** ("where does everyone else sit?", "what's China's mandate?") rather than probing a single
+mechanism — the sign a scaffold has become a tool. Distinct from the v32/v35 mis-located-premise mode and the
+v38 right-mechanism mode: this was **framework-as-lens / map-the-landscape**. Teach-forward: he's ready for
+comparative "map the whole field" framings across subjects, and the abbreviation ask is the
+**practitioner-reads-real-news** instinct ([[reading-track-is-discovery-not-preteach]]) → **expand acronyms by
+default in reference tables.** **DURABLE PROCESS FEEDBACK this session (now a memory rule,
+[[bilingual-chinese-glosses]]): English is ALWAYS the primary term** in titles/headings/prose/diagram-labels;
+Chinese only a parenthetical gloss + the glossary — I had to flip 强制结汇/意愿结汇 after over-promoting them to
+the §5 title/headings ("I said 强制结汇 because I did not know the English term then"). Also logged
+([[render-check-tools-available]]): **Playwright + a drivable Chrome ARE available on this machine** for the real
+typeset gate — don't downgrade to recognition-only. Process: clean finalize, body **no edits**; math `$`-balance
+clean; 4 matplotlib figs + mermaid held; profile pruned (v36/v35 folded to the archive). **Next:** **E04 fiscal
+policy** or **E05 (exchange rates/BoP/capital flows)**, or rotate to course (M02 Ch1 networking / M04 Ch3
+patterns / M01 Ch5 OS).)
+
 v38 (2026-08-06 — **hobby econ E03 §4 (the MAS model) FINALIZED and §5 (the PBoC model) PREPARED in one
 session → Module E03 down to its last section.** §4 body (drafted 08-01) went **untouched** again. **§4 §10 =
 the live session, three threads tracing the whole MAS machine:** **(10a)** he **derived the intervention

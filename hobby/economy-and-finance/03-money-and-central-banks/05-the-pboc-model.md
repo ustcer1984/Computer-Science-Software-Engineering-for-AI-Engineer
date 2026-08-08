@@ -13,8 +13,9 @@
 > that looks nothing like the Fed's. This is the exact inverse of the open-capital, freedom-of-contract
 > Singapore you met in §4 §10c. It closes E03 and points to E04 (fiscal policy) and E05 (exchange rates &
 > capital flows), where these mechanics return with full rigour.
-> **Status:** 🔵 **body drafted 2026-08-06.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section). This section **closes Module E03.**
+> **Status:** ✅ **finalized 2026-08-07** (body drafted 2026-08-06, went untouched). **§10 Applied** added from
+> our live session — two threads: the **PBoC's mandate** (vs the Fed's and MAS's), and **a map of every major
+> central bank on the trilemma triangle** (with an abbreviation key). This section **closes Module E03.**
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -407,8 +408,155 @@ Reason first; check against a source where noted.
 
 ## 10. Applied — from our session Q&A
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+Two threads, and together they turn the three-model arc of §3–§5 into a map of the *whole world*: first **what
+the PBoC is actually *for*** (its mandate, next to the Fed's and MAS's), then **where every major central bank
+sits** on the same trilemma triangle. An abbreviation key follows the big table — most of the acronyms are just
+"[Country] central bank," but the policy tools are worth knowing.
+
+### 10a — The PBoC's mandate: broader than the Fed's, and *dual in a different sense*
+
+You had the Fed and MAS pinned — **Fed = dual mandate** (price stability + maximum employment), **MAS = price
+stability only** (pursued through the exchange rate) — and asked what the PBoC's is. It's the broadest of the
+three, and the interesting part is *how*.
+
+**The legal mandate.** Under the *Law of the PRC on the People's Bank of China* (1995, amended 2003): *to
+maintain the **stability of the value of the currency** (货币币值稳定), and thereby to promote economic growth.*
+That reads dual (stability + growth) — but two things set it apart:
+
+- **"Value of the currency" is itself dual — internal *and* external.** Internal value = the domestic price
+  level (**price stability**, like everyone else). External value = the **exchange rate**. The Fed's mandate
+  covers only the internal value (it floats the dollar); MAS's *objective* is also internal (the exchange rate
+  is just its instrument). The PBoC's mandate makes the **external value an objective in its own right** — and
+  *that is the trilemma choice restated as a mandate*: a bank told to stabilize both the price level *and* the
+  exchange rate, while keeping its own rate, is a bank that **must** wall off the capital account. The mandate
+  and §1's corner are the same fact.
+- **In practice it's *multi-objective* (多目标制), not dual.** Former governor Zhou Xiaochuan described the
+  PBoC as juggling **five-ish goals**: price stability, growth, employment, **balance-of-payments equilibrium**
+  (the external-balance goal the Fed doesn't carry), and **financial stability / financial-sector reform &
+  opening**.
+
+**The decisive difference — it isn't an *independent* mandate.** For the Fed, the dual mandate is a legal
+constraint it pursues *autonomously*. For the PBoC, these objectives are **set and prioritized by the State
+Council** (§5) — so "growth" and "employment" enter not as autonomous central-bank targets but as *whatever the
+national plan currently requires*. The effective top line is "serve the national economic policy, anchored on
+currency stability + growth."
+
+| | **Fed** | **MAS** | **PBoC** |
+|---|---|---|---|
+| **Stated objective** | dual: **price stability + max employment** | **price stability** (basis for sustainable growth) | **currency stability — internal *and* external** → and thereby growth |
+| **In practice** | those two (+ moderate long rates) | one (price stability) | **multi-objective** (prices · growth · employment · BoP balance · financial stability/reform) |
+| **Exchange rate a *goal*?** | no (dollar floats) | no — it's the *instrument* | **yes, explicitly** |
+| **Who sets priorities** | the Fed, **independently** | MAS, operationally independent | the **State Council** (PBoC executes) |
+
+Narrowest and most autonomous (Fed) → most single-minded, one goal one lever (MAS) → **broadest and least
+independent, with the exchange rate written into the mandate itself** (PBoC).
+
+### 10b — The whole world on one triangle
+
+Your follow-up was the natural one: if there are three models, where does *everyone else* sit? The cleanest
+organizing question is **which corner of the trilemma each one gives up** — that *is* the Fed/MAS/PBoC
+classification (§7). Most of the developed world clusters at the Fed corner; a handful live on an edge.
+
+> **The three corners:** **Fed model** = keep an independent rate + free capital, give up FX stability
+> (**float**). **MAS model** = keep free capital + managed FX, give up the independent rate. **PBoC model** =
+> keep an independent rate + managed FX, give up free capital (**controls**).
+
+**Group 1 — Fed model** (float · independent rate · open capital · inflation targeting)
+
+| Body (economy) | Mandate | Main policy & toolkit | vs Fed — key difference |
+|---|---|---|---|
+| **Federal Reserve** (USA) | **Dual**: price stability + max employment | Policy rate (floor system), OMO, QE/QT, forward guidance | — *the reference* |
+| **ECB** (Eurozone) | **Single primary**: price stability (~2%) | Policy rates, APP/PEPP (QE), TLTRO, TPI | Single (not dual) mandate; **one rate for 20 sovereigns** → fragmentation risk |
+| **Bank of England** (UK) | Price stability (2%); *then* support growth & employment | Bank Rate, QE/QT, forward guidance | Explicitly **hierarchical**; annual remit letter from the Treasury |
+| **Bank of Japan** | Price stability (2%) | Policy rate, **YCC** (2016–24), **QQE**, ETF buying, negative rates (all ended 2024) | Fought **deflation** for ~30 yrs; pioneered QE & YCC; only now normalizing |
+| **BoC · RBA · RBNZ · Riksbank · Norges · BoK** | Inflation target (mostly 2%) | Policy rate, QE as needed, forward guidance | Same model. **RBNZ** = original inflation-targeter (1990); **RBA** carries a fuller employment leg |
+
+*Edge cases — float, but not "pure" Fed:*
+
+| Body | Mandate | Toolkit | Why it's a hybrid |
+|---|---|---|---|
+| **Swiss National Bank** | Price stability, w/ due account of the economy | Policy rate **+ heavy FX intervention** (EUR/CHF floor 2011–15; huge reserves) | Floats but **leans against safe-haven appreciation like MAS** — a Fed/MAS blend |
+| **Reserve Bank of India** | Flexible inflation targeting (4% ±2%) | Repo rate, **CRR/SLR**, OMO, **managed float + partial capital controls** | Sits **between Fed and PBoC**: own rate + inflation target, but a managed rupee and a half-open capital account |
+
+**Group 2 — MAS model** (open capital · managed FX · give up the independent rate)
+
+| Body (economy) | Mandate | Main policy & toolkit | vs MAS — key difference |
+|---|---|---|---|
+| **MAS** (Singapore) | Price stability (basis for growth) | **The SGD NEER band** (slope/width/level) + FX intervention | — *the reference* |
+| **HKMA** (Hong Kong) | Currency & banking stability; the Linked Exchange Rate | **Currency-board hard peg** 7.75–7.85/USD; no discretionary rate | Same corner, but a **hard peg, zero discretion** — fully imports Fed policy; no crawling band |
+| **Gulf pegs** (Saudi SAMA, UAE, Qatar…) | Exchange-rate / monetary stability | **Hard USD pegs**; rates move in lockstep with the Fed | MAS-corner via **hard peg**; oil exporters recycling USD (Kuwait pegs to a basket) |
+| **Danmarks Nationalbank** (Denmark) | Defend the **euro** peg (ERM II) | FX intervention + rate moves to hold the peg | Same corner, but pegged to the **euro** → gives up its rate to the **ECB**, not the Fed |
+
+**Group 3 — PBoC model** (independent rate · managed FX · capital controls)
+
+| Body (economy) | Mandate | Main policy & toolkit | vs PBoC — key difference |
+|---|---|---|---|
+| **PBoC** (China) | Currency stability (internal + external) → growth; multi-objective; not independent | Managed float (daily fix + ±2% band), **RRR**, LPR/MLF/reverse-repo, window guidance, relending, **capital controls** | — *the reference* |
+| **State Bank of Vietnam** | Currency stability + growth (state-directed) | Crawling band vs USD, **credit-growth quotas**, rate tools, **capital controls** | A smaller **PBoC-lite**; even heavier reliance on administrative credit quotas |
+| **EM with controls** (Malaysia 1998–2005; Argentina, Nigeria, Egypt at times) | FX-stability/growth, often under state direction | Pegs/managed rates + **capital & FX controls** (quotas, surrender rules) | PBoC-corner — several used **compulsory-surrender-style** rules — but usually **crisis-driven**, not China's deliberate long-run strategy |
+
+**How to read the whole thing.** Most of the developed world is **Group 1** — the differences there are about
+*mandate breadth* (dual vs single) and *what they fight* (BoJ: deflation), not the corner. **Group 2 is "run
+someone else's monetary policy on purpose"** — HKMA/Gulf import the Fed's, Denmark the ECB's; MAS is the
+sophisticated version (a discretionary band, not a rigid peg). **Group 3 is the rare, expensive corner** — it
+needs the whole capital-controls apparatus, so only large or tightly-governed states run it by design; others
+only *visit* it in a crisis. The two most instructive hybrids are the **SNB** (a floater borrowing MAS's
+appreciation-fighting tool) and **India** (parked *between* the Fed and PBoC corners, holding partial controls
+to keep a little of both). (The **IMF, BIS, and World Bank** are *not* on the list — they don't set monetary
+policy or issue a currency; they're lenders/forums/standard-setters.)
+
+#### Abbreviation key (the part you asked for)
+
+**Central banks & bodies** — mostly just "[place] central bank":
+
+| Abbrev. | Full name (economy) |
+|---|---|
+| **Fed** | Federal Reserve (USA) |
+| **ECB** | European Central Bank (the Eurozone — the 20 EU states using the euro) |
+| **BoE** | Bank of England (UK) |
+| **BoJ** | Bank of Japan |
+| **BoC** | Bank of Canada |
+| **RBA** | Reserve Bank of Australia |
+| **RBNZ** | Reserve Bank of New Zealand |
+| **Riksbank** | Sveriges Riksbank (Sweden — the world's oldest central bank) |
+| **Norges Bank** | central bank of Norway |
+| **BoK** | Bank of Korea (South Korea) |
+| **SNB** | Swiss National Bank (Switzerland) |
+| **RBI** | Reserve Bank of India |
+| **MAS** | Monetary Authority of Singapore |
+| **HKMA** | Hong Kong Monetary Authority |
+| **SAMA** | Saudi Central Bank (still abbreviated from the old *Saudi Arabian Monetary Authority*) |
+| **SBV** | State Bank of Vietnam |
+| **PBoC** | People's Bank of China |
+| **GCC** | Gulf Cooperation Council (Saudi Arabia, UAE, Qatar, Kuwait, Bahrain, Oman) |
+| **EM** | emerging markets (developing economies) |
+| **IMF / BIS** | International Monetary Fund / Bank for International Settlements (*not* central banks) |
+
+**Policy tools & terms:**
+
+| Abbrev. | What it is |
+|---|---|
+| **OMO** | Open Market Operations — buying/selling securities to move the money supply / rate |
+| **QE / QT** | Quantitative Easing / Tightening — large-scale asset *buying* (QE) or *shrinking* the balance sheet (QT); see §3 |
+| **IORB** | Interest On Reserve Balances — the rate the Fed pays banks on reserves; its main lever (§3) |
+| **ON RRP** | Overnight Reverse Repo — the Fed's sub-floor facility for non-banks (§3 §10b) |
+| **APP / PEPP** | ECB Asset Purchase Programme / Pandemic Emergency Purchase Programme — its QE programmes |
+| **TLTRO** | Targeted Longer-Term Refinancing Operations — cheap ECB loans to banks that keep lending |
+| **TPI** | Transmission Protection Instrument — ECB tool to stop one member's bond yields blowing out |
+| **YCC** | Yield Curve Control — pinning a *longer* bond yield at a target (BoJ 2016–24; §3 §5) |
+| **QQE** | Quantitative *and Qualitative* Easing — the BoJ's giant, wide-asset QE programme |
+| **NIRP** | Negative Interest Rate Policy — a policy rate below zero (BoJ/ECB/SNB, now unwound) |
+| **Bank Rate** | the Bank of England's name for its policy interest rate |
+| **repo / reverse repo** | a collateralized short-term loan; the *rate* on it is a common policy lever (China's 7-day reverse repo) |
+| **RRR** | Reserve Requirement Ratio — the share of deposits banks must park at the central bank; China's signature lever (§4–§5) |
+| **LPR / MLF** | Loan Prime Rate / Medium-term Lending Facility — China's main lending-rate anchors (§5) |
+| **CRR / SLR** | Cash Reserve Ratio / Statutory Liquidity Ratio — India's two reserve-type requirements |
+| **NEER** | Nominal Effective Exchange Rate — a currency vs a *trade-weighted basket* (the SGD NEER, the CFETS basket; §3–§4) |
+| **ERM II** | Exchange Rate Mechanism II — the EU framework in which a non-euro currency (e.g. the Danish krone) pegs to the euro |
+| **CFETS** | China Foreign Exchange Trade System — its basket index, the reference for the yuan's daily fix (§2) |
+
+*(For the China-specific tools in Chinese — RRR 存款准备金率, LPR 贷款市场报价利率, MLF 中期借贷便利, etc. — see
+the bilingual glossary above.)*
 
 ---
 
@@ -476,7 +624,7 @@ Reading **China/Asia** monetary news across both scripts. Most differences are *
 ---
 
 ### What's next
-🔵 **Body drafted 2026-08-06 — awaiting our live session. This section closes Module E03.** You now hold **all
+✅ **Finalized 2026-08-07 — this section CLOSES Module E03.** You now hold **all
 three** templates for how a central bank governs money — the trilemma's three corners: the **Fed** (§3 — keep
 the rate + open capital, **float**), **MAS** (§4 — keep open capital + a managed currency, **give up the
 rate**), and the **PBoC** (§5 — keep the rate + a managed currency, **give up free capital**, paid in *controls*
@@ -485,5 +633,5 @@ E03 is complete** — you can read essentially any monetary-policy story on eart
 track now opens onto the **other half of macro policy — E04, fiscal policy** (taxes, spending, deficits, and the
 policy mix), and, when you want the FX and cross-border mechanics deepened, **E05 (exchange rates, the balance
 of payments, and capital flows)** — where the trilemma, FX intervention, reserves, and capital controls all
-return with full rigour, now as the *main* subject rather than the central-bank lens. On finalize, a **§10
-Applied** will capture whatever thread our session pulls on.
+return with full rigour, now as the *main* subject rather than the central-bank lens. **§10 Applied** captured
+our two session threads — the PBoC's mandate, and the world map of central banks on the trilemma triangle.

@@ -4,7 +4,33 @@
 > Cursor, …) should read this for context and keep it current. Lives in `agent-docs/` per the repo's
 > multi-agent rule. Update it when a learning session reveals something new about skills/gaps.
 
-Last updated: 2026-08-06 (v38 — **hobby econ E03 §4 (the MAS model) FINALIZED and §5 (the PBoC model)
+Last updated: 2026-08-07 (v39 — **hobby econ E03 §5 (the PBoC model) FINALIZED → Module E03 (Money, Banking &
+Monetary Policy) COMPLETE — §1–§5 all ✅.** Body (drafted 08-06) went **untouched** again — the 4th straight
+econ section with zero body edits. **§10 = the live session, two map-building threads:** **(10a) the PBoC
+mandate** — he had the Fed (dual) and MAS (single) pinned and asked China's; the hook is that the legal
+*"stability of the value of the currency → and thereby growth"* has a **dual internal + external** reading
+(the price level AND the exchange rate), so **the mandate IS the trilemma choice restated as a legal duty**,
+and in practice it's **multi-objective (多目标制)** and **not independent** (the State Council prioritizes).
+**(10b) at his request, the whole world mapped onto the trilemma triangle** — Group 1 Fed-model floaters
+(ECB/BoE/BoJ/BoC/RBA/RBNZ/Riksbank/Norges/BoK), the two instructive **hybrids** (**SNB** = a floater using
+MAS's appreciation-fighting FX tool; **India** = parked *between* Fed & PBoC with partial controls), Group 2
+MAS-corner (HKMA currency-board hard peg, GCC/Saudi & Denmark pegs), Group 3 PBoC-corner (Vietnam PBoC-lite,
+crisis-driven EM controls) — then **he asked for the acronyms spelled out**, so I added an institutions+tools
+abbreviation key. **CALIBRATION — a new *mode*, not a new gap: he now uses the three-model framework as a LENS
+on the whole world** ("where does everyone else sit?", "what's China's mandate?") rather than probing a single
+mechanism — the sign a scaffold has become a tool; teach-forward, he's ready for comparative/"map the
+landscape" framings across subjects. The abbreviation ask is the **practitioner-reads-real-news** instinct
+(the reading-track motive, [[reading-track-is-discovery-not-preteach]]) → **expand acronyms by default in any
+reference table.** **DURABLE PROCESS FEEDBACK this session (now a memory rule): English is ALWAYS the primary
+term** in titles/headings/prose/diagram-labels; Chinese only a parenthetical gloss + the glossary — I had to
+flip 强制结汇/意愿结汇 after over-promoting them to the §5 title/headings ("I said 强制结汇 because I did not know
+the English term then"). Also logged: **Playwright + a drivable Chrome ARE available on this machine** for the
+real typeset gate — don't downgrade to recognition-only. Process: clean finalize, body **no edits**; math
+`$`-balance clean; 4 matplotlib figs + mermaid held. **Next:** **E04 — fiscal policy** (taxes/spending/deficits/
+the policy mix — the other half of macro policy, pairs with the monetary tools just built), or **E05** (exchange
+rates/BoP/capital flows — where the trilemma & controls return as the *main* subject), or rotate to course (M02
+Ch1 networking / M04 Ch3 patterns / M01 Ch5 OS).)
+Prior: v38 (2026-08-06 — **hobby econ E03 §4 (the MAS model) FINALIZED and §5 (the PBoC model)
 PREPARED in one session → Module E03 down to its last section.** §4 body (drafted 08-01) went **untouched**
 again. **§4 §10 = the live session, three threads tracing the whole MAS machine:** **(10a)** he **derived the
 intervention asymmetry himself** — *unlimited* ammunition to hold the SGD down (print it) vs *finite* reserves
@@ -56,63 +82,7 @@ Ch4's latency/round-trip + Little's-Law work** and touches his daily web-app pra
 Mermaid diagrams; GFM render-trap greps clean; plan.md Ch2 row flipped ✅. **Next:** **M02 Ch1 being prepared this
 session**; then M02 continues (HTTP · TLS · real-time), or **M04 Ch3 design patterns** (teed up — the port/adapter he
 built in §3 *is* Adapter + DI; inverting a cycle *is* DIP), or **M01 Ch5** (OS landscape).)
-Prior: v36 (2026-08-03 — **reading #12 finalized (created 2026-07-27, finalized 2026-08-03) — the post-quantum
-cryptographic migration (career) + the collapsing resource estimate for a codebreaking quantum computer (hobby).** First
-reading-track outing for the **cyber-security** track he requested at kickoff. **Story 1 stayed a read; the whole session
-went to a question sitting *underneath* story 2** — not "is the estimate collapse real?" but ***"I am not familiar with
-quantum computing. What will be its real application beside hacking the password?"*** **NEW MODE: he stepped BACK from the
-material to ask the foundational what-is-this-for question** — the practitioner/architect instinct, not the physicist's.
-**NEW DURABLE SIGNAL — a rare self-declared domain gap:** quantum computing **as a technology** is genuinely novice ground
-for him *while the underlying physics is native* — Hilbert-space dimension, the **fermion sign problem**, DFT's
-multireference failure and logical-vs-physical clock rates all landed with zero scaffolding, but the technology's
-*economics* was entirely new. **⇒ teach the technology and its economics, never the physics.** **What worked was a
-CREDIBILITY RANKING, not a survey:** tier 1 quantum simulation (the only *structural* case — a substrate match, not a
-trick; FeMoco, and **semiconductor defect/dopant chemistry as the target nearest his own decade of failure analysis**),
-tier 2 optimization (most sales collateral, weakest evidence — Grover is only square-root-N against a ~12-order logical-clock
-deficit), tier 3 quantum ML on classical data (category error — the exponential dies at the I/O; Tang's dequantization),
-plus **quantum *sensing*** as the mature non-computing quantum tech (**NV-centre magnetometry is already a real IC
-failure-analysis tool** — a second hook into his old job). Tier-1 keeper, itself a ranking claim: ***quantum wins first
-against the method nobody uses (full CI), not the method everyone uses (CC/MP2/DFT)***. **CALIBRATION — the signature
-pattern in a THIRD variant, and the corrective move was a DECOUPLING, not a re-ranking.** His synthesis — *"so at least for
-now, quantum computing is not competing on anything classical computing is doing, right?"* — **fused two claims that had to
-be split**: the **practical** claim TRUE (no production workload picks quantum today), the **structural** claim FALSE
-(quantum solves a *subset* of classically solvable problems — same race, different exponent), and splitting them is what
-reveals that **quantum chemistry enters the most crowded field in HPC, not an empty one**. Family: v33/v24/v30 =
-mis-*ranked* magnitudes/leverage; v32/v35 = mis-*located* mechanism; **v36 = two claims FUSED needing decoupling** (kin: the
-v24 io_uring dispatcher ⟂ zero-syscall split). **⇒ STANDING REFINEMENT: the corrective move alternates — RE-RANK when he
-mis-orders two magnitudes, DECOUPLE when he bundles two claims into one sentence.** Also logged: the **classical-fights-back
-dynamic** (Sycamore 2019 → tensor networks; Tang) — *the most durable output of a quantum advantage claim is often a better
-classical algorithm* — **and this year's counter-update against his "for now": Quantum Echoes has so far SURVIVED** (an
-April 2026 tensor-network rebuttal attempt concluded the opposite). Landing analogy from his own world, and it did work
-prose could not: **a quantum computer is closer to a synchrotron beamline than to a server.** **Teach-forward (generalises
-v28): for ANY domain he is new to, deliver a credibility-ranked map with hype tiers separated and vendor incentives named,
-not a survey.** Process: clean finalize; one new Mermaid diagram (the four-tier map) built on finalize because the ranking
-*was* the artifact; 7 Q&A sources added + verified; **the footer math-in-italic trap bit again and was caught by the parser
-check, not the regex**. **Next:** reading rotation open; standing hands-dirty follow-ups unchanged.)
-Prior: v35 (2026-08-01 — **hobby econ E03 §3 (monetary policy — the standard Fed model) finalized → Module E03
-nearly complete** (§1 ✅ §2 ✅ §3 ✅; only §4 MAS remains). The module centrepiece; body (drafted 07-25) went **untouched**.
-**§10 = the live session**, a **four-step chain built outward from one seed question — *how does the Fed actually create and
-drain reserves?*** — into the whole floor-system plumbing, ending on his own reasoning at the doorstep of §4 (same
-outward-chain mode as v29/v32). The calibration headline: **the signature "mis-*located*" pattern recurred FOUR times in
-one session** — right instinct/fact, wrong-by-one-step locus, integrated instantly on naming: **(10a)** *no reserve
-requirement → reserves market-determined* → reserves are a **closed system** (Fed sets the total, banks are price-takers /
-"hot potato"; creation = the purchase keystroke; QT = passive run-off; autonomous factors); **(10b)** *do banks deposit
-reserves to earn IORB?* → **reserves ARE deposits at the Fed**; IORB floors the rate by arbitrage; wrinkle EFFR<IORB
-(FHLB/GSE non-eligibility) → **ON RRP** sub-floor + Fed operating losses; **(10c)** *withdraw/lend out reserves?* → cash =
-the one real exit (→currency), but customer **lending creates deposits, not reserve outflow** (§1) — reserves are a
-**bank-only settlement layer** that moves only bank-to-bank; **(10d) his sharpest** — *asset choice has micro effects; does
-the govt get the money?* → the **allocative insight is CORRECT (validated → why the Fed picks *neutral* Treasuries; MBS→
-housing, BoJ ETFs)** but QE buys **secondary-market** so the *private seller* not the govt gets the cash (anti-**monetary-
-financing** firewall; ECB Art.123); indirect financing = the **fiscal-dominance** blur; scarce-Treasuries → other assets /
-repo-lending / the **bond-free MAS FX model (§4)**. **Calibration:** confirms the standing rule — on econ he's a
-**generative, mechanism-seeking sparring partner**; value = correcting the mislocated premise + naming the structure +
-*validating his one correct original insight* + the §4 forward-hook, NOT re-teaching. The **"mis-located" variant** (right
-instinct, wrong *locus* — distinct from his v24/v30 physical-magnitude *mis-ranking*) is now his established mode on
-**institutional-plumbing** questions: let him propose the mechanism, then relocate + name. Process: clean finalize, body
-**no edits**; math grep-clean + **Playwright-verified** (zero errors/leaks); 2 mermaid + 4 matplotlib figs held. Glossary
-+§10 (一级↔初級 / 二级↔次級 markets, 债务货币化, 结算, 自主性因素). **Next:** **E03 §4 — the MAS exchange-rate model**
-(closes Module E03; §10d + the §4 FX channel already teed it up), then E04 (fiscal) or rotate.)
-(v34 2026-07-30 M04 Ch2 §2 refactoring-a-monolith finalized — body untouched, no questions on the technique; whole session drove §7 into a meta-question (now §10 Applied): coding harnesses (Claude Code/Cursor/Codex) do NOT encode the refactoring doctrine in their injected system prompts — those carry operational/tool-use hygiene, not SWE methodology (verified vs Claude Code's own visible instructions); three-layer model = system prompt (mostly no) · post-training (soft disposition, degrades under vague/large asks) · project instructions = the deterministic lever he controls (CLAUDE.md/.cursor/rules/AGENTS.md). **NEW SIGNAL: engagement tilts to the systems-of-work / agent-governance layer**, not the SWE technique he owns. Artifact: had me author a user-level Claude Code `refactor` skill (~/.claude/skills/refactor/, cross-project); Cursor .cursor/rules equivalent to follow, v33 2026-07-26 reading #11 eBPF/`sched_ext` + redefining the SI second — Story 1 became a LIVE HARDWARE DEBUG of his Meteor Lake ThinkPad (thermal throttle correctly localized by exemplary empirical method; the mis-*ranked* remedy — "migrate to a cooler core" is the weakest knob; real levers thermald → PL1 cap → FPS cap → repaste); a career reading now works as a LAUNCHPAD FOR REAL WORK, v32 2026-07-25 hobby econ E03 §2 interest rates — the mis-*located* variant (government can't decree Treasury yields, but the instinct relocates onto issuance composition → the 2024 ATI "stealth QE" debate; inversion is a FORECAST not pressure), v31 2026-07-24 M12 Ch2 §4 multimodal/representation → Ch2 COMPLETE — the projector-as-universal-adapter; independently re-derived CALM + LangBridge; representation/multimodal architecture is a peer-level generative axis (NOT the audio application-consumer read), v30 2026-07-22 reading #10 diffusion-LLMs (career) + private-fusion (hobby) — UNUSUAL: both halves became deep discussions; he proposed the right serving-economics himself (diffusion = single-user/low-batch win, HBM→FLOPs, load×SLO crossover) + an original dual-mode AR+diffusion idea → confirms **AI architecture *design* is a peer-level generative axis**; fusion rare-earth question = the v24 physical-magnitude-rank pattern again (re-ranked tritium ≫ HTS-fab ≫ RE-refining ≫ ore); reading-track dating rule set here (filename/header = CREATION date, finalize date in footer only), v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
+(v36 2026-08-03 reading #12 (post-quantum crypto migration + the collapsing quantum-codebreaking resource estimate) — self-declared rare domain gap: quantum computing AS A TECHNOLOGY is novice ground while the physics is native (⇒ teach the tech + its economics, never the physics); delivered a CREDIBILITY-RANKED, hype-tiered map (tier-1 simulation = the only structural case), and the corrective move was a DECOUPLE (practical claim TRUE / structural claim FALSE), not a re-rank, v35 2026-08-01 hobby econ E03 §3 monetary policy — the Fed model finalized (Module E03 → §4/§5 remained); the four-step outward chain from "how does the Fed create/drain reserves?" (closed-system reserves · IORB = reserves-are-Fed-deposits · bank-only settlement layer · QE-secondary-market + the validated credit-neutrality insight); the "mis-located premise" pattern ×4 in one session, v34 2026-07-30 M04 Ch2 §2 refactoring-a-monolith finalized — body untouched, no questions on the technique; whole session drove §7 into a meta-question (now §10 Applied): coding harnesses (Claude Code/Cursor/Codex) do NOT encode the refactoring doctrine in their injected system prompts — those carry operational/tool-use hygiene, not SWE methodology (verified vs Claude Code's own visible instructions); three-layer model = system prompt (mostly no) · post-training (soft disposition, degrades under vague/large asks) · project instructions = the deterministic lever he controls (CLAUDE.md/.cursor/rules/AGENTS.md). **NEW SIGNAL: engagement tilts to the systems-of-work / agent-governance layer**, not the SWE technique he owns. Artifact: had me author a user-level Claude Code `refactor` skill (~/.claude/skills/refactor/, cross-project); Cursor .cursor/rules equivalent to follow, v33 2026-07-26 reading #11 eBPF/`sched_ext` + redefining the SI second — Story 1 became a LIVE HARDWARE DEBUG of his Meteor Lake ThinkPad (thermal throttle correctly localized by exemplary empirical method; the mis-*ranked* remedy — "migrate to a cooler core" is the weakest knob; real levers thermald → PL1 cap → FPS cap → repaste); a career reading now works as a LAUNCHPAD FOR REAL WORK, v32 2026-07-25 hobby econ E03 §2 interest rates — the mis-*located* variant (government can't decree Treasury yields, but the instinct relocates onto issuance composition → the 2024 ATI "stealth QE" debate; inversion is a FORECAST not pressure), v31 2026-07-24 M12 Ch2 §4 multimodal/representation → Ch2 COMPLETE — the projector-as-universal-adapter; independently re-derived CALM + LangBridge; representation/multimodal architecture is a peer-level generative axis (NOT the audio application-consumer read), v30 2026-07-22 reading #10 diffusion-LLMs (career) + private-fusion (hobby) — UNUSUAL: both halves became deep discussions; he proposed the right serving-economics himself (diffusion = single-user/low-batch win, HBM→FLOPs, load×SLO crossover) + an original dual-mode AR+diffusion idea → confirms **AI architecture *design* is a peer-level generative axis**; fusion rare-earth question = the v24 physical-magnitude-rank pattern again (re-ranked tritium ≫ HTS-fab ≫ RE-refining ≫ ore); reading-track dating rule set here (filename/header = CREATION date, finalize date in footer only), v29 2026-07-21 hobby econ E03 §1 money & bank credit → opens Module E03 — generative macro-synthesis (multiplier-as-ceiling, loan-demand throttle, US–China symbiosis; corrected: China's export-M2 was sterilized, r→0 ≠ unlimited borrowing), v28 2026-07-15 M12 Ch2 §3 audio/TTS (application-vs-understanding split), v27 2026-07-12 M01 Ch4 §3 (I/O dominates latency) → Ch4 core complete, v26 2026-07-10 reading interp/Vera-Rubin,
 v25 2026-07-07 hobby econ E02 §4 → Macro E02 complete, and v24 2026-07-07 M01 Ch4 §2 I/O multiplexing, are archived
 in the history log; their durable signal is distilled into the sections below.)
 
