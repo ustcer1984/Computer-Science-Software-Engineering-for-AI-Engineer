@@ -1,4 +1,4 @@
-# Daily Reading — 2026-08-03
+# Daily Reading — 2026-08-03  ✅ finalized
 
 *A "National Geographic / Discovery" pair — one story from the **career** world (the web's plumbing and its economics), one from the **hobby** world (semiconductor physics and manufacturing). Not course material; the wider, stranger, more current world around what you do.*
 
@@ -197,6 +197,124 @@ flowchart TB
 
 ---
 
+## What we worked out — the thread you drove (read this first on review)
+
+Story 1 took the whole session. Story 2 landed as a read — *"I roughly understand the concept"* — and then produced the more consequential of the two corrections: **a background fix that re-aims how this material should have been pitched in the first place.**
+
+### A. Story 1 — your four-claim thesis, and where it splits
+
+You didn't ask a question about the reading. You returned a *model* of where this ends up, in four parts: **(1)** humans have taken information off the internet through three interface eras — FTP and BBS with almost no UI, then browsers and mobile apps as **UI for humans**, and now **UI for agents**; **(2)** providers are fighting to separate humans from bots and that fight is unwinnable — *if I ask Claude to drive a browser and read screenshots, or eventually sit a robot in front of the keyboard, how can they tell?* — so era 3 wins; **(3)** that is **good** for providers, because attention stops being capped by the 24-hour day, so less popular apps finally get users; **(4)** it is **bad** because page ads stop working — but ads won't die, they'll migrate into the **token providers' pipeline**: watch five minutes of ads, get a million tokens.
+
+**A1. The arc is right — and it is missing a beat.** There was an **era 2.5**: the open-API / RSS / mashup web of roughly 2005–2012. That *was* a machine interface to the web, and it was **deliberately revoked** — Twitter's API clampdown, Facebook closing the graph, Google Reader's shutdown. Machine-readable access has been granted and taken back once already, which turns "era 3 is the future" from a prediction into a question: *why does it stick this time?* It has an answer, and the answer is the strongest support for your thesis. Last time the machine reader was **a competitor's platform** — a rival app rendering your content — so closing the interface was pure defence at no cost to your readers. This time the machine reader is **the user's own agent**, so closing it means refusing the reader. **The industry has already conceded your point in its taxonomy:** the reason Cloudflare's new split is *Search / Agent / Training* rather than *human / bot* is that a user-initiated agent fetch had to be priced differently from a crawl. The Agent category exists because the distinction is real.
+
+The axis underneath all three eras is also not "UI" — it is **who pays for the impedance mismatch**. FTP: machine-readable, no presentation layer. The web: presentation fused into the data. Era 3: the presentation layer becomes pure overhead — which is exactly why serving Markdown by content negotiation saves an agent up to 80% of its tokens. Your DOM became a tax.
+
+<!-- fig5 -->
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/03-the-majority-machine-web-and-the-atom-thin-transistor-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```mermaid
+flowchart TB
+    E1["ERA 1 — NO UI<br/>FTP, gopher, BBS<br/>machine-readable by default,<br/>no presentation layer"]
+    E1 --> E2["ERA 2 — UI FOR HUMANS<br/>browser, then mobile apps<br/>presentation FUSED into the data<br/>the ad-funded eyeball economy"]
+    E2 --> E25["ERA 2.5 — A MACHINE UI,<br/>GRANTED THEN REVOKED<br/>open APIs, RSS, mashups, 2005-2012<br/>Twitter API clampdown, Facebook graph closed,<br/>Google Reader shut down"]
+    E25 -.->|"WHY IT DIED:<br/>the machine reader was a COMPETITOR'S<br/>PLATFORM, so closing the door<br/>cost the publisher nothing"| X["the interface was withdrawn"]
+    E25 --> E3["ERA 3 — UI FOR AGENTS<br/>the reader is a model, not a person<br/>presentation becomes pure overhead<br/>Markdown over HTML saves up to 80 percent<br/>of an agent's tokens"]
+    E3 -.->|"WHY IT STICKS THIS TIME:<br/>the machine reader is the USER'S OWN AGENT,<br/>so closing the door means refusing your reader"| Y["Cloudflare splits crawlers into<br/>SEARCH / AGENT / TRAINING —<br/>the AGENT category exists because<br/>a user-initiated fetch is not a crawl"]
+```
+
+</details>
+<!-- DIAGRAM:END -->
+
+**A2. The one real correction, and it is a *decoupling*: "detection fails" is not "blocking fails."** Your argument bundled three claims that come apart:
+
+- **(a) Behavioural detection of a determined agent will fail — TRUE**, and the robot-at-the-keyboard is the correct reductio. This is the **client-side trust problem**: you cannot verify anything about a client you do not control. It is the same reason game anti-cheat, DRM and CAPTCHA all lost — models now solve CAPTCHAs better than people do.
+- **(b) Therefore blocking fails — DOES NOT FOLLOW.** Nobody is trying to detect bots. Two moves route around detection entirely. **Remote attestation** is the technical answer to *"how can they tell?"* — hardware-backed proof that a session runs on a genuine unmodified device (Apple Private Access Tokens, Android Play Integrity, Google's Web Environment Integrity proposal). It never detects your agent; it refuses to serve anything that cannot attest. Note what actually stopped it: **WEI was withdrawn in 2023 after public and antitrust backlash, not because it failed.** So the honest answer to your question is *"technically yes — and the ecosystem refused to allow it."* **That relocates your question from engineering to governance**, which is the same relocation that keeps showing up on institutional-plumbing questions. The second move is **identity as a carrot**: Web Bot Auth is voluntary, and the bot signs because signing buys access and priority while evading buys throttling — **incentive-compatible disclosure, not detection.**
+- **(c) The real battlefield is cost asymmetry.** Your robot argument proves too much: it also proves you cannot stop a *human* paid to scrape. The web never could stop determined humans — it stopped **cheap at scale**. Screenshot-driving a browser already costs 10–100× a DOM read in tokens and latency; a physical robot costs a device per concurrent session. Push the automated path's marginal cost up to the marginal value of the content and the operator would rather pay the toll than route around it.
+
+> **Keeper: blocking is the negotiating position; pricing is the endgame.** The tell is that the 15 September default flip landed while **no major lab has agreed to pay** — a wall that nobody has agreed to climb is a bargaining move.
+
+**A3. The claim that does not hold — and the version of it that does.** Agents relax the **reading** constraint. They do not touch the **deciding** constraint, and that was always the scarce one. An agent that reads 500 pages and returns one answer means 500 sites were read and *one* was acted on; aggregation is an argmax. So agentic mediation **diffuses crawl share and concentrates outcome share** — the opposite of your prediction on the payoff side. The measurements agree so far: AI answers cite roughly **3–6 domains** where a search page surfaces about ten, the top 15 domains take about **68%** of citations, the top 1% about **47%**, and Reddit alone is around 40% of multi-engine citation frequency. That is *more* concentrated than PageRank ever was. (Provenance caveat: these are SEO-industry studies, much weaker than the Cloudflare network data — read them as directional, not as measurements of the same quality as the crawl-to-refer chart.)
+
+**The version that survives is better than the original.** What agents genuinely collapse is **discovery cost**, not attention. A niche site that ranked fortieth was invisible; if it is the *best* answer to a narrow question it is now reachable. So the tail gains **eligibility, not traffic** — and the competitive axis flips from capturing time (SEO, brand, sticky UI) to **being the definitive source on a narrow thing**. Retrievability and specificity replace stickiness.
+
+And the two halves of your thesis turn out to be **one variable seen twice**: if every human's agent reads 500 pages per question, serving cost rises about 500× while the monetizable event stays at one. **The ad model did not break because eyeballs disappeared — it broke because the denominator exploded.** Your good side *is* your bad side.
+
+**A4. Ads — directionally right, already shipped, wrong mechanism.** The prediction is correct and partly cashed: OpenAI began testing ads in ChatGPT on **9 February 2026** on the Free and Go tiers, reportedly reaching about **100 million dollars annualized** within months, with a self-serve Ads Manager (CPC/CPM bidding) by May; Google has confirmed ads in Gemini for 2026; Microsoft already runs sponsored answers in Copilot. Ads did land in the inference layer, exactly as you said.
+
+The **barter** form is the part that does not clear, and it is worth doing the arithmetic rather than asserting it:
+
+<!-- fig6 -->
+<!-- PLOT:START -->
+![Horizontal log-scale bar chart testing the claim that five minutes of ads should buy one million tokens: at a 25 dollar rewarded-video eCPM, five minutes buys about 31,000 tokens on Claude Opus 5, 52,000 on Sonnet 5 and 156,000 on Haiku 4.5, against a dashed reference line at one million, with whiskers spanning the 15-to-40 dollar eCPM range and annotations showing that a million frontier tokens would need roughly 2.7 hours of ads.](images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.png)
+
+<details>
+<summary>Plot source (matplotlib)</summary>
+
+See [`images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.py`](images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.py). Supply side: rewarded-video eCPM of $15–40 in tier-1 markets, 30 s per completed view. Demand side: published list prices blended 85% input / 15% output, the shape of consumer assistant traffic. Both sides are list-rate estimates, not any provider's real unit economics — the finding is the order of magnitude, not the third digit.
+
+</details>
+<!-- PLOT:END -->
+
+**Why the barter never needed to clear — and this is the part worth keeping:** **ad value tracks intent, and the highest-intent moment is inside the answer, not before it.** Rewarded video is worth cents because generic attention is cheap; a recommendation slot in a commercial-intent answer monetizes like search, in dollars per click. So the money arrived in the pipeline exactly where you predicted, but it attached itself to **the recommendation, not the compute**. Today's implementation is still an honest labelled unit below the answer; the structural pressure runs toward paying to *be the cited source*, which recreates SEO as GEO with a much worse property — the ad sits inside the artifact the user has already delegated their decision to. **Perplexity is the datum on that ceiling:** it tested sponsored answers through 2024–25, stopped taking new advertisers in October 2025, and **exited advertising entirely in February 2026**, explicitly on trust grounds — *"the challenge with ads is that a user would just start doubting everything."* Someone ran your experiment and concluded the trust cost exceeded the revenue.
+
+> **The synthesis to keep from story 1.** Your two "bad side" outcomes are not alternatives, they are **complements**: ads at the inference layer *and* micropayments at the content layer, because **value is now captured at a different layer than it is created** — the model monetizes an answer assembled from pages it did not pay for. That gap is precisely what the whole `402` / x402 stack exists to bridge. Whether it succeeds is open; that it is needed is not.
+
+### B. Story 2 — the read landed, and the background correction is the keeper
+
+You confirmed the concept landed and then corrected something more important: **your decade of materials and failure analysis was in magnetic-disk (HDD recording media) manufacturing, not silicon semiconductor fab.** Every earlier "his semiconductor world" hook in this repo — including the one in reading #12 — was aimed at the wrong domain. The canonical record is fixed. What matters here is that the *correct* domain is a **better** fit for this story, in three specific ways.
+
+**B1. It is the same trilemma.** Your world: SNR wants more grains per bit, so grains must get smaller; thermal stability wants $K_{u} V / k_{B} T$ above about 60, so smaller grain volume demands higher anisotropy; writability caps anisotropy at whatever field the head can deliver. Pick two. The transistor version: short-channel control wants a thinner body; mobility wants a thicker one, collapsing as $\mu \propto t^{6}$ below about 4 nm; manufacturability wants a film you can actually make uniform. Pick two. **And both escapes have the same structure — not "improve one of the three" but *break a coupling the material had welded together*.** HAMR decouples anisotropy from writability by making anisotropy momentarily temperature-dependent. A monolayer decouples thickness from mobility by making thickness a constant of the crystal instead of a polishing outcome. That is the reason the 2D route is credible where "make silicon smoother" is not.
+
+**B2. Grains-per-feature is your problem, restated in a different material.** A 28 nm channel at 50 nm CPP is **one to a few grains across** a CVD-grown monolayer. You already know what happens when a feature shrinks to a few grains: the mean stops mattering, the *distribution* takes over, the tail sets the failure rate, and boundary bridging correlates neighbours that were supposed to be independent. Same statistics, different physics. This reframes which 2026 result matters most: **the 6-inch single-crystal MoS₂ growth is a bigger deal than the 123 cm²/V·s headline**, because it *deletes* the grain-boundary random variable rather than tightening its distribution — the analogue of leaving granular media behind entirely, not of squeezing another point out of σ/D.
+
+**B3. HAMR is the insertion precedent.** Roughly fifteen to twenty years from concept to volume, in which the binding constraint turned out to be **one component's reliability** (the near-field transducer) and the interfaces around it — not the headline physics, which worked early. That is the honest template for imec's A7-and-beyond timeline, and you lived through it.
+
+**B4. The correction to my own ranking — and it is a decoupling, not a re-rank.** The section ranked contacts first and variability fourth. Your lens says variability sets the schedule, and that is right, but the fix is not to reorder the list: **I fused two different questions into one ranking.**
+
+- **Contacts set whether the device is *good enough*** — a performance ceiling. At roughly 660 Ω·μm, drive current misses target no matter how uniform the film is.
+- **Grain-boundary variability sets whether it is *manufacturable, and when*** — a yield and schedule variable. It is also what the yield arithmetic was actually about: $1 - p \approx 3.5 \times 10^{-10}$ is a statement about the tail of a distribution, not about a mean.
+
+Those belong in two columns, not one ordered list.
+
+<!-- fig7 -->
+<!-- DIAGRAM:START -->
+![Diagram 4](diagrams/03-the-majority-machine-web-and-the-atom-thin-transistor-4.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```mermaid
+flowchart LR
+    subgraph HDD["MAGNETIC RECORDING MEDIA — the trilemma you already own"]
+        direction TB
+        h1["SNR<br/>wants MORE grains per bit<br/>so grains must get SMALLER"]
+        h2["THERMAL STABILITY<br/>wants KuV over kT above about 60<br/>smaller grain volume<br/>demands HIGHER anisotropy"]
+        h3["WRITABILITY<br/>caps anisotropy at whatever field<br/>the head can actually deliver"]
+        h1 --- h2 --- h3
+        h3 --- hE["ESCAPE — HAMR<br/>decouple ANISOTROPY from WRITABILITY<br/>by heating at the write instant.<br/>15-20 years, and the binding constraint<br/>was one component's reliability"]
+    end
+    subgraph FET["THE 2D TRANSISTOR — the same shape"]
+        direction TB
+        f1["SHORT-CHANNEL CONTROL<br/>wants a THINNER body"]
+        f2["MOBILITY<br/>wants a THICKER body<br/>collapses as the sixth power<br/>of thickness below about 4 nm"]
+        f3["MANUFACTURABILITY<br/>wants a film you can actually<br/>make uniform"]
+        f1 --- f2 --- f3
+        f3 --- fE["ESCAPE — MONOLAYER TMD<br/>decouple THICKNESS from MOBILITY<br/>by making thickness a constant<br/>of the crystal, not a polishing outcome"]
+    end
+    HDD -.->|"SAME MOVE: neither is solved by improving<br/>one of the three. Both are escaped by BREAKING<br/>A COUPLING the material had welded together"| FET
+```
+
+</details>
+<!-- DIAGRAM:END -->
+
+> **Where we landed.** Story 1 is the half of this reading that actually touches what you build: the web is being re-plumbed to charge for machine reads, and the load-bearing question is not whether sites can tell a bot from a human — they can't, and increasingly they aren't trying — but **at what price the machine path becomes cheaper to pay for than to evade.** Story 2 is the half that touches where you came from, and the transfer is sharper than the one I originally reached for: **your discipline was never "semiconductors," it was thin films whose device statistics are set by grain microstructure — which is exactly the variable that will decide when 2D transistors ship.** The unifying line across both halves is the one the pair was chosen for and the session confirmed twice: **the invention is finished in both stories; the migration is the entire problem.** In story 1 the migration is priced in months by economics, in story 2 in a decade by physics — and in both, the thing that decides the schedule is not the headline result but the least glamorous constraint in the stack.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -236,6 +354,18 @@ flowchart TB
 | process node | 工艺节点 | 製程節點 | ⚠ genuinely different word (工艺 vs 製程) |
 | foundry | 代工厂 | 晶圓代工廠 | ⚠ phrasing differs |
 | grain boundary | 晶界 | 晶界 | same |
+| crystal grain | 晶粒 | 晶粒 | same |
+| hard disk drive | 硬盘 | 硬碟 | ⚠ genuinely different word |
+| magnetic recording media | 磁记录介质 | 磁記錄媒體 | ⚠ 介质 vs 媒體 |
+| sputtering (deposition) | 溅射 | 濺鍍 | ⚠ genuinely different word |
+| thin film | 薄膜 | 薄膜 | same |
+| anisotropy | 各向异性 | 異向性 | ⚠ genuinely different word |
+| superparamagnetic limit | 超顺磁极限 | 超順磁極限 | script only |
+| statistical distribution | 分布 | 分佈 | script only |
+| remote attestation | 远程证明 | 遠端認證 | ⚠ 远程 vs 遠端, 证明 vs 認證 |
+| long tail | 长尾 | 長尾 | script only |
+| subscription | 订阅 | 訂閱 | script only |
+| advertisement | 广告 | 廣告 | script only |
 
 ---
 
@@ -270,4 +400,14 @@ flowchart TB
 - [IBM demonstrates High-NA EUV process capability on track for insertion below 2 nm — IBM Research](https://research.ibm.com/blog/spie-2026-below-2-nm)
 - [*The 2D Materials Roadmap* — arXiv 2503.22476](https://arxiv.org/abs/2503.22476)
 
-*Prepared 2026-08-03 — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (the web crossing into majority-machine traffic on 3 June 2026, the collapse of the crawl-for-referral bargain, and the new HTTP-level stack of cryptographic bot identity, per-purpose content policy, and `402`-based settlement being built to replace `robots.txt`) and one **hobby-track** (the June 2026 imec/ASML/TSMC demonstration of complementary 2D-material transistors at 50 nm contacted poly pitch on 300 mm wafers, why silicon's sixth-power mobility collapse with body thickness forces a channel-material change, and the honest ranking of what is still unsolved). Figures current to early August 2026. The **"What we worked out"** section will be added on finalize, after the discussion — leaving room for the threads worth pulling. Natural sparring hooks: **(a)** whether the identity/price stack is actually a fix or just a better block, given that no major lab has agreed to pay — i.e. is `402` load-bearing or theatre; **(b)** the `robots.txt` paradox (blocking cost publishers about 7% of *human* traffic) as a live decision he may face for his own deployed sites — how should a small site actually configure Search/Agent/Training on 15 September; **(c)** the layer-4 governance gap, which lands squarely on his agent-governance interest — what *would* it take to express authorisation, dissent and human escalation above MCP, and is that a protocol or a project-instructions problem; **(d)** on story 2, the ranking question the piece deliberately sets up — contacts vs doping vs gate stack vs defect variability: which is genuinely rate-limiting, and he has a decade of direct evidence about the last one; **(e)** the yield arithmetic (94% per device → eight orders of magnitude to go) versus the Fudan 5,900-transistor processor that nonetheless works — what is actually being traded there; and **(f)** the cross-story pattern claim itself: both stories are migrations of a primitive inside a running system, but on clocks set by economics vs physics — is that a real distinction or a retrofitted one. Visuals: 2 ComfyUI path-4 illustrations (a machine crowd funnelling through a lit turnstile; a monolayer sheet handled above a wafer) + 2 matplotlib figures (crawl-to-refer ratios by operator on a log scale; mobility versus body thickness with the sixth-power collapse) + 2 Mermaid diagrams (the four layers of the machine web and what each cannot express; the 2D-transistor wall, what June 2026 solved, and the four unsolved problems ranked).*
+**Added during the Q&A (the machine-web thesis, the ad arithmetic, and the HDD ↔ 2D bridge):**
+- [Eliminating CAPTCHAs on iPhones and Macs using a new standard — Cloudflare on Private Access Tokens](https://blog.cloudflare.com/eliminating-captchas-on-iphones-and-macs-using-new-standard/)
+- [Web Environment Integrity — the original explainer (proposal withdrawn after backlash, 2023)](https://github.com/RupertBenWiser/Web-Environment-Integrity)
+- [RFC 9334 — Remote ATtestation procedureS (RATS) Architecture](https://datatracker.ietf.org/doc/html/rfc9334)
+- [ChatGPT ads: announcement, leak and rollout timeline (July 2026)](https://www.contexthints.com/guide/chatgpt-ads-news.html)
+- [Perplexity abandons AI advertising over trust concerns (18 Feb 2026) — MacRumors](https://www.macrumors.com/2026/02/18/perplexity-abandons-ai-advertising/)
+- [App ad revenue benchmarks 2026: eCPMs by format, region and platform](https://revenueflex.com/blog/app-ad-revenue-benchmarks-2026/)
+- [AI search citation analysis, Q2 2026 — domain concentration](https://www.digitalapplied.com/blog/ai-search-citation-analysis-q2-2026-domains-ranked)
+- [Claude model pricing (list rates used in the barter arithmetic)](https://platform.claude.com/docs/en/about-claude/pricing)
+
+*Finalized 2026-08-11 (created 2026-08-03) — two feature stories in the "Nat-Geo / Discovery" register: one **career-track** (the web crossing into majority-machine traffic on 3 June 2026, the collapse of the crawl-for-referral bargain, and the new HTTP-level stack of cryptographic bot identity, per-purpose content policy, and `402`-based settlement being built to replace `robots.txt`) and one **hobby-track** (the June 2026 imec/ASML/TSMC demonstration of complementary 2D-material transistors at 50 nm contacted poly pitch on 300 mm wafers, why silicon's sixth-power mobility collapse with body thickness forces a channel-material change, and the honest ranking of what is still unsolved). Figures current to early August 2026. The **"What we worked out"** section is the durable record — read it first on review. **Story 1 took the whole session, and he drove it with a four-part thesis rather than a question**: three interface eras (no UI → UI for humans → UI for agents), detection being unwinnable, agents lifting the 24-hour attention cap in publishers' favour, and ads surviving by migrating into the token providers' pipeline. Verdicts: **the arc is right but missing era 2.5** — the open-API/RSS web that *was* a machine interface and was revoked — and the reason it sticks this time is that the machine reader is now the user's own agent, which Cloudflare has already conceded by creating an **Agent** crawler category. **The one real correction was a DECOUPLING:** *detection fails* is true (the client-side trust problem; CAPTCHA/DRM/anti-cheat lineage) but *therefore blocking fails* does not follow — **remote attestation is the technical answer and it lost politically, not technically** (WEI withdrawn 2023), which relocates his question from engineering to governance; and the real battlefield is **cost asymmetry**, since the web never stopped determined humans, only cheap-at-scale. Keeper: **blocking is the negotiating position, pricing is the endgame.** **The claim that failed was the optimistic one:** agents relax *reading*, not *deciding*, and aggregation is an argmax — AI answers cite 3–6 domains against a SERP's ten, top-15 domains take about 68% of citations — so mediation **diffuses crawl share and concentrates outcome share**; the surviving version is that the tail gains **eligibility, not traffic**, flipping the competitive axis from capturing time to being the definitive source on a narrow thing. His good side and bad side then **refused into one variable**: 500 reads per monetizable event is the denominator explosion that broke the ad model. **His ads prediction was right and is already shipping** (OpenAI 9 Feb 2026, about 100 million dollars annualized; Gemini ads confirmed) but the *barter* mechanism misses by 6×–32× — five minutes of rewarded video buys about 31,000 frontier tokens, not a million — because ad value tracks intent, so the money attached to the recommendation rather than to the compute; Perplexity's February 2026 exit from ads is the datum on that ceiling. **MAJOR DURABLE CORRECTION — he corrected his own background:** the decade of materials/failure analysis was in **magnetic-disk (HDD recording media) manufacturing, NOT silicon semiconductor fab**; every prior "his semiconductor world" hook in this repo was mis-aimed and `agent-docs/learner-profile.md` is now fixed. The corrected domain is a **better** fit: the HDD **trilemma** (SNR ↔ thermal stability ↔ writability) is structurally the transistor's short-channel-control ↔ thickness ↔ mobility trilemma, and **both are escaped by breaking a coupling the material had welded together** (HAMR decouples anisotropy from writability; a monolayer decouples thickness from mobility); **grains-per-feature is his problem restated**, which reframes 6-inch single-crystal MoS₂ as more important than the mobility headline because it deletes the grain-boundary random variable rather than tightening it; and **HAMR is the decade-long insertion precedent** where one component's reliability, not the headline physics, set the schedule. That prompted a correction to the piece's own ranking — again a **decoupling, not a re-rank**: **contacts decide whether the device is good enough; grain-boundary variability decides whether and when it is manufacturable.** Visuals: 2 ComfyUI path-4 illustrations (a machine crowd funnelling through a lit turnstile; a monolayer sheet handled above a wafer) + 3 matplotlib figures (crawl-to-refer ratios by operator; mobility versus body thickness with the sixth-power collapse; the ads-for-tokens barter arithmetic, added on finalize) + 4 Mermaid diagrams (the four layers of the machine web and what each cannot express; the 2D-transistor wall, what June 2026 solved, and the four unsolved problems; the three interface eras including the revoked era 2.5; and the HDD ↔ transistor trilemma parallel — the last two added on finalize).*
