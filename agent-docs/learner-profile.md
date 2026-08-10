@@ -92,7 +92,26 @@ signal is already distilled into the sections below (skill map, gaps, preference
 read the history only for the chronological "how we got here" trail.
 
 ## Background
-- PhD in applied physics; 10 yrs material/failure analysis in semiconductor manufacturing.
+- PhD in applied physics; **10 yrs materials / failure analysis in magnetic-disk (HDD recording-media)
+  manufacturing** — *corrected by him 2026-08-11; earlier entries in this file and in the reading/course
+  archive say "semiconductor manufacturing", which is **wrong**. Treat every pre-2026-08-11 "his
+  semiconductor world / his old fab" reference as meaning **thin-film magnetic media**, not silicon wafer
+  fab.* The distinction is load-bearing for analogies:
+  - **What he actually owns:** sputtered thin-film stacks, **granular microstructure** (grain size *and its
+    distribution*, grain-boundary segregants, intergranular exchange decoupling), crystallographic texture
+    and seed/underlayers, sub-nm overcoats and interfaces, and the surface/defect metrology that goes with
+    it (AFM/MFM, TEM, XRD, magnetometry). **He thinks in distributions and yield statistics over a
+    polycrystalline film, not in single-crystal device physics.**
+  - **What he does NOT own:** silicon front-end process (implant/dopant chemistry, silicide, gate-stack
+    ALD, lithography/patterning), transistor device physics as a daily tool.
+  - **The three bridges that do transfer** (validated 2026-08-11 on the 2D-transistor reading): (1) *the
+    microstructure sets the device statistics, not the mean* — grain boundaries and point defects as the
+    yield-limiting variable; (2) *the scaling trilemma* — HDD's SNR ↔ thermal stability ↔ writability
+    (superparamagnetic limit) is structurally the same shape as short-channel-control ↔ body thickness ↔
+    mobility, and both are escaped by **changing the material/mechanism** rather than pushing harder;
+    (3) *HAMR as the insertion precedent* — a ~15–20-year materials-and-interfaces program where the
+    binding constraint was one component's reliability, not the headline physics. Use these instead of
+    silicon-fab framings.
 - ~1 year as an AI Engineer (building web apps + data pipelines). Strong analyst, fast learner.
 - Works primarily by "vibe coding" with AI agents (Cursor, Claude). **Goal is to read & understand
   code with AI help, not to hand-write it.**
