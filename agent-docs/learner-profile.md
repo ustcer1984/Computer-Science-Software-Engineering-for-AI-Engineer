@@ -838,14 +838,30 @@ learning surfaces.
   (career = any plausible positive-career-effect topic; hobby = anything genuinely interesting, my judgment). The old
   "one theme, two altitudes" structure is retired. Keep production values (why-this framing, real diagrams, verified
   links, LaTeX math, bilingual 中文 glossary).
+- **2026-08-11 — reading #14 PREPARED, awaiting the session** (`upskill-readings/2026/08/11-the-unpatchable-bug-and-the-third-magnet.md`;
+  created 2026-08-11) — (1) **prompt injection as a structural class, not a bug** (career; **cashes the defensive/appsec
+  thread that #13 teed up**) — OWASP's LLM Top 10 v3 (4 Aug 2026) keeps it at `LLM01` for a third year while conceding
+  that on raw incident counts it *"wouldn't even make the top 10"*; the framing is **the prepared statement has no LLM
+  analogue** (control and data share one flat token stream); the lethal trifecta and Meta's Rule of Two; **detection
+  provably fails** (61–72% detection → 0–10% under an adaptive attack; eight defences, eight bypassed); **CaMeL** as the
+  boundary rebuilt (77% of AgentDojo with provable security vs 84% undefended); and the mirror image — **GTG-1002** and
+  Check Point's nine-agency Mexican breach (1,088 prompts → 5,317 commands, about 400M records) as *agent-as-operator*.
+  (2) **altermagnetism** (hobby; **the new magnetic/spintronic seam opened by his corrected HDD background**) — the July
+  2026 Europhysics Prize for a third class of magnetic order; the rotation-not-translation symmetry argument permitting
+  zero net magnetisation *with* spin-split bands; exchange-enhanced THz dynamics ($\sqrt{H_{A}H_{E}}$, the CuMnAs
+  picosecond write); and the live **RuO₂** controversy — neutrons $0.05\thinspace\mu_{B}$ vs muons $4.8\times10^{-4}$ —
+  resolving into **a thin-film strain-and-defect question, i.e. his own metrology world**. Cross-story frame is
+  deliberately a **different shape from the last three readings** (which were all substrate-swap migrations): both are
+  **taxonomy failures** — the classification had no slot for the case where all the action was. 2 ComfyUI illustrations +
+  3 matplotlib figures + 3 Mermaid diagrams; all 33 links checked (3 bot-blocked domains swapped for verified
+  equivalents); parser-level render-trap check caught and fixed one math-inside-bold leak.
 - **Queued / next reading day:** open — pick two fresh topics (one career-benefit, one of-interest), keep diversifying;
-  no specific item queued. *(Two threads are teed up by reading #13 itself: the **defensive/appsec** side of the security
-  track — supply-chain attacks, SBOM/provenance, or **prompt injection as a real security discipline**, which now also
-  connects to the agent-identity layer he just dissected; and the **agent-governance** layer above MCP (authorisation,
-  dissent, human escalation), which is his strongest engagement axis (v34) and which he did not get to this session.
-  **NEW from #13: magnetic/spintronic materials are now a live hobby seam** — his actual domain — e.g. HAMR's successors,
-  MRAM/spintronic memory, or magnetic materials as a quantum-simulation target. Three standing hands-dirty follow-ups he'd
-  enjoy: (a) a **developmental-interpretability** mini-repro — detect an induction-head/ICL phase transition on a small
+  no specific item queued. *(Reading #14 consumed two of the three threads listed below — the appsec/prompt-injection one
+  and the magnetic/spintronic one. **Still open: the agent-governance layer above MCP** (authorisation, dissent, human
+  escalation) — his strongest engagement axis (v34), and #14's story 1 sharpens the question rather than answering it.
+  Also still unused from the security track: **supply-chain attacks, SBOM/provenance**. The magnetic/spintronic hobby seam
+  stays live beyond #14 — **HAMR's successors, MRAM/SOT-MRAM as a product, or magnetic materials as a quantum-simulation
+  target.** Three standing hands-dirty follow-ups he'd enjoy: (a) a **developmental-interpretability** mini-repro — detect an induction-head/ICL phase transition on a small
   model (RTX 4070); (b) a **block-size-vs-reasoning-accuracy sweep on a small block-diffusion LM** (RTX 4070); (c) the
   **`scx_bpfland` / thermald / PL1-cap A/B** on his Meteor Lake ThinkPad (from reading #11; he's carrying this into a
   separate project).)*
