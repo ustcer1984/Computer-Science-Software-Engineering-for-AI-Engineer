@@ -5,7 +5,9 @@
 > **Section:** What actually happens between typing a URL (or calling an API) and the first byte
 > coming back — DNS, IP/routing, the TCP handshake, the TLS handshake, HTTP, and QUIC/HTTP-3 — all
 > read as a **sequence of round-trips**, with a real latency budget on top.
-> **Status:** 🔵 in progress — prepared 2026-08-04.
+> **Status:** ✅ finalized 2026-08-12 (body prepared 2026-08-04). Body went untouched; the Q&A drove
+> the §2b IPv4/IPv6/NAT paragraph into a real-world thread — *IPv6's actual adoption status, why AWS
+> bills for public IPv4, and whether an AWS backend can run purely on IPv6* — captured in **§11 Applied**.
 > **Prerequisites:** M01 Ch4 §3 (why I/O dominates latency — the round-trip as the unit of latency,
 > Little's Law, the four levers, latency ≠ bandwidth). This section *is* that chapter's payoff, one
 > level up: the network path is where those round-trips actually live.
@@ -173,6 +175,10 @@ is added *above* it, by TCP — §4.)
 
 The takeaway for budgeting: the number of *hops* and the *distance* set a hard latency floor before
 any protocol overhead — which §3 puts a number on.
+
+> **The v4/v6 split is also an economics story.** Why does AWS hand almost everything an IPv4 address
+> and *charge* you for a static one? Why is IPv6 still only \~half-deployed after 25 years — and can an
+> AWS backend run *purely* on IPv6? That real-world thread is worked in **§11 Applied**.
 
 ---
 
@@ -403,6 +409,67 @@ phase dominated and why.
 
 ---
 
+## 11. Applied — the IPv6 question: adoption status, and why AWS bills you for IPv4
+
+A reader question pushed §2b past the protocol into the real-world economics: *what is IPv6's actual
+status? On AWS almost everything gets an IPv4 address, and a static IPv4 now costs extra — so can a
+backend run purely on IPv6?* The answer is a useful map of where the transition really stands, and it
+turns the abstract "IPv4 ran out" into a live architecture-and-cost decision.
+
+**Adoption is split down the middle — and split by *side* of the connection.** The best public gauge,
+Google's measurement of how many of its users arrive over IPv6, sits around **45–50%** in the
+mid-2020s and climbs a few points a year. But the halves are lopsided by *who* you are: **eyeball and
+mobile networks moved** (T-Mobile US runs IPv6-only internally with 464XLAT; large mobile carriers are
+v6-heavy), while **enterprise and cloud *infrastructure* lag**. That asymmetry is exactly what you see
+on AWS — the client side of the world is half-v6, the server side you build on is still v4-first.
+
+**Why AWS shows IPv4 everywhere — and started charging for it.** A VPC is IPv4-first by design; IPv6
+is opt-in (a dual-stack or IPv6-only subnet you enable deliberately), so every default template hands
+out v4. Meanwhile IPv4 addresses became a *traded commodity* after exhaustion — a single address
+trades for tens of dollars (roughly 30–60) and rising. So on **1 February 2024 AWS began charging
+about 0.005 dollars per hour (\~3.6 dollars a month) for every public IPv4 address** — in-use ones too,
+not just idle Elastic IPs — while **IPv6 addresses are free**. The price gap is a deliberate stick: it
+prices in the real scarcity and nudges you toward v6. Your "pay extra for a static IPv4" is that
+charge.
+
+**Why IPv6 hasn't simply won** (the structural answer, deepening §2b):
+
+1. **No backward compatibility.** A v6-only host cannot talk directly to a v4-only host — different
+   wire formats. So you can't incrementally upgrade; through the whole transition you run *both* stacks
+   (dual-stack), which is more work, not less. There's no individual first-mover reward, only a
+   collective one — the single fact that keeps a 25-year-old protocol stuck at half.
+2. **NAT defused the crisis.** Carrier-grade NAT let whole networks share one public v4 (the §2b NAT
+   again), removing the scarcity urgency that would otherwise have forced migration.
+3. **Chicken-and-egg → permanent dual-stack.** Content won't go v6-*only* while eyeballs are v4; ISPs
+   keep v4 while content is v4. The stable equilibrium is dual-stack everywhere, not a switchover.
+
+**Where v6 *does* win: when you personally run out of addresses.** Meta's data-center network has been
+**IPv6-only since \~2015** — not ideology, but because they exhausted even *private* v4 space
+(`10.0.0.0/8` is only about 16 million addresses; a hyperscaler blows through it). That's the tell for
+the whole story: adoption follows real scarcity, and most people don't feel it.
+
+**So — can an AWS backend run purely on IPv6?** The honest split, and the practical target:
+
+- **Internal / east-west: yes.** IPv6-only subnets for compute, databases, and service-to-service
+  traffic work today and shed the v4 charges.
+- **Public ingress: no.** A v6-only endpoint is *unreachable* to the \~half of clients (and most
+  corporate/guest networks) still on v4-only — you'd be silently invisible to them. Keep a **thin
+  dual-stack edge** (CloudFront, an ALB, or API Gateway) that terminates client IPv4 and forwards to
+  the IPv6-only backend, concentrating v4 into a few *shared* edge addresses instead of one per
+  instance.
+- **Egress is the catch people miss.** An IPv6-only backend also can't *reach* IPv4-only destinations —
+  and many third-party APIs still publish no `AAAA` record (quite possibly some of the LLM providers a
+  backend calls). AWS's fix is **NAT64 + DNS64**: Route 53 Resolver synthesizes an `AAAA`, the NAT
+  Gateway translates the traffic to v4 on the way out — the mirror image of the dual-stack edge.
+
+**Keeper:** *"purely IPv6, zero IPv4 anywhere" is not achievable for an app that both serves and calls
+the public internet — but "**IPv6-only servers + a thin dual-stack edge + a NAT64 escape hatch**" is,
+and it is precisely the cost-smart target the AWS pricing is steering you toward.* The whole IPv4→IPv6
+saga in one line: **a protocol with no backward-compatibility, whose forcing function (scarcity) was
+softened by NAT — so it migrates only where someone actually hits the wall.**
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -420,6 +487,8 @@ phase dominated and why.
 | Cache | 缓存 | 快取 | ⚠ genuine split: 缓存 ↔ 快取 |
 | Port | 端口 | 連接埠 | ⚠ genuine split: 端口 ↔ 連接埠 |
 | Encapsulation | 封装 | 封裝 | script only |
+| Dual-stack (IPv4+IPv6) | 双栈 | 雙協定堆疊 / 雙堆疊 | ⚠ 双栈 ↔ 雙(協定)堆疊 (§11) |
+| Address exhaustion | 地址耗尽 | 位址耗盡 | ⚠ genuine split: 地址 (mainland) ↔ 位址 (Taiwan) |
 
 ---
 
