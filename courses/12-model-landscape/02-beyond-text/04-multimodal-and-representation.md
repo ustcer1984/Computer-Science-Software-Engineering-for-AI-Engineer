@@ -557,7 +557,7 @@ token → a spatial **grid** of per-patch vectors (224 px / 14 → 16×16 = 256 
 the **patch grid** (all N vectors, spatial detail preserved — what a VLM ingests) from the
 **pooled/global vector** (one summary vector — what retrieval compares), tied back to the 9a bound
 (the pooled vector discards the detail; a projector can't recover it), to §2's spacetime patches,
-and to Figure 3's resolution-as-an-$O(L^{2})$-compute-knob.
+and to Figure 3's resolution-as-an-O(L²)-compute-knob.
 
 **(9c) His research idea — cross-lingual reasoning via an aligner + projector (an independent
 re-derivation of LangBridge).** He proposed: LLM pretraining is English/Chinese-biased, so

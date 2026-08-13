@@ -12,8 +12,8 @@
 > at 250% while Greece imploded at 180%). We close on what "**sustainability**" really means (a dynamic condition,
 > not a magic number) and why Singapore's high *gross* debt is nothing to worry about. This sets up §3, the
 > fiscal-monetary **policy mix**, which closes the module.
-> **Status:** 🔵 **body drafted 2026-08-13.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **FINALIZED 2026-08-14.** §10 Applied added — the US/Japan/China fiscal-sustainability reading
+> from our live session (all three read off the master equation).
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -348,15 +348,120 @@ Reason first; check against a source where noted.
   episode (Sept 2022)** — watch the "slowly, then suddenly" non-linearity and the role of the central-bank
   backstop in real time.
 
-Bring one — a debt/GDP chart, an $r$-vs-$g$ comparison, or a denomination breakdown — to our session and we'll
+Bring one — a debt/GDP chart, a comparison of $r$ and $g$, or a denomination breakdown — to our session and we'll
 read a country's fiscal sustainability off it: which regime is $(r - g)$ in, is the debt own- or
 foreign-currency, and how much fiscal space is left — the way we read the Fed off the dot plot (E03 §3) and the
 budget off its revenue mix (E04 §1).
 
-## 10. Applied — from our session Q&A
+## 10. Applied — reading three sovereigns off the master equation
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+§9 promised we'd "read a country's fiscal sustainability off" the equation the way we read the Fed off its dot
+plot. Our session did exactly that, live, for the three economies whose debt actually moves the world — and they
+turned out to be **three points on the same curve.** The master equation is the whole apparatus:
+
+$$\Delta b = (r - g)b - p.$$
+
+The US is trying to **manufacture** the favorable regime ($g > r$); Japan **lost** it to deflation and is clawing
+it back; China is **watching** it erode as growth slows. Same equation, read three times.
+
+### 10a — The United States: *engineering* $r < g$ to melt the debt
+
+The thread started with a real puzzle: *why does a President lean on the Fed to cut rates?* Reading it off the
+equation dissolves the mystery. The play targets the **ratio** $b$, not the dollar debt $D$ (which keeps growing —
+deficits continue). Push $r$ down, keep nominal $g$ high, drive $(r - g)$ negative, and the ratio **melts on its
+own** — precisely the postwar-US mechanism from fig 1, run deliberately. Three things decide whether it works:
+
+- **The Fed doesn't set the rate the Treasury pays.** The Fed sets the overnight rate; the maturities that matter
+  (the 10Y, 30Y) are priced by the **bond market** on inflation expectations. Cut while inflation still lives and
+  the long end can *rise* (bear steepening) — the §4 non-linearity biting the exact debt you roll.
+- **The "growth absorbs the inflation" bet is the weakest leg.** The hope is that cheap capital funds real capacity
+  (fabs, data centres, grid) so supply rises to meet demand. But: demand hits *now* while capacity arrives in
+  years (a **timing mismatch**); rate cuts are **untargeted** (they inflate asset prices more reliably than
+  factories); at **full employment** there's no slack to absorb the demand; and if the resulting $g$ is *inflation*
+  rather than real growth, that's not a free melt — it's a transfer from savers to the debtor.
+- **The hidden asset being spent is Fed credibility.** The only reason a cut *stays* non-inflationary is the belief
+  the Fed will reverse if inflation flares. A cut that looks **coerced** de-anchors expectations → the inflation
+  premium bakes permanently into the 30Y → the melt defeats itself.
+
+Two refinements worth keeping. First, **inflation is partly the tool, not a side effect** — surprise inflation
+repays nominal debt in cheaper dollars, a direct creditor→debtor transfer, so even *un*-mitigated inflation helps
+the borrower. Second, from §5, the melt runs clean only for own-currency, fixed-rate, **long**-maturity debt: the
+US is own-currency ✓ and mostly fixed-rate ✓ but has **short average maturity (~6 yrs)** and **~30% foreign-held**
+debt — so the bond market sets the speed limit on how fast Washington is *allowed* to melt.
+
+### 10b — Japan: the melt it was *denied*, and the four cushions
+
+Two threads converged here: *why is the yen weak while rates rise?* and *why did Japan build ~250% debt at all?*
+
+**The weak yen is the rate differential, not Japan's own hiking.** The Fed (and everyone) at 4–5% while the BoJ
+sat near zero drove the carry trade and the yen down; the BoJ hiking is the *response* — defending the yen — which
+**collides head-on** with servicing 250%-of-GDP debt. The two goals point in opposite directions: defend the yen
+(hike, detonate debt service) vs. protect the debt (hold, let the yen slide and import inflation). Japan can ride
+that contradiction far longer than anyone because it has **every own-currency advantage maxed out**:
+
+1. **Long maturity (~9 yrs, termed out on purpose)** — a rate rise reprices the debt only slowly.
+2. **The BoJ owns >50% of JGBs** — interest on that half returns to the Treasury as remitted profit, so half the
+   debt is effectively **interest-free to the consolidated government**.
+3. **~90% domestically held** — a captive base with home bias and regulatory demand; **no foreign creditor to
+   flee.** "We owe it to ourselves" (§2) is *more literally true* in Japan than anywhere.
+4. **World's largest net creditor** (~3.3 trillion USD net foreign assets) — a weak yen *fattens* that external
+   wealth and the income it throws off. Japan is hedged against its own currency.
+
+**Why the debt built up** is the balance-sheet-recession story: the 1990 bubble burst → the private sector spent a
+*generation* paying down debt even at zero rates → by accounting identity the **government became the borrower of
+last resort** to stop demand imploding. Then the amplifier: two decades of **deflation froze the denominator** —
+nominal GDP flat for ~20 years, so $b$ ballooned even on modest deficits (in the equation, primary deficits with
+$g \approx 0$, survivable only because the BoJ pinned $r \approx 0$ too). **Demographics** widened the structural
+gap permanently. But domestic savings funded every yen of it, in yen, at zero rates — **the high debt and its
+captive buyer base are the same phenomenon viewed from two sides.**
+
+The cleanest **escape valve** isn't anything Japan does — it's the **Fed cutting** (10a): a narrower differential
+strengthens the yen on its own, so the BoJ needn't hike, and the debt pressure eases. Japan's least-painful exit
+is literally the US rate cut — the two threads are one system. The real risk isn't a bond run (no foreign creditor
+to run); it's **imported inflation** via a too-weak yen forcing a faster defense than the debt can survive.
+
+### 10c — China: *watching* $r < g$ erode, with the debt hidden off-sovereign
+
+China breaks the frame. Its **sovereign** debt looks low (~25% of GDP), yet **total** non-financial debt is
+~300% — because the debt was moved *off* the central balance sheet into **local governments and their off-book
+LGFVs** (地方政府融资平台), **corporates/SOEs**, and **households**. The engine was an
+**investment-and-land** model: local governments financed themselves by selling land-use rights and borrowing
+through LGFVs, which worked while real growth ran 8–10% (deep $g > r$ — growth outran any borrowing). The
+property bust (2021→) hit **growth, local revenue, and household wealth simultaneously** (they were the same
+pillar), just as $g$ is falling structurally — the favorable-regime cushion **thinning at the worst moment**,
+with near-deflation echoing early Japan.
+
+It rhymes with Japan, but three things differ — and all three come from the **PBoC model (E03 §5)**:
+
+- **A closed capital account.** Savings are trapped inside the system, so **bond-market vigilantes literally
+  cannot operate** — no capital-flight crisis of the §4 kind is even available. Japan-style own-currency
+  insulation *plus* active capital controls.
+- **The center has fiscal space precisely *because* the debt is decentralized** — Beijing's near-empty sovereign
+  balance sheet can **absorb** local/LGFV debt, an option Japan (already 100% central) never had.
+- **The state owns the whole chain** — the banks (creditors), the SOEs/LGFVs (debtors), *and* the controls — so it
+  can push losses around **administratively**. "Extend and pretend" is a policy instrument, not a failure.
+
+So the toolkit is: **debt swaps** (化债 — roll hidden, short, expensive LGFV debt into explicit, long, cheap
+municipal bonds: Japan's term-it-out *and* a melt at once); **financial repression**; and a bet to **grow into it
+via new industries** (EVs, batteries, solar, chips — 新质生产力) rather than reflate consumption, which Beijing
+ideologically resists. The distinctive risk is therefore *not* an acute crisis (the controls prevent it) but a
+slow **Japanification** — the very tools that block a sharp reset let a slow deflationary rot persist.
+
+### The through-line
+
+Read off the same equation, the three regimes line up on one curve:
+
+| | Regime move | Own-currency? | The binding constraint |
+|---|---|---|---|
+| **US** | *manufacturing* $g > r$ | yes, but ~6-yr maturity, ~30% foreign-held | **Fed credibility** + the bond-market speed limit |
+| **Japan** | *clawing back* $g > r$ after deflation | yes, maximally (4 cushions) | **imported inflation** via a too-weak yen |
+| **China** | *watching* $g > r$ erode as growth slows | yes, *plus capital controls* | **Japanification** — slow deflation, not a crisis |
+
+The US wants to *make* the melt happen, Japan is *finally getting* the melt it was denied for thirty years, and
+China is *losing* the melt it long took for granted. Every headline about any of the three — a Fed cut, a BoJ
+hike, a Beijing debt-swap — is a move on **one term of one equation**, which is exactly what §3–§6 built the
+machinery to read. *(These three are the payoff of §9's promise: bring a chart, name the regime, name the
+currency, name the constraint — done.)*
 
 ---
 
@@ -422,7 +527,7 @@ genuine terminology difference** you'd trip over.
 ---
 
 ### What's next
-🔵 **Body drafted 2026-08-13 — awaiting our live session.** You now hold the machinery to judge any sovereign-debt
+✅ **FINALIZED 2026-08-14.** You now hold the machinery to judge any sovereign-debt
 story: the **deficit/debt** (flow vs stock, gross vs net), the honest reckoning with "**we owe it to ourselves**,"
 the **debt-dynamics equation** where **$(r-g)$** melts or snowballs the pile, the **bond market's** non-linear
 "slowly-then-suddenly" spiral, and the decisive **own- vs. foreign-currency** distinction that explains why the
@@ -431,4 +536,4 @@ debt). The module closes with **§3 — the policy mix**: fiscal and monetary po
 the interaction that §1 and §2 kept flagging (crowding out, the central-bank backstop, fiscal dominance, monetary
 offset), now the main event, tying E04 back to everything in E03. After that, **E05 (exchange rates, the balance
 of payments & capital flows)** opens — where debt, currencies, and the trilemma all return with cross-border
-rigour. On finalize, a **§10 Applied** will capture whatever thread our session pulls on.
+rigour. **§10 Applied** reads the US, Japan and China off the master equation — three points on one curve.

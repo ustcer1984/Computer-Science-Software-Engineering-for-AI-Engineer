@@ -10,7 +10,10 @@
 > (rule 7: locally-generated ComfyUI illustrations); extended 2026-07-09 (rule 4: the opening-`$`-glued-to-a-
 > quote-or-hyphen trap) from three shipped Econ render bugs found during a track-wide illustration pass;
 > extended 2026-08-13 (rule 4: a **pre-push detector** for the inline-math-inside-`*emphasis*` trap, which had
-> been documented since 2026-07-02 but had no catch command and so re-shipped in Econ E04 §2).
+> been documented since 2026-07-02 but had no catch command and so re-shipped in Econ E04 §2); note 2026-08-14 —
+> the opening-`$`-glued-to-a-hyphen trap (documented 2026-07-09, with its grep) **re-shipped** in Econ E04 §2 §9
+> (`an $r$-vs-$g$ comparison`, learner-caught via screenshot) and was found latent in M12 Ch2 §4 (`-$O(L^{2})$-`):
+> **run the rule-4 greps track-wide before every commit** — a documented trap without a run detector still ships.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
