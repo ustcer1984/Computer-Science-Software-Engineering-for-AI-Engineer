@@ -11,8 +11,10 @@
 > §4). We close on the *constraints* — why governments can't just spend freely — which sets up §2 (deficits & debt)
 > and §3 (the fiscal-monetary policy mix). Global-first, with Singapore's unusually conservative fiscal
 > constitution as the local lens.
-> **Status:** 🔵 **body drafted 2026-08-07.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **finalized 2026-08-13** (body drafted 2026-08-07, went untouched). **§10 Applied** added from
+> our live session — a sustained argument on **government failure** (the counterweight to E01 §3's market failure):
+> spending-is-the-true-tax & fiscal illusion; the inefficiency/minimal-state critique + the year-end-spending
+> ratchet; and the **capacity-gated** view of government size.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -374,8 +376,137 @@ doing to the debt (§2) — the way we read an MPS off the SGD NEER band (E03 §
 
 ## 10. Applied — from our session Q&A
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+Our session became a single sustained argument about **government failure** — the counterweight to E01 §3's
+*market* failure. Three threads, each one a serious position you reconstructed on your own, and each one that I
+mostly *validated and sharpened* rather than corrected: **(a)** spending is the true tax and deficits hide it;
+**(b)** government is inefficient, so keep it minimal; **(c)** your actual, more precise view — **match the
+state's size to its capacity.**
+
+### 10a — "All government spending is effectively a tax," and deficits as fiscal illusion
+
+You argued that *all* government spending is effectively a tax, and that the modern habit of deficits is a way
+to make people feel the tax is lower than it is — a kind of cheating. Both halves have names and are largely
+right.
+
+**The strong core is Friedman's.** "The true tax is what the government *spends*, not what it *taxes*." The logic
+is airtight: the state has no resources of its own — every soldier, road, and clerk is real labour and materials
+**commandeered from the private sector**. Those resources are taken regardless of *how* the spending is financed.
+That gives the **government budget constraint** — spending is paid for by exactly one of three things, and all
+three are taxes wearing different clothes:
+
+$$G = \underbrace{T}_{\text{tax now}} + \underbrace{\Delta \text{Debt}}_{\text{borrow} = \text{tax later}} + \underbrace{\Delta \text{Money}}_{\text{print} = \text{inflation tax}}.$$
+
+- **Tax** — visible, now, today's taxpayers.
+- **Borrow** — a **deferred tax** on future taxpayers (who service and repay it).
+- **Print** — the **inflation tax** 通胀税 (通膨稅) / seigniorage, which silently erodes the value of everyone's
+  money (E02 §2's "inflation is a regressive tax"; the fiscal-dominance link, E02 §3 §11).
+
+**Your "cheating" instinct is also a named theory — fiscal illusion (Buchanan).** 财政幻觉 (財政幻覺). James
+Buchanan (Nobel, with Wagner, *Democracy in Deficit*) argued exactly your point: taxes are painful and visible,
+so they *brake* spending; debt removes the brake by deferring the pain onto people who can't yet vote — which
+unleashes the structural **deficit bias** (§6, fig 3's drift).
+
+**The one correction — it's not *pure* cheating; it's intertemporal tax-shifting, which is often right.** Three
+legitimate reasons to borrow rather than tax now: **(1) tax-smoothing (Barro)** — the deadweight loss of a tax
+rises *more than proportionally* with the rate, so paying for a one-off shock (war, pandemic) with a brutal
+one-year tax spike is far more wasteful than spreading it over decades via debt; **(2) intergenerational
+fairness** — a 50-year bridge can fairly be paid by the future users who benefit (the "golden rule": borrow for
+*investment*, not *current* spending — Singapore's exact rule); **(3) countercyclical stabilization** (§5 — in a
+slump the borrowing mobilizes otherwise-idle resources). So debt is a **tool**: efficient and fair for genuine
+shocks and long-lived assets, corrosive when it funds *permanent* spending the public would reject at its true
+price. The **structure** of the deficit (§4: cyclical/investment vs structural/consumption) is how you tell which
+one you're looking at.
+
+**The mirror image — Ricardian equivalence.** Your argument *requires* that people don't fully see through the
+deficit. The opposite hypothesis (in the glossary) says rational households *do* see the future taxes and save
+the difference — in which case deficits fool no one. Reality is in between; your position is "Ricardian
+equivalence fails and politicians exploit the failure," which is a defensible read.
+
+**The synthesis that surprised us both — left and right converge.** **MMT** (the progressive claim that a
+currency-issuer "isn't revenue-constrained") *sounds* opposite to Friedman, but even MMT concedes the real
+constraint is **inflation / real resources**, not the accounting — which *is* Friedman's point in other clothes.
+Both poles agree the financing method is a veil and the true cost is the resources consumed; they disagree only
+on where the real-resource ceiling sits.
+
+### 10b — "Government is inefficient, so keep it minimal" — steelman, then reframe
+
+**The critique has teeth, and you'd met most of it.** Real mechanisms: the **knowledge problem (Hayek)** — you
+saw it in E01 §2 §10a; **no residual claimant / the soft budget constraint (Kornai)** 软预算约束 (軟預算約束) —
+waste isn't punished the way bankruptcy punishes a firm; and **public choice (Buchanan/Niskanen)** 公共选择
+(公共選擇) — bureaucrats maximize budgets, politicians maximize votes, plus rent-seeking and capture. **Government
+failure is as real as market failure.**
+
+**But the honest frame is *comparative institutional analysis*.** The choice is never "efficient market vs.
+inefficient government" — it's an *imperfect* market vs. an *imperfect* government, and which is less bad depends
+on the *specific good*, because markets *also* fail (E01 §3). And here's the thing: **your own "essential things"
+list — roads, defense — is literally the economist's public-goods list.** You've already got the right criterion
+(the state does what markets structurally can't). The real debate is only *where the boundary sits* — and the
+contested middle (health, education, pensions, R&D) is contested precisely because markets fail there too on
+**efficiency** grounds (adverse selection in health insurance; positive externalities in education/R&D; myopia in
+retirement saving), not merely on compassion grounds.
+
+**The data don't support "smaller = better."** Rich countries run 18% (Singapore) to ~50% (Nordics) of GDP
+through the state, and both ends contain rich, well-run economies. What correlates with good outcomes is **state
+capacity / institutional quality**, not size — which set up thread (c).
+
+**Your "deficits only for stabilization, balance in normal times" is the *symmetric* Keynesian rule done right.**
+Deficit in the bust, **surplus in the boom**, balance over the cycle. The real-world failure is the *asymmetry*
+(deficit bias). The institutional fix is a **structural-balance rule** — Switzerland's **debt brake**, Chile's
+structural-surplus rule — which target the *cyclically-adjusted* balance (§4), permitting cyclical deficits while
+forcing them to be unwound in booms. Your instinct is already implemented policy.
+
+**Your year-end-spending example is the best illustration of all — and it's *fixable*.** The "use it or lose it"
+rush (年底突击花钱 / 年底突擊花錢; US "March madness") is not lazy people — it's **bad rules** producing a rational
+response: annual appropriations that don't roll over + **incremental budgeting** that ratchets next year's budget
+off this year's *spend* + no residual claimant → spend everything, even wastefully. It's *measured*: Liebman &
+Mahoney found US federal year-end contracts are lower *quality*. And the fixes are known — **carryover** of
+unspent funds, **let agencies keep a share of savings**, multi-year and **output-based** budgeting. Singapore
+uses several antidotes (block/net budgeting, a Reinvestment Fund that lets ministries retain savings). The
+optimistic punchline: **this inefficiency is a mechanism-design bug you can engineer out**, not human nature.
+
+### 10c — Your actual position: *match the state's size to its capacity*
+
+You then clarified you're **not** on the small-government side. Your rule is conditional: *if* civil servants are
+disciplined and competent, you're fine with a big, high-responsibility state; *if not*, keep it small and
+essential-only. This is a sharper, better position, and it has a name.
+
+**You swapped the axis — from *size* to *state capacity*** 国家能力 (國家能力). The usual debate is a
+one-dimensional dial (small ↔ big); you added the second dimension that actually predicts outcomes (Fukuyama's
+argument that the *quality/capacity* of the state matters more than its *scope*). As a 2×2:
+
+| | **Small scope** | **Big scope** |
+|---|---|---|
+| **High capacity** | Singapore, Switzerland — lean & excellent | Nordics — big *and* well-run (works) |
+| **Low capacity** | minimal but weak (fragile states) | **worst quadrant** — lots of responsibility, badly executed |
+
+Your rule reads straight off it: **capacity is the gating variable** — with high capacity either column is fine;
+with low capacity, stay small or you land bottom-right.
+
+**Three refinements I'd add:**
+1. **Capacity is *manufactured*, not found.** "If every public servant were competent" is not a given — it's an
+   institutional *achievement* (meritocratic recruitment, near-private-sector pay to attract talent and blunt
+   corruption, performance measurement, insulation from patronage). Singapore's competence is *engineered*, not
+   innate — so the real question is whether your institutions *reliably produce* competence.
+2. **The deep tension: rely on good people, or design so mediocre people can't do harm?** Your rule leans on
+   *people*; robust institutions are built so good outcomes *don't* depend on getting exceptional people ("design
+   a system a fool can run, because eventually one will"). The best states do both. Corollary: a big state
+   justified by *today's* excellent bureaucrats is a bet that the excellence *persists for decades* — and a big
+   state is far harder to shrink than to grow, so expand scope only with self-renewing accountability and
+   reversibility.
+3. **Capacity isn't uniform.** A country can have a world-class central bank and a hopeless procurement arm — so
+   the optimum is *granular*: big and activist where capacity is high, minimal where it isn't. Which is exactly
+   what Singapore does — filed as "small government," it is in fact **intensely activist** (HDB houses ~80% of
+   people; CPF; Temasek/GIC; industrial policy) *in its high-capacity domains*. Singapore is your position made
+   real: build the capacity first, and you *earn* the option to be big where it counts.
+
+**The one caveat to keep on the table:** competence isn't the only thing you want from a state — a hyper-competent
+but unaccountable technocracy raises a *legitimacy* question (who decides what's "essential"?) that efficiency
+alone can't answer.
+
+*(Calibration note to self, visible to you: all three threads were you reconstructing named traditions — Friedman,
+Buchanan, Fukuyama, the state-capacity school — from first principles, and the value was naming them + adding the
+one honest correction each, not re-teaching. This is the "framework as a lens on the real world" mode again,
+turned on the politics of the budget.)*
 
 ---
 
@@ -442,12 +573,13 @@ genuine terminology difference** you'd trip over.
 ---
 
 ### What's next
-🔵 **Body drafted 2026-08-07 — awaiting our live session, which opens Module E04.** You now have the **budget**
+✅ **Finalized 2026-08-13 — opens Module E04.** You now have the **budget**
 fully apart: the **revenue** side (taxing what you earn/spend/own, and *who really pays*), the **spending** side
 (G vs transfers, the ~73% autopilot), the **balance** (deficit → bonds → debt; cyclical vs structural), the
 budget-as-**stabilizer** (the multiplier, and why it depends on slack and the central bank), and the
 **constraints** that stop a government spending freely. That last point hands directly to **§2 — deficits, public
 debt & sustainability** (when does debt actually matter? the "we owe it to ourselves" question, debt dynamics, and
 the bond-market limit), and then **§3 — the policy mix** (fiscal + monetary together — the interaction §5 and §6
-kept flagging, now the main event, tying E04 back to all of E03). On finalize, a **§10 Applied** will capture
-whatever thread our session pulls on.
+kept flagging, now the main event, tying E04 back to all of E03). **§10 Applied** captured our session's
+sustained argument on **government failure** — spending-as-tax & fiscal illusion, the inefficiency/minimal-state
+critique with the year-end-spending ratchet, and the capacity-gated view of how big the state should be.

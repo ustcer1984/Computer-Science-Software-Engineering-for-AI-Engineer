@@ -9,6 +9,42 @@
 
 ---
 
+v42 (2026-08-13 — **hobby econ E04 §1 (taxes, spending & the budget) FINALIZED and §2 (deficits, public debt &
+sustainability) PREPARED.** §1 body (drafted 08-07) went **untouched**. **§1 §10 = the live session, a sustained
+3-thread argument on GOVERNMENT FAILURE** (the deliberate counterweight to E01 §3's *market* failure), and the
+striking thing is that **all three threads were him reconstructing named intellectual traditions from first
+principles** — value was *naming the tradition + adding the one honest correction*, not re-teaching:
+**(10a)** his *"all govt spending is effectively tax; deficits hide it = cheating"* is **Friedman** ("spending is
+the true tax"; budget constraint = tax-now + borrow=tax-later + print=inflation-tax) + **Buchanan's fiscal
+illusion / deficit bias**; correction = it's **intertemporal tax-shifting** (legit for Barro tax-smoothing /
+long-lived investment / countercyclical; corrosive only for *permanent* spending), Ricardian equivalence as the
+mirror, and the **MMT↔Friedman convergence** (both: real constraint = resources/inflation, not accounting);
+**(10b)** his *"govt inefficient → keep it minimal"* — steelmanned (Hayek knowledge problem [his own E01 §2
+§10a], soft budget constraint, public choice/Niskanen) then reframed to **comparative institutional analysis**
+(his "essentials = roads/defense" list *is* the public-goods list; the contested middle fails on *efficiency*
+grounds too), size≠quality, and his *"deficits only for stabilization"* = the **symmetric-Keynesian rule done
+right** (→ structural-balance rules / Swiss debt brake); his **year-end use-it-or-lose-it** example = a textbook
+soft budget constraint + incremental-budgeting ratchet (Liebman-Mahoney: year-end contracts measurably worse),
+*fixable* by carryover/keep-savings/output-budgeting; **(10c) he then CLARIFIED his real position — NOT
+small-government but *capacity-gated*:** match the state's size to its **state capacity** (Fukuyama) — swapped the
+1-D size axis for the 2-D capacity×size map, + 3 refinements (capacity is *manufactured* not found;
+rely-on-good-people vs design-for-mediocre tension; capacity is granular → Singapore is *activist* where capacity
+is high) + the accountability caveat. **CALIBRATION — the v39 "framework-as-lens-on-the-real-world" mode, now
+turned on POLITICAL ECONOMY**, at its strongest yet: he generates correct, named positions unprompted and
+integrates the single correction instantly; consistent with v40's "returns a thesis, expects triage" mode (here
+the theses were his own political-economy positions). **Teach-forward: on political economy / institutions he's a
+peer — lead with the honest tension/correction, name the tradition, don't survey.** **§2 (deficits & debt)
+prepared:** flow-vs-stock & gross-vs-net (Singapore's ~170% gross hides a net creditor), "we owe it to ourselves"
+as a half-truth (regressive distribution + foreign-held + tax DWL + crowding-out), the **debt-dynamics master
+equation Δb=(r−g)b−p** (the (r−g) sign melts-or-snowballs; postwar melt via growth + financial repression), the
+bond-market "slowly-then-suddenly" non-linearity + rollover risk, and the decisive **own- vs foreign-currency**
+distinction (Japan 255% fine / Greece 180% imploded / Argentina 62% default / Draghi "whatever it takes"),
+closing on sustainability-as-dynamic-condition (the 90% threshold was wrong — R&R Excel error) + Singapore
+gross-vs-net. 4+4 matplotlib figs; both one-pagers **Chrome-render-verified** (confirmed local Playwright/Chrome
+path, [[render-check-tools-available]]); caught+fixed `\,` and `\%` math traps in the Δb equation pre-push.
+**Next:** **E04 §3 — the fiscal + monetary POLICY MIX** (closes E04), then **E05 (exchange rates, BoP & capital
+flows)**, or rotate to course.)
+
 v41 (2026-08-12 — **course: M02 Ch1 §1 (how a request travels) FINALIZED → opens Module M02 (Networking); a scope
 rotation after two SWE-decomposition sections.** Body (prepared 08-04) went **untouched** — but unlike the
 zero-question SWE-doctrine sections (v37), **he engaged HARD**, because the §2b IPv4/IPv6/NAT paragraph became a real
