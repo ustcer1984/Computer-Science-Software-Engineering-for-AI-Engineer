@@ -154,7 +154,7 @@ the postwar era** (debt melted), turned sharply **positive under Volcker's high 
 negative again in the 2010s zero-rate era (when Olivier Blanchard argued debt might carry "no fiscal cost"), and
 has been **turning positive again in the 2020s** as rates rose — which is precisely why debt sustainability is
 back in the headlines. *The whole debate about whether today's debt is dangerous is really a debate about where
-$(r - g)$ is heading.*
+(r − g) is heading.*
 
 ---
 
