@@ -143,7 +143,7 @@ of memory and drowned the scheduler, and the readiness-checking syscalls of the 
 *finding out who was ready* became the bottleneck as $n$ grew. The C10k answer was a full switch to **event-loop + a scalable readiness
 primitive** — which is exactly what drove Linux's `epoll` (2002), BSD's `kqueue`, and the servers built on them. Today the same reasoning
 runs at **C10M** (ten million), where even `epoll`'s per-event syscall overhead matters and you reach for `io_uring` and kernel-bypass — but
-the shape of the argument is identical: *don't do $O(n)$ work to find the ready ones, and don't burn a thread per wait.*
+the shape of the argument is identical: *don't do O(n) work to find the ready ones, and don't burn a thread per wait.*
 
 ---
 

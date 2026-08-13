@@ -3,7 +3,7 @@
 > **Subject:** Economy & Finance *(hobby track)*
 > **Module:** E01 — Economic Foundations (Microeconomics)
 > **Section:** The *magnitude* §2 left open (elasticity), the *welfare* the market creates (surplus),
-> the *cost of pushing it off $P^\ast$* (deadweight loss, taxes), and the four classic ways the invisible
+> the *cost of pushing it off its optimum* (deadweight loss, taxes), and the four classic ways the invisible
 > hand genuinely fails (externalities, public goods, monopoly, asymmetric information).
 > **Status:** ✅ finalized 2026-06-20 — you studied the body, then in Q&A took it straight to a live policy:
 > **Singapore's sugar-sweetened-beverage measures** (Nutri-Grade labelling vs a sugar tax). §8 captures that

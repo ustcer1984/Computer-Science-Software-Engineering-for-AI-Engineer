@@ -8,7 +8,9 @@
 > from GitHub math-render bugs in Econ E02 §2 and §3; extended 2026-07-02 (rule 4: the `($…$)` open-paren
 > trap and the math-inside-`*emphasis*` trap) from two more Econ E02 §3/§11 render bugs; extended 2026-07-08
 > (rule 7: locally-generated ComfyUI illustrations); extended 2026-07-09 (rule 4: the opening-`$`-glued-to-a-
-> quote-or-hyphen trap) from three shipped Econ render bugs found during a track-wide illustration pass.
+> quote-or-hyphen trap) from three shipped Econ render bugs found during a track-wide illustration pass;
+> extended 2026-08-13 (rule 4: a **pre-push detector** for the inline-math-inside-`*emphasis*` trap, which had
+> been documented since 2026-07-02 but had no catch command and so re-shipped in Econ E04 §2).
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -111,8 +113,30 @@ Every mathematical expression, formula, equation, variable, sub/superscript, or 
     math renders fine when it isn't inside emphasis (shipped in E02 §11 2026-07-02: an italicized aside
     `*…you need potential growth $g^{\ast}$…*` leaked while the same `$g^{\ast}$` in plain prose rendered).
     Fix: **take the emphasis off the clause that holds the math** (emphasize the surrounding words instead),
-    or split so the `$…$` sits outside the `*…*`. Especially bite-y when the emphasis run also spans a soft
-    line-break. Eyeball-only review misses it; Playwright-verify.
+    or split so the `$…$` sits outside the `*…*`, **or make the math literal text** inside the emphasis (write
+    `*…where (r − g) is heading.*` with a Unicode minus `−`, not `$(r-g)$`). Especially bite-y when the emphasis
+    run spans a soft line-break — a single-line `grep` misses it — and single-`*` *italic* is the confirmed
+    shipper (bold `**…**` empirically renders, but avoid it too). **Pre-push detector** (paragraph-aware, strips
+    `**bold**` first, then flags any `$…$` inside a single-`*` italic run — this re-shipped in E04 §2 2026-08-13
+    because the trap list had no catch command for it):
+    ```sh
+    python3 - <file…> <<'PY'  # prints any $…$ math wrapped in a single-* italic run
+    import re, sys
+    for f in sys.argv[1:]:
+        for para in open(f, encoding="utf-8").read().split("\n\n"):   # paragraph = blank-line block
+            flat = re.sub(r"`[^`]*`", "", para.replace("\n", " "))    # strip `code`, join soft breaks
+            flat = re.sub(r"\*\*[^*]*\*\*", "", flat)                 # strip **bold** (renders OK in practice)
+            for m in re.finditer(r"(?<!\*)\*(?!\*)([^*]+?)\*(?!\*)", flat):        # single-* italic runs
+                if re.search(r"\$[^$ ][^$]*\$", m.group(1)):          # a real $…$ pair (not lone $ currency)
+                    print(f"{f}: {m.group(0)[:100]}")
+    PY
+    ```
+    Should print nothing on **material** files. It found six shipped leaks when added (E04 §2, E01 §3, two course
+    sections, two reading-track footers — the whole-footer-in-`*…*` is a repeat offender). **Caveat:** it
+    false-positives on `plan.md`-style **trackers**, where a giant table is one blank-line-free "paragraph" so the
+    asterisk-pairing spans unrelated `*emphasis*`/`$math$` — verify tracker hits by hand (usually noise). This trap
+    has no reliable one-line `grep` (it spans soft breaks and must tell single-`*` from `**`); Playwright-verify
+    the live blob as the final gate.
   - **Don't wrap inline math in literal parens when the math itself contains parentheses** — the nested
     `(…$…(…)…$)` confuses GitHub's cmark-gfm delimiter matching and the whole `$…$` leaks as raw text. A
     parenthetical aside like `**Okun's law** ($\Delta u \approx -0.5 (g - g^{\ast})$)` fails, but the *same*

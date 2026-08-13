@@ -180,8 +180,8 @@ wrong pairings. The loss (a symmetric **InfoNCE** / cross-entropy over rows *and
 
 $$\mathcal{L} = -\frac{1}{2N}\sum_{i=1}^{N}\left[ \log \frac{\exp(\langle \mathbf{I}_{i}, \mathbf{T}_{i}\rangle / \tau)}{\sum_{j=1}^{N}\exp(\langle \mathbf{I}_{i}, \mathbf{T}_{j}\rangle / \tau)} + \log \frac{\exp(\langle \mathbf{I}_{i}, \mathbf{T}_{i}\rangle / \tau)}{\sum_{j=1}^{N}\exp(\langle \mathbf{I}_{j}, \mathbf{T}_{i}\rangle / \tau)} \right].$$
 
-Read it as: *for each image, do a softmax classification over the $N$ candidate texts where the
-right answer is its own caption — and symmetrically for each text over the $N$ images.* The
+Read it as: *for each image, do a softmax classification over the N candidate texts where the
+right answer is its own caption — and symmetrically for each text over the N images.* The
 **temperature** $\tau$ (learned) scales the logits; a small $\tau$ sharpens the distribution and
 punishes near-misses harder.
 
