@@ -9,6 +9,40 @@
 
 ---
 
+v44 (2026-08-20 — **course: M02 Ch2 §1 (HTTP semantics — methods, status codes & the idempotency contract)
+FINALIZED.** Body went **untouched** — the session was **three real-world threads, every one sparked by his AWS
+practice and driven down to the principle underneath** (the v41 pattern at full stretch). Captured as **§10 Applied**.
+**(10a) "HTTP API vs REST API"** — a category error (HTTP = protocol; REST = an architectural *style* over it; HTTP
+API = the superset) + the **Richardson Maturity Model** (most real "REST" = Level 2 = exactly this section's
+method/status contract; L3 HATEOAS = the rarely-shipped "true REST") + siblings REST/RPC/GraphQL/SOAP all ride HTTP;
+**the ACTUAL source of his confusion was named — AWS API Gateway's product tiers literally called "REST API" vs "HTTP
+API" are a cost/feature distinction, NOT the architectural one** (recurring pattern worth pre-empting in M08: AWS
+product names collide with the concept words they borrow). **(10b) why the browser enforces CORS + the OPTIONS
+preflight** — the reframe that dissolved his "it's cosmetic on the backend": **CORS protects the user's sessions on
+OTHER sites, not your server**; curl is exempt (no ambient authority, no victim), the browser carries the user's
+cookies AND runs untrusted third-party JS; SOP default-closed → CORS = the server's opt-in relaxation; enforced
+browser-side because only the browser knows the *calling script's origin*; simple-vs-preflight = preflight gates
+exactly the requests that are both a NEW power (PUT/DELETE/custom headers a `<form>` couldn't send) and possibly
+IRREVERSIBLE, asking before any side effect; AWS "enable CORS" = a mock OPTIONS + the second gotcha (Allow-Origin also
+on the real response). **(10c) the client-trust boundary — HE re-derived a foundational security principle from first
+principles:** he asked "a malicious browser could just ignore CORS — is there a guard?" and the answer is *no, by
+design*, because he'd mis-identified the victim (an evil browser only harms its own already-compromised user; gains
+nothing at the server curl doesn't) → **never trust the client; a control that runs on the (possibly-attacker) client
+is not a boundary — the boundary is the server** (real defenses = server-side authn/authz + CSRF/SameSite, which
+assume a hostile client); the technical "verify a genuine browser" answer = **remote attestation**, real in native
+mobile (Play Integrity / App Attest) but **deliberately rejected for the open web** (WEI withdrawn 2023) — **looped
+straight back to reading #13's attestation/WEI thread** ("lost politically, not technically"). **CALIBRATION —
+reinforces v41 and EXTENDS the generative-in-his-domain read to security / systems-trust:** on client/server trust
+boundaries with a real hook he reaches the governing principle HIMSELF (as with econ / AI-architecture); value = *name
+the principle + pin the threat model + close the loop to prior sessions*, never re-teach. **Teach-forward: for
+networking/security material keep leading with his AWS reality; he drives confusion → principle; my job = name it,
+give the threat model, connect to prior learning. Queue the whole client-trust arc as an Applied thread for M10
+(security).** Process: clean finalize; §10 Applied (3 threads) + §4/intro forward-pointers + 4 key-terms rows; 2
+Mermaid diagrams visually verified (fixed a literal `&nbsp;` leak in the status-class diagram); ran the rule-4
+render-trap greps per the v43 lesson — the section has **no `$` math at all**, prose tildes escaped; plan.md M02 Ch2
+→ 🔵. **Next inside M02:** §2 (caching & conditional requests), then §3 (content negotiation + HTTP/1.1→2→3); or Ch3
+TLS / Ch4 real-time / rotate.)
+
 v43 (2026-08-14 — **hobby econ E04 §2 (deficits, public debt & sustainability) FINALIZED.** Body (drafted 08-13) went **untouched** — the fourth untouched-body econ finalize running. **§2 §10 = the live session, and it was the v39 FRAMEWORK-AS-LENS mode at full stretch: he read THREE SOVEREIGNS off the debt-dynamics master equation Δb=(r−g)b−p in one outward chain — US → Japan → China — that HE built, each country a reading of one term of one equation ("three points on one curve").** The trigger was a real-world puzzle, not a textbook prompt: *why does Trump lean on the Fed to cut rates?*, and from there he drove the whole comparative arc himself. **The corrective shape was the v38 RIGHT-MECHANISM pole, not a mis-location: he supplied correct intent/mechanism each time and the value was VALIDATE + name the tradition + add the ONE structural limit he didn't have — never re-teach.** **(US)** his two-part read — *melt the ratio with low r without cutting the absolute debt; the inflation is absorbed by investment-led growth* — is exactly **financial repression + the supply-side bet**, correct; added value = the three catches (the Fed sets the *overnight* rate not what Treasury *pays* → cutting into live inflation bear-steepens the long end; the growth-absorbs-inflation leg is weakest — timing mismatch / untargeted / no slack at full employment / inflation≠real-g; **Fed credibility is the hidden asset a *coerced* cut spends**) + the reframe that **inflation is partly the TOOL not a side effect** (surprise inflation = a creditor→debtor transfer). **(Japan)** he correctly tied the weak yen to the **Fed–BoJ rate differential** and asked what Japan does *besides* weak-yen+inflation → the **four own-currency cushions** (termed-out ~9yr maturity · BoJ owns >50% → half the debt interest-free to the consolidated govt · ~90% domestic → no foreign flight · world's largest net creditor), the *why-it-built-up* history (**balance-sheet recession** × **deflation froze the denominator** × demographics), and the keystone he took: **the escape valve is the Fed cutting** (narrows the differential) → the US and Japan threads are ONE system. **(China)** a pure "explain" → the **frame-break** (sovereign debt looks low ~25% but total ~300% because it's hidden OFF-sovereign in local govts / LGFVs / SOEs / households) + the three differences from the **PBoC model (E03 §5)** — closed capital account (bond vigilantes can't operate), central fiscal space *because* the debt is decentralized, state owns the whole chain (extend-and-pretend as a policy tool) → risk = **Japanification, not an acute crisis**. **CALIBRATION: his four econ modules are cohering into ONE map — the Fed/MAS/PBoC trilemma cast of E03 is now re-read through the *debt* lens, and HE is drawing the connections. On international-macro / sovereign-debt with a real-world hook he generates correct mechanism unprompted (the v38/v39 pole, NOT the v32/v35 mis-located pole). Teach-forward: validate the mechanism, name the tradition/structure, add the one structural limit or cushion he's missing, and let him run the country-by-country chain himself.** Process: clean finalize; §10 = 3 threads + a 3-row through-line table; **the learner CAUGHT A SHIPPED RENDER TRAP via screenshot** — `an $r$-vs-$g$ comparison`, an opening `$` **glued to a hyphen** (`-$g$`), the trap documented 2026-07-09 *with a grep that simply wasn't run* → fixed (space-bound the delimiters); the same grep then found a **latent twin in M12 Ch2 §4** (`-$O(L^{2})$-`, also fixed), and I logged in the conventions changelog that **a documented trap with no *run* detector still ships — run the rule-4 greps track-wide before every commit** ([[render-check-tools-available]]). Text-only edit, so no re-render; grep + tokenizer clean track-wide. **Next:** **E04 §3 — the fiscal + monetary POLICY MIX** (closes E04, ties it back to all of E03), then **E05 (exchange rates, BoP & capital flows)**, or rotate to course.)
 
 v42 (2026-08-13 — **hobby econ E04 §1 (taxes, spending & the budget) FINALIZED and §2 (deficits, public debt &

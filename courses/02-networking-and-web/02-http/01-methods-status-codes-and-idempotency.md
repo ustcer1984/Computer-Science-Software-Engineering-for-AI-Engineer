@@ -6,7 +6,11 @@
 > the three properties (safe · idempotent · cacheable) that govern how every cache, proxy, crawler, and
 > retry loop treats a request, and the idempotency-key move that makes a non-idempotent write safe to
 > retry. The application-layer message that §1's step ④ (the HTTP round-trip) actually carries.
-> **Status:** 🔵 in progress — prepared 2026-08-12.
+> **Status:** ✅ finalized 2026-08-20 (body prepared 2026-08-12). Body went untouched; the session was
+> **three real-world threads**, each sparked by his AWS practice and driven to the underlying principle —
+> *HTTP API vs REST API* (the AWS API Gateway naming collision), *why the browser enforces the CORS
+> `OPTIONS` preflight*, and *the client-trust boundary* (what if the browser is malicious?). Captured in
+> **§10 Applied**.
 > **Prerequisites:** M02 Ch1 §1 (how a request travels — HTTP rides on the TCP/TLS connection you now
 > know how to budget). Useful: your own experience with retries/idempotency in distributed systems,
 > which this section gives the precise HTTP vocabulary for.
@@ -33,7 +37,8 @@ by nature.
 
 > HTTP is the **uniform interface** of the web (the "UI" in REST). Its power is not richness — it's the
 > *opposite*: a deliberately tiny, universal vocabulary whose meaning is fixed, so that intermediaries
-> can act on it generically. The constraint is the feature.
+> can act on it generically. The constraint is the feature. *(What REST adds beyond HTTP — and why an
+> "HTTP API" is not automatically a "REST API," including the AWS API Gateway naming collision — is §10a.)*
 
 ---
 
@@ -187,7 +192,9 @@ The verbs encode intent; picking the right one is an API-design call with real c
   "non-simple" cross-origin request, the browser sends an automatic `OPTIONS` **preflight** asking the
   server which origins/methods/headers are allowed; only if the response's `Access-Control-Allow-*`
   headers permit it does the real request go. It's `OPTIONS` doing its "what can I do here?" job. (Ties
-  back to M02 Ch1's L7 devices reading the request.)
+  back to M02 Ch1's L7 devices reading the request.) *The full why — the threat model, why `curl` is
+  exempt, simple-vs-preflighted requests, and what happens if the browser itself is malicious — is worked
+  in §10b–§10c.*
 
 ---
 
@@ -350,6 +357,100 @@ keys, and one status code it returns that you'd previously ignored.
 
 ---
 
+## 10. Applied — three questions from the session (all sparked by AWS)
+
+The body went untouched; the session was three threads, each starting from an **AWS-shaped confusion**
+and driving down to the principle underneath — the pattern where abstract material lands hardest once it
+meets a system you actually run and a real decision.
+
+### 10a. "HTTP API" vs "REST API" — a category error, and an AWS naming collision
+
+The confusion is real and common, and it dissolves once you see the two words aren't the same *kind* of
+thing:
+
+- **HTTP is a protocol; REST is an architectural *style*** (Roy Fielding, 2000) implemented *over* a
+  protocol. So they don't compete: **"HTTP API" is the superset; a "REST API" is one disciplined way of
+  using HTTP.** Every REST API is an HTTP API; most HTTP APIs aren't strictly REST.
+- REST's load-bearing constraint is the **uniform interface** — which is *exactly* what §1–§6 taught:
+  resources named by URIs (nouns), methods and status codes used with their real semantics,
+  self-descriptive messages — plus **HATEOAS** (responses embed links to what you can do next), the one
+  constraint almost nobody ships.
+- The practical ruler is the **Richardson Maturity Model**: **L0** HTTP as an RPC tunnel (one endpoint,
+  all `POST`) → **L1** resources → **L2** proper methods + status codes → **L3** hypermedia. **Almost every
+  real-world "REST API" is Level 2** — precisely this section's contract — and L3 ("true" REST) is rare.
+  GitHub and Stripe are polished L2.
+- REST is only *one* style over HTTP; the siblings — **RPC** (gRPC), **GraphQL**, **SOAP** — all ride
+  HTTP too and are not REST. The taxonomy is *HTTP API* (umbrella) → *REST / RPC / GraphQL / SOAP*.
+- **The actual source of the confusion, named:** **AWS API Gateway offers two product types literally
+  called "REST API" and "HTTP API,"** and that dropdown is a **cost/feature tier**, *not* the
+  architectural distinction: the "REST API" product is older and fuller-featured (API keys, usage plans,
+  request validation, WAF), the "HTTP API" product is newer, lower-latency, and cheaper — and **both build
+  perfectly ordinary Level-2 "RESTish" APIs.** AWS's "REST API" is not more RESTful than its "HTTP API."
+  Keeper: *AWS product names borrow concept words and collide with them — read the product docs, not the
+  name.*
+
+### 10b. Why the browser enforces the CORS `OPTIONS` preflight
+
+The puzzle he brought: `curl` hits the API fine, but the browser fails until an `OPTIONS` method is added;
+he'd read "browser safety feature" and it felt cosmetic on the backend. The reframe that resolves it:
+
+> **CORS does not protect your backend. It protects the *user's logged-in sessions on other sites* — and
+> it lives in the browser because the browser is the only party with both the danger and the knowledge.**
+
+- **Why `curl` is exempt and the browser isn't:** `curl` has no *ambient authority* and no victim — it
+  sends only what you tell it, to a server you chose. A **browser carries the user's cookies for every
+  site AND runs untrusted JavaScript from every site visited.** The threat is `evil.com`'s script calling
+  `bank.com` with *your* cookie automatically attached.
+- **Same-Origin Policy (SOP)** is default-closed: JS may not *read* responses from a different origin.
+  **CORS is the server's opt-in *relaxation* of that wall**, via `Access-Control-Allow-*` headers — it
+  opens a hole, it doesn't add a restriction.
+- **Why enforcement must be in the browser:** to the server, three requests are identical HTTP —
+  legit-app JS, `evil.com` JS, and `curl`. Only the **browser** knows the *origin of the calling script*
+  and holds the credentials, so only the browser can gate on it. Your backend just **publishes a
+  permission slip** (the headers); that's why it feels like backend busywork — you aren't enforcing
+  anything and aren't the one being protected.
+- **Why the *extra* `OPTIONS` request (preflight):** the browser splits requests in two. **"Simple"**
+  ones (`GET`/`POST` with form-style bodies) go straight out and the browser just **withholds the
+  response** if CORS disallows it — fine, because a plain HTML `<form>` could already send them (not a new
+  power). **"Non-simple"** ones (`PUT`/`DELETE`/`PATCH`, `Authorization`, `Content-Type: application/json`)
+  are a *new* capability that never existed pre-`fetch`, and can be **irreversible** (a cross-origin
+  `DELETE`). You can't "send it then hide the reply" — the delete already happened. So the browser
+  **asks first** with `OPTIONS`, and sends the real request only if the server allows it. Keeper:
+  *preflight gates exactly the requests that are both a new power and possibly irreversible, checking
+  permission before any side effect.*
+- **Your AWS fix, explained:** your API uses `Authorization`/JSON/`PUT`/`DELETE` → all preflight triggers,
+  so the browser demands an `OPTIONS` answer first. "Enable CORS" in API Gateway auto-creates a **mock
+  `OPTIONS`** returning the `Access-Control-Allow-*` headers — that's the method you added. The classic
+  follow-on gotcha: the **real** `GET`/`POST` response *also* needs `Access-Control-Allow-Origin`, or the
+  browser blocks it even after the preflight passes.
+
+### 10c. The client-trust boundary — "what if the browser is malicious?"
+
+He then pushed to the sharp edge: *if CORS relies on the browser, a malicious browser can just ignore it —
+is there a guard?* He's exactly right, and the answer reveals the real trust model. He **re-derived a
+foundational security principle from first principles.**
+
+- **There is no browser-side guard, by design** — because the question mis-identifies the victim. A
+  malicious browser only endangers **its own user** (who is already fully compromised — such a browser
+  reads passwords, keystrokes, everything). It cannot reach *other* people's sessions, and it gains
+  **nothing at your server** that `curl` doesn't. CORS was never protecting the server.
+- **The principle:** *never trust the client. A control that runs on the (possibly attacker-controlled)
+  client is not a security boundary — the boundary is the server.* CORS/SOP is a **favor to the honest
+  user**, layered on top of the real defenses, which assume a hostile client: **server-side
+  authentication + authorization on every request**, and **CSRF defenses** (`SameSite` cookies, CSRF
+  tokens). None of those depend on the browser being honest.
+- **The one technical "verify it's a genuine browser" mechanism is remote attestation** — the client
+  cryptographically proves it's an unmodified browser on genuine hardware. It's real and shipping in
+  **native mobile apps** (Android **Play Integrity**, Apple **App Attest**), but for the **open web it was
+  deliberately rejected**: Google's **Web Environment Integrity** proposal was withdrawn in 2023 after an
+  antitrust / open-web backlash — the web chose *trust no client, secure the server, keep the client open*
+  over policing which browser you may run. (This loops straight back to **reading #13**, where the keeper
+  was that attestation *lost politically, not technically*.)
+- Keeper: **client-side controls protect the client's *user*; they are never a wall against the client's
+  *owner*. The wall is always at the server.** This whole arc is a trailer for **M10 (security)**.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -364,6 +465,10 @@ keys, and one status code it returns that you'd previously ignored.
 | Cache | 缓存 | 快取 | ⚠ genuine split (from Ch1) |
 | Rate limit | 限流 / 速率限制 | 速率限制 | 限流 common in mainland eng-speak |
 | Payload / body | 负载 / 报文体 | 酬載 / 主體 | ⚠ 负载 ↔ 酬載 |
+| Same-origin policy / CORS | 同源策略 / 跨源资源共享 | 同源政策 / 跨來源資源共享 | ⚠ 源 ↔ 來源; 策略 ↔ 政策 (§10b) |
+| Preflight (request) | 预检 | 預檢 | script only; the `OPTIONS` probe |
+| REST / architectural style | 表述性状态转移 / 架构风格 | 表述性狀態轉移 / 架構風格 | REST rarely translated in practice (§10a) |
+| Remote attestation | 远程认证 / 远程证明 | 遠端認證 / 遠端證明 | ⚠ 远程 ↔ 遠端 (§10c) |
 
 ---
 
