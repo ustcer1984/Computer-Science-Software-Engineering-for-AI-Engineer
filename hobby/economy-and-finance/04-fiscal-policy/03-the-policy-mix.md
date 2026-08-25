@@ -12,8 +12,8 @@
 > watch the fiscal multiplier swell and collapse depending on what the *other* lever does, and close on the
 > **Singapore inversion** — where an FX-based monetary policy hands the stabilization job to fiscal policy,
 > tying E03 §4 and E04 together. This **closes Module E04** and sets up **E05 (the global economy)**.
-> **Status:** 🔵 **body drafted 2026-08-14.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **FINALIZED 2026-08-14.** §10 Applied added — the current 2026 US economy read off the policy
+> mix (the fighting-mix quadrant + the saving–investment identity), closing Module E04.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -364,10 +364,98 @@ Reason first; check against a source where noted.
 > and check which quadrant they fall in. Then name the side effect the matrix predicts (currency, real rates,
 > recovery speed) and see if it shows up. Bring it to the session.
 
-## 10. Applied — from our session Q&A
+## 10. Applied — the current US, read off the policy mix
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+Our session turned this section's machinery on the **live 2026 US economy**, in a chain you drove one question at
+a time — each answer's refinement becoming your next question. It's the perfect stress test, because the current
+US is the **fighting-mix quadrant with a 2020s twist** the 1980s archetype didn't have, and reading it correctly
+requires almost every tool in the module. (Current figures below are from a live data pull during the session —
+see the dates.)
+
+### 10a — Does the US fit "loose fiscal + tight monetary"? Yes, but a *soft, drifting* version
+
+The quadrant fits (§2), but the **stance** needs reading carefully. Fiscal is unambiguously **loose** — deficits
+~6% of GDP *at full employment*, debt still climbing. Monetary is where "tight" misleads: the Fed's ~3.5–3.75%
+(mid-2026) is high versus the 2010s zero era, but with inflation ~4% the **real** policy rate is roughly **zero**.
+Compare Volcker (fig 3): nominal ~19%, *real* ~+6%. So this is "loose fiscal + *nominally*-tight, *really*-neutral"
+monetary — and with the market pricing **cuts** plus political pressure on the Fed, the stance is **drifting up
+toward loose-loose**, not parked in the hard bottom-right corner. That single correction — the real rate is near
+zero, not high — is what dissolves the next puzzle.
+
+### 10b — The dollar paradox: why the dollar is *weak* despite high rates
+
+Your observation: high rates "should" mean a strong dollar (the fig-3 fighting-mix footprint), yet the dollar was
+**weakening** (DXY ~99 on 24 Aug 2026, down ~2.5% over the prior month, off a 4-year low under 97) amid rising
+debt-and-"default" chatter. The resolution is that "high rate → strong dollar" is only **one** channel, and three
+forces are swamping it: **(1)** the *real*-rate attraction is thin (~0% real, vs Volcker's +6%); **(2)** a
+**rising risk premium** — a **fiscal** premium (positive $(r - g)$, 6%-of-GDP deficits) *and* a **Fed-independence**
+premium (markets pricing a politically-pressured Fed that tolerates inflation) — which makes yields and the
+currency move the *wrong* way *together* (yields up, currency down — the **emerging-market sign flip**, the UK-2022
+gilt episode in miniature, §4); **(3)** a policy that *wants* a weaker dollar for competitiveness. The keystone
+synthesis, tying back to §2: **for an own-currency sovereign, "default" doesn't arrive as a missed payment — it
+arrives as a weak dollar plus inflation** (the §2 §6 *inflate-it-away* exit; the sovereign can always print, §5).
+So "the dollar is weakening" and "there's default-adjacent risk" are not contradictory — the **weak dollar is the
+mechanism of the soft default**. (The one *literal* US default risk is different and political: a debt-ceiling
+technical default.)
+
+### 10c — CA = S − I: why the manufacturing plan can't dodge the trade deficit
+
+Your next step was sharp: high rates attract foreign capital *for* manufacturing, so surely no *larger* trade
+deficit? This runs into an **identity**, not a theory. The current account (≈ the trade balance) is *definitionally*
+
+$$CA = S - I,$$
+
+national saving minus investment: a country runs a trade **deficit** if and only if it **invests more than it
+saves**. Push the plan through it — more manufacturing **investment** (I ↑) plus **loose fiscal** (public saving
+↓) — and, with private saving flat, S − I **falls**: the deficit **widens**. And the specific claim inverts the
+causality, because of a *second* identity: **the capital inflow *is* the trade deficit** (a capital-account
+surplus ≡ a current-account deficit — two sides of the balance of payments). To attract *net* foreign capital *is*
+to run a trade deficit; you cannot do both-and-shrink-it unless **national saving rises**. This is the 1980s
+**twin deficits** again (fig 3). And it exposes the mix's internal war: tight money to fight inflation props the
+dollar **up**, which *hurts* the export/reindustrialize goal — which is exactly why the policy reaches for
+**tariffs** and **pressure for a weaker dollar/Fed cuts** to force by other means what a weak currency would do
+cleanly, while the tariffs *themselves* raise import prices → add to inflation → keep the Fed tight → prop the
+dollar up (a partially self-defeating loop).
+
+### 10d — Is the claimed "narrowing" real? Mostly a mirage
+
+You reasoned that if capital inflow can't *cause* a narrowing, then any real narrowing must come from the S − I
+side — correct, and the 2026 data rewards the deduction. The **total** goods-and-services deficit barely moved
+(~USD 901bn in 2025 vs 904bn in 2024 — still the *third-highest on record*). Trump's "**78% reduction**" is a
+**base-effect cherry-pick**: it measures from **March 2025** (USD 140.5bn, a record *inflated by importers
+front-running the April tariffs*) down to **October 2025** (USD 29.4bn) — and the gap then jumped **139%** by
+December. The real structural signal points the *other* way: the **goods** deficit hit a **record USD 1.24
+trillion**, driven by *importing chips from Taiwan to build AI datacenters* — the S − I identity made flesh, an
+investment boom *sucking in* imports. The only genuine narrowing was in **services** (surplus up to USD 339bn),
+the part of the economy the manufacturing policy isn't even aimed at. So the honest menu of what can narrow a
+deficit — higher saving / weaker-dollar exports (good), tariff import-compression (mechanical), recession or trade
+*diversion* (bad/illusory), base effects (artifact) — resolves the headline "narrowing" into **base effects + a
+services surplus**, while the manufacturing-relevant number set an all-time record.
+
+### 10e — The "good deficit": correct in principle, conditional in practice
+
+Your closing insight was genuinely sophisticated and independently correct: a deficit that funds **productive
+investment** can be *good*, because it builds future export capacity — the **intertemporal / "development" current
+account**, exactly how the 19th-century US (British capital → railroads → the world's top exporter) and postwar
+South Korea industrialized. Validated. The honest refinement is the **three conditions** it hinges on, not the
+investment *volume*: **(1)** the capital must build **tradables** (else it's Thailand 1997 — foreign money into
+property, no export payback, crash); **(2)** it must earn a **return above the cost of capital** — i.e. not a
+**bubble** (this is *your own* E02 §4 AI boom-vs-bubble thread: the thesis is worth exactly the ROI on the
+AI/factory capex); **(3)** national saving must eventually **rise / the fiscal deficit must consolidate**, or
+permanent public dis-saving just *swallows* the private-investment payoff (the S − I trap again). Plus a twist
+specific to now: America's comparative advantage is in **services/tech**, so if the AI capex pays off it likely
+shows up as **services exports** — meaning "good for the economy" ✓ *and* "narrows the deficit" ✓ can both hold
+**while "reindustrializes / shrinks the *goods* gap" does not.** And the AI capex (private, productive-looking) is
+a different bet from tariff-*protected* reshoring (comparative-advantage tension; some justified on
+strategic/security grounds, E04 §1's public-goods logic — but a lower financial return).
+
+> **The one-line landing.** The current US is the **fighting-mix quadrant read through the saving–investment
+> identity**: a loose-fiscal + softly-tight-monetary mix whose *own goals contradict* (fight inflation → strong
+> dollar → kills reindustrialization), papered over with tariffs and Fed pressure, with a dollar weakening the
+> **emerging-market way** (a fiscal + credibility premium repricing it) and a trade deficit the accounting holds
+> *open* from the saving side faster than tariffs close it from the goods side. The "good deficit" defense is real
+> but conditional — and the tells to watch are **tradability, ROI, and the fiscal path**, not the investment
+> headline. *All of it is Mundell–Fleming, which is where E05 begins.*
 
 ---
 
@@ -430,7 +518,7 @@ genuine terminology difference** you'd trip over.
 ---
 
 ### What's next
-🔵 **Body drafted 2026-08-14 — awaiting our live session.** With this you hold the **whole fiscal–monetary
+✅ **FINALIZED 2026-08-14 — this closes Module E04.** With this you hold the **whole fiscal–monetary
 picture**: the two levers on one demand (§1), the **2×2 mix** and its side effects (§2), the **monetary offset**
 that makes the multiplier regime-dependent (§3), the **cooperation** that the ZLB demands and its helicopter-money
 limit (§4), the **fiscal dominance** that high debt threatens (§5), the **game of chicken** that independence is
@@ -439,5 +527,5 @@ built to win (§6), and the **Singapore inversion** that shows the mix is a *cho
 (§2) to the policy mix (§3). Next, **E05 — the global economy** opens: **trade & comparative advantage**, then
 **exchange rates, the balance of payments & capital flows**, where the trilemma stops being a footnote and
 **Mundell–Fleming** turns the entire policy mix into an *open-economy* problem — the natural home of everything
-E03 §4–§5 and this section kept gesturing at. On finalize, a **§10 Applied** will capture whatever thread our
-session pulls on.
+E03 §4–§5 and this section kept gesturing at. **§10 Applied** reads the current 2026 US economy off this
+machinery — the fighting-mix quadrant, the dollar paradox, and the saving–investment identity CA = S − I.
