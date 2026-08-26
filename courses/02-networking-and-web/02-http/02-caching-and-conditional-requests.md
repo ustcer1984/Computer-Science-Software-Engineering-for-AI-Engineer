@@ -456,16 +456,39 @@ tells you **whose side it's on** — that's the entire concept.
   proxy quietly forwards each request to one of the real backends behind it. It's "reverse" because it's the
   mirror image — same interception, opposite side.
 
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/02-caching-and-conditional-requests-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```mermaid
+flowchart TB
+    subgraph FWD["FORWARD proxy — fronts the CLIENTS (hides the client from the server)"]
+        direction LR
+        C1["client"]:::cli --> FP["forward<br/>proxy"]:::px
+        C2["client"]:::cli --> FP
+        C3["client"]:::cli --> FP
+        FP --> N1(["internet"]) --> OS[("any origin<br/>server")]:::srv
+        FP -.-> FPn["clients are configured to use it;<br/>the origin sees the PROXY's IP,<br/>not the client's"]:::note
+    end
+    subgraph REV["REVERSE proxy — fronts the SERVERS (hides the server(s) from the client)"]
+        direction LR
+        AC["any<br/>client"]:::cli --> N2(["internet"]) --> RP["reverse<br/>proxy"]:::px
+        RP --> BA["backend A"]:::srv
+        RP --> BB["backend B"]:::srv
+        RP --> BC["backend C"]:::srv
+        RP -.-> RPn["the client thinks the proxy<br/>IS the real server;<br/>the backends are hidden"]:::note
+    end
+    FWD --> REV
+    classDef cli fill:#e8f4ff,stroke:#3b7dd8;
+    classDef px fill:#efe6ff,stroke:#7c3aed,stroke-width:2px;
+    classDef srv fill:#e9f9ee,stroke:#1e8449;
+    classDef note fill:#fffbe6,stroke:#e0b400,color:#333;
 ```
-FORWARD proxy — fronts the CLIENTS                REVERSE proxy — fronts the SERVERS
-                                                                     ┌─▶ backend A
-  [client]─┐                                       [any client]      ├─▶ backend B
-  [client]─┼─▶ [forward proxy] ─▶ (internet) ─▶       │              └─▶ backend C
-  [client]─┘                          │              ▼
-   configured to use it               ▼        [reverse proxy] ─▶ (forwards inward)
-                              [any origin server]   the client thinks THIS is
-   server sees the PROXY's IP                       the real server; backends hidden
-```
+
+</details>
+<!-- DIAGRAM:END -->
 
 **The tell — *who is hidden?*** Forward proxy hides the client from the server. Reverse proxy hides the
 server(s) from the client.
