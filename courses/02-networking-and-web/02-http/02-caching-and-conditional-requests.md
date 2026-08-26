@@ -9,8 +9,11 @@
 > **optimistic concurrency** (`If-Match` → `412`), which is the precise fix for §1's `409` edit-collision.
 > Caching is the **biggest latency lever after Ch1's connection reuse**: the fastest request is the one you
 > never send.
-> **Status:** 🟡 PREPARED 2026-08-20 — body ready for your read-through. Applied section (§10) is written on
-> finalize, after the Q&A.
+> **Status:** ✅ finalized 2026-08-26 (body prepared 2026-08-20). No questions on the main content — the
+> body landed. The session was **one adjacent question he flagged from the diagrams**: *what is a reverse
+> proxy?* (§2's "shared cache" and "forward/gateway proxy" boxes named it without defining it). Captured in
+> **§11 Applied**, because it's a building block M07/M08 will *use* but not teach in depth — and it closes
+> the loop on the shared-cache hierarchy he'd just read.
 > **Prerequisites:** M02 Ch2 §1 (safe/idempotent/**cacheable**, status codes incl. `304`/`409`, the headers
 > map). Useful: M02 Ch1 §1 (the latency budget — DNS + TCP + TLS + transfer — that a cache hit erases) and
 > Ch1 §7 (CDNs / edge).
@@ -212,7 +215,8 @@ flowchart LR
   responses (that user's data) because there's no one to leak them to. It's also what a page reload,
   back-button, and `immutable` assets hit first.
 - **Shared cache = a CDN edge (Ch1 §7), a reverse proxy in front of your origin, or a corporate forward
-  proxy** — one cache serving *many* users. This is where the leverage is (one origin fetch serves
+  proxy** — one cache serving *many* users. *(What a **reverse proxy** actually is — and why your ALB,
+  CloudFront, and API Gateway are all reverse proxies — is §11.)* This is where the leverage is (one origin fetch serves
   thousands) **and** where the danger is: a shared cache must **never** store a `private` or `no-store`
   response, because its next hit could be a different person. `s-maxage` lets you tune shared-cache lifetime
   independently — e.g. `max-age=0, s-maxage=600` says "browsers, always revalidate; CDN, hold it 10
@@ -431,6 +435,82 @@ Deliverable: for one real API or site you use, record its `Cache-Control` on (a)
 
 ---
 
+## 11. Applied — what is a reverse proxy? (the box the diagrams named but didn't define)
+
+No questions on the caching content — it landed. The one thing he flagged was **adjacent**: §4's diagram
+put a "**shared cache** = … a **reverse proxy** in front of your origin" and a "**forward/gateway proxy**"
+on the page without ever saying what either *is*. It's worth pinning here, because it's a building block
+that **M07 (designing for scale) and M08 (cloud networking) will *use* rather than teach** — and once named,
+it retro-explains the whole §4 hierarchy and four things he runs on AWS.
+
+### The one distinction that matters: which side it fronts
+
+A **proxy** is an intermediary that sits in the middle of a connection and relays it. *Forward* vs *reverse*
+tells you **whose side it's on** — that's the entire concept.
+
+- **Forward proxy** — fronts the **clients**. Clients are configured to point at it; it represents *them* to
+  the outside world, and the origin server sees the *proxy's* IP, not the client's. This is the corporate
+  egress proxy — the "forward/gateway proxy" box in §4's diagram.
+- **Reverse proxy** — fronts the **servers**. Clients are *not* configured for it and usually don't know
+  it's there: they resolve your hostname, connect, and believe they've reached your application, while the
+  proxy quietly forwards each request to one of the real backends behind it. It's "reverse" because it's the
+  mirror image — same interception, opposite side.
+
+```
+FORWARD proxy — fronts the CLIENTS                REVERSE proxy — fronts the SERVERS
+                                                                     ┌─▶ backend A
+  [client]─┐                                       [any client]      ├─▶ backend B
+  [client]─┼─▶ [forward proxy] ─▶ (internet) ─▶       │              └─▶ backend C
+  [client]─┘                          │              ▼
+   configured to use it               ▼        [reverse proxy] ─▶ (forwards inward)
+                              [any origin server]   the client thinks THIS is
+   server sees the PROXY's IP                       the real server; backends hidden
+```
+
+**The tell — *who is hidden?*** Forward proxy hides the client from the server. Reverse proxy hides the
+server(s) from the client.
+
+### Why you put one in front of an origin
+
+A reverse proxy is where you **consolidate every cross-cutting job** so the backends can stay dumb and
+identical. Give one box the public address and let it handle:
+
+- **TLS termination** — decrypt HTTPS once at the edge (it holds the cert), speak plain HTTP to backends on
+  the trusted internal network. Your Lambda/app never touches the handshake. *(The practical home of Ch3.)*
+- **Load balancing** — spread requests across N identical backends. This is *why §1 hammered statelessness*:
+  because HTTP carries all state per-request, any backend can serve any request, so the proxy is free to
+  pick one. Statelessness is the property that makes the reverse proxy possible.
+- **Caching** — and here's the loop back to this section: **§4's "shared cache" *is* a reverse proxy doing
+  the caching job.** An nginx with `proxy_cache`, or a CDN edge, is a reverse proxy holding
+  `Cache-Control`/`ETag`-governed copies so the origin never sees the repeat request.
+- **Routing / virtual hosting** — read the `Host` header or path (L7, Ch1 §1) and send `/api/*`, `/static/*`,
+  or different hostnames to different backends — all behind **one public IP and one certificate** (the
+  direct answer to Ch1 §11's IPv4 scarcity: one address fronts thousands of sites).
+- **Security & resilience** — hide the origin's real IP, absorb/deflect DDoS, run a WAF, enforce rate
+  limits, offload auth-token checks at the edge, add retries and circuit-breaking.
+
+### He already runs four of them
+
+The payoff that makes it click — these AWS pieces are **the same idea specialized for one job each**:
+
+| What he runs | The reverse-proxy job it specializes in |
+|---|---|
+| **AWS API Gateway** (front of Lambda) | API concerns: routing, auth, rate limiting, request validation. His `curl` hits the gateway; *it* invokes the function. |
+| **Application Load Balancer (ALB)** | spreading traffic across backend targets (L7 — reads path/host) |
+| **CloudFront** | **caching, geographically distributed** — a CDN *is* a reverse proxy at edge PoPs worldwide (Ch1 §7 + §4's shared cache) |
+| **nginx / HAProxy / Envoy / Caddy** | the general-purpose ones you run yourself; a k8s **ingress controller** is this inside a cluster |
+
+So **"load balancer," "API gateway," and "CDN" are not alternatives to a reverse proxy — they *are* reverse
+proxies**, each tuned for one of the jobs above (and real products blur the lines: CloudFront caches *and*
+routes; an ALB balances *and* terminates TLS).
+
+> Keeper: **a forward proxy fronts the client (represents the requester); a reverse proxy fronts the server
+> (represents the origin).** Everything he deploys as a load balancer, API gateway, or CDN is a reverse
+> proxy specialized for one job — a single public front door that lets the backends stay stateless,
+> identical, and hidden. This is the concept M07 Ch2 (scale) and M08 Ch2 (cloud networking) will build on.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -449,6 +529,9 @@ Deliverable: for one real API or site you use, record its `Cache-Control` on (a)
 | Lost update | 丢失更新 / 更新丢失 | 遺失更新 | the write-clobber §5 prevents |
 | Invalidation | 失效 / 缓存失效 | 失效 / 快取失效 | the hard problem (§7) |
 | Cache busting / fingerprinting | 缓存刷新 / 指纹化 | 快取破除 / 指紋化 | the content-hash URL trick |
+| Reverse proxy | 反向代理 | 反向代理 | fronts the *server(s)* (§11) |
+| Forward proxy | 正向代理 | 正向代理 | fronts the *client(s)*; ⚠ 正向 (mainland) also 前向 |
+| Load balancer | 负载均衡器 | 負載平衡器 | ⚠ 均衡 ↔ 平衡; a reverse proxy specialized for load (§11) |
 
 ---
 
