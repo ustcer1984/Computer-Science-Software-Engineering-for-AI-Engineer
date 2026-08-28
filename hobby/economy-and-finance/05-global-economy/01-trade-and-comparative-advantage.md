@@ -12,8 +12,8 @@
 > shock); analyze **tariffs** and their deadweight loss (paying off E01 §3); and close on **global supply chains**
 > and the retreat from hyperglobalization (reshoring, resilience-vs-efficiency). This sets up **§2 (exchange rates
 > & the balance of payments)** — where the trade balance meets the currency.
-> **Status:** 🔵 **body drafted 2026-08-14.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **FINALIZED 2026-08-14.** §10 Applied added — the learner's two upgrades: the **dynamic gains**
+> (trade as a catch-up engine, EOI vs ISI) and the **trade war as political economy**, not efficiency.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -327,10 +327,84 @@ Reason first; check against a source where noted.
 > own work where you (or your team) should "trade" a task you're good at to focus where your *opportunity cost* is
 > lowest, and bring it to the session.
 
-## 10. Applied — from our session Q&A
+## 10. Applied — two upgrades from static to real
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+You read the section, said it matched how you already understood world trade, and added the two extensions that
+turn a *static* textbook grasp into a real one. Both are the exact directions §1 deliberately left open, so they
+belong here as the section's payoff. (This is a domain where your prior intuition is strong — the dynamic story
+below is, after all, your own region's economic history.)
+
+### 10a — The dynamic gains: trade as an engine of catch-up growth
+
+§1–§3 mostly gave the **static** gain: comparative advantage reallocates *existing* resources for a **one-time**
+rise in the *level* of output. Your addition was the **dynamic** gain — trade raising a developing country's
+**growth *rate***, not just its level — and it's the categorically bigger effect. Because the economy isn't
+static, trading with advanced markets **accelerates** the follower's development through five channels:
+
+- **Technology & knowledge transfer** — you *import* the frontier (embodied in capital goods, components,
+  standards, managerial practice) instead of reinventing it.
+- **Learning by exporting** — selling into demanding rich markets drags firms up the quality/productivity curve.
+- **Scale** — export access unlocks the economies of scale (E01 §4) a poor domestic market can't provide.
+- **Competition as discipline** — import competition kills domestic monopolies and forces productivity.
+- **The ladder** — comparative advantage is *dynamic* (§3): textiles → assembly → components → design. Trade *is*
+  the ladder a country climbs.
+
+**The evidence is one of the cleanest natural experiments in economics**, and it's East Asia's story: **export-
+oriented industrialization** (Japan → Korea, Taiwan, Singapore, Hong Kong → China → Vietnam) produced the greatest
+sustained catch-up in history, while **import-substitution industrialization** — the closed, protectionist model
+of postwar Latin America and pre-1991 India — largely **failed** to converge. Same era, opposite strategies,
+opposite outcomes. This is close to *the* central finding of development economics, and it strongly backs your
+point.
+
+The honest condition that makes the claim bulletproof: catch-up is **not automatic — it's conditional.** Openness
+is necessary but not sufficient; it needs **absorptive capacity** (human capital to *use* the imported
+technology), institutions, and infrastructure. Without them a country gets the static gain but locks into
+exporting raw commodities and stalls (the **Prebisch–Singer** commodity-dependence trap). And East Asia did *not*
+run pure laissez-faire — it ran **managed, strategic integration** (sequenced liberalization, export discipline,
+industrial policy). So the precise statement is: *export-orientation **plus a capable state** accelerates
+development* — stronger and more accurate than "free trade always helps."
+
+**The precision on "purely from efficiency, free trade is always beneficial."** Correct — with one crystallization
+you already half-hold from §4: it's the **aggregate** (the global pie) that always weakly improves, **not every
+party.** "Beneficial" means a **potential** Pareto gain (Kaldor–Hicks: the winners *could* compensate the losers
+and all be better off) — whether they *do* is §4's distribution problem. The only textbook exceptions where even a
+*national* aggregate can gain from a tariff are the **optimal tariff** (a large country improving its terms of
+trade at the world's expense — but this *shrinks the global pie*) and **infant industry with a genuine market
+failure** (§3). Both are narrow and are the exceptions that prove the rule: globally, free trade maximizes
+efficiency; the exceptions are one country grabbing a bigger slice of a *smaller* pie.
+
+### 10b — The trade war is political economy, not efficiency
+
+Your second point — the trade-war narrative is political, not economic — is right, and the sharp version is
+stronger than it first sounds: **the economics of a trade war is nearly *unambiguous* — both sides lose** (§5
+deadweight loss on both sides, plus retaliation). There is essentially no serious *efficiency* case *for* one. So
+the drivers are **necessarily non-efficiency**, and there are three worth separating:
+
+- **Distribution, not efficiency (§4).** The losers from trade are **concentrated and mobilized** (manufacturing
+  regions, often swing states); the winners (all consumers) are **diffuse and silent.** Politics rewards
+  protecting the concentrated group even when the economics condemns it. A trade war is what an unaddressed
+  *compensation failure* looks like once it becomes policy.
+- **Geopolitics / national security.** The US–China conflict is substantially **strategic rivalry** — chips,
+  critical supply chains, techno-military supremacy, decoupling/de-risking — **not** the trade balance. The
+  deficit is the *scoreboard and pretext* (E04 §3 §10); the real game is the §6 resilience/security logic. A
+  *legitimate* non-efficiency objective.
+- **Signaling.** Tariffs are visible and "tough"; their costs are hidden, diffuse and delayed (the E04 §1
+  fiscal-illusion asymmetry). Great politics, bad economics.
+
+So the crispest formulation: **anyone making an *efficiency* argument for a trade war ("tariffs will make us
+richer / fix the deficit") is either confused or providing cover** — because efficiency runs the other way. The
+*honest* arguments for protection are **distributional** ("protect these communities"), **strategic** ("don't
+depend on a rival for chips"), or **resilience** ("insure against disruption"), and they should be argued and
+*paid for* on their own terms — not smuggled in wearing an economics costume the economics doesn't support.
+Telling "trade war to get rich" (the mercantilist error of §1 — intuitive, popular, wrong) from "trade war to not
+depend on a rival for chips" (a real argument you can weigh) is the whole skill.
+
+> **The landing.** §1 taught that trade grows the pie by *reallocating* resources; your two additions complete it
+> — trade also **grows the pie faster over time** (the dynamic catch-up engine, conditional on absorptive
+> capacity), and the fights over trade are almost never about the *efficiency* the economics measures but about
+> **distribution and power**, which it doesn't. Hold "the efficiency case is strong and mostly settled" in one
+> hand and "the *politics* is about who wins and who's secure" in the other, and no trade headline can confuse
+> you again.
 
 ---
 
@@ -393,7 +467,7 @@ terminology difference** you'd trip over.
 ---
 
 ### What's next
-🔵 **Body drafted 2026-08-14 — awaiting our live session.** You now hold the engine of trade: **why** countries
+✅ **FINALIZED 2026-08-14 — opens Module E05.** You now hold the engine of trade: **why** countries
 trade (comparative advantage, opportunity cost — the counterintuitive core that a country worse at everything
 still gains), **where** advantage comes from (endowments, scale, and building it), the honest reckoning with
 **winners and losers** (the China shock; diffuse gains, concentrated losses), the true cost of **tariffs**
@@ -403,5 +477,5 @@ balance of payments** connects all of this to the **currency**: what a trade flo
 how the exchange rate is set and what moves it, and how the trade balance and the capital account must sum to zero
 (the identity behind E04 §3's CA = S − I, now with the currency in it). Then **§3 — capital flows, crises &
 globalization**, with **Singapore as a trade/finance hub**. Together they turn the policy mix, the trilemma, and
-the debt story into a fully **open-economy** picture (**Mundell–Fleming**). On finalize, a **§10 Applied** will
-capture whatever thread our session pulls on.
+the debt story into a fully **open-economy** picture (**Mundell–Fleming**). **§10 Applied** captures the learner's
+two upgrades — the **dynamic gains** (trade as a catch-up engine) and the **trade war as political economy**.
