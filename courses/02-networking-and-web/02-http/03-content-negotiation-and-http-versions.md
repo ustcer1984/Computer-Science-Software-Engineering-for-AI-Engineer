@@ -9,8 +9,12 @@
 > *delivery* of everything in §1–§2 (the wire encoding, and how many requests share a connection) **without
 > changing a single method, status code, or caching rule.** The load-bearing idea: **semantics are constant;
 > only the transport evolves.**
-> **Status:** 🟡 PREPARED 2026-08-26 — body ready for your read-through. Applied section (§11) is written on
-> finalize, after the Q&A.
+> **Status:** ✅ finalized 2026-09-02 (body prepared 2026-08-26). No questions on the body — it landed.
+> The session was **two threads he drove from §4's claim that the version is a delivery concern**:
+> *"we only type `http://` in the address bar — where is the HTTP version selected?"*, and then his own
+> conclusion, *"so as a web-app developer I don't need to care much about the version, right?"* — which is
+> **right for application code and wrong for delivery architecture.** Both captured in **§11 Applied**,
+> with the negotiation mechanisms verified live on the wire.
 > **Prerequisites:** M02 Ch2 §1 (methods/status/headers — the *semantics* that stay fixed) and §2 (`Vary`,
 > the cache that negotiation must not break). Leans hard on M02 Ch1: §1 (the round-trip latency budget and
 > TCP head-of-line blocking), §5 (TLS 1.3), and §7 (QUIC/HTTP-3, first met there) — this section is where
@@ -144,6 +148,9 @@ three; the bytes on the wire and the number of round-trips differ, the meaning d
 "which HTTP version and why" story reduces to a single evolving problem — **head-of-line (HOL) blocking**:
 *a queue where one slow item stalls everything behind it.* Each version pushes that blocking down a layer
 until it's gone.
+
+*If the version isn't in the URL and you never write version-specific code, then **who chooses it, and when** —
+and does it ever reach your desk as an application developer? Both are worked in §11a–§11b.*
 
 ---
 
@@ -337,6 +344,138 @@ Deliverable: for one site you use, record its negotiated `Content-Encoding`, whe
 
 ---
 
+## 11. Applied — two questions from the session
+
+The body landed with no questions; both threads came off §4's claim that *the version is a delivery concern,
+not a semantic one.* He pushed on the two things that claim leaves open: **who picks the version**, and
+**whether it ever reaches an application developer.**
+
+### 11a. "We only type `http://` in the address bar — where is the HTTP version selected?"
+
+A genuinely sharp observation: **the version is never in the URL, and there is no syntax for it.** You
+cannot write `http2://`. The scheme selects the **port and whether TLS is used** (80 plaintext / 443
+encrypted) — not the version. So the choice happens invisibly at connection setup, in up to three places.
+(All four transcripts below were taken live on the wire while answering.)
+
+**1 — DNS, the newest and cheapest path (`HTTPS` resource record).** The lookup you were already doing
+(Ch1 §1's first round-trip) can carry the answer:
+
+```console
+$ dig +short -t HTTPS cloudflare.com
+1 . alpn="h3,h2" ipv4hint=104.16.132.229 ...
+$ dig +short -t HTTPS www.google.com
+1 . alpn="h2,h3"
+```
+
+The `HTTPS` RR (the SVCB family) advertises supported protocols in DNS — Cloudflare listing `h3` first,
+Google `h2` first — so the browser can know *before it connects*, at zero extra cost.
+
+**2 — The TLS handshake: ALPN. This is where it actually gets decided.** In the ClientHello the client
+lists what it speaks; the server picks one and echoes it back:
+
+```console
+* ALPN: curl offers h2,http/1.1
+* ALPN: server accepted h2
+* using HTTP/2
+> GET / HTTP/2
+```
+
+Force the offer down and the server obligingly agrees — same URL, different version:
+
+```console
+* ALPN: curl offers http/1.1
+* ALPN: server accepted http/1.1
+```
+
+The elegant part: **ALPN rides inside the TLS handshake you are already paying for** (Ch1 §5), so version
+negotiation costs **zero extra round-trips**.
+
+**3 — The `Alt-Svc` response header, for discovering HTTP/3.** HTTP/3 *cannot* be ALPN-negotiated on a
+first visit, because QUIC is **UDP** — you would already have to be speaking it. So the server advertises
+it over the existing HTTP/2 connection:
+
+```console
+HTTP/2 200
+alt-svc: h3=":443"; ma=86400
+```
+
+"I am also reachable as `h3` on 443 — remember that for 24 hours." The browser then uses HTTP/3 for
+*subsequent* connections (Chrome also races a QUIC attempt against TCP). With the DNS `HTTPS` record above,
+it can go straight to h3 on the very first connection.
+
+**So what does typing `http://` actually get you?** No TLS means **no ALPN and no negotiation at all** — the
+version is simply asserted in the request line, and it is always HTTP/1.1:
+
+```console
+* Connected to www.cloudflare.com port 80
+> GET / HTTP/1.1
+< HTTP/1.1 301 Moved Permanently
+< Location: https://www.cloudflare.com/
+```
+
+**Browsers never speak HTTP/2 or HTTP/3 over plaintext.** The spec does define `h2c` (cleartext HTTP/2 via
+the `Upgrade:` header), but **no major browser ever implemented it** — so `http://` means HTTP/1.1, full
+stop. In practice you are then redirected to `https://` (or HSTS / the browser's HTTPS-First mode upgrades
+you before a packet leaves), and the real negotiation happens on that second, encrypted connection.
+
+> A neat historical echo, and a **trailer for Ch4**: the `Upgrade:` header mechanism that *failed* for
+> cleartext HTTP/2 is the very one **WebSockets** still use to switch protocols — answered with `101
+> Switching Protocols`, the 1xx class from §1 that looked like trivia. Same door, different guest.
+
+**Why it is designed this way** — and this is §4's thesis restated: **a URL names a *resource*; the version
+merely *delivers* it.** If the version lived in the URL, every link would break the day a server upgraded,
+and caches would fragment per version. Keeping it in the connection is exactly what let HTTP/1.1 → 2 → 3
+roll out without changing a single link, method, status code, or `Cache-Control` rule.
+
+*To watch it yourself:* DevTools → Network → right-click the column headers → enable **Protocol** (shows
+`http/1.1`, `h2`, `h3` per request).
+
+### 11b. "So as a web-app developer, I don't need to care much about the version, right?"
+
+His own conclusion from 11a — and **mostly right, for exactly the reason §4 argues.** But the boundary is
+not "app dev vs infra"; it is **application code vs delivery architecture**, and he owns part of the second.
+
+**Where the instinct is exactly right — you never write version-specific application code.** Handlers,
+routes, `GET`/`404`/`Cache-Control`/`If-Match`/idempotency-key logic: byte-identical across 1.1, 2 and 3.
+That is *why* RFC 9110 is version-independent, and why the upgrade is a config flag at the edge rather than
+a migration. You will genuinely never branch on "if HTTP/2."
+
+**Where it still lands on your desk — the honest refinement:**
+
+1. **Un-learning the HTTP/1.1 workarounds — a frontend/build decision, not an infra one.** The 1.1-era
+   performance playbook is actively harmful under h2/h3 and nobody in infra will fix it for you:
+   **domain sharding** fragments the single multiplexed connection (delete it); **aggressive concatenation
+   and inlining** (`data:` URIs, one mega-bundle, CSS sprites) existed to dodge per-request cost that
+   multiplexing removed. The nuance: bundling still helps *compression ratio* and JS parse cost, so don't
+   swing to 500 tiny files — but finer-grained files now buy far better **cache granularity** (one changed
+   module invalidates one file, not the bundle — §2's fingerprinting).
+2. **Concurrency assumptions invert.** HTTP/1.1's \~6-connection ceiling was an *accidental rate limiter* on
+   your backend. Under HTTP/2 one client can open \~100 concurrent streams on a single connection — your
+   own capacity planning and rate limiting are now the only thing standing there.
+3. **Real-time — the sharpest leak, and closest to your work (Ch4).** **SSE was crippled under HTTP/1.1**:
+   each event stream consumed one of the \~6 per-origin connections, so a few open tabs starved the site.
+   Under HTTP/2 it is one stream among many and that constraint essentially vanishes — **the version
+   changes whether SSE is a viable design at all.** Meanwhile **WebSockets do not multiplex over HTTP/2** by
+   default (RFC 8441 exists; support is uneven), so a WebSocket still occupies a whole connection either
+   way; and **gRPC mandates HTTP/2** — choose that framework and you have chosen a version.
+4. **Header and cookie weight.** HPACK compresses repeated headers on h2/h3, but oversized cookies still
+   cost you on 1.1 and can trip **`431 Request Header Fields Too Large`**. Keeping headers small is
+   application-side.
+5. **The AWS configuration you actually own.** Client→CloudFront/ALB may be h2/h3 while **ALB→your target
+   commonly still speaks HTTP/1.1** (the target group's protocol version is a setting — HTTP1/HTTP2/gRPC).
+   So "we enabled HTTP/2" may describe only the first hop. That is usually your IaC, not someone else's.
+6. **Debugging.** *"Slow only on mobile"* → TCP head-of-line blocking under h2, fixed by h3. *"Works for me,
+   broken on the corporate VPN"* → HTTP/3's UDP blocked, falling back to h2. You cannot diagnose either
+   without the model in §5–§7.
+
+> Keeper: **the version never changes what you *write*; it changes what you should *stop doing*, what
+> concurrency you may *assume*, and a couple of real-time *design* choices.** §4's "semantics are constant"
+> holds at the layer you code — which makes this a textbook **leaky abstraction**: the leak surfaces
+> precisely at the performance/architecture boundary, which is where you sit as an architect rather than a
+> handler-author.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -352,6 +491,9 @@ Deliverable: for one site you use, record its negotiated `Content-Encoding`, whe
 | Persistent connection / keep-alive | 持久连接 / 长连接 | 持久連線 / 長連線 | ⚠ 连接 ↔ 連線 |
 | Binary framing | 二进制分帧 | 二進位分幀 | ⚠ 进制 ↔ 進位 |
 | Connection migration | 连接迁移 | 連線遷移 | QUIC's Wi-Fi→cellular survival |
+| ALPN (protocol negotiation) | 应用层协议协商 | 應用層協定協商 | ⚠ 协议 ↔ 協定; the TLS extension that picks the version (§11a) |
+| Cleartext / plaintext | 明文 | 明文 | same; `http://` = no TLS → no ALPN → HTTP/1.1 |
+| Leaky abstraction | 抽象泄漏 | 抽象洩漏 | script only; the §11b keeper |
 
 ---
 
