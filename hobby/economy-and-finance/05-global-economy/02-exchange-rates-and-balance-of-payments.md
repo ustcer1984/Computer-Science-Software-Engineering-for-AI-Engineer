@@ -12,8 +12,8 @@
 > regime spectrum as *the trilemma made concrete*; show how (and how *little*) a currency move fixes the trade
 > balance (the **J-curve**); and close on **Mundell–Fleming** — the open-economy policy mix that is the formal
 > engine behind the E04 §3 §10 US story. This sets up **§3 (capital flows, crises & globalization)**.
-> **Status:** 🔵 **body drafted 2026-08-14.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **FINALIZED 2026-09-04.** §10 Applied added — the **monetary-sovereignty spectrum**: the
+> assumption this whole module rests on, and how to analyze the euro and dollarization cases where it fails.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -321,10 +321,123 @@ Reason first; check against a source where noted.
 > how far and how *long* it wanders from its average (the slow PPP clock, fig 1). Bring one chart where the two
 > clocks disagreed — that gap is where the risk premium lives.
 
-## 10. Applied — from our session Q&A
+## 10. Applied — the monetary-sovereignty spectrum: where this theory stops applying
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+You closed the section by finding its **load-bearing assumption**: everything in E03–E05 — Mundell–Fleming, the
+trilemma, E04 §2's "own-currency debt can never be *forced* into default" — quietly assumes the country **issues
+and controls the money its economy runs on.** You named two cases where it doesn't: **EU members can't control the
+euro**, and **some countries use a foreign currency even domestically.** (E04 §2 §5 planted the euro case in a
+single sentence — "a Eurozone member, for whom the euro is effectively *foreign*" — this is that sentence fully
+developed.)
+
+### 10a — Sovereignty is four separable attributes, not a binary
+
+The clean way to analyze every edge case at once: monetary sovereignty decomposes into **four things you can lose
+independently.**
+
+| Attribute | Lose it and you lose… |
+|---|---|
+| **(a) You issue the currency** | seigniorage, and the printing press as a backstop |
+| **(b) Your debt is denominated in it** | the "can never be *forced* to default" guarantee (E04 §2 §5) |
+| **(c) Your residents actually *use* it** | monetary transmission — your policy rate never reaches your economy |
+| **(d) It floats** | the exchange rate as a shock absorber (§5) |
+
+Placing the cases on it:
+
+- **Eurozone member** — loses **(a), (b), (d)**; keeps only a seat on the ECB board. Its debt is in a currency no
+  single member controls.
+- **Fully dollarized** (Panama, Ecuador, El Salvador) — loses **all four**.
+- **Hong Kong currency board** — loses (d) and effectively (a), *but keeps an **exit option*** (it could devalue —
+  catastrophically, but legally). The euro's **irrevocability** is exactly what removes that escape, and is both
+  what makes the commitment credible and what makes the trap tight.
+- **The case worth adding: "original sin"** — a country with its own *floating* currency whose **debt is in USD**.
+  It loses only **(b)** — and that is the most common emerging-market situation.
+
+**The theory doesn't break; it re-parameterizes.** A Eurozone member is simply **the fixed-rate row of fig 4 taken
+to its limit**: monetary policy fully impotent, fiscal policy powerful *in principle* (no exchange-rate
+crowding-out) but constrained *in practice*. The trilemma still holds — the euro is "irrevocably fixed + free
+capital → zero monetary autonomy."
+
+### 10b — What actually breaks: four losses, and one cruel bind
+
+1. **The exchange rate as shock absorber vanishes.** Adjustment must instead run through **internal devaluation** —
+   cutting domestic wages and prices. Because wages are sticky downward (E02 §3), **unemployment does the
+   adjusting instead.** Greece needed roughly a 30% real depreciation, could not devalue, and got ~27%
+   unemployment and a ~25% collapse in GDP. *That is the price of a missing exchange rate, paid in people.*
+2. **The lender of last resort vanishes.** With no domestic LOLR in the currency your deposits and bonds are
+   denominated in, E04 §2 §4's **self-fulfilling run** stops being theoretical — which is exactly why Greek,
+   Italian and Spanish spreads exploded in 2010–12 while **Japan sat calm at 250%**. It also creates the
+   euro-specific **doom loop**: banks hold their own sovereign's bonds → sovereign stress wrecks the banks → bank
+   rescues wreck the sovereign. Draghi's 2012 "whatever it takes" worked precisely because the ECB agreed to
+   **be** the missing backstop.
+3. **Seigniorage disappears.** A dollarized country hands the issuer an interest-free loan for every note it holds.
+4. **The cruel bind:** fiscal becomes the **only** lever — and simultaneously the **most constrained** one (EU
+   fiscal rules; or, without a printing backstop, a bond market charging a fat risk premium). The decisive
+   comparison is **Singapore vs Greece**: structurally *identical* positions (no domestic rate lever, so fiscal
+   must do the stabilizing — E04 §3 §7), opposite outcomes — and the entire difference is **fiscal space.**
+
+### 10c — The framework for currency unions: Optimum Currency Area theory
+
+The named answer for your first case is **Mundell's OCA theory (1961)**: a group *should* share a currency only if
+it has enough **substitutes for the exchange rate it gave up.** Four criteria:
+
+1. **Labour mobility** — workers move from depressed to booming regions. *US states: high. Eurozone: low*
+   (language, pensions, credentials).
+2. **Wage and price flexibility** — makes internal devaluation fast rather than agonizing.
+3. **Fiscal transfers / risk sharing** — a central budget that automatically cushions a depressed region. *The US
+   federal budget absorbs roughly 20–30% of a state-level shock automatically; the EU budget is ~1% of GNI and
+   does essentially none of this.*
+4. **Symmetric shocks** — one monetary policy only fits if everyone gets the same shock. Germany booming while
+   Spain busts is the killer.
+
+**Verdict: the Eurozone is not an optimum currency area** on any of the four. It was a **political project run
+ahead of its economics**, justified by the "endogenous OCA" hope (Frankel–Rose: sharing a currency would itself
+*create* convergence). That hope partly failed — the early euro years instead pushed capital from core to
+periphery, inflating Spanish, Irish and Greek booms that burst with no currency to cushion them. The fixes since
+are real but partial: **OMT** (2012), **Banking Union** (2014, breaking part of the doom loop), the **ESM**, and
+**NGEU** (2020 — the first genuinely *joint* fiscal borrowing, a partial "Hamiltonian moment," but temporary).
+There is still **no permanent fiscal union** — the missing OCA leg.
+
+### 10d — The framework for dollarization: a credibility-for-flexibility trade
+
+Full dollarization is best read as a **commitment device**: a country that has destroyed its own monetary
+credibility (hyperinflation, serial default) **imports** credibility by using someone else's money — *you tie your
+hands because your hands cannot be trusted.* It reliably kills hyperinflation overnight (Ecuador 2000 after a
+currency collapse). The cost, beyond 10b, is **imported monetary policy that is wrong for you**: the Fed sets
+rates for the US, while Ecuador's cycle is driven by oil.
+
+But your second case is usually the **partial, de-facto** version (Argentina, Lebanon, Turkey, Cambodia) — and in
+one crucial respect it is **worse than full dollarization**, because it produces **currency mismatch**: banks,
+firms and households hold **liabilities in USD but earn income in local currency.**
+
+**This flips the sign of §5's central mechanism.** Normally a depreciation *helps* (expenditure switching, the
+J-curve). With dollarized liabilities it **doubles your debt in local terms while your income stays put** →
+balance sheets detonate → **contractionary devaluation.** The exchange rate stops being a **shock absorber** and
+becomes a **shock amplifier.** That single inversion is why emerging-market crises are so much more violent than
+rich-country recessions (Asia 1997, Argentina 2001, Lebanon 2019) — and it is the direct on-ramp to §3.
+
+It also explains **"fear of floating"** (Calvo–Reinhart, 2002): many countries that *officially* float intervene
+heavily to prevent depreciation, precisely because of these balance-sheet effects. So a country's **declared
+regime is not its actual regime** — classify by behaviour, not by the label.
+
+### 10e — The practical checklist
+
+For any country whose sovereignty is partial, ask four questions **in this order**:
+
+1. **What currency are the *liabilities* in?** → decides whether a depreciation heals or destroys.
+2. **Who is the lender of last resort in that currency, and will they actually act?** → if nobody, self-fulfilling
+   runs (E04 §2 §4) are live.
+3. **What replaces the exchange rate as the adjustment mechanism?** → run the OCA criteria; if none exist,
+   adjustment arrives as **unemployment**.
+4. **Which lever is left, and how much space does it have?** → usually fiscal only, and then Singapore-vs-Greece
+   is settled entirely by fiscal space.
+
+> **The landing.** §1–§6 taught the machine for a country that controls its own money. Your question found the
+> assumption and the exit: **sovereignty is a spectrum of four attributes, and every "exception" is just the same
+> theory with one of them switched off.** Switch off the exchange rate and adjustment becomes unemployment; switch
+> off the lender of last resort and debt runs become self-fulfilling; switch off currency-matching on the
+> liability side and the exchange rate flips from absorber to **amplifier**. That last inversion is precisely the
+> engine of the crises §3 is about.
 
 ---
 
@@ -387,7 +500,7 @@ Reading FX and balance-of-payments news across both scripts. Most differences ar
 ---
 
 ### What's next
-🔵 **Body drafted 2026-08-14 — awaiting our live session.** You now hold the currency machine: the **exchange rate**
+✅ **FINALIZED 2026-09-04.** You now hold the currency machine: the **exchange rate**
 (nominal vs real, the basket) and its **two clocks** (PPP slow, capital-flows fast); the **balance of payments**
 and its unbreakable **CA + KA = 0** (with **CA = S − I** — the formal home of E04 §3's identity); the
 **fixed-vs-floating** regime as *the trilemma made concrete*; the **J-curve** limit on fixing trade with a currency
@@ -395,5 +508,5 @@ move; and **Mundell–Fleming**, the open-economy policy mix that is the formal 
 story. Next, **§3 — capital flows, crises & globalization** takes the final step: what happens when capital moves
 *fast and reverses* — **sudden stops**, **currency crises** (the trilemma punished when a country runs an
 inconsistent mix), the 1997 Asian crisis and its lessons — with **Singapore as a trade and finance hub** (the
-local lens), closing Module E05 and the whole open-economy arc. On finalize, a **§10 Applied** will capture
-whatever thread our session pulls on.
+local lens), closing Module E05 and the whole open-economy arc. **§10 Applied** maps the **monetary-sovereignty
+spectrum** — the four attributes a country can lose, and how the euro and dollarization cases are analyzed.
