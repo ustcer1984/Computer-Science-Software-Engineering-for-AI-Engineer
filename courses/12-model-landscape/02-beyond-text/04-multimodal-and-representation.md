@@ -1,7 +1,7 @@
 # M12 · Ch2 · §4 — Multimodal & Representation
 
 > **Module:** The Model Landscape
-> **Chapter:** Beyond text (image/diffusion, video, audio/speech/TTS, **multimodal & representation**)
+> **Chapter:** Beyond text (image/diffusion, video, audio/speech/TTS [text-to-speech], **multimodal & representation**)
 > **Section:** The idea that ties the whole chapter together — **everything becomes an
 > embedding.** How a model turns pixels, audio, and text into vectors in a shared space
 > (CLIP and contrastive learning), the two grand strategies for going multimodal
@@ -19,7 +19,7 @@
 
 **Estimated study time:** 2.5–3 hours (conceptual core is frontier-level; §8 is a practical
 reference you can skim and return to).
-**Prerequisites:** your transformer/embedding knowledge from the LLM side transfers directly;
+**Prerequisites:** your transformer/embedding knowledge from the LLM (large language model) side transfers directly;
 §1 (latent representations), §2 (patch → token, the ViT/DiT backbone), §3 (the "shorten the
 sequence into discrete tokens" move). Nothing new to learn about attention — this section is
 about *what goes into* it and *how the vectors are arranged*.
@@ -38,7 +38,7 @@ through all of them, and through your daily LLM work too:
 > things — a photo and its caption, a spoken word and its text — land near each other.
 
 You already know one half of this cold: text embeddings, the $O(n^{2})$ attention that consumes
-them, the KV-cache. What you have *not* built is the other half — how a vision or audio signal is
+them, the KV (key-value) cache. What you have *not* built is the other half — how a vision or audio signal is
 projected into the *same* space as text so that a single model can reason across them. That is the
 subject here, and it splits cleanly into two architectures worth being able to tell apart on sight:
 
@@ -61,7 +61,7 @@ Look back at what each prior section actually did, stripped to one line:
 
 | Section | Modality | The representation it chose |
 |---|---|---|
-| §1 | Image | pixels → a **latent** (VAE) the diffusion model denoises |
+| §1 | Image | pixels → a **latent** (VAE — variational autoencoder) the diffusion model denoises |
 | §2 | Video | frames → **spacetime patches** → a flat token sequence for a DiT |
 | §3 | Audio | waveform → **discrete codec tokens** (RVQ) an LM can predict |
 | LLM (known) | Text | subwords → **token embeddings** |
@@ -129,7 +129,7 @@ the act of making two different sensors agree on the coordinates.
 
 This is the keystone of the whole section — arguably the single most influential idea in
 multimodal ML, and the direct ancestor of both the text-conditioning in your diffusion models and
-the vision half of every VLM.
+the vision half of every VLM (vision-language model).
 
 ### The problem CLIP solved
 
@@ -298,7 +298,7 @@ flowchart TB
 generation), and *non-generative* (it ranks and retrieves, it doesn't talk). Reach for it whenever
 the task is **"find / match / rank / condition"**: semantic image search, zero-shot tagging,
 deduplication, or feeding a text vector to a diffusion model. This is also the backbone of
-**multimodal RAG** — embed images and text into one space, retrieve across both.
+**multimodal RAG (retrieval-augmented generation)** — embed images and text into one space, retrieve across both.
 
 **Fusion / the VLM.** One model *ingests* the image and *generates* language about it. It's
 *expensive* (full LLM forward pass per query, image included), *generative*, and it can *reason*:
@@ -344,7 +344,7 @@ flowchart LR
    to see from scratch — it just has to learn to *read* these features. The encoder outputs a grid
    of patch vectors (e.g. 24×24 = 576), not a single vector — the VLM needs spatial detail the
    global CLIP vector throws away.
-2. **The projector** — the only *new* part, and often just a 2-layer **MLP** that maps each vision
+2. **The projector** — the only *new* part, and often just a 2-layer **MLP (multi-layer perceptron)** that maps each vision
    feature from the encoder's dimension into the LLM's token-embedding dimension. After the
    projector, a patch of image is, to the LLM, indistinguishable in shape from a word embedding.
    (Flamingo/Qwen use a fancier **resampler / cross-attention** here — see below.)
@@ -421,7 +421,7 @@ images, text (and increasingly PDFs/screenshots) in one space so a single vector
 "search my images and documents with a text query." A standout worth knowing is **ColPali**
 (2024): instead of one vector per document page, it embeds the page *image* as a grid of patch
 vectors and does **late interaction** (ColBERT-style token-level matching) — it retrieves over
-*rendered document pages* directly, skipping the brittle OCR→layout→chunk pipeline entirely. For
+*rendered document pages* directly, skipping the brittle OCR (optical character recognition)→layout→chunk pipeline entirely. For
 document RAG this is quietly a big deal.
 
 ---
@@ -444,7 +444,7 @@ the application side — dominant axis first, hosted **and** best-open, license 
 | Axis | The question | What it changes |
 |---|---|---|
 | **Quality / task** | Retrieval? clustering? classification? reranking? | pick by the right MTEB *task* column, not the overall average |
-| **Dimension** | Storage & ANN-index cost per vector | 384-d vs 4096-d is a 10× index-size and query-speed difference; **Matryoshka** lets you truncate |
+| **Dimension** | Storage & ANN (approximate-nearest-neighbour) index cost per vector | 384-d vs 4096-d is a 10× index-size and query-speed difference; **Matryoshka** lets you truncate |
 | **Context length** | How long are your chunks/documents? | 512-token vs 8k–32k models; long-context avoids over-chunking |
 | **Multilingual** | Which languages? cross-lingual retrieval? | huge split — most English-tuned models degrade badly off-English (relevant to your SEA-LION / multilingual work) |
 | **License** | Shipping commercially? | most top open embedders are Apache/MIT — but confirm (some are non-commercial or gated) |
@@ -467,9 +467,9 @@ multi-granularity) or a Qwen3-Embedding size that fits your GPU.
 | **[Cohere Embed v3 / v4](https://docs.cohere.com/docs/cohere-embed)** | hosted | 1024 | Multilingual (100+ langs), built-in doc/query input types, compression-aware |
 | **[Google Gemini `gemini-embedding-001`](https://ai.google.dev/gemini-api/docs/embeddings)** | hosted | up to 3072 (Matryoshka) | Top of MTEB multilingual; on Vertex/Gemini |
 | **[BGE-M3](https://huggingface.co/BAAI/bge-m3)** | open (MIT) | 1024 | **The open multilingual workhorse** — 100+ langs, up to 8k ctx, and gives dense + sparse + ColBERT-style vectors in one pass; excellent self-host default |
-| **[Qwen3-Embedding (0.6B/4B/8B)](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)** | open (Apache-2.0) | up to 4096 (Matryoshka) | Current open SOTA family; 0.6B fits your 4070 easily and is very strong, 8B for max quality |
+| **[Qwen3-Embedding (0.6B/4B/8B)](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)** | open (Apache-2.0) | up to 4096 (Matryoshka) | Current open SOTA (state-of-the-art) family; 0.6B fits your 4070 easily and is very strong, 8B for max quality |
 | **[E5 / multilingual-e5-large](https://huggingface.co/intfloat/multilingual-e5-large)** | open (MIT) | 1024 | Reliable, well-documented; needs the `query:` / `passage:` prefixes |
-| **[Nomic-embed-text-v2](https://huggingface.co/nomic-ai/nomic-embed-text-v2-moe)** | open (Apache-2.0) | 768 (Matryoshka) | Fully open (data + code), long context, MoE; good when auditability matters |
+| **[Nomic-embed-text-v2](https://huggingface.co/nomic-ai/nomic-embed-text-v2-moe)** | open (Apache-2.0) | 768 (Matryoshka) | Fully open (data + code), long context, MoE [mixture of experts]; good when auditability matters |
 | **[Jina embeddings v3](https://huggingface.co/jinaai/jina-embeddings-v3)** | open (CC-BY-NC) | 1024 (Matryoshka) | Strong long-context (8k) multilingual — but ⚠ non-commercial weights |
 
 ### 8.3 Multimodal embeddings (search across image + text; document RAG)

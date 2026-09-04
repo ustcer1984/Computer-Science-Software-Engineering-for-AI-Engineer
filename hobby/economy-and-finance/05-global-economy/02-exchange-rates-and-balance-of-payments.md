@@ -8,7 +8,7 @@
 > lives as a formal identity) and the **price** (the exchange rate — what it is, and what actually moves it). We
 > nail the exchange rate (nominal vs real, the quote confusion, the trade-weighted basket); split "what moves a
 > currency" into its **two horizons** (PPP anchors the decade, interest-rates-and-capital-flows drive the month);
-> build the **balance of payments** and its iron identity **CA + KA = 0**; lay out the **fixed-vs-floating**
+> build the **balance of payments** and its iron identity **CA + KA (capital account) = 0**; lay out the **fixed-vs-floating**
 > regime spectrum as *the trilemma made concrete*; show how (and how *little*) a currency move fixes the trade
 > balance (the **J-curve**); and close on **Mundell–Fleming** — the open-economy policy mix that is the formal
 > engine behind the E04 §3 §10 US story. This sets up **§3 (capital flows, crises & globalization)**.
@@ -19,9 +19,9 @@
 
 **Estimated study time:** 1.5–2 hours including reflection.
 **Prerequisites:** E05 §1 (trade, the gains, the trade balance); E04 §3 §10 (the **CA = S − I** identity and the
-current-US dollar/trade-deficit discussion — this section formalizes it); E03 §4 (the **MAS model** — monetary
-policy *as* the exchange rate, the S\$NEER basket, intervention); E03 §5 (**the trilemma / impossible trinity**,
-CNY–CNH, capital controls); E03 §2 (interest rates — the short-run driver here is interest parity). Helpful: E02
+current-US dollar/trade-deficit discussion — this section formalizes it); E03 §4 (the **MAS (Monetary Authority of Singapore) model** — monetary
+policy *as* the exchange rate, the S\$NEER [nominal effective exchange rate] basket, intervention); E03 §5 (**the trilemma / impossible trinity**,
+CNY (onshore renminbi)–CNH (offshore renminbi), capital controls); E03 §2 (interest rates — the short-run driver here is interest parity). Helpful: E02
 §1 (net exports NX in GDP) and E02 §2 (real vs nominal, which reappears as the *real* exchange rate).
 
 ---
@@ -89,7 +89,7 @@ and safety. So the drivers split by horizon.
 
 **The long run — Purchasing Power Parity (PPP).** The **law of one price** applied to baskets: if a basket costs
 more (in a common currency) in one country than another, arbitrage and trade should push the exchange rate until
-purchasing power is equalized. PPP is a **real anchor** — but a **slow and leaky** one.
+purchasing power is equalized. PPP (purchasing power parity) is a **real anchor** — but a **slow and leaky** one.
 
 ![A line chart of the US real effective exchange rate as an index from 1980 to 2024, swinging widely around a dashed long-run average near 108. It rises to about 143 at the 1985 Plaza peak, falls to about 90 by the mid-1990s, climbs to about 129 by 2002, drops back near 96 around 2008 to 2011, and rises again toward 128 by 2022. Regions above the average are shaded to show the currency dear, and regions below to show it cheap. An annotation notes that deviations of about 30 percent can last a decade, so purchasing-power parity anchors the long run, not the short run.](diagrams/02-exchange-rates-and-balance-of-payments-fig1.svg)
 
@@ -128,7 +128,7 @@ accounts:
 
 - **The current account (CA)** — flows of *goods, services, and income*: net exports (the trade balance from
   §1/E05), plus **primary income** (cross-border investment income — dividends and interest, e.g. Singapore's
-  **NIRC** from E03 §4, and the returns on foreign assets), plus **secondary income** (transfers, remittances,
+  **NIRC (Net Investment Returns Contribution)** from E03 §4, and the returns on foreign assets), plus **secondary income** (transfers, remittances,
   aid).
 - **The capital & financial account (KA)** — flows of *ownership of assets*: foreign direct investment (building
   factories), portfolio flows (buying stocks and bonds), bank lending, and changes in official **reserves**.
@@ -137,7 +137,7 @@ The identity is the whole point:
 
 $$CA + KA = 0.$$
 
-![A horizontal bar chart of four economies showing the current account and the capital and financial account as a share of GDP, as mirror-image bars. The USA has a current-account deficit of about minus 3 percent matched by a capital-account surplus of plus 3 percent; the United Kingdom is minus 3.5 and plus 3.5; China is a current-account surplus of plus 2.2 matched by a capital-account deficit of minus 2.2; Germany is plus 6.5 and minus 6.5. A caption notes that the current and capital accounts are equal and opposite for every country, so deficit countries import capital and surplus countries export it.](diagrams/02-exchange-rates-and-balance-of-payments-fig2.svg)
+![A horizontal bar chart of four economies showing the current account and the capital and financial account as a share of GDP (Gross Domestic Product), as mirror-image bars. The USA has a current-account deficit of about minus 3 percent matched by a capital-account surplus of plus 3 percent; the United Kingdom is minus 3.5 and plus 3.5; China is a current-account surplus of plus 2.2 matched by a capital-account deficit of minus 2.2; Germany is plus 6.5 and minus 6.5. A caption notes that the current and capital accounts are equal and opposite for every country, so deficit countries import capital and surplus countries export it.](diagrams/02-exchange-rates-and-balance-of-payments-fig2.svg)
 
 Fig 2 is the identity made visible: for **every** country the two accounts are **equal and opposite.** A
 **current-account deficit is *exactly* financed by a capital-account surplus** — the US imports more goods than it
@@ -315,7 +315,7 @@ Reason first; check against a source where noted.
    "crowded out through the exchange rate." Tie your answer explicitly to the current-US strong-dollar /
    wider-deficit story of E04 §3 §10.
 
-> **Optional — watch the two clocks in real data (15–20 min).** On **FRED**, pull (a) a currency pair's spot rate
+> **Optional — watch the two clocks in real data (15–20 min).** On **FRED (Federal Reserve Economic Data)**, pull (a) a currency pair's spot rate
 > and (b) the *interest-rate differential* between the two countries over the last 3 years — see how the fast clock
 > (rates) tracks the currency short-term. Then pull a **real effective exchange rate** index over 30 years and eyeball
 > how far and how *long* it wanders from its average (the slow PPP clock, fig 1). Bring one chart where the two
@@ -344,7 +344,7 @@ independently.**
 
 Placing the cases on it:
 
-- **Eurozone member** — loses **(a), (b), (d)**; keeps only a seat on the ECB board. Its debt is in a currency no
+- **Eurozone member** — loses **(a), (b), (d)**; keeps only a seat on the ECB (European Central Bank) board. Its debt is in a currency no
   single member controls.
 - **Fully dollarized** (Panama, Ecuador, El Salvador) — loses **all four**.
 - **Hong Kong currency board** — loses (d) and effectively (a), *but keeps an **exit option*** (it could devalue —
@@ -385,7 +385,7 @@ it has enough **substitutes for the exchange rate it gave up.** Four criteria:
    (language, pensions, credentials).
 2. **Wage and price flexibility** — makes internal devaluation fast rather than agonizing.
 3. **Fiscal transfers / risk sharing** — a central budget that automatically cushions a depressed region. *The US
-   federal budget absorbs roughly 20–30% of a state-level shock automatically; the EU budget is ~1% of GNI and
+   federal budget absorbs roughly 20–30% of a state-level shock automatically; the EU budget is ~1% of GNI (Gross National Income) and
    does essentially none of this.*
 4. **Symmetric shocks** — one monetary policy only fits if everyone gets the same shock. Germany booming while
    Spain busts is the killer.
@@ -396,7 +396,7 @@ ahead of its economics**, justified by the "endogenous OCA" hope (Frankel–Rose
 periphery, inflating Spanish, Irish and Greek booms that burst with no currency to cushion them. The fixes since
 are real but partial: **OMT** (2012), **Banking Union** (2014, breaking part of the doom loop), the **ESM**, and
 **NGEU** (2020 — the first genuinely *joint* fiscal borrowing, a partial "Hamiltonian moment," but temporary).
-There is still **no permanent fiscal union** — the missing OCA leg.
+There is still **no permanent fiscal union** — the missing OCA (optimum currency area) leg.
 
 ### 10d — The framework for dollarization: a credibility-for-flexibility trade
 
@@ -443,7 +443,7 @@ For any country whose sovereignty is partial, ask four questions **in this order
 
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
-Reading FX and balance-of-payments news across both scripts. Most differences are **simplified vs traditional**;
+Reading FX (foreign exchange) and balance-of-payments news across both scripts. Most differences are **simplified vs traditional**;
 **⚠ marks a genuine terminology difference** you'd trip over.
 
 **The price**
@@ -489,7 +489,7 @@ Reading FX and balance-of-payments news across both scripts. Most differences ar
   Mundell–Fleming (§1–§6).
 - **The two clocks:** Kenneth Rogoff's survey work on **PPP puzzles** (why real rates deviate so far, so long) for
   §2's slow clock; any FX-market primer on **interest-rate parity and the carry trade** for the fast one.
-- **The identity, made concrete:** the **IMF Balance of Payments Manual (BPM6)** and a country's central-bank BoP
+- **The identity, made concrete:** the **IMF (International Monetary Fund) Balance of Payments Manual (BPM6)** and a country's central-bank BoP
   release (e.g. **MAS** for Singapore) — see CA + KA = 0 and the CA = S − I decomposition in real published data
   (fig 2).
 - **Mundell–Fleming & the trilemma:** Robert Mundell's Nobel work; Maurice Obstfeld & Alan Taylor on the

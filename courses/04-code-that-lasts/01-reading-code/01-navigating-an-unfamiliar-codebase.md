@@ -32,7 +32,7 @@ By the end you'll have a repeatable strategy for:
 
 The physics analogy that might resonate: reading a codebase is like reading an unknown circuit. You do
 not probe every node — you find the rails (power/ground = entry points), identify the main blocks
-(subsystems), and *then* trace the signal path of interest. You read the schematic, not the PCB copper.
+(subsystems), and *then* trace the signal path of interest. You read the schematic, not the PCB (process control block) copper.
 
 ---
 
@@ -92,7 +92,7 @@ Moves:
    tree). This tells you where the *mass* of the code is — which is usually where the complexity is.
 
 At this altitude you want one sentence per "block": *"routes/ is the HTTP layer, services/ has the
-business logic, models/ is the DB schema."* You are drawing the schematic, not reading the gates.
+business logic, models/ is the DB (database) schema."* You are drawing the schematic, not reading the gates.
 
 ### 5,000 ft — what does this module/file do, and what does it expose?
 
@@ -159,7 +159,7 @@ about. There is almost always a small set of entry points; once you have one, th
 | Python CLI / script | `if __name__ == "__main__":` block; `[tool.poetry.scripts]` in pyproject.toml |
 | FastAPI / Flask app | `@app.get("/...")`, `@router.post("/...")` — the route decorators |
 | Celery / background worker | `@celery.task` decorated functions |
-| React SPA | The file imported by `index.tsx` / `main.tsx`; top-level router (React Router `<Route>`) |
+| React SPA (single-page application) | The file imported by `index.tsx` / `main.tsx`; top-level router (React Router `<Route>`) |
 | Next.js | `pages/` or `app/` directory — each file is a route |
 | Lambda handler | `def handler(event, context):` |
 | GitHub Actions / cron | `.github/workflows/*.yml` — the `jobs:` block |
@@ -224,7 +224,7 @@ is opaque (the function name does not tell you what it does), that is the node y
 
 ## 5. Navigating a monolith file
 
-This is directly applicable to your situation. A 2,400-line Python file or a 3,200-line JSX file is
+This is directly applicable to your situation. A 2,400-line Python file or a 3,200-line JSX (JavaScript XML) file is
 not qualitatively different from a smaller file — it just has more nodes in the local graph. The
 same altitude approach applies, but the file itself becomes the project:
 

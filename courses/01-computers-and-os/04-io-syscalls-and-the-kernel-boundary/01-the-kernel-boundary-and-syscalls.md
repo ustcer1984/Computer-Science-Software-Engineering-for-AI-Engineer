@@ -21,12 +21,12 @@
 **Prerequisites — this section builds directly on things you already own:**
 - **Ch1 §3 (machine code & the CPU):** the CPU executes one instruction stream; it has privileged operations (talking to devices,
   editing page tables). It also gives us the **Meltdown/Spectre** callback — speculation is *why* modern syscalls got more expensive.
-- **Ch2 §1 & §3 (address space, paging, OOM):** every process has its own virtual address space and **cannot see** another's or the
+- **Ch2 §1 & §3 (address space, paging, OOM — out of memory):** every process has its own virtual address space and **cannot see** another's or the
   kernel's; demand paging and page faults are the machinery `mmap` reuses to turn file I/O into memory access. The kernel is the thing
   that *owns* the page tables you learned about.
 - **Ch3 §2 (async, deeply):** you derived that the event loop's *one* blocking call per tick is `selector.select()` → `epoll_wait`, and
   that a task "parked on I/O" costs zero CPU. This section tells you what those actually **are**: syscalls. `epoll_wait` is a syscall; a
-  blocking `read` is a syscall that puts your thread to sleep *in the kernel*; the GIL is released across them for exactly this reason.
+  blocking `read` is a syscall that puts your thread to sleep *in the kernel*; the GIL (Global Interpreter Lock) is released across them for exactly this reason.
 
 ---
 
@@ -87,10 +87,10 @@ code, and transitions back — your process didn't stop being scheduled; it step
 that trips people up: **a mode switch is not a context switch.** A mode switch changes the CPU's privilege level (cheap-ish); a context
 switch swaps *which process/thread* is running (expensive — §3).
 
-**(b) The kernel is not "another process."** It has no PID; it isn't scheduled against your process. It's better pictured as a privileged
+**(b) The kernel is not "another process."** It has no PID (process identifier); it isn't scheduled against your process. It's better pictured as a privileged
 **library that lives in every process's address space** — mapped into the top of the virtual address range, but with its pages marked
 *kernel-only* so ring-3 code faults if it even reads them. (Meltdown, §3, was a hardware bug that briefly let ring 3 read those
-kernel-only pages via speculation — which is why the fix, KPTI, was to stop mapping them into user space at all.) When you make a syscall,
+kernel-only pages via speculation — which is why the fix, KPTI (kernel page-table isolation), was to stop mapping them into user space at all.) When you make a syscall,
 you're not "sending a message to the kernel process"; you're **entering privileged mode and running kernel code on your own CPU thread,
 against kernel data structures.**
 
@@ -98,9 +98,9 @@ Why build the wall at all? Three reasons, all of which you've already met from t
 
 1. **Protection / isolation (Ch2).** If any program could write any memory or drive any device, one buggy process could corrupt every
    other and the OS itself. The wall is what makes "my process crashed" not mean "the machine crashed."
-2. **Arbitration.** The disk, the NIC, physical RAM, the CPU cores — these are *shared*. Something has to decide who gets what and
+2. **Arbitration.** The disk, the NIC (network interface card), physical RAM, the CPU cores — these are *shared*. Something has to decide who gets what and
    serialize access. Only privileged code can be trusted to do that fairly.
-3. **A stable contract.** User code shouldn't have to know the difference between an NVMe SSD and a spinning disk and an NFS mount. The
+3. **A stable contract.** User code shouldn't have to know the difference between an NVMe SSD (solid-state drive) and a spinning disk and an NFS (Network File System) mount. The
    kernel hides all of that behind a *fixed, abstract interface* — `open`/`read`/`write`/`close` — the deepest, most durable "deep module"
    (M04 Ch2 §1) in the whole system. Unix's "everything is a file" is exactly this: one narrow interface over wildly different devices.
 
@@ -136,7 +136,7 @@ choose. Walk the round trip on x86-64 (the calling convention is real and worth 
 
 1. **You (user mode) marshal the request into registers.** The **syscall number** goes in `rax` (e.g. `0` = `read`, `1` = `write`,
    `257` = `openat`). Up to six arguments go in `rdi, rsi, rdx, r10, r8, r9` — a file descriptor, a buffer pointer, a byte count, and so
-   on. This is a *convention*, fixed by the kernel ABI, so both sides agree without a negotiation.
+   on. This is a *convention*, fixed by the kernel ABI (application binary interface), so both sides agree without a negotiation.
 2. **You execute the `syscall` instruction.** This one instruction does the privileged transition: the CPU switches to ring 0, saves the
    return address and flags, and jumps to the address in a special register (`LSTAR` / `MSR_LSTAR`) that **the kernel set at boot** and
    user code cannot change. So you don't jump *wherever you like* into the kernel — you always land at the kernel's one **syscall entry
@@ -145,7 +145,7 @@ choose. Walk the round trip on x86-64 (the calling convention is real and worth 
    (`sys_call_table`) — an array of function pointers — to reach the actual implementation (`sys_read`, `sys_openat`, …). It **validates
    every argument** here, because they came from untrusted user space: is that file descriptor really open? Does that buffer pointer point
    into *your* address space and not the kernel's? (Skipping that check is a classic kernel-exploit primitive.)
-4. **The kernel does the privileged work** — copies bytes from the page cache into your buffer, queues a DMA request to the NIC, reads the
+4. **The kernel does the privileged work** — copies bytes from the page cache into your buffer, queues a DMA (direct memory access) request to the NIC, reads the
    clock, whatever the call is. If the work can't complete immediately (the data isn't here yet), this is where a **blocking** call puts
    your thread to sleep — more in §5 and in §2.
 5. **The kernel returns the result and drops back to user mode.** The return value (bytes read, or a negative error code) goes in `rax`;
@@ -203,7 +203,7 @@ you reason about performance instead of guessing:
 The figure makes the two gaps that matter concrete (log scale — every gridline is 100×):
 
 <!-- FIGURE -->
-![The latency landscape: a log-scale bar chart. Function call ≈2 ns and RAM read ≈100 ns sit on the CPU with no boundary; a system-call round trip ≈600 ns and a thread context switch ≈3 µs cross the kernel boundary; SSD random read ≈100 µs, same-datacentre round trip ≈500 µs, HDD seek ≈10 ms and an intercontinental internet round trip ≈150 ms are real devices past the boundary. Two annotations mark the gaps: a syscall is ≈300× a function call, so batch syscalls; device I/O is 150× to 250,000× a syscall, so park the waiting task rather than spin.](diagrams/01-the-kernel-boundary-and-syscalls-fig1.svg)
+![The latency landscape: a log-scale bar chart. Function call ≈2 ns and RAM read ≈100 ns sit on the CPU with no boundary; a system-call round trip ≈600 ns and a thread context switch ≈3 µs cross the kernel boundary; SSD random read ≈100 µs, same-datacentre round trip ≈500 µs, HDD (hard disk drive) seek ≈10 ms and an intercontinental internet round trip ≈150 ms are real devices past the boundary. Two annotations mark the gaps: a syscall is ≈300× a function call, so batch syscalls; device I/O is 150× to 250,000× a syscall, so park the waiting task rather than spin.](diagrams/01-the-kernel-boundary-and-syscalls-fig1.svg)
 
 Read the whole chapter's engineering off this one picture:
 
@@ -222,7 +222,7 @@ Read the whole chapter's engineering off this one picture:
 **Why the syscall cost *moved* (the Meltdown/KPTI callback to Ch1 §3).** For decades a "null" syscall like `getpid` was ~100 ns. Then
 **Meltdown** (2018) showed that ring-3 speculation could read the kernel pages mapped into every process. The fix — **KPTI** (Kernel Page
 Table Isolation) — stopped mapping most kernel memory into user space, so **every** syscall now has to switch page tables *twice* (entry
-and exit), each switch flushing TLB entries. On affected CPUs that multiplied syscall overhead by ~2–5×. This machine has KPTI active
+and exit), each switch flushing TLB (translation lookaside buffer) entries. On affected CPUs that multiplied syscall overhead by ~2–5×. This machine has KPTI active
 (`/proc/cpuinfo` lists the `pti` flag), which is why the figure marks the syscall bar "KPTI era." The lesson is a clean loop back to Ch1:
 **speculative execution wasn't just a micro-architecture curiosity — a hardware side-channel changed the cost of the single most common
 boundary crossing in computing, and rippled up into how much syscall-batching matters.** (We meet the attack itself properly in M10.)
@@ -365,7 +365,7 @@ You asked nothing about the body — you read it and immediately did the thing y
 direction the text was weakest.** The section is written Linux-first, so your first instinct was to test its *generality* ("is this the same
 on Windows?"), and your second pulled the boundary all the way down to the silicon ("what's x86 vs ARM, and why won't an x86 Windows app run
 on ARM Windows?"). Both are comparative questions — your stated preference — and together they draw the two portability lines that sit under
-this whole chapter: **the OS line** (does the syscall look the same across kernels?) and **the ISA line** (does the compiled binary run on a
+this whole chapter: **the OS line** (does the syscall look the same across kernels?) and **the ISA (instruction set architecture) line** (does the compiled binary run on a
 different CPU?). They're the right two questions, and they turn out to have opposite answers.
 
 ### 9a. Is the syscall the same on Windows and Linux? — separate the *hardware* from the *contract*
@@ -376,7 +376,7 @@ everywhere; everything that's a *name* or a *policy* is per-OS.
 - **Identical, because it's the CPU, not the kernel:** the two privilege levels (ring 0 / ring 3; ARM calls them EL1/EL0), the
   `syscall`/`sysret` trap, the single fixed entry the kernel installs in `LSTAR`, the cost ladder (fn call ≪ syscall ≪ context switch), and
   the two rules (batch · park). **Even Meltdown/KPTI has a Windows twin** — Microsoft shipped the same page-table-isolation mitigation under
-  the name **KVA Shadow**, with the same "syscalls got more expensive" effect. The §3 figure holds on all three OSes.
+  the name **KVA (key-value attention) Shadow**, with the same "syscalls got more expensive" effect. The §3 figure holds on all three OSes.
 - **The deep divergence you pulled first — *where the stable contract lives*.** This is the one worth remembering:
 
   | | Linux | Windows |
@@ -410,7 +410,7 @@ everywhere; everything that's a *name* or a *policy* is per-OS.
 
 Then you pushed below the OS entirely, to the CPU. The keeper here is that **question 2 is a corollary of question "what is an ISA."**
 
-**What actually differs (not just the CISC/RISC slogan).** They're different **ISAs** — the CPU's binary language — so the same `add` is
+**What actually differs (not just the CISC/RISC — Complex vs Reduced Instruction Set Computer — slogan).** They're different **ISAs** — the CPU's binary language — so the same `add` is
 different *bytes* on each. The differences that carry weight:
 
 | | x86-64 (Intel/AMD) | ARM (AArch64) |
@@ -437,7 +437,7 @@ Three of those have mechanisms behind them, and two are callbacks you'd already 
 ships an x86/x64 **emulator** (**Prism** on Windows 11 Copilot+ PCs, the same idea as Apple's **Rosetta 2**) that binary-translates x86 →
 ARM at runtime. So the failures cluster where emulation *can't* reach — and naming them is the keeper:
 
-1. **Kernel-mode code can't be emulated (the real killer).** A ring-0 **driver** (antivirus, VPN, anti-cheat) runs *beside* the ARM kernel;
+1. **Kernel-mode code can't be emulated (the real killer).** A ring-0 **driver** (antivirus, VPN [virtual private network], anti-cheat) runs *beside* the ARM kernel;
    you can't splice an emulated x86 blob into ring 0. Needs a native ARM64 driver or it simply won't work.
 2. **Performance cost** — translation is slower than native (Prism/Rosetta narrowed it, but you still pay); fine for an editor, painful for
    a game or compiler.
@@ -453,7 +453,7 @@ exception is **native extensions** (numpy, anything with C) — those *are* mach
 
 > **Keeper (9b):** *native execution requires the same ISA — a binary speaks exactly one CPU's language; emulation (Prism/Rosetta) bridges
 > **user-mode** code at a cost, but breaks at (a) ring-0 driver code, (b) performance-critical paths, and (c) mixing ISAs in one process.*
-> And the reason interpreted/JIT'd runtimes dodge the whole problem is Ch1 §1: they ship arch-neutral bytecode over a per-arch engine.
+> And the reason interpreted and just-in-time (JIT) compiled runtimes dodge the whole problem is Ch1 §1: they ship arch-neutral bytecode over a per-arch engine.
 
 *(Meta-note for both threads: these were open exploratory questions, not hypotheses to re-rank — consistent with how you work in
 conceptual/systems domains. The value added was **structure and naming** (hardware-vs-contract; ISA-as-mother-tongue; the three emulation
@@ -507,7 +507,7 @@ CPU's language, emulation bridges only user-mode). Natural follow-ons, your call
 - **Ch4 §2 — Blocking vs non-blocking I/O & multiplexing** (blocking / non-blocking / `select`·`poll`·`epoll` / `io_uring`; the C10k
   problem; the model your event loop actually uses). The direct continuation, and it cashes the `epoll_wait` thread from Ch3 §2.
 - **Ch4 §3 — Why I/O dominates latency** (the right-hand side of this section's figure, made into latency budgets and pipelining).
-- Or **rotate scope** per the interleave: **M04 Ch2 §2** (refactoring in moves, SWE) or **M12 Ch2 §3** (audio/speech/TTS, AI).
+- Or **rotate scope** per the interleave: **M04 Ch2 §2** (refactoring in moves, SWE — software engineering) or **M12 Ch2 §3** (audio/speech/text-to-speech, AI).
 
 <!-- Bilingual key-terms table follows; see authoring-conventions §5. -->
 

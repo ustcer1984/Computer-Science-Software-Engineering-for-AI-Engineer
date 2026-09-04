@@ -3,7 +3,7 @@
 > **Module:** How Computers & Operating Systems Work
 > **Chapter:** Processes, Threads & Concurrency
 > **Section:** The third leg of the chapter, and the one §1 promised you. §1 sorted the *models* (process / thread / async) and pinned
-> down the GIL; §2 opened the async box (event loop, tasks, cancellation). Both left one thing as a warning rather than a mechanism:
+> down the GIL (Global Interpreter Lock); §2 opened the async box (event loop, tasks, cancellation). Both left one thing as a warning rather than a mechanism:
 > **the moment two flows of control touch the same mutable state, you have a coordination problem the language will not solve for you.**
 > This section is that problem and its toolkit — what "atomic" actually means, why `x += 1` is a bug in two threads, why a *single-threaded*
 > async program still sometimes needs a lock, the full primitive set (`Lock`/`RLock`/`Semaphore`/`Event`/`Condition`/`Barrier` and their
@@ -169,7 +169,7 @@ fraction). The dial you turn is **granularity**:
   *high* contention (everyone queues on it). The Python GIL itself is the ultimate coarse lock: one lock for the entire interpreter.
 - **Fine-grained** — many small locks (one per bucket, per row, per node). *Low* contention (different threads touch different locks), but
   *complex* and the **main source of deadlock** (now you can hold one and want another). Java's `ConcurrentHashMap` famously lock-stripes its
-  buckets; a database row-locks instead of table-locking for exactly this throughput reason (→ M03 Ch2, where this becomes MVCC and isolation
+  buckets; a database row-locks instead of table-locking for exactly this throughput reason (→ M03 Ch2, where this becomes multi-version concurrency control (MVCC) and isolation
   levels).
 
 The engineering tension is permanent: **coarse = safe but slow under contention; fine = fast but deadlock-prone and hard to reason about.**
@@ -281,7 +281,7 @@ in both `threading` (preemptive, thread-safe, may block the thread) and `asyncio
 The two you will actually reach for most, with the traps that matter:
 
 **`Semaphore` — the concurrency cap.** A counter of permits; `acquire` takes one (blocking/suspending at zero), `release` returns one. This
-is the *exact* tool for "run at most $K$ of these at once" — the rate-limited LLM fan-out from §2 §7, a database connection pool, "no more
+is the *exact* tool for "run at most $K$ of these at once" — the rate-limited LLM (large language model) fan-out from §2 §7, a database connection pool, "no more
 than 10 in-flight uploads." A `Lock` is just a `Semaphore(1)` with an owner. Use **`BoundedSemaphore`** in production: a plain `Semaphore`
 that you `release()` more times than you `acquire()` silently inflates its permit count (now your "cap of 10" admits 11, 12, …); the bounded
 variant raises `ValueError` on the over-release so the *bug* surfaces instead of the *symptom* (a capacity limit that quietly stops limiting).
@@ -297,7 +297,7 @@ with condition:
     consume()                   # predicate is now true AND we hold the lock
 ```
 
-The `while` defends against two real phenomena: **spurious wakeups** (the OS may wake a waiter with no notify — permitted by POSIX, so
+The `while` defends against two real phenomena: **spurious wakeups** (the OS may wake a waiter with no notify — permitted by the Portable Operating System Interface (POSIX) standard, so
 portable code must tolerate it) and, more importantly, the **lost-wakeup / stolen-condition** race — between your wake and your re-acquire,
 a *third* flow can grab the lock and consume the item you were notified about, so the predicate is false again. An `if` checks once and
 charges ahead on a stale assumption (a check-then-act race, §1, in disguise); the `while` re-checks under the lock and is correct. *If you
@@ -379,7 +379,7 @@ all** (§6), which removes condition #1 at the root.
 
 ## 6. The escape hatch: don't share memory — pass messages
 
-Every primitive so far defends shared mutable state. The most effective move is usually to **not share it.** Tony Hoare's CSP and the design
+Every primitive so far defends shared mutable state. The most effective move is usually to **not share it.** Tony Hoare's CSP (communicating sequential processes) and the design
 of Go crystallised the slogan:
 
 > **"Do not communicate by sharing memory; instead, share memory by communicating."**
@@ -388,7 +388,7 @@ Instead of $N$ flows reaching into one structure behind a lock, give each flow i
 through a **queue** (队列 / TW 佇列). The queue's *own* internal locking is the only synchronisation, written once by experts and hidden — your
 application code becomes lock-free at the level you reason about it. This is the single highest-leverage idea in the section.
 
-**`queue.Queue` (threads) / `asyncio.Queue` (async)** — a thread-/loop-safe FIFO that *is* the producer/consumer pattern:
+**`queue.Queue` (threads) / `asyncio.Queue` (async)** — a thread-/loop-safe FIFO (first-in, first-out) that *is* the producer/consumer pattern:
 
 ```python
 # Threaded producer/consumer — note: ZERO explicit locks in your code.
@@ -435,11 +435,11 @@ One level under the locks (the Ch1 §3 §11 cash-in), so the abstraction isn't a
 lurk beneath the logical race:
 
 - **Reordering and visibility.** The CPU and compiler reorder memory operations for speed, and each core has its own cache (Ch1 §3 §11
-  MESI). A write by core 1 may not be *visible* to core 2 for a while, and operations may appear *out of order* across cores. So even "take
+  MESI (Modified/Exclusive/Shared/Invalid)). A write by core 1 may not be *visible* to core 2 for a while, and operations may appear *out of order* across cores. So even "take
   turns" needs a guarantee that when you release a lock, your writes are **published** (flushed/made visible) before the next acquirer reads.
   This is a **memory model**: a contract about what one thread is guaranteed to see of another's writes. A lock's acquire/release acts as a
   **memory barrier** (内存屏障) — it forces the ordering and visibility, which is *half of what you're paying for* when you take a lock (the
-  other half being the mutual exclusion). C++11's `std::memory_order`, Java's `volatile` and the JMM, and Rust's `Ordering` are all this
+  other half being the mutual exclusion). C++11's `std::memory_order`, Java's `volatile` and the JMM (Java Memory Model), and Rust's `Ordering` are all this
   contract made explicit.
 - **Atomics and the broken double-checked lock.** Hardware offers atomic instructions — **compare-and-swap (CAS)** is the king — that do
   read-modify-write *indivisibly* in one instruction, which is how lock-free data structures and the locks themselves are built. But naïve
@@ -686,8 +686,8 @@ the planned Ch3** (§1 GIL/models · §2 async · §3 synchronisation) → `cour
 the next session:
 - **Ch4 — I/O, syscalls & the kernel boundary** (blocking vs non-blocking I/O, what a syscall *is*, why I/O dominates latency — the layer
   under both §2's `epoll` and this section's "lock held across I/O"). The natural bottom-of-the-stack continuation of M01.
-- **Rotate scope** per the interleave (this was a fifth straight M01 topic): **M04 Ch2 §2** (refactoring in moves, SWE) or **M12 Ch2 §3**
-  (audio/speech/TTS, AI — your "all model types" goal).
+- **Rotate scope** per the interleave (this was a fifth straight M01 topic): **M04 Ch2 §2** (refactoring in moves, SWE — software engineering) or **M12 Ch2 §3**
+  (audio/speech/text-to-speech, AI — your "all model types" goal).
 - **Optional Ch3 §4 — Producer/consumer & back-pressure** if you later want the queue primitives (§6) taken into real pipeline/throughput
   design (→ M07 Ch2 scaling). Not required for Ch3 completeness; park it until a concurrent-graph pipeline makes it load-bearing (your own
   "revisit if needed").

@@ -1,7 +1,7 @@
 # M12 · Ch2 · §2 — Video Generation & World Models
 
 > **Module:** The Model Landscape
-> **Chapter:** Beyond text (image/diffusion, audio, video, TTS, multimodal)
+> **Chapter:** Beyond text (image/diffusion, audio, video, TTS [text-to-speech], multimodal)
 > **Section:** From image diffusion to video — temporal coherence, spacetime patch tokenization
 > (Sora/DiT), flow matching, the unified-model question (Transfusion), and what it means to
 > call a video model a *world simulator*.
@@ -139,7 +139,7 @@ The architectural move that makes video DiT work is:
 > those tokens.**
 
 Concretely: take a latent video tensor of shape $(T, H, W, C)$ (time × height × width × channels,
-after encoding through a video VAE). Divide it into non-overlapping patches of shape
+after encoding through a video VAE (variational autoencoder)). Divide it into non-overlapping patches of shape
 $(p_t, p_h, p_w)$. Each patch is linearly projected to a token vector, plus a 3D positional
 embedding (encoding time, row, column). The result is a flat sequence of tokens — the input to a
 standard bidirectional transformer.
@@ -226,7 +226,7 @@ The **probability-flow ODE** (Song et al., 2021, from §1) removes the stochasti
 
 $$d\mathbf{x}_t = \left[ f(\mathbf{x}_t, t) - \frac{1}{2}g(t)^2\thinspace\nabla_{\mathbf{x}}\log p_t(\mathbf{x}_t) \right] dt.$$
 
-This is deterministic and therefore more amenable to ODE solvers that can take larger steps — down
+This is deterministic and therefore more amenable to ODE (ordinary differential equation) solvers that can take larger steps — down
 to 20–50 steps for good quality. But the ODE still follows a *curved* path in latent space, because
 the score $\nabla_{\mathbf{x}}\log p_t$ is an inherently curved field (it must curve to route the
 probability mass from a Gaussian to a complicated data distribution).
@@ -335,7 +335,7 @@ Transfusion's proposal: a single transformer trained simultaneously with **two o
 interleaved sequences of text tokens and image/video patches:
 
 - **Autoregressive cross-entropy loss** on text tokens (left-to-right prediction, as in a standard
-  LLM).
+  LLM (large language model)).
 - **Diffusion loss** on image/video patches (the FM loss from §4, conditioned on surrounding
   context).
 
@@ -476,7 +476,7 @@ A brief annotated map of where things stand:
 | Kling 2.0 | Kuaishou | DiT, details proprietary | ~3 min |
 
 **The open-source axis is real:** WAN 2.1 and CogVideoX-5B are fully open-weight and run on
-consumer hardware (24 GB VRAM for WAN at standard resolution). The gap between open and proprietary
+consumer hardware (24 GB VRAM — video random-access memory — for WAN at standard resolution). The gap between open and proprietary
 models in video narrowed dramatically in late 2024, mirroring what happened with image generation
 in 2022–2023.
 

@@ -3,8 +3,8 @@
 > **Module:** How Computers & Operating Systems Work
 > **Chapter:** Memory
 > **Section:** What physically happens when memory runs out — virtual address space vs. physical RAM, paging
-> and the OOM killer, leak vs. legitimately-too-much, the cgroup limit your cloud actually enforces, and the one
-> you feel daily: *why a 16 GB model won't load on a 12 GB GPU, and what "CUDA out of memory" is really telling you.*
+> and the OOM (out of memory) killer, leak vs. legitimately-too-much, the cgroup limit your cloud actually enforces, and the one
+> you feel daily: *why a 16 GB model won't load on a 12 GB GPU, and what "CUDA (Compute Unified Device Architecture) out of memory" is really telling you.*
 > **Status:** ✅ **finalized 2026-06-14.** The body held; the entire session was you taking §7/§9.7 into contact
 > with **your own LLM-serving experience** — three threads, all of which turned out to be the *same* OS memory
 > playbook (§1–§7) reappearing one layer up in inference serving. §11 captures them: **(11a)** PagedAttention — your
@@ -18,8 +18,8 @@
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** §1 (the process **address space** as a map; stack vs. heap; the allocator searching the heap for
 free space) and §2 (refcounting frees on the last `DECREF`; **pymalloc keeps freed memory in its own pools instead of
-handing it back to the OS** → high RSS isn't always a leak; `tracemalloc` distinguishes a true leak from "RSS high,
-Python-memory flat"). Also Ch1 §3 (the memory hierarchy; the **GPU** hierarchy — VRAM as a separate, smaller memory
+handing it back to the OS** → high RSS (resident set size) isn't always a leak; `tracemalloc` distinguishes a true leak from "RSS high,
+Python-memory flat"). Also Ch1 §3 (the memory hierarchy; the **GPU** hierarchy — VRAM (video random-access memory) as a separate, smaller memory
 space; memory-bound inference; the KV-cache VRAM cost you already reason about). This section discharges the last IOU
 of Chapter 2: §1 gave you the map, §2 told you who cleans it up — **this one is what happens at the edges of the map,
 the hard physical walls.**
@@ -54,7 +54,7 @@ Three things it will change for you specifically:
 
 **The framing to carry** (the physics one again, since it's served us). §1's address space was a *map*; treat
 physical RAM as the **territory**, and virtual memory as the **conformal map that's larger than the land it
-describes.** The MMU redraws the map onto real ground page by page, on demand, lazily — and the whole system works
+describes.** The MMU (memory management unit) redraws the map onto real ground page by page, on demand, lazily — and the whole system works
 only because *most of the map is never walked at once* (your working set ≪ your address space). "Out of memory" is
 the moment you try to stand on more territory than physically exists. Everything below — overcommit, paging, the OOM
 killer, CUDA's allocator — is a different strategy for handling the instant the map outruns the land. **The
@@ -72,13 +72,13 @@ Two distinct things wear the word "memory":
 
 - **Virtual address space** — the addresses *your process* sees and uses. On 64-bit, astronomically large
   (the kernel hands user space ~128 TB on x86-64 Linux), per-process, private. This is the map.
-- **Physical RAM** — the actual DRAM chips, shared by *every* process and the kernel. Finite, small by comparison
+- **Physical RAM** — the actual DRAM (dynamic random-access memory) chips, shared by *every* process and the kernel. Finite, small by comparison
   (your laptop's 16/32 GB). This is the territory.
 
 Between them sits the **MMU** (memory management unit, in the CPU) walking **page tables** the kernel maintains.
 Memory is handled in fixed **pages** (4 KB typically). Every memory access your program makes is a *virtual* address;
 the MMU translates it to a *physical* frame via the page table, transparently, on every load and store. (This is the
-same translation layer the TLB caches — a callback to Ch1 §3's hierarchy, one level up from the data caches.)
+same translation layer the TLB (translation lookaside buffer) caches — a callback to Ch1 §3's hierarchy, one level up from the data caches.)
 
 <!-- DIAGRAM:START -->
 ![Diagram 1](diagrams/03-out-of-memory-1.svg)
@@ -140,7 +140,7 @@ second tier *below* RAM, and it's about **capacity, not speed**: **swap** (Linux
 a region of *disk* the kernel uses as overflow for RAM.
 
 When physical RAM fills, the kernel doesn't immediately fail. It **pages**: it picks RAM frames holding pages that
-haven't been used recently (an LRU-ish policy) and **evicts** them to swap, freeing the frame for whoever needs it
+haven't been used recently (an approximately least-recently-used (LRU) policy) and **evicts** them to swap, freeing the frame for whoever needs it
 now. If the evicted page is touched again later, that access triggers a **major page fault** — the kernel must read
 the page *back from disk* into a frame (possibly evicting another), then resume your program. Your code didn't
 change; one memory access just went from ~100 ns (RAM) to ~10 ms (disk seek) — **~100,000× slower**, invisibly.
@@ -312,7 +312,7 @@ flowchart TB
 <!-- DIAGRAM:END -->
 
 - **If RSS grows without bound** → leak. Now apply §2's sub-diagnosis: does `gc.collect()` reclaim it? *Yes* → it's a
-  **reference cycle** (and your §10d immutable-DAG pipeline design is the reason your own code rarely makes them).
+  **reference cycle** (and your §10d immutable-DAG — directed acyclic graph — pipeline design is the reason your own code rarely makes them).
   *No* → it's a **strong-reference** leak: an accumulating list, a module-level cache that never evicts (→ `weakref`,
   §2 7.5), unclosed handles, or a C-extension leak. When you can't fix the leaking code, **process isolation**
   outlives it (§2 10b — `maxtasksperchild=1`, gunicorn `max_requests`). Note the cruel interaction: a slow leak in a
@@ -354,7 +354,7 @@ your KV-cache and quantization knowledge). The headline: **GPU memory is a diffe
 machinery of §1–§4 — overcommit, demand paging, swap, the OOM killer — is the *CPU/host* story. VRAM plays by
 harsher rules:
 
-- **VRAM is separate and small.** It's the GPU's own HBM/GDDR (Ch1 §3), physically distinct from host RAM, typically
+- **VRAM is separate and small.** It's the GPU's own HBM (high-bandwidth memory) / GDDR (Ch1 §3), physically distinct from host RAM, typically
   *smaller* (12/24/80 GB) and far more contended.
 - **There is (effectively) no swap.** By default the GPU does **not** page cold tensors to disk or host RAM the way
   the kernel pages RAM to swap. (CUDA *Unified Memory* can oversubscribe and migrate pages over PCIe/NVLink, but it's
@@ -410,7 +410,7 @@ So the arithmetic that actually governs the fit:
   **optimizer state** (Adam = 2× weights for momentum + variance), plus **activations** for the backward pass (scales
   with batch × sequence × depth). A 7B fp16 model that *infers* in ~15 GB needs **~60–80 GB to fully fine-tune** with
   Adam — which is the entire reason for gradient checkpointing (recompute activations instead of storing them —
-  trade compute for memory), ZeRO/FSDP sharding (split optimizer state across GPUs), LoRA/QLoRA (train tiny adapters,
+  trade compute for memory), ZeRO/FSDP (Fully Sharded Data Parallel) sharding (split optimizer state across GPUs), LoRA/QLoRA (train tiny adapters,
   freeze the base), and mixed precision (your FP8/bf16 knowledge).
 
 **What `Tried to allocate X. … Y free … Z reserved` is really telling you — including the fragmentation twist.**
@@ -457,8 +457,8 @@ Concrete, ranked, and mapped to the signatures above.
    leak. This is your failure-analysis instinct: one measurement is noise, the time series is the signal.
 
 4. **For too-much, the fix is "touch less at once," not "free more."** Stream/chunk inputs (`pandas` `chunksize`,
-   iterate don't `.read()`), go out-of-core (Dask, Polars streaming, `np.memmap`), shrink batch size, paginate DB
-   reads. Loading a 30 GB file into a 16 GB box will *never* work by tuning the GC — it's a working-set problem (§5).
+   iterate don't `.read()`), go out-of-core (Dask, Polars streaming, `np.memmap`), shrink batch size, paginate DB (database)
+   reads. Loading a 30 GB file into a 16 GB box will *never* work by tuning the GC (garbage collection) — it's a working-set problem (§5).
 
 5. **For GPU OOM, compute the budget *before* launching (§7).** params × bytes/param for weights; ×4 for full
    training with Adam; add KV-cache (grows with context × concurrency) for inference. If it doesn't pencil out, reach
@@ -505,7 +505,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 
 ## 10. Optional: get your hands dirty (15–20 min)
 
-The machine will *show* you every wall in this section. (Run the scarier ones in a VM/container you don't mind
+The machine will *show* you every wall in this section. (Run the scarier ones in a VM (virtual machine) or container you don't mind
 crashing — especially anything that actually exhausts memory.)
 
 ```python
@@ -563,7 +563,7 @@ what your real deployment's `memory.max` in (e) turns out to be.
 
 ## 11. Applied — captured from our 2026-06-14 session
 
-You never went near the CPU/host material — you took the section straight into **LLM serving**, the part you've
+You never went near the CPU/host material — you took the section straight into **LLM (large language model) serving**, the part you've
 actually operated (vLLM, llama.cpp), and pulled the *why* out of three rules-of-thumb you'd been handed. The
 satisfying punchline, which only emerged at the end: **all three are the §1–§7 OS memory playbook reappearing one
 abstraction up.** Distilled so you can re-derive them.
@@ -583,7 +583,7 @@ contiguous VRAM chunk." That names **external fragmentation** (§6/§7's "free b
 The crux you took away — **contiguity + dynamic growth forces reserve-for-the-worst-case.** A KV-cache grows one
 token per decode step to an unknown final length; "must stay contiguous" means you can't let the next request sit
 right behind you, so you reserve the whole `max_seq_len` block up front and then stop generating at token 60 of 2048.
-Measured: prior systems put only ~20–40% of KV memory to real token states. PagedAttention breaks **growth from
+Measured: prior systems put only ~20–40% of KV (key-value) memory to real token states. PagedAttention breaks **growth from
 contiguity** — grab any free fixed-size block (default 16 tokens) on demand, indirect through a block table — so:
 
 - **fixed-size blocks eliminate external fragmentation *by construction*** (the classic OS insight you'd half-
@@ -610,7 +610,7 @@ can't explain holding back *bytes* of VRAM. Wrong currency.
 What the knob actually is: a **ceiling.** vLLM pre-allocates the KV pool as `ratio × VRAM − weights − profiled-peak`,
 where the peak is an **estimate** from one profiling forward pass. The `(1 − ratio)` slice is an **explicit safety
 margin against a peak that is *variable* at serving time** — live batch composition (many long sequences hitting one
-decode step), CUDA-graph capture, cuBLAS/cuDNN workspaces, allocator fragmentation, NCCL buffers under tensor
+decode step), CUDA-graph capture, cuBLAS/cuDNN workspaces, allocator fragmentation, NCCL (NVIDIA Collective Communications Library) buffers under tensor
 parallelism, other tenants on the card. Blow past it and there's **no swap to catch you** (§7): you get `CUDA out of
 memory` and the **server crashes mid-serving**. It's two-sided — too high risks the crash, too low wastes the pool
 (fewer concurrent requests, lower throughput) — hence a sweet spot, not "higher is better."
@@ -626,7 +626,7 @@ You'd run `-ngl` offloading and noticed *low offload ratio ≈ tolerable*. The t
 
 1. **Offloaded blocks are computed purely on CPU** — compute follows the weights. (Granularity note: `-ngl` offloads
    whole decoder *blocks* — attention **+** FFN — not attention alone; `--override-tensor` is the tensor-level knob,
-   used to push MoE expert FFNs to CPU while keeping attention on GPU.)
+   used to push MoE (mixture-of-experts) expert FFNs (feed-forward networks) to CPU while keeping attention on GPU.)
 2. **Sequential, not parallel.** The transformer is a dependency chain (block *i+1*'s input is block *i*'s output),
    so GPU blocks run, *then* CPU blocks — one device idle at a time. Latency is **additive**. And because decode is
    **memory-bandwidth-bound**, a CPU block is ~10–40× a GPU block (RAM ≈ 50–100 GB/s vs VRAM ≈ 0.5–3 TB/s) → a few
@@ -697,16 +697,16 @@ Each rule-of-thumb is the OS memory playbook one level up:
 
 ### What's next
 ✅ **Finalized 2026-06-14 — and with it, Chapter 2 (Memory) is COMPLETE**: §1 the map (address space, the pointer
-model), §2 who frees it (refcounting + cycle collector + the GIL), §3 the walls (OOM, paging, the VRAM budget). §11
+model), §2 who frees it (refcounting + cycle collector + the GIL (Global Interpreter Lock)), §3 the walls (OOM, paging, the VRAM budget). §11
 captures the three LLM-serving threads you drove (PagedAttention waste-ranking · `gpu_memory_utilization` as
 derating · llama.cpp offload mechanics) and the unifying principle — *don't move/duplicate/over-reserve the big
 thing.* Links re-verified live; `courses/plan.md` flipped to ✅.
 
 With Ch2 done, the Phase-1 interleave points three ways — your pick at the boundary:
-- **M01 Ch3 — Processes, threads & concurrency** (the natural next CS step; it cashes in the GIL keystone from §2 §6
+- **M01 Ch3 — Processes, threads & concurrency** (the natural next computer-science step; it cashes in the GIL keystone from §2 §6
   and the "thread is one instruction stream" thread from Ch1 §2 — async/await, the GIL, parallelism vs concurrency,
   your `asyncio` usage explained).
-- **M04 Ch1 §2 — Tracing data flow** (the SWE thread; pairs with your code-decomposition gap and reuses your pipeline
+- **M04 Ch1 §2 — Tracing data flow** (the software-engineering (SWE) thread; pairs with your code-decomposition gap and reuses your pipeline
   code).
 - **M12 Ch2 §2 — Video models (DiT/Sora)** (the AI thread — your strongest critique mode; the diversification note
   from 06-12 leans this way after a CS-heavy run).

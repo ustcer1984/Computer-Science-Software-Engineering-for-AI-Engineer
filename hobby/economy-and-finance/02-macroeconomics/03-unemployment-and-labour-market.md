@@ -7,7 +7,7 @@
 > accounting** behind it, and its indispensable companion the **participation rate** — then the parts the
 > headline hides: **flows vs the stock**, the **four types** of unemployment and why **full employment isn't
 > zero** (the *natural rate*), **broad measures** (U-6) that expose hidden slack, **Okun's law** (the bridge
-> back to §1's GDP), and how **wages** clear — or fail to clear — this most unusual of markets, picking up
+> back to §1's GDP (Gross Domestic Product)), and how **wages** clear — or fail to clear — this most unusual of markets, picking up
 > §2's **wage rigidity** thread.
 > **Status:** ✅ **finalized 2026-07-02.** Body drafted 2026-06-29; **§11 captures the live session** — a
 > single mechanics question (how is potential growth $g^{\ast}$ estimated?) pulled outward into the whole
@@ -91,7 +91,7 @@ So you read the **participation rate** alongside it as the reality check, and of
 labour-force denominator entirely and so can't be flattered by discouragement.
 
 <!-- FIGURE -->
-![Twin-axis chart 2005-2024: red bars showing the unemployment rate spiking in the 2008-09 GFC and the 2020 COVID shock against a ~4.5% natural-rate line, and a blue line showing the participation rate drifting down from ~66% to ~63% as boomers retire and discouraged workers exit](diagrams/03-unemployment-and-labour-market-fig2.svg)
+![Twin-axis chart 2005-2024: red bars showing the unemployment rate spiking in the 2008-09 GFC (global financial crisis) and the 2020 COVID shock against a ~4.5% natural-rate line, and a blue line showing the participation rate drifting down from ~66% to ~63% as boomers retire and discouraged workers exit](diagrams/03-unemployment-and-labour-market-fig2.svg)
 
 Two readings the chart makes concrete:
 
@@ -158,7 +158,7 @@ unemployment** (the dashed line in Fig 2), the rate that persists even when the 
 > market, workers scarce) and wage growth accelerates, feeding **inflation** (the §2 wage-price thread); let
 > it sit *above* it and inflation eases. This is the hinge between this section and §2 — the labour market is
 > where a huge part of inflation is *made* — and it's the conceptual engine of the **Phillips curve** in §4.
-> The catch: the NAIRU is **unobservable and drifts** (with demographics, technology, institutions), so
+> The catch: the NAIRU (non-accelerating-inflation rate of unemployment) is **unobservable and drifts** (with demographics, technology, institutions), so
 > central banks are steering by a target they can't directly see — a recurring theme in policy.
 
 ---
@@ -328,7 +328,7 @@ then test against a real release.
 
 ## 10. Optional: read a real labour-market release (15–20 min)
 
-- **United States — BLS Employment Situation** (the monthly "jobs report"): find the **U-3 headline**, the
+- **United States — BLS (Bureau of Labor Statistics) Employment Situation** (the monthly "jobs report"): find the **U-3 headline**, the
   **U-6** broad rate, the **participation rate**, the **long-term unemployed share**, and **nonfarm payrolls**
   (a separate *establishment* survey of jobs added). Note the household survey (which gives the rate) and the
   payroll survey can disagree month to month. *(bls.gov)*
@@ -370,7 +370,7 @@ used:
 2. **The production-function approach (what agencies publish).** Formalize step 1 with a Cobb–Douglas
    production function $Y = A \cdot K^{\alpha} L^{1 - \alpha}$, then plug in *trend* inputs: the capital stock,
    the labour force at the natural rate $u^{\ast}$ (the NAIRU from §4), and trend **total factor productivity**
-   $A$. This is **growth accounting**, and it's how the **CBO** (US), **OECD**, and **IMF** build their series.
+   $A$. This is **growth accounting**, and it's how the **CBO** (US), **OECD (Organisation for Economic Co-operation and Development)**, and **IMF (International Monetary Fund)** build their series.
    Note the soft spot: $A$ is itself the unexplained residual — "the measure of our ignorance" — so a big chunk
    of $g^{\ast}$ rests on the least-understood term.
 
@@ -468,7 +468,7 @@ We then checked the *current* state online, and it turned out to be almost a liv
 - **The twist.** At **Warsh's first meeting (17 June 2026)** the Fed did **not** cut: it **held** the target
   range at **3.50–3.75%** on a **unanimous 12–0 vote**, *flipped its dot plot to a hike bias* (median year-end
   now above today; 17 of 18 officials saw inflation risks to the upside), and **raised its 2026 inflation
-  forecast** (PCE to 3.6%). With headline inflation **topping 4%**, Warsh said "price stability" a dozen times
+  forecast** (PCE — Personal Consumption Expenditures — to 3.6%). With headline inflation **topping 4%**, Warsh said "price stability" a dozen times
   and pushed back on the pressure campaign, insisting independence "would not change." Notably, **Trump eased
   off** — *"we have a very good guy over there now… I'm guided by what he wants"* — because demanding cuts with
   inflation visibly at 4% is a losing hand into the November 2026 midterms.
@@ -482,7 +482,7 @@ We then checked the *current* state online, and it turned out to be almost a liv
 > *faster than the data warrant*? That's when we'll learn whether this is genuine independence or a capture
 > waiting for cover. **This is exactly the terrain E03 formalizes.**
 >
-> *Sources (retrieved 2026-07-02):* Fed FOMC statement 2026-06-17; CNN, StockTitan, CNBC, and PBS reporting on
+> *Sources (retrieved 2026-07-02):* Fed FOMC (Federal Open Market Committee) statement 2026-06-17; CNN, StockTitan, CNBC, and PBS reporting on
 > the June decision, Warsh's confirmation and swearing-in, and Trump's shift in stance.
 
 ---
@@ -560,12 +560,12 @@ just **simplified vs traditional script**; **⚠ marks a genuine terminology dif
 - *CORE Econ — The Economy 2.0*, units on **the labour market and unemployment** (and **wage-setting /
   price-setting**) — a rigorous, free treatment with real data and the institutional detail.
   https://books.core-econ.org/the-economy/
-- **On Okun's law:** a clean primer is the **FRED blog / St. Louis Fed** explainer (search "Okun's law"),
+- **On Okun's law:** a clean primer is the **FRED (Federal Reserve Economic Data) blog / St. Louis Fed** explainer (search "Okun's law"),
   which plots the GDP-growth vs unemployment-change relationship on live US data.
 - **Primary sources to practise on:** United States — **BLS Employment Situation** (https://www.bls.gov/ces/
   and https://www.bls.gov/cps/) including the **U-1…U-6** alternative measures; Singapore — **MOM Labour
   Market** reports and **SingStat** (https://www.mom.gov.sg, https://www.singstat.gov.sg); cross-country —
-  **OECD** and **ILO** unemployment and participation data (https://data.oecd.org, https://ilostat.ilo.org).
+  **OECD** and **ILO (International Labour Organization)** unemployment and participation data (https://data.oecd.org, https://ilostat.ilo.org).
 
 ---
 

@@ -649,5 +649,5 @@ Two natural continuations inside Ch2:
 - Then **Ch3 — Design patterns you'll actually meet** (strategy/factory/adapter/DI) — several of which
   showed up here as the *targets* of a refactoring (Replace Conditional with Polymorphism → strategy).
 
-Or rotate scope: the SWE thread pairs well with **M06 (Testing)** now that characterization tests and
+Or rotate scope: the SWE (software engineering) thread pairs well with **M06 (Testing)** now that characterization tests and
 seams are on the table, or continue systems with **M01 Ch5** / **M02 Networking**.

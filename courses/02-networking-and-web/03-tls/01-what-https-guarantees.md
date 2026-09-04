@@ -4,7 +4,7 @@
 > **Chapter:** TLS & secure transport
 > **Section:** Opens Ch3 by paying off a debt the last two chapters kept running up. HTTPS is HTTP over
 > **TLS** (Transport Layer Security), and TLS buys you exactly **three** things — **confidentiality**, **integrity**, and
-> **authentication** — plus a fourth that people wrongly assume. This section works the **TLS 1.3
+> **authentication** — plus a fourth that people wrongly assume. This section works the **TLS (Transport Layer Security) 1.3
 > handshake** step by step (the 1-RTT — one-round-trip — line-item from Ch1 §5, and the place Ch2 §3's
 > **ALPN** (Application-Layer Protocol Negotiation) version negotiation actually rides), the **certificate chain of trust** that makes authentication possible and is
 > also its weakest link, and **where TLS terminates** — the first job of the reverse proxy from Ch2 §2 §11.
@@ -132,10 +132,10 @@ Walking the steps, because each one maps to a failure mode later:
    key share** (its half of the ECDHE exchange) for the curve it expects the server to pick. It also sends
    two extensions that matter to you: **SNI** (*Server Name Indication* — "I want `www.example.com`"),
    which is how one IP can host many HTTPS sites (the TLS-layer counterpart of Ch1's `Host` header), and
-   **ALPN** — the list of application protocols, which is exactly where Ch2 §3 §11a's HTTP version gets
+   **ALPN (Application-Layer Protocol Negotiation)** — the list of application protocols, which is exactly where Ch2 §3 §11a's HTTP version gets
    chosen.
 2. **Server side.** The server picks a cipher and curve, sends **its** key share, and can now compute the
-   shared secret. It selects **which certificate to present based on SNI**, and picks the ALPN protocol.
+   shared secret. It selects **which certificate to present based on SNI (Server Name Indication)**, and picks the ALPN protocol.
 3. **Certificate + CertificateVerify.** The server sends its **certificate chain** (§4) and then a
    **signature over the handshake transcript** using the private key belonging to that certificate. This is
    the actual proof of identity: anyone can *copy* a public certificate, but only the true holder of the
@@ -153,7 +153,7 @@ only carry **safe, idempotent** requests (Ch2 §1's vocabulary, doing real work 
 charges a card. This is one of the cleanest examples of why §1's idempotency taxonomy was worth learning.
 
 > Keeper: TLS 1.3's speed comes from **guessing well**. The client bets on the key-exchange parameters in
-> its first message; if the bet is right the handshake completes in 1 RTT, and only a bad guess costs an
+> its first message; if the bet is right the handshake completes in 1 RTT (round-trip time), and only a bad guess costs an
 > extra trip (a `HelloRetryRequest`).
 
 ---
@@ -166,7 +166,7 @@ a validity period — signed by someone else. That's all. Its power comes entire
 - **The chain.** Your server's **leaf** certificate is signed by an **intermediate Certificate Authority (CA)**, which is signed by
   a **root** CA. The client walks that chain upward until it reaches a root it *already* trusts.
 - **The trust anchor is a list shipped with your device.** Your OS and browser carry a **root store** — a
-  few hundred pre-installed root CA certificates. Trust doesn't come from the network; it comes from that
+  few hundred pre-installed root CA (Certificate Authority) certificates. Trust doesn't come from the network; it comes from that
   bundled list, curated by Apple/Microsoft/Mozilla/Google. **This is the foundation of the whole system:
   authentication works because you already trust a list of strangers your vendor chose.**
 - **Roots stay offline; intermediates do the work.** Root private keys live in air-gapped hardware; they
@@ -262,7 +262,7 @@ something old." TLS 1.3's defence was **deleting the options.**
 The honest boundary of the guarantee — and the part that produces bad security assumptions:
 
 - **It does not hide *who* you're talking to.** The **hostname leaks** twice: in plaintext **DNS** (Ch1 §1)
-  and in the **SNI** field of the ClientHello, which is sent *before* encryption exists. Your ISP can't read
+  and in the **SNI** field of the ClientHello, which is sent *before* encryption exists. Your ISP (Internet Service Provider) can't read
   your Gmail, but it knows you connected to Gmail. Fixes are rolling out — **DoH/DoT** (DNS over HTTPS / DNS over TLS) for DNS, and
   **Encrypted Client Hello (ECH)** for SNI — but the hostname is historically visible.
 - **It does not hide traffic *shape*.** Packet sizes, timing, and volumes remain visible, and **traffic
@@ -325,7 +325,7 @@ flowchart TB
    environments** — and note it's still not "end-to-end" in the cryptographic sense: the proxy sees
    plaintext in the middle, by design.
 3. **Passthrough (L4).** The balancer forwards TCP bytes without decrypting; your app terminates TLS
-   itself. Maximum secrecy, **but you lose every L7 capability** — no caching, no header routing, no WAF,
+   itself. Maximum secrecy, **but you lose every L7 capability** — no caching, no header routing, no WAF (Web Application Firewall),
    no HTTP/2 termination — because the balancer can't see inside. Choose it when the backend must be the
    only holder of plaintext.
 
@@ -390,7 +390,7 @@ Nearly every TLS incident is operational, not cryptographic:
    the most likely misconfiguration, and why does the browser hide it?
 6. An attacker records your entire HTTPS session today and steals the server's private key next year. What
    can they decrypt, and why?
-7. Your ALB terminates TLS and forwards plain HTTP to your app. State one concrete capability this buys you
+7. Your ALB (Application Load Balancer) terminates TLS and forwards plain HTTP to your app. State one concrete capability this buys you
    and one risk it creates — then say what you'd change in a zero-trust environment.
 8. Why must 0-RTT resumption data be restricted to idempotent requests?
 
@@ -417,7 +417,7 @@ Nearly every TLS incident is operational, not cryptographic:
    static DH), where the session key *was* recoverable from the private key alone.
 5. An **incomplete chain** — the server isn't sending the **intermediate** certificate. Chrome often has
    the intermediate cached from visiting other sites (or fetches it), so it silently completes the chain; a
-   cold client like a container's `curl`/SDK has no cache and fails. Test with `openssl s_client` against a
+   cold client like a container's `curl` or SDK (software development kit) has no cache and fails. Test with `openssl s_client` against a
    clean environment.
 6. **Nothing**, assuming TLS 1.3 (or any ECDHE suite): the session key came from an **ephemeral** key pair
    that was destroyed, and the long-term key only *signed* the handshake. That's forward secrecy. Under the
@@ -492,7 +492,7 @@ and days-to-expiry, and the termination arrangement per hop.
   flow) — <https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/>
 - RFC 8446 — *The Transport Layer Security (TLS) Protocol Version 1.3* (authoritative; the "removed
   features" list in §1.2 is worth reading for §5) — <https://www.rfc-editor.org/rfc/rfc8446.html>
-- Let's Encrypt — *How it works* + the ACME protocol (why HTTPS became free and automated) —
+- Let's Encrypt — *How it works* + the ACME (Automated Certificate Management Environment) protocol (why HTTPS became free and automated) —
   <https://letsencrypt.org/how-it-works/>
 - Certificate Transparency — <https://certificate.transparency.dev/> · and **badssl.com** for the
   deliberately-broken test endpoints in §10 — <https://badssl.com/>
@@ -502,7 +502,7 @@ and days-to-expiry, and the termination arrangement per hop.
 ### What's next
 
 Continuing Ch3 (TLS & secure transport):
-- **§2 — TLS in operation:** certificate lifecycle and automation (ACME, AWS Certificate Manager — ACM), HSTS and the
+- **§2 — TLS in operation:** certificate lifecycle and automation (ACME, AWS Certificate Manager — ACM), HSTS (HTTP Strict Transport Security) and the
   preload list, cipher/version policy, mTLS for service-to-service, debugging TLS failures, and the
   performance side (session resumption, 0-RTT, OCSP stapling, where handshake cost actually lands).
 

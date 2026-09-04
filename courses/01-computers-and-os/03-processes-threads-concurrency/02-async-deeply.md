@@ -21,7 +21,7 @@
   swaps** (green threads); that a coroutine is a *single-use frame* and a Task is a *reusable result box*; and that **`await` is not
   concurrency** — two sequential `await`s are blocking calls in disguise. This section makes the "swap" mechanical.
 - **Ch3 §1 (concurrency vs parallelism, the GIL):** async lives in §1's **bottom-left cell** — massive concurrency, *zero* parallelism,
-  one thread, one core. The event loop never escapes the GIL because it never needs to: it's the scheduler *for one thread*.
+  one thread, one core. The event loop never escapes the GIL (Global Interpreter Lock) because it never needs to: it's the scheduler *for one thread*.
 - **The 06-16 Applied session (§1 §9b):** you drove the `asyncio.gather` failure model and landed the keeper *"`return_exceptions`
   handles errors; only a **timeout** handles silence."* §6 here is the mechanism under that keeper — *why* a timeout can break into a
   coroutine that a missing response left hanging forever.
@@ -66,7 +66,7 @@ one iteration (a **tick**) actually does. CPython's loop (`asyncio.base_events.B
   that just became unblocked has its "resume me" callback sitting here.
 - **`_scheduled`** — a **min-heap** of `TimerHandle`s ordered by *when* they should fire. Everything time-based lives here: `call_later`,
   `loop.call_at`, **`asyncio.sleep`**, and — the one that matters most for §6 — **every timeout's deadline**.
-- **the selector** — `selectors.DefaultSelector`, which is `epoll` on Linux, `kqueue` on macOS, IOCP on Windows. This is the kernel's
+- **the selector** — `selectors.DefaultSelector`, which is `epoll` on Linux, `kqueue` on macOS, IOCP (I/O completion ports) on Windows. This is the kernel's
   readiness oracle: you register "tell me when *this* socket is readable/writable," and the kernel watches the file descriptors for you.
 
 One tick of `_run_once` is five steps, and the shape of it is the whole story:
@@ -114,7 +114,7 @@ Four facts to read off this, because they answer real questions you've hit:
    Ch1 §3's preemption, except here it's *cooperative*, so the loop can only be fair *between* callbacks, never *within* one. Which is the
    whole reason a single un-yielding callback freezes everyone — §6, §7.)
 
-> **The keeper for §1:** "the loop waits on I/O" is literally "the loop is asleep inside `epoll_wait`, woken by the kernel when an FD is
+> **The keeper for §1:** "the loop waits on I/O" is literally "the loop is asleep inside `epoll_wait`, woken by the kernel when an FD (file descriptor) is
 > ready or the nearest timer is due." Concurrency without parallelism is *one thread alternating between sleeping in the kernel and
 > draining a run queue.* There is no magic — there is a `deque`, a heap, and one syscall.
 
@@ -373,12 +373,12 @@ Canonical async bugs, each one a corollary of §1–§5. The first three are the
    `return_exceptions=True` (everyone finishes). The default is neither.
 3. **Swallowing `CancelledError` (§5).** Catching it (often via an over-broad `except BaseException` or a bare `except:`) and not
    re-raising breaks cancellation and timeouts. Symptom: shutdown hangs, `asyncio.timeout` doesn't actually stop the work.
-4. **Blocking the loop (§1, located in §1's tick).** A sync DB driver, `requests`, `time.sleep`, a heavy pure-Python parse, or a blocking
+4. **Blocking the loop (§1, located in §1's tick).** A sync DB (database) driver, `requests`, `time.sleep`, a heavy pure-Python parse, or a blocking
    `boto3` call sitting directly in a coroutine **never reaches `selector.select`** — so *every* other task starves until it returns,
    spiking p99 for all users (your 9b Hang #2). Fix: an async client (`httpx`/`aiohttp`/an async DB driver), `asyncio.sleep` not
    `time.sleep`, or push the CPU step to `loop.run_in_executor(process_pool, …)` (§1 §4 hybrid).
 5. **Unretrieved task exceptions.** A backgrounded task that raises, with no one to `await` its result, logs *"Task exception was never
-   retrieved"* only when it's GC'd — easy to miss entirely. Structured concurrency (`TaskGroup`) fixes this at the root: errors propagate
+   retrieved"* only when it's GC (garbage collection)'d — easy to miss entirely. Structured concurrency (`TaskGroup`) fixes this at the root: errors propagate
    to the block.
 6. **`asyncio.run()` nesting / multiple loops.** `asyncio.run` creates *and closes* a fresh loop; you cannot call it from inside a running
    loop (`RuntimeError: asyncio.run() cannot be called from a running event loop`). Notably **Jupyter already runs a loop**, so `await` works
@@ -600,5 +600,5 @@ flips §2 to ✅. Natural follow-ons, your call at the boundary:
   "now it's your job"). The third leg of the chapter; pairs with the shared-mutable-state warning.
 - **Ch3 §4 — *(if we add it)* the producer/consumer & backpressure patterns** that the queue primitives enable — straight into M07 scaling
   territory.
-- Or **rotate scope** per the interleave (this would be a fifth M01 day if taken now): **M04 Ch2 §2** (refactoring in moves, SWE) or
-  **M12 Ch2 §3** (audio/speech/TTS, AI — your "all model types" goal).
+- Or **rotate scope** per the interleave (this would be a fifth M01 day if taken now): **M04 Ch2 §2** (refactoring in moves, SWE — software engineering) or
+  **M12 Ch2 §3** (audio/speech/text-to-speech, AI — your "all model types" goal).

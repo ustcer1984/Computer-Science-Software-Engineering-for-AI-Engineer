@@ -6,7 +6,7 @@
 > which way dependencies should point, package-by-layer vs package-by-feature, keeping the import
 > graph acyclic, and dependency inversion. Where §2's *seams* become permanent *module edges*.
 > **Status:** ✅ finalized 2026-08-04 (body prepared 2026-07-30). Body went **untouched** — he had no
-> questions (as with §2's mechanics: this is SWE-decomposition doctrine he largely already owns, absorbed
+> questions (as with §2's mechanics: this is software-engineering decomposition doctrine he largely already owns, absorbed
 > as reference). This section **closes the core of Ch2 (Decomposition)**: §1 the metric, §2 the moves,
 > §3 the boundaries.
 > **Prerequisites:** §1 (cohesion, coupling, module depth) and §2 (the refactoring moves + seams).
@@ -40,7 +40,7 @@ So §3 is about the **arrows**, not the boxes. Three questions organize it:
 
 The payoff idea, stated up front:
 
-> A healthy codebase's dependency graph is a **DAG that points from the volatile toward the stable**:
+> A healthy codebase's dependency graph is a **DAG (directed acyclic graph) that points from the volatile toward the stable**:
 > details depend on policy, not the reverse. Boundaries go where the arrows want to be few, one-way,
 > and crossing a narrow interface — exactly the seams §2 taught you to create.
 
@@ -57,7 +57,7 @@ A **module** is any unit with a public face and a hidden inside — but at this 
 - In **Java**, a `package` is the unit and `public`/package-private control the face. In **Go**, a
   directory is a package and **capitalization** is the access modifier — plus the special `internal/`
   directory the *compiler* refuses to let outside packages import (a language-enforced boundary). In
-  **JS/TS**, a file is a module and an `index.ts` "barrel" often defines the package's public surface.
+  **JS/TS (JavaScript/TypeScript)**, a file is a module and an `index.ts` "barrel" often defines the package's public surface.
 
 The lesson from §1 scales exactly: a good package is **deep** — a small public API (a few exported
 names) in front of a large implementation (many internal files). The failure mode also scales: a
@@ -212,7 +212,7 @@ the direction.
 lots of things depend on it and it depends on little (changing it is expensive, so it's kept still);
 "volatile" if it changes often. Dependencies should flow **from volatile to stable**: the things that
 change often may depend on the things that rarely change, *never the reverse*. If a stable, widely-used
-core module imports a volatile detail (a specific UI widget, a vendor SDK), then every change to that
+core module imports a volatile detail (a specific UI widget, a vendor SDK — software development kit), then every change to that
 volatile detail threatens the core — you've wired the whole system to the most fickle part of it.
 
 **Dependency Inversion Principle (DIP) — high-level policy must not depend on low-level detail; both
@@ -454,12 +454,12 @@ real refactor toward clean boundaries (using §2's moves) executes against.
   <https://martinfowler.com/bliki/PresentationDomainDataLayering.html>
 - Robert C. Martin, *Screaming Architecture* —
   <https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html>
-- *Dependency Inversion Principle* (the "D" in SOLID) —
+- *Dependency Inversion Principle* (the "D" in SOLID — Single-responsibility, Open-closed, Liskov, Interface-segregation, Dependency-inversion) —
   <https://en.wikipedia.org/wiki/Dependency_inversion_principle>
 - Python packaging: the import system & `__init__.py` public API —
   <https://docs.python.org/3/reference/import.html>
 - Tooling: `import-linter` (Python architecture contracts) <https://import-linter.readthedocs.io/> ·
-  `madge --circular` (JS/TS cycle detection) <https://github.com/pahen/madge> ·
+  `madge --circular` (JS/TS — TypeScript — cycle detection) <https://github.com/pahen/madge> ·
   `pydeps` (Python import graphs) <https://github.com/thebjorn/pydeps>
 
 ### What's next
@@ -471,5 +471,5 @@ Natural continuations:
   the Adapter + DI patterns; inverting a cycle with an interface **is** DIP).
 - Or cash the new testability angle in **M06 (Testing)** — seams and ports are what make the test
   pyramid buildable.
-- Or rotate scope: **M01 Ch5** (OS landscape), **M02** (networking), or the AI thread (**M13** RAG,
+- Or rotate scope: **M01 Ch5** (OS landscape), **M02** (networking), or the AI thread (**M13** RAG [retrieval-augmented generation],
   which reuses the projector/adapter framing from M12 Ch2 §4).

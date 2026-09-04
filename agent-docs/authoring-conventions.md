@@ -17,6 +17,9 @@
 > Extended 2026-09-02 (**rule 8: expand every abbreviation on first use**) from learner feedback on M02 Ch3 §1, where
 > `DV` was expanded but **`OV`/`EV` were not** — his instruction: *"You should show full term at least on the first time
 > an abbreviation is used in a material."*
+> **Corpus-wide sweep completed 2026-09-05** at his request ("do a full survey of all materials including other tracks"):
+> all 57 material files across the course, reading and hobby tracks were audited and fixed (\~510 expansions), so the
+> baseline is clean — from here this rule is a *maintenance* rule, applied per new section.
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -375,6 +378,26 @@ unexpanded acronym is a silent comprehension gap — he cannot look up what he c
   - **Internal repo shorthand** (`M02`, `Ch3`, `§4`, `E05`) is structural, not an abbreviation to expand.
 - **Where an abbreviation is a *concept* the section teaches, also give it a Key-terms row** (rule 5), with the
   Chinese gloss — that's the durable reference, and the two rules reinforce each other.
+
+**Lessons from the 2026-09-05 corpus sweep — read before attempting a bulk pass:**
+
+- **Never bulk-insert glosses at the first *textual* occurrence.** A naive pass produced `shared (CDN (Content
+  Delivery Network)/proxy)` and glosses jammed mid-formula. Placement needs quality guards: skip inline code,
+  inline **and display** math (`$$` lines), slash-clusters (`JS/TS`), hyphen-compounds (`LLM-ification`),
+  headings, table rows, links/URLs, and any spot already **inside** a parenthetical.
+- **Scope the glossary by track — abbreviations collide across domains.** `CA` = Certificate Authority in the
+  networking track but **current account** in economics; `SI` = SI units *or* snapshot isolation; `SSE` =
+  Server-Sent Events *or* Intel's Streaming SIMD Extensions; `MC`/`MR`/`TC`/`PV` are econ cost/value terms
+  elsewhere meaningless. A global find-and-replace **will** introduce factual errors. Keep separate
+  tech/econ/common maps and a hand-only list for the genuinely ambiguous.
+- **Detect an existing gloss across soft line breaks.** `**SISD** — Single\nInstruction, Single Data` is already
+  glossed; a line-local check misses it and double-glosses. Match the normalized expansion in a ±200-char
+  window over the *whole file*, not the line.
+- **Where the only occurrence sits inside a parenthetical, use square brackets** — `(antivirus, VPN [virtual
+  private network], anti-cheat)` — or spell the term out and drop the abbreviation. Nested parens read badly;
+  an em-dash pair breaks when the tail starts with punctuation or `**`.
+- **Watch for redundancy**: `NAND (NAND flash) flash`, `MoE (mixture of experts) expert`. Skip when the
+  following word already repeats the expansion's last word.
 
 **Pre-push detector** (heuristic — flags candidate acronyms and whether an expansion appears near the first
 use; expect false positives from Mermaid node IDs and attack code-names, so eyeball the output):

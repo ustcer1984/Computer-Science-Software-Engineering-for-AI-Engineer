@@ -91,7 +91,7 @@ when the process dies. The action is in the two dynamic regions, and they have *
 ## 2. The stack — fast, automatic, and bounded
 
 You already know the stack's *behavior* from Ch1 §2: every function call pushes a **frame** (its locals,
-arguments, and the return address); every return pops it; it's strictly **LIFO**. Now look at it as *memory*.
+arguments, and the return address); every return pops it; it's strictly **LIFO (last-in, first-out)**. Now look at it as *memory*.
 
 Allocating on the stack is almost free: there's a register, the **stack pointer**, that just points at the
 current top. To "allocate" 200 bytes for a new frame, the CPU **subtracts 200 from the stack pointer** (it
@@ -180,7 +180,7 @@ bugs. The question is deceptively simple: **when you write `x = something`, what
 
 There are two completely different answers, and most languages pick one.
 
-### Model A — "a variable is a box" (value semantics: C, C++, Rust, Go structs, primitives in Java/JS)
+### Model A — "a variable is a box" (value semantics: C, C++, Rust, Go structs, primitives in Java/JavaScript)
 
 ```c
 int x = 5;     // x IS a box in the current stack frame; the bytes 00000005 live there
@@ -311,7 +311,7 @@ this is in the language spec — it's a CPython detail leaking through `is`.
 > **The trap that makes this hard to demo (and worth understanding):** put it all on *one line* —
 > `a = 257; b = 257; a is b` — and you get **`True`**, not `False`. That's a *second, different* sharing
 > mechanism: a single line is compiled to one **code object**, and the compiler stores the literal `257` once
-> in that object's constants table, so both `a` and `b` load the *same* constant. Separate REPL lines are
+> in that object's constants table, so both `a` and `b` load the *same* constant. Separate REPL (read-eval-print loop) lines are
 > separate compilations, so each makes its own `257`. So there are **two** ways Python ends up sharing an
 > object behind your back — the *runtime* small-int cache (−5..256, always) and *compile-time* constant
 > dedup (literals within one code object). Both are CPython implementation details; neither is something to
@@ -795,7 +795,7 @@ def main(raw: str, deps: Deps) -> State:
 
 **Upgrade paths:** if artifact kinds need *different* merge semantics (not always append — "keep max score",
 "overwrite"), generalize `add` to take a per-key **reducer** `Callable[[tuple, Artifact], tuple]` — that's
-exactly LangGraph's channel model, a small change here. For untrusted/LLM-produced artifacts, swap the artifact
+exactly LangGraph's channel model, a small change here. For untrusted or LLM (large language model)-produced artifacts, swap the artifact
 dataclasses for **Pydantic** models — same shape, runtime validation on construction (an M05 / M13-reliability
 lever). This whole design is **M14 Ch2 (frameworks vs framework-less) / M07** territory — your framework-less
 graph-lite pipeline lives in exactly this space, and we'll come back to it there.
@@ -832,11 +832,11 @@ The two open IOUs it leaves are the rest of Chapter 2:
 - **§2 — Garbage collection:** if heap objects must be freed by *someone* and Python never makes you do it, who
   does? CPython's **reference counting** (every object carries a count of name tags pointing at it; hits zero →
   freed instantly) **plus a cycle collector** for the case ref-counting can't handle (`a` and `b` referring to
-  each other). This is also where the GIL from Ch1 re-enters — ref-count updates are why touching objects isn't
+  each other). This is also where the GIL (Global Interpreter Lock) from Ch1 re-enters — ref-count updates are why touching objects isn't
   thread-safe without it.
 - **§3 — "Out of memory" for real:** what actually happens when the heap can't grow, the difference between a
   *leak* and *legitimately too much*, the OOM killer, and why a 16 GB model won't load on a 12 GB GPU.
 
-Per the Phase-1 interleave, the parallel threads remain **M04 Ch1 §2 (tracing data flow)** on the SWE side and
+Per the Phase-1 interleave, the parallel threads remain **M04 Ch1 §2 (tracing data flow)** on the SWE (software engineering) side and
 **M12 Ch2 §2 (video — DiT/Sora)** on the AI side — say the word if you'd rather advance one of those next
 instead of continuing M01 Ch2.

@@ -9,13 +9,13 @@
 > *decides* where to set it (the **reaction function** you were forecasting back in §2 §10c — the Taylor
 > rule and inflation targeting), how that one overnight rate reaches the whole economy (the **transmission
 > mechanism** — the payoff of §1 + §2), and what it does when the rate hits **zero** (the unconventional
-> toolkit: **QE**, forward guidance, and why QE didn't do what §1's multiplier predicted). It closes on the
+> toolkit: **QE (quantitative easing)**, forward guidance, and why QE didn't do what §1's multiplier predicted). It closes on the
 > limits and the live 2021–26 record. It sets up **§4**, where Singapore throws the whole playbook out and
 > steers the *exchange rate* instead.
 > **Status:** ✅ **finalized 2026-08-01.** Body drafted 2026-07-25; **§10 captures the live session** — a
 > four-step chain that walked *outward* from one seed question, *how does the Fed actually create and drain
 > reserves?*, into the full plumbing of the floor system: **(a)** reserves are a **closed system** (the Fed
-> sets the total; banks are price-takers on the quantity — the "hot potato"); **(b)** **IORB** is interest
+> sets the total; banks are price-takers on the quantity — the "hot potato"); **(b)** **IORB (interest on reserve balances)** is interest
 > on balances banks *already hold* (reserves *are* deposits at the Fed), and it floors the rate by
 > arbitrage (with **ON RRP** as the sub-floor and EFFR trading just under IORB); **(c)** reserves are a
 > **bank-only settlement layer** customers never touch — cash withdrawal is the one real exit, customer
@@ -38,8 +38,8 @@ E02 §4 (the output gap and the Phillips curve — the last link in transmission
 
 ## Why this section exists (for *you*)
 
-Open any economics headline and count how many are, at bottom, about *this*: "the Fed held rates," "the ECB
-cut 25 basis points," "the dot plot moved," "QT is draining liquidity," "the central bank is behind the
+Open any economics headline and count how many are, at bottom, about *this*: "the Fed held rates," "the ECB (European Central Bank)
+cut 25 basis points," "the dot plot moved," "QT (quantitative tightening) is draining liquidity," "the central bank is behind the
 curve." Monetary policy is the **single most-covered lever in economic news**, and it serves **Goal 2
 (understand policy)** and **Goal 1 (read the news)** more directly than anything else in the course.
 
@@ -68,7 +68,7 @@ interest. Its jobs, in rough order of how often they make the news:
    the balance sheet) to keep prices stable and, at some central banks, employment high. This is §§2–6.
 2. **Lender of last resort — backstop the financial system.** From §1 §6: lend freely against good
    collateral in a panic (Bagehot's rule) to stop a liquidity run from killing solvent banks. This is the
-   older job, and it resurfaces every crisis (SVB 2023, the BTFP facility).
+   older job, and it resurfaces every crisis (SVB 2023, the BTFP — Bank Term Funding Program — facility).
 3. **Financial-stability and supervisory roles** — regulate banks, run the payment system, watch for
    systemic risk (the macroprudential tools from E02 §4 §10a).
 
@@ -140,7 +140,7 @@ exactly why the Fed can run QT (shrinking reserves) and cut rates *at the same t
 quantity story says is impossible.
 
 > **Reading the news.** When you hear "**the Fed raised rates by 25 basis points**," what physically
-> happened is that the FOMC voted to raise the **IORB** (and ON RRP) by 0.25 percentage points, and the
+> happened is that the FOMC (Federal Open Market Committee) voted to raise the **IORB** (and ON RRP) by 0.25 percentage points, and the
 > whole overnight market repriced to the new floor within a day. A **basis point (bp)** is 0.01% — "50 bps"
 > = half a percentage point. There was no printing, no rationing — a price was announced, and because it's
 > the *risk-free overnight* price, it anchors the short end of §2's yield curve, and the rest of the curve
@@ -244,7 +244,7 @@ flowchart TD
 1. **The interest-rate channel (the main one).** The policy rate anchors the short end of the yield curve
    (§2); the rest of the curve reprices off expected future policy (§2's expectations hypothesis). Higher
    rates raise mortgage rates, corporate borrowing costs, and every **discount rate** in the economy — so
-   fewer projects clear the **NPV** bar (§2d), and interest-sensitive spending (housing, business
+   fewer projects clear the **NPV (net present value)** bar (§2d), and interest-sensitive spending (housing, business
    investment, cars) falls. This is the workhorse.
 2. **The credit / bank-lending channel.** Straight from §1: a higher policy rate raises banks' cost of
    funding, so fewer loans clear the profitability bar, so **money creation itself slows** (§1's
@@ -295,14 +295,14 @@ after 2008 central banks built an **unconventional toolkit**.
   did **not** cause runaway M2 or inflation, because banks don't lend out reserves (§1 §4b) — QE works on
   *yields and expectations*, not by mechanically multiplying money. The 2010s proved it; fig 3 shows the
   balance sheet exploding while the funds rate — and inflation — stayed floored.
-- **Forward guidance.** As in §3c, but load-bearing at the ZLB: when you can't cut, you *promise* to stay low
+- **Forward guidance.** As in §3c, but load-bearing at the ZLB (zero lower bound): when you can't cut, you *promise* to stay low
   for longer, dragging down the long rates that actually matter (§2).
-- **Negative interest rates (NIRP).** Some central banks (the ECB, Switzerland, Japan) went *slightly*
+- **Negative interest rates (NIRP — negative interest rate policy).** Some central banks (the ECB, Switzerland, Japan) went *slightly*
   negative — charging banks to hold reserves — testing how far below zero you can actually go. The
   consensus verdict: a little works, but it's constrained by the cash-hoarding floor and it squeezes bank
   profitability.
 - **Yield curve control (YCC).** From §2 §10b: instead of buying a *quantity* of bonds (QE), promise to buy
-  *whatever it takes* to pin a chosen long yield at a target. The **Bank of Japan** ran explicit YCC
+  *whatever it takes* to pin a chosen long yield at a target. The **Bank of Japan** ran explicit YCC (yield curve control)
   2016–2024; the **Fed** did a version 1942–51. It's the most aggressive form of "price not quantity" —
   applied to the long end.
 - **Quantitative tightening (QT).** The reverse of QE — letting the balance sheet **shrink** (bonds mature
@@ -390,7 +390,7 @@ flowchart TD
    *which price* (the policy rate), *how they choose it* (the reaction function), *how it spreads*
    (transmission).
 2. **Mandates differ:** the Fed has a **dual mandate** (jobs + prices), the ECB a single one (prices), the
-   MAS targets the **currency** (§4). Independence is **operational** — the law sets the goal, the bank
+   MAS (Monetary Authority of Singapore) targets the **currency** (§4). Independence is **operational** — the law sets the goal, the bank
    picks the means.
 3. **It moves ONE rate**, the overnight interbank rate — not mortgages, not the 10-year. Everything else
    reprices off it through §2's yield curve.
@@ -436,7 +436,7 @@ Reason first; check against a source where noted.
 7. **When it can't work.** Explain "you can't push on a string" using the zero lower bound and E02 §2 §9b's
    demand gap. Why does this hand the baton to **fiscal** policy (E04)?
 8. **Live check.** On [FRED](https://fred.stlouisfed.org), plot the target rate (`DFEDTARU`), the balance
-   sheet (`WALCL`), and core PCE inflation (`PCEPILFE`, as a year-over-year change). Where is policy now
+   sheet (`WALCL`), and core PCE (Personal Consumption Expenditures) inflation (`PCEPILFE`, as a year-over-year change). Where is policy now
    relative to the 2% target — tightening, easing, or on hold — and is the balance sheet growing (QE) or
    shrinking (QT)?
 
@@ -444,11 +444,11 @@ Reason first; check against a source where noted.
 
 ## 9. Optional: watch monetary policy on live data (15–20 min)
 
-- **The two tools, live.** On FRED, plot the **target range** (`DFEDTARU` / `DFEDTARL`) and the **balance
+- **The two tools, live.** On FRED (Federal Reserve Economic Data), plot the **target range** (`DFEDTARU` / `DFEDTARL`) and the **balance
   sheet** (`WALCL`) — this is fig 3 with the real numbers, updated. Are they moving together or in opposite
   directions right now?
 - **The floor system.** Plot the **effective fed funds rate** (`EFFR`) against the **IORB** rate (`IORB`)
-  and the **ON RRP** rate (`RRPONTSYAWARD`). See the market rate sit *between* the floors — the §2 plumbing
+  and the **ON RRP (reverse repurchase agreement)** rate (`RRPONTSYAWARD`). See the market rate sit *between* the floors — the §2 plumbing
   made visible.
 - **Is policy tight or loose?** Compare the **real** policy rate (funds rate minus core PCE inflation) to
   estimates of **r-star** (the NY Fed publishes the **Laubach–Williams** r-star series). Above neutral =
@@ -487,7 +487,7 @@ of reserves (set by the Fed) and any individual bank's desired holdings (a marke
 - **QT drains via passive run-off**, not mainly active selling: the Fed stops replacing maturing bonds, so
   the Treasury must sell those bonds to the *public* instead; the public pays with reserves, which flow
   through the Treasury's Fed account and are **extinguished** as the Fed's balance sheet shrinks. Net: the
-  public re-absorbs the bonds, reserves vanish. Plus the **autonomous factors** (currency withdrawn, the TGA,
+  public re-absorbs the bonds, reserves vanish. Plus the **autonomous factors** (currency withdrawn, the TGA [Treasury General Account],
   ON RRP) move reserves around too — but every one is a shift *between lines on the Fed's own balance sheet*.
 
 ### 10b. IORB is interest on balances banks *already hold* — and that's what floors the rate
@@ -503,8 +503,8 @@ by crediting more reserves — a keystroke).
   (§2b) made concrete: IORB is the administered price.
 - **The wrinkle (why EFFR trades a few bp *below* IORB).** Not everyone with a Fed account earns IORB —
   the **GSEs / Federal Home Loan Banks** don't, so they lend fed funds below IORB (anything beats zero), and
-  the arbitrage that should close the gap is blunted by banks' balance-sheet costs (leverage ratio, FDIC
-  fees). So the Fed runs a **sub-floor, ON RRP**, for non-banks, and EFFR settles in the band just under
+  the arbitrage that should close the gap is blunted by banks' balance-sheet costs (leverage ratio, FDIC [Federal Deposit Insurance Corporation]
+  fees). So the Fed runs a **sub-floor, ON RRP**, for non-banks, and EFFR (effective federal funds rate) settles in the band just under
   IORB. The corridor: **discount rate (ceiling) > IORB (bank floor) > ON RRP (non-bank sub-floor).**
 - **The cost.** IORB on trillions runs to 100-plus billion dollars a year; since 2022 it has exceeded the
   Fed's income on its old low-yield QE portfolio, so the Fed books an **operating loss** ("deferred asset") —
@@ -534,7 +534,7 @@ effects — and if it buys Treasuries, doesn't the government get the money? Wha
 fewer?* Two moves — validate the insight, correct the premise:
 
 - **The allocative insight is correct — and it's *why* they buy Treasuries.** The asset choice picks winners
-  (MBS → housing; corporate bonds → 2020 corporate credit; the **BoJ's ETF buying** made it a top equity
+  (MBS [mortgage-backed securities] → housing; corporate bonds → 2020 corporate credit; the **BoJ's ETF [exchange-traded fund] buying** made it a top equity
   shareholder). The Fed prefers Treasuries precisely because they are the most **market-neutral** (deepest,
   most liquid, no private-sector tilt). His instinct found the actual design principle.
 - **But the government does *not* get the money.** QE buys in the **secondary market** from *private*
@@ -548,7 +548,7 @@ fewer?* Two moves — validate the insight, correct the premise:
   agency, even corporate/equities as some central banks do — reviving the neutrality problem), or **create
   reserves by *lending* against collateral** (repo / the Standing Repo Facility) rather than buying outright.
   For the US it is near-moot (a ~36-trillion-dollar debt ocean), though it *was* genuinely debated in the
-  late-1990s surplus era. And the **pure bond-free version** — manage the monetary base via **FX** instead —
+  late-1990s surplus era. And the **pure bond-free version** — manage the monetary base via **FX (foreign exchange)** instead —
   is exactly the **MAS model of §4**. He reasoned his own way to the module's finale.
 
 ---

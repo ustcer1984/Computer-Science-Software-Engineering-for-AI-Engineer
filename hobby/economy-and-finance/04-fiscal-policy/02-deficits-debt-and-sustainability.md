@@ -56,7 +56,7 @@ minus revenue). The **debt** is a **stock** — the accumulated pile of all past
 is the water level.)
 
 **The number that matters is debt-to-GDP, not the absolute level.** "USD 35 trillion" is meaningless on its own —
-the question is *relative to the economy's capacity to service it*, and GDP is the proxy for that capacity (it's
+the question is *relative to the economy's capacity to service it*, and GDP (Gross Domestic Product) is the proxy for that capacity (it's
 the tax base). So we track $b = D / Y$ (debt over GDP). A country can grow its way to a lower ratio while the
 absolute debt still rises — because the *denominator* grew faster (this is §3's whole story).
 
@@ -180,7 +180,7 @@ the premium jumps, and the dynamics go from benign to explosive in *months*. Two
 - **Self-fulfilling crises.** Because the fear of default *causes* the high rates that *cause* default, a country
   can be tipped into crisis by a **shift in sentiment** alone — there can be a "good" equilibrium (low rates,
   sustainable) and a "bad" one (high rates, unsustainable) for the *same* fundamentals. This is what makes a
-  **credible backstop** so powerful (§5) — and it's the deep reason the euro crisis was as much about the ECB's
+  **credible backstop** so powerful (§5) — and it's the deep reason the euro crisis was as much about the ECB (European Central Bank)'s
   early *absence* as about Greek fundamentals.
 
 ---
@@ -248,8 +248,8 @@ euro spent.
 > **The Singapore lens — why its scary gross number is a non-story.** Singapore's **gross** debt is ~170% of GDP
 > — a figure that would look alarming anywhere else. But Singapore has **never run a deficit to need it**: by law
 > it can't borrow to fund spending (§1 §6). The debt exists because it *chooses* to issue **SGS** (to build a
-> risk-free yield curve and a bond market) and **SSGS** (special securities the CPF is invested in), and the
-> proceeds are **invested**, managed by GIC. Net of its enormous reserves, Singapore is a massive **creditor**.
+> risk-free yield curve and a bond market) and **SSGS** (special securities the CPF (Central Provident Fund) is invested in), and the
+> proceeds are **invested**, managed by GIC (Government of Singapore Investment Corporation). Net of its enormous reserves, Singapore is a massive **creditor**.
 > Its gross debt is a *capital-market and savings-management* artifact, not a solvency question — the textbook
 > case for why **gross vs. net** (§1) and **why the debt exists** matter more than the raw ratio.
 
@@ -336,7 +336,7 @@ Reason first; check against a source where noted.
 
 ## 9. Optional: read the debt like a bond investor (15–20 min)
 
-- **The long-run picture.** On **FRED** or the **IMF Global Debt Database**, pull debt/GDP for the US, Japan, and
+- **The long-run picture.** On **FRED (Federal Reserve Economic Data)** or the **IMF (International Monetary Fund) Global Debt Database**, pull debt/GDP for the US, Japan, and
   an emerging market on one chart — see the war spikes, the postwar melt, and the divergence. (This is fig 1.)
 - **The variable that matters.** Find your country's **10-year government bond yield** (the market's $r$) and its
   **nominal GDP growth** (a proxy for $r$ vs $g$ at the nominal level). Is the gap positive or negative right now?
@@ -344,7 +344,7 @@ Reason first; check against a source where noted.
 - **Denomination.** Look up what share of a country's debt is in **foreign currency** and what share is
   **foreign-held** (the IMF or the country's debt-management office publishes this). Contrast Japan (almost all
   yen, mostly domestic) with a stressed emerging market.
-- **A crisis in slow motion.** Read a short retrospective on the **euro crisis (2010–12)** or the **UK gilt / LDI
+- **A crisis in slow motion.** Read a short retrospective on the **euro crisis (2010–12)** or the **UK gilt / LDI (liability-driven investment)
   episode (Sept 2022)** — watch the "slowly, then suddenly" non-linearity and the role of the central-bank
   backstop in real time.
 
@@ -437,7 +437,7 @@ It rhymes with Japan, but three things differ — and all three come from the **
   cannot operate** — no capital-flight crisis of the §4 kind is even available. Japan-style own-currency
   insulation *plus* active capital controls.
 - **The center has fiscal space precisely *because* the debt is decentralized** — Beijing's near-empty sovereign
-  balance sheet can **absorb** local/LGFV debt, an option Japan (already 100% central) never had.
+  balance sheet can **absorb** local/LGFV (local government financing vehicle) debt, an option Japan (already 100% central) never had.
 - **The state owns the whole chain** — the banks (creditors), the SOEs/LGFVs (debtors), *and* the controls — so it
   can push losses around **administratively**. "Extend and pretend" is a policy instrument, not a failure.
 
@@ -513,12 +513,12 @@ genuine terminology difference** you'd trip over.
 - **The definitive history:** Reinhart & Rogoff, *This Time Is Different* — eight centuries of debt, default, and
   the recurring "this time is different" delusion. (Read it *with* the caveat that their 2010 "90% threshold"
   paper was found to contain a spreadsheet error and reverse causality.)
-- **The modern debt-dynamics view:** Olivier Blanchard's 2019 AEA presidential address, *"Public Debt and Low
+- **The modern debt-dynamics view:** Olivier Blanchard's 2019 AEA (American Economic Association) presidential address, *"Public Debt and Low
   Interest Rates"* — the clearest statement of why $r < g$ changes the calculus (and its limits now that rates
   have risen).
 - **The euro crisis, mechanically:** any good retrospective on 2010–12 and Draghi's "whatever it takes" — the
   cleanest real-world lesson in own- vs. foreign-currency debt and the self-fulfilling-crisis logic of §4–§5.
-- **The Singapore case:** the **MOF / MAS** explainers on why Singapore issues debt despite balanced budgets (SGS,
+- **The Singapore case:** the **MOF (Ministry of Finance) / MAS (Monetary Authority of Singapore)** explainers on why Singapore issues debt despite balanced budgets (SGS,
   SSGS/CPF, SINGA) and the reserves framework — the gross-vs-net story of §6.
 - **Live data:** **FRED**, the **IMF Global Debt Database** and **Fiscal Monitor** (debt/GDP, gross vs net,
   interest-growth differentials), and any government **debt-management office** for maturity and

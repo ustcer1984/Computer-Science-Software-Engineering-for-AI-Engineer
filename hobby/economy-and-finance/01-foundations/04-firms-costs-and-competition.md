@@ -8,9 +8,9 @@
 > of small shops (economies of scale)? And the **spectrum of competition** — perfect competition →
 > monopolistic competition → oligopoly → monopoly — of which §3 only sampled the two endpoints.
 > **Status:** ✅ finalized 2026-06-24 — closes Module E01. You studied the body, then in Q&A took it to a
-> live case: **the frontier AI labs** (OpenAI/Anthropic) that serve below AVC yet don't shut down. §9
+> live case: **the frontier AI labs** (OpenAI/Anthropic) that serve below AVC (average variable cost) yet don't shut down. §9
 > captures that thread — the static→dynamic shutdown re-rank, training-FC vs serving-VC, the learning curve
-> as a *moving* LRAC, the race to build barriers to entry, and the failure modes. Math in LaTeX,
+> as a *moving* LRAC (long-run average cost), the race to build barriers to entry, and the failure modes. Math in LaTeX,
 > quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -120,7 +120,7 @@ Divide each cost by output to get **per-unit (average)** costs, and take the slo
 | **MC** — marginal cost | $\Delta TC / \Delta q = dTC/dq$ | The cost of one more unit. U-shaped, and it does something special ↓ |
 
 <!-- FIGURE -->
-![The family of cost curves: MC cuts AVC and ATC at their minimum points](diagrams/04-firms-costs-and-competition-fig1.svg)
+![The family of cost curves: MC cuts AVC and ATC (average total cost) at their minimum points](diagrams/04-firms-costs-and-competition-fig1.svg)
 
 The non-obvious, completely general fact in that picture: **MC passes through the minimum of both AVC and
 ATC.** This isn't a quirk of the dummy numbers — it's a law about marginals and averages, and it's worth
@@ -225,7 +225,7 @@ could pick (one per plant size). It's typically U-shaped, and the three regions 
 real-world signature:
 
 <!-- FIGURE -->
-![The long-run average cost curve as the envelope of plant-size choices, with economies, MES, and diseconomies](diagrams/04-firms-costs-and-competition-fig4.svg)
+![The long-run average cost curve as the envelope of plant-size choices, with economies, MES (minimum efficient scale), and diseconomies](diagrams/04-firms-costs-and-competition-fig4.svg)
 
 - **Economies of scale** (LRAC falling): bigger is cheaper per unit. Sources — spreading huge fixed costs
   (a chip fab, a drug's R&D, a software codebase) over more output; bulk buying; specialization; learning
@@ -233,7 +233,7 @@ real-world signature:
   winner-take-most.
 - **Constant returns** (LRAC flat): size no longer changes unit cost — the bottom of the U.
 - **Diseconomies of scale** (LRAC rising): *too* big gets expensive per unit — coordination overhead,
-  bureaucracy, communication breaking down, slow decisions. (The org-design failures the SWE track studies
+  bureaucracy, communication breaking down, slow decisions. (The org-design failures the software-engineering track studies
   — giant systems no one can change, teams that can't coordinate — are diseconomies of scale wearing an
   engineering hat.)
 
@@ -265,7 +265,7 @@ comes down to **barriers to entry**.
 
 | Structure | # firms | Product | Pricing power | Long-run economic profit | Barriers to entry | Real examples |
 |---|---|---|---|---|---|---|
-| **Perfect competition** | very many | identical | none (price-*taker*) | **zero** | none | wheat, FX spot, basic commodities |
+| **Perfect competition** | very many | identical | none (price-*taker*) | **zero** | none | wheat, FX (foreign exchange) spot, basic commodities |
 | **Monopolistic competition** | many | *differentiated* | a little | **zero** (eroded by entry) | low | restaurants, cafés, salons, branded snacks, apps |
 | **Oligopoly** | few | identical *or* differentiated | substantial, *interdependent* | can persist | high | airlines, telcos, banks, soft drinks, aircraft |
 | **Monopoly** | one | unique (no close substitute) | maximal (price-*maker*) | can persist | very high | utilities, patented drug, a local network |
@@ -426,7 +426,7 @@ flowchart TD
 1. **Economic cost** includes **opportunity cost**, so **economic profit** subtracts the return capital
    could earn elsewhere. *Zero economic profit = a normal return = a healthy-but-unexceptional business*
    (still positive **accounting** profit). This distinction runs through everything.
-2. **Cost curves:** AFC falls, AVC and ATC are U-shaped (diminishing returns), and **MC cuts AVC and ATC at
+2. **Cost curves:** AFC (average fixed cost) falls, AVC and ATC are U-shaped (diminishing returns), and **MC cuts AVC and ATC at
    their minima** — the marginal always pulls the average toward itself.
 3. **Output rule: $MR = MC$.** For a price-taker $MR = P$, so $P = MC$ — which is *why supply is the
    marginal-cost curve.* Profit is the rectangle $(P - ATC)\times q$.
@@ -495,12 +495,12 @@ elasticity/surplus/failure story on Singapore's sugar policy in §3.
 ## 9. Applied — from our session Q&A (2026-06-24): the frontier AI labs
 
 You took the section straight to a business that *looks* like it breaks the rule: **frontier AI labs**
-(OpenAI, Anthropic). Their structure, as you posed it: huge **FC** (R&D, model training) *and* huge **VC**
+(OpenAI, Anthropic). Their structure, as you posed it: huge **FC** (R&D, model training) *and* huge **VC (venture capital)**
 (model serving), with plan prices widely believed to sit **below per-token cost** — i.e. $P < AVC$. §4 says
 that means *shut down*; they do the opposite, funded by investors betting on future profitability via
 **pricing power + falling hardware cost**. Your reconstruction had the right shape; the value was in four
 re-ranks and the failure modes. The headline: **nothing in §4 breaks — the labs have swapped "maximize this
-period's profit on fixed curves" for "maximize multi-period NPV while *bending* the curves."**
+period's profit on fixed curves" for "maximize multi-period NPV (net present value) while *bending* the curves."**
 
 ### 9a. The core re-rank: the shutdown rule is *single-period and static*
 
@@ -698,7 +698,7 @@ Economic Foundations.** You now have the full micro toolkit: how individuals and
 prices coordinate them (§2), how to measure welfare and diagnose failure (§3), and where supply itself comes
 from and how market structure shapes it (§4). The
 natural next step is the jump from the individual market to **the whole economy: Module E02 —
-Macroeconomics**, starting with **§1 — GDP & measuring output** ("what 'the economy grew 2%' really means").
+Macroeconomics**, starting with **§1 — GDP (Gross Domestic Product) & measuring output** ("what 'the economy grew 2%' really means").
 That's the pivot from *micro* to the indicators behind the headlines — straight at your Goal 1 (understand
 economy/business news). A live hook already in hand: §4's economic-vs-accounting-profit and cost-structure
 ideas are the seed of the financial-statements module (E07), if you'd rather jump reports-first.

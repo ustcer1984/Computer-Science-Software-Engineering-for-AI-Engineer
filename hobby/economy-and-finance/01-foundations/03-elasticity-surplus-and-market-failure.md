@@ -172,7 +172,7 @@ something is *worth* to you and what you actually *pay or receive*. It's measura
 supply-and-demand diagram, because §2 already told us the curves *are* the marginal-benefit and
 marginal-cost curves read sideways.
 
-- **Consumer surplus (CS).** Each buyer's marginal benefit is read off the **demand curve**; they pay only
+- **Consumer surplus (CS — computer science).** Each buyer's marginal benefit is read off the **demand curve**; they pay only
   $P^\ast$. The difference, summed over every unit bought, is the area **below demand and above the price** —
   the value buyers capture beyond what they hand over. (Your willingness to pay \$8 for a coffee you got
   for \$4 is \$4 of consumer surplus.)
@@ -292,7 +292,7 @@ the gap is the externality.
 
 - **Negative externality** (pollution, traffic congestion, a noisy bar): the **marginal social cost (MSC)**
   exceeds the **marginal private cost (MPC)** by the external damage. The market produces where demand meets
-  *MPC*; the efficient quantity is where demand meets *MSC* — which is **smaller**. So a market with
+  *MPC (marginal propensity to consume)*; the efficient quantity is where demand meets *MSC* — which is **smaller**. So a market with
   negative externalities **over-produces**, and the gap is a deadweight loss.
 
 <!-- FIGURE -->
@@ -345,7 +345,7 @@ the open ocean can't)? The familiar private good is *both*. Drop either and the 
   the road) but bears only a fraction of the shared cost (depletion, congestion), so the resource is
   **over-used** and can collapse. It is a negative externality each user imposes on all the others —
   overfished cod, drained aquifers, rush-hour gridlock, antibiotic resistance. Fixes: assign **property
-  rights / quotas** (tradable fishing quotas), **price the congestion** (Singapore's ERP road pricing is a
+  rights / quotas** (tradable fishing quotas), **price the congestion** (Singapore's Electronic Road Pricing (ERP) is a
   textbook live example), or — Elinor Ostrom's Nobel-winning point — **community governance**, where local
   users craft and enforce their own rules without either privatization or top-down control.
 
@@ -542,7 +542,7 @@ quantity split actually leans on the **supply** slope. Elasticity is the right l
 to substitutes," not for the *direction* of a shift.
 
 Your real-world puzzle — *prices rose, not fell* — is the **ceteris paribus** caveat, not a falsification.
-The demand-left effect was swamped by **supply-left cost-push** (2022–23 inflation, input costs, the GST
+The demand-left effect was swamped by **supply-left cost-push** (2022–23 inflation, input costs, the GST [Goods and Services Tax]
 rise to 9%), and branded-soda demand is **more inelastic** (habit, brand, caffeine) than "easily
 substituted" suggests. The model predicts the *partial* effect; field data is *mutatis mutandis*, and other
 shifts can dominate.

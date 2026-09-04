@@ -5,7 +5,7 @@
 > **Section:** The number that turns *nominal* into *real*. §1 left two loose ends — "the economy grew 2%"
 > means **real** growth, and **real ≈ nominal − inflation** — without ever saying what *inflation* is or how
 > anyone measures it. This section closes that gap: what inflation actually is (a change in the **price
-> level**, not in one price), how a **price index** like the **CPI** is built from a fixed **basket**, the
+> level**, not in one price), how a **price index** like the **CPI (Consumer Price Index)** is built from a fixed **basket**, the
 > **family** of indices you'll meet in the news (core CPI, PPI, PCE, the GDP deflator from §1), how to use a
 > price index to deflate any nominal figure into real terms, **why every index is biased**, and the question
 > that anchors all monetary policy to come: **why central banks target a little inflation (≈2%) rather than
@@ -16,13 +16,13 @@
 > distributional) and then *relocated* to where it actually bites (growth-dependence, **unpriced environmental
 > externalities** = E01 §3 redux, the **discount rate**, the entropy/throughput lens); and (9b) a from-scratch
 > reconstruction of the **money-and-growth loop** + a hand-built **steady-state** thought experiment, sharpened
-> with credit money, the **debt-deferral** (Minsky) and **MPC demand-gap** corrections, and Daly's
+> with credit money, the **debt-deferral** (Minsky) and **MPC (marginal propensity to consume) demand-gap** corrections, and Daly's
 > scale/distribution/allocation answer to "why the market can't reach a stationary state." Math in LaTeX,
 > quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
-**Prerequisites:** E02 §1 — especially **nominal vs real GDP**, the **GDP deflator**
+**Prerequisites:** E02 §1 — especially **nominal vs real GDP (Gross Domestic Product)**, the **GDP deflator**
 ($\text{deflator} = \text{nominal}/\text{real} \times 100$), and the relation
 **nominal growth ≈ real growth + inflation**. From E01: a **weighted average** and the idea of
 substituting toward whatever got relatively cheaper (§3 elasticity / consumer response to price). New math
@@ -40,7 +40,7 @@ what inflation is and how it's measured. You don't yet — so here we build it.
 This matters for all four of your goals, but three especially:
 
 - **Goal 1 (read the news).** "CPI rose 3.1% year-on-year," "**core** inflation is sticky," "**real** wages
-  fell for the 18th straight month," "the Fed's preferred **PCE** gauge cooled" — these are the most-quoted
+  fell for the 18th straight month," "the Fed's preferred **PCE (Personal Consumption Expenditures)** gauge cooled" — these are the most-quoted
   numbers in economics after GDP, and each is a different cut of *the same idea*.
 - **Goal 2 (understand policy).** Inflation is the **target variable** of monetary policy (E03). You cannot
   understand why a central bank raises rates until you understand what the ≈2% it's defending even means —
@@ -160,7 +160,7 @@ is most of reading inflation news correctly.
 | **Core CPI** | CPI **excluding food & energy** | Food and energy are **volatile** (weather, oil shocks). Stripping them shows the **underlying trend** central banks care about — a §1-style signal-vs-noise filter, not a claim that you don't eat. |
 | **PPI** (Producer Price Index) | Prices producers *receive* at the factory gate / wholesale | An **early-warning** gauge — cost pressure often shows up in PPI *before* it reaches consumer CPI (a leading indicator, E02 §4). |
 | **PCE** (Personal Consumption Expenditures price index) | Broader consumption, weights that **update more often** | The **US Federal Reserve's preferred** gauge — it allows for substitution, so it usually reads a touch *below* CPI. When the Fed says "2% target," it means **core PCE**. |
-| **GDP deflator** | **Everything in GDP** ($C+I+G+NX$) — not just consumer goods | The economy-wide measure from **§1**. Covers investment goods, government, exports; **excludes imports** (they're not domestic output). Broadest of all. |
+| **GDP deflator** | **Everything in GDP** ($C+I+G+NX$, where NX is net exports) — not just consumer goods | The economy-wide measure from **§1**. Covers investment goods, government, exports; **excludes imports** (they're not domestic output). Broadest of all. |
 
 Two distinctions worth burning in, because the news blurs them constantly:
 
@@ -217,7 +217,7 @@ rate you're quoted and the rate that matters.*
 
 **Indexation — building inflation into contracts.** Once you can deflate, you can **protect** against
 inflation by linking payments to a price index: **cost-of-living adjustments (COLA)** in wages and pensions,
-**inflation-linked bonds** (US **TIPS**, Singapore's and the UK's linkers), and indexed tax brackets. This is
+**inflation-linked bonds** (US **TIPS** [Treasury Inflation-Protected Securities], Singapore's and the UK's linkers), and indexed tax brackets. This is
 double-edged: indexation shields people from inflation, but widespread indexation can also **entrench** it —
 a price rise auto-feeds into wages and back into prices, the **wage-price spiral** (§6).
 
@@ -262,7 +262,7 @@ Four sources:
 ## 6. Why target a *little* inflation (≈2%) — not zero, not high
 
 Here's the question that puzzles almost everyone, and the keystone of all monetary policy to come: nearly
-every modern central bank — Fed, ECB, Bank of England, and (in its own way) MAS — aims for **about 2%**
+every modern central bank — Fed, ECB (European Central Bank), Bank of England, and (in its own way) MAS (Monetary Authority of Singapore) — aims for **about 2%**
 inflation, *on purpose.* Why not **zero**? And why is **deflation** treated as a disaster, not a discount?
 
 **The costs of *high* inflation (why not high).** These are real and rise steeply with the rate:
@@ -297,7 +297,7 @@ inflation, *on purpose.* Why not **zero**? And why is **deflation** treated as a
 **Why ≈2% specifically — three reasons it's the sweet spot:**
 
 1. **A buffer against deflation.** Aiming for 2% keeps a **safety margin** above zero, so an ordinary
-   downturn dips inflation toward 0–1% rather than into outright deflation and the ZLB trap.
+   downturn dips inflation toward 0–1% rather than into outright deflation and the ZLB (zero lower bound) trap.
 2. **"Greasing the wheels" — downward nominal wage rigidity.** Workers fiercely resist *nominal* pay **cuts**
    (it feels like an insult, and contracts/norms forbid it) but accept a *real* cut via a below-inflation
    raise. So firms almost never cut nominal pay — they **freeze** it. The empirical fingerprint is unmistakable:
@@ -316,7 +316,7 @@ inflation, *on purpose.* Why not **zero**? And why is **deflation** treated as a
 
 > **Local lens — MAS and "core inflation."** Singapore's central bank (MAS) watches **MAS Core Inflation**,
 > which strips out **accommodation (housing) and private road transport** — the two most policy-distorted,
-> volatile components in the SG context (housing is heavily policy-driven; car prices swing with the **COE**
+> volatile components in the SG context (housing is heavily policy-driven; car prices swing with the **COE** [Certificate of Entitlement]
 > quota system). It's the same **core-vs-headline** logic from §3, tuned to local idiosyncrasies. And because
 > Singapore is a tiny, ultra-open economy where **imports dominate the basket**, MAS fights inflation not by
 > setting an interest rate but by managing the **exchange rate** (a stronger Sing dollar makes imports
@@ -364,7 +364,7 @@ flowchart TD
    almost always means **disinflation** — prices still rose, just slower; they don't fall back.
 3. **Measure it with a price index:** cost of a **fixed basket** vs a base year; inflation = **% change** in
    the index. It's a **weighted** average — big weights (housing ≈ ⅓) dominate.
-4. **Know the family:** **headline vs core** (ex food/energy = the trend); **CPI** (what you feel), **PPI**
+4. **Know the family:** **headline vs core** (ex food/energy = the trend); **CPI** (what you feel), **PPI (Producer Price Index)**
    (early warning), **PCE** (the Fed's gauge), **GDP deflator** (broadest, excludes imports — §1).
 5. **Real = nominal ÷ index × 100.** Apply it to **wages** (a raise below inflation is a real *cut*),
    **returns** (cash can lose in real terms), and **rates** (**real ≈ nominal − inflation**, Fisher).
@@ -412,7 +412,7 @@ Pick a recent release and read it through this section's lens:
 - **Singapore — MAS / SingStat** monthly CPI: find **headline CPI** *and* **MAS Core Inflation**; note exactly
   what core *excludes* (accommodation, private transport) and why the two can diverge sharply. *(SingStat:
   singstat.gov.sg; MAS commentary: mas.gov.sg.)*
-- **United States — BLS CPI** news release: locate **headline vs core** (ex food & energy), the **biggest
+- **United States — BLS (Bureau of Labor Statistics) CPI** news release: locate **headline vs core** (ex food & energy), the **biggest
   contributing categories** (watch shelter's weight — Fig 1), and the **year-on-year vs month-on-month**
   figures. Then find the **Fed's** preferred gauge, **core PCE**, and note it usually reads a bit *lower* than
   core CPI (substitution, §5).
@@ -691,8 +691,8 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
   https://www.ssa.gov/history/reports/boskinrpt.html
 - **Primary sources to practise on:** Singapore — **SingStat CPI** and **MAS Core Inflation**
   (https://www.singstat.gov.sg, https://www.mas.gov.sg); United States — **BLS CPI** news release
-  (https://www.bls.gov/cpi/) and the **BEA PCE price index** (https://www.bea.gov); cross-country inflation —
-  **World Bank / IMF** data (https://data.worldbank.org).
+  (https://www.bls.gov/cpi/) and the **BEA (Bureau of Economic Analysis) PCE price index** (https://www.bea.gov); cross-country inflation —
+  **World Bank / IMF (International Monetary Fund)** data (https://data.worldbank.org).
 - **On the §9 sustainability / money-loop threads (the bigger debate):** Herman Daly, *Steady-State Economics*
   and the **scale / distribution / allocation** split; Nicholas Georgescu-Roegen, *The Entropy Law and the
   Economic Process* (1971) — the thermodynamic foundation of **ecological economics** (the physicist's entry

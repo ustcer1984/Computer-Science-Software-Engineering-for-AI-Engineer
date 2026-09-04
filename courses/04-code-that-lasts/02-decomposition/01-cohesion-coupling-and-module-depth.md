@@ -199,7 +199,7 @@ $$\text{depth} \approx \frac{\text{functionality hidden inside}}{\text{cost of t
   is the **Unix file abstraction**: `open`, `read`, `write`, `close` — four calls — sit in front of
   filesystems, pipes, sockets, terminals, and device drivers. A handful of verbs, an ocean of
   implementation. Go's `io.Reader` is even starker — *one* method, `Read(p []byte)`, and the entire
-  standard library composes around it. Python's `requests.get(url)` hides connection pooling, TLS,
+  standard library composes around it. Python's `requests.get(url)` hides connection pooling, TLS (Transport Layer Security),
   redirects, chunked encoding, and retries behind one line. Huge numerator, tiny denominator.
 - A **shallow module** has an interface nearly as complex as its implementation. It makes you learn
   about as much to *call* it as to do the work yourself. Ousterhout's own example is Java's stream
@@ -286,11 +286,11 @@ Real ones you've almost certainly hit without naming:
 - **TCP over IP.** TCP sells you a reliable, ordered byte stream over an unreliable packet network. The
   abstraction holds — until packet loss spikes and your "reliable stream" mysteriously stalls. The
   unreliability leaks through as *latency* you can't see in the API.
-- **ORMs and SQL.** An ORM hides the database behind objects — until a loop over `user.orders`
+- **ORMs and SQL.** An ORM (object-relational mapper) hides the database behind objects — until a loop over `user.orders`
   silently fires one query per user (the **N+1 problem**) and the only fix is to understand the SQL the
   abstraction was hiding. The query planner leaks too: the same `SELECT` is fast or catastrophic
   depending on an index you can't see from the query.
-- **Network file systems.** NFS makes a remote disk look local — until the network is slow and every
+- **Network file systems.** NFS (Network File System) makes a remote disk look local — until the network is slow and every
   `open()` blocks in ways a local file never would.
 - **Storage-specific errors.** A `get_user(id)` that raises `KeyError` leaks that it's backed by a dict;
   swap it for SQL and it raises something else, so callers end up depending on the *implementation*.

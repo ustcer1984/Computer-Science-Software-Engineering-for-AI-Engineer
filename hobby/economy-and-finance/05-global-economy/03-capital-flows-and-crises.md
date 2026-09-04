@@ -7,7 +7,7 @@
 > by trade flows but by **capital** flows — vastly larger, far faster, and prone to violent reversal. This is where
 > the machinery gets **stress-tested to destruction**. We anatomize capital flows (why *composition* matters more
 > than amount); see why they are a **double-edged sword** (procyclical, and the **sudden stop** that turns §2's
-> benign identity CA + KA = 0 into a straitjacket); build the **three generations of currency-crisis models**; work
+> benign identity CA + KA (capital account) = 0 into a straitjacket); build the **three generations of currency-crisis models**; work
 > the **1997 Asian financial crisis** as the canonical case and trace its enormous aftermath; lay out the **policy
 > toolkit** that actually protects a country (including the modern **"dilemma, not trilemma"** refinement); and
 > close on **Singapore as a trade and finance hub** — the most open economy on earth, and the control case proving
@@ -21,7 +21,7 @@
 **Prerequisites:** E05 §2 — **all of it**, and especially **§10** (the monetary-sovereignty spectrum, currency
 mismatch and **contractionary devaluation**, the missing lender of last resort — this section is that discussion's
 payoff); E05 §2 §3 (**CA + KA = 0**, the identity that becomes a straitjacket here) and §4 (the trilemma as a
-regime); E05 §1 (trade, the East-Asian export model); E03 §4 (**MAS**, reserves, intervention) and §5 (capital
+regime); E05 §1 (trade, the East-Asian export model); E03 §4 (**MAS (Monetary Authority of Singapore)**, reserves, intervention) and §5 (capital
 controls). Helpful: E04 §2 §4 (self-fulfilling debt crises, rollover risk) and E02 §4 (the business cycle,
 financial amplification).
 
@@ -62,7 +62,7 @@ Understanding *why* is the single best test of whether you've absorbed the last 
 
 **The rule this table encodes: the *composition* of your inflows matters more than the *amount*.** Two countries
 can run identical current-account deficits — identical on §2's ledger — and be in completely different danger,
-because one financed it with FDI and the other with short-term dollar bank debt. Equity and FDI **share** losses
+because one financed it with FDI (foreign direct investment) and the other with short-term dollar bank debt. Equity and FDI **share** losses
 with the foreign investor when things go wrong; debt does **not** — it must be repaid in full, on schedule, in
 someone else's currency.
 
@@ -88,7 +88,7 @@ bonanza"** is one of the better predictors that a crisis is coming.
 Then comes the event this section is built around. A **sudden stop** (Calvo) is an abrupt halt — or reversal — of
 capital inflows.
 
-![A bar chart of net private capital flows to the Asia-5 economies from 1990 to 2000 in billions of US dollars. Flows rise from about plus 25 billion in 1990 to a peak of plus 93 billion in 1996, then reverse sharply to minus 12 billion in 1997 and minus 45 billion in 1998 before partially recovering to about minus 20 billion by 2000. An annotation marks the sudden stop, noting that the swing from 1996 to 1997 exceeded 105 billion dollars, roughly a tenth of their combined GDP, in a single year. A second note explains that capital floods in during the boom and makes it bigger.](diagrams/03-capital-flows-and-crises-fig1.svg)
+![A bar chart of net private capital flows to the Asia-5 economies from 1990 to 2000 in billions of US dollars. Flows rise from about plus 25 billion in 1990 to a peak of plus 93 billion in 1996, then reverse sharply to minus 12 billion in 1997 and minus 45 billion in 1998 before partially recovering to about minus 20 billion by 2000. An annotation marks the sudden stop, noting that the swing from 1996 to 1997 exceeded 105 billion dollars, roughly a tenth of their combined GDP (Gross Domestic Product), in a single year. A second note explains that capital floods in during the boom and makes it bigger.](diagrams/03-capital-flows-and-crises-fig1.svg)
 
 Fig 1 shows the 1996→1997 reversal for the Asia-5: a swing of **over 105 billion USD — about a tenth of their
 combined GDP — in a single year.**
@@ -118,7 +118,7 @@ every emerging-market crisis of the last forty years.
 Crisis theory developed in three waves, each written after a crisis the previous generation couldn't explain. They
 are not rivals so much as three *mechanisms*, and modern crises mix all three.
 
-![A three-panel comparison of currency-crisis models. The first generation, from Krugman in 1979, is triggered by bad fundamentals: a fixed peg plus unsustainable deficits drains reserves predictably until speculators attack at the threshold, so the crisis is deserved, as in Latin America in the 1980s. The second generation, from Obstfeld, is triggered by expectations: the government chooses between defending with high rates that cause recession or exiting, and if markets expect an exit then defending costs more so exiting becomes optimal, making the crisis self-fulfilling with multiple equilibria and not necessarily deserved, as in the 1992 ERM crisis. The third generation, developed after 1997, is triggered by balance sheets: currency and maturity mismatches mean devaluation destroys balance sheets, producing contractionary devaluation and a twin banking crisis, so the exchange rate acts as an amplifier, as in Asia in 1997.](diagrams/03-capital-flows-and-crises-fig4.svg)
+![A three-panel comparison of currency-crisis models. The first generation, from Krugman in 1979, is triggered by bad fundamentals: a fixed peg plus unsustainable deficits drains reserves predictably until speculators attack at the threshold, so the crisis is deserved, as in Latin America in the 1980s. The second generation, from Obstfeld, is triggered by expectations: the government chooses between defending with high rates that cause recession or exiting, and if markets expect an exit then defending costs more so exiting becomes optimal, making the crisis self-fulfilling with multiple equilibria and not necessarily deserved, as in the 1992 ERM (Exchange Rate Mechanism) crisis. The third generation, developed after 1997, is triggered by balance sheets: currency and maturity mismatches mean devaluation destroys balance sheets, producing contractionary devaluation and a twin banking crisis, so the exchange rate acts as an amplifier, as in Asia in 1997.](diagrams/03-capital-flows-and-crises-fig4.svg)
 
 - **First generation (Krugman, 1979) — the crisis you *deserve*.** A government pegs the currency while running
   unsustainable deficits financed by printing. Reserves drain predictably; speculators, seeing the arithmetic,
@@ -169,7 +169,7 @@ deepened the capital flight; the flight drove the currency lower still. **Contra
 doom loop.** Indonesian GDP fell about 13% in 1998; Korea's chaebol conglomerates buckled; Indonesia's government
 fell.
 
-**The IMF response, and the argument that changed the field.** The IMF's programs prescribed **high interest rates
+**The IMF (International Monetary Fund) response, and the argument that changed the field.** The IMF's programs prescribed **high interest rates
 and fiscal austerity** — the standard first-generation remedy. Critics (notably Stiglitz and Sachs) argued this
 badly misdiagnosed the disease: these were **balance-sheet** crises, not fiscal ones, so austerity and punitive
 rates deepened the collapse rather than restoring confidence. **Malaysia**, notably, went the other way in
@@ -198,7 +198,7 @@ Ranked roughly by how much the profession now trusts them:
 
 1. **Get the composition right.** Favor **FDI and local-currency** finance; discourage **short-term
    foreign-currency debt**. This attacks the vulnerability at its root (§1).
-2. **Macroprudential policy** — the post-2008 workhorse. Limits on banks' FX exposure and maturity mismatch,
+2. **Macroprudential policy** — the post-2008 workhorse. Limits on banks' FX (foreign exchange) exposure and maturity mismatch,
    loan-to-value caps, countercyclical capital buffers. It targets the **mismatch**, not the flow, and is now
    mainstream everywhere.
 3. **Reserves as self-insurance** (fig 3). Effective and proven, but genuinely expensive — and if *everyone*
@@ -237,21 +237,21 @@ banking crisis, no IMF program, no crisis at all.** Why?
 
 Because openness was paired with a **coherent system of buffers**, each of which is a concept from this course:
 
-- **No original sin, and a huge net creditor position.** Singapore borrows in **SGD** (SGS/SSGS — E04 §2 §6's
+- **No original sin, and a huge net creditor position.** Singapore borrows in **SGD** (SGS/SSGS [Singapore Government Securities, ordinary and Special] — E04 §2 §6's
   gross-vs-net story), and its external assets vastly exceed its liabilities. So a depreciation **helps** it
   (its foreign assets are worth more) rather than destroying it — the §2 §10d condition **inverted**. The
   third-generation mechanism simply cannot get a grip.
 - **Enormous reserves plus exchange-rate-based monetary policy.** The MAS manages the trade-weighted SGD directly
-  (E03 §4), backed by reserves across MAS/GIC/Temasek — self-insurance at a scale few match.
+  (E03 §4), backed by reserves across MAS/GIC [Government of Singapore Investment Corporation]/Temasek — self-insurance at a scale few match.
 - **Fiscal space, and the willingness to use it.** With no domestic interest-rate lever (the trilemma choice of
   E04 §3 §7), fiscal does the stabilizing — and Singapore has the space, which is exactly the
   **Singapore-vs-Greece** contrast from §2 §10b.
-- **Deliberate internal devaluation.** In 1998 Singapore cut employer **CPF** contributions sharply and restrained
+- **Deliberate internal devaluation.** In 1998 Singapore cut employer **CPF (Central Provident Fund)** contributions sharply and restrained
   wages to cut business costs directly — *the internal devaluation of §2 §10b, chosen deliberately and executed
   fast*, rather than suffered slowly through unemployment. It is the clearest real-world demonstration that
   internal devaluation is *possible* when institutions can coordinate it.
 - **Institutions and macroprudential rigor.** The MAS is an integrated regulator with high capital standards, and
-  Singapore's property **cooling measures** (LTV limits, ABSD, TDSR) are textbook macroprudential policy — item 2
+  Singapore's property **cooling measures** (LTV limits, ABSD [Additional Buyer's Stamp Duty], TDSR — Total Debt Servicing Ratio) are textbook macroprudential policy — item 2
   of §5, applied for decades.
 - **Hub strategy — monetizing openness.** Entrepôt trade, regional headquarters, FX and wealth management: being
   *the node* turns exposure into income.

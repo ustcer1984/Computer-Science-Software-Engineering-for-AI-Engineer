@@ -4,7 +4,7 @@
 > **Chapter:** Processes, Threads & Concurrency
 > **Section:** The two questions people fuse into one word — *are these things composed, or are they running at the same instant?* —
 > and the three execution models that answer them differently: **processes**, **threads**, and **async**. The centrepiece is the
-> **GIL**: why it exists (it's the bill for §2's refcounting), what it actually locks, the asymmetry that makes it harmless for I/O
+> **GIL (Global Interpreter Lock)**: why it exists (it's the bill for §2's refcounting), what it actually locks, the asymmetry that makes it harmless for I/O
 > and fatal for CPU-bound threads, and how **free-threading** (PEP 703) is now paying it off.
 > **Status:** ✅ **finalized 2026-06-16.** The body held at your level — you absorbed §1–§4 and spent the whole session **applying** them to
 > an LLM-eval pipeline. §9 (Applied) captures the three threads you drove: **(9a)** "batch" is three mechanisms wearing one word
@@ -78,7 +78,7 @@ hardware running pieces at the same instant?"* Every cell is a real system you'v
 
 |  | **Not parallel** — one execution unit at a time | **Parallel** — many units firing at once |
 |---|---|---|
-| **Not concurrent** — one task, no composition | **Neither** — a plain synchronous script (your simplest Lambda handler). | **Parallel, not concurrent** *(top-right)* — one task the *runtime* splits across cores: a `np.matmul`/BLAS call, SIMD. You wrote one conceptual task; the library found the parallelism. |
+| **Not concurrent** — one task, no composition | **Neither** — a plain synchronous script (your simplest Lambda handler). | **Parallel, not concurrent** *(top-right)* — one task the *runtime* splits across cores: a `np.matmul`/BLAS call, SIMD (Single Instruction, Multiple Data). You wrote one conceptual task; the library found the parallelism. |
 | **Concurrent** — many independently-progressing tasks | **Concurrent, not parallel** *(bottom-left)* — many tasks, **one** core, interleaved: **your single-thread `asyncio` arena** — 500 connections, 1 thread, 0 parallelism. | **Concurrent AND parallel** — many tasks across many cores: a `multiprocessing` pool, a Go server, Rust `rayon`, C++ threads. |
 
 Two cells deserve a beat, because they're the ones that break the "it's all one slider" intuition:
@@ -86,7 +86,7 @@ Two cells deserve a beat, because they're the ones that break the "it's all one 
 - **Concurrent but not parallel** (bottom-left) is your arena under `asyncio`. One OS thread, one core, *zero* parallelism — and yet it
   juggles hundreds of in-flight WebSocket turns. The concurrency is real and valuable (nothing blocks waiting on a slow LLM call); the
   parallelism is zero. This is the cell people refuse to believe is useful until they've shipped it.
-- **Parallel but not concurrent** (top-right) is a single `np.matmul` that BLAS fans across eight cores. *You* wrote one conceptual task —
+- **Parallel but not concurrent** (top-right) is a single `np.matmul` that BLAS (Basic Linear Algebra Subprograms) fans across eight cores. *You* wrote one conceptual task —
   "multiply these matrices." You didn't structure any concurrency; the library found data-parallelism *inside* your one task and lit up the
   cores. The parallelism is real; the concurrency (in *your* code) is nil.
 
@@ -107,7 +107,7 @@ Two cells deserve a beat, because they're the ones that break the "it's all one 
 | **Unit** | OS process — own address space | OS thread — shared address space | coroutine — a parked frame on the heap (Ch1 §2) |
 | **Scheduled by** | the OS kernel (preemptive) | the OS kernel (preemptive) | **the event loop, in your process** (cooperative) |
 | **Memory model** | **isolated** — separate heaps; share via IPC/pickle | **shared** — one heap, all threads see it | **shared** — one thread, so trivially one heap |
-| **Switch cost** | high (context switch + cache/TLB flush) | medium (kernel context switch) | **tiny** (a function return + loop bookkeeping) |
+| **Switch cost** | high (context switch + cache/TLB [translation lookaside buffer] flush) | medium (kernel context switch) | **tiny** (a function return + loop bookkeeping) |
 | **Create cost** | high (`fork`/spawn, new interpreter) | medium (~MB stack each) | **negligible** (an object) |
 | **How many fit** | ~one per core, sensibly | hundreds–low thousands | **hundreds of thousands** |
 | **Uses many cores?** | **YES — true parallelism** | **NO for Python bytecode (the GIL)** | **NO — one thread by design** |
@@ -212,7 +212,7 @@ flowchart TB
   threads therefore **take turns on one core** — total time ≈ the same as running them one after another, plus switching overhead. **This is
   why threading does not speed up CPU-bound Python.** It's not that threads are fake; it's that the bytecode resource they need is behind a
   single token.
-- **Blocking I/O releases the GIL.** Before a thread blocks on `socket.recv`, `file.read`, a DB round-trip — anything where the kernel will
+- **Blocking I/O releases the GIL.** Before a thread blocks on `socket.recv`, `file.read`, a DB (database) round-trip — anything where the kernel will
   make it wait — CPython **drops the GIL**, lets other threads run, and reacquires it when the I/O completes. So while thread A waits 50 ms
   for a network reply, threads B and C run bytecode. **This is why threading *does* speed up I/O-bound work** even with the GIL: the lock is
   free exactly when you're not using the CPU anyway. The GIL was never the bottleneck for I/O; the network was.
@@ -230,7 +230,7 @@ flowchart TB
 you'd expect: pre-3.2 Python had a "GIL battle" where a CPU-bound thread and an I/O thread on different cores would thrash the lock,
 *degrading* throughput below single-threaded. The modern GIL (Antoine Pitrou's rewrite) fixed the worst of it, but the lesson stands —
 **a lock is a serialization point, and serialization points don't scale.** It's the software echo of the cache-coherence cost from Ch1 §3:
-shared mutable state under contention is where parallelism goes to die, whether the contended thing is a cache line (MESI) or the
+shared mutable state under contention is where parallelism goes to die, whether the contended thing is a cache line (MESI — Modified/Exclusive/Shared/Invalid) or the
 interpreter lock.
 
 ---
@@ -275,7 +275,7 @@ Walk the branches with your own systems in mind:
   driver. Threads release the GIL on each blocking call, so you get real overlap *and* you don't have to rewrite anything async. Simplest
   thing that works.
 - **I/O-bound, high fan-out, async-native libraries → asyncio.** **This is the arena.** Hundreds–thousands of concurrent connections/turns,
-  each mostly *waiting* on an LLM API or a socket. Threads would cost ~MB of stack each and bog down in context switches at that count;
+  each mostly *waiting* on an LLM (large language model) API or a socket. Threads would cost ~MB of stack each and bog down in context switches at that count;
   coroutines cost an object each. One thread, one core, enormous concurrency — exactly the bottom-left cell of §1.
 
 **The hybrid is where your 06-09 insight lands precisely.** An `asyncio` service that mostly waits on I/O but has one CPU-heavy step (say,
@@ -471,7 +471,7 @@ server converts it to GPU efficiency* — the word "batch" doing double duty acr
 
 ### 9b. The `asyncio.gather` failure mode — two different "hangs" (the core re-rank)
 
-Your **scheduler** model was correct (ready-FIFO `deque`; a task runs until it `await`s a *pending* future, then yields; I/O completion is
+Your **scheduler** model was correct (a ready first-in-first-out (FIFO) `deque`; a task runs until it `await`s a *pending* future, then yields; I/O completion is
 marshalled back onto the same ready queue). Your **failure** model fused two failures that behave oppositely:
 
 - **Hang #1 — a task parked on I/O forever** (your scenario: "a response never comes"). Correction: this **does not hang the thread or the
@@ -512,7 +512,7 @@ numpy removes the need *by parallelizing*; orjson/pydantic remove it *by being f
 
 **The eval decision rule** (not "is parse CPU-bound?" but): *is a single parse long enough to stall the loop while other responses wait?* If
 no (the normal sub-ms case) → parse **inline** in the coroutine, a brief GIL blip between awaits. If yes → `run_in_executor(ProcessPool…)`,
-but mind the **pickle tax** (for a fast parse the IPC overhead exceeds the work → multiprocessing would be *slower*).
+but mind the **pickle tax** (for a fast parse the IPC — inter-process communication — overhead exceeds the work → multiprocessing would be *slower*).
 
 > **The ladder you keep (one rule for all CPU work in the pipeline):** (1) don't bother — it's dwarfed by the I/O; (2) push the loop into a
 > C/Rust lib (numpy/pandas · orjson/pydantic/lxml) — kills interpreter overhead; (3) *only* if a single item stalls the loop →
@@ -559,5 +559,5 @@ themselves (your call at the next boundary):
   `CancelledError` *into* a stuck coroutine — and structured concurrency). Directly cashes 9b; the obvious next step if the failure modes
   grabbed you.
 - **Ch3 §3 — Synchronization & races** (locks, queues, deadlock, the data races free-threading exposes — §5's "now it's your job").
-- Or, since this was a fourth straight M01 day, **rotate scope** per the interleave: **M04 Ch1 §2** (data-flow tracing, SWE — your clearest
+- Or, since this was a fourth straight M01 day, **rotate scope** per the interleave: **M04 Ch1 §2** (data-flow tracing, software engineering — your clearest
   gap) or **M12 Ch2 §2** (video models, AI — your stated "all model types" goal).

@@ -10,7 +10,7 @@
 > (monetary offset, crowding out), when the government's debt **captures** the central bank (fiscal dominance), and
 > who is really in charge (the game of chicken, and why independence exists). We read the mix off a **2×2 matrix**,
 > watch the fiscal multiplier swell and collapse depending on what the *other* lever does, and close on the
-> **Singapore inversion** — where an FX-based monetary policy hands the stabilization job to fiscal policy,
+> **Singapore inversion** — where a foreign-exchange (FX)-based monetary policy hands the stabilization job to fiscal policy,
 > tying E03 §4 and E04 together. This **closes Module E04** and sets up **E05 (the global economy)**.
 > **Status:** ✅ **FINALIZED 2026-08-14.** §10 Applied added — the current 2026 US economy read off the policy
 > mix (the fighting-mix quadrant + the saving–investment identity), closing Module E04.
@@ -20,7 +20,7 @@
 **Estimated study time:** 1.5–2 hours including reflection.
 **Prerequisites:** E04 §1 (the budget, T − G, the fiscal multiplier 1/(1−c), crowding out) and §2 (debt dynamics,
 fiscal dominance, own-currency debt); E03 §3 (monetary policy — the Fed model: the policy rate, the reaction
-function, transmission, the ZLB toolkit) and §3 §6 (fiscal dominance, first flagged there); E03 §4 (the MAS model
+function, transmission, the ZLB (zero lower bound) toolkit) and §3 §6 (fiscal dominance, first flagged there); E03 §4 (the MAS (Monetary Authority of Singapore) model
 — monetary policy *as the exchange rate*, needed for §7); E03 §5 (monetary sovereignty & the ZLB). Helpful: E02 §3
 §11 (central-bank independence, time-inconsistency) and E02 §4 (aggregate demand, the multiplier, the output gap).
 
@@ -54,7 +54,7 @@ Line the levers up side by side. They both move aggregate demand, but they are u
 
 | | **Monetary** (E03) | **Fiscal** (E04) |
 |---|---|---|
-| **Who** | the central bank (Fed/ECB/MAS/BoJ) | the government (treasury + legislature) |
+| **Who** | the central bank (Fed/ECB [European Central Bank]/MAS/BoJ) | the government (treasury + legislature) |
 | **Lever** | the overnight interest rate + the balance sheet | taxes (T) and spending (G) |
 | **Speed** | fast — decided in a meeting, changed at the next | slow — budgets, laws, politics |
 | **Aim** | broad demand / inflation (a blunt, economy-wide tool) | can be **targeted** (who is taxed, what is funded) |
@@ -90,7 +90,7 @@ This one picture is the mental model for the whole section.
 Walk the quadrants (fig 1):
 
 - **Loose + Loose (top-right) — maximum stimulus.** Both levers push demand the same way. The clean modern case is
-  **COVID 2020–21**: huge fiscal transfers *plus* zero rates and QE. Enormously effective at preventing a
+  **COVID 2020–21**: huge fiscal transfers *plus* zero rates and QE (quantitative easing). Enormously effective at preventing a
   depression — and, when overdone relative to supply, the road to the **1970s Great Inflation** and the 2021–22
   inflation spike. This quadrant is powerful and dangerous in equal measure.
 - **Tight + Tight (bottom-left) — maximum contraction.** Both levers pull demand down together. Almost always a
@@ -107,7 +107,7 @@ Walk the quadrants (fig 1):
   with the central bank at (or near) the zero lower bound trying to offset via QE. The problem — as §3 explains —
   is that a central bank *already at the floor* can't fully offset, so the recovery came in **weak and slow**.
 
-![A dual-axis chart of the United States from 1977 to 1992. Light blue bars show the federal budget deficit as a share of GDP, rising from about 2.5 percent in the late 1970s to a peak near 6 percent in 1983 and staying elevated through the 1980s, representing a loose fiscal stance. A red line shows the real federal funds rate, which is slightly negative in the late 1970s, then jumps to about 6 percent in 1981 during the Volcker shock and stays between 3 and 6 percent through the mid-1980s before falling back toward zero by 1992, representing a tight monetary stance. Annotations mark the Volcker shock driving real rates to about 6 percent to break inflation, and the Reagan deficits widening at the same time.](diagrams/03-the-policy-mix-fig3.svg)
+![A dual-axis chart of the United States from 1977 to 1992. Light blue bars show the federal budget deficit as a share of GDP (Gross Domestic Product), rising from about 2.5 percent in the late 1970s to a peak near 6 percent in 1983 and staying elevated through the 1980s, representing a loose fiscal stance. A red line shows the real federal funds rate, which is slightly negative in the late 1970s, then jumps to about 6 percent in 1981 during the Volcker shock and stays between 3 and 6 percent through the mid-1980s before falling back toward zero by 1992, representing a tight monetary stance. Annotations mark the Volcker shock driving real rates to about 6 percent to break inflation, and the Reagan deficits widening at the same time.](diagrams/03-the-policy-mix-fig3.svg)
 
 Fig 3 is the "fighting mix" in real data: through the early 1980s the US ran a **loose fiscal** stance (Reagan tax
 cuts and defense spending → deficits widening toward 6% of GDP) straight into a **tight monetary** stance
@@ -171,7 +171,7 @@ That cooperation shades toward a limit case worth naming carefully:
   Bernanke): it is both fiscal (someone gets money to spend) and monetary (the money base rises permanently).
 - **QE + large deficits looks similar but is legally different.** In QE the central bank buys *existing* bonds in
   the *secondary* market (the §2/E03 §5 firewall: never directly from the treasury), and the purchase is
-  understood to be **temporary** (unwound via QT). The macro *result* rhymes with monetary financing, which is
+  understood to be **temporary** (unwound via QT — quantitative tightening). The macro *result* rhymes with monetary financing, which is
   why critics call QE "money-printing" — but the **firewall and the temporariness are the whole point.** The
   distinction that actually matters for inflation is **temporary vs. permanent**: temporary money creation (QE) is
   a loan the system expects back; permanent creation (helicopter) is a gift, more stimulative *and* more
@@ -359,7 +359,7 @@ Reason first; check against a source where noted.
    and tie it to the trilemma choice that made it necessary.
 
 > **Optional — read a real mix off the data (15–20 min).** Pick one episode — **COVID 2020–21**, **Reagan–Volcker
-> (1981–85)**, or **Eurozone austerity (2010–15)** — and place it on the fig-1 matrix yourself: on **FRED**, pull
+> (1981–85)**, or **Eurozone austerity (2010–15)** — and place it on the fig-1 matrix yourself: on **FRED (Federal Reserve Economic Data)**, pull
 > the government deficit/GDP (the fiscal stance) and the *real* policy rate (the monetary stance) for those years,
 > and check which quadrant they fall in. Then name the side effect the matrix predicts (currency, real rates,
 > recovery speed) and see if it shows up. Bring it to the session.
@@ -385,7 +385,7 @@ zero, not high — is what dissolves the next puzzle.
 ### 10b — The dollar paradox: why the dollar is *weak* despite high rates
 
 Your observation: high rates "should" mean a strong dollar (the fig-3 fighting-mix footprint), yet the dollar was
-**weakening** (DXY ~99 on 24 Aug 2026, down ~2.5% over the prior month, off a 4-year low under 97) amid rising
+**weakening** (DXY [US Dollar Index] ~99 on 24 Aug 2026, down ~2.5% over the prior month, off a 4-year low under 97) amid rising
 debt-and-"default" chatter. The resolution is that "high rate → strong dollar" is only **one** channel, and three
 forces are swamping it: **(1)** the *real*-rate attraction is thin (~0% real, vs Volcker's +6%); **(2)** a
 **rising risk premium** — a **fiscal** premium (positive $(r - g)$, 6%-of-GDP deficits) *and* a **Fed-independence**
@@ -454,7 +454,7 @@ strategic/security grounds, E04 §1's public-goods logic — but a lower financi
 > dollar → kills reindustrialization), papered over with tariffs and Fed pressure, with a dollar weakening the
 > **emerging-market way** (a fiscal + credibility premium repricing it) and a trade deficit the accounting holds
 > *open* from the saving side faster than tariffs close it from the goods side. The "good deficit" defense is real
-> but conditional — and the tells to watch are **tradability, ROI, and the fiscal path**, not the investment
+> but conditional — and the tells to watch are **tradability, ROI (return on investment), and the fiscal path**, not the investment
 > headline. *All of it is Mundell–Fleming, which is where E05 begins.*
 
 ---
@@ -513,7 +513,7 @@ genuine terminology difference** you'd trip over.
 - **Coordination and its limits:** any good retrospective on the **2008–09 and 2020** responses (fiscal expansion
   + QE) and on **Eurozone austerity 2010–15** — the two cleanest cooperate-vs-fight case studies of §4.
 - **The Singapore mix:** the **MAS** monetary-policy framework explainers (the exchange-rate-centred system) read
-  alongside the **MOF** budget framework — the two halves of §7's inverted assignment.
+  alongside the **MOF (Ministry of Finance)** budget framework — the two halves of §7's inverted assignment.
 
 ---
 

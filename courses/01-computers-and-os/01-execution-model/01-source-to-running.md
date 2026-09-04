@@ -6,7 +6,7 @@
 > **Status:** ✅ finalized 2026-06-08 — personalized with applied notes from our Q&A (see §10).
 
 **Estimated study time:** 2–3 hours including reflection.
-**Prerequisites:** You can read basic Python and a little C. No prior CS theory needed.
+**Prerequisites:** You can read basic Python and a little C. No prior CS (computer science) theory needed.
 
 ---
 
@@ -104,7 +104,7 @@ int add(int a, int b) { return a + b; }
 gcc -O2 -c add.c -o add.o      # compile to machine code, ahead of time
 ```
 
-The `add.o` is now native machine code for your CPU's ISA. When you run it, the CPU executes it
+The `add.o` is now native machine code for your CPU's ISA (instruction set architecture). When you run it, the CPU executes it
 *directly* — no translator stands in between.
 
 **Consequences (the trade-offs that matter):**
@@ -175,7 +175,7 @@ So Python **is compiled** — just not to machine code. It's compiled to **bytec
 abstract "Python machine" (the CPython **Virtual Machine**). Then the VM — a big loop written in C —
 *interprets* that bytecode, and *that C code* is what's actually been compiled to machine code.
 
-You can see all of this directly. Open a Python REPL and run:
+You can see all of this directly. Open a Python REPL (read-eval-print loop) and run:
 
 ```python
 import dis
@@ -197,7 +197,7 @@ You'll see something like:
 ```
 
 **That is Python bytecode.** `LOAD_FAST` ("push a local variable onto a stack"), `BINARY_OP` ("add the
-top two"), `RETURN_VALUE` — these are the instructions the CPython VM actually executes. Notice they're
+top two"), `RETURN_VALUE` — these are the instructions the CPython VM (virtual machine) actually executes. Notice they're
 *higher-level* than CPU instructions (they know about "local variables" and "+"), but *lower-level* than
 your source. They're the in-between language.
 
@@ -231,9 +231,9 @@ of time:
 
 That per-operation overhead is the price of Python's flexibility and fast edit loop.
 
-**So why is `numpy`/`torch`/your LLM inference fast?** Because the heavy work *isn't done in Python*. When
+**So why is `numpy`/`torch`/your LLM (large language model) inference fast?** Because the heavy work *isn't done in Python*. When
 you call `numpy.dot(a, b)` or run a model, Python spends a few bytecode ops to hand a pointer to a big
-array down into **precompiled C / Fortran / CUDA** code, which does the million multiply-adds at native
+array down into **precompiled C / Fortran / CUDA (Compute Unified Device Architecture)** code, which does the million multiply-adds at native
 speed and hands one result back. Python is the *conductor*; the *orchestra* is compiled native code.
 
 > **The practical heuristic this gives you:** Python is slow at *fine-grained* work (tight loops over
@@ -250,12 +250,12 @@ If interpretation is flexible-but-slow and compilation is fast-but-rigid, can we
 compile *those* to machine code on the fly while the program runs.
 
 You already rely on JITs without knowing it:
-- **JavaScript V8** (Chrome, Node) is a JIT — it's why the JS in your `arena-concept-experiment`
+- **JavaScript V8** (Chrome, Node) is a JIT (just-in-time) — it's why the JS (JavaScript) in your `arena-concept-experiment`
   frontend is far faster than its "scripting language" reputation suggests. (More in M11.)
 - **PyPy** is an alternative Python implementation with a JIT — often 5–10× faster than CPython for
   pure-Python loops.
 - **CPython itself** gained an *experimental* JIT in 3.13 (and a separate experimental free-threaded /
-  "no-GIL" build) — both maturing through 3.14. We'll treat the GIL properly in Ch1 §3 (concurrency);
+  "no-GIL" build) — both maturing through 3.14. We'll treat the GIL (Global Interpreter Lock) properly in Ch1 §3 (concurrency);
   for now just file away: *the execution model is still actively evolving.*
 
 JITs trade a warm-up cost (the first runs are slow while the engine profiles and compiles) for steady-
@@ -369,7 +369,7 @@ Split "create a Lambda" into two things:
 
 - Lambda is **polyglot**: managed runtimes (Python, Node, Java, .NET, Ruby), **custom runtime**
   (`provided.al2023` + a `bootstrap` binary → Go, **Rust**, **C/C++** via the Lambda Runtime API), or
-  **container images** (anything, up to 10 GB). Go/Rust are native AOT — §1's left column.
+  **container images** (anything, up to 10 GB). Go/Rust are native AOT (ahead-of-time) — §1's left column.
 - **But check the bottleneck first.** Your backends are **I/O-bound** — they spend ~95% of wall-clock
   *waiting* on the LLM, Postgres, S3, HF Hub. Python being slow *per CPU op* is irrelevant when the op
   is "await a 3s LLM call." Rust can't make the remote call faster. And the CPU-heavy bits you do run
@@ -384,7 +384,7 @@ Split "create a Lambda" into two things:
   invocation reuses all of that and jumps straight to the handler — your fast refresh.
 - **Low traffic makes it worse, not better:** idle containers get reclaimed, so most real users hit a
   cold path. This was the arena leaderboard "UI hangs for seconds on first load" symptom.
-- **Diagnose before fixing:** CloudWatch `REPORT` → `Init Duration` (cold-only). And beware a **dev DB
+- **Diagnose before fixing:** CloudWatch `REPORT` → `Init Duration` (cold-only). And beware a **dev DB (database)
   that auto-pauses** (Aurora Serverless v2) — it produces the *same* symptom and no Lambda fix helps.
 
 ### 10d. Cold-start mitigations (full plan in `temp/arena-cold-start-latency-plan.md`)
@@ -393,7 +393,7 @@ Split "create a Lambda" into two things:
   ~$0, no cold start. Best for read-heavy, staleness-tolerant endpoints.
 - **Trim init** (lazy imports, smaller package) — free; attacks INIT directly.
 - **SnapStart** (supports Python): snapshot the initialized runtime → big cold-start cut, low cost,
-  keeps Python. Re-init unique state (DB conns/RNG) in a restore hook.
+  keeps Python. Re-init unique state (DB conns/RNG — random number generator) in a restore hook.
 - **Provisioned Concurrency**: keep N envs pre-warmed → cold start *eliminated*, but **ongoing $$**
   (~$9–11/mo for PC=2 @ 512 MB 24/7, x86; ~20% less on ARM; schedule it to cut cost). Use only where
   SnapStart isn't enough.

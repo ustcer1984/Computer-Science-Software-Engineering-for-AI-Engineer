@@ -5,7 +5,7 @@
 > **Section:** Machine code & the CPU — what `call`/`ret` and your arithmetic *actually are* at the silicon level
 > **Status:** ✅ finalized 2026-06-09 — you knew most of the body already; the session ran almost
 > entirely on *your* questions one layer past it (multi-core cache/register topology, GPU memory
-> hierarchy, what CUDA actually is). §11 captures those threads in the form we worked them out.
+> hierarchy, what CUDA (Compute Unified Device Architecture) actually is). §11 captures those threads in the form we worked them out.
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** §1 (machine code, ISA, registers, the fetch–decode–execute loop) and §2 (the call
@@ -26,7 +26,7 @@ llm(prompt)`. This section fills exactly that gap: from logic gates up to "why m
 By the end, these everyday mysteries collapse into one model:
 
 - Why `numpy`/`torch` run ~100× faster than the same loop in pure Python — it's **not** just "C is
-  compiled" (§1's answer); it's **cache locality + SIMD**, and you'll see why.
+  compiled" (§1's answer); it's **cache locality + SIMD (Single Instruction, Multiple Data)**, and you'll see why.
 - Why CPU clock speeds **stopped climbing around 2005** (~3–4 GHz) and the industry pivoted to *more
   cores* — which is the entire reason concurrency (Ch1 §3) became unavoidable rather than optional.
 - Why a **cache miss** can cost more than a thousand arithmetic instructions, and why "big-O" sometimes
@@ -88,7 +88,7 @@ run — your arena pipeline, Postgres, the Linux kernel — is *billions of thes
 richness is in the composition, not the primitives. (This is the same humbling realization as §1: there
 are no "strings" or "functions" down here, only the abstractions we build.)
 
-Two ISA philosophies, worth knowing because it's your AWS bill:
+Two ISA (instruction set architecture) philosophies, worth knowing because it's your AWS bill:
 
 | | **CISC** (x86-64: Intel/AMD) | **RISC** (ARM64: Apple Silicon, AWS Graviton) |
 |---|---|---|
@@ -179,7 +179,7 @@ Read those cycle counts again. If a register access is "reach into your hand" (1
 | L2 | ~12 | a book on the shelf (~12 s) |
 | L3 | ~40 | walk to the next room (~40 s) |
 | **RAM** | **~200–300** | **drive across town (~4–5 min)** |
-| SSD | ~100,000+ | a multi-day shipment |
+| SSD (solid-state drive) | ~100,000+ | a multi-day shipment |
 
 **A RAM access can cost ~200+ cycles** — during which a modern core could have executed *hundreds* of
 arithmetic instructions. So the CPU spends staggering effort *avoiding* RAM by keeping recently/soon-used
@@ -282,7 +282,7 @@ cores. But here's the load-bearing consequence for everything you build:
 > program must be split into *multiple* streams that run at once — **concurrency and parallelism.**
 
 That is *the* reason Ch1 §3 exists, and it ties straight to the threads you've already pulled on (§2
-§12a): a thread is one instruction stream → one core at a time; the GIL serializes Python bytecode so
+§12a): a thread is one instruction stream → one core at a time; the GIL (Global Interpreter Lock) serializes Python bytecode so
 threads don't get you multi-core CPU parallelism; `multiprocessing` and native libraries that drop the
 GIL do. The hardware stopped handing us free speed in ~2005, and **that** is why "make it concurrent" is
 now a skill you have to own rather than a luxury. The free lunch is over; the kitchen gave you more
@@ -295,7 +295,7 @@ stoves instead of a hotter one.
 One more lever, and it's the one closest to your day job. Normal instructions are **SISD** — Single
 Instruction, Single Data: `addq` adds *one* pair of numbers. But a CPU core also has **SIMD** units —
 *Single Instruction, Multiple Data* — that apply one operation to a **whole vector** at once (e.g. add
-eight pairs of floats in one instruction: SSE/AVX on x86, NEON on ARM).
+eight pairs of floats in one instruction: SSE/AVX — Intel's Streaming SIMD Extensions and Advanced Vector Extensions — on x86, NEON on ARM).
 
 > **Why `numpy` crushes a Python loop, part 2 of 2.** Beyond cache-friendliness (§4), `numpy`'s C
 > kernels are **vectorized** — they issue SIMD instructions that chew through 4/8/16 array elements per
@@ -305,7 +305,7 @@ eight pairs of floats in one instruction: SSE/AVX on x86, NEON on ARM).
 > the library 100× faster than my loop."
 
 Now extrapolate. A **GPU** takes SIMD to its logical extreme: thousands of simple ALUs all running the
-*same* operation on *different* data — "SIMT," massively parallel. Matrix multiply (the core of every
+*same* operation on *different* data — "SIMT (Single Instruction, Multiple Threads)," massively parallel. Matrix multiply (the core of every
 neural network) is *embarrassingly* parallel in exactly this way, which is why training and inference
 live on GPUs/TPUs, not CPUs. You don't need the silicon details yet (M12 covers how models map onto this
 hardware), but plant the flag: **the reason AI runs on accelerators is this section's punchline pushed to
@@ -418,7 +418,7 @@ you can re-derive them.
 
 ### 11a. Multi-core: what's private vs shared (ties to §3, §4)
 
-- **Registers — private per core**, and in fact per *hardware thread*. With **SMT/hyperthreading** one
+- **Registers — private per core**, and in fact per *hardware thread*. With **SMT (simultaneous multithreading) / hyperthreading** one
   physical core holds **two full architectural register sets** (so two logical threads don't clobber
   each other's `rip`/`rax`) while *sharing the execution units* — which is why two hyperthreads ≠ 2×
   throughput.
@@ -430,7 +430,7 @@ you can re-derive them.
 ### 11b. Cache coherence — the consequence of private caches (ties to §4, foreshadows Ch3)
 
 - If two cores each cache the same address privately and one writes, the other's copy is stale. Hardware
-  fixes this *for you* with a **coherence protocol (MESI** and variants): cores **snoop** and
+  fixes this *for you* with a **coherence protocol (MESI — Modified/Exclusive/Shared/Invalid — and variants)**: cores **snoop** and
   **invalidate** each other's copies so software sees one coherent memory — but it's maintained by real
   bus/coherence traffic, not free.
 - Two things this plants for **Ch3 (concurrency)**: (1) **False sharing** — two cores writing *different*
@@ -444,12 +444,12 @@ you can re-derive them.
 - **Terminology first:** **SM (Streaming Multiprocessor) ≈ a CPU core** (an H100 has ~130); a **CUDA
   core = one ALU lane** (~128 per SM); a **warp = 32 threads in lockstep (SIMT)**. "16,000 CUDA cores" =
   ~130 real cores × ~128 lanes.
-- **Same private→shared→DRAM ladder:** registers **private** (per-thread, partitioned from a *huge*
+- **Same private→shared→DRAM (dynamic random-access memory) ladder:** registers **private** (per-thread, partitioned from a *huge*
   ~256 KB register file); **L1 + Shared Memory private to each SM**; **L2 shared** across all SMs; then
-  **VRAM** (HBM, ~3 TB/s on H100) shared by everything.
+  **VRAM** (HBM, high-bandwidth memory, ~3 TB/s on H100) shared by everything.
 - **The inversion (the key insight):** a CPU hides RAM latency with **big caches + out-of-order**; a GPU
   hides it with **massive thread oversubscription** — thousands of threads resident at once (hence the
-  giant register file), and when a warp stalls on VRAM the scheduler swaps to a ready warp at **zero
+  giant register file), and when a warp stalls on VRAM (video random-access memory) the scheduler swaps to a ready warp at **zero
   context-switch cost** (all registers already resident). Term: **occupancy** — too many registers per
   thread → fewer resident warps → less latency hiding. So GPU caches are *small relative to compute*; it
   bets on bandwidth + parallelism, not on caching a working set.
@@ -457,7 +457,7 @@ you can re-derive them.
   VRAM data into (~100× faster than VRAM) — no clean CPU analogue (CPU caches are transparent).
 - **Why it lands on your AI work:** fast matmul **tiles** into Shared Memory so values are reused
   (identical math, less data movement — §4's "layout beats big-O" at the limit); **FlashAttention** is
-  exactly this trick for attention. And **LLM decode is usually memory-bandwidth-bound** (you stream
+  exactly this trick for attention. And **LLM (large language model) decode is usually memory-bandwidth-bound** (you stream
   billions of weights past half-idle cores) — which is why VRAM *bandwidth*, not just FLOPs, is the
   headline spec and why **quantization** (less to move) speeds inference. The compute-bound/memory-bound
   split is the framing for all GPU performance reasoning.
@@ -467,12 +467,12 @@ you can re-derive them.
 - **CUDA is NVIDIA's proprietary software platform**, *not* hardware. The collision to keep straight:
   **"CUDA core" = a hardware ALU lane** (marketing); **"CUDA" = the software stack**.
 - **The stack, top to bottom:** the CUDA C/C++ *language* extension (`__global__` kernels, `<<<...>>>`
-  launch) → the `nvcc` *compiler* → the *runtime + libraries* (**cuBLAS**, **cuDNN**, NCCL — the fast
+  launch) → the `nvcc` *compiler* → the *runtime + libraries* (**cuBLAS**, **cuDNN**, NCCL (NVIDIA Collective Communications Library) — the fast
   kernels that actually matter) → the **driver** (the only genuinely "driver-like" layer, at the bottom,
   talking to silicon).
-- **The §1 callback:** `nvcc` compiles kernels to **PTX** — a *virtual* GPU ISA (NVIDIA's bytecode) —
+- **The §1 callback:** `nvcc` compiles kernels to **PTX (Parallel Thread Execution)** — a *virtual* GPU ISA (NVIDIA's bytecode) —
   and the **driver JIT-compiles PTX → SASS** (the real, per-generation, undocumented machine code) at
-  run time. Same "portable IR + JIT" trick as CPython bytecode → native, one layer down; it's why an old
+  run time. Same "portable IR + JIT (just-in-time)" trick as CPython bytecode → native, one layer down; it's why an old
   CUDA binary still runs on a new GPU.
 - **Name:** historically **"Compute Unified Device Architecture,"** but **NVIDIA dropped the expansion
   ~2007–08** — today it's just a brand name.
@@ -482,7 +482,7 @@ you can re-derive them.
   through it. So they're alternative front ends, not an independent stack. In practice AI uses CUDA
   because cuBLAS/cuDNN + the PyTorch/TF ecosystem live there — the **"CUDA moat"** is *software* lock-in,
   not hardware. Your real path: `model.to("cuda")` → PyTorch → cuDNN/cuBLAS → runtime → driver JIT
-  PTX→SASS → SMs.
+  PTX→SASS (Streaming ASSembler) → SMs.
 
 ---
 

@@ -7,7 +7,7 @@
 > server and every async runtime you use. It walks the **five I/O models** (blocking · non-blocking · multiplexing · signal-driven ·
 > asynchronous), the two **concurrency architectures** built on them (thread-per-connection vs the event loop), the **C10k problem** that
 > forced the change, and the **`select` → `poll` → `epoll`** scaling story — then closes the loop to §9a by showing `io_uring` and Windows
-> IOCP as the *completion* model. It is the direct cash-in of Ch3 §2's "the loop's one blocking call is `epoll_wait`."
+> IOCP (I/O completion ports) as the *completion* model. It is the direct cash-in of Ch3 §2's "the loop's one blocking call is `epoll_wait`."
 > **Status:** ✅ **finalized 2026-07-07.** The body held at your level and went untouched — the whole session was one thread into §5, the
 > **`io_uring` completion model**, which you drove with a factory-and-two-warehouses analogy and two sharp mechanical predictions. Both were
 > **well-ranked**: completions are *not* FIFO (out-of-order), and the user-space job is to *route* each completion to its waiter. §9 captures
@@ -23,7 +23,7 @@
 - **Ch3 §1–§2 (concurrency, async):** you derived that async is *one thread, massive concurrency, zero parallelism* (the bottom-left cell),
   that the event loop's **one blocking call per tick is `selector.select()` → `epoll_wait`**, and that a task "parked on I/O" costs zero CPU.
   This section is what's *under* that: what `epoll_wait` is, why it's the one call, and why it beats the alternatives at scale.
-- **§1's GIL note:** a blocking I/O syscall **releases the GIL** because the thread is asleep in the kernel, not running bytecode. That's the
+- **§1's GIL (Global Interpreter Lock) note:** a blocking I/O syscall **releases the GIL** because the thread is asleep in the kernel, not running bytecode. That's the
   fact that makes thread-per-connection *possible* in Python at all (§4) even though the GIL serializes CPU work.
 
 ---
@@ -70,7 +70,7 @@ those two phases between you and the kernel:
 | **Non-blocking** (`O_NONBLOCK`) | returns `EAGAIN` immediately; **you** poll again | blocks briefly during copy | you spin asking "ready yet?" — wasteful alone |
 | **I/O multiplexing** (`select`/`poll`/`epoll`) | **one call blocks on many fds**, wakes on the first ready | you then do the (non-blocking) read | one thread waits for thousands — the server model |
 | **Signal-driven** (`SIGIO`) | kernel sends a signal when ready | you then read | rare; signals are awkward to compose |
-| **Asynchronous** (POSIX AIO, **`io_uring`**, Windows IOCP) | kernel does it | **kernel does the copy too** | you submit, kernel delivers the finished bytes |
+| **Asynchronous** (POSIX AIO [asynchronous I/O], **`io_uring`**, Windows IOCP) | kernel does it | **kernel does the copy too** | you submit, kernel delivers the finished bytes |
 
 The load-bearing split is the last row against the rest. In the first four, *you* still perform the `read` yourself and your thread is
 synchronously involved in phase 2 — these are **synchronous** models. Only the last hands **both** phases to the kernel and just notifies you
@@ -120,7 +120,7 @@ fine up to hundreds or low thousands of connections. Its costs, which you can no
   demand paging (Ch2 §3), that's not 8 MB of RAM each — only the touched pages are resident — but the *kernel* structures (each thread's
   kernel stack, task struct) are real, and 10k threads is real memory plus real bookkeeping.
 - **Scheduling.** The OS scheduler must now time-slice among thousands of threads; each **context switch** costs (§1's ladder: ~µs, plus
-  cache/TLB churn). Most of those threads are *blocked* at any instant, but the ones that wake stampede the scheduler.
+  cache/TLB [translation lookaside buffer] churn). Most of those threads are *blocked* at any instant, but the ones that wake stampede the scheduler.
 - **It doesn't get you parallelism you can use (in Python).** Under the GIL, threads don't run Python in parallel anyway (Ch3 §1) — they
   help *only* because a blocked I/O syscall releases the GIL (§1). So you pay the thread costs to buy concurrency you can get more cheaply.
 
@@ -175,7 +175,7 @@ That single change — the kernel *remembers* your interest set and *maintains* 
 while `select`/`poll` climb. The figure makes the gap concrete:
 
 <!-- FIGURE -->
-![Log-log plot of work per readiness-check call vs number of monitored connections. select and poll rise as a straight O(n) diagonal (the kernel rescans every registered fd on every call), while epoll is a flat O(ready) line (the kernel returns only the fds that fired). A vertical marker at 1024 shows select's FD_SETSIZE wall; a marker at 10,000 shows the C10k point, where select/poll do ~10,000 units of work per call while epoll does ~50. The caption stresses the fix isn't faster hardware — it's not rescanning idle connections.](diagrams/02-blocking-nonblocking-and-multiplexing-fig1.svg)
+![Log-log plot of work per readiness-check call vs number of monitored connections. select and poll rise as a straight O(n) diagonal (the kernel rescans every registered fd on every call), while epoll is a flat O(ready) line (the kernel returns only the fds that fired). A vertical marker at 1024 shows select's FD (file descriptor)_SETSIZE wall; a marker at 10,000 shows the C10k point, where select/poll do ~10,000 units of work per call while epoll does ~50. The caption stresses the fix isn't faster hardware — it's not rescanning idle connections.](diagrams/02-blocking-nonblocking-and-multiplexing-fig1.svg)
 
 At 10k mostly-idle connections (the common case — most clients are between requests), `select`/`poll` do ~10,000 units of bookkeeping *per
 loop iteration* to discover that maybe 50 are ready; `epoll` does ~50. The win isn't a faster CPU — it's **refusing to look at the idle
@@ -189,7 +189,7 @@ connections at all.** A compact comparison:
 | Portability | everywhere (POSIX) | everywhere (POSIX) | Linux-specific (`kqueue` = BSD/macOS; IOCP = Windows) |
 | Used by | legacy / small $n$ | legacy / moderate $n$ | nginx, Redis, `asyncio`, libuv |
 
-Note the portability row — this is §9a again: `select`/`poll` are portable POSIX; the *scalable* primitive is per-OS (`epoll` Linux,
+Note the portability row — this is §9a again: `select`/`poll` are portable POSIX (Portable Operating System Interface); the *scalable* primitive is per-OS (`epoll` Linux,
 `kqueue` macOS/BSD), which is exactly why cross-platform runtimes ship an abstraction layer (**libuv** for Node.js; Python's `selectors`
 module picks the best backend per OS) rather than calling `epoll` directly.
 
@@ -267,7 +267,7 @@ Assembling it against systems you run:
   connections; the GPU work is the CPU-bound part you keep *off* the loop (Ch3 §2's `run_in_executor`, or a separate worker/process). This is
   why one process serves many streams without many threads.
 - **When you deliberately pick threads instead.** Model (A) still wins when the work behind each connection is a **blocking C library with no
-  async version** (a synchronous DB driver, a blocking SDK) — you can't `await` it, so you run it in a thread pool where its blocking syscall
+  async version** (a synchronous DB [database] driver, a blocking SDK — software development kit) — you can't `await` it, so you run it in a thread pool where its blocking syscall
   releases the GIL (§1). "Async all the way down" only works if nothing in the stack blocks the loop.
 
 ---
@@ -281,7 +281,7 @@ Assembling it against systems you run:
   loop on it. Non-blocking mode is the *partner* of multiplexing (you set fds non-blocking so that after `epoll_wait` says "ready" your
   `read` can't accidentally block, especially under edge-triggered), not a replacement for it.
 - **`epoll` is a readiness primitive, not a magic "async file" API.** Classically it works for sockets, pipes, and other pollable fds but
-  **not regular disk files** (a disk read is "always ready" and still blocks on the platter/SSD) — which is one reason `io_uring`, which does
+  **not regular disk files** (a disk read is "always ready" and still blocks on the platter/SSD — solid-state drive) — which is one reason `io_uring`, which does
   real async *disk* I/O, matters beyond just sockets.
 
 > **The keeper for the whole section.** The question was never "how do I make one I/O fast" — it's "**how does one thread wait for thousands
@@ -310,7 +310,7 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 5. **Readiness vs completion, applied.** Map each to §9a: (a) `epoll_wait` returns "fd 7 readable," you call `read(7)`; (b) `io_uring` hands
    you a completion with bytes already in your buffer. Which is reactor, which is proactor, and which one is Windows' *native* model? Then:
    why does `io_uring` reduce syscalls even when the number of I/Os is unchanged (§1's rule)?
-6. **Your pipeline, precisely.** In one paragraph, trace what happens under the hood when your `asyncio` eval pipeline has 2,000 in-flight LLM
+6. **Your pipeline, precisely.** In one paragraph, trace what happens under the hood when your `asyncio` eval pipeline has 2,000 in-flight LLM (large language model)
    API calls and one response arrives: from the socket becoming readable, through `epoll`, to the right coroutine resuming. Name the one
    blocking syscall the whole loop was sitting in.
 
@@ -432,7 +432,7 @@ dispatcher decoupled from the zero-syscall `SQPOLL` knob. Natural follow-ons, yo
   many device round trips, and can you overlap them). The direct continuation and the last core piece of Ch4.
 - **Ch4 §4 — *(if we add it)* zero-copy & the data path** (`sendfile`, `mmap` vs `read`, page cache, `O_DIRECT`) — how the *copy* half of §1's
   two phases gets optimized away.
-- Or **rotate scope** per the interleave: **M04 Ch2 §2** (refactoring in moves, SWE) or **M12 Ch2 §3** (audio/speech/TTS, AI).
+- Or **rotate scope** per the interleave: **M04 Ch2 §2** (refactoring in moves, SWE — software engineering) or **M12 Ch2 §3** (audio/speech/text-to-speech, AI).
 
 <!-- Bilingual key-terms table follows; see authoring-conventions §5. -->
 

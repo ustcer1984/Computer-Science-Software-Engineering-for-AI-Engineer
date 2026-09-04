@@ -3,10 +3,10 @@
 > **Module:** How Computers & Operating Systems Work
 > **Chapter:** Memory
 > **Section:** Automatic memory management — CPython's reference counting, the cycle collector it needs, and why
-> all of it is the deep reason the GIL exists.
+> all of it is the deep reason the GIL (Global Interpreter Lock) exists.
 > **Status:** ✅ **finalized 2026-06-13.** The body held up; the session was you pressure-testing the §7.2 rule
 > ("use `with`, never the GC") against concrete code and a real fab-era image-processing leak — your signature mode,
-> now aimed at the GC. §10 captures the two threads: **(10a)** resource-lifetime-vs-object-lifetime — `with` vs
+> now aimed at the GC (garbage collection). §10 captures the two threads: **(10a)** resource-lifetime-vs-object-lifetime — `with` vs
 > manual `close()` vs GC *from the GC's point of view* (answer: no GC difference; closing ≠ freeing); and **(10b)**
 > the war story — why your `gc.collect()` fix was *also a diagnosis* (the leak must be cyclic), the count-vs-bytes
 > threshold blindness that explains the "~10 images" crash, and **process isolation** as the robust "outlive the leak
@@ -32,7 +32,7 @@ Here's why it's worth your time specifically — three things it will change:
 
 1. **You'll know when memory is actually freed**, which is not "when I'm done with it" and not "at `del`." This is
    the difference between a pipeline that holds 8 GB of intermediate tensors longer than you think and one that
-   doesn't. For someone shipping LLM data pipelines, *when the last reference drops* is a latency-and-cost question,
+   doesn't. For someone shipping LLM (large language model) data pipelines, *when the last reference drops* is a latency-and-cost question,
    not trivia.
 2. **You'll see the one bug class GC can't save you from — reference cycles — and where your own code makes them.**
    Your graph-pipeline design from §10 is directly relevant here, and the answer is a satisfying callback.
@@ -401,7 +401,7 @@ nothing. The reframe from §1: `del` un-sticks one name tag; the object dies onl
 **2. For resource cleanup, use `with`, never the garbage collector.** Because CPython frees deterministically, it's
 tempting to lean on "the file closes when the object dies." Don't — it's a portability trap (§1's note: PyPy won't),
 and even on CPython a stray reference (a cycle, a logged exception holding a frame) can delay it indefinitely. Files,
-sockets, DB connections, locks → context managers (`with open(...) as f:`), which release on block exit regardless of
+sockets, DB (database) connections, locks → context managers (`with open(...) as f:`), which release on block exit regardless of
 refcounts. `__del__` finalizers are **not** reliable cleanup hooks (uncertain timing; historically didn't run on
 cycles at all before PEP 442; can resurrect objects). Treat `__del__` as a last-resort safety net, not a plan.
 
@@ -509,7 +509,7 @@ print("None refcount:", sys.getrefcount(None))   # a huge constant — None is i
 
 For real diagnosis, the two tools to know:
 - **`tracemalloc`** (stdlib) — snapshots of *Python-level* allocations; diff two snapshots to find what's actually
-  growing. This distinguishes a true leak (live objects climbing) from "RSS high but Python memory flat" (§7.3).
+  growing. This distinguishes a true leak (live objects climbing) from "RSS (resident set size) high but Python memory flat" (§7.3).
 - **`gc.get_objects()` / `objgraph`** — when you suspect a cycle or a surprise reference keeping something alive,
   these let you find *what* still points at an object you expected to die.
 
@@ -579,7 +579,7 @@ correction for that count-vs-bytes blindness.
 Alternatives without touching `process()`, ranked by robustness:
 
 1. **Tune, don't force** — `gc.set_threshold(50, 5, 5)` makes automatic collection fire sooner. **Weaker than what
-   you already did**: still count-based, so it's guessing at the wrong variable and can still OOM on few-but-huge
+   you already did**: still count-based, so it's guessing at the wrong variable and can still OOM (out of memory) on few-but-huge
    objects. Your explicit per-loop collect is the *more reliable* form of the same idea, not a worse one.
 2. **Process isolation — the robust answer.** Run `process(image)` in a **child process**
    (`ProcessPoolExecutor(max_tasks_per_child=1)`, or `multiprocessing.Pool(maxtasksperchild=1)`); when the child
@@ -633,9 +633,9 @@ not building cycles / containing the blast radius (10b).
 (who frees the heap) done, the last IOU in Chapter 2 is:
 - **§3 — "Out of memory" for real:** what physically happens when the heap can't grow; the difference between a
   *leak* and *legitimately too much*; virtual memory, paging, and the **OOM killer**; and the concrete one you feel —
-  *why a 16 GB model won't load on a 12 GB GPU*, and what "CUDA out of memory" is actually telling you. That section
+  *why a 16 GB model won't load on a 12 GB GPU*, and what "CUDA (Compute Unified Device Architecture) out of memory" is actually telling you. That section
   ties §1's address space + this section's allocator picture to the hardware limits you already reason about well.
 
-Per the Phase-1 interleave, the parallel threads remain **M04 Ch1 §2 (tracing data flow)** on the SWE side and
+Per the Phase-1 interleave, the parallel threads remain **M04 Ch1 §2 (tracing data flow)** on the SWE (software engineering) side and
 **M12 Ch2 §2 (video — DiT/Sora)** on the AI side — say the word if you'd rather advance one of those instead of
 finishing M01 Ch2 with §3.

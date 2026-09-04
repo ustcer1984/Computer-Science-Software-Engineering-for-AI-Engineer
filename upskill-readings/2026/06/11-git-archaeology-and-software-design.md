@@ -1,7 +1,7 @@
 # Daily Reading — 2026-06-11  ✅ finalized
 
 **Today's two readings (diversified — deliberately *not* AI/GPU this time):**
-1. **CS / tooling** — Git as a *reading & history* tool: `blame` → `log -L` → the pickaxe (`-S` / `-G`) *(this is the entry queued from your M04 Ch1 §1 session — the one confirmed gap there)*
+1. **CS (computer science) / tooling** — Git as a *reading & history* tool: `blame` → `log -L` → the pickaxe (`-S` / `-G`) *(this is the entry queued from your M04 Ch1 §1 session — the one confirmed gap there)*
 2. **Software engineering / architecture** — *A Philosophy of Software Design* (Ousterhout): deep vs shallow modules, fighting complexity *(your #1 actionable gap — monolithic files — and the core architect skill)*
 
 > Why these, and why the pivot: the last two reading days (concurrency+agents, GPU+career) leaned hard into AI/systems — your spike. Today rebalances onto the **horizontal bar** of your T: a tool gap you explicitly flagged (git history) and the single most-cited gap in your profile (code decomposition / modularity). Both are *understanding*-skills, not typing-skills — which is exactly the lane you said you want to grow in. Reading #1 turns git from "save button" into a code-comprehension instrument; reading #2 gives you the vocabulary to *name why* a 2,400-line file is bad and what "better" actually means.
@@ -115,7 +115,7 @@ quadrantChart
 
 **Other ideas worth carrying (each is a one-liner you can apply):**
 - **Information hiding vs. information leakage.** A design decision that shows up in *multiple* modules is leakage — change one, chase the rest. Hide each decision behind one module.
-- **"Define errors out of existence."** The deepest API isn't the one with great error handling — it's the one where the error *can't happen*. (His example: redefine an operation's semantics so the edge case is just normal behavior — e.g. deleting a non-existent thing is a no-op, not an exception.) **Directly relevant to your "LLM reliability" gap**: instead of three layers of JSON-parse fallback, can you design the call so malformed output is structurally impossible (schema-constrained / tool-call output)?
+- **"Define errors out of existence."** The deepest API isn't the one with great error handling — it's the one where the error *can't happen*. (His example: redefine an operation's semantics so the edge case is just normal behavior — e.g. deleting a non-existent thing is a no-op, not an exception.) **Directly relevant to your "LLM (large language model) reliability" gap**: instead of three layers of JSON-parse fallback, can you design the call so malformed output is structurally impossible (schema-constrained / tool-call output)?
 - **Strategic vs. tactical programming.** Tactical = "just make it work now," accreting complexity. Strategic = invest ~10–20% extra continuously in design. The **"tactical tornado"** — the dev who ships fast and leaves a mess — is an anti-pattern. *This is the single most important frame for vibe-coding:* an agent is a tactical tornado by default; **your job is to supply the strategic layer it lacks.**
 - **Comments as design.** Ousterhout argues comments capture intent the code *can't* express; if something is hard to comment, that's a design smell. (Orosz pushes back — prefers comments as "invitations to refactor." Worth forming your own view; you like comparative framing.)
 

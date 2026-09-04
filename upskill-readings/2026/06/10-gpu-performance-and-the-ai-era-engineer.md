@@ -4,7 +4,7 @@
 1. **AI / systems — from first principles** — *Making Deep Learning Go Brrrr From First Principles* (Horace He) *(directly extends yesterday's M01 Ch1 §3 GPU work, and is the conceptual bridge into M01 Ch2 — Memory)*
 2. **Software engineering / career** — *The Next Two Years of Software Engineering* (Addy Osmani, Jan 2026) *(keeps you current; speaks straight to your "full-stack dev **and architect**" goal and your vibe-coding reality)*
 
-> Why these: in §3 you pushed the whole session into **GPU memory hierarchy, latency-hiding, FlashAttention, and why LLM inference is memory-bound**. Reading #1 is the canonical first-principles framework that *names* what you were circling — every kernel is **compute-bound, memory-bandwidth-bound, or overhead-bound** — and gives you the back-of-envelope test to tell which. It's the perfect on-ramp to M01 Ch2 (Memory) and to M12. Reading #2 deliberately switches scope: it's the clearest recent map of how the *engineer's role* shifts as agents do more of the typing — i.e. the job you're actually skilling up for.
+> Why these: in §3 you pushed the whole session into **GPU memory hierarchy, latency-hiding, FlashAttention, and why LLM (large language model) inference is memory-bound**. Reading #1 is the canonical first-principles framework that *names* what you were circling — every kernel is **compute-bound, memory-bandwidth-bound, or overhead-bound** — and gives you the back-of-envelope test to tell which. It's the perfect on-ramp to M01 Ch2 (Memory) and to M12. Reading #2 deliberately switches scope: it's the clearest recent map of how the *engineer's role* shifts as agents do more of the typing — i.e. the job you're actually skilling up for.
 
 > **Finalized note:** the two **"What we worked out"** sections at the bottom are the durable takeaways from our Q&A — read those first on review; the source summaries above are the supporting detail. The big one (#1) is the **energy/power/heat reframing you drove** — the article is all about *time*, you asked what happens when the axis is *joules*.
 
@@ -14,7 +14,7 @@
 
 🔗 https://horace.io/brrr_intro.html
 
-**Why it's worth your time even though it's from 2022.** It's the standard reference in ML-systems for *reasoning* about performance instead of cargo-culting tricks. The framework predates and explains the tools you now use by default — `torch.compile`, Triton, XLA. It's short, first-principles, and exactly your style (you re-derive, you don't memorize).
+**Why it's worth your time even though it's from 2022.** It's the standard reference in ML-systems for *reasoning* about performance instead of cargo-culting tricks. The framework predates and explains the tools you now use by default — `torch.compile`, Triton, XLA (Accelerated Linear Algebra). It's short, first-principles, and exactly your style (you re-derive, you don't memorize).
 
 **The one idea.** Any deep-learning workload spends its time in exactly one of **three regimes**, and the optimization that helps depends *entirely* on which one you're in:
 
@@ -22,7 +22,7 @@
 - **Memory-bandwidth-bound** — time goes to *moving tensors* between global memory (HBM) and the compute units, not computing on them. Adding FLOPs does nothing; you must move **fewer bytes**. ← *this is the LLM-inference-decode regime you reconstructed in §3.*
 - **Overhead-bound** — time goes to *everything else*: Python, the framework, kernel-launch costs. Dominates with **tiny tensors / eager mode**.
 
-**The diagnostic (the back-of-envelope you wanted in §3).** Compare your op's **arithmetic intensity** (FLOPs done per byte moved) against the hardware's ratio of `peak FLOPs ÷ memory bandwidth`. He uses an A100: **~19.5 TFLOP/s** of compute vs **~1.5 TB/s** of bandwidth. If your op does few FLOPs per byte (elementwise ops, activations, the decode step reading weights + KV cache), you're **memory-bound** — the compute units sit idle waiting for data.
+**The diagnostic (the back-of-envelope you wanted in §3).** Compare your op's **arithmetic intensity** (FLOPs done per byte moved) against the hardware's ratio of `peak FLOPs ÷ memory bandwidth`. He uses an A100: **~19.5 TFLOP/s (trillions of floating-point operations per second)** of compute vs **~1.5 TB/s** of bandwidth. If your op does few FLOPs per byte (elementwise ops, activations, the decode step reading weights + KV cache), you're **memory-bound** — the compute units sit idle waiting for data.
 
 <!-- DIAGRAM:START -->
 ![Diagram 1](diagrams/10-gpu-performance-and-the-ai-era-engineer-1.svg)
@@ -45,11 +45,11 @@ flowchart TD
 
 **The single most impactful technique: operator fusion.** `x.cos().cos()` naively is *read x → write tmp → read tmp → write out* = 4 memory trips. Fused into one kernel it's *read x → write out* = 2 trips → ~2× faster, **for free**, with zero change in FLOPs. Key consequence that surprises people: a fused `x.cos().cos()` costs almost the same as a single `x.cos()` — so for memory-bound chains, *which* cheap elementwise op you pick barely matters; **how many memory round-trips you make is everything.**
 
-**The overhead point that should stick.** GPUs are so much faster than the CPU driving them that "in the time Python performs a *single* FLOP, an A100 could have done ~9.75 million." The only reason eager-mode PyTorch isn't crippled: execution is **asynchronous** — Python races ahead queuing kernels while the GPU chews through earlier ones, *hiding* the overhead — but only while kernels stay big enough to hide behind. Tiny kernels expose it.
+**The overhead point that should stick.** GPUs are so much faster than the CPU driving them that "in the time Python performs a *single* FLOP (floating-point operation), an A100 could have done ~9.75 million." The only reason eager-mode PyTorch isn't crippled: execution is **asynchronous** — Python races ahead queuing kernels while the GPU chews through earlier ones, *hiding* the overhead — but only while kernels stay big enough to hide behind. Tiny kernels expose it.
 
 **Connect it to your §3 + the next course chapter.**
-- This *is* the formal version of "GPU inference is memory-bound" you arrived at. **Decode** = read all the weights + KV cache to produce one token → tiny arithmetic intensity → bandwidth-bound. That's why batching and KV-cache tricks (not faster math) speed up serving.
-- **FlashAttention** is literally "memory-bound regime + operator fusion" applied to attention: tile the computation so the N×N attention matrix is *never written to HBM* — it lives in on-chip SRAM. The §3 callback you made (Shared Memory as a software-managed scratchpad) is exactly the mechanism. Paper: [FlashAttention — Dao et al., 2022](https://arxiv.org/abs/2205.14135).
+- This *is* the formal version of "GPU inference is memory-bound" you arrived at. **Decode** = read all the weights + KV (key-value) cache to produce one token → tiny arithmetic intensity → bandwidth-bound. That's why batching and KV-cache tricks (not faster math) speed up serving.
+- **FlashAttention** is literally "memory-bound regime + operator fusion" applied to attention: tile the computation so the N×N attention matrix is *never written to HBM (high-bandwidth memory)* — it lives in on-chip SRAM (static random-access memory). The §3 callback you made (Shared Memory as a software-managed scratchpad) is exactly the mechanism. Paper: [FlashAttention — Dao et al., 2022](https://arxiv.org/abs/2205.14135).
 - **Bridge to M01 Ch2 (Memory):** "moving bytes is the bottleneck, not computing on them" is the *same* lesson the CPU cache hierarchy teaches (cache locality, why a cache miss costs ~100× an L1 hit). GPU HBM↔SRAM is the same story one level up. Hold this thought going into Ch2.
 
 **Questions to pressure-test while you read (your usual style):**
@@ -74,7 +74,7 @@ flowchart TD
 **Connect it to *you* specifically — this article is almost a mirror of your plan.**
 - Your stated method — *"I'll keep vibe coding; what I need is to **read and judge** code with AI help"* — is exactly the "knows when to distrust AI" skill Osmani says becomes the differentiator. Your whole course track (fundamentals → reading code → testing → types → architecture) is the **anti-atrophy** curriculum.
 - "Author → composer" *is* the **architect** goal in your profile. The high-leverage move isn't typing faster; it's owning system design + verification — which is why M07 (Architecture) and M06 (Testing) carry so much weight in your plan.
-- "T-shaped" reframes your interleaved sequence: your **deep spike** is forming (AI/LLM + the GPU-systems intuition you keep showing); the breadth (CS fundamentals, networking, DB, cloud, security, frontend) is the horizontal bar this plan is deliberately building.
+- "T-shaped" reframes your interleaved sequence: your **deep spike** is forming (AI/LLM + the GPU-systems intuition you keep showing); the breadth (computer-science fundamentals, networking, DB [databases], cloud, security, frontend) is the horizontal bar this plan is deliberately building.
 
 **Questions to pressure-test while you read:**
 - Osmani's biggest risk is *skill atrophy from over-trusting AI*. Concretely: where in your current workflow do you **ship AI output you can't fully verify** — and which course module is the direct antidote to that specific blind spot?
@@ -87,7 +87,7 @@ flowchart TD
 
 Operator fusion was the new piece for you; you understood the rest, then flipped the article from **time** to **energy/power/heat** — your physics/failure-analysis lens. The reframing that mattered:
 
-**The one fact:** a FLOP is nearly free; the joules are in *moving the bytes*. Horowitz's ladder (45 nm, order-of-magnitude): FP add ≈ 0.9 pJ · FP mult ≈ 3.7 pJ · on-chip SRAM read ≈ 5 pJ · 10 mm wire ≈ 26 pJ · **off-chip DRAM/HBM read ≈ 640 pJ**. So a DRAM fetch costs **~600–1000× a FLOP** — the energy bill is a *data-movement* bill, even more lopsidedly than the time bill. And the trend is *worse* in energy: per-FLOP energy keeps falling with each node, per-byte-moved energy barely does (same "compute outruns memory" asymmetry as the time roofline, starker).
+**The one fact:** a FLOP is nearly free; the joules are in *moving the bytes*. Horowitz's ladder (45 nm, order-of-magnitude): FP add ≈ 0.9 pJ · FP mult ≈ 3.7 pJ · on-chip SRAM read ≈ 5 pJ · 10 mm wire ≈ 26 pJ · **off-chip DRAM/HBM read ≈ 640 pJ**. So a DRAM (dynamic random-access memory) fetch costs **~600–1000× a FLOP** — the energy bill is a *data-movement* bill, even more lopsidedly than the time bill. And the trend is *worse* in energy: per-FLOP energy keeps falling with each node, per-byte-moved energy barely does (same "compute outruns memory" asymmetry as the time roofline, starker).
 
 **The regimes remap cleanly:**
 - **Compute-bound = the *most energy-efficient* place** — high arithmetic intensity means the expensive DRAM read is amortized over many cheap FLOPs.

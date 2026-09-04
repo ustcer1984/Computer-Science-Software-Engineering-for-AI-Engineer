@@ -4,11 +4,11 @@
 > **Module:** E03 — Money, Banking & Monetary Policy
 > **Section:** the **third and final central-bank model** of E03, and the piece that **completes the trilemma
 > triangle**. §3 (the Fed) and §4 (MAS) each took *two corners* of the impossible trinity and gave up the
-> third: the Fed keeps an independent rate + free capital and **floats**; MAS keeps free capital + a managed
+> third: the Fed keeps an independent rate + free capital and **floats**; MAS (Monetary Authority of Singapore) keeps free capital + a managed
 > currency and **gives up the rate**. The **People's Bank of China (PBoC)** takes the corner *neither* chose —
 > it keeps **both** an independent interest rate **and** a managed exchange rate, and pays the trilemma's bill
 > by giving up the third corner: **free movement of capital**. That single choice explains everything
-> downstream — **capital controls**, the historical **compulsory FX surrender (强制结汇)** that built the
+> downstream — **capital controls**, the historical **compulsory FX (foreign exchange) surrender (强制结汇)** that built the
 > largest reserve pile in history, an FX regime that is neither a float nor a hard peg, and a monetary toolkit
 > that looks nothing like the Fed's. This is the exact inverse of the open-capital, freedom-of-contract
 > Singapore you met in §4 §10c. It closes E03 and points to E04 (fiscal policy) and E05 (exchange rates &
@@ -39,7 +39,7 @@ trilemma at all.
 Second, the **local/regional lens goes both ways.** You live in Singapore's *open-capital* world, where you can
 hold USD, wire money abroad, and price a contract in any currency (§4 §10c). China is the **mirror image** — a
 world of quotas, surrender requirements, and controlled gates. Half of Asia's economic news — the yuan
-"fixing," the RRR cut, the reserve number, the capital-flight scare — is unreadable without this model, and it
+"fixing," the RRR (reserve requirement ratio) cut, the reserve number, the capital-flight scare — is unreadable without this model, and it
 is the one whose *mechanics* differ most from everything you've built so far.
 
 Third, **China is where the trilemma stops being a diagram and starts drawing blood.** MAS's asymmetry (§4
@@ -131,7 +131,7 @@ parity** and a **trading band** around it.
   basket; China's is a *daily-reset*, narrow ±2% around a *daily* fix. Both are "managed floats," operated very
   differently.)
 
-**CNY vs CNH — a consequence worth naming.** Because the onshore market is walled off, an **offshore** yuan
+**CNY (onshore renminbi) vs CNH (offshore renminbi) — a consequence worth naming.** Because the onshore market is walled off, an **offshore** yuan
 market grew up in Hong Kong (**CNH**), where the yuan trades freely. **CNY** (onshore, managed) and **CNH**
 (offshore, free) are the *same currency* at *two prices*. When the two diverge, it tells you which way the
 *uncontrolled* market wants to go — a pressure gauge the controls would otherwise hide.
@@ -246,7 +246,7 @@ neutrality principle you reasoned about in §3 §10.
 
 **Structural / targeted tools (a whole extra category):**
 
-- **Relending & targeted facilities (再贷款, PSL).** The PBoC lends cheaply to banks *earmarked* for favored
+- **Relending & targeted facilities (再贷款, PSL — Pledged Supplementary Lending).** The PBoC lends cheaply to banks *earmarked* for favored
   sectors — small business, agriculture, affordable housing, "green," strategic industry. This is **credit
   allocation by design**: monetary policy pointed not just at *how much* credit but *where it goes*.
 
@@ -254,7 +254,7 @@ neutrality principle you reasoned about in §3 §10.
 
 - **It is *not* independent.** The PBoC is a **ministry-level body under the State Council** — an arm of the
   government, not an independent authority. Monetary policy is subordinate to the Party-state's growth,
-  employment, and industrial goals. Contrast the Fed's and ECB's hard-won *operational independence* (E02 §3
+  employment, and industrial goals. Contrast the Fed's and ECB (European Central Bank)'s hard-won *operational independence* (E02 §3
   §11). This is a *feature* of the model, not a flaw in it: China chose a monetary authority that executes
   national policy rather than one insulated from it.
 - **It is deliberately allocative.** In §3 §10 you worked out *why* the Fed buys *neutral* Treasuries — to avoid
@@ -281,7 +281,7 @@ the trilemma bit, China paid the bill it had always chosen to pay: *less* free c
 
 **RMB internationalization — the slow, deliberate half-opening.** China wants the yuan to be a global trade and
 reserve currency — a source of prestige and power, and insulation from USD dominance. The yuan was added to the
-IMF's **SDR** basket in 2016; cross-border trade is increasingly RMB-settled. **But** a global reserve currency
+IMF (International Monetary Fund)'s **SDR** basket in 2016; cross-border trade is increasingly RMB-settled. **But** a global reserve currency
 must be *freely usable* — which needs an *open* capital account — which the trilemma says China cannot have while
 keeping both its rate and its managed currency. So China threads the needle with the **offshore CNH** market and
 the metered **Connect** pipes (§2–§3): internationalize *just enough*, through *controllable channels*, without
@@ -419,7 +419,7 @@ You had the Fed and MAS pinned — **Fed = dual mandate** (price stability + max
 stability only** (pursued through the exchange rate) — and asked what the PBoC's is. It's the broadest of the
 three, and the interesting part is *how*.
 
-**The legal mandate.** Under the *Law of the PRC on the People's Bank of China* (1995, amended 2003): *to
+**The legal mandate.** Under the *Law of the PRC (People's Republic of China) on the People's Bank of China* (1995, amended 2003): *to
 maintain the **stability of the value of the currency** (货币币值稳定), and thereby to promote economic growth.*
 That reads dual (stability + growth) — but two things set it apart:
 
@@ -465,10 +465,10 @@ classification (§7). Most of the developed world clusters at the Fed corner; a 
 
 | Body (economy) | Mandate | Main policy & toolkit | vs Fed — key difference |
 |---|---|---|---|
-| **Federal Reserve** (USA) | **Dual**: price stability + max employment | Policy rate (floor system), OMO, QE/QT, forward guidance | — *the reference* |
+| **Federal Reserve** (USA) | **Dual**: price stability + max employment | Policy rate (floor system), OMO, QE/QT [quantitative easing/tightening], forward guidance | — *the reference* |
 | **ECB** (Eurozone) | **Single primary**: price stability (~2%) | Policy rates, APP/PEPP (QE), TLTRO, TPI | Single (not dual) mandate; **one rate for 20 sovereigns** → fragmentation risk |
 | **Bank of England** (UK) | Price stability (2%); *then* support growth & employment | Bank Rate, QE/QT, forward guidance | Explicitly **hierarchical**; annual remit letter from the Treasury |
-| **Bank of Japan** | Price stability (2%) | Policy rate, **YCC** (2016–24), **QQE**, ETF buying, negative rates (all ended 2024) | Fought **deflation** for ~30 yrs; pioneered QE & YCC; only now normalizing |
+| **Bank of Japan** | Price stability (2%) | Policy rate, **YCC** (2016–24), **QQE**, ETF [exchange-traded fund] buying, negative rates (all ended 2024) | Fought **deflation** for ~30 yrs; pioneered QE & YCC; only now normalizing |
 | **BoC · RBA · RBNZ · Riksbank · Norges · BoK** | Inflation target (mostly 2%) | Policy rate, QE as needed, forward guidance | Same model. **RBNZ** = original inflation-targeter (1990); **RBA** carries a fuller employment leg |
 
 *Edge cases — float, but not "pure" Fed:*
@@ -502,7 +502,7 @@ sophisticated version (a discretionary band, not a rigid peg). **Group 3 is the 
 needs the whole capital-controls apparatus, so only large or tightly-governed states run it by design; others
 only *visit* it in a crisis. The two most instructive hybrids are the **SNB** (a floater borrowing MAS's
 appreciation-fighting tool) and **India** (parked *between* the Fed and PBoC corners, holding partial controls
-to keep a little of both). (The **IMF, BIS, and World Bank** are *not* on the list — they don't set monetary
+to keep a little of both). (The **IMF, BIS (Bank for International Settlements), and World Bank** are *not* on the list — they don't set monetary
 policy or issue a currency; they're lenders/forums/standard-setters.)
 
 #### Abbreviation key (the part you asked for)

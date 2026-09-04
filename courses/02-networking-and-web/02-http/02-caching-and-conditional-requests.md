@@ -28,7 +28,7 @@
 
 Every response in §1 carried a hidden question the ecosystem was waiting to ask: *can I reuse this, and
 for how long?* Caching is HTTP's answer, and it is the highest-leverage performance feature the protocol
-has. Ch1 gave you the latency budget — a fresh request pays for DNS, a TCP handshake, a TLS handshake, and
+has. Ch1 gave you the latency budget — a fresh request pays for DNS, a TCP handshake, a TLS (Transport Layer Security) handshake, and
 transfer, and none of it beats the speed of light. **A cache hit erases that entire budget.** The fastest
 possible request is the one that never leaves the machine; the second fastest is the one that goes out,
 learns "nothing changed," and comes back with an empty body in a single round-trip.
@@ -37,7 +37,7 @@ So this section is pitched where caching becomes an **architecture and correctne
 header you copy from Stack Overflow. Two things make it worth real attention:
 
 1. **Caching is correctness-critical, not just performance.** A wrong `Cache-Control` doesn't make things
-   slow — it serves **stale or private data to the wrong person**. A CDN that caches a logged-in user's
+   slow — it serves **stale or private data to the wrong person**. A CDN (Content Delivery Network) that caches a logged-in user's
    dashboard and hands it to the next visitor is a real, shipped class of breach. Getting the *directives*
    right is a security decision.
 2. **Two mechanisms, one machine.** The same conditional-request machinery (`If-None-Match` / `If-Match`
@@ -176,7 +176,7 @@ Cache-Control: max-age=3600          ← and here's a fresh lifetime
 ```
 
 That exchange is one round-trip and a few hundred bytes, versus re-downloading the whole asset. On a
-250 ms intercontinental RTT it turns a "download 200 KB" into "confirm and move on."
+250 ms intercontinental RTT (round-trip time) it turns a "download 200 KB" into "confirm and move on."
 
 **Strong vs weak ETags.** A validator prefixed `W/` (`ETag: W/"abc"`) is **weak** — it promises the two
 representations are *semantically equivalent*, not byte-identical (e.g. same content, different gzip level
@@ -402,7 +402,7 @@ The real-world calls, most of which you'll recognize once named:
 6. The cache now stores a **separate entry per distinct `User-Agent` string** — and there are effectively
    unlimited UA (user-agent) strings — so the **hit rate collapses** and almost every request goes to origin. It's a
    *performance* bug because every client still gets a *correct* response (the content didn't actually
-   depend on UA); it's just that caching stopped helping.
+   depend on UA (user-agent)); it's just that caching stopped helping.
 7. Because the **URL changes whenever the content changes** (the hash is derived from the bytes), an old
    URL's content is *immutable by construction* — it will never mean anything different — so a copy cached
    forever can never be wrong. A new build emits a new filename; the old one simply stops being requested.
@@ -528,7 +528,7 @@ The payoff that makes it click — these AWS pieces are **the same idea speciali
 
 So **"load balancer," "API gateway," and "CDN" are not alternatives to a reverse proxy — they *are* reverse
 proxies**, each tuned for one of the jobs above (and real products blur the lines: CloudFront caches *and*
-routes; an ALB balances *and* terminates TLS).
+routes; an ALB (Application Load Balancer) balances *and* terminates TLS).
 
 > Keeper: **a forward proxy fronts the client (represents the requester); a reverse proxy fronts the server
 > (represents the origin).** Everything he deploys as a load balancer, API gateway, or CDN is a reverse

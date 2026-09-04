@@ -189,7 +189,7 @@ The verbs encode intent; picking the right one is an API-design call with real c
   send — a real data-loss bug. `PATCH` is usually *not* idempotent (e.g. a JSON-Patch "append"), so it
   needs the same retry care as `POST`.
 - **`GET` with side effects: never.** (See §2's crawler disaster.) If it changes state, it is not a `GET`.
-- **`OPTIONS` and CORS preflight.** The browser mechanism you'll meet in frontend work: before a
+- **`OPTIONS` and CORS (Cross-Origin Resource Sharing) preflight.** The browser mechanism you'll meet in frontend work: before a
   "non-simple" cross-origin request, the browser sends an automatic `OPTIONS` **preflight** asking the
   server which origins/methods/headers are allowed; only if the response's `Access-Control-Allow-*`
   headers permit it does the real request go. It's `OPTIONS` doing its "what can I do here?" job. (Ties
@@ -381,7 +381,7 @@ thing:
   real-world "REST API" is Level 2** — precisely this section's contract — and L3 ("true" REST) is rare.
   GitHub and Stripe are polished L2.
 - REST is only *one* style over HTTP; the siblings — **RPC** (gRPC), **GraphQL**, **SOAP** — all ride
-  HTTP too and are not REST. The taxonomy is *HTTP API* (umbrella) → *REST / RPC / GraphQL / SOAP*.
+  HTTP too and are not REST. The taxonomy is *HTTP API* (umbrella) → *REST / RPC (Remote Procedure Call) / GraphQL / SOAP*.
 - **The actual source of the confusion, named:** **AWS API Gateway offers two product types literally
   called "REST API" and "HTTP API,"** and that dropdown is a **cost/feature tier**, *not* the
   architectural distinction: the "REST API" product is older and fuller-featured (API keys, usage plans,
@@ -406,7 +406,7 @@ he'd read "browser safety feature" and it felt cosmetic on the backend. The refr
   **CORS is the server's opt-in *relaxation* of that wall**, via `Access-Control-Allow-*` headers — it
   opens a hole, it doesn't add a restriction.
 - **Why enforcement must be in the browser:** to the server, three requests are identical HTTP —
-  legit-app JS, `evil.com` JS, and `curl`. Only the **browser** knows the *origin of the calling script*
+  legit-app JS (JavaScript), `evil.com` JS, and `curl`. Only the **browser** knows the *origin of the calling script*
   and holds the credentials, so only the browser can gate on it. Your backend just **publishes a
   permission slip** (the headers); that's why it feels like backend busywork — you aren't enforcing
   anything and aren't the one being protected.
@@ -481,7 +481,7 @@ foundational security principle from first principles.**
   status <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status>
 - RFC 9110 — *HTTP Semantics* (the current authoritative spec; safe/idempotent/cacheable definitions) —
   <https://www.rfc-editor.org/rfc/rfc9110.html>
-- IETF draft — *The Idempotency-Key HTTP Header Field* (standardizing the Stripe pattern) —
+- IETF (Internet Engineering Task Force) draft — *The Idempotency-Key HTTP Header Field* (standardizing the Stripe pattern) —
   <https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/>
 - Stripe — *Idempotent requests* (the canonical real-world design) —
   <https://docs.stripe.com/api/idempotent_requests>

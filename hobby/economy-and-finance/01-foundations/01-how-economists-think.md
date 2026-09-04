@@ -122,7 +122,7 @@ non-obvious, second-order consequences — incentives reshape behaviour in ways 
   the bounty → more cobras. The incentive was real; the response was not the one intended.
 - **Rent control** caps rents to help tenants → reduces the incentive to build or maintain rental housing →
   long-run shortage and decay. The policy's *stated* goal and its *incentive* point in opposite directions.
-- **Singapore's COE / vehicle quota and ERP congestion pricing**: instead of *banning* cars, price them — a
+- **Singapore's COE (Certificate of Entitlement) / vehicle quota and ERP (Electronic Road Pricing) congestion pricing**: instead of *banning* cars, price them — a
   certificate to own one, and a road toll that *rises with congestion*. This is incentives used as a scalpel:
   change the price, let people re-optimize. (We'll meet this as "internalizing an externality" in §3.)
 
@@ -212,7 +212,7 @@ Read it like a feasibility boundary (because that's what it is):
   so the *more* butter you already make, the *more* guns you sacrifice for each extra unit — **increasing
   opportunity cost**, the economic version of diminishing returns.
 
-> **Physics lens:** the PPF is a **Pareto frontier** — the boundary of the feasible set. Points inside are
+> **Physics lens:** the PPF (production possibility frontier) is a **Pareto frontier** — the boundary of the feasible set. Points inside are
 > dominated; points on it are non-dominated (can't improve one axis without hurting the other); points
 > outside violate the constraint. Its slope is the *marginal rate of transformation*, i.e. the local
 > opportunity cost — the trade-off ratio at that operating point. You've drawn this exact object whenever
@@ -389,7 +389,7 @@ marginalism. Marginalism scales to the global problem fine.
 
 **Your short-vs-long-term example is *inside* the rational model, not a deviation from it:**
 - Opportunity cost is **horizon-agnostic** — the opportunity cost of spending now *is* the discounted future
-  return forgone. Saving / studying / investing = `MB = MC` where benefits are discounted future flows (NPV).
+  return forgone. Saving / studying / investing = `MB = MC` where benefits are discounted future flows (NPV — net present value).
 - Formally it's the **intertemporal Euler equation** — a first-order condition on *lifetime* utility; the
   economics of **optimal control / a Bellman equation**. Optimize the *integral over the whole trajectory*,
   not the instantaneous term.

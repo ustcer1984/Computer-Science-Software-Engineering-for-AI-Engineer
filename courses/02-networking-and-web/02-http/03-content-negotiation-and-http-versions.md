@@ -166,7 +166,7 @@ and does it ever reach your desk as an application developer? Both are worked in
 - **But requests on a 1.1 connection are still strictly serial** — request, wait for full response, next.
   **Pipelining** (send the next request before the first response arrives) was specified but is effectively
   dead: it forced responses back **in order**, so one slow response blocked all the ready ones behind it —
-  **HOL blocking at the HTTP layer.** Browsers worked around it by opening **\~6 parallel TCP connections per
+  **HOL (head-of-line) blocking at the HTTP layer.** Browsers worked around it by opening **\~6 parallel TCP connections per
   origin** (and "domain sharding" across extra hostnames for more) — brute force that multiplies handshakes
   and congestion-control state.
 
@@ -235,7 +235,7 @@ layer down to the **TCP** layer — which is where HTTP/3 goes to kill it.
 ## 7. HTTP/3 + QUIC: no head-of-line blocking left
 
 HTTP/3 (2022) keeps HTTP/2's semantics and multiplexing but **replaces the transport underneath**: instead
-of TCP+TLS it runs on **QUIC** (your Ch1 §7 acquaintance), a transport built on **UDP**.
+of TCP+TLS (Transport Layer Security) it runs on **QUIC** (your Ch1 §7 acquaintance), a transport built on **UDP**.
 
 - **Streams are independent at the transport layer.** QUIC understands streams *itself*, so a lost packet
   stalls **only the stream it belonged to** — the others keep flowing. **TCP head-of-line blocking is gone.**
@@ -373,7 +373,7 @@ $ dig +short -t HTTPS www.google.com
 The `HTTPS` RR (resource record, of the SVCB — Service Binding — family) advertises supported protocols in DNS — Cloudflare listing `h3` first,
 Google `h2` first — so the browser can know *before it connects*, at zero extra cost.
 
-**2 — The TLS handshake: ALPN. This is where it actually gets decided.** In the ClientHello the client
+**2 — The TLS handshake: ALPN (Application-Layer Protocol Negotiation). This is where it actually gets decided.** In the ClientHello the client
 lists what it speaks; the server picks one and echoes it back:
 
 ```console
@@ -458,13 +458,13 @@ a migration. You will genuinely never branch on "if HTTP/2."
 3. **Real-time — the sharpest leak, and closest to your work (Ch4).** **SSE (Server-Sent Events) was crippled under HTTP/1.1**:
    each event stream consumed one of the \~6 per-origin connections, so a few open tabs starved the site.
    Under HTTP/2 it is one stream among many and that constraint essentially vanishes — **the version
-   changes whether SSE is a viable design at all.** Meanwhile **WebSockets do not multiplex over HTTP/2** by
+   changes whether SSE (Server-Sent Events) is a viable design at all.** Meanwhile **WebSockets do not multiplex over HTTP/2** by
    default (RFC 8441 exists; support is uneven), so a WebSocket still occupies a whole connection either
    way; and **gRPC mandates HTTP/2** — choose that framework and you have chosen a version.
 4. **Header and cookie weight.** HPACK compresses repeated headers on h2/h3, but oversized cookies still
    cost you on 1.1 and can trip **`431 Request Header Fields Too Large`**. Keeping headers small is
    application-side.
-5. **The AWS configuration you actually own.** Client→CloudFront/ALB may be h2/h3 while **ALB→your target
+5. **The AWS configuration you actually own.** Client→CloudFront/ALB may be h2/h3 while **ALB (Application Load Balancer)→your target
    commonly still speaks HTTP/1.1** (the target group's protocol version is a setting — HTTP1/HTTP2/gRPC).
    So "we enabled HTTP/2" may describe only the first hop. That is usually your IaC, not someone else's.
 6. **Debugging.** *"Slow only on mobile"* → TCP head-of-line blocking under h2, fixed by h3. *"Works for me,

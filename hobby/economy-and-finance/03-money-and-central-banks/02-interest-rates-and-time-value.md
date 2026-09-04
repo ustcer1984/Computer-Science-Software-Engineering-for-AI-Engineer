@@ -167,7 +167,7 @@ compare against is your **cost of capital** (the return you could get elsewhere 
 opportunity cost of §1). The rate at which $NPV = 0$ is the **internal rate of return (IRR)**, the
 project's own break-even yield. This is the exact machinery behind the "serve below cost now for a bigger
 payoff later" logic you built for the AI labs in E01 §4 §9 — *static single-period* thinking says shut down;
-*dynamic NPV* thinking says keep going if the discounted future profits clear the bar.
+*dynamic NPV (net present value)* thinking says keep going if the discounted future profits clear the bar.
 
 ---
 
@@ -199,7 +199,7 @@ Two refinements that matter for reading the news:
   cheaper dollars) — one reason surprise inflation is politically explosive.
 - **You can observe the real rate directly.** Governments issue **inflation-protected bonds** (US **TIPS**,
   UK linkers) whose payments rise with the price index, so their quoted yield *is* a real yield. The gap
-  between an ordinary Treasury yield and the matching TIPS yield is the **breakeven inflation rate** — the
+  between an ordinary Treasury yield and the matching TIPS (Treasury Inflation-Protected Securities) yield is the **breakeven inflation rate** — the
   market's live forecast of average inflation over that horizon. That is a genuinely useful number: it is
   the bond market telling you what it expects §2's price level to do.
 
@@ -415,7 +415,7 @@ Reason first; check against a source where noted.
 
 ## 9. Optional: see the price of time on live data (15–20 min)
 
-- **The yield curve, today.** The US Treasury publishes the **daily par yield curve**; or on FRED plot the
+- **The yield curve, today.** The US Treasury publishes the **daily par yield curve**; or on FRED (Federal Reserve Economic Data) plot the
   3-month (`DGS3MO`), 2-year (`DGS2`), and 10-year (`DGS10`) on one chart. Is it upward-sloping, flat, or
   inverted right now?
 - **The recession signal.** Plot **`T10Y2Y`** (10y minus 2y) and switch on FRED's recession shading. Find
@@ -469,7 +469,7 @@ found a genuine, live lever once relocated:
   it shrinks the stock of duration the market must absorb → **compresses the term premium** (§4) → **long
   yields fall.** This is not hypothetical: it is the 2024 **Activist Treasury Issuance (ATI)** debate
   (Stephen Miran & Nouriel Roubini), who argued Treasury's tilt toward bills lowered the 10-year yield by
-  roughly a quarter-point — critics called it **"stealth QE."**
+  roughly a quarter-point — critics called it **"stealth QE (quantitative easing)."**
 - **But it is self-defeating for the stated purpose**, for three stacked reasons: **(1) direction** —
   lowering long yields *is easing itself* (cheaper mortgages/credit), a **substitute** for a Fed cut, not a
   reason the Fed should cut; **(2) a false signal** — an inversion manufactured by *supply* is one the Fed
@@ -482,7 +482,7 @@ found a genuine, live lever once relocated:
 - **Footnote — the tool that *does* pin a long yield exists, but it is the central bank, not the
   government:** **Yield Curve Control (YCC)**, where the central bank promises to buy unlimited bonds to hold
   a chosen long yield. The **Fed ran a version 1942–51** (to finance WWII debt) and the **Bank of Japan**
-  ran explicit YCC 2016–24 — the *antithesis* of the market-pricing-plus-independence we started from.
+  ran explicit YCC (yield curve control) 2016–24 — the *antithesis* of the market-pricing-plus-independence we started from.
 
 ### 10c. "So the inversion is the market pressuring the Fed to cut?" — no: a forecast, not pressure
 
@@ -622,4 +622,4 @@ Fed actually sets the short-term policy rate, the **reaction function** the mark
 the transmission mechanism from that one rate out to the whole curve and the economy, and how inflation
 targeting and QE work (now that §1 told you *why* QE didn't do what the multiplier predicted). Then **§4**
 contrasts the whole standard model with Singapore's unusual **exchange-rate-based** monetary policy — where
-the MAS steers the currency, not the interest rate, and the price it manages is a different one entirely.
+the MAS (Monetary Authority of Singapore) steers the currency, not the interest rate, and the price it manages is a different one entirely.

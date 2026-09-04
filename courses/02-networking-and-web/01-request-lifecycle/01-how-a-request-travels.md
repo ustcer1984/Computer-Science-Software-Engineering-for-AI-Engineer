@@ -22,7 +22,7 @@
 You ship HTTP APIs, API Gateway, and WebSockets every day, and they work. This module's job is to
 convert that working intuition into **mechanism you can budget and debug** — so that "the API is
 slow" becomes "we're paying three extra round-trips because connections aren't being reused," and "it
-works locally but not in prod" becomes "split-horizon DNS" or "an idle NAT dropped the socket."
+works locally but not in prod" becomes "split-horizon DNS" or "an idle NAT (Network Address Translation) dropped the socket."
 
 M01 built the single machine from the bottom up (execution → memory → concurrency → I/O & syscalls).
 This module connects machines. The organizing idea is the one you already earned in **M01 Ch4 §3**:
@@ -85,7 +85,7 @@ flowchart TB
 </details>
 <!-- DIAGRAM:END -->
 
-*Each layer adds its own header around the payload it's handed. Your `GET` is wrapped by TLS, then
+*Each layer adds its own header around the payload it's handed. Your `GET` is wrapped by TLS (Transport Layer Security), then
 TCP (which port? which byte-offset?), then IP (which host?), then the link frame (which next hop?).
 The receiver unwraps in reverse. A "layer-N device" is one that reads down to layer N's header: a
 switch reads the frame (L2), a router reads IP (L3), a load balancer reading ports is L4, one reading
@@ -193,7 +193,7 @@ before any software:
 
 $$\text{RTT}_{\min} \approx \frac{2 \times \text{distance}}{\frac{2}{3}c}$$
 
-- New York ↔ London (\~5,600 km): floor ≈ **56 ms** RTT. Real-world: \~70–80 ms.
+- New York ↔ London (\~5,600 km): floor ≈ **56 ms** RTT (round-trip time). Real-world: \~70–80 ms.
 - Singapore ↔ US-East (\~15,000 km): floor ≈ **150 ms** RTT. Real-world: \~200+ ms.
 - Same data-centre / same region: **< 1 ms**.
 
@@ -235,7 +235,7 @@ request goes out. Remember it for the budget.
 
 **TCP vs UDP — the fork.** **UDP** is the other transport: fire-and-forget datagrams, **no handshake,
 no ordering, no retransmit, no congestion control** — just "send this packet, maybe it arrives." It
-trades reliability for zero setup latency and no HOL blocking. Use TCP when you need every byte in
+trades reliability for zero setup latency and no HOL (head-of-line) blocking. Use TCP when you need every byte in
 order (HTTP, databases); use UDP when you need speed and can tolerate/handle loss yourself (DNS,
 real-time video/VoIP, games) — and, as we'll see, as the *foundation QUIC builds its own smarter
 reliability on top of.*
@@ -389,7 +389,7 @@ Read off the levers (all four from M01 Ch4 §3, now concrete):
 
 Make the invisible round-trips visible on your own machine.
 
-1. **The DNS walk:** `dig +trace api.github.com` — watch it descend root → TLD → authoritative. Then
+1. **The DNS walk:** `dig +trace api.github.com` — watch it descend root → TLD (Top-Level Domain) → authoritative. Then
    `dig api.github.com` twice and compare the reported query time (the second is cache-warm). Look at
    the TTL.
 2. **The phase breakdown of one request** — the single most useful command here:
@@ -426,7 +426,7 @@ mobile networks moved** (T-Mobile US runs IPv6-only internally with 464XLAT; lar
 v6-heavy), while **enterprise and cloud *infrastructure* lag**. That asymmetry is exactly what you see
 on AWS — the client side of the world is half-v6, the server side you build on is still v4-first.
 
-**Why AWS shows IPv4 everywhere — and started charging for it.** A VPC is IPv4-first by design; IPv6
+**Why AWS shows IPv4 everywhere — and started charging for it.** A VPC (Virtual Private Cloud) is IPv4-first by design; IPv6
 is opt-in (a dual-stack or IPv6-only subnet you enable deliberately), so every default template hands
 out v4. Meanwhile IPv4 addresses became a *traded commodity* after exhaustion — a single address
 trades for tens of dollars (roughly 30–60) and rising. So on **1 February 2024 AWS began charging

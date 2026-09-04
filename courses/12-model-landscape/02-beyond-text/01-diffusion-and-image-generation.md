@@ -36,22 +36,22 @@ image was itself produced by the technique the section explains. — Illustratio
 ## Why this section exists (for *you*)
 
 Your two decks make it clear: on the autoregressive-LLM axis you're at frontier level — attention math,
-the linear-attention↔RNN↔Titans lineage, MoE/MLA/FP8, the R1 data critique. So we skip all of that.
+the linear-attention↔RNN (recurrent neural network)↔Titans lineage, MoE (mixture-of-experts)/MLA/FP8, the R1 data critique. So we skip all of that.
 
-But you flagged the real gap honestly: **you haven't read the papers on image, video, audio, or TTS.**
+But you flagged the real gap honestly: **you haven't read the papers on image, video, audio, or TTS (text-to-speech).**
 This section attacks the biggest and most foundational of those — **diffusion** — because image generation
 *is* diffusion, video is diffusion-with-time, and even modern TTS borrows the machinery.
 
 Here's the hook that should make this efficient for you: **diffusion is not an ML trick, it's
 physics you already own.** The forward process is literally a diffusion / Ornstein–Uhlenbeck process; the
 training target is a **score function** `∇ₓ log p(x)`; sampling is **Langevin dynamics**; the whole thing
-has a clean **stochastic-differential-equation** formulation with a deterministic **probability-flow ODE**
+has a clean **stochastic-differential-equation** formulation with a deterministic **probability-flow ODE (ordinary differential equation)**
 twin. Where an ML engineer memorizes the DDPM loss, you can *derive why it has that form* from
 non-equilibrium statistical mechanics. We'll lean on that the whole way.
 
 The one conceptual pivot to internalize up front:
 
-> **An LLM generates by autoregression** — one discrete token at a time, left to right, each conditioned
+> **An LLM (large language model) generates by autoregression** — one discrete token at a time, left to right, each conditioned
 > on the past. **A diffusion model generates by iterative denoising** — it starts from pure Gaussian noise
 > and refines the *entire* image in parallel over many steps. Sequential-and-discrete vs
 > parallel-and-continuous. Almost everything that's different downstream follows from this.
@@ -153,7 +153,7 @@ knowing `x₀` — but the noise-prediction target makes the loss beautifully si
 L = E_{x₀, ε, t}  ‖ ε − ε_θ(xₜ, t) ‖²
 ```
 
-That's it — a plain **MSE between true and predicted noise**. Training:
+That's it — a plain **MSE (mean squared error) between true and predicted noise**. Training:
 
 <!-- DIAGRAM:START -->
 ![Diagram 3](diagrams/01-diffusion-and-image-generation-3.svg)
@@ -268,7 +268,7 @@ work. And the stochastic samplers that *do* re-add noise (DDPM/SDE) use it only 
 optional and never a detail-source.
 
 > **The mental model to carry:** diffusion trades a *single hard problem* (model `p(x)` directly, as a
-> GAN or autoregressive model must) for *many easy problems* (denoise a little, `T` times). The price is
+> GAN (generative adversarial network) or autoregressive model must) for *many easy problems* (denoise a little, `T` times). The price is
 > the iterative sampling loop — and the last five years of diffusion research is largely about **paying
 > down that loop** (fewer, bigger steps), exactly as LLM serving is about paying down the decode loop.
 > The number of *inference* steps is decoupled from the "1000" training framing — you choose the
@@ -304,7 +304,7 @@ flowchart LR
 <!-- DIAGRAM:END -->
 
 The compute saving is roughly the compression ratio — the difference between "needs a datacenter" and
-"runs on your GPU." Conceptually it's the same instinct as DeepSeek's MLA you analyzed: **do the expensive
+"runs on your GPU." Conceptually it's the same instinct as DeepSeek's MLA (multi-head latent attention) you analyzed: **do the expensive
 operation in a compressed space.** You already have the intuition; this is the image-domain instance.
 
 ---
@@ -425,7 +425,7 @@ flowchart TD
 
 1. Why does predicting the *noise* `ε` (rather than the clean image `x₀` directly) give such a simple
    training loss? Use the closed-form forward equation in your answer.
-2. You described DeepSeek's MLA as "low-rank compression to save VRAM." What is the *exact* structural
+2. You described DeepSeek's MLA as "low-rank compression to save VRAM (video random-access memory)." What is the *exact* structural
    analogue in latent diffusion, and why does it buy a roughly proportional compute saving?
 3. From the SDE/ODE picture: explain — physically, not by citing the paper — why DDIM can use ~20 steps
    where DDPM wants ~1000. What are you trading away?
@@ -463,7 +463,7 @@ a peer-level Q&A. Recording it because the *shape* of what you got right vs wron
 
 ### What you had right (and sharper than most published explainers)
 
-1. **"It's all about SNR; the model is a noise filter that raises SNR."** Correct, and the SNR axis is
+1. **"It's all about SNR (signal-to-noise ratio); the model is a noise filter that raises SNR."** Correct, and the SNR axis is
    the *native* coordinate system of the rigorous theory — Kingma et al.'s **Variational Diffusion
    Models** parameterizes the whole loss as an integral over log-SNR. Most blogs never say this.
 2. **"Step-by-step noising is just a way to generate samples at different SNR; training needn't be

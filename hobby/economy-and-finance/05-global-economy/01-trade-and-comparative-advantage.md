@@ -151,7 +151,7 @@ lowers the return to its **scarce** factor. In the US — abundant in capital an
 less-skilled labour — freer trade tends to **raise** returns to capital and the college-educated and **lower**
 wages (or jobs) for less-skilled manufacturing workers, who now compete with abundant labour abroad.
 
-![A dual-axis chart of the United States. A red line shows manufacturing employment in millions, roughly flat near 17 to 19 million from 1970 to 2000, then falling sharply to about 11.5 million by 2010 before partially recovering to about 12 million. A blue dashed line shows China's share of US goods imports rising from about 1 percent in 1970 to a peak near 21 percent by 2015. A vertical marker notes China joining the WTO in 2001, and an annotation marks the China shock, in which roughly one to two million manufacturing jobs were lost, concentrated in specific towns, per Autor, Dorn and Hanson.](diagrams/01-trade-and-comparative-advantage-fig3.svg)
+![A dual-axis chart of the United States. A red line shows manufacturing employment in millions, roughly flat near 17 to 19 million from 1970 to 2000, then falling sharply to about 11.5 million by 2010 before partially recovering to about 12 million. A blue dashed line shows China's share of US goods imports rising from about 1 percent in 1970 to a peak near 21 percent by 2015. A vertical marker notes China joining the WTO (World Trade Organization) in 2001, and an annotation marks the China shock, in which roughly one to two million manufacturing jobs were lost, concentrated in specific towns, per Autor, Dorn and Hanson.](diagrams/01-trade-and-comparative-advantage-fig3.svg)
 
 Fig 3 is this in real data — the **"China shock."** After China joined the WTO in 2001, its share of US imports
 surged and US manufacturing employment fell sharply. The aggregate US gains from that trade were real and large
@@ -224,7 +224,7 @@ imported content — echoing the gross-vs-net theme from E04 §2).
 
 And the long arc has turned:
 
-- **Hyperglobalization (roughly 1990–2008):** trade grew far faster than GDP as supply chains fragmented across
+- **Hyperglobalization (roughly 1990–2008):** trade grew far faster than GDP (Gross Domestic Product) as supply chains fragmented across
   the globe chasing the lowest cost — the era that produced both the China-shock gains *and* its concentrated
   losses.
 - **"Slowbalization" and retreat (roughly 2016– ):** trade/GDP plateaued, and policy pivoted from pure efficiency
@@ -304,7 +304,7 @@ Reason first; check against a source where noted.
 2. **Work the example.** In the §2 table (USA: 10 software / 20 textiles; Vietnam: 2 / 8 per worker), confirm the
    opportunity costs and state each country's comparative advantage. Then explain, in one sentence, *why* the USA
    gains by importing textiles from a country it could out-produce.
-3. **Beyond the frontier.** What does it mean to say trade lets a country "consume outside its PPF"? Why doesn't
+3. **Beyond the frontier.** What does it mean to say trade lets a country "consume outside its PPF (production possibility frontier)"? Why doesn't
    that violate the fact that the PPF shows *everything it can make*?
 4. **Sources of advantage.** Match each to its explanation: (a) China exports textiles, the US exports aircraft;
    (b) Germany and Japan both export cars *to each other*; (c) South Korea, with no 1970 advantage in chips, leads
@@ -461,7 +461,7 @@ terminology difference** you'd trip over.
   why *similar* countries trade so much with each other (§3).
 - **Tariffs & the modern era:** the **Tax Foundation** and **Peterson Institute (PIIE)** trackers on the 2018–2026
   US tariffs — who actually pays, and the measured deadweight cost, alongside the §5 diagram.
-- **Value chains & slowbalization:** the **WTO** and **IMF** work on trade in value-added and the post-2016 trade
+- **Value chains & slowbalization:** the **WTO** and **IMF (International Monetary Fund)** work on trade in value-added and the post-2016 trade
   slowdown — the data behind §6's "made in the world" and the efficiency-vs-resilience turn.
 
 ---

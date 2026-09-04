@@ -93,7 +93,7 @@ price. The **supply curve** (almost always) **slopes upward** — higher price, 
 
 Why upward? Again, it's §1:
 
-- **Increasing marginal cost.** This is the same phenomenon as the PPF's *increasing opportunity cost* from
+- **Increasing marginal cost.** This is the same phenomenon as the PPF (production possibility frontier)'s *increasing opportunity cost* from
   §1 §5. As a firm produces more, it runs into less-suited resources, overtime, congestion — each extra unit
   costs more than the last. A profit-maximizing firm produces while $\text{price} \geq MC$ and stops at $\text{price} = MC$.
   Since $MC$ rises with quantity, you need a *higher* price to justify a *larger* quantity. **The supply
@@ -379,7 +379,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 
 ## 9. Optional: spot supply & demand in the wild (15 min, no setup)
 
-Pick any market with a price in the news right now — eggs, GPUs, air fares, a specific stock, HDB resale
+Pick any market with a price in the news right now — eggs, GPUs, air fares, a specific stock, HDB (Housing and Development Board) resale
 flats, electricity. For that market:
 
 - Sketch (mentally) the supply and demand curves and mark roughly where you think $P^\ast$ sits.

@@ -16,12 +16,12 @@
 > **Status:** ✅ **finalized 2026-07-21.** Body drafted 2026-07-07; **§10 captures the live session** — a
 > five-thread arc that ran the two-tier machine from *one bank's balance sheet* out to *the global dollar
 > system*: **(a)** the reserve fraction as a *ceiling, not a floor* (and why it isn't even the binding
-> constraint); **(b)** why **China's M2 dwarfs its GDP** — financial structure, not wealth; **(c)** whether
+> constraint); **(b)** why **China's M2 dwarfs its GDP (Gross Domestic Product)** — financial structure, not wealth; **(c)** whether
 > US aggregates count the world's dollars — **cash yes, eurodollars no**; **(d)** what foreign
 > **reserve-accumulation and Treasury-buying** do to US M2 (almost nothing — the money recycles); and
 > **(e)** the learner's own synthesis — **is export-led growth sustainable, and does it cause inflation?** —
 > where he correctly diagnosed the model's fragility and I corrected the money→inflation step (China's money
-> was *sterilized* and went into *assets*, not the CPI).
+> was *sterilized* and went into *assets*, not the CPI (Consumer Price Index)).
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -37,8 +37,8 @@ mechanism under that intuition) and a nodding acquaintance with E01 §2 (supply/
 
 Two reasons, one conceptual and one you flagged yourself.
 
-**The conceptual one.** Almost every piece of economic-policy news — "the Fed hiked rates," "the ECB is
-doing QE," "M2 is shrinking," "the banks are pulling back on lending," "a bank run took down SVB" — is a
+**The conceptual one.** Almost every piece of economic-policy news — "the Fed hiked rates," "the ECB (European Central Bank) is
+doing QE (quantitative easing)," "M2 is shrinking," "the banks are pulling back on lending," "a bank run took down SVB" — is a
 statement about *money and who controls it*. You cannot judge any of it without a correct model of what
 money is and how it comes into being. And the correct model is genuinely **counter-intuitive**: the thing
 most people (and, embarrassingly, many older textbooks) believe about money creation is wrong in a way that
@@ -137,7 +137,7 @@ Money has moved through three broad regimes, each a step further from "intrinsic
 This raises the question that trips up almost everyone: **if a fiat dollar is backed by nothing, why is it
 worth anything at all?** Three reinforcing answers, in rough order of importance:
 
-1. **Taxes create a baseline demand (the "chartalist" / MMT-adjacent point).** The government will accept
+1. **Taxes create a baseline demand (the "chartalist" / Modern-Monetary-Theory-adjacent point).** The government will accept
    *its own* currency — and *only* its own currency — in payment of taxes, and it can compel you to pay
    taxes. That alone forces a standing, economy-wide demand to acquire the stuff. You need dollars because
    the tax collector needs dollars. This is the most robust leg: it doesn't rely on anyone's good opinion.
@@ -361,7 +361,7 @@ fear others will run*, is to run first. That self-fulfilling logic is why runs a
 Two institutions exist precisely to break that bad equilibrium — and they're monetary-policy vocabulary you
 now own:
 
-- **Deposit insurance** (the FDIC in the US, up to a cap; SDIC in Singapore) removes the *reason* for small
+- **Deposit insurance** (the FDIC in the US, up to a cap; SDIC — Singapore Deposit Insurance Corporation — in Singapore) removes the *reason* for small
   depositors to run: your insured deposit is safe regardless, so you don't rush the door.
 - **The lender of last resort** — the central bank lends freely against good collateral to a bank facing a
   run (Bagehot's rule: *lend freely, against good collateral, at a penalty rate*), turning illiquid assets
@@ -369,7 +369,7 @@ now own:
   inflation targeting.
 
 > **The live case (2023).** **Silicon Valley Bank** is the textbook made real. It had taken deposits (mostly
-> **uninsured**, above the FDIC cap — tech firms with big balances) and bought long-dated bonds. When rates
+> **uninsured**, above the FDIC (Federal Deposit Insurance Corporation) cap — tech firms with big balances) and bought long-dated bonds. When rates
 > rose (§2), those bonds lost market value; when a few large depositors noticed and moved to withdraw, the
 > rest — knowing they were uninsured and watching each other — ran, and *digital, instant* withdrawals made
 > it the fastest run in history. SVB was arguably solvent-if-held-to-maturity but fatally **illiquid**. It
@@ -378,7 +378,7 @@ now own:
 
 **The frontier debate (why this section is current).** If most money is private bank IOUs, should it be?
 Three live proposals worth recognizing in the news: **central bank digital currencies (CBDCs)** — giving the
-public direct access to *tier-1* digital money (China's e-CNY is the largest live experiment); **stablecoins**
+public direct access to *tier-1* digital money (China's e-CNY — onshore renminbi — is the largest live experiment); **stablecoins**
 — privately issued tokens promising 1-for-1 redemption in dollars, i.e. a *new* tier-2 issuer competing with
 banks, and a live regulatory fight over whether they're "money," securities, or a bank in disguise; and
 **narrow banking / full-reserve banking** — the proposal to *end* money creation by private banks entirely
@@ -457,7 +457,7 @@ Reason first, then check against a source where noted.
    1,000 business loan. Write its balance sheet immediately after. Where did the 1,000 of new money come
    from, and what happens to the money supply when the firm eventually repays?
 5. **The QE puzzle — predict then check.** After 2008 the Fed's balance sheet (the monetary base) grew
-   several-fold, yet inflation stayed below 2% for years. Explain why, using §4b. Then look up a **FRED**
+   several-fold, yet inflation stayed below 2% for years. Explain why, using §4b. Then look up a **FRED (Federal Reserve Economic Data)**
    chart of `M2SL` divided by `BOGMBASE` (the money multiplier ratio) and confirm what happened to it after
    2008.
 6. **Reserves vs capital.** In one or two sentences each, distinguish a bank's **reserves** from its
@@ -483,7 +483,7 @@ Reason first, then check against a source where noted.
 - **Bank credit = money creation.** Plot **bank credit / loans and leases** (`TOTLL` or `TOTBKCR`) alongside
   M2. When banks lend more, broad money rises — the §4 mechanism visible in the data.
 - **A run, in one series.** Look up **SVB March 2023**: FRED's `DPSACBW027SBOG` (deposits at commercial
-  banks) shows the system-wide deposit wobble; pair it with the Fed's emergency **BTFP** facility (the
+  banks) shows the system-wide deposit wobble; pair it with the Fed's emergency **BTFP (Bank Term Funding Program)** facility (the
   lender-of-last-resort response, §6).
 
 Bring one chart to our session and we'll run the money story on it — is broad money expanding or

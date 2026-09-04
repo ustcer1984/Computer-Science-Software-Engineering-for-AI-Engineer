@@ -6,7 +6,7 @@
 > **prices**, **jobs** — one at a time. They do not move independently: they **co-move** in a recurring
 > boom-and-bust pattern, the **business cycle**. This section assembles the pieces you already hold —
 > **potential output** and the **output gap** (§1), **wage/price stickiness** (§2), and **cyclical
-> unemployment / the NAIRU / Okun's law** (§3) — into one working theory of *why* economies expand and
+> unemployment / the NAIRU (non-accelerating-inflation rate of unemployment) / Okun's law** (§3) — into one working theory of *why* economies expand and
 > contract: the anatomy of a cycle, the **demand vs supply shocks** that start one, the **propagation
 > mechanisms** that amplify it, the **Phillips curve** that links slack to inflation (the §3 cliffhanger,
 > paid off), and the **leading / coincident / lagging indicators** the news uses to read the cycle in real
@@ -63,7 +63,7 @@ unemployment and falling inflation*, the obvious question is **what does policy 
 
 ## 1. What a business cycle actually is — the shape, not a "cycle"
 
-Strip an economy's real GDP down and you see two things at once: a **rising long-run trend** (potential
+Strip an economy's real GDP (Gross Domestic Product) down and you see two things at once: a **rising long-run trend** (potential
 output — population, capital, and productivity growing, §1) and **fluctuations around that trend**. The
 business cycle is the *fluctuation*, and it has a standard vocabulary:
 
@@ -90,7 +90,7 @@ Two things the picture makes concrete, and both matter for reading the news:
 
 > **Who decides a recession has happened — and the rule of thumb that's wrong.** The popular definition is
 > **"two consecutive quarters of falling real GDP."** It's a handy shorthand but **not** the official call.
-> In the US the **NBER**'s Business Cycle Dating Committee declares recessions using a *basket* — depth,
+> In the US the **NBER (National Bureau of Economic Research)**'s Business Cycle Dating Committee declares recessions using a *basket* — depth,
 > **diffusion** (is the weakness spread across sectors?), and **duration** — across income, employment,
 > production, and sales, not GDP alone. That's why the call comes with a long lag (the 2020 recession was
 > dated *after* it had already ended) and why 2022 — two negative GDP quarters but a booming labour market —
@@ -135,7 +135,7 @@ because the two kinds move prices and output in *opposite* patterns, and one is 
 
 The workhorse picture is **aggregate demand and aggregate supply (AD–AS)** — the whole-economy cousin of
 the E01 supply-and-demand curves, with the **price level** (§2) on the vertical axis and **real output**
-(§1) on the horizontal. **Aggregate demand** is just the $C + I + G + NX$ identity from §1 read as a curve
+(§1) on the horizontal. **Aggregate demand** is just the $C + I + G + NX$ identity from §1 (NX = net exports) read as a curve
 (it slopes down); **short-run aggregate supply** slopes up because prices/wages are sticky (§2), so firms
 produce more when prices rise relative to costs.
 
@@ -408,7 +408,7 @@ then test against a real series.
    shock**, one about **expectations**).
 6. **Indicator timing — predict, then check.** Rank these by when they turn relative to the cycle:
    *unemployment rate, building permits, real GDP, the yield-curve spread, the inflation rate.* Then pull up
-   a **FRED** chart of the **10-year minus 2-year Treasury spread** with recession bars and check: did the
+   a **FRED (Federal Reserve Economic Data)** chart of the **10-year minus 2-year Treasury spread** with recession bars and check: did the
    spread go negative *before* each recession band?
 7. **Why recoveries feel bad.** The NBER says a recession ended a year ago, but people still say "it feels
    like a recession." Using the **lagging** nature of unemployment (§3) and the leading/coincident/lagging
@@ -490,7 +490,7 @@ three questions with different answers:**
 2. **Is there a financial bubble in the capital structure?** Clear late-boom signals: **circular financing**
    (Nvidia funds OpenAI, which commits compute back to Nvidia/Microsoft/Oracle/CoreWeave), increasingly
    **debt-funded** capex via SPVs/private credit, and a **depreciation mismatch** (GPUs have a ~1–2yr
-   economic life but are financed/depreciated over 5–6yr). Microsoft fell ~10% on a beat with no clear ROI.
+   economic life but are financed/depreciated over 5–6yr). Microsoft fell ~10% on a beat with no clear ROI (return on investment).
 3. **Will hardware supply overshoot?** Almost certainly at some point — and here the learner's own
    intuition was the right frame.
 
@@ -530,15 +530,15 @@ exceeds total consumption capacity*, producing an **inevitable** crisis intrinsi
 his own original counter-arguments.
 
 **(i) On 剩余价值 = 剥削 — why rejecting it is right.** Exploitation here rests on the **labour theory of
-value** (劳动价值论 — labour is the *sole* source of value). Mainstream economics abandoned the LTV at the
-**marginal revolution (1870s)**: each factor is paid its **marginal product** (the E01 §4 "hire to $MRP$"
+value** (劳动价值论 — labour is the *sole* source of value). Mainstream economics abandoned the LTV (loan-to-value) at the
+**marginal revolution (1870s)**: each factor is paid its **marginal product** (the E01 §4 "hire to $MRP$" (marginal revenue product)
 rule), so capital's return is payment for a genuinely productive contribution + deferred consumption + risk,
 not pure extraction. **But** the honest steelman survives in a *different* form: under **monopsony** (§3),
 employers with wage-setting power pay *below* marginal product — so the modern, testable version of
 "exploitation" is bargaining-power/monopsony rents and the declining labour share, not the LTV.
 
 **(ii) On the crisis theory — separate the mechanism (right) from the inevitability (wrong).** The mechanism
-is the **underconsumptionist** demand gap: concentration → lower average MPC → $C$ falls short of $Y$ →
+is the **underconsumptionist** demand gap: concentration → lower average MPC (marginal propensity to consume) → $C$ falls short of $Y$ →
 glut. **This is exactly the model the learner rebuilt from scratch in §2 §9b**, and mainstream macro absorbed
 it — it is Keynes's *deficient effective demand*, Piketty's $r > g$, and *secular stagnation*. That is *why*
 it felt hard to argue. The error is the word **inevitable**, and five things break it:
@@ -576,7 +576,7 @@ sociological claim — a *permanent hereditary* capitalist class vs a permanent 
   to overpower $r > g$ (the 1914–70 de-concentration was world wars + Depression + high taxes, not smooth
   富不过三代). And two corrections: in a crash wealth is largely *destroyed*, not broadly redistributed to
   society (workers lose *income* via unemployment; they don't receive the rich's lost paper wealth); and
-  downturns often **re-concentrate** on the recovery (2008 → QE inflated assets → top shares rose).
+  downturns often **re-concentrate** on the recovery (2008 → QE — quantitative easing — inflated assets → top shares rose).
 - **Getting rich without inherited capital (Musk).** Correctly dents Marx's owner-only model — **human
   capital** (人力资本) blurs the capital/labour line. But Musk is *skill → convert to capital → compound as
   capital* (his wealth is overwhelmingly equity, not wages), so capital is still the engine, skill is the
@@ -693,10 +693,10 @@ traditional script**; **⚠ marks a genuine terminology difference** between Mai
   https://www.core-econ.org/the-economy/
 - **On dating recessions:** the **NBER Business Cycle Dating Committee** page explains the multi-indicator
   method (and why it isn't "two quarters"). https://www.nber.org/research/business-cycle-dating
-- **On the Phillips curve:** Friedman's 1968 AEA address *"The Role of Monetary Policy"* is the origin of
+- **On the Phillips curve:** Friedman's 1968 AEA (American Economic Association) address *"The Role of Monetary Policy"* is the origin of
   the expectations-augmented / vertical-long-run argument — worth reading once for the logic.
 - **Live data to practise on:** **FRED** (https://fred.stlouisfed.org) — `GDPC1`, `UNRATE`, `T10Y2Y`,
-  `SAHMREALTIME`; the **Conference Board LEI** (https://www.conference-board.org); **ISM PMIs**
+  `SAHMREALTIME`; the **Conference Board LEI** (https://www.conference-board.org); **ISM (Institute for Supply Management) PMIs**
   (https://www.ismworld.org).
 
 ---

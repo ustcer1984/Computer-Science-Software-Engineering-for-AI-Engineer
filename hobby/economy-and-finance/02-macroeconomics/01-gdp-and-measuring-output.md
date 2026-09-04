@@ -6,7 +6,7 @@
 > once). It builds the single most-quoted number in economic news — **Gross Domestic Product** — from the
 > ground up: what it measures, the **three equivalent ways** to count it (production, expenditure, income),
 > the **$GDP = C + I + G + NX$** identity you'll meet in every release, the **nominal-vs-real** distinction
-> behind "the economy grew 2%," and — just as important — **what GDP misses** so you read the headline with
+> behind "the economy grew 2%," and — just as important — **what GDP (Gross Domestic Product) misses** so you read the headline with
 > the right skepticism.
 > **Status:** ✅ finalized 2026-06-26. Body drafted 2026-06-24; **§9 captures the live session Q&A:**
 > (a) the built-then-resold-house edge case (only new production counts; resale = capital gain + the agent's
@@ -84,7 +84,7 @@ hiding in one of these words.
     anything; it's excluded from the government's contribution to GDP (§3).
 - **"Within a country"** — GDP is **geographic**. A Toyota plant in the US adds to *US* GDP even though Toyota
   is Japanese; an Apple design centre's output counts wherever the work physically happens. The alternative —
-  counting by *who owns the income* rather than *where it's produced* — is **GNI**, and the gap between them
+  counting by *who owns the income* rather than *where it's produced* — is **GNI (Gross National Income)**, and the gap between them
   is large and revealing for some countries (§5).
 - **"In a given period"** — GDP is a **flow**, measured *per quarter* or *per year*, not a stock you can hold.
   This distinction trips up almost everyone, so it earns the one analogy of the section:
@@ -161,7 +161,7 @@ The shares differ enormously across economies, and the *shape* tells you what ki
 at:
 
 <!-- FIGURE -->
-![Stacked bars of C, I, G, NX as a share of GDP for the US, China, and Singapore, each totalling 100%](diagrams/01-gdp-and-measuring-output-fig2.svg)
+![Stacked bars of C, I, G, NX (net exports) as a share of GDP for the US, China, and Singapore, each totalling 100%](diagrams/01-gdp-and-measuring-output-fig2.svg)
 
 - **United States** — **consumption-driven** ($C$ ≈ 68%): the archetypal consumer economy, with a
   small **trade deficit** ($NX < 0$). Notice $C + I + G$ slightly *exceeds* 100% — that overshoot is exactly
@@ -171,7 +171,7 @@ at:
   fingerprint of "the news says China needs to rebalance toward consumption."
 - **Singapore** — **trade-driven** ($NX$ huge and positive): as a small, open entrepôt, exports dwarf the
   domestic economy, so net exports are a *large* slice of GDP *(your local lens — this extreme openness is
-  why MAS targets the exchange rate rather than interest rates, which we'll meet in E03 §4).*
+  why MAS (Monetary Authority of Singapore) targets the exchange rate rather than interest rates, which we'll meet in E03 §4).*
 
 > Numbers are **illustrative, rounded to the published shape** — the point is the silhouette (who leans on
 > $C$ vs $I$ vs $NX$), not the decimals, which get revised. You can pull the live figures from each country's
@@ -227,7 +227,7 @@ living standards over the long run.
 >    *annualized quarterly* rate. Many other countries (and most of Asia) quote the plain **year-on-year** or
 >    **quarter-on-quarter** rate instead. Same word, different arithmetic — check which before comparing
 >    countries.
-> 2. **Levels for size, growth for momentum, PPP for living standards.** *Nominal* GDP in a common currency
+> 2. **Levels for size, growth for momentum, PPP (purchasing power parity) for living standards.** *Nominal* GDP in a common currency
 >    ranks economies by **size** (US > China > Germany > …). But to compare **living standards** across
 >    countries you want **GDP per capita**, and often at **purchasing-power parity (PPP)** — adjusting for the
 >    fact that a haircut or a bowl of noodles is far cheaper in some countries, so a dollar buys more there.
@@ -380,11 +380,11 @@ the reasoning *before* looking anything up, then test it against a real release.
 Pick the most recent GDP release from a statistics office you care about and read it through this section's
 lens:
 
-- **Singapore — MTI / SingStat** (advance estimate quarterly): note the **headline real growth**, the
+- **Singapore — MTI (Ministry of Trade and Industry) / SingStat** (advance estimate quarterly): note the **headline real growth**, the
   convention used (year-on-year vs quarter-on-quarter, seasonally adjusted annualized), and the
   **sector/expenditure breakdown**. See how dominant **net exports** are. *(SingStat: data.gov.sg / singstat.gov.sg.)*
 - **United States — BEA** ("Gross Domestic Product, Q_ 20__"): note that growth is **annualized**, find the
-  **$C/I/G/NX$ contributions**, and locate the **GDP deflator** (or the related PCE price index) in the same
+  **$C/I/G/NX$ contributions**, and locate the **GDP deflator** (or the related PCE — Personal Consumption Expenditures — price index) in the same
   release.
 
 For each, answer: Is this **real or nominal**? Is the growth **annualized or year-on-year**? Which
@@ -442,8 +442,8 @@ dishonest:
    trust a single GDP print too hard.*
 3. **Outright gaming and fraud (your "easily").**
    - **The deflator channel — the subtle, powerful one.** Since $\text{real} = \text{nominal}/\text{deflator}$,
-     **understating inflation automatically overstates real growth.** **Argentina (2007–2015)** faked its CPI
-     so badly the **IMF formally censured it in 2013** (the first ever) — the GDP fraud rode in on the
+     **understating inflation automatically overstates real growth.** **Argentina (2007–2015)** faked its CPI (Consumer Price Index)
+     so badly the **IMF (International Monetary Fund) formally censured it in 2013** (the first ever) — the GDP fraud rode in on the
      *inflation* fraud.
    - **Sub-national fabrication rewarded by promotion.** In **China**, provincial GDPs summed to *more* than
      the national total for years; **Liaoning admitted fabricating data 2011–2014.** Premier Li Keqiang
@@ -464,7 +464,7 @@ dishonest:
 **Why it *isn't* trivially fakeable in good systems** (the counterweight, so you don't over-discount honest
 numbers):
 
-- **Independent statistical agencies** (US BEA, UK ONS, Eurostat, Singapore's SingStat) with legal
+- **Independent statistical agencies** (US BEA, UK ONS [Office for National Statistics], Eurostat, Singapore's SingStat) with legal
   independence and IMF data standards — fabrication is illegal and career-ending.
 - **The three-approaches reconciliation (§2) is a built-in audit:** fake one of production/expenditure/income
   and the **statistical discrepancy balloons** — a visible tell.
@@ -652,7 +652,7 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over — and this se
 - *CORE Econ — The Economy 2.0*, unit **"The nation in the world economy"** / measurement sections — a
   rigorous, free treatment with real data and the welfare critiques. https://books.core-econ.org/the-economy/
 - **Primary sources to practise on:** Singapore — **SingStat / MTI** GDP releases
-  (https://www.singstat.gov.sg, https://www.mti.gov.sg); United States — **BEA** GDP news release
+  (https://www.singstat.gov.sg, https://www.mti.gov.sg); United States — **BEA (Bureau of Economic Analysis)** GDP news release
   (https://www.bea.gov); cross-country — **World Bank** GDP, GDP-per-capita and **GNI** data
   (https://data.worldbank.org) — the source behind the GDP-vs-GNI figure.
 - **On manipulation & data quality (§9):** Luis R. Martínez, *"How Much Should We Trust the Dictator's GDP

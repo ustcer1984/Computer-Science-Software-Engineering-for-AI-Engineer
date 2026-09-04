@@ -1,7 +1,7 @@
 # Daily Reading — 2026-06-09  ✅ finalized
 
 **Today's two readings (diversified):**
-1. **CS / Python foundations** — Python concurrency: async/await vs threading *(extends your M01 Ch1 §2 session and is directly actionable on your arena code)*
+1. **CS (computer science) / Python foundations** — Python concurrency: async/await vs threading *(extends your M01 Ch1 §2 session and is directly actionable on your arena code)*
 2. **Frontier AI** — Context engineering for AI agents *(keeps you current; maps to M14 Agentic Systems)*
 
 > Why these: §2 yesterday went deep on **`await` ≠ concurrency** (two sequential `await`s are just
@@ -29,7 +29,7 @@ each one actually helps.
   compresses **3 sequential 5s waits → ~5s total (≈3× speedup)**, no extra hardware. CPU-bound work
   gets *nothing* from async — the core is already busy; you need real parallelism (multiprocessing /
   GPU).
-- **The GIL.** Python threads run on a *single* core because of the GIL (the kicker that landed in
+- **The GIL (Global Interpreter Lock).** Python threads run on a *single* core because of the GIL (the kicker that landed in
   §2). Python 3.13 introduced an experimental free-threaded (no-GIL) build.
 - **Cost of each.** Async avoids locks/races because control transfer is *explicit*; threading needs
   `threading.Lock()` and careful synchronization to avoid data corruption.
@@ -122,7 +122,7 @@ discipline that decides reliability.
 **Connect it to your work.** Your graph-lite pipeline already makes context decisions implicitly
 (what you stuff into each call). This article gives you the vocabulary and the levers to make those
 choices *deliberately* — and it's the conceptual on-ramp to **M14 (Agentic Systems)** and **M13 Ch2
-(RAG / when retrieval is the wrong tool)**. "Just-in-time retrieval" in particular reframes RAG as one
+(RAG / when retrieval is the wrong tool)**. "Just-in-time retrieval" in particular reframes RAG (retrieval-augmented generation) as one
 option among several, not the default.
 
 **Questions to pressure-test while you read:**
@@ -136,7 +136,7 @@ option among several, not the default.
 
 ## What we worked out — async vs threads for model evaluation (multiple LLM calls)
 
-The reframing that mattered: **for LLM calls, the choice is *not* "which one actually overlaps the
+The reframing that mattered: **for LLM (large language model) calls, the choice is *not* "which one actually overlaps the
 waiting" — both do.** The common "GIL ⇒ threads are useless" reflex is wrong here.
 
 - **CPython releases the GIL while a thread is blocked on I/O.** An LLM call is ~99.9% socket-wait,
@@ -145,7 +145,7 @@ waiting" — both do.** The common "GIL ⇒ threads are useless" reflex is wrong
 - So the decision is an **engineering trade-off**, not a concurrency-vs-not one:
   - `asyncio` (async client): coroutine ≈ KB, scales to 1,000s; bound with `asyncio.Semaphore(k)`;
     `gather(return_exceptions=True)` to collect all incl. failures, or `TaskGroup` to cancel siblings
-    on first error; first-class timeouts/cancellation. **Default choice when the SDK has an async client.**
+    on first error; first-class timeouts/cancellation. **Default choice when the SDK (software development kit) has an async client.**
   - Threads (`ThreadPoolExecutor` + sync client): thread ≈ ~1 MB each, ceiling ~hundreds; bound via
     `max_workers`; works with **any blocking** client (no async support needed); awkward cancellation;
     needs a lock around shared result state. **Pick when the client is sync-only, the batch is small,
@@ -159,13 +159,13 @@ waiting" — both do.** The common "GIL ⇒ threads are useless" reflex is wrong
    bytecode on one core; they only **degrade gracefully** (GIL released periodically + on I/O, so the
    LLM calls keep flowing). To actually fix CPU: **escape the GIL** — `ProcessPoolExecutor`/
    `multiprocessing`, **native libs that drop the GIL** (NumPy/PyTorch embeddings often do ⇒ threads
-   *can* parallelize those; pure-Python BLEU can't), or GPU. Clean pattern: **async for the LLM I/O +
+   *can* parallelize those; pure-Python BLEU (Bilingual Evaluation Understudy) can't), or GPU. Clean pattern: **async for the LLM I/O +
    `loop.run_in_executor(process_pool, cpu_fn, …)` for the compute** — the §2 "stack→heap / escape the
    constraint" move again.
 2. *"async client vs threads on the same rate-limited endpoint — throughput difference? server-side
    optimization for async?"* — **No.** The server can't tell asyncio from threads; the wire requests
    are byte-for-byte identical. **Throughput is identical** at the same concurrency level; the real
-   ceiling is the **rate limit (RPM/TPM) + remote latency**, not your client model. Client model only
+   ceiling is the **rate limit (RPM/TPM — requests and tokens per minute) + remote latency**, not your client model. Client model only
    changes *local* cost. More concurrency helps **only up to the rate limit** — past it you just earn
    `429`s. (Second-order, client-side only: `httpx` HTTP/2 multiplexing ≠ "server optimizing for async.")
 
@@ -191,7 +191,7 @@ Anthropic levers:
    over-plan a one-liner.
 2. **Structure / names / folder READMEs / `docs/` = retrieval index + just-in-time retrieval.** Good
    path names *are* the index a grep agent navigates by; a folder README compresses "what's here" into
-   a few tokens; `docs/` with API contracts + DB schema lets the agent **load** canonical truth instead
+   a few tokens; `docs/` with API contracts + DB (database) schema lets the agent **load** canonical truth instead
    of reverse-engineering it. **Trap: a stale doc is worse than none — the agent trusts it.** Prefer
    **generated-from-source** (OpenAPI from code, schema dumped from the DB); for hand-maintained prose,
    update it in the *same* change that touches the code.

@@ -3,8 +3,8 @@
 > **Module:** The Model Landscape
 > **Chapter:** Beyond text (image/diffusion, video, **audio/speech/TTS**, multimodal)
 > **Section:** How machines represent, recognise, and generate sound — the representation
-> problem (waveform → spectrogram → discrete tokens), the classic TTS cascade, neural audio
-> codecs and the LLM-ification of audio, the diffusion/flow-matching branch, ASR and
+> problem (waveform → spectrogram → discrete tokens), the classic TTS (text-to-speech) cascade, neural audio
+> codecs and the LLM-ification of audio, the diffusion/flow-matching branch, ASR (automatic speech recognition) and
 > self-supervised speech, and the frontier: native audio-in/audio-out full-duplex models.
 > **Plus §9 — an application-side model-selection cheatsheet** (SOTA + open, per use case).
 > **Status:** ✅ finalized 2026-07-15. Body pitched high and went untouched (confirmed as a
@@ -17,7 +17,7 @@
 **Prerequisites:** §1 (DDPM, the score/SDE view, latent diffusion), §2 (flow matching, codec-style
 tokenisation, the DiT backbone). Your transformer and quantization knowledge transfers directly — the
 modern audio stack is *autoregressive transformers over discrete tokens* and *flow-matching decoders*,
-both of which you already understand from the LLM and diffusion sides.
+both of which you already understand from the LLM (large language model) and diffusion sides.
 
 ---
 
@@ -26,8 +26,8 @@ both of which you already understand from the LLM and diffusion sides.
 You've now closed the image (§1) and video (§2) gaps. Audio is the third "beyond text" modality, and
 it's the one where your **background is the biggest advantage of any section in this chapter** — audio
 *is* a signal-processing domain, and Fourier analysis, sampling theory, and the time–frequency
-trade-off are tools you own from physics. Where §1 leaned on energy landscapes and §2 on ODE
-trajectories, this section leans on the DSP you already have.
+trade-off are tools you own from physics. Where §1 leaned on energy landscapes and §2 on ODE (ordinary differential equation)
+trajectories, this section leans on the DSP (digital signal processing) you already have.
 
 The section is built around one organising idea that makes the whole field legible:
 
@@ -52,7 +52,7 @@ sequence of numbers by two discretisations:
   theorem, to represent frequencies up to $f_{\max}$ without aliasing you need $f_{s} \geq 2 f_{\max}$.
   Human hearing tops out near 20 kHz, so music uses $f_{s} = 44.1$ or $48$ kHz. Speech energy lives
   below ~8 kHz, so speech systems commonly use **16 kHz** (and telephony historically 8 kHz).
-- **Bit depth** — how finely each amplitude is quantised. 16-bit PCM gives $2^{16} = 65{,}536$ levels;
+- **Bit depth** — how finely each amplitude is quantised. 16-bit PCM (pulse-code modulation) gives $2^{16} = 65{,}536$ levels;
   the classic $\mu$-law companding used by WaveNet quantises to 256 levels on a logarithmic (loudness-
   perceptual) scale.
 
@@ -178,7 +178,7 @@ sprint from "high quality but unusably slow" to "high quality and real-time":
   one second means 24,000 sequential forward passes.
 - **Parallel WaveNet** (2017) distils the autoregressive teacher into a parallel student (an inverse
   autoregressive flow), buying real-time synthesis.
-- **HiFi-GAN** (Kong et al., 2020) is the workhorse that won: a **GAN** vocoder whose generator is a
+- **HiFi-GAN** (Kong et al., 2020) is the workhorse that won: a **GAN (generative adversarial network)** vocoder whose generator is a
   stack of transposed convolutions and whose discriminators judge the waveform at multiple periods and
   scales. It is fast, small, and near-indistinguishable from real audio — and it's still a default
   vocoder in 2025.
@@ -197,7 +197,7 @@ This is the pivotal idea of modern audio, and the one that connects the field to
 about LLMs. It answers the sequence-length problem from §1 not by moving to the frequency domain, but by
 **learning a discrete vocabulary for audio**.
 
-### The VQ-VAE lineage
+### The VQ-VAE (vector-quantized variational autoencoder) lineage
 
 A neural audio codec is an autoencoder with a **quantiser** in the middle:
 
@@ -378,7 +378,7 @@ Automatic Speech Recognition went through the same arc as the rest of ML:
   language model), aligned with Hidden Markov Models.
 - **End-to-end**: **CTC** (Connectionist Temporal Classification — a loss that marginalises over all
   alignments of a label sequence to a longer frame sequence, so you don't need frame-level labels),
-  **RNN-Transducer** (streaming-friendly), and **seq2seq attention** collapsed the pipeline into one
+  **RNN-Transducer** (recurrent-neural-network transducer; streaming-friendly), and **seq2seq attention** collapsed the pipeline into one
   network.
 - **Whisper** (Radford et al., OpenAI, 2022) is the model worth internalising, and its lesson is
   **not architectural** — it's a fairly standard encoder-decoder transformer over log-mel input. The
@@ -394,7 +394,7 @@ Automatic Speech Recognition went through the same arc as the rest of ML:
 The unlabelled-audio pretraining models are the ones that produce the semantic tokens of §4:
 
 - **wav2vec 2.0** (Baevski et al., Meta, 2020) — mask spans of a latent audio sequence and solve a
-  **contrastive** task (identify the true quantised latent among distractors). Fine-tuned with CTC on a
+  **contrastive** task (identify the true quantised latent among distractors). Fine-tuned with CTC (Connectionist Temporal Classification) on a
   *tiny* amount of labelled data, it reached strong ASR — the "BERT moment" for speech.
 - **HuBERT** (Hsu et al., 2021) — instead of contrastive learning, run **offline k-means** on features
   to get discrete cluster IDs, then train the model to **predict the cluster ID of masked frames**
@@ -572,7 +572,7 @@ end-to-end (STT + LLM + TTS); TTS should eat ≤ ~200 ms.
 
 | Model | Type | TTFB *(vendor / bench)* | When to reach for it |
 |---|---|---|---|
-| **[Cartesia Sonic-3.5](https://www.cartesia.ai/sonic)** | hosted | ~40 ms Turbo / ~90 ms *(vendor)* | Latency leader (SSM architecture); default for interruptible agents (⚡ supersedes Sonic-3) |
+| **[Cartesia Sonic-3.5](https://www.cartesia.ai/sonic)** | hosted | ~40 ms Turbo / ~90 ms *(vendor)* | Latency leader (SSM [state-space model] architecture); default for interruptible agents (⚡ supersedes Sonic-3) |
 | **[ElevenLabs Flash v2.5](https://elevenlabs.io/docs/overview/models)** | hosted | ~135 ms e2e *(vendor)* | ElevenLabs quality at near-real-time (English strong); use Flash/Turbo — **not v3** — for agents |
 | **[Deepgram Aura-2](https://deepgram.com/learn/introducing-aura-2-enterprise-text-to-speech)** | hosted | sub-200 ms *(vendor)* | Tightest STT↔TTS loop if you're already on Deepgram Nova |
 | **[Rime Arcana v3](https://rime.ai/resources/arcana-v3)** | hosted | ~120 ms on-prem *(vendor)* | Conversational (phone-agent) voices, code-switching keeps identity |
@@ -586,7 +586,7 @@ end-to-end (STT + LLM + TTS); TTS should eat ≤ ~200 ms.
 | Model | Type | Consumer GPU? | When to reach for it |
 |---|---|---|---|
 | **[Whisper large-v3-turbo](https://huggingface.co/openai/whisper-large-v3-turbo)** | open (MIT) | ✅ (8 GB) | **Multilingual default** — 99 langs, ~6× faster than large-v3; the safe general pick (no successor as of 2026-07) |
-| **[NVIDIA Canary-Qwen-2.5B](https://huggingface.co/nvidia/canary-qwen-2.5b)** | open (CC-BY) | ✅ | **Top English accuracy** on the leaderboard (~5.6% WER); SALM decoder, higher latency |
+| **[NVIDIA Canary-Qwen-2.5B](https://huggingface.co/nvidia/canary-qwen-2.5b)** | open (CC-BY) | ✅ | **Top English accuracy** on the leaderboard (~5.6% WER [word error rate]); SALM decoder, higher latency |
 | **[NVIDIA Parakeet-tdt-0.6b-v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3)** | open (CC-BY) | ✅ (~2 GB) | **Speed king** (RTFx in the thousands), now 25 EU languages; batch/long-form at scale |
 | **[NVIDIA Canary-1b-v2](https://huggingface.co/nvidia/canary-1b-v2)** | open (CC-BY) | ✅ | Best multilingual-European open model (25 langs + EN↔ translation) |
 | **[Deepgram Nova-3 + Flux](https://developers.deepgram.com/docs/models-languages-overview)** | hosted | — | Lowest-latency agent STT with built-in end-of-turn detection (Flux Multilingual GA Apr 2026) |
@@ -706,7 +706,7 @@ Useful if you have an older mental model. Verified this pass (2026-07):
 - Cartesia Sonic-3 → **Sonic-3.5** (GA May 2026). Google → **Gemini 3.1 Flash TTS** (Apr 2026) + native-audio Live API.
 - OpenAI realtime → **GPT-Realtime-2.1 / -mini** (Jul 2026) + Translate/Whisper siblings. Amazon Nova Sonic → **Nova 2 Sonic** (Jun 2026).
 - Deepgram Nova-3 → **Flux / Flux Multilingual** (GA Apr 2026); **no Nova-4**.
-- NVIDIA ASR → **Canary-Qwen-2.5B** (English top) + **Parakeet-tdt-0.6b-v3** (25 EU langs). pyannote 3.1 → **community-1** (Jul 2026, v4.0); Sortformer → **streaming v2.1**. ElevenLabs STT → **Scribe v2 / v2 Realtime**.
+- NVIDIA ASR → **Canary-Qwen-2.5B** (English top) + **Parakeet-tdt-0.6b-v3** (25 EU langs). pyannote 3.1 → **community-1** (Jul 2026, v4.0); Sortformer → **streaming v2.1**. ElevenLabs STT (speech-to-text) → **Scribe v2 / v2 Realtime**.
 - Music: **Suno v5.5** (Mar 2026); **ElevenLabs Music v2** (May 2026, commercial-cleared); **Google Lyria 3** + Flow Music; **ACE-Step 1.5/XL**; **Stable Audio 3.0** (⚠ *there is no "Stable Audio Open 2.0"*).
 - Translation: **Gemini 3.5 Live Translate** (Jun 2026) + **ElevenLabs Dubbing v2**; **SeamlessM4T v2 has no successor** and is **non-commercial**.
 - **Whisper**: still **large-v3-turbo** — no v4. **DeepFilterNet**: still **DFN3** — no v4.
@@ -745,7 +745,7 @@ The conceptual arc, compressed:
 4. **The LLM-ification**: AudioLM's semantic-vs-acoustic split; VALL-E's zero-shot voice cloning as pure
    in-context learning; MusicGen's codebook-delay pattern.
 5. **The flow-matching branch** (Voicebox, Matcha, F5-TTS) is §2's technique applied to speech —
-   straight trajectories → few-step, deployable NAR TTS; F5-TTS even reuses the DiT backbone.
+   straight trajectories → few-step, deployable NAR (non-autoregressive) TTS; F5-TTS even reuses the DiT backbone.
 6. **Recognition feeds generation**: Whisper's lesson is *scale of weak supervision, not architecture*;
    self-supervised models (wav2vec 2.0, HuBERT) both do ASR and emit the semantic tokens the generative
    side consumes.
@@ -845,6 +845,6 @@ self-host (RTX 4070) feasibility** — not mechanism internals. This fits his co
 practitioner/ops strength ([[arena-cold-start-concern]], LLM serving): he engages hardest when
 abstract material meets a system he actually wants to build or use. **Teach-forward:** for the
 non-text-model tracks aimed at *use*, lead with **(a) the dominant lever, (b) the honest ceiling, (c)
-the license/rights gate**, and pair **SOTA hosted with best open**; flag currency because these churn
+the license/rights gate**, and pair **SOTA (state of the art) hosted with best open**; flag currency because these churn
 monthly. The value he acknowledged was exactly the *reframes* — noise-vs-competing-speech, spatial
-capture as the lever, and the VLM→brief→generate pattern — over enumerating models.
+capture as the lever, and the VLM (vision-language model)→brief→generate pattern — over enumerating models.

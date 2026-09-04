@@ -9,7 +9,7 @@
 
 **Estimated study time:** 2–3 hours including reflection.
 **Prerequisites:** §1 (you know a CPU runs machine-code *instructions* and works in *registers*).
-You can read basic Python and a little C. No prior CS theory needed.
+You can read basic Python and a little C. No prior CS (computer science) theory needed.
 
 ---
 
@@ -108,7 +108,7 @@ So the machine keeps the active frames in a region of memory used as a stack:
 
 You never need to reach into the middle. The function currently running is *always* the frame on top.
 This is why the structure and the operation share a name — the **call stack** is a stack *because the
-call/return discipline is inherently LIFO.* Nothing forced this; it falls out of how calls nest.
+call/return discipline is inherently LIFO (last-in, first-out).* Nothing forced this; it falls out of how calls nest.
 
 ---
 
@@ -165,7 +165,7 @@ the stack pointer* — bump a register, done. This cheapness matters later (§6,
 ### The convention question (a peek under the hood)
 
 *Who* pushes the arguments and *who* cleans up — caller or callee, which registers, in what order — is
-nailed down by a **calling convention** (part of the platform's ABI). It differs by ISA and OS (x86-64
+nailed down by a **calling convention** (part of the platform's ABI — application binary interface). It differs by ISA (instruction set architecture) and OS (x86-64
 System V on Linux vs Windows x64 vs ARM64). You'll almost never write this by hand, but it's *why* a
 function compiled by one toolchain can call one compiled by another, and it's the same ISA/ABI story
 from §1 that makes native wheels non-portable across architectures. File it away; M09/M10 will lean
@@ -301,7 +301,7 @@ the bytecode/VM idea.
 Historically each Python call also consumed a chunk of the C stack, which is why deep Python recursion
 could threaten the *native* stack. **CPython 3.11+ moved Python frames into a contiguous, heap-managed
 data stack** and made calls cheaper and shallower on the C stack — part of the "Faster CPython" work
-(same lineage as the 3.13 JIT you met in §1). The mental model still holds: *Python calls push frames,
+(same lineage as the 3.13 JIT — just-in-time — you met in §1). The mental model still holds: *Python calls push frames,
 returns pop them*; the implementation just got leaner.
 
 You can *see* a frame object:
@@ -404,7 +404,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    1,000,000 numbers is fine. Explain the difference in terms of frames.
 4. Why does raising `sys.setrecursionlimit()` to a huge number *not* actually make deep recursion safe?
    What are you really trading?
-5. Your async arena handler `await`s an LLM call and the traceback looks like it "skips" the middle of
+5. Your async arena handler `await`s an LLM (large language model) call and the traceback looks like it "skips" the middle of
    your pipeline. Using §7, explain why — what did `await` do to the stack?
 
 ## 11. Optional: get your hands dirty (10 min, just Python)
@@ -457,9 +457,9 @@ session pressed on §7 (async) and §5 (recursion/TCO) — these are the parts t
   instruction stream**, and a core runs one stream at a time. The single stack is the *companion
   bookkeeping* of that single stream, not the thing pinning it to a core.
 - Nuances: "one core" means *at any instant* — the OS scheduler can migrate a thread between cores over
-  time (unless you set CPU affinity); and **SMT/hyperthreading** lets one physical core interleave two
+  time (unless you set CPU affinity); and **SMT (simultaneous multithreading) / hyperthreading** lets one physical core interleave two
   threads as two *logical* CPUs, but your thread still occupies one logical CPU.
-- **The Python kicker (foreshadows Ch1 §3):** even with many threads, CPython's **GIL** runs only one
+- **The Python kicker (foreshadows Ch1 §3):** even with many threads, CPython's **GIL (Global Interpreter Lock)** runs only one
   thread's *bytecode* at a time → threads give you **no multi-core parallelism for CPU-bound Python**;
   that's what `multiprocessing` is for. For **I/O-bound** work (your arena: LLM/Postgres/S3 waits),
   threads and `asyncio` shine, because a thread blocked on the network isn't using a core anyway.
@@ -503,12 +503,12 @@ session pressed on §7 (async) and §5 (recursion/TCO) — these are the parts t
   optimization (TCO)**. Guido rejected TCO on purpose — eliminating frames would gut tracebacks, and
   the traceback *is* the stack (§4). Caveat: Python discourages recursion *as a looping construct*;
   shallow, genuinely-recursive shapes (tree of height ~log n, nested JSON) are fine.
-- **TCO mechanism:** a *tail call* is the last thing a function does (`return f(...)`). Its frame has
+- **TCO (tail-call optimization) mechanism:** a *tail call* is the last thing a function does (`return f(...)`). Its frame has
   nothing left to do, so a TCO compiler **reuses the current frame** instead of pushing — million-deep
   tail recursion runs in **one frame**, as cheap as a loop.
 - **The opposite pole:** **Scheme** *mandates* proper tail calls in its spec (recursion *is* the loop);
   **Erlang/Elixir** have no `for` at all — you tail-recurse, and the BEAM guarantees TCO;
-  **Haskell/OCaml/F#** are recursion-first. JVM languages show the constraint: **Clojure** (`loop`/
+  **Haskell/OCaml/F#** are recursion-first. JVM (Java Virtual Machine) languages show the constraint: **Clojure** (`loop`/
   `recur`) and **Scala** (`@tailrec`) had to bolt on explicit self-tail-recursion because the JVM lacks
   TCO. The split is philosophical: immutable/expression-first languages *need* TCO and guarantee it;
   loop-and-mutate languages (Python/Java/C/Go) traded it for debuggability.

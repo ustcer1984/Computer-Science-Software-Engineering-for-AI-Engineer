@@ -6,8 +6,8 @@
 > model — a central bank steering a domestic **interest rate**. This section is its mirror image: the
 > **Monetary Authority of Singapore (MAS)** gives up the interest rate entirely and steers the **exchange
 > rate** instead. That's not an exotic quirk to memorize — it's the cleanest possible way to *test whether you
-> actually understood §3*, because MAS makes the opposite choice at every fork (interest rate vs currency, 8
-> meetings vs 2, domestic bonds vs FX reserves), and each opposite choice has a *reason* rooted in what an
+> actually understood §3*, because MAS (Monetary Authority of Singapore) makes the opposite choice at every fork (interest rate vs currency, 8
+> meetings vs 2, domestic bonds vs FX (foreign exchange) reserves), and each opposite choice has a *reason* rooted in what an
 > economy is. We build why a small, ultra-open economy targets the currency, why the **impossible trinity**
 > means it *cannot also* keep an independent rate, the actual mechanism (the **BBC band** — basket, band,
 > crawl), how MAS operates it (FX intervention — the bond-free model §3 §10d landed on), and the side-by-side
@@ -32,7 +32,7 @@ E01/E02 that Singapore imports almost everything.
 ## Why this section exists (for *you*)
 
 Two reasons. First, the **local lens**: you live and invest in Singapore, and MAS policy *is* the local
-monetary news — "MAS tightened the slope," "the SGD NEER is at the top of the band," "core inflation came in
+monetary news — "MAS tightened the slope," "the SGD NEER (nominal effective exchange rate) is at the top of the band," "core inflation came in
 at 3%." You cannot read any of it with the Fed model alone, because MAS doesn't set an interest rate at all.
 
 Second, and more powerfully, **MAS is the perfect foil for §3**. The best way to check that you understood
@@ -53,7 +53,7 @@ the two side by side (§5) and the logic of *both* snaps into focus in a way nei
 ## 1. Why an exchange rate, not an interest rate?
 
 Start with the fact that decides everything: **Singapore is one of the most open economies on earth.** Its
-total trade (exports plus imports) runs to **roughly three times its GDP** — it imports its food, its
+total trade (exports plus imports) runs to **roughly three times its GDP (Gross Domestic Product)** — it imports its food, its
 energy, its water, its raw materials, and most of what it consumes, and re-exports an enormous volume on top.
 
 ![A bar chart of trade openness — exports plus imports as a share of GDP — across economies. Hong Kong is about 350 percent and Singapore about 320 percent, towering over the others; the Netherlands is about 155 percent, Germany and South Korea about 90 percent, and China, Japan, and the USA cluster low at roughly 37, 37, and 25 percent. A dashed line marks 100 percent of GDP. Annotations note that Singapore trades about three times its GDP so import prices drive its inflation, whereas the US is large and relatively closed so its interest rate is the natural lever.](diagrams/04-the-mas-model-fig3.svg)
@@ -176,7 +176,7 @@ Two consequences complete the mirror-image of §3:
   requires. (The Fed chooses the price of reserves and lets the quantity follow; MAS chooses the exchange
   rate and lets *both* the money quantity and the interest rate follow. The trilemma, made mechanical.)
 - **Reserves are foreign, not domestic.** The Fed's balance sheet is full of **domestic Treasuries** (§3);
-  MAS's is full of **foreign-currency assets**. When MAS "does QE-like base expansion," it's buying *foreign*
+  MAS's is full of **foreign-currency assets**. When MAS "does quantitative-easing-like base expansion," it's buying *foreign*
   bonds, not Singaporean ones — the fully bond-market-independent way to run a central bank (§3 §10d). It
   also means MAS earns returns on a giant foreign portfolio (managed alongside GIC and Temasek in
   Singapore's broader reserves system), a very different institution from a domestic-bond central bank.
@@ -207,8 +207,8 @@ exchange rate acts on the *importable* part of the basket.)
 |---|---|---|
 | **Targets** | a domestic **interest rate** (price of *time*) | the **exchange rate** / SGD NEER (price of *foreign money*) |
 | **Because inflation is driven by** | **domestic** demand & wages (large closed-ish economy) | **imported** prices (small ultra-open economy) |
-| **Instrument(s)** | one overnight **policy rate** (IORB) | the **band**: slope · width · level |
-| **Operating method** | administer IORB / OMO on **domestic bonds** | **FX intervention** — buy/sell SGD vs foreign currency |
+| **Instrument(s)** | one overnight **policy rate** (IORB — interest on reserve balances) | the **band**: slope · width · level |
+| **Operating method** | administer IORB / OMO (open market operations) on **domestic bonds** | **FX intervention** — buy/sell SGD vs foreign currency |
 | **Balance sheet holds** | domestic **Treasuries** | **foreign-exchange reserves** |
 | **Gives up (trilemma)** | exchange-rate stability (the US **floats**) | an **independent interest rate** (imported from the world) |
 | **Meets** | 8 times a year | **twice** a year (fast transmission) |
@@ -237,7 +237,7 @@ worked. That parallel is the single clearest demonstration that §3 and §4 are 
   through domestic demand — the right tool for the economy MAS actually has.
 - **Fast transmission** — the exchange rate passes through to prices in months, not the Fed's year-plus.
 - **A band, not a peg**, gives flexibility: it can absorb volatility (width) and bend to fundamentals
-  (slope/level) without inviting the one-way speculative attack that broke hard pegs elsewhere (the ERM 1992,
+  (slope/level) without inviting the one-way speculative attack that broke hard pegs elsewhere (the ERM [Exchange Rate Mechanism] 1992,
   various 1990s crises — E05's territory).
 
 **Limits — and what MAS gives up.**
@@ -351,7 +351,7 @@ Reason first; check against a source where noted.
   October) at mas.gov.sg — note the exact language on *slope*, *width*, and *level*. Compare two consecutive
   statements to see what changed.
 - **Core vs headline inflation.** On the **SingStat** or MAS site, plot **MAS core inflation** against
-  **headline CPI** — the gap is mostly accommodation + private transport, the bits the SGD NEER *doesn't*
+  **headline CPI (Consumer Price Index)** — the gap is mostly accommodation + private transport, the bits the SGD NEER *doesn't*
   target. This is §5 made concrete.
 - **Imported rates.** Look up **SORA** (the Singapore Overnight Rate Average) alongside the US fed funds rate
   — watch SGD rates track global rates, not an MAS decision. That's the trilemma's "imported interest rate"
@@ -403,9 +403,9 @@ by selling SGD, and reserves accumulate.*
    among the largest on earth. More foreign currency flows in (exports of goods, services, and investment
    income) than out → continuous excess demand for SGD. It reflects a national **saving rate** (CPF, corporate
    retained earnings, fiscal surpluses) running far ahead of domestic investment.
-2. **A huge net-creditor position throwing off income.** GIC, Temasek, MAS reserves, corporates → Singapore is
+2. **A huge net-creditor position throwing off income.** GIC (Government of Singapore Investment Corporation), Temasek, MAS reserves, corporates → Singapore is
    a massive net owner of foreign assets, whose returns feed the surplus in a *self-reinforcing* loop.
-3. **Safe-haven capital inflows** 避险资金 (避險資金) — AAA rating, rule of law, hub status pull in FDI,
+3. **Safe-haven capital inflows** 避险资金 (避險資金) — AAA rating, rule of law, hub status pull in FDI (foreign direct investment),
    portfolio, and private-wealth inflows: structural demand for SGD assets.
 4. **Balassa–Samuelson (productivity).** A fast-growing, high-productivity economy tends to see its *real*
    exchange rate appreciate; a country delivers that either through domestic inflation or a rising nominal
@@ -424,7 +424,7 @@ counterpart** of the surplus.
 
 **The caveat on "unlimited."** Resisting appreciation isn't *free*: selling SGD injects SGD liquidity, which
 left alone would loosen policy and stoke inflation — defeating the purpose. So MAS **sterilizes** 冲销 (沖銷) —
-issuing MAS Bills / SGS, taking government deposits, doing reverse repos. Real cost and complexity, but — the
+issuing MAS Bills / SGS (Singapore Government Securities), taking government deposits, doing reverse repos. Real cost and complexity, but — the
 key point — **not a hard ceiling** the way finite reserves are on the depreciation side. Your "unlimited on the
 strong side" holds; the binding constraint only bites in the rare crisis when MAS must defend a *weak* SGD, and
 the giant reserve stockpile exists precisely to win those rare fights decisively.
@@ -480,18 +480,18 @@ completely legal — routine in trade, shipping, commodities, and B2B.
 tender** 法定货币 (法定貨幣) — meaning only that *if an SGD debt is payable in Singapore, the creditor must accept
 SGD to discharge it*. It does **not** force prices to be in SGD (same reason a shop may refuse a large note or
 refuse cash: legal tender governs *discharge of a debt*, not *what you must price in*). So the consumer market
-being all-SGD is **economic gravity, not law** — wages, rents, CPF, and taxes are all SGD, so pricing consumer
+being all-SGD is **economic gravity, not law** — wages, rents, CPF (Central Provident Fund), and taxes are all SGD, so pricing consumer
 goods otherwise just dumps FX risk on the customer.
 
 **Could a developer put a USD tag on a condo?** No outright statutory ban on the *quote* — but the entire
 apparatus of a residential sale runs in SGD, so in practice it's SGD and a USD tag would be self-defeating:
 statutorily **prescribed** Option-to-Purchase / Sale-&-Purchase forms and progress-payment schedule; **stamp
-duties** (BSD/ABSD) assessed in SGD; MAS **loan rules** (LTV, TDSR) and SGD housing loans; **CPF** (SGD-only).
+duties** (BSD/ABSD) assessed in SGD; MAS **loan rules** (LTV, TDSR — Total Debt Servicing Ratio) and SGD housing loans; **CPF** (SGD-only).
 A USD contract would pile FX risk onto a buyer whose loan, CPF, and salary are all SGD — nobody would sign it,
 and the paperwork converts to SGD anyway.
 
 **The one hard hook — and note what it's about.** Even a USD invoice for a domestic supply must show the
-**SGD-equivalent** for **GST** 消费税 (消費稅): IRAS requires GST to be *accounted for* in SGD. That's the
+**SGD-equivalent** for **GST (Goods and Services Tax)** 消费税 (消費稅): IRAS (Inland Revenue Authority of Singapore) requires GST to be *accounted for* in SGD. That's the
 closest thing to a "must use SGD" rule — and it's **tax accounting**, not a restriction on what you may price or
 contract in.
 
@@ -570,7 +570,7 @@ The payoff section for reading **Singapore/Asia** monetary news across both lang
   and the live application of everything above.
 - **The trilemma:** any international-macro explainer of the **Mundell–Fleming impossible trinity** — e.g.
   the *Investopedia* "Trilemma" entry, or CORE Econ's open-economy material. https://www.core-econ.org/the-economy/
-- **A good outside overview:** the IMF or BIS write-ups on Singapore's monetary framework, and academic
+- **A good outside overview:** the IMF (International Monetary Fund) or BIS (Bank for International Settlements) write-ups on Singapore's monetary framework, and academic
   retrospectives on "why Singapore targets the exchange rate" (MAS's own staff papers are accessible).
 - **Live data to practise on:** **MAS** (SGD NEER commentary, MPS, core inflation), **SingStat** (CPI),
   bank research desks (DBS/OCBC/UOB **SGD NEER band estimates**), and **SORA** vs the US fed funds rate.

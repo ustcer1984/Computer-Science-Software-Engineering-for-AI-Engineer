@@ -19,7 +19,7 @@
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
 **Estimated study time:** 1.5–2 hours including reflection.
-**Prerequisites:** E02 §1 (GDP and the **C + I + G + NX** identity — especially what **G** does and does not
+**Prerequisites:** E02 §1 (GDP and the **C + I + G + NX** identity (NX = net exports) — especially what **G** does and does not
 include), E02 §4 (the business cycle, the **output gap**, the **multiplier** $1/(1-c)$, and §4 §10a's **automatic
 stabilizers = the passive dashpot**), E01 §3 (elasticity and **tax incidence** — who really bears a tax), and E03
 §3 (monetary policy — because fiscal and monetary policy interact, the "policy mix" of §3). Helpful: E03 §2's
@@ -57,7 +57,7 @@ bank. That institutional split is the whole point:
 
 | | **Monetary policy (E03)** | **Fiscal policy (E04)** |
 |---|---|---|
-| **Who** | the central bank (Fed, MAS, PBoC) | the elected government / treasury |
+| **Who** | the central bank (Fed, MAS [Monetary Authority of Singapore], PBoC) | the elected government / treasury |
 | **Levers** | the policy rate, the money supply, the exchange rate | **taxes** and **government spending** |
 | **Independent?** | usually **operationally independent** (E02 §3 §11) | **inherently political** — set through the budget/legislature |
 | **Speed** | fast to *decide* (a committee), slow to *transmit* (12–18 mo lags) | slow to *decide* (legislation), can be fast to *act* (a transfer lands immediately) |
@@ -88,7 +88,7 @@ plus some non-tax sources.
   estate/inheritance tax.
 - **Trade taxes** — tariffs on imports (small for most rich economies; E05's territory).
 
-![A grouped bar chart comparing the composition of government revenue across three systems, as a share of total revenue. For the USA (federal), personal income tax is about 49 percent and payroll/social contributions about 35 percent, dwarfing corporate income (about 9 percent), other taxes (about 5 percent) and non-tax revenue (about 2 percent), with essentially no federal consumption tax. For a high-tax European system, the load is spread across payroll/social contributions (about 33 percent), personal income (about 23 percent) and a large consumption/VAT slice (about 25 percent). For Singapore, the mix is unusual: corporate income (about 22 percent), GST (about 20 percent), other taxes such as stamp and property (about 20 percent), personal income (about 15 percent), and a large non-tax slice of about 23 percent from investment income (the NIRC). Annotations note that the US leans on income plus payroll with no federal VAT, Europe leans on VAT plus social contributions, and Singapore leans on corporate tax, GST, and a large investment-income contribution.](diagrams/01-taxes-spending-and-the-budget-fig1.svg)
+![A grouped bar chart comparing the composition of government revenue across three systems, as a share of total revenue. For the USA (federal), personal income tax is about 49 percent and payroll/social contributions about 35 percent, dwarfing corporate income (about 9 percent), other taxes (about 5 percent) and non-tax revenue (about 2 percent), with essentially no federal consumption tax. For a high-tax European system, the load is spread across payroll/social contributions (about 33 percent), personal income (about 23 percent) and a large consumption/VAT slice (about 25 percent). For Singapore, the mix is unusual: corporate income (about 22 percent), GST (about 20 percent), other taxes such as stamp and property (about 20 percent), personal income (about 15 percent), and a large non-tax slice of about 23 percent from investment income (the NIRC). Annotations note that the US leans on income plus payroll with no federal VAT (value-added tax), Europe leans on VAT plus social contributions, and Singapore leans on corporate tax, GST (Goods and Services Tax), and a large investment-income contribution.](diagrams/01-taxes-spending-and-the-budget-fig1.svg)
 
 The figure makes the headline point: **there is no single "normal" tax system.** The US federal government runs
 on **income + payroll** (no federal VAT at all); high-tax European states lean heavily on **VAT + social
@@ -130,7 +130,7 @@ Spending splits two ways that both matter.
 **By economic type** (this is the E02 §1 subtlety, so get it right):
 
 - **Government consumption & investment** — buying goods and services *now* (salaries of teachers, soldiers;
-  buying equipment) and *building for the future* (roads, schools). **This is the "G" in GDP** — it's the
+  buying equipment) and *building for the future* (roads, schools). **This is the "G" in GDP (Gross Domestic Product)** — it's the
   government directly using resources.
 - **Transfers** 转移支付 (移轉支付) — handing money to people *without buying anything* (pensions, unemployment
   benefits, welfare). **Transfers are NOT in "G"** — they don't consume resources; they *move purchasing power* to
@@ -151,7 +151,7 @@ The figure carries a fact that dominates rich-world fiscal politics: **the budge
 Mandatory entitlements plus interest are ~73% of US federal outlays, so the annual budget fight is over the
 remaining ~27%. And the mandatory share **grows structurally** as populations age (more pensioners, more
 healthcare) — the slow-motion fiscal pressure behind §2. (Singapore's spending profile is very different again:
-small transfers, no large public-pension entitlement — CPF does that job — and a big share going to development
+small transfers, no large public-pension entitlement — CPF (Central Provident Fund) does that job — and a big share going to development
 and topping up the reserves.)
 
 ---
@@ -164,7 +164,7 @@ $$\text{Balance} = T - G,$$
 
 where $T$ is total revenue and $G$ total spending (including transfers and interest — using $G$ loosely here for
 *all* outlays). A **surplus** ($T > G$) lets the government pay down debt or save; a **deficit** ($G > T$) must be
-**financed by borrowing** — the government issues **bonds** (US Treasuries, Singapore's SGS/SINGA), which is
+**financed by borrowing** — the government issues **bonds** (US Treasuries, Singapore's SGS [Singapore Government Securities]/SINGA), which is
 exactly the issuance side of E03 §2's yield-curve thread. **Every deficit adds to the stock of debt** (→ §2); the
 deficit is the *flow*, the debt is the *stock*.
 
@@ -315,13 +315,13 @@ flowchart TD
    automatic stabilizers, E02 §4) from the **structural** one (actual policy), and watch the **primary** balance
    (ex-interest) for current effort.
 6. **The fiscal multiplier is $1/(1-c)$** — **spending beats tax cuts** (tax cuts are partly saved), and the
-   multiplier is **big with slack / at the ZLB** and **small at full employment or in an open economy** (imports
+   multiplier is **big with slack / at the ZLB (zero lower bound)** and **small at full employment or in an open economy** (imports
    leak).
 7. **Crowding out and Ricardian equivalence** shrink the multiplier — but mostly **at full employment**, not in a
    deep slump; the state of the economy decides whether stimulus works.
 8. **The constraints:** the budget constraint, **deficit bias**, **fiscal rules**, the **monetary interaction**
    (pull together or fight — §3), and **decision lags** (why automatic stabilizers matter). **Singapore is the
-   conservative outlier** — balance over a term, no borrow-to-spend, the NIRC, protected reserves.
+   conservative outlier** — balance over a term, no borrow-to-spend, the NIRC (Net Investment Returns Contribution), protected reserves.
 
 ---
 
@@ -361,18 +361,18 @@ Reason first; check against a source where noted.
   spending breakdown" and find the two pie/bar charts (revenue by source, spending by function). Identify the
   single biggest line on each side — for most rich countries it's *income/payroll* on revenue and
   *pensions/health* on spending.
-- **Singapore's Budget.** The **MOF Budget** (mof.gov.sg / singaporebudget.gov.sg) publishes revenue and
+- **Singapore's Budget.** The **MOF (Ministry of Finance) Budget** (mof.gov.sg / singaporebudget.gov.sg) publishes revenue and
   expenditure tables — find the **NIRC** line and the **GST** line, and note how *small* personal income tax is
   relative to corporate + GST + NIRC. This is fig 1 made concrete.
-- **The US deficit history, live.** On **FRED**, plot `FYFSGDA188S` (federal surplus/deficit as % of GDP) — it's
+- **The US deficit history, live.** On **FRED (Federal Reserve Economic Data)**, plot `FYFSGDA188S` (federal surplus/deficit as % of GDP) — it's
   fig 3. Note the Clinton surpluses and the 2009 and 2020 troughs.
-- **Find the cyclical vs. structural split.** The **IMF Fiscal Monitor** or **CBO** publishes
+- **Find the cyclical vs. structural split.** The **IMF (International Monetary Fund) Fiscal Monitor** or **CBO (Congressional Budget Office)** publishes
   *cyclically-adjusted* balances — compare the headline and structural deficit for a recession year and see how
   much was "just the thermostat."
 
 Bring one — a budget breakdown, the deficit chart, or a headline-vs-structural comparison — to our session and
 we'll read the fiscal stance off it: is it expansionary or contractionary, cyclical or structural, and what is it
-doing to the debt (§2) — the way we read an MPS off the SGD NEER band (E03 §4) and the dot plot off the Fed (E03 §3).
+doing to the debt (§2) — the way we read an MPS off the SGD NEER (nominal effective exchange rate) band (E03 §4) and the dot plot off the Fed (E03 §3).
 
 ## 10. Applied — from our session Q&A
 
@@ -423,7 +423,7 @@ the difference — in which case deficits fool no one. Reality is in between; yo
 equivalence fails and politicians exploit the failure," which is a defensible read.
 
 **The synthesis that surprised us both — left and right converge.** **MMT** (the progressive claim that a
-currency-issuer "isn't revenue-constrained") *sounds* opposite to Friedman, but even MMT concedes the real
+currency-issuer "isn't revenue-constrained") *sounds* opposite to Friedman, but even MMT (Modern Monetary Theory) concedes the real
 constraint is **inflation / real resources**, not the accounting — which *is* Friedman's point in other clothes.
 Both poles agree the financing method is a veil and the true cost is the resources consumed; they disagree only
 on where the real-resource ceiling sits.
@@ -495,8 +495,8 @@ with low capacity, stay small or you land bottom-right.
    reversibility.
 3. **Capacity isn't uniform.** A country can have a world-class central bank and a hopeless procurement arm — so
    the optimum is *granular*: big and activist where capacity is high, minimal where it isn't. Which is exactly
-   what Singapore does — filed as "small government," it is in fact **intensely activist** (HDB houses ~80% of
-   people; CPF; Temasek/GIC; industrial policy) *in its high-capacity domains*. Singapore is your position made
+   what Singapore does — filed as "small government," it is in fact **intensely activist** (HDB [Housing and Development Board] houses ~80% of
+   people; CPF; Temasek/GIC [Government of Singapore Investment Corporation]; industrial policy) *in its high-capacity domains*. Singapore is your position made
    real: build the capacity first, and you *earn* the option to be big where it counts.
 
 **The one caveat to keep on the table:** competence isn't the only thing you want from a state — a hyper-competent
@@ -568,7 +568,7 @@ genuine terminology difference** you'd trip over.
 - **The Singapore fiscal constitution:** the **MOF** Budget documents and the explainers on the **NIRC** and the
   reserves framework (mof.gov.sg) — the local-lens outlier in §6.
 - **Live data:** **FRED** (US deficit, revenue, outlays as % of GDP), the **IMF Fiscal Monitor** (cross-country
-  deficits, debt, *cyclically-adjusted* balances), and **OECD** revenue-statistics for the tax-mix comparison.
+  deficits, debt, *cyclically-adjusted* balances), and **OECD (Organisation for Economic Co-operation and Development)** revenue-statistics for the tax-mix comparison.
 
 ---
 

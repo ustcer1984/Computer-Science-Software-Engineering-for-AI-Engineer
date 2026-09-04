@@ -27,11 +27,11 @@
 
 You already feel this in your gut from ops, but haven't yet named the discipline:
 
-- **Your eval pipeline's wall-clock is set by the slowest calls, not the average.** You fan out thousands of LLM API requests and the batch
+- **Your eval pipeline's wall-clock is set by the slowest calls, not the average.** You fan out thousands of LLM (large language model) API requests and the batch
   isn't done until the last one returns. That's not a quirk — it's **tail-at-scale**, and §5 gives you the math that says *why* it's
   unavoidable and what the mitigations are (your `as_completed` + timeout instincts from Ch3 §2 are exactly the right ones, and now you'll
   see why).
-- **"Make it faster" almost never means "faster CPU."** For anything touching a DB, a cache, or a network, the time is *waiting*, and the
+- **"Make it faster" almost never means "faster CPU."** For anything touching a DB (database), a cache, or a network, the time is *waiting*, and the
   wins come from **making fewer round-trips, overlapping them, or moving the data closer** — not from optimizing Python. This section is the
   map of where the time actually goes and which lever to pull.
 - **LLM serving lives on both sides of the latency/throughput split.** Prefill vs decode, batching for throughput vs latency SLOs, streaming
@@ -54,9 +54,9 @@ or do them where the user can't see the wait.
 |---|---|---|
 | L1 cache reference | ~1 ns | **1 second** |
 | Main memory (RAM) | ~100 ns | ~1.7 minutes |
-| SSD random read (NVMe) | ~100 µs | **~1.2 days** |
+| SSD (solid-state drive) random read (NVMe) | ~100 µs | **~1.2 days** |
 | Round trip, same datacentre | ~500 µs | ~5.8 days |
-| Disk (HDD) seek | ~10 ms | ~116 days |
+| Disk (HDD — hard disk drive) seek | ~10 ms | ~116 days |
 | Round trip, intercontinental | ~150 ms | **~4.75 years** |
 
 Read the table as an engineer: from the CPU's point of view, **going to the network is like a human waiting years for an answer.** A function
@@ -103,7 +103,7 @@ concurrency* you need to get there. (And §2 is what makes holding 1,000 in flig
 Zoom into one request. Its latency is not "the code" — it's the **critical path**: the longest chain of *dependent* operations, each of which
 must wait for the previous. The classic killers are all the same shape — **round-trips forced to happen one after another**:
 
-- **The N+1 query problem.** An ORM loads a list of 100 items with one query, then lazily loads each item's author with a *separate* query —
+- **The N+1 query problem.** An ORM (object-relational mapper) loads a list of 100 items with one query, then lazily loads each item's author with a *separate* query —
   101 sequential DB round-trips where 2 would do. If each is 1 ms, that's 101 ms of pure waiting, none of it CPU. (The fix: one join or one
   batched `IN (...)` query — the "fewer trips" lever.)
 - **Chatty APIs.** A request that calls service A, then uses A's result to call B, then B's to call C — three serial network RTTs. If they're
@@ -151,7 +151,7 @@ separate a senior instinct from a junior one:
 Every latency optimization is one of exactly four moves. Learn them as a checklist:
 
 **Lever 1 — Fewer round-trips (the biggest one).** Since each trip costs a full device latency, *removing* trips beats speeding them up.
-Batch (`IN (...)`, multi-get, bulk insert, GraphQL/BFF to collapse chatty calls), join instead of N+1, coalesce, and **cache** so the trip
+Batch (`IN (...)`, multi-get, bulk insert, GraphQL/BFF — backend-for-frontend — to collapse chatty calls), join instead of N+1, coalesce, and **cache** so the trip
 never happens. This is the highest-leverage lever because it attacks the *count*, and count multiplies latency.
 
 **Lever 2 — Overlap the round-trips (concurrency/pipelining).** If trips are independent, run them at once so total ≈ **max** instead of
@@ -165,8 +165,8 @@ Five 100-ish-ms calls take 525 ms serially and 130 ms concurrently — and note 
 says the overlap is also what gives you throughput.)
 
 **Lever 3 — Move the data closer (shorten the trip).** Each tier in the §1 hierarchy is orders of magnitude apart, so *promoting* data up a
-tier is a huge win: RAM cache instead of disk, a read replica in-region instead of cross-region, a CDN edge instead of origin, colocating
-services to turn a cross-region RTT into a same-datacentre one. "Closer" is measured in the §1 table's units — every tier you climb is a
+tier is a huge win: RAM cache instead of disk, a read replica in-region instead of cross-region, a CDN (Content Delivery Network) edge instead of origin, colocating
+services to turn a cross-region RTT (round-trip time) into a same-datacentre one. "Closer" is measured in the §1 table's units — every tier you climb is a
 10–1000× cut.
 
 **Lever 4 — Hide the latency (do the wait where nobody's looking).** If you can't remove or shorten the wait, move it off the user's critical
@@ -186,7 +186,7 @@ your eval pipeline.
 
 **Averages lie; use percentiles.** A mean latency hides the shape of the distribution. What users and SLAs care about is the **tail**: p50
 (median), p95, p99, p99.9. "p99 = 200 ms" means 1% of requests take *longer* than 200 ms. The tail is where timeouts, retries, angry users,
-and cascading failures live — and it's routinely 10–100× the median because of GC pauses, cache misses, queueing, contention, a slow disk, a
+and cascading failures live — and it's routinely 10–100× the median because of GC (garbage collection) pauses, cache misses, queueing, contention, a slow disk, a
 noisy neighbour. **Report and alert on p99/p99.9, never the average.**
 
 **The tail at scale — why rare slowness becomes the common case (Dean & Barroso, "The Tail at Scale").** Here is the result that explains your
@@ -286,7 +286,7 @@ The seconds of "slowness" were entirely **cold-start** cost — and when you bre
 one-time setup**, exactly the §1 claim:
 
 <!-- FIGURE -->
-![Horizontal stacked bar titled 'Anatomy of a cold serverless request (~3.6 s): the compute is a sliver, the I/O and setup are everything.' Five segments laid end to end along a wall-clock-time axis in milliseconds: container init / imports & page-in (1400 ms), init_db bootstrap / schema-seed check (1000 ms), first DB connect / TCP+TLS+auth (750 ms), Firebase cert fetch / one network round-trip (360 ms), and finally a tiny green DB-query segment (42 ms). An arrow points to the thin green sliver with the caption 'DB query — the actual work — is 42 ms: ~1% of the wait. Everything else is a round-trip or a one-time setup cost.' The figure makes visceral that the only compute slice is ~1% of the request; the rest is setup and network I/O.](diagrams/03-why-io-dominates-latency-fig3.svg)
+![Horizontal stacked bar titled 'Anatomy of a cold serverless request (~3.6 s): the compute is a sliver, the I/O and setup are everything.' Five segments laid end to end along a wall-clock-time axis in milliseconds: container init / imports & page-in (1400 ms), init_db bootstrap / schema-seed check (1000 ms), first DB connect / TCP+TLS (Transport Layer Security)+auth (750 ms), Firebase cert fetch / one network round-trip (360 ms), and finally a tiny green DB-query segment (42 ms). An arrow points to the thin green sliver with the caption 'DB query — the actual work — is 42 ms: ~1% of the wait. Everything else is a round-trip or a one-time setup cost.' The figure makes visceral that the only compute slice is ~1% of the request; the rest is setup and network I/O.](diagrams/03-why-io-dominates-latency-fig3.svg)
 
 Read it against §7's keeper: the compute is a rounding error, and the latency *is* the setup + round-trips. A junior instinct ("the DB is slow,
 scale it up") would have optimized the 1% and left the 99% untouched — the same critical-path mistake as caching the 1 ms permission lookup in
@@ -371,7 +371,7 @@ it by walking a real serverless cold-start investigation straight down that same
   two phases gets optimized away; the bandwidth-bound counterpart to this section.
 - **Close Ch4 and open M02 — Networking & the Web** (Ch4 §3 leaned on RTTs, TCP windows, the bandwidth-delay product — M02 Ch1 "how a request
   travels" is the natural continuation, and cashes the cross-region-RTT and BDP threads).
-- Or **rotate scope** per the interleave: **M04 Ch2 §2** (refactoring in moves, SWE) or **M12 Ch2 §3** (audio/speech/TTS, AI).
+- Or **rotate scope** per the interleave: **M04 Ch2 §2** (refactoring in moves, SWE — software engineering) or **M12 Ch2 §3** (audio/speech/text-to-speech, AI).
 
 <!-- Bilingual key-terms table follows; see authoring-conventions §5. -->
 
