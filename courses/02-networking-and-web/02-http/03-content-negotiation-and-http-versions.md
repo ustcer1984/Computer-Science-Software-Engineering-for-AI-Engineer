@@ -17,7 +17,8 @@
 > with the negotiation mechanisms verified live on the wire.
 > **Prerequisites:** M02 Ch2 §1 (methods/status/headers — the *semantics* that stay fixed) and §2 (`Vary`,
 > the cache that negotiation must not break). Leans hard on M02 Ch1: §1 (the round-trip latency budget and
-> TCP head-of-line blocking), §5 (TLS 1.3), and §7 (QUIC/HTTP-3, first met there) — this section is where
+> TCP head-of-line blocking), §5 (TLS — Transport Layer Security — 1.3), and §7
+> (QUIC — Quick UDP Internet Connections — and HTTP-3, first met there) — this section is where
 > those pay off.
 
 **Estimated study time:** 2.5–3 hours including the `curl --http2 / --http3` hands-on.
@@ -110,7 +111,7 @@ serves French to an English reader. Negotiation and caching are the same problem
 ## 3. Compression — the negotiation that pays for itself
 
 `Accept-Encoding` / `Content-Encoding` is content negotiation's highest-leverage case, so it's worth its
-own treatment. Text compresses dramatically — HTML/CSS/JS/JSON routinely shrink **70–90%** — and that
+own treatment. Text compresses dramatically — HTML, CSS, JavaScript and JSON routinely shrink **70–90%** — and that
 shrinkage comes straight off transfer time, the blue bar in §2's latency figure.
 
 - **The codecs, in order of modern preference:** **Brotli (`br`)** — best ratio for text, now near-universal
@@ -210,7 +211,7 @@ flowchart TB
 
 ## 6. HTTP/2: one connection, many streams
 
-HTTP/2 (2015, born from Google's SPDY) keeps every HTTP semantic and rewrites the transport:
+HTTP/2 (2015, born from Google's experimental SPDY protocol) keeps every HTTP semantic and rewrites the transport:
 
 - **Binary framing.** Messages become binary **frames** instead of ASCII text — cheaper and unambiguous to
   parse (no more header-line edge cases).
@@ -245,7 +246,8 @@ of TCP+TLS it runs on **QUIC** (your Ch1 §7 acquaintance), a transport built on
   ports, so it **survives a network change** — walk from Wi-Fi to cellular and the connection (and your
   downloads) continue without a new handshake. Impossible with TCP.
 - **Cost:** it's UDP, so some corporate firewalls block or throttle it, and per-packet crypto/CPU is
-  higher; clients therefore keep HTTP/2-over-TCP as a fallback (negotiated via `Alt-Svc` / TLS ALPN).
+  higher; clients therefore keep HTTP/2-over-TCP as a fallback (negotiated via `Alt-Svc` / TLS ALPN — Application-Layer
+  Protocol Negotiation, worked in §11a).
 
 The three-line summary you can keep: **HTTP/1.1** = one request at a time per connection (HTTP-layer HOL) →
 **HTTP/2** = many streams on one TCP connection (fixes HTTP-layer HOL, leaves TCP HOL) → **HTTP/3** = many
@@ -265,7 +267,8 @@ throughout.**
   can't satisfy `Accept` (or document that you default — just do it deliberately).
 - **Enable HTTP/2 (and HTTP/3 where your edge supports it) — and then STOP domain-sharding.** Sharding and
   inlining were HTTP/1.1 workarounds; under HTTP/2/3 they *hurt* by fragmenting the single multiplexed
-  connection. Let the edge (CloudFront/ALB/nginx) negotiate the version; your app semantics don't change.
+  connection. Let the edge (CloudFront, an ALB — Application Load
+  Balancer — or nginx) negotiate the version; your app semantics don't change.
 - **Expect HTTP/3 to help most on mobile/lossy networks**, least on clean low-loss links. It's a
   tail-latency and resilience win (no TCP HOL, connection migration), not a magic universal speedup.
 - **Don't confuse `Content-Encoding` (end-to-end, part of the representation/`ETag`) with `Transfer-Encoding`
@@ -275,7 +278,7 @@ throughout.**
 
 ## 9. Check your understanding
 
-1. A client sends `Accept: application/json, text/csv;q=0.8` and the server can only produce CSV and XML.
+1. A client sends `Accept: application/json, text/csv;q=0.8` and the server can only produce CSV and XML (Extensible Markup Language).
    What does it send, what's the "honest" status if it refuses, and what header must appear so a cache
    doesn't mis-serve?
 2. Your API gzip-compresses responses but you forgot one header, and users behind a shared proxy
@@ -335,7 +338,7 @@ See negotiation and versions on the wire.
    Compare with `--http1.1`.
 4. **q-values:** `curl -s -H 'Accept: text/csv;q=0.9, application/json' -D - <a content-negotiating API>`
    and see which representation wins.
-5. **Thought experiment (no code):** you enable HTTP/2 on your CDN and also keep your old HTTP/1.1
+5. **Thought experiment (no code):** you enable HTTP/2 on your CDN (Content Delivery Network) and also keep your old HTTP/1.1
    domain-sharding (assets split across `static1/2/3.example.com`). Sketch why page load might *not* improve
    — and could regress — and what you'd change.
 
@@ -367,7 +370,7 @@ $ dig +short -t HTTPS www.google.com
 1 . alpn="h2,h3"
 ```
 
-The `HTTPS` RR (the SVCB family) advertises supported protocols in DNS — Cloudflare listing `h3` first,
+The `HTTPS` RR (resource record, of the SVCB — Service Binding — family) advertises supported protocols in DNS — Cloudflare listing `h3` first,
 Google `h2` first — so the browser can know *before it connects*, at zero extra cost.
 
 **2 — The TLS handshake: ALPN. This is where it actually gets decided.** In the ClientHello the client
@@ -415,7 +418,7 @@ version is simply asserted in the request line, and it is always HTTP/1.1:
 
 **Browsers never speak HTTP/2 or HTTP/3 over plaintext.** The spec does define `h2c` (cleartext HTTP/2 via
 the `Upgrade:` header), but **no major browser ever implemented it** — so `http://` means HTTP/1.1, full
-stop. In practice you are then redirected to `https://` (or HSTS / the browser's HTTPS-First mode upgrades
+stop. In practice you are then redirected to `https://` (or HSTS — HTTP Strict Transport Security — or the browser's HTTPS-First mode upgrades
 you before a packet leaves), and the real negotiation happens on that second, encrypted connection.
 
 > A neat historical echo, and a **trailer for Ch4**: the `Upgrade:` header mechanism that *failed* for
@@ -446,13 +449,13 @@ a migration. You will genuinely never branch on "if HTTP/2."
    performance playbook is actively harmful under h2/h3 and nobody in infra will fix it for you:
    **domain sharding** fragments the single multiplexed connection (delete it); **aggressive concatenation
    and inlining** (`data:` URIs, one mega-bundle, CSS sprites) existed to dodge per-request cost that
-   multiplexing removed. The nuance: bundling still helps *compression ratio* and JS parse cost, so don't
+   multiplexing removed. The nuance: bundling still helps *compression ratio* and JavaScript parse cost, so don't
    swing to 500 tiny files — but finer-grained files now buy far better **cache granularity** (one changed
    module invalidates one file, not the bundle — §2's fingerprinting).
 2. **Concurrency assumptions invert.** HTTP/1.1's \~6-connection ceiling was an *accidental rate limiter* on
    your backend. Under HTTP/2 one client can open \~100 concurrent streams on a single connection — your
    own capacity planning and rate limiting are now the only thing standing there.
-3. **Real-time — the sharpest leak, and closest to your work (Ch4).** **SSE was crippled under HTTP/1.1**:
+3. **Real-time — the sharpest leak, and closest to your work (Ch4).** **SSE (Server-Sent Events) was crippled under HTTP/1.1**:
    each event stream consumed one of the \~6 per-origin connections, so a few open tabs starved the site.
    Under HTTP/2 it is one stream among many and that constraint essentially vanishes — **the version
    changes whether SSE is a viable design at all.** Meanwhile **WebSockets do not multiplex over HTTP/2** by
@@ -465,7 +468,7 @@ a migration. You will genuinely never branch on "if HTTP/2."
    commonly still speaks HTTP/1.1** (the target group's protocol version is a setting — HTTP1/HTTP2/gRPC).
    So "we enabled HTTP/2" may describe only the first hop. That is usually your IaC, not someone else's.
 6. **Debugging.** *"Slow only on mobile"* → TCP head-of-line blocking under h2, fixed by h3. *"Works for me,
-   broken on the corporate VPN"* → HTTP/3's UDP blocked, falling back to h2. You cannot diagnose either
+   broken on the corporate VPN (virtual private network)"* → HTTP/3's UDP blocked, falling back to h2. You cannot diagnose either
    without the model in §5–§7.
 
 > Keeper: **the version never changes what you *write*; it changes what you should *stop doing*, what
@@ -518,7 +521,7 @@ steps:
 - **Ch3 — TLS & secure transport:** deepens Ch1 §5 (what HTTPS actually guarantees, certificates, the
   handshake conceptually) — and it's the "TLS termination" job your §2/§11 reverse proxy performs.
 - **Ch4 — Real-time:** REST vs WebSockets vs SSE vs long-polling — **closest to your arena/WebSocket work**,
-  and it builds directly on the connection model (§5–§7 here) and Ch1's NAT/idle-timeout note.
+  and it builds directly on the connection model (§5–§7 here) and Ch1's NAT (Network Address Translation) idle-timeout note.
 
 Or rotate out of M02: **M04 Ch3 (design patterns)**, **M03 (databases/storage)**, or **M01 Ch5 (OS
 landscape)**.

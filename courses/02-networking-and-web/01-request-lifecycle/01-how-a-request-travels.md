@@ -3,10 +3,11 @@
 > **Module:** Networking & The Web
 > **Chapter:** The request lifecycle
 > **Section:** What actually happens between typing a URL (or calling an API) and the first byte
-> coming back — DNS, IP/routing, the TCP handshake, the TLS handshake, HTTP, and QUIC/HTTP-3 — all
+> coming back — DNS, IP/routing, the TCP handshake, the TLS (Transport Layer Security)
+> handshake, HTTP, and QUIC (Quick UDP Internet Connections) / HTTP-3 — all
 > read as a **sequence of round-trips**, with a real latency budget on top.
 > **Status:** ✅ finalized 2026-08-12 (body prepared 2026-08-04). Body went untouched; the Q&A drove
-> the §2b IPv4/IPv6/NAT paragraph into a real-world thread — *IPv6's actual adoption status, why AWS
+> the §2b IPv4/IPv6/NAT (Network Address Translation) paragraph into a real-world thread — *IPv6's actual adoption status, why AWS
 > bills for public IPv4, and whether an AWS backend can run purely on IPv6* — captured in **§11 Applied**.
 > **Prerequisites:** M01 Ch4 §3 (why I/O dominates latency — the round-trip as the unit of latency,
 > Little's Law, the four levers, latency ≠ bandwidth). This section *is* that chapter's payoff, one
@@ -47,7 +48,7 @@ A networked request is built like a set of **nested envelopes**. Each layer wrap
 its own header, sends it, and the peer's matching layer unwraps it. This is **encapsulation**, and it
 is the single structural idea that makes the whole stack comprehensible.
 
-The industry uses two maps. The **OSI 7-layer model** is the vocabulary ("that's a layer-7 load
+The industry uses two maps. The **OSI (Open Systems Interconnection) 7-layer model** is the vocabulary ("that's a layer-7 load
 balancer," "a layer-4 proxy"); the **TCP/IP 4-layer model** is what the internet actually implements.
 You need OSI only as *shared jargon*; reason with the TCP/IP four:
 
@@ -131,13 +132,14 @@ Mechanism worth owning:
 
 - **It's a cache hierarchy, not a lookup every time.** Your OS caches, the browser caches, and above
   all the **recursive resolver** caches every answer for its **TTL** (time-to-live, seconds). The full
-  root→TLD→authoritative walk happens only on a cold cache; the common case is a single \~1–20 ms hop
+  root→TLD (Top-Level Domain)→authoritative walk happens only on a cold cache; the common case is a single \~1–20 ms hop
   to a nearby resolver, or a hit in local cache (≈ 0). *This is why a first request to a new host is
   slower — the cold DNS walk is a real, one-time round-trip tax*, exactly the cold-start shape from
   M01 Ch4 §9.
 - **Record types you'll actually meet:** `A` (name → IPv4), `AAAA` (→ IPv6), `CNAME` (alias → another
   name — costs an extra resolution), `NS` (which servers are authoritative), `MX` (mail), `TXT`
-  (SPF/verification). A CNAME chain to your CDN is common and each hop is latency.
+  (SPF — Sender Policy Framework — and other verification records). A CNAME chain to your
+  CDN (Content Delivery Network) is common, and each hop is latency.
 - **Transport:** classic DNS rides **UDP** (one datagram each way — fast, no handshake; §5), falling
   back to TCP for large answers. Modern privacy variants **DoH/DoT** (DNS over HTTPS/TLS) wrap it in
   TLS — more secure, but now with a handshake cost.
@@ -147,7 +149,7 @@ Mechanism worth owning:
 **Failure modes ("it's always DNS," and it often is):** a stale record cached for its full TTL after
 you cut over a service (why you *lower TTL before* a migration); **negative caching** (a `NXDOMAIN`
 cached, so a just-created record "doesn't exist" for a while); and **split-horizon DNS** — the same
-name resolving to a private address inside a VPC and a public one outside, the classic "works in prod,
+name resolving to a private address inside a VPC (Virtual Private Cloud) and a public one outside, the classic "works in prod,
 not from my laptop" (and vice-versa).
 
 ---
@@ -167,7 +169,8 @@ is added *above* it, by TCP — §4.)
   **NAT** (Network Address Translation — many private hosts behind one public IP) and **IPv6**
   ($2^{128}$ addresses, so every device can have a public one). NAT is now everywhere, and it has a
   consequence that touches your daily work: a NATed host has **no stable, dialable public address**, so
-  *inbound* connections don't just work — which is why peer-to-peer needs STUN/TURN and why **your
+  *inbound* connections don't just work — which is why peer-to-peer needs STUN/TURN (helper protocols that
+  discover a public address or relay traffic through a third party) and why **your
   server must accept the connection** (the client dials out). It also means a **NAT/firewall keeps a
   per-connection mapping with an idle timeout**, and when it silently drops an idle mapping, a
   long-lived **WebSocket** dies — the reason those connections need **heartbeats/keepalives** (a live
@@ -209,9 +212,9 @@ should recognize.
 
 **The 3-way handshake — one full RTT before any data:**
 
-- Client → **SYN** (can we talk? here's my starting sequence number)
+- Client → **SYN** (*synchronize* — can we talk? here's my starting sequence number)
 - Server → **SYN-ACK** (yes; here's mine)
-- Client → **ACK** (got it) — and only now can the client send the HTTP request.
+- Client → **ACK** (*acknowledge* — got it) — and only now can the client send the HTTP request.
 
 That's **1 RTT of pure setup** — \~150 ms on our cross-ocean path, spent before a single byte of your
 request goes out. Remember it for the budget.
@@ -402,7 +405,7 @@ Make the invisible round-trips visible on your own machine.
 4. **Reuse in action:** `curl -v https://api.github.com https://api.github.com` (two URLs, one
    command) and look for `Re-using existing connection` on the second — the handshakes vanish.
 5. **In the browser:** DevTools → Network → click a request → *Timing* tab shows the exact same
-   DNS/Connic/TLS/TTFB waterfall for real page loads.
+   DNS/connect/TLS/TTFB (time-to-first-byte) waterfall for real page loads.
 
 Deliverable: the four phase numbers for one cold and one warm request, and a one-line note on which
 phase dominated and why.
@@ -454,11 +457,11 @@ the whole story: adoption follows real scarcity, and most people don't feel it.
   traffic work today and shed the v4 charges.
 - **Public ingress: no.** A v6-only endpoint is *unreachable* to the \~half of clients (and most
   corporate/guest networks) still on v4-only — you'd be silently invisible to them. Keep a **thin
-  dual-stack edge** (CloudFront, an ALB, or API Gateway) that terminates client IPv4 and forwards to
+  dual-stack edge** (CloudFront, an ALB — Application Load Balancer — or API Gateway) that terminates client IPv4 and forwards to
   the IPv6-only backend, concentrating v4 into a few *shared* edge addresses instead of one per
   instance.
 - **Egress is the catch people miss.** An IPv6-only backend also can't *reach* IPv4-only destinations —
-  and many third-party APIs still publish no `AAAA` record (quite possibly some of the LLM providers a
+  and many third-party APIs still publish no `AAAA` record (quite possibly some of the LLM (large language model) providers a
   backend calls). AWS's fix is **NAT64 + DNS64**: Route 53 Resolver synthesizes an `AAAA`, the NAT
   Gateway translates the traffic to v4 on the way out — the mirror image of the dual-stack edge.
 
@@ -501,7 +504,7 @@ softened by NAT — so it migrates only where someone actually hits the wall.**
 - High Performance Browser Networking, Ilya Grigorik (free online) — the definitive deep treatment of
   latency, TCP, TLS, HTTP/2. <https://hpbn.co/>
 - The speed-of-light latency floor, illustrated — <https://hpbn.co/primer-on-latency-and-bandwidth/>
-- IETF: TLS 1.3 (RFC 8446, 1-RTT/0-RTT) <https://datatracker.ietf.org/doc/html/rfc8446> ·
+- IETF (Internet Engineering Task Force): TLS 1.3 (RFC 8446, 1-RTT/0-RTT) <https://datatracker.ietf.org/doc/html/rfc8446> ·
   QUIC (RFC 9000) <https://datatracker.ietf.org/doc/html/rfc9000> ·
   HTTP/3 (RFC 9114) <https://datatracker.ietf.org/doc/html/rfc9114>
 - `curl` timing variables (`-w`) — <https://curl.se/docs/manpage.html#-w>
@@ -513,7 +516,7 @@ This opens M02. Natural continuations inside the module:
   the application-layer message that step ④ above carries.
 - **Ch3 — TLS & secure transport:** what the §5 handshake actually agrees on (certificates, the key
   exchange), deepened — and the bridge into M10 (security).
-- **Ch4 — Real-time:** REST vs WebSockets vs SSE vs long-polling, and the NAT-idle-timeout/heartbeat
+- **Ch4 — Real-time:** REST vs WebSockets vs SSE (Server-Sent Events) vs long-polling, and the NAT-idle-timeout/heartbeat
   story from §2b in full — closest to your arena work.
 
 Or rotate scope: **M04 Ch3 (design patterns)** is teed up from Ch2, or **M01 Ch5** (OS landscape)

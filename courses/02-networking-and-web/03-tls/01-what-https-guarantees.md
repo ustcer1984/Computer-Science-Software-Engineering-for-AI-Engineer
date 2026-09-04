@@ -3,10 +3,10 @@
 > **Module:** Networking & The Web
 > **Chapter:** TLS & secure transport
 > **Section:** Opens Ch3 by paying off a debt the last two chapters kept running up. HTTPS is HTTP over
-> **TLS**, and TLS buys you exactly **three** things — **confidentiality**, **integrity**, and
+> **TLS** (Transport Layer Security), and TLS buys you exactly **three** things — **confidentiality**, **integrity**, and
 > **authentication** — plus a fourth that people wrongly assume. This section works the **TLS 1.3
-> handshake** step by step (the 1-RTT line-item from Ch1 §5, and the place Ch2 §3's **ALPN** version
-> negotiation actually rides), the **certificate chain of trust** that makes authentication possible and is
+> handshake** step by step (the 1-RTT — one-round-trip — line-item from Ch1 §5, and the place Ch2 §3's
+> **ALPN** (Application-Layer Protocol Negotiation) version negotiation actually rides), the **certificate chain of trust** that makes authentication possible and is
 > also its weakest link, and **where TLS terminates** — the first job of the reverse proxy from Ch2 §2 §11.
 > **Status:** 🟡 PREPARED 2026-09-02 — body ready for your read-through. Applied section (§11) is written on
 > finalize, after the Q&A.
@@ -30,7 +30,7 @@ Three separate promises across this module all land here:
   is why it costs zero extra round-trips.
 
 So this is the box-opening. And it's pitched as a **trust-model** section rather than a cryptography
-lesson, because that's where the real engineering decisions are. The mathematics of AES and ECDHE is M03
+lesson, because that's where the real engineering decisions are. The mathematics of AES (Advanced Encryption Standard) and ECDHE (Elliptic Curve Diffie-Hellman Ephemeral) is M03
 Ch2's job; what you need here is: **what does the padlock actually promise, what does it conspicuously
 *not* promise, who has to be trusted for any of it to work, and where in your own architecture does the
 encrypted channel begin and end.** Those four questions are where TLS bugs and TLS outages actually come
@@ -49,7 +49,7 @@ When a browser shows `https://` and a padlock, TLS is asserting exactly three pr
 
 | Guarantee | Plain-English claim | Broken without it |
 |---|---|---|
-| **Confidentiality** | nobody on the path can *read* the traffic | the café Wi-Fi, your ISP, or a transit provider reads your session cookie |
+| **Confidentiality** | nobody on the path can *read* the traffic | the café Wi-Fi, your ISP (Internet Service Provider), or a transit provider reads your session cookie |
 | **Integrity** | nobody on the path can *modify* the traffic undetected | an ISP injects ads; an attacker flips a byte in your JSON |
 | **Authentication** | the server is *really* the domain in the address bar | you complete a perfect handshake — with an impostor |
 
@@ -61,7 +61,7 @@ is the only part of TLS that depends on trusting third parties.
 
 **The fourth thing people wrongly assume: "HTTPS means the site is safe."** It does not. HTTPS says the
 *channel* to `evil-phishing-site.com` is confidential, intact, and genuinely terminating at
-`evil-phishing-site.com`. Phishing sites overwhelmingly have valid certificates — free, automated DV certs
+`evil-phishing-site.com`. Phishing sites overwhelmingly have valid certificates — free, automated DV (Domain Validated) certs
 (§4) are available to anyone, attackers included. The padlock is a statement about the **pipe**, never
 about the **peer's intentions** or the application's quality.
 
@@ -74,14 +74,15 @@ about the **peer's intentions** or the application's quality.
 
 You need three primitives and one trick. (M03 Ch2 does the real treatment; this is the working set.)
 
-- **Symmetric encryption** (AES-GCM, ChaCha20-Poly1305) — one shared key encrypts *and* decrypts. **Fast**,
+- **Symmetric encryption** (AES-GCM — Advanced Encryption Standard in Galois/Counter Mode — or ChaCha20-Poly1305) — one shared key encrypts *and* decrypts. **Fast**,
   good for bulk data. Problem: both sides must already share a secret.
-- **Asymmetric / public-key cryptography** (RSA, elliptic curves) — a **key pair**: the public key can be
+- **Asymmetric / public-key cryptography** (RSA — Rivest-Shamir-Adleman — or elliptic curves) — a **key pair**: the public key can be
   shouted from the rooftops; the private key never leaves the server. What one key does, only the other
   undoes. **Slow**, but it solves the "we've never met" problem, and it enables **signatures** (sign with
   the private key → anyone can verify with the public key → proof of possession).
-- **Cryptographic hashing + AEAD** — a hash (SHA-256) is a one-way fingerprint; combined into an
-  **authenticated encryption** mode (the "GCM"/"Poly1305" part), it gives you integrity *and*
+- **Cryptographic hashing + AEAD** (Authenticated Encryption with Associated Data) — a hash (SHA-256, a Secure
+  Hash Algorithm variant) is a one-way fingerprint; combined into an
+  **authenticated encryption** mode (the Galois/Counter Mode or Poly1305 part), it gives you integrity *and*
   confidentiality in one operation, so a tampered message fails to decrypt rather than decrypting to
   garbage.
 
@@ -162,7 +163,7 @@ charges a card. This is one of the cleanest examples of why §1's idempotency ta
 A **certificate** is a small signed document binding **an identity (a domain name) to a public key**, with
 a validity period — signed by someone else. That's all. Its power comes entirely from **who signed it**.
 
-- **The chain.** Your server's **leaf** certificate is signed by an **intermediate** CA, which is signed by
+- **The chain.** Your server's **leaf** certificate is signed by an **intermediate Certificate Authority (CA)**, which is signed by
   a **root** CA. The client walks that chain upward until it reaches a root it *already* trusts.
 - **The trust anchor is a list shipped with your device.** Your OS and browser carry a **root store** — a
   few hundred pre-installed root CA certificates. Trust doesn't come from the network; it comes from that
@@ -176,11 +177,13 @@ a validity period — signed by someone else. That's all. Its power comes entire
 - **What's *in* the leaf.** The **Subject Alternative Name (SAN)** list is the authoritative field for
   which hostnames it covers (the old `CN` is legacy). Wildcards (`*.example.com`) cover one label only.
 - **Validation levels — and why only one matters.** **DV** (Domain Validated) proves only "whoever got this
-  cert controlled the domain." **OV**/**EV** additionally vet the legal organization. Browsers **stopped
+  cert controlled the domain." **OV** (Organization Validation) and **EV** (Extended Validation)
+  additionally vet the legal organization — OV confirms the company exists as a legal entity, EV adds an
+  audited check of its premises, operational history and an authorized signatory. Browsers **stopped
   giving EV any special UI** (the green company name is gone), so in practice **DV is the web**, and this
   is precisely why HTTPS cannot vouch for a site's honesty (§1's fourth point).
 - **Automation changed everything.** **Let's Encrypt** made DV certificates **free and automated** via the
-  **ACME** protocol, taking HTTPS from a paid annual chore to a default. Consequence: certificate lifetimes
+  **ACME** (Automated Certificate Management Environment) protocol, taking HTTPS from a paid annual chore to a default. Consequence: certificate lifetimes
   are shrinking (Let's Encrypt issues **90-day** certs; the industry cap fell to **398 days** in 2020 and
   the trend is shorter still) on the logic that **short-lived + automated beats long-lived + revocable** —
   because revocation, as below, barely works.
@@ -194,7 +197,7 @@ a validity period — signed by someone else. That's all. Its power comes entire
 ```mermaid
 flowchart TD
     RS[["ROOT STORE<br/>shipped with your OS / browser<br/>a few hundred pre-trusted CAs<br/>— the trust anchor"]]
-    RS --> R["Root CA certificate<br/>self-signed · private key OFFLINE<br/>(air-gapped HSM)"]
+    RS --> R["Root CA certificate<br/>self-signed · private key OFFLINE<br/>(air-gapped hardware<br/>security module)"]
     R -->|"signs"| I["Intermediate CA<br/>does the day-to-day signing<br/>revocable without killing the root"]
     I -->|"signs"| L["LEAF certificate (your server)<br/>· SAN: www.example.com<br/>· public key<br/>· validity window"]
     L -.->|"proves possession of<br/>the PRIVATE key"| P(["CertificateVerify:<br/>server signs the handshake<br/>transcript with the leaf's<br/>private key"])
@@ -219,8 +222,8 @@ append-only logs, and Chrome refuses certificates that aren't. It doesn't *preve
 it **publicly detectable**, so a domain owner can monitor the logs and catch a rogue certificate for their
 own name. A reputational/audit fix for a structural trust problem.
 
-**Revocation, honestly.** If a private key leaks you want to invalidate the certificate — but CRLs are huge
-and **OCSP** checks are a privacy leak and a latency hit, and browsers **soft-fail** them (if the OCSP
+**Revocation, honestly.** If a private key leaks you want to invalidate the certificate — but Certificate Revocation
+Lists (CRLs) are huge and **OCSP** (Online Certificate Status Protocol) checks are a privacy leak and a latency hit, and browsers **soft-fail** them (if the OCSP
 responder is unreachable, they proceed). So revocation is unreliable in practice, which is exactly the
 argument for the **short-lifetime** direction above: a 90-day certificate that expires on its own is a
 better safety property than a 2-year certificate you hope you can revoke.
@@ -243,7 +246,7 @@ So the session secret exists nowhere durable, and past sessions stay unreadable 
 
 **TLS 1.3 made this mandatory** — it **removed RSA key transport and static Diffie-Hellman entirely**, along
 with renegotiation, compression (the CRIME attack), and a long list of weak ciphers (RC4, 3DES, MD5/SHA-1,
-CBC-mode constructions). This is the rare protocol revision that got *smaller*, and it's the deeper lesson:
+Cipher Block Chaining (CBC) mode constructions). This is the rare protocol revision that got *smaller*, and it's the deeper lesson:
 **most TLS vulnerabilities were in optional legacy features and downgrade paths, not in the strong
 primitives.** BEAST, CRIME, POODLE, FREAK, Logjam, DROWN were nearly all "negotiate the peer down to
 something old." TLS 1.3's defence was **deleting the options.**
@@ -260,7 +263,7 @@ The honest boundary of the guarantee — and the part that produces bad security
 
 - **It does not hide *who* you're talking to.** The **hostname leaks** twice: in plaintext **DNS** (Ch1 §1)
   and in the **SNI** field of the ClientHello, which is sent *before* encryption exists. Your ISP can't read
-  your Gmail, but it knows you connected to Gmail. Fixes are rolling out — **DoH/DoT** for DNS, and
+  your Gmail, but it knows you connected to Gmail. Fixes are rolling out — **DoH/DoT** (DNS over HTTPS / DNS over TLS) for DNS, and
   **Encrypted Client Hello (ECH)** for SNI — but the hostname is historically visible.
 - **It does not hide traffic *shape*.** Packet sizes, timing, and volumes remain visible, and **traffic
   analysis** can infer which page you loaded or which video you streamed from those patterns alone.
@@ -268,11 +271,11 @@ The honest boundary of the guarantee — and the part that produces bad security
   keylogger, or a leaked database are all completely outside TLS's scope. It's a **channel** guarantee.
   This is Ch2 §1 §10c restated: TLS delivers your bytes safely *to the server* — it says nothing about the
   client's honesty or the server's competence.
-- **It does not stop TLS-terminating middleboxes you've been made to trust.** Corporate MITM proxies and
+- **It does not stop TLS-terminating middleboxes you've been made to trust.** Corporate MITM (man-in-the-middle) proxies and
   antivirus work by installing **their own root CA** on your machine, then re-signing every site's
   certificate. Because the root store *is* the trust anchor (§4), this is undetectable to the browser — the
   padlock still shows. Whoever controls your root store controls what "authenticated" means.
-- **It does not make your application secure.** Injection, broken authorization, XSS, CSRF, secrets in the
+- **It does not make your application secure.** Injection, broken authorization, XSS (cross-site scripting), CSRF (cross-site request forgery), secrets in the
   repo — untouched (M10's territory). HTTPS is table stakes, not a security programme.
 
 ---
@@ -281,7 +284,7 @@ The honest boundary of the guarantee — and the part that produces bad security
 
 This is where the section meets your architecture, and it's Ch2 §2 §11's TLS-termination job made concrete.
 **Termination** means the point where the encrypted connection is decrypted. That point is almost never
-your application process — it's the edge (CloudFront, an ALB, nginx, API Gateway), which holds the
+your application process — it's the edge (CloudFront, an Application Load Balancer (ALB), nginx, API Gateway), which holds the
 certificate and private key. Three arrangements, with real trade-offs:
 
 <!-- DIAGRAM:START -->
@@ -313,7 +316,7 @@ flowchart TB
 
 1. **Termination at the edge (the default).** The proxy decrypts; the hop to your app is plain HTTP over a
    private network. **Why:** the edge can now do every job from Ch2 §2 §11 — cache (it must read the body),
-   route on path/headers (L7), compress, run a WAF — and you manage **one** certificate instead of many.
+   route on path/headers (L7 — application layer), compress, run a WAF (Web Application Firewall) — and you manage **one** certificate instead of many.
    **Cost:** that internal hop is plaintext, so it's only acceptable if the network between them is
    genuinely trusted.
 2. **Re-encryption ("end-to-end").** The proxy decrypts, does its L7 work, then opens a *second* TLS
@@ -328,7 +331,8 @@ flowchart TB
 
 **The hop you own — the direct callback to Ch2 §3 §11b.** "We enabled HTTPS" usually describes only
 client→edge. The edge→target hop is a **separate setting** (and on an ALB, so is the target's protocol
-version). The classic real-world footgun is Cloudflare's **"Flexible SSL"** mode: browser→Cloudflare is
+version). The classic real-world footgun is Cloudflare's **"Flexible SSL"** mode (SSL — Secure Sockets Layer — being TLS's
+predecessor, a name that survives in product branding): browser→Cloudflare is
 encrypted and the padlock appears, while **Cloudflare→origin is plain HTTP over the open internet** — a
 site that looks secure and isn't. Know which of the three arrangements you're running, per hop.
 
@@ -354,10 +358,10 @@ Nearly every TLS incident is operational, not cryptographic:
 - **Hostname mismatch** → the SAN doesn't cover the name used (bare domain vs `www`, or a wildcard used
   more than one label deep).
 - **Clock skew** → a wrong client clock makes valid certificates look expired/not-yet-valid. A recurring
-  embedded/IoT and CI-container failure.
+  embedded/Internet-of-Things (IoT) and continuous-integration (CI) container failure.
 - **Mixed content** → an HTTPS page pulling `http://` subresources; browsers block them, so the page
   silently half-loads.
-- **No HSTS / plaintext first hop** → the initial `http://` request is interceptable before the redirect
+- **No HSTS (HTTP Strict Transport Security) / plaintext first hop** → the initial `http://` request is interceptable before the redirect
   (Ch2 §3 §11a). Send **`Strict-Transport-Security`** so the browser refuses plaintext for your domain
   afterwards; consider the preload list.
 - **Certificate pinning, applied naively** → you pin a certificate, rotate it, and **brick every deployed
@@ -476,6 +480,7 @@ and days-to-expiry, and the termination arrangement per hop.
 | TLS termination | TLS 终止 / 卸载 | TLS 終止 / 卸載 | the reverse-proxy job (§7) |
 | Mutual TLS (mTLS) | 双向 TLS | 雙向 TLS | client also presents a cert (§7) |
 | Revocation | 吊销 / 撤销 | 撤銷 | ⚠ 吊销 common in mainland |
+| Domain / Organization / Extended Validation (DV/OV/EV) | 域名 / 组织 / 扩展验证 | 網域 / 組織 / 延伸驗證 | ⚠ 域名 ↔ 網域; only DV matters in browsers now (§4) |
 
 ---
 
@@ -497,11 +502,11 @@ and days-to-expiry, and the termination arrangement per hop.
 ### What's next
 
 Continuing Ch3 (TLS & secure transport):
-- **§2 — TLS in operation:** certificate lifecycle and automation (ACME/ATS, AWS ACM), HSTS and the
+- **§2 — TLS in operation:** certificate lifecycle and automation (ACME, AWS Certificate Manager — ACM), HSTS and the
   preload list, cipher/version policy, mTLS for service-to-service, debugging TLS failures, and the
   performance side (session resumption, 0-RTT, OCSP stapling, where handshake cost actually lands).
 
-Or move on: **Ch4 — Real-time** (REST vs WebSockets vs SSE vs long-polling) is the closest to your
+Or move on: **Ch4 — Real-time** (REST vs WebSockets vs SSE — Server-Sent Events — vs long-polling) is the closest to your
 arena/WebSocket work and was already teed up by Ch2 §3 §11b's SSE-versus-WebSocket trade-off. Deeper
 cryptography — hashing vs encryption, signing, key management — is **M03 Ch2**; the application-security
 programme HTTPS explicitly does *not* give you is **M10**.

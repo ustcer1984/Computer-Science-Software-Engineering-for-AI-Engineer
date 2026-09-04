@@ -14,6 +14,9 @@
 > the opening-`$`-glued-to-a-hyphen trap (documented 2026-07-09, with its grep) **re-shipped** in Econ E04 §2 §9
 > (`an $r$-vs-$g$ comparison`, learner-caught via screenshot) and was found latent in M12 Ch2 §4 (`-$O(L^{2})$-`):
 > **run the rule-4 greps track-wide before every commit** — a documented trap without a run detector still ships.
+> Extended 2026-09-02 (**rule 8: expand every abbreviation on first use**) from learner feedback on M02 Ch3 §1, where
+> `DV` was expanded but **`OV`/`EV` were not** — his instruction: *"You should show full term at least on the first time
+> an abbreviation is used in a material."*
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -339,3 +342,60 @@ the rule-2 precedence still governs *what kind* of visual a given need calls for
   `ideogram` subcommand instead (`… comfy_media.py ideogram --prompt '<JSON>' --out <name>`). The skill
   can also download fitting open models for image *editing* or *video* when the installed models can't do
   the task.
+
+## 8. Expand every abbreviation on its first use in a section
+
+*(Established 2026-09-02 from learner feedback on M02 Ch3 §1 — `DV` was spelled out as "Domain Validated" but
+the very next words, **`OV`/`EV`**, were left bare. His instruction: "You should show full term at least on the
+first time an abbreviation is used in a material.")*
+
+**Give the full term the first time an abbreviation appears in a given section**, then use the short form
+freely. The learner is a frontier practitioner but not a specialist in every domain the course crosses, and an
+unexpanded acronym is a silent comprehension gap — he cannot look up what he cannot decode.
+
+- **Format:** `full term (ABBR)` or `ABBR (full term)` — either reads fine. Inline parentheticals or em-dash
+  glosses both work: `**OV** (Organization Validation)`, `AES-GCM — Advanced Encryption Standard in
+  Galois/Counter Mode —`.
+- **Per section, not per repo.** Each section should stand alone; re-expand in a later section even if an
+  earlier one defined it. (Cross-references like "TLS, from Ch1 §5" are good practice *in addition*, not a
+  substitute.)
+- **Sibling abbreviations must each be expanded.** The actual failure was expanding the first of a set and
+  assuming the rest were obvious — `DV`/`OV`/`EV`, `DoH`/`DoT`, `CRL`/`OCSP`. If they appear together, gloss
+  them all.
+- **Covers diagrams too.** A Mermaid/figure label is material: `(air-gapped HSM)` became
+  `(air-gapped hardware security module)`. Labels are where abbreviations hide, because the render-check
+  looks at layout, not vocabulary.
+- **Exercise judgment for three classes** (don't bloat the prose):
+  - **Proper names of algorithms/attacks** that nobody expands in practice — `RC4`, `MD5`, `SHA-1`,
+    `ChaCha20-Poly1305`, `BEAST`, `POODLE`, `CRIME` — may stay as names. Expand them only if the expansion
+    teaches something.
+  - **Genuinely universal terms in context** — `HTTP`, `URL`, `DNS`, `CPU`, `OS`, `API` in a CS course — need
+    no expansion. But note **`HTTPS`, `TCP`, `TLS`, `RTT`, `L4`/`L7` are NOT in this class** for a section
+    that teaches them; expand on first use.
+  - **Internal repo shorthand** (`M02`, `Ch3`, `§4`, `E05`) is structural, not an abbreviation to expand.
+- **Where an abbreviation is a *concept* the section teaches, also give it a Key-terms row** (rule 5), with the
+  Chinese gloss — that's the durable reference, and the two rules reinforce each other.
+
+**Pre-push detector** (heuristic — flags candidate acronyms and whether an expansion appears near the first
+use; expect false positives from Mermaid node IDs and attack code-names, so eyeball the output):
+
+```sh
+python3 - <file> <<'PY'
+import re, sys
+SKIP = {"HTTP","HTTPS","DNS","URL","JSON","CSV","HTML","CSS","API","AWS","OS","CPU","RFC","MDN",
+        "TCP","UDP","IP","GET","POST","PUT","OK","UI","US","LR","TB","TD","RC4","MD5","BEAST",
+        "CRIME","POODLE","FREAK","DROWN"}
+txt = open(sys.argv[1], encoding="utf-8").read()
+seen = {}
+for m in re.finditer(r'\b([A-Z][A-Z0-9]{1,5}(?:-[A-Z0-9]{1,4})?)\b', txt):
+    a = m.group(1)
+    if a in SKIP or re.match(r'^(M\d\d|Ch\d|E\d\d|[A-Z]\d)$', a):
+        continue
+    seen.setdefault(a, m.start())
+for a, off in sorted(seen.items(), key=lambda kv: kv[1]):
+    ctx = txt[max(0, off-140):off+140].replace("\n", " ")
+    ok = re.search(re.escape(a) + r'\s*[—(]', ctx) or re.search(r'[—)]\s*\(?' + re.escape(a), ctx)
+    if not ok:
+        print(f"  UNEXPANDED? {a:<8} …{ctx[110:210]}…")
+PY
+```

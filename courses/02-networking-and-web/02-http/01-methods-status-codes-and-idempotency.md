@@ -9,9 +9,10 @@
 > **Status:** ✅ finalized 2026-08-20 (body prepared 2026-08-12). Body went untouched; the session was
 > **three real-world threads**, each sparked by his AWS practice and driven to the underlying principle —
 > *HTTP API vs REST API* (the AWS API Gateway naming collision), *why the browser enforces the CORS
-> `OPTIONS` preflight*, and *the client-trust boundary* (what if the browser is malicious?). Captured in
+> (Cross-Origin Resource Sharing) `OPTIONS` preflight*, and *the client-trust boundary* (what if the browser is malicious?). Captured in
 > **§10 Applied**.
-> **Prerequisites:** M02 Ch1 §1 (how a request travels — HTTP rides on the TCP/TLS connection you now
+> **Prerequisites:** M02 Ch1 §1 (how a request travels — HTTP rides on the TCP/TLS (Transport Layer
+> Security) connection you now
 > know how to budget). Useful: your own experience with retries/idempotency in distributed systems,
 > which this section gives the precise HTTP vocabulary for.
 
@@ -23,7 +24,7 @@
 
 You write HTTP endpoints every day and they work. The thing worth extracting is that "it works" rests on
 a **contract almost nobody reads but everybody depends on**: HTTP defines a small, fixed set of methods
-and status codes with *agreed semantics*, and that agreement is exactly what lets a CDN, a browser, a
+and status codes with *agreed semantics*, and that agreement is exactly what lets a CDN (Content Delivery Network), a browser, a
 corporate proxy, a load balancer, and your client's retry loop all make correct decisions about your
 traffic **without knowing anything about your application.** Get the semantics right and the whole
 ecosystem cooperates for free; get them wrong and you get double-charges, cache poisoning, crawlers
@@ -156,12 +157,12 @@ flowchart TD
 
 **The move for operations that aren't naturally idempotent: the idempotency key.** `POST /charges`
 creates a *new* charge each time — blind-retry it and you double-charge the customer. You make it safe by
-having the client generate a unique **`Idempotency-Key`** (a UUID) per logical operation and send it on
+having the client generate a unique **`Idempotency-Key`** (a UUID — universally unique identifier) per logical operation and send it on
 the request *and every retry of it*. The server records the key with the result; a repeat of the same key
 returns the **stored** result instead of doing the work again. This is exactly **at-least-once delivery +
 an idempotent handler = effectively-once processing** — the distributed-systems pattern you already use,
 now with its standard HTTP spelling (it's Stripe's well-known API design, and it's spreading into the
-IETF as a standard header). The key points worth holding:
+IETF (Internet Engineering Task Force) as a standard header). The key points worth holding:
 
 - The **client** owns the key (it must be stable across retries of the *same* intent, and different for a
   genuinely new one).
@@ -375,7 +376,7 @@ thing:
   resources named by URIs (nouns), methods and status codes used with their real semantics,
   self-descriptive messages — plus **HATEOAS** (responses embed links to what you can do next), the one
   constraint almost nobody ships.
-- The practical ruler is the **Richardson Maturity Model**: **L0** HTTP as an RPC tunnel (one endpoint,
+- The practical ruler is the **Richardson Maturity Model**: **L0** HTTP as an RPC (Remote Procedure Call) tunnel (one endpoint,
   all `POST`) → **L1** resources → **L2** proper methods + status codes → **L3** hypermedia. **Almost every
   real-world "REST API" is Level 2** — precisely this section's contract — and L3 ("true" REST) is rare.
   GitHub and Stripe are polished L2.
@@ -384,7 +385,7 @@ thing:
 - **The actual source of the confusion, named:** **AWS API Gateway offers two product types literally
   called "REST API" and "HTTP API,"** and that dropdown is a **cost/feature tier**, *not* the
   architectural distinction: the "REST API" product is older and fuller-featured (API keys, usage plans,
-  request validation, WAF), the "HTTP API" product is newer, lower-latency, and cheaper — and **both build
+  request validation, WAF — Web Application Firewall), the "HTTP API" product is newer, lower-latency, and cheaper — and **both build
   perfectly ordinary Level-2 "RESTish" APIs.** AWS's "REST API" is not more RESTful than its "HTTP API."
   Keeper: *AWS product names borrow concept words and collide with them — read the product docs, not the
   name.*
@@ -401,7 +402,7 @@ he'd read "browser safety feature" and it felt cosmetic on the backend. The refr
   sends only what you tell it, to a server you chose. A **browser carries the user's cookies for every
   site AND runs untrusted JavaScript from every site visited.** The threat is `evil.com`'s script calling
   `bank.com` with *your* cookie automatically attached.
-- **Same-Origin Policy (SOP)** is default-closed: JS may not *read* responses from a different origin.
+- **Same-Origin Policy (SOP)** is default-closed: JS (JavaScript) may not *read* responses from a different origin.
   **CORS is the server's opt-in *relaxation* of that wall**, via `Access-Control-Allow-*` headers — it
   opens a hole, it doesn't add a restriction.
 - **Why enforcement must be in the browser:** to the server, three requests are identical HTTP —
@@ -437,7 +438,7 @@ foundational security principle from first principles.**
 - **The principle:** *never trust the client. A control that runs on the (possibly attacker-controlled)
   client is not a security boundary — the boundary is the server.* CORS/SOP is a **favor to the honest
   user**, layered on top of the real defenses, which assume a hostile client: **server-side
-  authentication + authorization on every request**, and **CSRF defenses** (`SameSite` cookies, CSRF
+  authentication + authorization on every request**, and **CSRF (cross-site request forgery) defenses** (`SameSite` cookies, CSRF
   tokens). None of those depend on the browser being honest.
 - **The one technical "verify it's a genuine browser" mechanism is remote attestation** — the client
   cryptographically proves it's an unmodified browser on genuine hardware. It's real and shipping in
@@ -494,7 +495,7 @@ Continuing Ch2 (HTTP deeply):
   revalidation and the `304` round-trip saver, and the browser/CDN/proxy cache hierarchy — the mechanics
   behind the "cacheable" column here and the biggest latency lever after Ch1's connection reuse.
 - **§3 — Content negotiation & the HTTP versions:** `Accept*` negotiation, compression, and how HTTP/1.1
-  → HTTP/2 (multiplexing) → HTTP/3 (QUIC, from Ch1 §7) change the *delivery* without changing these
+  → HTTP/2 (multiplexing) → HTTP/3 (QUIC — Quick UDP Internet Connections — from Ch1 §7) change the *delivery* without changing these
   semantics.
 
 Or rotate: **Ch3 (TLS)** deepens Ch1 §5, **Ch4 (real-time)** is closest to your WebSocket work, or

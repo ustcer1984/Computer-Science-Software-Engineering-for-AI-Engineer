@@ -4,7 +4,8 @@
 > **Chapter:** HTTP deeply
 > **Section:** The mechanics behind the **"cacheable"** column from §1 — how `Cache-Control` grants a
 > response a *lifetime*, how `ETag`/`Last-Modified` let a client **revalidate** a stale copy in one cheap
-> round-trip (the `304 Not Modified` that ships no body), the **private → shared (CDN/proxy)** cache
+> round-trip (the `304 Not Modified` that ships no body), the **private → shared (CDN — Content Delivery
+> Network — or proxy)** cache
 > hierarchy the response travels through, and the *second* use of the same conditional machinery —
 > **optimistic concurrency** (`If-Match` → `412`), which is the precise fix for §1's `409` edit-collision.
 > Caching is the **biggest latency lever after Ch1's connection reuse**: the fastest request is the one you
@@ -15,7 +16,8 @@
 > **§11 Applied**, because it's a building block M07/M08 will *use* but not teach in depth — and it closes
 > the loop on the shared-cache hierarchy he'd just read.
 > **Prerequisites:** M02 Ch2 §1 (safe/idempotent/**cacheable**, status codes incl. `304`/`409`, the headers
-> map). Useful: M02 Ch1 §1 (the latency budget — DNS + TCP + TLS + transfer — that a cache hit erases) and
+> map). Useful: M02 Ch1 §1 (the latency budget — DNS, TCP, TLS (Transport Layer Security)
+> and transfer — that a cache hit erases) and
 > Ch1 §7 (CDNs / edge).
 
 **Estimated study time:** 2.5–3 hours including the `curl` hands-on.
@@ -215,8 +217,8 @@ flowchart LR
   responses (that user's data) because there's no one to leak them to. It's also what a page reload,
   back-button, and `immutable` assets hit first.
 - **Shared cache = a CDN edge (Ch1 §7), a reverse proxy in front of your origin, or a corporate forward
-  proxy** — one cache serving *many* users. *(What a **reverse proxy** actually is — and why your ALB,
-  CloudFront, and API Gateway are all reverse proxies — is §11.)* This is where the leverage is (one origin fetch serves
+  proxy** — one cache serving *many* users. *(What a **reverse proxy** actually is — and why your ALB (Application Load
+  Balancer), CloudFront, and API Gateway are all reverse proxies — is §11.)* This is where the leverage is (one origin fetch serves
   thousands) **and** where the danger is: a shared cache must **never** store a `private` or `no-store`
   response, because its next hit could be a different person. `s-maxage` lets you tune shared-cache lifetime
   independently — e.g. `max-age=0, s-maxage=600` says "browsers, always revalidate; CDN, hold it 10
@@ -398,7 +400,7 @@ The real-world calls, most of which you'll recognize once named:
    version no longer matches (so the second writer is rejected and told to re-read/merge/retry, rather than
    clobbering). The strategy is **optimistic concurrency control** (a compare-and-swap over HTTP).
 6. The cache now stores a **separate entry per distinct `User-Agent` string** — and there are effectively
-   unlimited UA strings — so the **hit rate collapses** and almost every request goes to origin. It's a
+   unlimited UA (user-agent) strings — so the **hit rate collapses** and almost every request goes to origin. It's a
    *performance* bug because every client still gets a *correct* response (the content didn't actually
    depend on UA); it's just that caching stopped helping.
 7. Because the **URL changes whenever the content changes** (the hash is derived from the bytes), an old
@@ -509,7 +511,8 @@ identical. Give one box the public address and let it handle:
 - **Routing / virtual hosting** — read the `Host` header or path (L7, Ch1 §1) and send `/api/*`, `/static/*`,
   or different hostnames to different backends — all behind **one public IP and one certificate** (the
   direct answer to Ch1 §11's IPv4 scarcity: one address fronts thousands of sites).
-- **Security & resilience** — hide the origin's real IP, absorb/deflect DDoS, run a WAF, enforce rate
+- **Security & resilience** — hide the origin's real IP, absorb/deflect DDoS (distributed denial-of-service)
+  attacks, run a WAF (Web Application Firewall), enforce rate
   limits, offload auth-token checks at the edge, add retries and circuit-breaking.
 
 ### He already runs four of them
@@ -577,7 +580,8 @@ routes; an ALB balances *and* terminates TLS).
 
 Continuing Ch2 (HTTP deeply):
 - **§3 — Content negotiation & the HTTP versions:** the `Accept*` negotiation that `Vary` here keys off,
-  compression, and how HTTP/1.1 → HTTP/2 (multiplexing) → HTTP/3 (QUIC, from Ch1 §7) change the *delivery*
+  compression, and how HTTP/1.1 → HTTP/2 (multiplexing) → HTTP/3 (QUIC — Quick UDP Internet
+  Connections — from Ch1 §7) change the *delivery*
   of everything in §1–§2 without changing the semantics. Closes the chapter.
 
 Or rotate: **Ch3 (TLS)** deepens Ch1 §5, **Ch4 (real-time)** is closest to your WebSocket work, or
