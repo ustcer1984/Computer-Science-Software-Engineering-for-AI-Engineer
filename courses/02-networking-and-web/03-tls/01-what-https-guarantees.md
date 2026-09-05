@@ -8,8 +8,14 @@
 > handshake** step by step (the 1-RTT — one-round-trip — line-item from Ch1 §5, and the place Ch2 §3's
 > **ALPN** (Application-Layer Protocol Negotiation) version negotiation actually rides), the **certificate chain of trust** that makes authentication possible and is
 > also its weakest link, and **where TLS terminates** — the first job of the reverse proxy from Ch2 §2 §11.
-> **Status:** 🟡 PREPARED 2026-09-02 — body ready for your read-through. Applied section (§11) is written on
-> finalize, after the Q&A.
+> **Status:** ✅ finalized 2026-09-05 (body prepared 2026-09-02). No questions on the body — it landed. The
+> session was **two questions driven straight out of §4's chain of trust**: he restated §1's authentication
+> guarantee in his own words (*"if the certificate is compromised, an attacker can impersonate
+> `www.example.com`"* — right in outcome, imprecise in mechanism), then asked the operational question §4
+> leaves open: *"from the server's side, how can they know their private key has leaked?"* **§11** works
+> both — the certificate-is-public / key-is-secret split, the three distinct meanings of "compromised", and
+> the finding that **both obvious defences (revocation and detection) are broken**, which is the real reason
+> certificate lifetimes keep shrinking.
 > **Prerequisites:** M02 Ch1 §1 (the handshake round-trip budget) and §5 (TLS as a 1-RTT line-item — this
 > section opens that box). Ch2 §2 §11 (reverse proxy — TLS termination is its job) and Ch2 §3 §11a (ALPN,
 > which lives inside the handshake below). Deeper crypto internals are **M03 Ch2**; this section teaches
@@ -461,6 +467,111 @@ and days-to-expiry, and the termination arrangement per hop.
 
 ---
 
+## 11. Applied — two questions from the session
+
+The body landed with no questions; both threads came off **§4 (the chain of trust)** and both were the
+*same* move — taking the section's claim and asking what it costs. He first restated §1's authentication
+guarantee in his own words, then immediately asked the operational question that §4 leaves open: **if
+detection is the defence, who does the detecting, and can they?**
+
+### 11a. "The certificate proves the destination is real — so if the certificate is compromised, an attacker can impersonate `www.example.com`. Correct?"
+
+**Right in outcome, and the imprecision is the interesting part.** "The certificate is compromised" collapses
+three different failures that have different attackers, different blast radii, and different defences.
+
+**The certificate is public — it cannot be stolen.** It is served in plaintext to every visitor during the
+handshake (§3), and since **Certificate Transparency** (§4) every certificate ever issued is published in
+append-only logs that anyone can search. Copying a certificate gets an attacker nothing.
+
+What proves identity is the **private key**, which never leaves the server. §3's handshake splits the job in
+two, and the split is the whole answer:
+
+| Message | Role |
+|---|---|
+| `Certificate` | The CA's signed **claim**: "the holder of this public key controls `www.example.com`." |
+| `CertificateVerify` | The server's live **proof** that it holds the matching private key — it signs the transcript of *this* handshake. |
+
+An attacker holding the certificate but not the key gets stuck at the second message. So the precise
+statement is: **whoever holds the private key can be `www.example.com`.**
+
+**The three failures that "compromised" actually names:**
+
+| What breaks | What the attacker gets | Detectable? |
+|---|---|---|
+| **The server's private key is stolen** | Impersonation of that one site, until the certificate expires | Barely — the certificate is genuine, and Certificate Transparency shows nothing unusual |
+| **A CA mis-issues** (DigiNotar, §4) | A *different but perfectly valid* certificate for the same name, with a key the attacker chose | Yes, now — the rogue certificate must appear in the Certificate Transparency logs |
+| **The client's root store is poisoned** (corporate middlebox, malware) | Certificates for *any* site, on that machine | Not by the site — only by inspecting the local trust store (§6) |
+
+Row two is the severe one, and it is exactly why §4 calls the chain of trust *"also its weakest link."* The
+attacker never touches `example.com`'s servers at all. They obtain a valid credential for a name they do
+not control, and every browser accepts it, because **the browser trusts the CA, not the site**. One weak CA
+anywhere in the root store — DigiNotar was Dutch — breaks every site on the internet. That asymmetry is
+the structural flaw Certificate Transparency was built to patch: it cannot *prevent* mis-issuance, but it
+makes it **loud**.
+
+**Two things the credential alone does not buy:**
+
+- **They still need your traffic.** A stolen key is a credential, not a position on the network. To use it
+  they must also make you connect to them — DNS hijack, BGP (Border Gateway Protocol) hijack, hostile Wi-Fi, a compromised resolver.
+  This is why key theft and network attacks are almost always reported together, and why §6's "HTTPS does
+  not hide *who* you are talking to" and this section are two halves of one threat model.
+- **Past traffic stays safe.** §5's forward secrecy means the session keys came from an ephemeral **ECDHE**
+  exchange, not from the certificate key. An attacker who steals the key today cannot decrypt traffic they
+  recorded last year — they can only impersonate *going forward*. That is precisely what TLS 1.3 bought by
+  deleting RSA key transport.
+
+**One correction to "the real one."** The certificate proves control of the **name**, never the honesty of
+the **operator**. `paypa1-secure.com` can obtain a valid DV (Domain Validated) certificate in about thirty
+seconds, and the padlock looks identical. HTTPS tells you *you are talking to whoever controls the name in
+the address bar, with nobody in between* — which is §1's third guarantee stated exactly, and §1's **fourth
+thing people wrongly assume** stated as its shadow.
+
+### 11b. "From the server's side, how can they know their private key has leaked?"
+
+**Usually they cannot — and that fact is load-bearing for the whole design.**
+
+Copying a private key leaves **no trace**. No log entry, no state change, nothing measurably different on
+the server; the file is still there afterwards. This is the asymmetry that makes secrets unlike objects:
+stealing a secret does not remove it. Everything below follows from accepting that.
+
+**The detection channels that exist — all of them indirect:**
+
+| Channel | What it actually catches | Limit |
+|---|---|---|
+| **Certificate Transparency monitoring** — subscribe to the logs for your own domains, alert on any certificate you did not request | **CA mis-issuance** (row two of 11a) | Blind to key theft: a thief with your key reuses *your* certificate and never asks a CA for anything |
+| **Finding the intrusion that carried it out** | Exfiltration alerts, a key in a backup or a pushed container image, a laptop with a copy | Finds the breach, not the key — and only if the breach is found at all |
+| **Traffic that should exist and doesn't** | Sessions an attacker serves never reach your access logs | Negative and noisy: a regional traffic dip, a CDN (Content Delivery Network) / origin count mismatch, unreproducible user reports |
+| **Someone tells you** | A researcher, a CA, a browser vendor, law enforcement | Uncomfortably often the real discovery path |
+| **HSM (Hardware Security Module) audit trail** | Signing operations are counted and logged; a rate far above your traffic is a genuine alarm | Requires the key to have been in an HSM to begin with |
+
+**Heartbleed (2014) is the archetype.** The bug let an attacker read server memory, possibly including the
+private key — and left **no way to determine whether any particular key had actually been read**. The
+entire internet re-keyed on the *assumption* that it had. That is what "cannot detect" looks like at scale.
+
+**So the real answer is architectural — you engineer so you never need to detect it:**
+
+- **Make the key non-extractable.** In an **HSM** or a cloud **KMS** (Key Management Service) the key is
+  generated inside the device and never emitted. The server can ask it to *sign*; it cannot ask for the
+  key. An attacker with root gets a **signing oracle for as long as they hold the box** — bad, but bounded,
+  and it ends when you evict them. A copied key file does not end.
+- **Keep certificate lifetimes short.** A stolen key is only worth anything while its certificate still
+  validates. Ninety days (Let's Encrypt) already bounds the damage without depending on detection *or* on
+  revocation, and the CA/Browser Forum is driving toward roughly 47 days by 2029.
+- **Automate renewal so rotation is routine.** ACME makes "fresh key, fresh certificate" a cron job instead
+  of a change-management ticket — and that is what makes re-keying **on suspicion** possible. If rotation is
+  a scary manual ritual you will not do it on suspicion, and suspicion is all you are ever going to have.
+- **Rely on forward secrecy** (§5) so a leak never reaches recorded past traffic.
+- **Assume compromise after any relevant intrusion.** Re-key first; confirmation is not coming.
+
+**The keeper, and it reframes §4 and §8.** Certificate security does not rest on catching theft or on
+revoking credentials. **Revocation barely works** (§4: CRLs are huge, OCSP is a privacy and latency cost,
+browsers soft-fail it) and **detection barely works** (this section). Both of the obvious defences are
+broken, and the system holds anyway — because the *exposure window* is short and the key is hard to
+extract. That is the honest reason certificate lifetimes keep shrinking, and it is the reason a **manual**
+certificate process is a security problem and not merely an operational chore.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -481,6 +592,9 @@ and days-to-expiry, and the termination arrangement per hop.
 | Mutual TLS (mTLS) | 双向 TLS | 雙向 TLS | client also presents a cert (§7) |
 | Revocation | 吊销 / 撤销 | 撤銷 | ⚠ 吊销 common in mainland |
 | Domain / Organization / Extended Validation (DV/OV/EV) | 域名 / 组织 / 扩展验证 | 網域 / 組織 / 延伸驗證 | ⚠ 域名 ↔ 網域; only DV matters in browsers now (§4) |
+| Certificate Transparency (CT) | 证书透明度 | 憑證透明度 | public append-only logs; makes mis-issuance *loud* (§4, §11a) |
+| Hardware Security Module (HSM) | 硬件安全模块 | 硬體安全模組 | ⚠ 模块 ↔ 模組; holds a **non-extractable** key (§11b) |
+| Key rotation / re-keying | 密钥轮换 | 金鑰輪替 | ⚠ 密钥 ↔ 金鑰; 轮换 ↔ 輪替 (§11b) |
 
 ---
 
