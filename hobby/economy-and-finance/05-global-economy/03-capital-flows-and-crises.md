@@ -12,8 +12,9 @@
 > toolkit** that actually protects a country (including the modern **"dilemma, not trilemma"** refinement); and
 > close on **Singapore as a trade and finance hub** — the most open economy on earth, and the control case proving
 > that *openness isn't the danger; unhedged mismatch and weak institutions are.* This **closes Module E05.**
-> **Status:** 🔵 **body drafted 2026-09-04.** Awaiting our live session → a **§10 Applied** will be added on
-> finalize (as in every prior section).
+> **Status:** ✅ **FINALIZED 2026-09-04 — this CLOSES Module E05.** §10 Applied added — stress-testing **China**
+> against this section's checklist: a real risk, correctly re-typed (external vs domestic), plus the export-data
+> rerouting argument adjudicated.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -353,10 +354,156 @@ Reason first; check against a source where noted.
 > (FDI vs portfolio debt). Then run §5's checklist and judge how a sudden stop would hit it. Bring your country to
 > the session.
 
-## 10. Applied — from our session Q&A
+## 10. Applied — stress-testing China: a real risk, correctly re-typed
 
-*(To be added on finalize — this section will capture whatever thread our live discussion pulls on, as in
-every prior section.)*
+You ran §8's optional exercise unprompted and on the hardest possible subject, then pushed it through two more
+rounds. The session became a three-part adjudication — and in each part the *structure* of your analysis was right
+while one specific link needed correcting. (All figures below were pulled live during the session.)
+
+### 10a — Running the checklist on China: the crisis is real, but it is the wrong *type*
+
+You laid out three protections — inflows dominated by **FDI** (high-quality, sticky), **huge reserves**, and
+**capital controls** — then four deteriorating signals: FDI reversing as supply chains leave, domestic wealth
+fleeing, leakage despite the controls, and **reserves falling**.
+
+**Three of the four signals check out.** Net direct investment *was* negative in 2025 (outward USD 157bn against
+inward of only USD 80bn); domestic entities added **over USD 300bn** of overseas investment in the first five
+months of 2026 alone; and the leakage is real (the balance-of-payments *errors and omissions* line is the standard
+proxy for unrecorded flight).
+
+**But the fourth — the load-bearing one — is factually wrong, and correcting it inverts the conclusion.** Reserves
+are **not** falling: they stood at **USD 3.74tn at end-2025, up about 8% year-on-year**, and remained **stable
+above USD 3.4tn** through the first half of 2026.
+
+**The resolution comes from the identity you learned in §2 §3.** China's current-account surplus just hit an
+**all-time high** — **USD 379.4bn in H1 2026** (goods surplus USD 526.3bn), with external assets at a record
+**~USD 12tn**. Since **CA + KA = 0**, a record surplus *requires* a matching capital outflow. **The outflow you
+are seeing IS the surplus, viewed from the other side of the ledger.** You cannot run a surplus that size without
+exporting capital — which is exactly why reserves aren't draining.
+
+That makes China's configuration **the opposite of a sudden stop**. A sudden stop happens to a country that
+*needs* foreign capital and stops receiving it. Scored against §2's vulnerability checklist:
+
+| Criterion | China | Verdict |
+|---|---|---|
+| Needs foreign financing? | No — record current-account surplus | protected |
+| Currency mismatch? | External debt only ~13–14% of GDP, much of it in RMB | protected |
+| Rollover dependence on foreigners? | **Net creditor**, ~USD 12tn external assets | protected |
+| Reserve adequacy (Guidotti–Greenspan) | Covers short-term external debt several times over | protected |
+| Open capital account? | Controlled | protected |
+
+**The third-generation mechanism (§3) cannot get a grip**, because the ingredient that made 1997 lethal — large
+unhedged foreign-currency liabilities — is not there at scale.
+
+**So the fear is well-aimed but mis-typed.** The danger is not this section's external crisis; it is **E04 §2
+§10c's Japanification** — a *domestic*, *own-currency*, *slow* balance-sheet problem (property, LGFV debt,
+deflation, households deleveraging, nominal growth falling so the r-minus-g cushion thins). And note the
+uncomfortable symmetry: **the capital controls that make an acute crisis nearly impossible are the same tool that
+lets the slow rot persist.** No forced reckoning means no cleansing reset — losses get rolled, swapped and
+socialized rather than crystallized. Stagnation instead of a crash is a *different* disease, not a cure.
+
+Three places your instinct still bites: **confidence** is the one thing controls cannot manufacture (and its
+erosion is self-fulfilling — the *second*-generation mechanism); **2015–16 proves the buffer is finite** (about
+USD 1tn of reserves spent in 18 months defending the RMB — it held, but it was expensive); and the FDI exit splits
+into a **cyclical** part (profit repatriation driven by the rate differential, which reverses if the Fed cuts) and
+a **structural** part (China-plus-one, which does not). The structural part's real cost is not crisis risk — it is
+losing **E05 §1's dynamic-gains channel**. That is a *growth* story, not a *crisis* story.
+
+### 10b — Export dependence, the RMB, and the reframe that unifies everything
+
+**"China relies heavily on exports" is true at the *margin*, not the *level*.** Exports are roughly **20% of GDP**,
+down from a ~36% peak in 2006 — *less* export-dependent than Germany (~47%) or Korea (~44%). But last year's 5%
+growth came from an export boom **offsetting weak domestic consumption**: exports are carrying the **marginal**
+growth precisely because the domestic engine is broken. So an external hit lands **harder than the 20% share
+suggests** — not because exports are large, but because nothing else is currently generating growth.
+
+**On the RMB, the measurement rule from §2 §1 applies — and the data validated you beyond your own
+observation.** For competitiveness you must read the **trade-weighted basket**, never the bilateral rate. My first
+instinct was that RMB strength was mostly *dollar weakness*; checking it proved otherwise: the **CFETS index rose
+about 4.8% year-to-date versus only 0.9% and 2.6% against the USD.** This is genuine **effective** appreciation,
+so your concern was *understated* by looking at USD alone.
+
+Yet the revealed outcome contradicts the fear: a **record goods surplus** and a current account at **3.69% of GDP**
+in Q1. You do not set surplus records while being priced out. China is absorbing the appreciation through **price
+and margin cuts** (this is the "exporting deflation" phenomenon) plus real competitiveness in EVs, batteries,
+solar and machinery. **Volume wins; value per unit is sacrificed.** The policy tension is deliberate: a stronger
+RMB **helps** against the capital flight of 10a and deflects manipulation accusations, but **worsens deflation**
+and squeezes exporters.
+
+**Are markets closing?** Mostly no — this is **de-risking, not decoupling**, and **redirection, not reduction**:
+China's share of US imports fell while its *global* surplus set records. Two real bites remain: **margin
+compression**, and **the ladder walled off at the top** (controls on chips in, and on EVs and solar out, target
+exactly the high-value rungs of E05 §1's dynamic comparative advantage). The Global-South escape valve is also
+narrowing as Brazil, India, Indonesia and Mexico raise their own barriers.
+
+**And here is the keystone.** From **CA = S − I**: a surplus *is* an excess of saving over investment. Chinese
+households save **over 30% of disposable income**, and consumption's share of GDP sits far below the global norm.
+So **China's export dependence is the mirror image of its suppressed consumption** — the surplus exists *because*
+China under-consumes. Therefore the substitute for foreign demand is **domestic demand, entirely within China's own
+control**: a country of 1.4 billion running a record surplus is *choosing* to depend on foreign customers.
+
+**Which means your export worry and the Japanification worry are the same problem seen from two sides** — a
+high-saving, low-consumption model shows up *externally* as a surplus that irritates trading partners and
+*internally* as deflation and weak demand. Fix the consumption share and you fix both. Beijing has now named it:
+2026 is being called "the year of rebalancing," the World Bank's China update is titled *Rebalancing Growth*, and
+for the first time a dedicated plan to raise **household incomes** sits in a top-level policy document — though
+with **no specific target**, and against a saving rate driven by structural insecurity (health, pensions,
+education, hukou, destroyed property wealth) that takes years of safety-net building to unwind.
+
+### 10c — "The export data is misread" — a real mechanism with its causality backwards
+
+You brought an argument for adjudication: China moves final assembly abroad to shed the "Made in China" label,
+must therefore export intermediates to those factories, and so its export data looks strong while net exports have
+actually fallen. **My position: the mechanism is real, the causality is inverted, and the magnitudes are far too
+small to carry the claim.**
+
+Work the arithmetic on a USD 100 finished good:
+
+| | China's gross export | China's captured value |
+|---|---|---|
+| **Whole chain in China** | **USD 100** (the finished good) | ~USD 85 |
+| **Assembly moved to Vietnam** | **USD 80** (components only) | ~USD 70 |
+
+When assembly moves abroad, China stops exporting the **USD 100 finished good** and starts exporting the **USD 80
+intermediate**. **Rerouting SUBTRACTS from China's gross exports — it cannot inflate them.** What double-counts is
+*world* trade (the value crosses two borders), but China's own line item *shrinks*. China's exports are strong
+**despite** rerouting, not because of it.
+
+**The magnitudes confirm it.** Firm-level evidence on Vietnam splits the post-tariff export increase to the US
+into roughly **8.8% genuine re-exported Chinese goods**, **20.4% added Chinese inputs**, and **~40% genuine
+Vietnamese value added.** In scale, about **USD 8bn** was rerouted through Vietnam over three quarters of 2025 —
+against Chinese exports of roughly **USD 3.5tn a year**, a fraction of one percent. Real, but nowhere near
+load-bearing.
+
+**What the argument *should* have said** — three better reasons the headline flatters: **margin compression** (the
+strongest, and the one we found in 10b); **capital-goods front-loading** (building those overseas plants requires
+exporting machinery and production lines — a one-off *stock* adjustment that stops once they are built, and the
+sharpest correct version of the intuition); and **gross versus value-added** (E05 §1 §6) — though that one cuts
+*against* the pessimism, since China's domestic value-added share of exports has *risen* (roughly 65% to 80%+) as
+it localized supply chains, meaning it captures **more** per gross dollar than before.
+
+**Is it a real risk? It depends entirely on which rungs China keeps.** Shedding low-margin assembly while
+retaining high-value components and capital goods is **exactly the Japan and Korea path** of the 1980s–90s — that
+is *climbing* the ladder, not losing it, and the Vietnam split (~20% Chinese inputs) is consistent with
+graduating upward. **The genuine danger is being SQUEEZED IN THE MIDDLE**: pushed out of the top rungs by
+technology export controls *while* losing the bottom rungs to cheaper competitors. Note what that implies — **the
+risk is set by the technology-control fight, not by where final assembly physically sits.** The assembly question
+is a distraction; the chip question is the real one. Two caveats do bite: **employment** (assembly is job-intensive,
+so shedding it is economically rational but politically painful), and **the valve is closing** — Washington has
+named **40-plus countries** in a transshipment crackdown, giving the rerouting strategy a limited shelf life.
+
+**The honest epistemic limit:** value-added trade data (OECD–WTO TiVA) lags by years, so the *recent* period
+cannot be measured cleanly yet. Watch instead for **export volume rising while value falls** (margin compression),
+the **capital-goods share** unwinding, and whether China **holds its position in high-value components**.
+
+> **The landing.** Three corrections, three different shapes: a **factual** one (reserves are rising, not falling —
+> which inverted the conclusion), a **type** one (the crisis is domestic and slow, not external and sudden), and a
+> **direction** one (rerouting subtracts from China's exports rather than inflating them). What survived all three
+> is your underlying instinct: *something is genuinely wrong in China.* It simply is not the crisis this section
+> is about. **China is protected against the 1997 disease by exactly the features that leave it exposed to the
+> Japanese one** — a closed capital account, a vast surplus, and a state that can socialize losses. The binding
+> constraint was never foreign demand or foreign capital. It is whether China can turn its own savers into
+> consumers before the export channel and the property channel both run out.
 
 ---
 
@@ -421,13 +568,14 @@ Reading crisis and capital-flow news across both scripts. Most differences are *
 ---
 
 ### What's next
-🔵 **Body drafted 2026-09-04 — awaiting our live session.** You now hold the stress-test: the **anatomy of capital
+✅ **FINALIZED 2026-09-04 — this CLOSES Module E05.** You now hold the stress-test: the **anatomy of capital
 flows** (composition beats amount), their **procyclicality** and the **sudden stop** that turns CA + KA = 0 into a
 guillotine, the **three generations** of crisis models, the **1997 Asian crisis** end-to-end with its
 world-reshaping aftermath, the **toolkit** that actually protects a country (plus Rey's **"dilemma not
 trilemma"** tightening of the framework), and **Singapore** as the control case proving that openness is not the
-danger — unhedged mismatch and weak institutions are. **On finalize this closes Module E05**, and with it the whole
+danger — unhedged mismatch and weak institutions are. **This closes Module E05**, and with it the whole
 open-economy arc: trade (§1) → the currency and the balance of payments (§2) → capital and crises (§3), sitting on
 top of E03's monetary machinery and E04's fiscal machinery. Next, **E06 — Financial Markets & Instruments** opens
 the third act: what is *actually* being bought and sold in all these flows — primary vs secondary markets, who is
-in them, and what they are for. On finalize, a **§10 Applied** will capture whatever thread our session pulls on.
+in them, and what they are for. **§10 Applied** stress-tests **China** against this section's own checklist —
+finding a real risk that is correctly re-typed from an external crisis to a domestic, slow one.
