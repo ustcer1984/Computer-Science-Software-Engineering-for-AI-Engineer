@@ -12,8 +12,10 @@
 > transmits shocks; **how a trade physically happens** — order books, spreads, dealers, clearing houses; what
 > **price discovery** and "efficiency" do and do not claim; and finally the puzzle of **Singapore, a giant global
 > financial centre with a shrinking domestic stock market** *(local lens)*.
-> **Status:** 🔵 **PREPARED 2026-09-07** — body drafted, awaiting the live session. **§10 Applied** gets added on
-> finalize.
+> **Status:** ✅ **FINALIZED 2026-09-11.** §10 Applied added — **why a country fights for a stock market nobody
+> wants to list on**: the exchange-versus-board re-cut, the delisting wealth transfer worked end to end, a ranked
+> argument audited item by item (one reason correctly demolished and rebuilt), and the foreign-access question
+> that closes the diagnosis.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -499,6 +501,142 @@ Reason first; check against a source where noted.
 
 ---
 
+## 10. Applied — why a country fights for a stock market nobody wants to list on
+
+You read §7, accepted the diagnosis, and immediately inverted the question: *"I can understand why companies do
+not want to list there. **Why does Singapore still want to keep it?**"* That is the right next question — §7
+explained the decay but never justified the defence — and the session that followed took a shape none of the
+previous ones did: **you audited a ranked argument item by item**, agreeing with three points, demanding the
+mechanism behind one, and attacking one with a counter-example. The attack landed. What follows is the exchange,
+including the part where you were right and I revised.
+
+### 10a — The question had to be re-cut before it could be answered
+
+"Why keep the exchange?" contains a hidden assumption: that the exchange is failing. It isn't. SGX's FY2025 net
+revenue was a record **SGD 1.30 billion, up 11.7%**, with record profit — and the segment mix is the reason:
+
+| Segment | Share of SGX net revenue, FY2025 |
+|---|---|
+| Cash equities | 30.3% |
+| Derivatives | 26.6% |
+| Currencies & commodities | 24.0% |
+| Platform & others | 18.3% |
+
+**Roughly 70% of SGX's revenue has nothing to do with Singaporeans buying Singaporean shares.** Its derivatives
+franchise (China A50, Japan, iron ore) and its FX business serve the region, not the domestic board. So the
+commercial entity is healthy; what is shrinking is one segment of it. **The real question is narrower and
+harder: why fight for the *domestic listing board* specifically?** Five answers, deliberately ranked — which is
+what made them auditable:
+
+| # | The reason | Weight |
+|---|---|---|
+| 1 | **The tier that can't list anywhere else** — a large multinational lists in New York; a SGD 300m Singaporean industrial cannot (no coverage, no natural buyers, ruinous compliance). Remove the local board and that tier has only bank debt and private equity — pushing the corporate sector toward **pure bank-based finance** (§4), the structure where a credit squeeze hits every firm at once with no spare tyre | **Strongest** |
+| 2 | **Every delisting is a wealth transfer** from minority holders to insiders — see 10b | **Strong** |
+| 3 | **A domestic savings channel** — originally argued as a macroprudential valve against property | **Failed — see 10c** |
+| 4 | **Agglomeration in people** — analysts, brokers and research houses are sustained partly by domestic listing flow, and that population feeds the asset-management industry Singapore genuinely dominates | Moderate |
+| 5 | **Strategic optionality** — owning your own clearing, depository and benchmarks matters more in a fragmenting world (E05 §3), and a politically neutral venue is an asset Hong Kong can no longer offer | Moderate |
+
+You returned: **1 agreed · 2 needs the mechanism · 3 challenged · 4 and 5 agreed.**
+
+### 10b — The delisting transfer, worked
+
+A family controls 65% of a listed industrial. The shares trade at **SGD 1.00**; on a sober valuation — net asset
+value, or what a trade buyer would pay — the business is worth about **SGD 1.60**. The gap exists because of
+§7's loop: no coverage, no institutional buyers, a wide spread, so the quoted price reflects whoever the
+*marginal* buyer happens to be rather than fundamental value. **This is §6's claim in its sharpest form —
+efficiency is weakest exactly where nobody is looking.**
+
+The controller offers **SGD 1.25** and takes it private. That is simultaneously:
+
+- a **25% premium to market** — the headline reads "generous exit offer"; and
+- a **22% discount to value** — the insider captures roughly SGD 0.35 per share on the 35% being bought.
+
+Three asymmetries make it work:
+
+1. **Information.** The controller knows the order pipeline, the revaluation potential of the properties on the
+   books, the succession plan. The minority has an annual report and no analyst. **The party with the
+   information is setting the price and standing on the buy side.**
+2. **Coercion built into the structure.** Vote no and lose anyway, and you hold an **unquoted stub** — no exit,
+   no price, and a controller who now owns nearly everything. At 90% acceptances compulsory acquisition sweeps
+   up the rest. "Accept a bad offer" versus "hold something you can never sell" is not a real choice.
+3. **The ratchet.** Delisting is one-way. Restoring that company to the public pool requires a full IPO, far
+   more expensive than the delisting was. **The shrinkage never self-reverses; it only accumulates** — which is
+   why a regulator acts rather than waiting for the cycle to turn.
+
+Then the second-order effect, which is the nastiest part: once investors *learn* that cheap valuations invite
+privatisation at the bottom, they rationally discount any thinly-traded SGX small-cap further, because being
+bought out at a trough is now a known hazard of holding it. **That deepens the discount, which makes the next
+privatisation more attractive — a second self-reinforcing loop stacked on §7's liquidity loop.**
+
+SGX did respond. The **July 2019** rewrite of the voluntary delisting regime requires the exit offer to be
+judged **both fair *and* reasonable** by an independent financial adviser (previously only "reasonable" — a
+markedly lower bar), sets approval at **75% of independent shareholders**, and **forces the offeror and its
+concert parties to abstain**. Genuine improvements. But note precisely what they do: **they police the price of
+an exit; they do not remove the reason exits are attractive.** The regulation treats the symptom, the EQDP
+targets the cause — which is the coherent reading of why Singapore does both.
+
+### 10c — Where you were right, and the argument had to be rebuilt
+
+My third reason claimed a domestic equity market is a **macroprudential valve**: without one, household savings
+pile into property, which is the concentration Singapore has spent two decades of cooling measures fighting.
+
+Your counter was one sentence: **"But local residents can easily invest in other markets, like US stock,
+right?"**
+
+**Correct, and it breaks the argument as stated.** Singapore has no capital controls, brokerage access to US
+equities is cheap and ubiquitous, and Singaporeans use it heavily. **The realistic substitute for SGX is not a
+condominium; it is the S&P 500.** The framing was wrong and the reason drops from third place to last. What
+survives is narrower:
+
+- **CPF is a genuinely captive pool — this is the part your counter-example does not reach.** Under the CPF
+  Investment Scheme you may invest up to **35% of investible Ordinary Account savings in shares, SGX Mainboard
+  only**. Foreign stocks are **not eligible at any allocation**. So a large, structurally domestic pool of
+  retirement savings has equity options that exist only if the local board exists and is worth buying.
+- **Currency matching.** MAS runs the SGD on a gradual appreciation path (E03 §4). Someone who saved a lifetime
+  in USD assets but retires *spending* SGD has fought a structural headwind in their own consumption currency.
+  Holding some SGD-denominated real assets is genuine liability matching — and much of why S-REITs are so
+  heavily held locally.
+- **The national version — real, but weak, and I said so rather than dressing it up.** Singapore's gross savings
+  run near **40% of GDP** and its current-account surplus near **17% of GDP**. In MAS's own words the current
+  account *is* the gap between national saving and domestic investment, so a large share of Singapore's savings
+  is invested abroad by construction — **E05 §2's CA = S − I read straight off the national accounts.** A
+  domestic equity market is one channel that could recycle some of it into domestic firms. But **for a small
+  economy, exporting savings is rational**: there are not 40%-of-GDP worth of good domestic investments, and GIC
+  exists precisely to do this well. "Recycle savings at home" is not self-evidently a goal.
+
+> **The transferable lesson is about argument structure, not Singapore.** A ranked list invites exactly the
+> attack you made: find the weakest item and test it with a counter-example. Reason 3 was the one that had been
+> asserted rather than checked, and it was the one that fell. **Note what did *not* happen — the conclusion did
+> not collapse.** Reasons 1, 2, 4 and 5 stand on independent mechanisms, so removing 3 lowered the total weight
+> without changing the direction. That is the difference between a **cumulative** argument and a **chain**: a
+> chain is only as strong as its weakest link, a cumulative case survives losing one. When you audit an argument,
+> the diagnostic question is which kind you are holding.
+
+### 10d — And the access question closes the diagnosis
+
+You then asked whether foreigners face any limit on investing in SGX. **Essentially none**, and the detail
+matters more than it first appears:
+
+- **No quota regime** — nothing resembling China's QFII or Stock Connect, or India's FPI registration. Open an
+  account and buy.
+- **No capital gains tax** — Singapore does not levy one on anyone.
+- **No dividend withholding tax** — under the one-tier corporate system dividends are tax-exempt in the
+  shareholder's hands, resident or not.
+- **No stamp duty** on scripless listed share transfers.
+- The exceptions are sector-specific and apply to **everyone, not only foreigners**: MAS approval to cross 5%,
+  12% and 20% controller thresholds in a local **bank**; licensing conditions in **media and telecom**; and the
+  **SIRA (Significant Investments Review Act, 2024)** national-security screen — nine entities designated
+  initially, with notification at 5% and approval at 12%, 25% and 50%, plus a broad ministerial call-in power,
+  explicitly covering domestic and foreign investors alike.
+
+> **Why this is the diagnostic closer.** If access were restricted, the thinness would have an obvious and
+> boring cause. It is not restricted — foreign capital enters freely and pays no tax on the way out. **So the
+> explanation must be one of the two named in §7: the self-reinforcing liquidity loop, or what is actually
+> listed.** Policy can plausibly break the first and cannot manufacture the second. That is precisely why my
+> forecast on the EQDP is *partial* success — measurably tighter spreads and better coverage in mid-caps, and no
+> revival of a technology listing pipeline. **Openness is a policy asset here, exactly as in E05 §3's Singapore
+> case — and it is also the reason the EQDP has to buy liquidity rather than protect it.**
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 Reading market news across both scripts. Most differences are **simplified vs traditional**; **⚠ marks a genuine
@@ -583,12 +721,14 @@ vocabulary was translated separately on each side.
 ---
 
 ### What's next
-🔵 **PREPARED 2026-09-07.** This section opens **E06 — Financial Markets & Instruments**, the bridge from macro
+✅ **FINALIZED 2026-09-11.** This section opens **E06 — Financial Markets & Instruments**, the bridge from macro
 machinery to the instruments themselves. You now have the **five jobs** a market does, the
 **primary/secondary** distinction and the liquidity chain that connects them, the **instrument map** and the
 single discounting equation that prices all three types, the **cast of participants** and the bank-versus-market
 structural question, the **order-book mechanics** of an actual trade, what **efficiency** does and does not
 claim, and **Singapore's centre-versus-venue puzzle** as a live policy experiment. Next, **E06 §2 — Stocks
 (equity)** takes the residual claim apart: what a share legally is, how ownership, voting and dividends work,
-and how you value something whose cash flows nobody knows. **§10 Applied** will be added on finalize, from the
-live session.
+and how you value something whose cash flows nobody knows. **§10 Applied** inverts §7's puzzle — *why does
+Singapore keep a market nobody wants to list on?* — re-cutting the exchange from the board, working the
+delisting wealth transfer end to end, and testing a ranked five-reason argument item by item until one of the
+five had to be discarded and rebuilt.
