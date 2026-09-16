@@ -11,8 +11,15 @@
 > TLS) between your own services, and a **debugging method** for the failure that takes production down.
 > The load-bearing idea, inherited straight from §1 §11b: **certificate security rests on a short exposure
 > window, not on detection or revocation — so automation is a security control, not a convenience.**
-> **Status:** 🟡 PREPARED 2026-09-05 — body ready for your read-through. Applied section (§11) is written on
-> finalize, after the Q&A.
+> **Status:** ✅ finalized 2026-09-16 (body prepared 2026-09-05). No questions on the body — it landed.
+> The session was **one thread, aimed straight at §4's "one-way door" warning**: having accepted that
+> *removal* from the preload list must ship in a browser release and then reach users, he turned the same
+> propagation lag around and pointed it at the other end — *"what happens if `preload` is already in the
+> header but a user has not yet upgraded to a browser carrying the new list?"* **§12** works it: the
+> `preload` token is **consent, not a mechanism**, so adding it is **purely additive** and a stale browser
+> is never worse off — while the same lag in the *removal* direction enforces a rule you have already
+> revoked, against users you cannot reach. Plus the second pin people forget: the per-user dynamic HSTS
+> cache, which no list removal touches.
 > **Prerequisites:** §1 of this chapter (the three guarantees, the handshake, the chain of trust, the three
 > termination arrangements) — this section assumes all of it. Ch1 §1 and §5 for the round-trip budget the
 > performance section spends. Ch2 §1's idempotency taxonomy returns, load-bearing, in §6.
@@ -556,6 +563,77 @@ current expiry, the Mozilla profile in force, and the alert that would page you 
 
 ---
 
+## 12. Applied — the question from the session
+
+One thread, and it went straight at the **one-way door** warning in §4. Having accepted that removal from
+the preload list has to ship in a browser release and then reach users, he turned the same lag around and
+pointed it at the *other* end: **"what happens if `preload` is already in the header, but a user hasn't yet
+upgraded to a browser release that carries the new list?"**
+
+It is the right question to ask of any claim that rests on client-side propagation, and the answer is the
+opposite of the intuition: **nothing bad happens, and the asymmetry between the two directions is the whole
+lesson.**
+
+### 12a. The `preload` token does nothing on its own
+
+**No browser acts on the token.** It is **consent, not a mechanism** — `hstspreload.org` requires it so a
+domain cannot be submitted by someone who does not control it, and so your intent is recorded in the header
+itself rather than only in a form. The enforcement lives entirely in the **list compiled into the browser
+binary** (§4).
+
+So for a user whose browser predates your list entry:
+
+| | In that user's browser |
+|---|---|
+| Static preload entry for your domain | **Absent** — no first-visit protection |
+| `max-age` and `includeSubDomains` from your header | **Fully honored**, as ordinary dynamic HSTS |
+
+They land in exactly the trust-on-first-use case §4 describes. The first request can still leave as
+plaintext and is strippable; but once they have received the header over HTTPS **even once**, the browser
+pins the domain for `max-age` and refuses click-through on certificate errors. That is precisely the
+protection they would have had if you had never added `preload` at all.
+
+**Adding `preload` is purely additive.** A lagging browser is never *worse off* for it — it simply has not
+yet gained the extra first-visit coverage. The token costs a stale client nothing.
+
+### 12b. The lag only hurts in the other direction — and that is why §4 is worded as it is
+
+The two directions are not mirror images, and this is the part worth carrying:
+
+- **Getting on:** the lag costs you a **benefit you do not have yet**. Harmless, and it resolves itself.
+- **Getting off:** the lag keeps enforcing **a rule you have already revoked**. Removal ships in a new
+  browser release, and every user still on an older build goes on refusing plaintext to your domain with
+  **no channel by which you can reach them**. You cannot serve a header that says *never mind*, because a
+  preloaded entry is enforced **whether or not you send a header at all** — that is the entire point of
+  preloading, and it is exactly what makes it unrevocable.
+
+For most consumer Chrome installs that lag is weeks, since it auto-updates. **The tail is what bites:**
+enterprise-pinned builds, abandoned installs, and embedded webviews on old mobile devices.
+
+### 12c. The second pin, which is the one people forget
+
+Even once you are off the static list you are still not clear, because **two independent mechanisms** hold
+you, and list removal only touches one:
+
+1. the **static list** compiled into the binary, and
+2. the **dynamic HSTS cache** in each individual browser — written from your own header, good for the full
+   `max-age` you advertised.
+
+If you advertised a year, then everyone who visited you carries a year of pinning that no list removal
+affects. To genuinely unwind you must serve `Strict-Transport-Security: max-age=0` **over working HTTPS**
+for at least as long as the old `max-age`, so that each returning visitor's cached entry is overwritten —
+and **a user who never returns during that window stays pinned indefinitely.**
+
+**The keeper, and it generalizes past HSTS.** The recovery path *depends on users coming back to you* —
+which is exactly what you have lost control of if the thing you are trying to undo is what broke their
+access. That circularity is why §4's rule is **decide before you ship it**, not *ship it and revisit*: a
+control whose rollback requires the cooperation of the people it is currently locking out is not really
+reversible, however documented the removal procedure looks. It is the same shape as §1 §11b's finding —
+when the defence you are relying on (there: revocation and detection; here: removal) does not work in
+practice, what actually protects you is **not entering the bad state in the first place**.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -575,6 +653,8 @@ current expiry, the Mozilla profile in force, and the alert that would page you 
 | Mutual TLS (mTLS) | 双向 TLS | 雙向 TLS | service-to-service (§7) |
 | Trust store / CA bundle | 信任库 / 根证书包 | 信任存放區 / 根憑證套件 | ⚠ genuine split (§8) |
 | Runbook | 运行手册 / 应急手册 | 維運手冊 | ⚠ 运维 ↔ 維運 |
+| Trust on first use (TOFU) | 首次使用信任 | 首次使用信任 | the gap preload closes (§4, §12a) |
+| Dynamic vs static (preloaded) HSTS | 动态 / 静态（预载）HSTS | 動態 / 靜態（預載）HSTS | ⚠ 预载 ↔ 預載; two independent pins (§12c) |
 
 ---
 
