@@ -49,6 +49,27 @@ Use the Read tool on the SVG/PNG (it renders images visually) to inspect it; if 
 wrong, fix the source (simplify the graph, shorten labels, bump font size, switch tools)
 and re-render until it's clean. **Do not commit a diagram you haven't looked at.**
 
+> **Look at it in a BROWSER, not through cairosvg.** *(Found 2026-09-17 while preparing Econ E06 §3.)*
+> The Read tool cannot display an SVG directly, so the obvious move is to convert it with `cairosvg`
+> first — and for a **Mermaid** diagram that conversion is actively misleading. Mermaid renders with
+> `htmlLabels: false`, which emits `<text>`/`<tspan>` at x-positions computed from **Chrome's** font
+> metrics; cairosvg substitutes a different font, so every label overflows its box and the diagram looks
+> catastrophically broken when the committed SVG is perfectly fine. The already-shipped E06 §2 one-pager
+> "failed" this way before the real cause was found. **matplotlib SVGs convert fine** (they carry explicit
+> glyph positioning), so cairosvg is still the quick path for data figures.
+> **For Mermaid, screenshot the SVG in the real browser instead:**
+> ```js
+> // node shot.mjs <abs-path-to.svg> out.png   — Playwright is installed globally (see authoring-conventions §4)
+> import { chromium } from '<npm root -g>/playwright/index.mjs';
+> const [src, out] = process.argv.slice(2);
+> const b = await chromium.launch();
+> const p = await b.newPage({ viewport: { width: 1400, height: 1000 }, deviceScaleFactor: 2 });
+> await p.goto('file://' + src); await p.waitForTimeout(600);
+> await (await p.$('svg')).screenshot({ path: out }); await b.close();
+> ```
+> Then `Read` the PNG. The same Playwright session is what the rule-4 live-blob check uses, so it costs
+> nothing extra.
+
 ---
 
 ## Mermaid path (one recommended option, with tooling)
