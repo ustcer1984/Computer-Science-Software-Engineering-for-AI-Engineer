@@ -26,6 +26,13 @@ and up-to-date AI. It is not a software product. Three parallel tracks:
   function and the 1-career + 1-hobby balance rule.
 
 ## Rules every agent must keep in context
+- **Always commit and push when work is finished — do not wait to be asked.** (Set 2026-09-16: *"always
+  commit and push. This is also a rule as I read these material from github."*) **The learner reads the
+  material on GitHub, not in the working tree**, so uncommitted work is invisible to him — finishing a
+  section and leaving it local means he cannot read it at all. Commit straight to `main` (solo repo, no
+  feature branch, no pull request) as soon as a unit of work is complete and verified, and push. This does
+  not override the usual care: verify first, and still check in before anything destructive or
+  irreversible.
 - **`prompts/` is human-authored and read-only.** Never edit any file in `prompts/`. If something is
   wrong or unclear, raise it in conversation; you may suggest edits but must not make them.
 - **Keep the shared learner profile current.** [`learner-profile.md`](learner-profile.md) is the
