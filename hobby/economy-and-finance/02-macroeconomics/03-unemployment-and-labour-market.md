@@ -326,6 +326,47 @@ then test against a real release.
    **downward nominal wage rigidity**, what adjusts *instead* — and why is that the mechanism that turns a
    demand shock into *unemployment*?
 
+<details>
+<summary>Answers</summary>
+
+1. **It can happen because discouraged workers stop searching** — failing the "actively searching" test, they
+   leave the *numerator* (no longer unemployed) **and** the *denominator* (no longer in the labour force), so
+   the rate falls although nobody found a job (§1, §2). The two numbers to check are the **participation rate**
+   and the **employment-to-population ratio**: if the rate fell while both of those also fell, the
+   "improvement" is people dropping out, not hiring (§2). U-6 and the long-term share (§3, §5) confirm it.
+2. **Before:** labour force = 65, so **unemployment rate = 5/65 = 7.7%**, **participation = 65/100 = 65%**,
+   **employment-to-population = 60/100 = 60%**. **After** 3 become discouraged: unemployed 2, labour force 62,
+   employed still 60 — **unemployment rate = 2/62 = 3.2%** (improves dramatically), **participation = 62%**
+   (worsens), **employment-to-population = 60%** (unchanged). The headline halved while **not one extra person
+   is working** — the denominator trap in numbers (§2).
+3. (a) **Structural** — a skills/technology mismatch; demand policy won't fix it, retraining and mobility
+   might. (b) **Frictional** — normal between-jobs churn, and a sign of a working market; no policy target.
+   (c) **Cyclical** — **this is the one macro demand policy targets** (§4). (d) **Seasonal** — predictable
+   calendar swing, normally **seasonally adjusted** out of the published series, so don't double-count it
+   (§4).
+4. **Zero is unachievable because frictional and structural unemployment never go away** — people are always
+   between jobs or mismatched to the openings — and together they *are* the **natural rate**, so "full
+   employment" means **cyclical unemployment ≈ 0**, not a zero rate (§4). It's undesirable because frictional
+   churn is people matching to better jobs, and pushing unemployment **below** the natural rate (the NAIRU)
+   means a labour market so tight that wage growth accelerates into inflation (§4).
+5. **Unemployment rises by about 0.75 percentage points:** $\Delta u \approx -0.5\,(0.5 - 2) = +0.75$ (§6).
+   Note the sign — positive growth, rising unemployment, which is precisely §1's "+3% can be a crisis"
+   argument made quantitative. When you check it against a real country-year, expect a loose fit: the Okun
+   coefficient isn't a constant of nature (labour hoarding and jobless recoveries flatten it, §6), and
+   $g^{\ast}$ itself is an *estimate* with a band wide enough to flip the predicted sign (§11a).
+6. **The recovery is incomplete — the headline recovered, the slack didn't.** U-3 counts only those actively
+   searching, so a gap that stays wide means the people still missing are the **marginally attached /
+   discouraged** (who want work but stopped searching, and so sit in NILF) and the **involuntary part-timers**
+   who can't find full-time work — **underemployment** rather than unemployment (§5). Add the gauges no rate
+   catches at all: gig/informal work that counts as "employed," and skill underemployment (§5).
+7. **Under flexible wages the price adjusts — the wage falls until the market clears, with employment roughly
+   intact.** In reality nominal wages are **rigid downward**: firms freeze pay rather than cut it (morale,
+   contracts, norms — §2's spike-at-zero histogram), so the adjustment comes through **quantities instead of
+   prices — layoffs** (§7). That stickiness is exactly why a demand shock shows up as *unemployment* rather
+   than as *lower pay*, and why a little inflation helps: it lets real wages fall without any nominal cut.
+
+</details>
+
 ## 10. Optional: read a real labour-market release (15–20 min)
 
 - **United States — BLS (Bureau of Labor Statistics) Employment Situation** (the monthly "jobs report"): find the **U-3 headline**, the

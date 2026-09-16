@@ -438,6 +438,65 @@ flowchart TD
    *critical test* — in the spirit of your DeepSeek teardown — that would reveal whether a video diffusion
    model has actually learned physics versus merely memorized plausible-looking motion.
 
+<details>
+<summary>Answers</summary>
+
+1. Because the closed form `xₜ = √(ᾱₜ)·x₀ + √(1−ᾱₜ)·ε` makes `ε` a **free, exactly-known label** (§2).
+   You *drew* `ε` yourself to build `xₜ`, so the target requires no simulation and no chain — sample
+   `x₀`, sample a random `t`, jump straight to that noise level, one forward pass, one MSE. And because
+   the blend is invertible in `ε`, predicting `ε` is *equivalent* to predicting `x₀` — no information is
+   lost. The reason to prefer `ε` is **conditioning**: `ε ~ N(0,I)` has the same unit scale at every `t`,
+   whereas the `x₀` target's effective difficulty varies wildly across noise levels, so a single
+   unweighted `‖ε − ε_θ‖²` is already a sensibly-balanced loss across all `t` (§3). This is also why
+   training is **non-sequential** — the point you'd already worked out yourself (§13).
+2. The **VAE (autoencoder) latent** is the structural analogue: encode `512×512×3 → 64×64×4` once, run
+   **all `T` denoising steps inside that compressed space**, decode once at the end (§6). The saving is
+   roughly proportional because sampling cost is `T × (cost of one full network pass)`, and that pass
+   scales with the spatial extent it operates over — shrink the thing being denoised by \~48× and every
+   one of the `T` passes shrinks with it, while the two VAE passes are amortised over the whole loop.
+   The shared instinct with MLA is *do the expensive operation in a compressed space*, but note the
+   difference in what's being bought: MLA compresses the key-value cache to save **memory**, latent
+   diffusion compresses the signal itself to save **compute**.
+3. Because DDIM integrates the **deterministic probability-flow ODE**, which has the *same marginals* as
+   the reverse SDE but no Brownian term (§4). With no noise injected, the trajectory from seed to image
+   is a smooth curve, and a curve can be traversed with a good numerical integrator taking big steps —
+   your only error is **truncation error**, set by how curved the path is (§5). The stochastic SDE has no
+   such luxury: each step carries a `√(Δt)` random kick, so the discretization must stay fine. What you
+   trade away: (a) **stochasticity as error-correction** — the "churn" that scrubs accumulated
+   integration error (Karras et al.'s EDM); (b) **diversity** — under the ODE the seed alone determines
+   which basin you land in, so one seed gives exactly one image; (c) a little fidelity at very low step
+   counts, where curvature finally bites and you get the overshoot blur of §5.
+4. It is precisely the **fidelity ↔ diversity dial** — the same axis as **temperature / top-p** in LLM
+   sampling (§7). Raising `w` is like lowering temperature or tightening top-p: you concentrate mass on
+   the highest-probability modes *consistent with the condition*, so output gets more on-prompt and more
+   "typical," at the cost of variety. "Oversaturated" corresponds to **low-temperature degeneracy** —
+   the bland, repetitive, over-confident, stereotyped text you get at `temperature → 0`. One sharpening
+   note: `ε̂ = ε_uncond + w·(ε_cond − ε_uncond)` with `w>1` **extrapolates past** the true conditional
+   prediction, so it does not merely sharpen a valid distribution — it pushes off-manifold, which is why
+   the failure mode is blown-out colour and not just a boring image.
+5. Two concrete ones (§1, §3, §8): **(a) attention pattern and iteration** — GPT is **causal-masked** and
+   emits one token at a time, each conditioned on the past; a DiT attends **bidirectionally over all
+   patch tokens at once** because the whole canvas is refined in parallel, and it is re-run `T` times
+   *over its own output* rather than over a growing prefix. **(b) objective and output type** — GPT
+   outputs a categorical distribution over a discrete vocabulary, trained with cross-entropy; a DiT
+   outputs a **continuous tensor the same shape as its input** (the predicted noise `ε`), trained with
+   MSE. A third if you want it: a DiT takes a **noise-level input `t`** injected via adaptive layernorm,
+   a conditioning channel that has no counterpart in a language model.
+6. **Test extrapolation of a conserved quantity, not plausibility of a clip.** The design: prompt a
+   fixed, measurable mechanical scenario — a ball thrown across frame, a pendulum, two colliding pucks —
+   and then sweep a physical parameter *away* from what training video can contain: "on the Moon," "in
+   water," "at one-third gravity." Track the object centroid frame by frame, fit the trajectory, and
+   extract the implied `g` (or the coefficient of restitution, or momentum before/after collision).
+   **The discriminator is quantitative consistency, not looks:** a model that learned physics produces a
+   trajectory whose fitted `g` scales with the prompt and whose momentum balances across the collision;
+   a model that memorized plausible motion produces an Earth-gravity parabola with a slow-motion filter
+   on it, and loses momentum on contact. Second, cheaper probe from §9: **occlusion** — pass the object
+   behind a screen at known velocity and check whether it exits at the *predicted* time and position
+   rather than at a time that merely looks right. Both are falsifiable with a tracker and a curve fit,
+   which is the point — the same move as demanding real numbers in the H800 teardown.
+
+</details>
+
 ---
 
 ## 12. Optional: paper trail (you read papers — here's the efficient path)

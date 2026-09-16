@@ -314,6 +314,50 @@ Bring your answers to our chat — especially where you have to *rank* the domin
    API calls and one response arrives: from the socket becoming readable, through `epoll`, to the right coroutine resuming. Name the one
    blocking syscall the whole loop was sitting in.
 
+<details>
+<summary>Answers</summary>
+
+1. **The two costs are scheduler pressure and context-switch time.** (i) The OS scheduler now has 10,000 runnable-or-blocked threads to
+   track, and every batch of arriving packets wakes a stampede of them — the "who's ready?" bookkeeping has been dumped on the scheduler,
+   which is §2's whole pivot. (ii) Quantified from §1's ladder: each **context switch is ≈1–5 µs** plus cache and TLB (translation
+   lookaside buffer) churn, so a server doing even 100k wake-ups/sec is spending entire cores on switching rather than serving. "Plenty of
+   RAM" misses the point because the 8 MB per-thread stack is *virtual* address space — overcommit and demand paging (Ch2 §3) mean it was
+   never resident. What is actually scarce is **kernel-side structures** (a real kernel stack and task struct per thread) and **scheduler
+   throughput**. And in Python the threads buy no parallelism anyway (Ch3 §1); they help only because a blocking syscall releases the GIL
+   (Global Interpreter Lock).
+2. **`poll` makes the kernel scan all 10,000 `struct pollfd` entries — and makes user space copy and re-walk all 10,000 — to discover the
+   ≈20; `epoll_wait` returns ≈20 entries and the kernel scans nothing.** Physically the saved work lives in **the kernel's own data
+   structure**: `epoll_ctl` registered each fd *once* into a red-black tree that persists between calls, so the interest list is neither
+   re-copied across the boundary nor rescanned, and a per-fd callback appended the ≈20 ready fds to a **ready list** as their events
+   actually happened. The work didn't get faster — it moved from $O(n)$ *per call* to $O(1)$ *per event* (§4).
+3. **Because registration is what lets the kernel keep state between calls — and `poll` is stateless by construction.** `poll`'s fd array
+   arrives with the call and dies with it, so the kernel must re-learn your interest set and rescan it every single time; there is nowhere
+   for it to remember that fd 4,113 matters to you. `epoll_ctl` gives it that place: the **interest list** (a red-black tree) that survives
+   across `epoll_wait` calls. The mechanism that keeps it current is the **per-fd callback** installed at registration, fired by the
+   protocol/device layer the moment data arrives, which moves that fd onto the **ready list** — so `epoll_wait` is just "drain the list,"
+   $O(\text{ready})$ (§4).
+4. **The handler forgot to drain the socket in a non-blocking loop until `read` returns `EAGAIN`.** Edge-triggered reports only the
+   *transition* to ready, so if you read once and leave bytes sitting in the kernel's socket buffer, no further arrival means no further
+   event, and that data sits unread forever — the connection "hangs" with its payload already in the kernel. Level-triggered hid the bug
+   because it re-reports an fd as ready *as long as unread data remains*, so the next loop iteration silently handed you another chance at
+   the leftovers (§4). Diagnostically it looks exactly like Ch3 §2's stuck connection: the process is parked in `epoll_wait` with nothing
+   to do while the bytes are already across.
+5. **(a) is the reactor (readiness, `epoll`); (b) is the proactor (completion, `io_uring`); completion/IOCP (I/O completion ports) is
+   Windows' native model** — which is why `asyncio` runs a `ProactorEventLoop` there and a `SelectorEventLoop` on Linux (§1 §9a, §5).
+   `io_uring` cuts syscalls with the same number of I/Os because **submission and reaping are memory operations on the shared mmap'd
+   rings**, not crossings: N requests are N writes into the SQ (submission queue) plus **one** `io_uring_enter` — or zero under `SQPOLL` —
+   against readiness's floor of **two crossings per event** (`epoll_wait`, then a `read` each). Crossings per I/O went from ≥2 to ≤1/N.
+   That is §1's Rule 1, batch your boundary crossings, taken to its limit.
+6. **The loop was sitting in one blocking syscall: `epoll_wait`.** All 2,000 sockets were registered into the single `epoll` instance by
+   `epoll_ctl` when each coroutine `await`ed, and each `await` parked its Task with zero CPU cost (Ch3 §2). A response arrives: the NIC
+   raises an interrupt (§1 §7), the kernel copies the bytes into that socket's receive buffer and the fd's registered callback moves it
+   onto the **ready list**, which wakes `epoll_wait`. It returns *just that one fd* (not 2,000 — $O(\text{ready})$), the `selectors` layer
+   maps fd → the callback registered with it → the `Future` the coroutine is waiting on, the loop marks that Future done and schedules its
+   Task, and the coroutine resumes at its `await` and performs the now-guaranteed-non-blocking `read`. The other 1,999 were never looked
+   at.
+
+</details>
+
 ---
 
 ## 9. Applied — captured from our 2026-07-07 session

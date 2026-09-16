@@ -37,8 +37,9 @@ tokens, `llama.cpp` loading a multi-gigabyte weight file. You reason fluently on
 fan-out and back-pressure). But a set of facts you currently hold as *rules of thumb* all bottom out at one mechanism you haven't yet
 made explicit:
 
-- **"I/O releases the GIL"** — *why?* Because the thread isn't running your Python; it's blocked **inside the kernel**, and the kernel
-  drops the GIL before it puts you to sleep.
+- **"I/O releases the GIL"** — *why?* Because the thread isn't running your Python; it's blocked **inside the kernel**. Note *who*
+  does the releasing: the kernel knows nothing about the GIL. **CPython** drops it — the `Py_BEGIN_ALLOW_THREADS` macro wrapped
+  around the blocking call — immediately before entering the syscall, and reacquires it on the way back.
 - **"The event loop sleeps in `epoll_wait`"** — that's a **syscall**; the loop is a user-space scheduler whose one link to the outside
   world is a handful of syscalls.
 - **"Buffered I/O is faster than reading a byte at a time"** — because each `read` is a *boundary crossing* with fixed overhead, and
@@ -356,6 +357,50 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 6. **Why the GIL is free across I/O.** Put §5 and Ch3 together: when a Python thread is blocked in a `read` syscall, another Python thread
    can run. State *where* the GIL is released and *why the interpreter can safely release it there* (what is the blocked thread definitely
    **not** doing?).
+
+<details>
+<summary>Answers</summary>
+
+1. **The context switch to Q flushes the TLB; the `read()` mode switch does not have to.** A syscall keeps the *same* thread in the *same*
+   address space — `CR3` is untouched, so every cached virtual→physical translation stays valid (§1(a): a mode switch is not a context
+   switch). Switching to process Q reloads `CR3` with Q's page-table root (Ch2 §1), which invalidates P's translations, so Q restarts cold
+   and re-walks the page tables on its first memory touches — on top of the scheduler run and the register-file/kernel-stack swap. That is
+   the whole gap in §3's ladder: ≈0.1–1 µs for a syscall against ≈1–5 µs for a context switch. The honest caveat is §3's KPTI (kernel
+   page-table isolation) story — post-Meltdown a syscall *does* swap page tables twice and flush some TLB entries, which is exactly why the
+   syscall bar moved ≈2–5×; it still does not throw away another process's whole working set.
+2. **1-byte reads: ≈10.5 million crossings × 600 ns ≈ 6.3 s. 64 KB reads: 160 crossings × 600 ns ≈ 96 µs.** The data movement itself is the
+   same in both cases — copying 10 MB out of the page cache at roughly 10 GB/s is ≈1 ms. So in the 1-byte case the **crossings dominate by
+   about four orders of magnitude** (6.3 s vs 1 ms); in the 64 KB case the **copy dominates** and the boundary is ≈10% noise. The lesson is
+   that batching matters only while (overhead × count) is comparable to the work done per crossing: once the buffer is a few KB the 600 ns
+   is amortized to near-nothing, which is why `io.DEFAULT_BUFFER_SIZE` of 8192 B (§5) is already enough and a 1 MB buffer buys almost
+   nothing. Rule 1 (§3) has a knee, and it is low.
+3. **A user-space buffer in the C library sits in between** — the `FILE*` stdio buffer of §4. `printf` formats into that buffer and returns
+   without touching the kernel; the crossing happens only when the buffer **flushes**: it fills (typically ≈4 KB), you call `fflush`, or the
+   process exits. So thousands of `printf`s produce no `write` at all, then one `write(1, …, 4096)` appears. (Bonus: to a terminal libc uses
+   **line buffering** — flush on every `\n` — but a pipe is not a terminal, so `| cat` switches it to **full buffering** and the program
+   crosses the boundary *less* often, in 4 KB bursts. This is also why output can vanish when a program crashes: it was still in the
+   user-space buffer, never written.)
+4. **`clock_gettime` is a pure read of process-independent, non-secret data with no side effect — so the kernel can just publish the answer
+   in a shared read-only page and let ring 3 read it.** Three properties must hold to serve a call from the vDSO (virtual dynamic shared
+   object): the result is the *same for every process* (nothing per-process to look up), reading it *changes no kernel state*, and the data
+   is *not privileged* (the current time leaks nothing). `read` fails all three: it must look up the file descriptor in **your** process's
+   open-file table, it *mutates* state (the file offset, consumption of a socket buffer), it may have to sleep, and it returns data your
+   process must be checked for permission to see — none of which can be precomputed into a page shared by everyone. §4's slogan holds: the
+   cheapest crossing is the one you don't make, but only calls with nothing to decide qualify.
+5. **The `epoll_wait(6,` hang is the timeout's job; the silent one is not.** A syscall line with no return value is a thread **asleep in the
+   kernel** (§5) waiting for an event that may never come — bounded waiting is precisely what a timeout gives you (the loop wakes, gives
+   up, retries or errors). Silence means the process is making **no boundary crossings at all**: it is spinning in user space, burning CPU
+   in a loop that never asks the kernel for anything, so there is no wait to time out — you need a profiler / `py-spy`, and the fix is in
+   the code. `strace` alone separates them because `strace` can only see crossings: a hanging line = parked on I/O, no lines = never
+   leaving user space. (`strace -c`, §5, makes the same call in one line.)
+6. **The GIL (Global Interpreter Lock) is released by CPython around the libc `read` call — dropped immediately before the `syscall`
+   instruction and reacquired immediately after it returns.** It is safe there because the blocked thread is definitely **not executing
+   Python bytecode and not touching interpreter state**: it is asleep inside the kernel (the hanging `read(3,` line of §5), so it cannot be
+   mutating reference counts, object headers, or the interpreter's data structures that the GIL exists to protect. That is the mechanism
+   behind "I/O releases the GIL" from the opening section — and it is why thread-per-connection works at all in Python even though the GIL
+   serializes CPU work.
+
+</details>
 
 ---
 

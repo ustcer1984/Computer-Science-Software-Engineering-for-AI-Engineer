@@ -353,6 +353,67 @@ Reason first; check against a source where noted.
    or borrowing to spend — name the mechanism (tie to E03 §4 §10b) and say what it relies on that most countries
    don't have.
 
+<details>
+<summary>Answers</summary>
+
+1. **Fiscal policy is the elected government/treasury moving taxes and spending; monetary policy is the
+   central bank moving the policy rate, the money supply or the exchange rate** (§1's table). You want them
+   in different hands because the monetary lever is subject to **time-inconsistency** (E02 §3 §11): a
+   government facing an election has a standing incentive to run the economy hot and to inflate away its own
+   debt, so handing the rate to an **operationally independent** central bank is a commitment device that
+   anchors inflation expectations. The fiscal lever, by contrast, is *inherently political* — it decides who
+   is taxed and who is funded — so it belongs with the legislature.
+2. **Only the dollars above the bracket threshold are taxed at 24%** — brackets apply to slices of income,
+   not to the whole, so a raise never re-taxes what you already earned (§2, point 2). (a) Your **total tax
+   bill** is described by the **average rate** (total tax ÷ total income), which is always below the top
+   marginal rate you touch; (b) whether overtime is worth it is decided by the **marginal rate**, because
+   incentives run on the tax charged on the *next* dollar. Conflating the two is the single most common tax
+   error in the news.
+3. **Most of it is borne by workers, through lower wages**, even though the employer writes the cheque —
+   **tax incidence** falls on **whichever side of the market is more inelastic** (§2, point 3; E01 §3). The
+   answer depends on the fact that **labour supply is much more inelastic than labour demand**: workers keep
+   working when take-home pay falls a little, so they absorb the tax. Flip that assumption — highly elastic
+   labour supply, inelastic demand — and the employer would bear it instead. "We'll tax the employers, not
+   you" is incidence sleight-of-hand.
+4. **(a) in G, (b) transfer, (c) in G, (d) transfer.** **G** is the government *buying goods and services or
+   building assets* — it directly commandeers real resources (a soldier's salary, a road). **Transfers**
+   hand over purchasing power without buying anything; they show up in GDP only later, as **C**, when the
+   recipient spends (§3). The distinction matters because adding transfers into G **double-counts** the
+   government's GDP footprint (E02 §1) and mismeasures how much of the economy the state is actually using —
+   transfers do the redistribution and stabilization jobs, G does the public-goods job.
+5. **Essentially all of it is the thermostat** — with no new laws passed, the 4-point widening is the
+   **cyclical deficit**: revenue falls automatically as incomes shrink and transfers rise automatically as
+   unemployment claims come in (§4, point 1). That *is* the **automatic stabilizers** of E02 §4 §10a doing
+   their job, and suppressing it would make the recession worse. Judge the government on the **structural
+   (cyclically-adjusted) deficit**, which strips the cycle out and shows the deliberate policy choice —
+   judging by the headline number is like judging a thermostat by the room temperature.
+6. **(a) public investment in a deep recession > (c) unemployment benefits in a slump > (d) spending in a
+   very open economy > (b) a broad tax cut at full employment** (fig 4's ordering: roughly 1.6, 1.2, and
+   well under 1 for the last two). The **two effects doing the ranking** are (i) **slack and the central
+   bank's response** — a dollar spent into idle resources creates output, while at full employment it just
+   bids up prices and crowds out private activity, and at the **zero lower bound (ZLB)** the central bank
+   welcomes rather than offsets it; and (ii) **how much of the dollar leaks out of domestic demand** — a tax
+   cut is partly **saved** (tax multiplier $-c/(1-c)$, smaller in magnitude than $1/(1-c)$), except when it
+   goes to liquidity-constrained households who spend nearly all of it, and in a very open economy much of
+   it **leaks into imports**.
+7. **Crowding out and Ricardian equivalence** (§5). **Crowding out:** government borrowing competes for
+   scarce savings, pushes up the interest rate, and displaces private investment — it bites hardest **at
+   full employment**, where there is no spare capacity and the central bank is not pinning rates, and barely
+   at all in a deep slump or at the ZLB. **Ricardian equivalence:** households recognise a tax cut today as
+   higher taxes tomorrow and **save the whole cut**, so demand never rises — it bites hardest for a **tax
+   cut** (not direct spending) aimed at forward-looking, **unconstrained** households with long horizons;
+   liquidity constraints, myopia and finite lives are what break it in practice.
+8. **Through the NIRC — the Net Investment Returns Contribution** (E03 §4 §10b): up to about 50% of the
+   *expected long-run returns* on the national reserves is booked as a standing **non-tax revenue** line,
+   the roughly 23% non-tax slice in fig 1. Past surpluses fund present spending **through their returns**,
+   not by drawing down principal — which is why Singapore can keep personal income tax small and still
+   balance the budget over each term without borrowing to spend (§6). What it relies on that most countries
+   don't have is **a very large stock of accumulated past reserves**, built by decades of surpluses and
+   professionally invested, plus the constitutional protection (the "second key") that stops them being
+   consumed.
+
+</details>
+
 ---
 
 ## 9. Optional: read a real budget (15–20 min)

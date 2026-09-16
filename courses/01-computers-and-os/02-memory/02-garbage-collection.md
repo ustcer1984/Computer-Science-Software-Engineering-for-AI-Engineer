@@ -457,6 +457,61 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    whether a frozen-dataclass + append-only-`Artifacts` pipeline can create reference cycles, and what that implies
    about how hard the cycle collector has to work on your code.
 
+<details>
+<summary>Answers</summary>
+
+1. **At the `DECREF` that takes `ob_refcnt` to zero — immediately, synchronously, right there** (§1, §2), plus a
+   cascade that `DECREF`s everything the dying object referenced. No collector has to run. **INCREF:** binding a
+   second name (`b = a`), passing the object as a function argument, inserting it into a list/dict/set, setting it
+   as an attribute (`self.x = obj`), capturing it in a closure. **DECREF:** `del` on a name, rebinding a name to
+   something else, a function returning (its frame's locals die), removing it from a container (`container.pop()`).
+   That per-operation bookkeeping is the "smeared cost" in §1's table.
+2. **Because each dict's count is stuck at 1, held up by the other** — after `del a; del b` the names are gone but
+   `a`'s entry still references `b` and `b`'s still references `a`, so both sit at refcount **1**, never 0, never
+   freed (§3). The reachability fact the counts can't see: **nothing outside the pair can reach either object — the
+   two surviving references form a closed loop with no entry point.** Refcounting is a purely *local* measurement;
+   "is there a path from a root?" is a *global* property, which is exactly what a tracing collector computes.
+3. **It reclaims unreachable reference cycles — the one case refcounting provably can't** (§3, §4). **Generational**
+   buys it cheapness: by the **weak generational hypothesis** most objects die very young, so gen 0 is scanned
+   often and is small, while survivors are promoted to gen 1 and gen 2 and re-examined progressively less — you
+   spend attention where the garbage actually is instead of rescanning long-lived structures. It tracks only
+   **container** objects because a plain `int`, `float` or `str` **holds no references to other objects**, so it
+   can't be a link in a cycle — excluding them is free correctness, not a heuristic.
+4. **The chain:** `Py_INCREF`/`Py_DECREF` are `ob_refcnt++`/`--`, a **non-atomic read-modify-write** (load, add,
+   store); shared objects like `None`, `True`, small ints and interned strings are touched by every thread
+   constantly; two threads interleaving lose an update, so a count reads 4 when it should be 5, one `DECREF` too
+   many frees a live object → **use-after-free** and a corrupt interpreter. Serializing every refcount mutation
+   with **one global lock** is the brute-force cure — that is the GIL (§6). **PEP 703's two:** **immortal objects**
+   (PEP 683) pin the count of `None`/`True`/small ints/interned strings at a sentinel so `INCREF`/`DECREF` become
+   **no-ops** — it removes synchronization entirely from the hottest, most-shared objects; **biased reference
+   counting** gives each object an **owning thread** that mutates a cheap local non-atomic count, with a separate
+   shared atomic count for other threads — it optimizes the common case where an object is only ever touched by its
+   creator, so you pay the atomic only for genuinely cross-thread objects.
+5. **(a) Freed by Python is not returned to the OS** — pymalloc keeps the memory in its own pools and arenas to
+   serve future allocations fast, so RSS stays high while the memory is free *to Python* (§7.3). **(b) `del` freed
+   nothing, because that wasn't the last reference** — the array is still in a list, a closure, a module-level
+   cache, or a held traceback, so the `DECREF` just un-stuck one name tag (§7.1, §7.4). Neither is a leak. The
+   discriminator is `tracemalloc` snapshot diffs (§9): a **real** leak is Python's *live-object* count climbing
+   without bound, not RSS being high once.
+6. **Because `with` desugars to `try/finally`, so `close()` runs on every exit path — exception, `return`, `break`
+   — and releases the OS file descriptor deterministically, regardless of refcounts** (§7.2, §10a). Leaning on
+   collection is the third approach §10a names: **no `close()` at all**, hoping `file.__del__` runs. "Usually
+   works" depends on **CPython's refcounting timing being both deterministic and prompt** — which fails if you run
+   on PyPy or Jython (pure tracing GC: the descriptor stays open until the next collection), or if any lingering
+   reference delays the drop (a cycle, a logged traceback pinning the frame). Keep the two lifetimes apart:
+   **closing is a resource operation, freeing is a memory operation** (§10a).
+7. **It (almost) can't create cycles — the structure is a DAG by construction** (§5). A cycle needs some object to
+   eventually point *back* at an object that points at it; with `frozen=True` you can never rebind a field after
+   construction, and `Artifacts.add` returns a *new* store, so a new state can reference old artifacts but an old
+   artifact can never be made to reference the new state. You only ever build new nodes that point at existing
+   ones — edges always run backwards in time, which forbids a loop. **Implication: the cycle collector stays nearly
+   idle on your code**, every object dies promptly at its last `DECREF`, and reclamation stays deterministic. The
+   caveat is the §10c "frozen is shallow" hole — a mutable `extra` dict you poke in place could still close a loop.
+   Cycles are a hallmark of **mutable, bidirectional** structure (parent↔child, observer↔subject), which this
+   design refuses to build.
+
+</details>
+
 ---
 
 ## 9. Optional: get your hands dirty (15–20 min)

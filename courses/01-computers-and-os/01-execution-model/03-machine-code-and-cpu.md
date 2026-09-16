@@ -375,6 +375,58 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 6. (Stretch) In one sentence each: what problem is a **GPU** built to win at, and why is that the same
    idea as SIMD rather than the same idea as multicore?
 
+<details>
+<summary>Answers</summary>
+
+1. **`call square` pushes the current Program Counter onto the stack and then writes `square`'s address
+   into the PC; `ret` pops that saved address off the stack and writes it back into the PC** (§3). That's
+   the whole trick: **control flow is nothing but writing the PC**, and the "return address" of §2's
+   stack frame is literally the PC value parked in memory. The stack pointer is just another register the
+   CPU adds to and subtracts from. §2's entire abstraction — frames, nesting, unwinding — bottoms out
+   here as "save the PC and jump; later restore the PC and jump back."
+2. **Compiled not interpreted (§1), cache locality (§4), and SIMD (§7)** — three independent multipliers
+   that stack. (i) `numpy`'s kernel is precompiled native code, so it pays none of the per-operation
+   bytecode dispatch, dynamic type check, boxing and refcounting the CPython VM (virtual machine) pays on every `+`.
+   (ii) The array is **one contiguous block** of raw numbers, so every 64-byte cache line fetched carries
+   the next several values you need; a Python `list` is a million *pointers* to boxed `int` objects
+   scattered on the heap — a cache-miss minefield. (iii) The kernel is **vectorized**, issuing SIMD
+   instructions that add 4/8/16 elements per instruction instead of one. Remove any one and you still
+   have the other two — which is why the combined gap is around 100x rather than 3x.
+3. **A RAM access costs roughly 200–300 cycles, so a core could have retired several hundred arithmetic
+   instructions in that time** — more than 200, in fact, because a superscalar core finishes more than
+   one instruction per cycle (§5). §4's human scale: if a register is "already in your hand," RAM is
+   "drive across town," four to five minutes. What hides it is the **cache hierarchy** — L1 around 4
+   cycles, L2 around 12, L3 around 40 — which works only because of **temporal and spatial locality**,
+   and which fetches a whole 64-byte **cache line** at a time. Out-of-order execution hides a bit more by
+   finding independent work during the stall. Your colleague is describing the *hit* case and mistaking
+   it for RAM.
+4. **Power density stopped it** (§6). Dynamic power scales roughly with frequency times voltage squared,
+   and by 2004–2006 you could no longer dissipate the heat from a few mm² of silicon; clocks plateaued
+   around 3–4 GHz and have stayed there. Transistors kept arriving, so the budget went into **more cores
+   instead of faster ones**. The direct consequence for how you write code: **more cores do nothing for a
+   single sequential instruction stream** — a straight line of arithmetic, `call` and `ret` occupies one
+   core and ignores the other fifteen. You must deliberately split the work into multiple streams, which
+   is exactly why concurrency (Ch1 §3) became mandatory rather than optional — and in Python why the GIL,
+   `multiprocessing`, and GIL-releasing native libraries are the terms of the problem.
+5. **A mispredicted branch throws away every instruction the core speculatively executed down the wrong
+   path, then refills the pipeline — roughly 15–20 cycles of work discarded** (§5). The pipeline has to
+   fetch the next instruction long before the branch condition resolves, so the **branch predictor**
+   guesses from history and the core runs ahead on that guess; a right guess is free, a wrong one costs a
+   full flush. **Sorted data helps because it makes a data-dependent branch predictable**: a test like
+   "is this value above the threshold" flips essentially at random on shuffled data and defeats the
+   predictor, but on sorted data it answers one way for a long run and then the other way for the rest,
+   so the predictor is right almost every time. Identical instructions, identical big-O — only the
+   prediction accuracy changed.
+6. **A GPU is built to win at throughput on enormous, uniform numeric work** — the same arithmetic over
+   vast amounts of data, like the matrix multiplies at the heart of every neural network, where thousands
+   of simple ALUs beat a few clever ones. **It is the SIMD idea, not the multicore idea, because it
+   widens *one* instruction stream over many data elements** (SIMT is SIMD with a thread-shaped
+   programming model), whereas multicore adds *independent* streams each doing something different (§6,
+   §7). Multicore helps a branchy, heterogeneous workload; SIMD/GPU helps only when the same operation
+   applies across the whole dataset.
+
+</details>
+
 ## 10. Optional: get your hands dirty (15 min)
 
 You don't need assembly tools — Python can *show* you the layers.

@@ -10,7 +10,7 @@
 > price index to deflate any nominal figure into real terms, **why every index is biased**, and the question
 > that anchors all monetary policy to come: **why central banks target a little inflation (≈2%) rather than
 > zero.**
-> **Status:** ✅ **finalized 2026-06-29.** Body drafted 2026-06-26; **§9 captures the live session** — two
+> **Status:** ✅ **finalized 2026-06-29.** Body drafted 2026-06-26; **§10 captures the live session** — two
 > threads that both began as a *moral* unease, not a mechanics question: (9a) "inflation punishes thrift" —
 > calibrated to the precise truth (mild inflation taxes *idle cash*, not saving; the real defect is
 > distributional) and then *relocated* to where it actually bites (growth-dependence, **unpriced environmental
@@ -405,6 +405,52 @@ it out first, then test it against a real release.
    *harm* an economy, and name the policy trap (hint: the Fisher relation and the lower bound on nominal
    rates) that makes central banks fear it more than mild inflation.
 
+<details>
+<summary>Answers</summary>
+
+1. **Your friend is describing deflation, but what happened is disinflation.** The *rate* fell from 8% to 3%,
+   so the **price level is still rising** — just less steeply; it ends the year about 3% **above** where it
+   started, and the earlier spike is never reversed (§1). Only a *negative* rate — a genuinely falling level —
+   is **deflation**. This is why the public's "but everything still costs more!" is correct even as the
+   headline improves.
+2. **CPI = 113.3, inflation = 13.3%.** Base basket: $20 \times 1.00 + 5 \times 2.00 = 30.00$; this year:
+   $20 \times 1.20 + 5 \times 2.00 = 34.00$; index $= 34.00/30.00 \times 100 = 113.3$ (§2). Rice moves the
+   index more because the index is a **weighted** average and rice is about 67% of the basket by base-year
+   value (\$20 of \$30) against the bus fare's 33% — a 20% rise in a two-thirds weight lands far harder than
+   the same rise would in a small-weight category.
+3. (a) **Headline CPI** — cost-of-living adjustments track what households actually pay, food and energy
+   included (§3, and the COLA note in §4). (b) **Core** — in the US specifically **core PCE (Personal
+   Consumption Expenditures)**, the Fed's preferred gauge — stripping volatile food and energy exposes the
+   underlying trend (§3). (c) **PPI**, producer prices at the factory gate, a leading indicator of consumer
+   prices (§3). (d) **The GDP deflator**, which covers everything in GDP — investment, government, exports —
+   and excludes imports (§3, §1).
+4. **Purchasing power fell by roughly 1.5%** — real wage growth ≈ nominal wage growth − inflation = 4 − 5.5
+   (§4). A raise that lands below inflation is a **real pay cut**, which is why "wages are rising" and "living
+   standards are falling" can both be true at once. In the release, expect the nominal figure and the CPI
+   figure to be published separately, with the real series derived as nominal / price index × 100; check
+   whether the inflation figure used is **headline or core**, since that choice alone moves the answer.
+5. **Substitution bias:** when beef gets dearer people buy more chicken, but a **fixed (Laspeyres) basket**
+   keeps pricing the old beef-heavy basket, so it **overstates** the rise in the cost of maintaining a given
+   standard of living (§5). A **chained** CPI updates the basket continuously, capturing that switch, so it
+   rises a touch slower every year and reads **lower**. That is exactly why it's contentious: a lower index
+   means **smaller** Social Security increases and **faster** tax-bracket creep — billions of dollars riding
+   on a methodology choice (§5).
+6. **(i) A buffer against deflation and the zero lower bound**, and **(ii) "greasing the wheels" of the labour
+   market given downward nominal wage rigidity** (§6). On (ii): workers resist *nominal* pay cuts almost
+   absolutely — the histogram spikes at exactly 0% and the negative tail is nearly missing — so a firm that
+   needs a worker's **real** wage 2% lower simply **freezes nominal pay** and lets 2% inflation do the cutting.
+   At 0% inflation that escape valve is gone and the adjustment comes through **layoffs** instead. (A third
+   reason: CPI overstates true inflation by perhaps a point, so a measured 2% is nearer 1% true.)
+7. **Two mechanisms: deferred spending and debt deflation.** If prices will be lower next month, buyers
+   **wait**; everyone waiting cuts demand, output and prices further — a self-feeding slump (Japan's lost
+   decades, the 1930s). And deflation **raises the real value of debt**: nominal debts are fixed while wages
+   and prices fall, so the real burden grows and mass deleveraging deepens the slump (Irving Fisher). The trap
+   is the **zero lower bound (ZLB)**: by the Fisher relation the real rate ≈ nominal rate − inflation, so with
+   negative inflation the *real* rate stays **high** exactly when it needs to be low, and the central bank
+   cannot cut nominal rates far below zero — its main tool is disarmed (§6).
+
+</details>
+
 ## 9. Optional: read a real CPI / inflation release (15–20 min)
 
 Pick a recent release and read it through this section's lens:
@@ -424,7 +470,7 @@ in §1.
 
 ---
 
-## 9. Applied — from our session Q&A (2026-06-29)
+## 10. Applied — from our session Q&A (2026-06-29)
 
 Two long threads, and both started from a moral discomfort rather than a mechanics question — the rare and
 valuable kind. (9a) *"Inflation rewards spending over saving — isn't that against the old virtue of thrift?"*
@@ -652,7 +698,7 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
 | Inflation target | 通胀目标 | 通膨目標 | the ≈2% |
 | Zero lower bound (ZLB) | 零利率下限 | 零利率下限 | disarms rate cuts in deflation |
 
-**Growth, sustainability & the money loop (§9)**
+**Growth, sustainability & the money loop (§10)**
 
 | English | 中国大陆 (简体) | 台灣 (繁體) | Note |
 |---|---|---|---|
@@ -693,7 +739,7 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
   (https://www.singstat.gov.sg, https://www.mas.gov.sg); United States — **BLS CPI** news release
   (https://www.bls.gov/cpi/) and the **BEA (Bureau of Economic Analysis) PCE price index** (https://www.bea.gov); cross-country inflation —
   **World Bank / IMF (International Monetary Fund)** data (https://data.worldbank.org).
-- **On the §9 sustainability / money-loop threads (the bigger debate):** Herman Daly, *Steady-State Economics*
+- **On the §10 sustainability / money-loop threads (the bigger debate):** Herman Daly, *Steady-State Economics*
   and the **scale / distribution / allocation** split; Nicholas Georgescu-Roegen, *The Entropy Law and the
   Economic Process* (1971) — the thermodynamic foundation of **ecological economics** (the physicist's entry
   point). Tim Jackson, *Prosperity Without Growth*, and Kate Raworth, *Doughnut Economics* — the **degrowth /
@@ -709,7 +755,7 @@ China (大陆) and Taiwan (台灣) that you'd actually trip over.
 ✅ **Finalized 2026-06-29.** This pays off §1's cliffhanger — you now know what "real," the "deflator," and
 "nominal ≈ real + inflation" actually rest on: a **weighted basket**, a **family of indices** that disagree by
 construction, the **deflate-to-real** operation, the **upward bias** every index carries, and **why ≈2% is the
-deliberate target.** **§9** captured an unusually deep session — the thrift/inflation unease (relocated onto
+deliberate target.** **§10** captured an unusually deep session — the thrift/inflation unease (relocated onto
 externalities, growth-dependence, and the discount rate) and the money-loop/steady-state reconstruction (credit
 money, debt-deferral, the MPC demand-gap, Daly's scale/distribution/allocation). Deliberate cliffhangers feed
 the rest of the module and E03: the **Fisher relation** (real ≈ nominal − inflation) and **inflation
@@ -718,6 +764,6 @@ policy)**; the **zero-lower-bound** and **wage-rigidity** material is the *why* 
 toolkit; the **MAS core-inflation / imported-inflation** thread sets up **E03 §4 (the MAS exchange-rate
 model)**; **unemployment** — via wage rigidity and layoffs-as-the-alternative-adjustment — is the subject of
 **§3 (unemployment & the labour market)**, with the inflation-unemployment trade-off (the Phillips curve) in
-**§4 (the business cycle)**; and §9's **credit-money / money-loop** thread is the explicit on-ramp to **E03 §1
+**§4 (the business cycle)**; and §10's **credit-money / money-loop** thread is the explicit on-ramp to **E03 §1
 (what money is, and how banks create it)**, where the learner's "lending grows the money supply" insight gets
 its full treatment.

@@ -433,6 +433,58 @@ mechanism together (your signature mode).
 7. (Synthesis) Why was `ExceptionGroup` / `except*` added to the language *at the same time* as `TaskGroup`? What problem in structured
    concurrency requires "more than one error at once" to be a first-class concept?
 
+<details>
+<summary>Answers</summary>
+
+1. **One tick: (1) compute the select timeout, (2) `selector.select(timeout)`, (3) push a callback onto `_ready` for every ready file
+   descriptor, (4) move every now-due timer from `_scheduled` into `_ready`, (5) snapshot `ntodo = len(_ready)` and run exactly that many
+   callbacks** (§1). Physically, "the loop waiting on I/O" is the thread **asleep inside `epoll_wait`, in `selector.select`** — the one
+   blocking call in the whole loop, burning zero CPU. Its length is set by the run queue and the timer heap: 0 if `_ready` is non-empty,
+   otherwise the time until the nearest `_scheduled` timer, otherwise `None`. `await asyncio.sleep(1)` is just a timer in `_scheduled`
+   that caps that kernel sleep, so the loop keeps draining everything else; `time.sleep(1)` sleeps the **thread**, so the tick never
+   reaches `select` at all and all 999 other tasks starve.
+2. **Coroutine = the inert object you get from calling an `async def` function — a paused frame, a *recipe*. Future = a result box with a
+   state (`PENDING`/`FINISHED`/`CANCELLED`) plus done-callbacks — a *mailbox*. Task = a Future subclass that wraps and *drives* a
+   coroutine, scheduled on the loop the instant it is created — a *running job* plus its mailbox** (§2). `foo()` runs none of the body
+   because calling an `async def` **builds** the frame rather than executing it — hence the "coroutine was never awaited" warning: you
+   made the recipe and threw it away. Two `await`s run sequentially because **`await` does not create a Task** — it runs the awaited
+   coroutine *inside the current task*, chaining frames, so the task cannot proceed past the first `await` until it resolves. Concurrency
+   needs *more tasks* for the loop to interleave (`create_task`/`gather`/`TaskGroup`).
+3. (a) **`gather(..., return_exceptions=True)`** — harvest mode: every raising coroutine comes back as an exception object, index-aligned,
+   and the batch always completes, so failures are reported per item instead of crashing the call (§3). (b) **`TaskGroup`** — fail-fast by
+   design: the first error cancels all siblings and raises an `ExceptionGroup` at the block, which is exactly the policy when partial
+   success is meaningless (§3, §4). (c) **`as_completed`** — it yields futures in *completion* order, so you persist each result the
+   instant it lands and a crash at item 198 costs nothing already harvested (§3). What default `gather` does to the other 199 when #50
+   raises: **nothing — it does not cancel them.** The exception propagates to your `await` immediately while the siblings keep running as
+   **orphans**, consuming connections and rate-limit budget with their results silently dropped (§6, footgun 2).
+4. **`task.cancel()` sets a flag; it kills nothing and interrupts no running line.** The next time the loop would resume that task, it
+   resumes it with **`coro.throw(CancelledError)`** instead of `coro.send(value)` — the exception is raised *at the exact `await` where
+   the coroutine is suspended* (§5). Normal completion and cancellation are the same resume machinery with a different payload. A timeout
+   ends a silent hang because the coroutine is **parked** at an `await` on a Future that stays `PENDING` forever: the loop itself is
+   healthy, the timeout's deadline sits in `_scheduled`, the tick fires it (§1 — timers and I/O are the same kind of event), it calls
+   `cancel()`, and the injected exception has a suspension point to land on. `return_exceptions=True` can only capture an exception the
+   coroutine **raises on its own**; silence raises nothing, so only an *externally injected* exception can end it.
+5. **The timeout never fires and the program hangs forever — only `Ctrl-C` breaks it** (§10a). Two independent reasons, and the dominant
+   one is not the obvious one. **Dominant:** `asyncio.timeout` is not a watchdog thread — it is a timer scheduled **on the same loop**,
+   and your `while True` runs inside the Task's `__step` callback, so `coro.send(None)` never returns, `__step` never returns, `_run_once`
+   never finishes its tick (§1), the due timer is never moved to `_ready`, and **`task.cancel()` is never even called**. **Independent
+   second reason:** even granting that `cancel()` somehow fired, cancellation is delivered only at a resume-from-`await`, and this
+   coroutine has no suspension point anywhere — the exception has nowhere to land. The fix is therefore not a timeout at all: get the work
+   off the loop with `run_in_executor` onto a process pool (Ch3 §1 §4).
+6. **They are right the first time and wrong the second.** `CancelledError` inherits from `BaseException`, not `Exception` (deliberately,
+   since 3.8), so a blanket `except Exception:` cannot catch it — their "log and continue" genuinely cannot suppress a cancellation (§5).
+   Switching to `except BaseException:` **does** catch it, and because they `return` instead of re-raising, the task **swallows its own
+   cancellation**: the timeout fired, the exception was thrown in, and the code ate it and kept going. Production symptom:
+   `asyncio.timeout` appears not to stop the work, shutdown hangs, "this task won't die" (§6, footgun 3). The idiom is catch, clean up,
+   **and `raise`**.
+7. **Because structured concurrency makes "several children failed at once" a routine, first-class event, and the pre-3.11 exception model
+   could only carry one exception** (§4). A `TaskGroup` child failure *cancels its siblings*, and those siblings can raise on their way
+   out too, so the block has to deliver a *set* of errors to a single point — pick one and you are back to the silently-swallowed error
+   that structured concurrency exists to abolish. `ExceptionGroup` (PEP 654) is that multi-error value and `except*` is the syntax that
+   handles one type across the group without discarding the rest. Hence the two features shipped together in 3.11.
+
+</details>
+
 ---
 
 ## 9. Optional: get your hands dirty (15–20 min)

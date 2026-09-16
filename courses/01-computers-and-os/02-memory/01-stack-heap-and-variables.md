@@ -426,6 +426,46 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 6. (Stretch) C makes you choose value-vs-pointer at every assignment; Python always shares and gives you
    immutability instead. Name one concrete safety win and one concrete footgun that this trade buys you.
 
+<details>
+<summary>Answers</summary>
+
+1. **A call subtracts from the stack pointer; a return adds it back** — that's the whole physical event. The
+   prologue moves the stack pointer down by that function's frame size (§2; the size is per-function and
+   compile-time-fixed in C, §10a), giving the frame its locals, args and return address; `ret` adds it back and
+   the frame is gone. **You can't leak stack memory because deallocation isn't a decision — it's a consequence
+   of returning.** Heap memory (§3) has no such coupling: a heap object lives until *something explicitly frees
+   it*, so "nobody ever frees it" is a reachable state. That asymmetry is the whole reason §2 exists.
+2. **`a` prints `[1, 2, 3]`** — `b = a` didn't copy the list, it stuck a **second name tag on the same heap
+   object** (§4), so `b.append(3)` mutated the one object both names point at. With the tuple version **`a`
+   prints `(1, 2)`**: `b + (3,)` can't change the tuple in place, so it builds a *new* tuple and **rebinds**
+   `b` at it, leaving `a`'s name tag where it was. The one-word difference is **mutability** (§5) — identical
+   reference mechanics, opposite outcome.
+3. **The `[]` is created once, when the `def` statement executes** — not per call. It's an ordinary heap object
+   stored on the function object, and every call that omits `items` gets a name tag on *that same* list, so
+   state bleeds across calls (§6.1). It is not a Python bug; it's the reference model being consistent. The
+   standard fix is `def f(items=None): items = items or []` — make a **fresh object inside the call**. Worth
+   grepping your pipelines for `=[]`, `={}`, `=set()` in signatures.
+4. **In a Python list the numbers themselves aren't in the list — the list holds pointers to separate `int`
+   objects scattered anywhere on the heap** (§4: everything is an object, integers included). Walking it is
+   pointer-chasing across the address space. A numpy array holds **one contiguous heap block of raw machine
+   numbers**, no per-element object header and no indirection. That's §3's "cache-cold, scattered" bullet stated
+   in terms of *where the bytes live*; Ch1 §4's cache-line argument is the consequence, not the cause.
+5. **Two different sharing mechanisms, both CPython implementation details.** `256` is `True` because CPython
+   **pre-creates and caches the small ints −5..256** as shared singletons, so both names get the one object;
+   `257` is outside that range, so each separate REPL line makes a fresh object. On **one line** you get `True`
+   for a different reason: the line compiles to a single **code object**, whose constants table stores the
+   literal `257` once, so both names load the same constant (§5). The lesson: **`is` asks about identity, not
+   value** — use `==` to compare values and reserve `is` for singletons (`None`, `True`, sentinels).
+6. **Safety win: passing a huge object costs one pointer, so there are no accidental expensive copies** — a
+   local holding a 3-million-element list is the same one pointer as a 3-element one (§10a), and immutable types
+   (int/str/tuple) can be shared freely because nothing can mutate them in place (§5). **Footgun: aliasing** —
+   `b = a` on a mutable object means a step that mutates its input silently changes everyone else's (§6.2), and
+   `a.copy()` only breaks sharing at the *top* level (§6.3). They're the same fact told as a feature and as a
+   bug; **immutability is your only built-in protection**, which is why `frozen=True` dataclasses and
+   don't-mutate-your-inputs are discipline rather than pedantry (§10b).
+
+</details>
+
 ---
 
 ## 9. Optional: get your hands dirty (15 min)

@@ -381,6 +381,57 @@ re-rank it against the dominant mechanism together).
 7. (Synthesis) Under **free-threading** (PEP 703), the `threading` row in §2's table flips to "uses many cores: YES." Name two things that
    get *worse* or *harder* as a result, and connect one of them back to the refcounting keystone from §2.
 
+<details>
+<summary>Answers</summary>
+
+1. **Concurrency is the *composition* of independently-executing tasks — a property of your code; parallelism is the *simultaneous
+   execution* of computations — a property of the hardware and runtime.** They are orthogonal axes, not a slider (§1). (a) The arena is
+   **concurrent, not parallel** (bottom-left): 500 in-flight turns, one thread, one core, zero simultaneity. (b) `np.matmul` is
+   **parallel, not concurrent** (top-right): you wrote one conceptual task and BLAS found the data-parallelism *inside* it. (c) A
+   `ProcessPoolExecutor` on pure-Python scoring is **concurrent AND parallel**: N interpreters, N GILs, N cores. (d) A plain synchronous
+   script is **neither**.
+2. **Because CPython's reference counting is not thread-safe** — the Ch2 §2 keystone cashed in (§3). `ob_refcnt` is incremented and
+   decremented constantly, and at the machine level that is `load → add 1 → store`. Two cores with no lock both read 5 and both write 6,
+   so an object that gained two references carries a count of 6 instead of 7, hits zero one decref early, and is freed while still
+   referenced — **use-after-free**. The alternative was making every refcount operation atomic. The property they protected by choosing
+   one big lock instead: **single-threaded speed** — a plain add is far cheaper than an atomic add, and refcounting is *everywhere*, so
+   the common case (one thread) stays fast and the rare case (many CPU threads) pays by not parallelizing.
+3. (a) **No speedup — roughly equal to sequential, and often slightly worse.** Pure-Python bytecode holds the GIL, so the two loops take
+   turns on one core, handing off only when the switch interval (about 5 ms) forces a release, and you pay the switching overhead on top
+   (§3). (b) **Close to 2x.** CPython drops the GIL before blocking on the socket, so the two waits overlap — the lock is free exactly
+   when you are not using the CPU; the ceiling is the network, not the GIL. (c) **Close to 2x.** NumPy's SVD kernel is C/Fortran that
+   explicitly releases the GIL (`Py_BEGIN_ALLOW_THREADS`) around the number-crunching, so you get real multicore parallelism — **but only
+   for the time spent inside the C code**, not for the Python glue around it.
+4. **The correction: threads in CPython parallelize exactly the work that runs with the GIL released — blocking I/O and GIL-releasing C
+   extensions — and serialize everything else** (§3). So "threading never parallelizes" is false; **"threading never parallelizes *Python
+   bytecode*"** is the precise truth. Threads are the simplest right answer for I/O-bound work with blocking libraries, and useless only
+   for pure-Python CPU work. The per-library nuance from §9c completes it: *"C library" does not mean "GIL released"* — NumPy releases it,
+   `json`/`orjson`/`pydantic` hold it because they spend their time building Python objects.
+5. **Most likely: that endpoint contains a call that never `await`s — a synchronous database driver, a blocking `boto3` call,
+   `time.sleep`, or a heavy pure-Python step — sitting directly on the event loop.** Async scheduling is cooperative (§2: no preemption,
+   the loop switches only at `await`), so one un-yielding call freezes *every* in-flight coroutine, which is why all users feel it and not
+   just that endpoint's callers (§4 footgun). Fix: an async client, or push the CPU step off the loop with
+   `loop.run_in_executor(process_pool, ...)`. Confirm before touching code: measure **event-loop lag** — a heartbeat coroutine that
+   `await`s a short sleep in a loop and records how late it actually wakes — and correlate the lag spikes with hits on that endpoint; then
+   read the handler for calls with no `await` in front of them.
+6. **Phase 1 (fetch 200 URLs) → `asyncio`; phase 2 (pure-Python parse+score) → a process pool.** Fetching is I/O-bound at high fan-out:
+   coroutines cost an object each, whereas threads cost roughly a megabyte of stack apiece plus context switches at that count, and
+   processes would pay the fork and pickle tax for work that is pure *waiting* (§4). Parse+score is pure-Python CPU: threads cannot help
+   (the GIL serializes bytecode) and async cannot help (one thread — async is for waiting, and CPU work never waits), so you need
+   separate interpreters. `run_in_executor` goes **inside the async phase**, wrapping a **`ProcessPoolExecutor`** —
+   `await loop.run_in_executor(process_pool, parse_and_score, payload)` — so the CPU step never blocks the loop (§4, the hybrid). The §9c
+   caveat first, though: push the parse into a C/Rust engine (`orjson`, `pydantic` v2) before reaching for processes, and only pay the
+   pickle tax if a *single* item is long enough to stall the loop.
+7. **(i) Single-threaded code runs somewhat slower, and (ii) your own threaded Python is exposed to real data races that the GIL's coarse
+   serialization used to paper over** (§5). (i) connects straight back to the refcounting keystone: **biased reference counting** splits
+   each refcount into a cheap thread-local count and an atomically-updated shared count, and immortal objects add their own checks — that
+   per-refcount tax is *precisely* the cost the GIL was invented to avoid (§3), so removing the lock re-imports it. (ii) means the shared
+   mutable dict that "happened to work" can now corrupt: free-threading does not make concurrency safe, it makes it your job. (A third, if
+   you want it: every C extension must be rebuilt and audited for thread-safety — the ecosystem constraint that has blocked every prior
+   attempt.)
+
+</details>
+
 ---
 
 ## 8. Optional: get your hands dirty (15–20 min)

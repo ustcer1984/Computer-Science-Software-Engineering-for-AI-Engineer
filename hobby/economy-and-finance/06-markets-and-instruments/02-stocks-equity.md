@@ -468,6 +468,97 @@ Reason first; check against a source where noted.
 11. **The REIT as a teaching case.** Explain why a REIT behaves more like a bond than a typical share, using the
     Gordon model, and say why unit issuance is not automatically bad for existing holders.
 
+<details>
+<summary>Answers</summary>
+
+1. **They own no part of the factory — the factory belongs to the company, which is a *separate legal person*; they
+   own a share *of the company*, which is a bundle of rights** (§1). **The four rights: (i) residual cash flow** — a
+   claim on distributions the board chooses to make, dividends and buybacks; **(ii) the vote** — electing directors
+   and approving major transactions; **(iii) information** — audited accounts and continuous disclosure; **(iv)
+   residual assets** — whatever is left in a liquidation after *every* creditor is paid, which is usually zero. A
+   share is a claim on **the remainder, in perpetuity**, not a slice of property.
+2. **Because without limited liability a passive shareholder's downside would be unbounded — a company failure
+   could take their house — so nobody would buy a stake in a business run by strangers** (§1). Dispersed ownership
+   only works if you can hold a small stake *without* monitoring management, and that requires the loss to be
+   capped at what you paid; otherwise every owner would need to be a competent, watchful operator, which forces
+   ownership back into small concentrated partnerships. **The risk is shifted onto the company's creditors** —
+   lenders, suppliers, bondholders, and involuntary creditors such as tort claimants and sometimes employees or
+   the taxpayer — who absorb losses beyond the firm's own assets. Contractual creditors price it in; involuntary
+   ones cannot, which is the standing critique.
+3. **Company B, by a wide margin** (§2). Work it per share, since only per-share figures are honest. **A:** profit
+   ×1.60 against a share count ×1.55, so earnings per share rise by 1.60/1.55 = **about 3%** over five years —
+   the growth was almost entirely handed to whoever received the new shares. **B:** profit ×1.25 against a share
+   count ×0.80, so earnings per share rise by 1.25/0.80 = **about 56%**. Same holder, no trades, and the slower-
+   growing business delivered roughly eighteen times more per share. **The denominator moves, and it moves your
+   stake.**
+4. **Miller–Modigliani (1961): in a frictionless world — no taxes, no transaction costs, no information asymmetry,
+   investment policy held fixed — dividend policy is irrelevant to value** (§3). Pay a dividend and the share price
+   falls by exactly that amount; withhold it and a shareholder can manufacture a **homemade dividend** by selling a
+   sliver. **The three frictions that make it matter: taxes** (the classic case for buybacks where dividend income
+   is taxed more heavily), **signalling** (initiating or raising a dividend is a costly, credible statement about
+   expected cash — talk is cheap, a cheque is not), and **agency** (paying cash out removes the temptation to spend
+   it badly — Jensen's free-cash-flow discipline); **clienteles** are the fourth. **The tax friction is unusually
+   weak in Singapore** because the **one-tier system** makes dividends tax-exempt in the shareholder's hands and
+   there is **no capital gains tax**, so the scoreboard between a dividend and a buyback is close to neutral.
+5. **They are assuming perpetual growth of 8% a year, and it is not plausible for a mature utility.** Rearranged,
+   the Gordon model says your return is the dividend yield plus the growth rate, so 12% = 4% + $g$ implies $g$ =
+   **8% forever** (§4). That is above plausible long-run nominal growth for a regulated utility and, sustained
+   indefinitely, violates the constraint that **no company can grow faster than the economy forever — if it did it
+   would eventually *be* the economy.** Either the 12% is wrong, or it is really a forecast of a **re-rating** (a
+   change in the multiple), which is a bet on $r$ falling rather than on the business.
+6. **At 5% growth the value is 1/(0.08 − 0.05) = about 33 times next year's dividend; at 6.5% it is
+   1/(0.08 − 0.065) = 1/0.015 = about 67 times — one and a half points of growth *doubles* the value** (§4,
+   fig 2). **The reason is the collapsing denominator** $r - g$, not investor psychology: because the
+   claim is infinitely lived, growth compounds against the discount rate, so valuation is genuinely
+   hypersensitive to $g$ — which is why a small revision to a growth forecast can move a share 30% in a day, and
+   why any valuation with $g$ close to $r$ is, in the section's phrase, **an opinion wearing a lab coat**.
+7. **The pre-profit software company falls much further, because most of its present value sits in cash flows far
+   in the future** (§4, fig 3). Each cash flow is discounted by $(1+r)^t$, and the penalty from a higher $r$
+   compounds with $t$ — so a claim with nearly three quarters of its value beyond year 10 is hit far harder than
+   one where a quarter of the value arrives within five years. That is **equity duration**, and it is pure
+   arithmetic: a high-payout utility is a **short-duration** claim, a low-payout fast-growing one is a
+   **long-duration** claim, and rate sensitivity follows from duration alone — nothing about the industry enters
+   the calculation.
+8. **Each multiple is a compressed discounted cash flow, asserting a payout ratio, a risk level and a growth
+   rate at once** — from the identity, price over earnings equals the payout ratio divided by $r - g$ (§4). **Stock
+   X at 45 times is asserting high expectations**: high sustainable growth, low risk (a low $r$), or an eventually
+   high payout — it is *not* "overpriced" by that fact alone. **Stock Y at 7 times is asserting decline or danger**
+   — negative or minimal growth, or a high risk premium — and is *not* cheap by that fact alone. **To judge either,
+   check what would have to be true:** back out the implied $g$ at a sensible discount rate, ask whether the
+   earnings are real and repeatable rather than an accounting choice (E07), and test the implied risk against the
+   business. The question is never "is 45 too high" but **"at 45, what is being assumed?"**
+9. **Because the volatility you removed was *idiosyncratic* risk, which the market does not pay you to bear**
+   (§5). Company-specific surprises — a failed trial, a fire, a fraud — cancel out across 20–30 reasonably
+   different names, and because that risk can be eliminated **for free**, no premium attaches to it. What remains
+   is **systematic risk** — recessions, rate shocks, wars — which hits everything at once and **is** what the
+   **equity risk premium** compensates. CAPM writes this as expected return depending on **beta**, your exposure
+   to market risk, and nothing else. **The implication: a concentrated portfolio carries a large slab of
+   uncompensated risk** — you take more variance with no expectation of more return, which is simply an error
+   rather than a bold choice.
+10. **Dual-class: the *vote* is modified** — public shares carry one vote or none while founders hold ten or more
+    each, so control is held with a small fraction of the economics and **the ordinary corrective mechanism of
+    equity, replacing the board, is switched off permanently.** It benefits founders and insiders (defensibly, by
+    insulating a long project from short-term pressure). **Preferred shares: the *residual cash flow* right is
+    modified and the *vote* usually surrendered** — a fixed dividend ranking ahead of ordinary shares makes it
+    economically closer to a bond; it benefits income-seeking holders who want seniority, and issuers who can
+    raise money without giving up control. **VIE (variable interest entity): the *residual assets* right — and
+    ownership itself — is removed.** You buy a Cayman holding company that owns **contracts** entitling it to the
+    operating business's profits, not the business; it benefits the operating company and satisfies the Chinese
+    state's foreign-ownership restriction, while leaving the investor a contractual claim enforceable in uncertain
+    venues (§6). All three are the same lesson: **a share is exactly and only the rights it carries** (§1).
+11. **Because the 90% distribution requirement fixes the payout ratio at nearly one and caps retained growth**,
+    so in the Gordon model the numerator is unusually knowable and the denominator $r - g$ is dominated by
+    movements in $r$ (§7, §4). With $g$ structurally low, a REIT's price is essentially a discounted stream of
+    known distributions —
+    which is the definition of a **short-duration, bond-like** claim, and why REIT prices visibly track interest
+    rates. **Unit issuance is not automatically bad because dilution here is the business model, not a scandal:**
+    with retention switched off, growth must be bought, and **if the trust issues units to acquire a property at a
+    yield above its cost of capital, existing holders are better off *per unit*.** The metric that settles it is
+    **DPU (distribution per unit)**, not total distributions — and the governance question to ask is whether the
+    acquisition was priced for unitholders or for the sponsor selling the asset.
+
+</details>
+
 > **Optional — take a real company apart (20–30 min).** Pick any listed company and pull five years of data:
 > (a) **diluted shares outstanding** at each year end — is the denominator rising or falling? (b) **dividends
 > and buybacks** as a share of operating cash flow; (c) **earnings per share** growth versus *total* earnings

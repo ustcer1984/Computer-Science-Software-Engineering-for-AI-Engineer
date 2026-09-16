@@ -470,6 +470,63 @@ Reason first, then check against a source where noted.
    and no new loans made, the broad money supply would shrink dramatically." What does this tell you about
    the relationship between debt and money?
 
+<details>
+<summary>Answers</summary>
+
+1. **15 relative prices under barter, 6 under money.** The general formulas are $\frac{n(n-1)}{2}$ for
+   barter and $n$ for a money economy — with $n = 6$ that is 15 versus 6, and the gap explodes as $n$ grows.
+   This illustrates money's **medium-of-exchange** job: it dissolves the **double coincidence of wants** by
+   turning every trade into two half-trades against one universally accepted thing, collapsing an $O(n^{2})$
+   matching problem to an $O(n)$ one (§1).
+2. **The friend is wrong because "backed by nothing" is not the same as "demanded by nobody."** The
+   strongest correction runs through §2's three sources of fiat value: **taxes** (the state accepts only its
+   own currency for a liability it can compel you to incur, creating standing economy-wide demand), **legal
+   tender plus the network effect** (a self-fulfilling coordination equilibrium — you accept dollars because
+   everyone else will), and **managed scarcity plus institutional trust** (a credible central bank keeping
+   supply from exploding, so the store-of-value job survives). The leg **least** dependent on other people's opinions is
+   **taxes** — the chartalist point — because it works by compulsion, not confidence. The friend's instinct
+   is only right about leg 2, which is why currencies collapse *fast* when confidence flips (hyperinflation).
+3. **Multiplier 20; the old story says 200 dollars of reserves "create" 4,000 dollars of deposits**
+   (the multiplier is $1/r = 1/0.05 = 20$, and $\Delta D = \Delta R / r = 200/0.05 = 4{,}000$). It is an
+   a mechanism, because the causation runs the other way: banks make a loan first and **create the deposit**
+   by the same keystroke, then acquire whatever reserves settlement requires afterwards (§4b). And because
+   the central bank commits to a **price** (the policy rate) and supplies reserves elastically at it, $M0$ is
+   not a fixed input to be multiplied — $M2/M0$ is something you compute after the fact (§3, §10a).
+4. **Assets: reserves 200 + loan 1,000 = 1,200; liabilities: deposits 1,200.** Both sides grow by 1,000 at
+   the same instant — the loan is the new asset, the borrower's new deposit the new liability. The 1,000 came
+   from **nowhere**: no pre-existing money moved, it was created by a **double-entry keystroke** (§4b). When
+   the firm repays, the bank cancels the loan and extinguishes the deposit, so that 1,000 of money is
+   **destroyed** and the money supply shrinks by exactly that amount (§4c).
+5. **Because QE creates *reserves*, and banks do not lend out reserves.** The multiplier story predicts
+   base $\to$ deposits mechanically; the real constraint on lending is **capital, profitability and loan
+   demand** (§5), none of which a reserve glut relaxes, so broad money and inflation barely responded
+   (§4b). On FRED, the ratio `M2SL/BOGMBASE` **collapses** after 2008 (from roughly 9 to the low single
+   digits) and again in 2020 — which is the point: a stable "multiplier" was never there to begin with (§9).
+6. **Reserves are an *asset* the bank holds** — central-bank money used for settlement and liquidity.
+   **Capital is how the bank is *funded*** — equity on the liability/equity side, a buffer that absorbs
+   losses. **Capital is far the tighter constraint today**: each new loan is a risk-weighted asset consuming
+   scarce capital under the Basel ratio (§5). The fact that the US reserve requirement has been **zero since
+   March 2020** without any explosion of credit is the cleanest evidence — zeroing it retired a constraint
+   that was never binding (§10a).
+7. **Because the bank is *illiquid*, not insolvent: maturity transformation means it funds long, illiquid
+   assets with short, on-demand liabilities**, so the money has been lent out and cannot be recalled at once
+   — no bank can honour all deposits simultaneously (§6). **Deposit insurance** defeats the *incentive*
+   half of the run: your insured deposit is safe regardless, so the coordination trap ("run first if you fear
+   others will") never starts. **The lender of last resort** defeats the *liquidity* half: the central bank
+   lends against good collateral (Bagehot — freely, good collateral, penalty rate), turning illiquid assets
+   into reserves so withdrawals can be met. Bonus — **SVB** was unusually run-prone because its depositors
+   were concentrated tech firms mostly **above the FDIC cap** (so insurance did not remove their reason to
+   run), it held long-dated bonds whose market value had fallen as rates rose, and withdrawals were digital
+   and instant.
+8. **True.** Repayment extinguishes the deposit that the loan created, shrinking both sides of the bank's
+   balance sheet (§4c), so an economy that repaid everything and borrowed nothing would drain broad money
+   down to whatever central-bank money remained — the currency and reserves of M0, a small minority of M2
+   (§3). What it tells you is that **debt and the money supply are two sides of one coin**: a credit boom
+   *is* money created faster than destroyed, a deleveraging *is* the money supply contracting, which is
+   exactly why credit cycles transmit straight into the demand gap (E02 §4 §10a).
+
+</details>
+
 ---
 
 ## 9. Optional: see the two-tier system on live data (15–20 min)

@@ -346,6 +346,48 @@ Before our Q&A, jot a one-line answer to each:
 5. (Stretch) In React's component model, what is the equivalent of an "entry point"? How does the
    component tree structure tell you where rendering starts?
 
+<details>
+<summary>Answers</summary>
+
+1. **File tree → README → top-level config**, in that order, all at 50k ft (§2). The tree tells you the
+   *block diagram* — a `routes/ services/ models/` layout names the subsystems in ten seconds. The
+   README tells you what the thing is *for*, even when it's a bad README. The config files
+   (`pyproject.toml`, `Makefile`, `Dockerfile`, `package.json` scripts) name the **executable surfaces**
+   — the commands that run, test and build it, which is where you'll find entry points next. A fourth
+   move that costs nothing: `wc -l` per file to find where the **code mass** sits (§10 Part A), because
+   mass is usually where the complexity is.
+2. Reading a codebase is trying to build a **complete map**; reading a path is traversing **one
+   sub-graph** from an entry point to the leaf that does the work (§1). The distinction is the whole
+   method: a codebase is a directed graph of calls, and you only ever need the path a specific input
+   travels. At 2,000+ lines the difference is between a week and twenty minutes — the file has more
+   nodes but not a different structure (§5), so you use the symbol outline and search to jump straight
+   onto the path instead of scrolling past 1,900 irrelevant lines. It also tells you when to **stop**:
+   you're done when you have the answer you came for (§4 step 6), not when you've read everything.
+3. **Entry point first, then one data-flow trace, then git** (§3, §4, §6). Concretely: (a) name the
+   scenario — "a user submits an arena turn and it should land in the DB"; (b) find the entry point with
+   `grep -r "@router\." --include="*.py" .` and pick the turn-submission route; (c) read that handler's
+   *signature* only — what payload comes in, what type; (d) follow the **first call** it delegates to
+   (e.g. `TurnService.route_turn`), not the rest of the handler; (e) repeat hop by hop, noting data in /
+   data out, until you reach the actual write (`db.save_turn`); (f) now you have a 3-hop sequence
+   diagram, and the bug is at whichever hop the data you expected isn't the data that arrived. If the
+   write *looks* right, `git log -- db/turns.py` for the recent change that broke it.
+4. **Read the callers and the history before the body** (§2 5k ft, §6). In order: the type signature and
+   docstring — the machine-verified contract, which often answers the question outright; then *find
+   usages* — what callers pass in and what they do with the result tells you the function's job from the
+   outside; then `git log -S "def the_function" --oneline` and `git blame` to find the commit that
+   introduced it, because the commit message says **why** it exists (a bug fix, an external constraint,
+   a workaround) where the code only says what. A name that gives no clue — `process`, `handle` — is
+   itself the smell flagged in §2 and picked up in M04 Ch4.
+5. **The root component rendered by `index.tsx` / `main.tsx`** — that call (`createRoot(...).render(<App/>)`)
+   is where rendering starts, and the top-level router (`<Route>` definitions) is the second-level entry
+   table, one entry per URL, exactly like route decorators in FastAPI (§3). Inside a single monolith
+   component file the local equivalent is the **`export default`** at the bottom: read from the export
+   *upward* and the composition falls out — the root component names its children, which name theirs,
+   and that JSX nesting **is** the component tree (§5 Step 2). React's tree is a graph like any other:
+   find the root, then trace only the branch that handles your scenario.
+
+</details>
+
 ---
 
 ## 10. Optional: get your hands dirty (20 min)

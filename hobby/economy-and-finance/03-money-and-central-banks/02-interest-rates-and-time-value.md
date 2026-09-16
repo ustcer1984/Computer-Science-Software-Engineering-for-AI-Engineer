@@ -411,6 +411,62 @@ Reason first; check against a source where noted.
    `T10YIE` (the 10-year breakeven inflation rate). Is the curve currently inverted? What is the market's
    current 10-year inflation forecast, and how does it compare to the central bank's ~2% target (E02 §2)?
 
+<details>
+<summary>Answers</summary>
+
+1. **About 3,140 dollars today.** $PV = 5000/(1.06)^{8} = 5000/1.594 \approx 3{,}137$ (§2b). The Rule of 72
+   sanity-check: at 6% money doubles in about $72/6 = 12$ years, so 8 years is two-thirds of one doubling —
+   the discount factor must sit between 1 and 1/2, nearer 1/2, so the answer has to land somewhere around
+   3,000–3,300. Anything near 2,500 or 4,000 means you mis-set the exponent (§2a).
+2. **The discount factor decays exponentially in the number of years, and the rate sits in the base** —
+   the factor is $1/(1+r)^{n}$.
+   At 30 years a 10% rate gives a factor of about 0.057 (1,000 dollars becomes 57) while a 2% rate gives
+   about 0.552 (1,000 becomes 552) — an order of magnitude apart from the same cash flow, which is the steep
+   right-hand tail of fig 1 (§2b). The climate link: Stern discounted far-future damages at about 1.4% and
+   Nordhaus at about 4.5%, so the **same** projected damages came out "act now" catastrophic for one and
+   "manageable" for the other — the argument was never about the damages, it was about $r$ (E02 §2 §9a).
+3. **About 1% real** — by the Fisher approximation $r \approx i - \pi = 4.5 - 3.5$ (§3). If inflation jumps to
+   6% and the bank stays at 4.5%, your real return is about **−1.5%**: the balance rises while your
+   **purchasing power falls**. **Borrowers benefit** from the surprise — they repay in cheaper dollars —
+   and lenders/savers lose, because only *expected* inflation was priced into the contract ex ante
+   (the ex-ante vs ex-post distinction in §3). That wealth transfer is why surprise inflation is
+   politically explosive.
+4. **Bond A's 8% is mostly the inflation-compensation term; bond B's 8% is mostly the credit spread.** Using
+   §4's stack: A is a real risk-free rate plus a large $\pi^{e}$, with essentially no default premium — a
+   government that issues its own currency can always repay in it. B is a real risk-free rate plus a small
+   $\pi^{e}$ plus a large **credit/default spread** (and likely a liquidity premium too). Same number,
+   opposite information: A says *the currency is losing value*, B says *this borrower may not pay you back*.
+   Hence §4's habit — always ask which premium is doing the work.
+5. **Inverted** — the 3-month at 5.3% sits above the 10-year at 4.1%. Via the expectations hypothesis
+   (§5), the market is implicitly forecasting that **short rates will fall**, which happens when the central
+   bank **cuts**, which it does when fighting a slowdown — so this has historically been the single most
+   reliable US **recession** leading indicator, typically 6–18 months ahead. One reason it could be a false
+   alarm: heavy central-bank bond-buying (quantitative easing) **compresses the term premium**, pushing long
+   yields down for reasons that have nothing to do with growth expectations — plus the signal's own record
+   of false positives and long, variable lags.
+6. **Below par (at a discount)**, because its 3% coupon is fixed and below the 5% market yield, so the only
+   way a buyer earns 5% is to pay less than 1,000 for the same cash flows — every term of
+   $P = \sum C/(1+y)^{t} + F/(1+y)^{n}$ is divided by a larger number (§6). **The 10-year loses more**: its
+   value is concentrated in cash flows further out, which discounting hits hardest, so its **duration** is
+   longer, and $\Delta P / P \approx -D \times \Delta y$ scales the loss with $D$.
+7. **SVB funded long-dated bonds with on-demand deposits — maturity transformation (§1 §6).** When the Fed
+   hiked hard through 2022 (§5's inversion episode), yields rose and, by §6's arithmetic, the market value of
+   those long, **high-duration** bonds fell sharply. It was "solvent on paper" because the bonds would still
+   pay face *if held to maturity* — but a run forced it to **sell** at the depressed price, realising the
+   loss, which is what killed it. The general lesson: solvency-if-held and liquidity-under-a-run are
+   different tests, and a bank only gets to sit the first one if it passes the second.
+8. **Read it this way, whatever the day's numbers are.** `T10Y2Y` **below zero** means inverted (short
+   yields above long) — the market pricing cuts and, through §5's logic, forecasting weakness; above zero
+   means a normal, upward-sloping curve. `T10YIE` is the **breakeven inflation rate**, the market's average
+   inflation forecast for the next decade: near 2% says the 2% target is credible and expectations are
+   anchored (E02 §2); persistently well above it says the bond market doubts the central bank will get back
+   to target, and well below it hints at deflation risk. For orientation: the curve inverted deeply from
+   2022 and stayed inverted into 2024 (§5). For the breakeven, read the level against the Fed's 2% target
+   rather than against a remembered number — the point of the exercise is that the market publishes its own
+   inflation forecast, and what matters is whether it is anchored near target or drifting away from it.
+
+</details>
+
 ---
 
 ## 9. Optional: see the price of time on live data (15–20 min)

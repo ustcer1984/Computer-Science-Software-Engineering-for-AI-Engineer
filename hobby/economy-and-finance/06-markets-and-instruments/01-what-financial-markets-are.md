@@ -491,6 +491,86 @@ Reason first; check against a source where noted.
     exchange shrinks. Then evaluate the EQDP: what mechanism is it trying to break, and what evidence three
     years from now would tell you it worked?
 
+<details>
+<summary>Answers</summary>
+
+1. **The five jobs are: (1) channel savings into investment, (2) price discovery, (3) liquidity transformation,
+   (4) risk transfer and pooling, (5) monitoring and discipline** (§1). Most market news is job 2 or job 5 in
+   disguise — a profit warning that moves a share price is price discovery *and* a governance verdict; a bank
+   failure or a fund "gating" redemptions is almost always **job 3 breaking**, because liquidity transformation is
+   the structurally fragile one: the promise of instant access against twenty-year assets is **true on average and
+   false in a panic.** Apply §1's honest test to whatever story you pick: is this market doing one of the five
+   jobs, or charging a fee for pretending to?
+2. **Another investor receives it — the company gets nothing.** Buying listed shares is a **secondary-market**
+   transaction: you pay the seller, a broker takes a commission and/or a dealer earns the spread, and the issuer is
+   not even a party to the trade (§2). **It nonetheless cares deeply because the price sets the cost of any
+   *future* primary issuance** — a higher price means fewer shares sold for the same cash, which is literally a
+   lower cost of capital — **and because the quoted price is a continuously updated public verdict on management**
+   (job 5, §1), visible to the board, and the thing that makes a firm cheap enough to be taken over.
+3. **Because the *option to sell* is worth money: investors pay more for an identical claim that trades on a deep
+   market, and paying more for the claim is the same statement as the issuer funding itself more cheaply** — the
+   **liquidity premium** (§2). The chain is: liquid secondary market → investors face low exit cost → they demand
+   a smaller discount → the issue prices higher → the issuer's cost of capital falls. **The first link to break is
+   the exit option**: as trading dries up the spread widens and market impact rises (§5), so institutions cannot
+   build or exit a position at reasonable cost, discount the claim, and eventually stay away entirely — which is
+   precisely the self-reinforcing loop §7 diagnoses at SGX.
+4. **Bondholders are paid first out of whatever the assets realize — a partial recovery — and shareholders get
+   nothing**, because equity is the **residual claim**, last in line (§3). **That ordering *is* the entire
+   difference in risk and return:** debt is a fixed senior promise, so its upside is capped at getting its money
+   back and its analysis is mostly "will I be repaid?"; equity is junior and residual with **limited liability**
+   setting the floor at zero and nothing setting the ceiling, so its return tracks how well the business actually
+   does. Everything else — voting rights, volatility, valuation difficulty — follows from the position on the
+   **capital structure** ladder, and E07's balance sheet is a picture of it.
+5. **Because that figure is *notional* — the reference amount used to compute payments, not an amount anyone
+   owes.** Almost nobody ever pays the notional; the **gross market value**, what would change hands if every
+   contract settled today, is roughly an order of magnitude and a half smaller (§3). **The three risks worth
+   worrying about are counterparty risk, leverage, and opacity** — and notional measures none of them, which is
+   why the "quadrillion-dollar time bomb" genre misfires.
+6. **Through the same mechanism: both are long-duration claims, and the discount factor punishes distant cash
+   flows hardest.** In §3's one equation the price is the sum of each future cash flow divided by
+   $(1+r)^t$; raising $r$ shrinks every term, but the shrinkage compounds with $t$, so a claim whose value sits
+   30 years out loses far more than one paid next year. **A 30-year bond and a fast-growing company are the same
+   animal arithmetically** — most of their present value is far away. **A mature dividend-paying utility is
+   short-duration**: it returns cash now, so less of its value is exposed to the compounding of $r$. Note the
+   decomposition $r = r_f + \text{risk premium}$ — this is why E03's policy rate prices literally everything.
+7. **You paid the spread: your market order removed liquidity and executed against the best resting offer — the
+   ask — rather than the price you happened to be looking at, and if the order was large for the book it also
+   walked the book and paid market impact** (§5). **The dealer or market maker on the other side earned the
+   spread** (their compensation for quoting both sides and carrying inventory risk), and **your broker earned a
+   commission** — or was paid for routing your order, which is precisely why the **broker-versus-dealer**
+   distinction of §4 matters: a broker acts *for* you, a dealer trades *against* you.
+8. **(a) In the euro area the shock arrives through the banking channel** — banks reprice and ration credit, and
+   because there is essentially one pipe, **every firm feels it at roughly the same time**; monetary policy
+   transmits powerfully and fast, though long bank relationships cushion individual borrowers. **(b) In the United
+   States it arrives mainly through market prices** — bond yields and equity valuations reprice immediately, but a
+   firm shut out of bank credit can issue bonds instead, the "**spare tyre**" (§4). **Euro-area firms are far more
+   exposed to a *banking* crisis specifically**, because they have no alternative pipe — and remember §4's warning
+   that the US is the outlier, not the norm.
+9. **Semi-strong EMH: prices already reflect all *publicly available* information, so public information cannot be
+   used to earn systematically abnormal risk-adjusted returns** (§6). **Grossman–Stiglitz:** if prices reflected
+   everything, nobody would pay for research; if nobody researched, prices would reflect nothing — so a perfectly
+   efficient market is **impossible**, and efficiency is an **equilibrium in the effort to exploit
+   inefficiency**, with the winners' profits acting as the wage that keeps people trying. **The implication: in
+   large, liquid, heavily-covered markets your base case is that you will not beat the price**, and the sensible
+   response is diversification and low costs. **The exception is where nobody is competing** — thinly traded
+   small-caps with no analyst coverage, which is both the flaw and the opportunity in §7's SGX.
+10. **Because being a financial *centre* and being a listing *venue* are different businesses** (§7). FX, wealth
+    and asset management, fund domiciliation, treasury and cross-border lending use Singapore's institutions, law,
+    tax and time zone and need **no domestic exchange at all**; listings, by contrast, **follow the deepest pool
+    of buyers for that kind of business**, which for technology means the United States. On top of that,
+    **illiquidity is self-reinforcing** — thin trading widens spreads and market impact, institutions stay away,
+    valuations fall, cheap valuations invite privatisation, and each delisting removes more liquidity (§2's chain
+    running in reverse). **The EQDP (Equity Market Development Programme) is aimed at that loop**: placing SGD 5
+    billion, expanded to SGD 6.5 billion, with managers mandated into Singapore-listed equities tilted to small-
+    and mid-caps is an attempt to **buy liquidity where it is scarcest**, because secondary liquidity is what
+    lowers the primary-market cost of capital (§2) and restores price discovery and governance (§1, jobs 2 and 5).
+    **The evidence to watch is not the index level: it is spreads, turnover, analyst coverage, and the
+    listings-versus-delistings balance** three years out. The honest sceptical case is that subsidised demand
+    raises prices without creating natural buyers and analysts, and stops working when the money stops — and §10d
+    is where that forecast is pinned down as *partial* success.
+
+</details>
+
 > **Optional — take apart a market yourself (15–20 min).** Pick any listed company you know and assemble its
 > market profile from public data: (a) its **market capitalisation** and **average daily traded value**; (b) the
 > current **bid-ask spread** as a fraction of price; (c) whether it has issued *new* shares or bonds in the last

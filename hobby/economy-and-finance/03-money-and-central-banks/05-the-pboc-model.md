@@ -404,6 +404,74 @@ Reason first; check against a source where noted.
    (PBoC / SAFE, or a data aggregator). Is the RRR higher or lower than a year ago — and what does the direction
    tell you about the PBoC's current stance and the direction of capital flow?
 
+<details>
+<summary>Answers</summary>
+
+1. **"Keep an independent interest rate and a managed exchange rate, give up free capital movement."**
+   Capital controls are what make the first two compatible because they **sever the arbitrage**: with an open
+   capital account, covered interest parity pins the domestic rate to
+   $i_{\text{CNY}} \approx i_{\text{USD}} - (\text{expected CNY appreciation})$, so holding the rate above
+   that would pull money in and force the yuan up, breaking the managed rate. With the gate shut, global
+   money cannot chase the spread, so parity **does not bind onshore** and the PBoC can set a Chinese rate for
+   Chinese conditions while still steering the currency (§1). The evidence is the **CNY/CNH split** — the
+   onshore and offshore yuan are the same currency at two prices, which is only possible because the wall
+   blocks the arbitrage that would force them together (§2).
+2. **The engine: exporters earned dollars and were legally required to surrender them**, selling them to
+   designated state banks that passed them up to the PBoC, so every trade surplus funnelled foreign currency
+   onto the central bank's balance sheet — reserves peaking near **USD 4 trillion in 2014** (fig 3). **The
+   creation of yuan is the same act seen from the other side:** the PBoC had to *issue* yuan to pay for those
+   dollars, so base money expanded automatically with the surplus (§4, and §1's base-money creation). Left
+   alone that would have produced runaway credit and inflation, so the PBoC had to **sterilise** — issuing
+   central-bank bills and, above all, ratcheting the **reserve requirement ratio (RRR)** up to **21.5% in
+   2011** to lock the yuan away instead of letting banks lend it (fig 4). **Fig 3 is the engine, fig 4 is the
+   brake.**
+3. **(i) The FX machine is running in reverse.** Inflows have slowed or reversed and reserves have plateaued
+   around USD 3.0–3.3 trillion, so there is no longer a tide of newly created yuan needing to be locked up —
+   the sterilisation the high RRR existed to perform is simply no longer required (§4). **(ii) The domestic
+   stance has turned to easing.** An RRR cut is now a headline **easing** tool in its own right, releasing
+   locked reserves into the lending system to support growth and credit — the quantity lever used the way the
+   Fed would use a rate cut (§5).
+4. **China was on the *depreciation* side — the finite-ammunition side of the asymmetry.** After the 8·11
+   reform the market wanted the yuan weaker, so the PBoC had to **sell dollars and buy yuan**, which it can
+   only do with the reserves it actually holds; it burned roughly **USD 1 trillion** between mid-2014 and
+   early 2017 (fig 3's cliff) — §4 §10a's logic at trillion-dollar scale. Its escape was the move Singapore
+   structurally cannot make: it **re-tightened capital controls**, cracking down on outflows and on
+   enforcement of the personal quota. MAS cannot do that because free capital movement is non-negotiable for
+   a financial hub (§4 §10c) — so when the trilemma bit, China paid the bill it had always chosen to pay
+   (§6).
+5. **Relending and targeted facilities (including Pledged Supplementary Lending), and window
+   guidance / credit quotas.** Relending lends cheaply to banks **earmarked** for favoured sectors — small
+   business, agriculture, affordable housing, "green" and strategic industry. Window guidance (and
+   differentiated RRRs for small versus large banks) steers credit by telling banks **how much to lend and to
+   whom**, typically toward the priorities of the national plan and away from sectors the state wants cooled.
+   Both are the deliberate opposite of the Fed's choice to hold only **neutral** Treasuries precisely to
+   avoid picking sectors (§5, §3 §10).
+6. **(i) A resident cannot freely convert or move money abroad** — the **individual FX quota** caps
+   conversion at **USD 50,000 per year**, and even that is monitored and cannot simply be used to buy foreign
+   property or securities (§3). **(ii) A firm cannot freely move capital across the border** — outbound
+   investment is screened and foreign borrowing is quota'd, all requiring documentation and **SAFE** (State
+   Administration of Foreign Exchange) approval; and foreign money reaches Chinese markets only through the
+   **metered gates** — QFII/RQFII (the licensed foreign-institutional-investor schemes), Stock Connect and
+   Bond Connect — each a valve the state can widen or narrow. That is the exact inverse of Singapore, where
+   you may hold any currency and price a contract in any currency (§4 §10c).
+7. **Corner kept: an independent interest rate plus a managed exchange rate** — the one corner neither of the
+   others takes. **Gives up: free capital movement**, hence capital controls — where the Fed gives up
+   exchange-rate stability and MAS gives up its own interest rate. **Regime: a tightly managed float** — a
+   **daily central parity** plus a **±2% band** against the CFETS basket — versus the Fed's free float and
+   versus MAS's secret, slowly *crawling* band. **Reserves were built by compulsory FX surrender** of export
+   dollars, versus MAS's discretionary leaning against appreciation and the Fed's not accumulating FX
+   reserves at all. **Independence: none** — the PBoC is a ministry-level arm of the **State Council**,
+   against the Fed's hard-won operational independence and MAS's statutory authority (§7, §10a).
+8. **Read the direction, not the level.** A **falling** RRR means easing *and*, historically, that the FX
+   machine is no longer running forward — inflows have slowed or reversed, so the sterilisation brake can be
+   released (§4); a **rising** RRR would mean either tightening or a return of the inflow flood needing to be
+   mopped up. Pair it with the reserves figure: reserves falling means the PBoC is on the expensive
+   depreciation-defence side of the asymmetry (§6), reserves rising means inflows again. For orientation:
+   the RRR for large banks has fallen from the 21.5% peak of 2011 to around 9% by 2025, with reserves
+   plateaued near USD 3 trillion — the machine in reverse (§4, §5).
+
+</details>
+
 ---
 
 ## 10. Applied — from our session Q&A

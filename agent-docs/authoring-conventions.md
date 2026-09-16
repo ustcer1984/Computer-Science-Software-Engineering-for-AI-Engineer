@@ -471,6 +471,32 @@ he has to bring back to a session.
 - **Rules 4 and 8 apply inside the answers too.** They are material: run the render-trap greps, and expand
   any abbreviation whose first use in the section lands in the answer block.
 
+**Corpus-wide backfill completed 2026-09-16** at his request ("Fill them. You can use subagents"): all 35
+files that had a self-check without answers were filled (\~250 answers) via 10 parallel subagents grouped by
+module, then verified centrally. The baseline is now clean — from here this rule is a *maintenance* rule,
+applied per new section.
+
+**Lessons from that bulk pass — read before attempting another:**
+
+- **Answers cannot be automated the way the rule-8 abbreviation sweep was.** Every answer has to be written
+  against its own section and checked. A wrong answer in study material is worse than no answer.
+- **Give each agent a coherent module, not an arbitrary file count.** Domain context is what makes the
+  answers specific rather than generic — and it let the econ agents be warned about the `CA` = *current
+  account* collision and the `$r$ vs $g$` trap that had already shipped twice in those exact files.
+- **Verify the reports, do not trust them.** One agent reported "+14 lines per file" for 8 answers; the
+  content was correct but written as single unwrapped 400–950 character lines, against the repo's \~110-col
+  wrap. A rewrap must treat `$...$` and backtick spans as atomic, or it splits a math span across a newline.
+- **Warn agents off a shared scratchpad.** Two agents collided on the same temp filename and econ prose
+  briefly landed in a concurrency file. Give each a uniquely-named subdirectory, and grep for cross-domain
+  contamination afterwards.
+- **Require agents to flag what they had to supply.** Several questions have no full answer in their own
+  body; the honest reports made those reviewable. One agent invented a live-market number ("the 10-year
+  breakeven in the low 2s") that was not in the material — caught and replaced only because it said so.
+- **The backfill is a free audit of the body.** Writing answers surfaced three real defects: a factual error
+  (*"the kernel drops the GIL"* — the kernel knows nothing about the GIL; CPython releases it via
+  `Py_BEGIN_ALLOW_THREADS`), a duplicate `## 9.` heading, and stale in-file cross-references. **Renumbering a
+  heading means re-pointing every `§N` reference to it** — five in that one file.
+
 **Detector** (lists every self-check that has no answers block):
 
 ```sh

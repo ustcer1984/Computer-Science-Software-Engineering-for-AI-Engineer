@@ -375,6 +375,54 @@ the reasoning *before* looking anything up, then test it against a real release.
    one sentence using "produced here" vs "earned by residents." Which measure would you trust more to gauge
    Irish residents' incomes, and why?
 
+<details>
+<summary>Answers</summary>
+
+1. **The chain adds \$2.50 — the final price of the loaf.** It isn't \$0.60 + \$1.10 + \$2.50 = \$6.20 because
+   the wheat and the flour are **intermediate goods**: their value is already baked into the loaf's price, so
+   adding them separately **double-counts** the same output (§1, the "final" clause). The two equivalent ways
+   to get \$2.50: (a) take the **final sale price** to the end user, or (b) sum the **value added** at every
+   stage — \$0.60 + \$0.50 + \$0.90 + \$0.50 = \$2.50 (§2's production approach; Fig 1).
+2. (a) **Counts — in $I$**: newly built housing is *residential investment*, not $C$ (§3; §9a). (b) **Does not
+   count**: an existing asset changing hands is not new production — only the newly produced services wrapped
+   around it (agent's commission, conveyancing) enter GDP (§1; §9a). (c) **Counts — in $NX$** as an export.
+   (d) **Does not count**: a **transfer payment** moves money without producing anything, so it is excluded
+   from $G$ (§3). (e) **Does not count**: buying shares is a financial swap, not production — though the
+   broker's fee is a produced service (§1). (f) **Counts — in $I$**: the **change in inventories** is part of
+   investment (§3).
+3. **Real growth was about 2%**, since nominal growth ≈ real growth + inflation, so real ≈ 7 − 5 = 2 (§4).
+   (It's exact in logs; for small rates the cross-term is negligible.) The same release should also let you
+   reconstruct the **GDP deflator** = nominal GDP / real GDP × 100 — the price index implied by the two — and
+   its growth rate is the 5 you subtracted. If the three don't line up, you've mixed conventions (e.g. an
+   annualized rate against a year-on-year one) rather than found an error.
+4. **The two numbers aren't the same arithmetic**, so the ratio is meaningless: the US "+2.8%" is an
+   **annualized quarterly** rate (the quarter compounded as if it ran a full year), while Singapore and most
+   of Asia usually quote plain **year-on-year** or **quarter-on-quarter** growth (§4, trap 1). Before drawing
+   any conclusion, check for each country: annualized or year-on-year; **real or nominal**; seasonally
+   adjusted or not. And for living standards you'd want **per capita** growth, since total growth partly
+   reflects population (§4).
+5. (a) **United States — consumption-driven** ($C$ about 68%), with a small trade deficit ($NX < 0$);
+   (b) **China — investment-driven** ($I$ about 42%), decades of factories, housing and infrastructure, with a
+   relatively small household $C$ — the statistical fingerprint behind "China must rebalance toward
+   consumption"; (c) **Singapore — trade-driven**, with $NX$ large and positive because a small, open entrepôt
+   exports far more than its domestic economy absorbs (§3, Fig 2). The silhouette is the point; the decimals
+   get revised.
+6. **GDP can rise while people are worse off:** rebuilding after a hurricane adds to GDP even though the
+   hurricane destroyed wealth — the **"bads count as goods"** blind spot; equally, average GDP per capita can
+   rise while the median person stagnates — the **distribution** blind spot (§5). **Life can improve with
+   little measured GDP:** free digital goods (search, maps, open-source) and **quality improvements** deliver
+   huge value at a zero or flat market price, so they barely register — the **non-market / quality-and-variety**
+   blind spots (§5). Unpaid household work moving into the market is the mirror case: GDP rises with no real
+   change in output.
+7. **Ireland:** multinationals *produce and book profits inside the borders* (so GDP is inflated) while much
+   of that income *accrues to foreign owners abroad*, so income **earned by residents** is far lower — hence
+   GDP ≫ GNI. **The Philippines:** millions of Filipinos work overseas and **remit** income home, so income
+   earned by residents exceeds what is *produced here* — hence GNI > GDP (§5). For Irish residents' incomes,
+   trust **GNI** — in fact the modified **GNI\*** that Irish economists use — because GDP counts output whose
+   income never reaches them.
+
+</details>
+
 ## 8. Optional: read a real GDP release (15–20 min)
 
 Pick the most recent GDP release from a statistics office you care about and read it through this section's

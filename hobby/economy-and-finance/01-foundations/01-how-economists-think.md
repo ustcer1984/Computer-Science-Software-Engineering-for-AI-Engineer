@@ -326,6 +326,47 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    point that's efficient, and one that's currently impossible. What single thing would let the country reach
    the impossible point *without* giving up anything?
 
+<details>
+<summary>Answers</summary>
+
+1. **Because scarcity, not money, is the binding constraint** — economics exists only because finite means
+   (time, attention, materials, capital) must serve effectively unlimited wants (§1). Money is merely one
+   claim on resources; remove the price tag and the choice still has to be made, so a moneyless world would
+   need economics just as much. The example: a billionaire still has **24 hours a day and one life** — the
+   constraint has *relocated* from money to time and attention, not disappeared. Remember the two precisions
+   from §1: "scarce" means **rival** (using it one way precludes the other), not "rare"; and scarcity is not
+   poverty.
+2. **The ticket is free; the evening is not.** The cost of going is the **opportunity cost** — the best
+   alternative use of those hours, plus whatever the ticket would fetch if you sold or gave it away — and
+   none of that depends on how you acquired it (§2). Zero dollars paid is the *accounting* cost; the
+   economic question is always **"compared to what?"**
+3. **Spend the last \$2M if and only if the expected future value of finishing exceeds \$2M** — nothing else
+   enters. The \$4M is a **sunk cost**: gone whether you continue or stop, a constant in the objective, so it
+   drops out of the derivative and cannot move the optimum (§4). The marginal thinker compares only the
+   *forward* marginal benefit of completion against its \$2M marginal cost. The "we've already spent \$4M!"
+   argument is the **sunk-cost fallacy** — and note it is a documented *violation* of the rational-agent
+   model, one of the behavioural deviations §7 warns about.
+4. **For pricing:** a ban or a lottery rations by fiat or luck, while a price rations by **marginal benefit**
+   — road space and car ownership go to whoever values them above the price, and every driver re-optimizes
+   to their own $MB = MC$ (§3, §4). ERP's toll that rises with congestion is a continuous dial that tracks
+   the externality in real time; a ban is a single binary with no margin to adjust. **Against:** willingness
+   to pay tracks *ability* to pay, so the scheme rations scarce road capacity by wealth, and the revenue is a
+   transfer from motorists to the state. *My normative position (labelled as one, per §6): pricing is right
+   here, because the alternative rationing channels — queues, lotteries, connections — waste real resources
+   without even raising revenue that can be redistributed.* The positive claim underneath it (pricing cuts
+   congestion at lower resource cost than a quota) is the falsifiable part; the verdict "that trade is worth
+   it" is the value judgement.
+5. Healthcare on one axis, everything else on the other, with a **bowed-out** frontier (increasing
+   opportunity cost, §5). A point **inside** = wasteful, idle or misallocated resources — you could get more
+   healthcare *and* more of everything else, so no trade-off binds yet. A point **on** the curve = efficient,
+   and its **slope is the opportunity cost** of one more unit of healthcare in units of everything else. A
+   point **outside** = infeasible today. The single thing that reaches it without giving anything up is
+   **growth** — more resources or better technology moving the whole frontier outward. That is precisely why
+   "economic growth" carries so much weight in the news: it *escapes* a trade-off rather than picking a point
+   along it.
+
+</details>
+
 ## 10. Optional: spot the five tools in the wild (15 min, no setup)
 
 Open any business/economics headline (Bloomberg, the *FT*, *The Straits Times* business section, a central

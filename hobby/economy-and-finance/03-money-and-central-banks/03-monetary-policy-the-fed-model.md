@@ -440,6 +440,63 @@ Reason first; check against a source where noted.
    relative to the 2% target — tightening, easing, or on hold — and is the balance sheet growing (QE) or
    shrinking (QT)?
 
+<details>
+<summary>Answers</summary>
+
+1. **Because in the floor system the quantity of reserves and the policy rate are decoupled — the rate is
+   *administered*, not squeezed out of a scarce quantity.** With reserves ample, the system sits far out on
+   the flat part of the reserve-demand curve (fig 1, panel b), where draining reserves through quantitative
+   tightening moves the overnight rate by essentially nothing; the rate is wherever the Fed announces the
+   floor to be. The single 2008 innovation is **interest on reserve balances (IORB)** — paying interest on
+   reserves, which floors the overnight market by arbitrage since no bank lends below what it earns risk-free
+   at the Fed (§2b, §10b).
+2. **No — it *loosened*.** The real rate was about $2.5 - 2 = 0.5\%$ before and about $4 - 5 = -1\%$ after,
+   so despite a 150-basis-point nominal hike the rate that actually bites on spending **fell** by about 1.5
+   percentage points (§3b). That is exactly why the **Taylor principle** demands a coefficient **greater than
+   one** on inflation: only a nominal rate that rises *more* than one-for-one with inflation raises the real
+   rate $r = i - \pi$. Raising one-for-one leaves the real rate unchanged and never tightens at all — the
+   textbook diagnosis of the 1970s Great Inflation (E02 §3 §11a).
+3. **(a) the asset-price / wealth channel** (a lower discount rate lifts the present value of future
+   earnings, §2's discounting applied to equities); **(b) the exchange-rate channel** (higher rates attract
+   yield-chasing capital, the currency appreciates, imports cheapen); **(c) the expectations channel** (a
+   credible target anchors wage- and price-setting, the expectations-augmented Phillips curve); **(d) the
+   credit / bank-lending channel** (a higher funding cost means fewer loans clear the profitability bar, so
+   money creation itself slows — §1's loans-create-deposits run in reverse). All four are §4.
+4. **Because QE creates *reserves*, and reserves are a bank-only settlement layer that never becomes
+   customer lending.** A loan creates a *deposit* by keystroke (§1 §4b); reserves are only used to convert to
+   cash, settle interbank payments, or lend to another bank (§10c) — so the base ballooned without broad
+   money or spending following. What QE actually operates on is **long yields, the term premium, and
+   expectations** (§5). **2021 was different because the money reached *spenders*:** fiscal transfers went
+   straight into household deposits, which is spendable M2 in the hands of people who spent it, and inflation
+   followed. Inflation comes when money reaches spenders, not from balance-sheet size.
+5. **Because policy is set for an economy 12–18 months out, on a forecast, while the feedback arrives only
+   after the action has already worked through.** So a central bank that keeps tightening until it *sees*
+   inflation fall has by then already put more tightening into the pipeline than the economy has absorbed
+   (§4). That is the "active damper with a **destabilizing lag**" from E02 §4 §10a: a corrective force
+   applied out of phase with the thing it is correcting stops damping and starts driving oscillation —
+   overshoot on the way up, then over-easing on the way down. It is structural, not incompetence.
+6. **It must believe that inflation will fall back to or below target *and* that the output gap will turn
+   negative.** Run §3b's Taylor rule backwards: the rule prescribes a *lower* rate only when the inflation
+   gap $\pi - \pi^{\ast}$ and the output gap $y - y^{\ast}$ are negative (or turning so). So an inversion is
+   the market forecasting **a slowdown that opens a negative output gap and disinflates** — the recession is
+   the primitive, and the expected cuts are just how the market prices the Fed's **reaction function**
+   responding to it (§2 §10c). It is a forecast, not pressure.
+7. **Because a rate cut only *enables* borrowing; it cannot *make* anyone borrow.** At the **zero lower
+   bound** the price of money cannot fall further, and if households and firms are frightened enough that
+   loan demand has collapsed — E02 §2 §9b's demand gap, §5's liquidity trap — cheap money simply sits
+   (§6). Fiscal policy (E04) takes the baton because it does **not** depend on a private party choosing to
+   borrow and spend: the government spends or transfers directly, closing the demand gap itself rather than
+   inviting someone else to.
+8. **Read the three series as a stance, not a level.** `PCEPILFE` year-over-year against 2% tells you
+   whether the target is being met; the direction of `DFEDTARU` tells you tightening, easing or on hold; and
+   the slope of `WALCL` tells you QE (growing) versus QT (shrinking). The sharper test §9 suggests is the
+   **real** policy rate (funds rate minus core PCE inflation) against estimates of **r-star**: above neutral
+   is restrictive, below is accommodative. For orientation from §6's live record: by 2026 the Fed was holding
+   at 3.50–3.75% with a hawkish tilt and inflation still sticky above target, with the balance sheet having
+   been shrinking under QT since 2022 — i.e. the two tools pointing the same way.
+
+</details>
+
 ---
 
 ## 9. Optional: watch monetary policy on live data (15–20 min)

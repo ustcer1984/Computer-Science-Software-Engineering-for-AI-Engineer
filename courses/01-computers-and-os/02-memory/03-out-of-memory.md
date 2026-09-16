@@ -501,6 +501,62 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    piece — pages, the indirection table, demand allocation, fragmentation reduction — onto the §1 paging mechanism,
    and say what problem it solves that a single contiguous KV-cache per sequence does not.
 
+<details>
+<summary>Answers</summary>
+
+1. **VIRT/VSZ is the virtual address space the process has *mapped*; RES/RSS is the physical frames actually
+   backing it right now — RSS is what fills RAM** (§1). The gap exists because **a virtual page costs nothing
+   physical until you touch it**: allocating just edits the map and marks the pages not-present, and a frame is
+   assigned only on the first read or write, via a minor page fault. So 100 GB VIRT on a 16 GB box is fine as long
+   as the *touched* working set stays small — VIRT also counts shared libraries and reserved-but-untouched regions,
+   which is why it's mostly a meaningless number to alert on.
+2. **`malloc` succeeded because Linux overcommits** (§3): the kernel says yes to far more than it has, betting you
+   won't touch it all, and hands back a valid pointer with **zero physical frames assigned**. As you write, each
+   fresh page takes a minor fault and the kernel finds a frame; once RAM is full and there's no swap to evict into,
+   there is no frame to give. **A page fault can't return an error to your line of C — the
+   program is mid-instruction**, so the kernel has no polite way to say no. It invokes the **OOM killer**, which scores processes
+   and sends the victim **SIGKILL** — uncatchable, no cleanup, no traceback. Hence `Killed` and exit code **137**
+   (128 + 9), with the evidence only in `dmesg`/`journalctl -k`, never in your app log (§4 sig. 2).
+3. **(1) `MemoryError` with a traceback** — look at the traceback line; layer: the **allocator inside your
+   process** (a single too-big allocation, or strict overcommit). **(2) `Killed` / exit 137, no traceback** — look
+   in `dmesg` or `journalctl -k`; layer: the **kernel**, on behalf of the whole machine. **(3) `OOMKilled` / exit
+   137 while the host has RAM to spare** — look in the orchestrator's events (k8s), Lambda logs, or `docker
+   inspect`; layer: the **cgroup**, enforcing the limit you configured. **(4) `CUDA out of memory` traceback** —
+   look at the error's own allocated/reserved/free line; layer: the **GPU allocator**, VRAM full (§4, §7).
+4. **Because the shape is a leak, and adding memory only buys a slower crash** (§5, §8.1): steady unbounded growth
+   with no plateau is the leak signature, whereas legitimately-too-much jumps high and stays **flat**. The one
+   measurement that decides it is the **trend, not a snapshot** — graph RSS over time, or diff `tracemalloc`
+   snapshots for live-object growth (§2 §9); a single `top` reading cannot distinguish them. If it is a leak, the
+   next sub-question is **"does `gc.collect()` reclaim it?"** — run a forced collection and watch RSS. *Yes* → it's
+   a **reference cycle**; *no* → it's a **strong-reference** leak (accumulating list, never-evicting module cache,
+   unclosed handles, C-extension). If you can't fix the code, **process isolation outlives it** (§2 §10b).
+5. **Because the weights alone are already 14 GB at fp16 (7B × 2 bytes) — over the card before anything else** —
+   and the weights are only the first line item (§7). Also resident: the **CUDA context** (≈0.5–2 GB just to
+   initialize), cuDNN/cuBLAS workspaces, activations for the forward pass, **fragmentation slack**, and the
+   **KV-cache**, which grows linearly with context length × batch/concurrency and is the silent eater that OOMs a
+   model that loaded fine yesterday. **Full fine-tuning with Adam: ≈4× the weights ≈ 56 GB, call it 60–80 GB with
+   activations.** The 4× is weights (1×) + **gradients** (≈1×) + **Adam optimizer state** (2×: momentum +
+   variance), with activations on top — which is precisely why gradient checkpointing, ZeRO/FSDP sharding,
+   LoRA/QLoRA and mixed precision exist.
+6. **Fragmentation — the 3 GiB is free but scattered across non-contiguous cached blocks, and a tensor needs one
+   contiguous span** (§6.2, §7). It's the GPU version of §6's allocator-geometry OOM: the cause is *geometry, not
+   quantity*, which is why "buy a bigger card" is the wrong reflex. Two fixes that target this specifically:
+   **`torch.cuda.empty_cache()`** (hand PyTorch's cached-but-unused blocks back to the driver) and
+   **`PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`** (let the caching allocator grow segments rather than
+   accumulate fixed ones). Quantity levers — smaller batch, shorter context, quantization — are a different problem.
+7. **The mapping is one-to-one with §1: logical KV-cache = virtual address space · fixed-size KV blocks (default 16
+   tokens) = physical frames · the block table = the page table · grab-a-block-when-you-fill-one = demand paging ·
+   copy-on-write block sharing across beams/samples = shared `fork`ed pages** (§7, §11a). **But the problem it
+   actually solves is *not* mainly external fragmentation** — that's the smallest of three wastes. A KV-cache grows
+   one token per decode step to an *unknown* final length, so "must stay contiguous" forces you to **reserve
+   `max_seq_len` up front** and then stop at token 60 of 2048: **internal fragmentation plus reservation slack is
+   the dominant waste (prior systems put only ≈20–40% of KV memory to real token states)**. PagedAttention breaks
+   **growth from contiguity**; external fragmentation then vanishes as a *side effect*, because when every unit is
+   identical, any free block satisfies any request. The bonus a contiguous cache can't offer at all is **block
+   sharing** — parallel sampling and beam search reuse the prompt's blocks instead of duplicating them.
+
+</details>
+
 ---
 
 ## 10. Optional: get your hands dirty (15–20 min)

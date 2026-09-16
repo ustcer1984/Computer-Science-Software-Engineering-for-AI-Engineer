@@ -358,6 +358,73 @@ Reason first; check against a source where noted.
    Explain, in three sentences, why this forces **fiscal** policy to do more of the domestic-stabilization work —
    and tie it to the trilemma choice that made it necessary.
 
+<details>
+<summary>Answers</summary>
+
+1. **Real interest rates, the exchange rate, and the composition of output** — the three side effects that
+   differ even when demand lands in the same place (§2, fig 3). In the fighting mix (loose fiscal, tight
+   monetary) **real rates are far higher**, because the government is adding demand that the central bank
+   must remove with the rate; **the currency is stronger**, because high real rates pull in foreign capital,
+   which in turn widens the *trade* deficit (the "twin deficits"); and **private investment is crowded
+   out**, so the same total demand is tilted toward government and away from private capital and exports. A
+   fourth, slower difference: the debt path is worse. **Choosing the mix is choosing the side effects.**
+2. **The multiplier collapses toward zero** — this is the **monetary offset** (the Sumner critique, §3). At
+   full employment the extra demand pushes inflation above target, so an inflation-targeting central bank
+   raises rates by just enough to suppress the private spending the stimulus added; the central bank, not
+   the government, has the last word on demand, and fig 2 puts the multiplier in a 0.0–0.5 band. **At the
+   zero lower bound (ZLB) the same stimulus is powerful** — the central bank cannot cut further and *wants*
+   the extra demand, so there is no offset and the multiplier sits well above one (about 1.4–2.1). The
+   eternal question "does stimulus work?" has no answer until you name the monetary regime it lands in.
+3. **Loose + loose** — COVID 2020–21 (transfers plus QE) and the 1970s Great Inflation; side effect:
+   **maximum stimulus, and inflation when it outruns supply**. **Loose fiscal + tight monetary** —
+   Reagan–Volcker 1981–85; side effect: **very high real rates, a soaring dollar, twin deficits, crowded-out
+   investment**. **Tight fiscal + loose monetary** — Eurozone and UK austerity 2010–15; side effect: a
+   **weak, slow recovery**, because a central bank already at the floor cannot fully offset. **Tight +
+   tight** is the quadrant that is **usually a mistake** — both levers pull demand down together. **1937**
+   is the classic case: the US tightened fiscal *and* monetary policy prematurely and aborted the recovery
+   from the Great Depression, producing the "Roosevelt recession".
+4. **Because high real rates attract foreign capital, which bids up the dollar, and an overvalued dollar
+   makes exports uncompetitive and imports cheap** — so the budget deficit shows up as a *trade* deficit too
+   (§2, fig 3). The accounting version, from §10c, is the identity $CA = S - I$: the current account equals
+   national saving minus investment, and a fiscal deficit is **public dis-saving** that lowers $S$, so with
+   investment unchanged the current account must fall. The two are the same story: a capital-account surplus
+   (the inflow attracted by high rates) *is* a current-account deficit, by the balance-of-payments identity.
+5. **The firewall and temporary-vs-permanent** (§4). The **firewall**: QE buys *existing* bonds from
+   investors in the **secondary market**, never directly from the treasury, so the central bank is not
+   legally financing the government; helicopter money / overt monetary financing hands money straight to the
+   treasury or to citizens. **Temporary vs. permanent**: QE is understood to be **unwound** (via
+   quantitative tightening), whereas helicopter money is created with **no intention of reversal**. It is
+   the temporary/permanent distinction that governs inflation, because a money injection the system expects
+   back is effectively a loan and doesn't change the long-run price level, while a permanent rise in the
+   money base is a gift — more stimulative *and* more inflationary. The line between crisis coordination and
+   monetization is exactly the line between *temporary-and-independent* and *permanent-and-captured*.
+6. **About 1.2% of GDP a year for the 40%-debt country and about 7.2% for the 240%-debt one** — using
+   $\Delta(\text{interest bill}) \approx \Delta r \times b$, that's $0.03 \times 0.4$ versus
+   $0.03 \times 2.4$ (§5, fig 4). The second number is a fiscal earthquake, larger than most countries'
+   entire defense budget, so the hike that is an annoyance in one case threatens solvency in the other. That
+   strips independence **de facto, with no law changing**: the central bank still legally sets the rate, but
+   it now faces the choice "raise rates and detonate the budget, or hold rates down and let inflation run" —
+   and when the budget wins that argument, monetary policy has become subordinate to fiscal needs. That is
+   **fiscal dominance**.
+7. **Because the debt has to be paid for one way or another: if the fiscal authority refuses to adjust its
+   primary deficits, tightening today just piles up more debt at higher interest, which must eventually be
+   monetized** — so the central bank shifts inflation into the future rather than removing it
+   (**Sargent–Wallace, "Unpleasant Monetarist Arithmetic", 1981**, §5). Only a change in the *fiscal path*
+   changes the presence of inflation; monetary policy alone changes its **timing**. This is why §2's high
+   **own-currency** debt is a monetary problem too: the sovereign can never be *forced* to default in a
+   currency it prints, so the danger is not a missed payment but the debt **capturing the printing press** —
+   §2's "inflate it away" exit arriving whether or not anyone chose it.
+8. **Because Singapore does not have a domestic interest-rate lever to stabilize demand with, the
+   stabilization job falls to the budget** (§7). By the **trilemma** (E03 §4–§5) a country can have at most
+   two of {a managed exchange rate, free capital flows, an independent domestic interest rate}; **Singapore
+   chose the exchange rate and open capital, and therefore gave up the rate** — MAS runs policy by managing
+   the trade-weighted SGD, and local interest rates are essentially **imported** from global markets. So the
+   **assignment of §1 inverts**: the exchange-rate lever handles imported inflation (letting the SGD
+   appreciate through 2022), while counter-cyclical demand support is **fiscal** — the 2020 COVID budgets
+   drawing on past reserves via the "second key" (E04 §1 §6) did the work that rate cuts did in the US.
+
+</details>
+
 > **Optional — read a real mix off the data (15–20 min).** Pick one episode — **COVID 2020–21**, **Reagan–Volcker
 > (1981–85)**, or **Eurozone austerity (2010–15)** — and place it on the fig-1 matrix yourself: on **FRED (Federal Reserve Economic Data)**, pull
 > the government deficit/GDP (the fiscal stance) and the *real* policy rate (the monetary stance) for those years,

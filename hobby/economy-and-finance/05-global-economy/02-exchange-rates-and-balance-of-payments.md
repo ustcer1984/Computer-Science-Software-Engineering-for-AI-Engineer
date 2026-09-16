@@ -315,6 +315,65 @@ Reason first; check against a source where noted.
    "crowded out through the exchange rate." Tie your answer explicitly to the current-US strong-dollar /
    wider-deficit story of E04 §3 §10.
 
+<details>
+<summary>Answers</summary>
+
+1. **The SGD appreciated.** The quote is *SGD per USD*, so a fall from 1.35 to 1.30 means one US dollar now buys
+   fewer Singapore dollars — equivalently one SGD buys more USD (0.74 → 0.77). **The US holiday became cheaper**
+   for a Singaporean, because every SGD of spending money converts into more dollars of American goods and hotel
+   nights; a Singapore holiday is unchanged in SGD and now *dearer* to foreigners. This is exactly the
+   **numerator trap** of §1: "the dollar went up" is meaningless until you know which currency is on top.
+2. **Its *real* exchange rate appreciates by roughly 6% a year — about 34% over five years — and its
+   competitiveness erodes badly**, even though the nominal rate never moved. From §1's identity, the real rate is
+   the nominal rate scaled by the ratio of domestic to foreign price levels, so domestic inflation running 6
+   points above the world's *is* a real appreciation. **This is the classic way a peg dies**: the country's goods
+   price themselves out of world markets, the current account deteriorates, and the defended nominal rate becomes
+   visibly inconsistent with the fundamentals — the first-generation setup that §4's regime choice and E05 §3's
+   crisis models take up.
+3. **Next month the currency *appreciates*, by uncovered interest parity (UIP)** — capital chases the higher
+   yield, bidding the currency up until expected future depreciation just offsets the extra return (§2).
+   **Over the decade the anchor is purchasing power parity (PPP)** — the currency drifts toward the level that
+   equalizes the price of a common basket. **They can point in opposite directions** because a sharp rate rise
+   often accompanies *high inflation*, and high relative inflation means PPP calls for long-run **depreciation**
+   while the rate differential is pulling the spot rate **up**; and because real rates can deviate about 30% from
+   the PPP average for a decade (fig 1). A **risk premium** can flip even the short-run answer — that is the E04
+   §3 §10 dollar paradox.
+4. **Its capital and financial account (KA) must be a surplus of exactly +4% of GDP**, because the balance of
+   payments sums to zero: CA + KA = 0 (§3). **In plain words: foreigners are buying 4% of GDP worth of the
+   country's assets each year** — its government bonds, shares, companies and bank deposits — and that inflow is
+   precisely what pays for the excess of imports over exports. Read through **CA = S − I**, the same fact says the
+   country is **investing more than it saves** and borrowing the difference from abroad. Trade deficit, capital
+   import, and a saving shortfall are one fact in three languages.
+5. **Because the deficit is determined by CA = S − I, and the identity CA + KA = 0 leaves no room for a tariff to
+   change it** (§3, §5). Tariffs raise the price of imports from the taxed source, but unless national saving
+   rises or investment falls, the current-account gap must reappear elsewhere — through trade diverted to other
+   partners, through a currency **appreciation** (§6's Mundell–Fleming channel) that hurts exports, and through
+   retaliation. **What would shrink it: a rise in national saving** (smaller fiscal deficit, higher private
+   saving) **or a fall in investment** — nothing else.
+6. **Hong Kong chose a stable exchange rate + free capital movement, so it gave up monetary autonomy; China chose
+   a stable exchange rate + monetary autonomy, so it gave up free capital movement** (§4 — the **impossible
+   trinity**). With the peg fixed and capital free, any gap between Hong Kong and US interest rates would be
+   arbitraged instantly by capital flows that the currency board must accommodate to hold the rate — so Hong Kong
+   **imports US rates** whatever its own economy needs. China escapes that only by putting a wall between its
+   domestic money market and the world: **capital controls** are literally the price it pays for keeping both a
+   managed rate and its own policy rate.
+7. **Because prices adjust immediately while volumes are sticky — the J-curve** (§5, fig 3). Contracts are already
+   signed and supply chains and habits do not switch overnight, so on day one you pay *more* in local currency for
+   the same import quantity while still selling the same exports: the balance **worsens first**, and improves only
+   as buyers switch. **Whether it improves at all is decided by the Marshall–Lerner condition** — the export and
+   import demand elasticities must sum to more than one. And it is **only temporary unless saving minus investment
+   changes**: if the depreciation merely feeds through into domestic inflation, the *real* exchange rate reverts
+   and the trade balance with it. **The currency is the mechanism; the S − I gap is the cause.**
+8. **Because the fiscal expansion raises domestic interest rates, which pulls capital *in*, which appreciates the
+   currency, which cuts net exports — the stimulus leaks out through the trade account** (§6, fig 4's
+   floating/fiscal cell). Under **Mundell–Fleming** with mobile capital this is a theorem, not bad luck: floating
+   makes monetary policy powerful and fiscal policy weak, and fixed reverses it. **The current US is exactly this
+   cell** — a (dirty-)floating economy with open capital running a loose fiscal stance got a **strong dollar and a
+   wider trade deficit** (E04 §3 §10), which is why a reindustrialization goal was fought by the exchange rate
+   itself. The policy mix and the currency are one system.
+
+</details>
+
 > **Optional — watch the two clocks in real data (15–20 min).** On **FRED (Federal Reserve Economic Data)**, pull (a) a currency pair's spot rate
 > and (b) the *interest-rate differential* between the two countries over the last 3 years — see how the fast clock
 > (rates) tracks the currency short-term. Then pull a **real effective exchange rate** index over 30 years and eyeball

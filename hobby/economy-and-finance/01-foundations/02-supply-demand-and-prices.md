@@ -377,6 +377,59 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    dual decomposition hold tightly, and where does the **endogenous-surface / coupling** worry from §11a make
    it leakier than a textbook convex dual problem?
 
+<details>
+<summary>Answers</summary>
+
+1. **Two stories fit, and the price alone cannot separate them: demand shifted right, or supply shifted
+   left.** Your colleague's inference is the classic conflation — a higher price by itself only tells you
+   buyers *moved along* their curve (lower **quantity demanded**); it says nothing about whether **demand**,
+   the whole curve, moved at all (§1). Story A: incomes/tastes push demand right (a consumption boom). Story
+   B: a Brazilian frost pushes supply left. **The extra fact is quantity — volume of coffee traded.** Price
+   and quantity moving the *same* way ⇒ demand shifted; moving *opposite* ways ⇒ supply shifted (§4). Soaring
+   price with *falling* volume is a supply shock.
+2. **Demand slopes down because marginal benefit falls; supply slopes up because marginal cost rises** — both
+   are §1's $MB = MC$ rule drawn sideways. A buyer keeps buying while $MB \geq P$ and stops at $MB = P$; the
+   second coffee is worth less than the first, so only a *lower* price recruits a larger quantity — the
+   demand curve **is the marginal-benefit curve read sideways** (§1). A seller produces while $P \geq MC$ and
+   stops at $P = MC$; $MC$ rises with output (the same increasing opportunity cost that bows the PPF out), so
+   only a *higher* price justifies a larger quantity — supply **is the marginal-cost curve read sideways**
+   (§2). Equilibrium then makes $MB = P^\ast = MC$ hold for everyone at once (§5).
+3. **Positive:** at a rent 30% below $P^\ast$, quantity demanded exceeds quantity supplied, so the model
+   predicts a **persistent shortage** — and since price is forbidden to ration, something worse does it:
+   queues, waiting lists, "who you know," key money, quality decay, black-market sublets. Construction and
+   maintenance incentives fall, so the shortage *deepens* over time; incumbent tenants gain, searchers and
+   future tenants pay (§6). The control does not repeal scarcity, it **changes the rationing mechanism**.
+   **Normative (labelled):** *incumbent housing stability is worth the shortage — displacing a sitting
+   tenant is a concentrated, irreversible harm, while the shortage is diffuse and falls on people who have
+   not yet arrived.* That is a value weighting, not a prediction, and it is fully consistent with accepting
+   every positive consequence above.
+4. From a too-high price, **excess demand is the restoring force**: at $P > P^\ast$ quantity supplied exceeds
+   quantity demanded, so $Z(P) = Q_d(P) - Q_s(P) < 0$ — unsold inventory piles up and sellers cut prices to
+   move it, which is the entire mechanism; no auctioneer required. Because $Q_d$ falls and $Q_s$ rises in
+   price, $Z'(P) < 0$, so the dynamics $dP/dt \propto Z(P)$ is **negative feedback relaxing to a stable fixed
+   point** — Walras's **tâtonnement** (§3). It fails to settle when the slopes misbehave: if $Z'(P^\ast) > 0$
+   the fixed point *repels*, and in discrete time with a production lag the **cobweb model** says the ratio
+   of supply to demand slope decides — converge, orbit in a **limit cycle**, or diverge (the hog cycle, the
+   semiconductor cycle, §10b). *The fixed point existing does not guarantee the search finds it.*
+5. **It holds tightly on the separability, and leaks on convexity, endogeneity and the trading protocol.**
+   Where it is tight: once the price is broadcast, the global "maximize total surplus subject to
+   $Q_d = Q_s$" problem is **separable** — each agent's first-order condition involves only its own margin
+   and the shared price — excess demand $Z$ really is the gradient of the dual, and $P \leftarrow P + \eta Z$
+   really is dual ascent to the optimal multiplier (§5). Where it leaks: (a) **the dual argument needs
+   convexity** — convex preferences, rising $MC$, price-takers; with increasing returns, network effects or
+   market power the surplus problem is non-convex, a duality gap opens, and the equilibrium can be
+   non-unique or inefficient (§10a's market-failure frontier). (b) **A dual-decomposition solver holds the
+   problem fixed while it iterates; the market does not** — the §11a **endogenous-surface** point: each
+   agent's landscape is *produced by* everyone else's choices, so this is a coupled fixed-point problem, and
+   with reflexivity (the Lucas critique) publishing a model of it moves it. (c) **Trade actually happens at
+   disequilibrium prices** ("false trading"), which reallocates the endowments that defined the problem — an
+   optimizer would never let its iterates change the objective. (d) **Convergence is assumed, not proved**:
+   §3's cobweb shows the update can cycle or diverge, whereas dual ascent on a convex problem with a small
+   enough step is guaranteed. The honest verdict: the analogy is *exact* for the competitive, convex,
+   full-information special case and *suggestive* everywhere else.
+
+</details>
+
 ## 9. Optional: spot supply & demand in the wild (15 min, no setup)
 
 Pick any market with a price in the news right now — eggs, GPUs, air fares, a specific stock, HDB (Housing and Development Board) resale

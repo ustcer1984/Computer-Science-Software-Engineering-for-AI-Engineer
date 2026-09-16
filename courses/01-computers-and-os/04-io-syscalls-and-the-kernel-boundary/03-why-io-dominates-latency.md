@@ -271,6 +271,45 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 6. **Your pipeline's wall-clock.** In two sentences, explain to a colleague why your 2,000-call eval batch's total time barely improves when
    the *median* call gets faster, but improves a lot when you add a per-call timeout. Use the words *max*, *tail*, and *bound*.
 
+<details>
+<summary>Answers</summary>
+
+1. **$L = \lambda W = 400 \times 3 = 1{,}200$ calls in flight.** Capped at $L = 300$, the law runs the other way:
+   $\lambda = L / W = 300 / 3 = 100$ calls/sec — a quarter of the target. The arriving work doesn't vanish; it **queues** behind the
+   semaphore, and since arrivals (400/s) exceed completions (100/s) the queue grows without bound and the *observed* $W$ (queue wait +
+   service) blows up even though each individual call still takes 3 s. That is the §2 keeper in action: a concurrency cap is a throughput
+   cap. The mechanism that holds 1,200 in flight cheaply is §2's **event loop on one `epoll` instance** — 1,200 parked coroutines, not
+   1,200 threads.
+2. **The index wins; the permission cache is worth exactly zero.** The rule is §3's: **only the critical path counts.** The permission
+   lookup sits in the concurrent fan-out where $\max(8, 1, 40) = 40$ is set by the feed query, so cutting 1 ms to 0.1 ms changes
+   $\max$ not at all. After the index: $2 + 5 + \max(8, 1, 12) + 3 = 22$ ms. Note the follow-on a senior eye catches — the feed is still
+   critical at 12 ms but only by 4 ms; push it below 8 ms and the **profile query becomes the new critical path**, and further feed work
+   stops paying.
+3. **≈63%.** $1 - 0.995^{200} \approx 1 - e^{-1} \approx 0.632$ — the same answer as §5's $N = 100$ at 1% slow, because what matters is the
+   product $N \times p_{\text{slow}} \approx 1$. For the p99.9 reassurance: solve $1 - 0.999^{N} > 0.5$, giving
+   $N > \ln 0.5 / \ln 0.999 \approx 693$ — so it breaks around a **fan-out of ≈700**. That is §5's "each 10× improvement in the
+   per-backend tail buys roughly 10× more fan-out" made numeric, and at your 2,000-call batch size even p99.9 backends leave you with
+   ≈87% of batches waiting on a straggler.
+4. **Because you must wait for *all* five and they wait *simultaneously*, so the wall-clock is the largest single latency — $\max$, not
+   $\sum$ and not the typical one.** It isn't ≈500 ms because the five waits overlap: each is parked in the kernel costing no CPU (§2), so
+   they consume wall-clock *concurrently* rather than end to end. It isn't ≈100 ms because the batch isn't done when a typical call is
+   done — the 130 ms call is still outstanding. The tie to §5: 130 ms is the **max of five draws** from the latency distribution, i.e. a
+   **tail statistic**, so the only remaining lever is the straggler — improve p99, bound it with a timeout, or hedge it. Optimizing the
+   90 ms call is off the critical path (§3).
+5. **(a) latency-bound, (b) bandwidth-bound, (c) bandwidth-bound — but on the *memory* bus, not the network.** (a) 50 health-check pings
+   carry almost no bytes, so the time is all round-trip time (RTT): Levers 1 and 2 — fewer trips and overlap them (fan them out
+   concurrently, §4). (b) 5 GB is bytes ÷ bandwidth with the RTT negligible: widen the pipe and keep enough data in flight to fill the
+   bandwidth-delay product (§6). (c) LLM (large language model) decode streams the whole weight set through the memory bus per token
+   (§6), so the lever is **batching to amortize the weight reads** across many sequences, not networking. "Add more bandwidth" helps only
+   **(b)**, because it is the only one whose bottleneck is a network pipe you can actually widen — (a) is starved by distance, and (c) by
+   GPU memory bandwidth you cannot buy more of without buying a different GPU.
+6. **Because the batch's wall-clock is the *max* of 2,000 draws, not the mean — so it is a *tail* statistic, and moving the median just
+   shifts a part of the distribution the max was never sampled from.** A per-call timeout changes the answer because it *bounds* that tail
+   by construction: the worst any single call can contribute becomes the timeout value, so the batch finishes in roughly (timeout + one
+   retry) instead of however long the unluckiest of 2,000 calls happens to take (§5).
+
+</details>
+
 ---
 
 ## 9. Applied — a real cold-start investigation (from our session)

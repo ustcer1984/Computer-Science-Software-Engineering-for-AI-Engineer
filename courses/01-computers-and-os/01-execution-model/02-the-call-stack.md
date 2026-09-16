@@ -407,6 +407,46 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 5. Your async arena handler `await`s an LLM (large language model) call and the traceback looks like it "skips" the middle of
    your pipeline. Using §7, explain why — what did `await` do to the stack?
 
+<details>
+<summary>Answers</summary>
+
+1. **Because the call/return discipline is inherently LIFO** — the last function called is always the
+   first to finish, since calls nest and never cross (§2). That means you only ever need to touch the
+   *top*: call = push, return = pop, and the running function is always the top frame. A **queue** is
+   FIFO (first-in, first-out) and would hand back frames in exactly the wrong order — `A`'s frame before
+   `C`'s. An indexable list buys random access you never need, at the cost of the thing that makes frames
+   almost free: allocating one is just *subtracting from the stack pointer* (§3).
+2. **Start at the bottom, read upward.** Python's "most recent call last" means the **bottom frame is the
+   top of the stack** — the innermost place execution actually reached (§4). The last `File … line …`
+   plus the error type tells you *where it broke*; everything above it is the chain of who called whom.
+   Then walk **up** looking for the first frame that is *your* code passing something it shouldn't — the
+   bottom is the symptom, the fix is usually higher (§4's `"3"` example). In CloudWatch the only added
+   skill is filtering: the frames are interleaved with JSON log lines, so find the innermost frame first,
+   then trace up through handler → service → client layers.
+3. **Recursion pushes a frame per call; a loop reuses one frame** (§5). One million recursive calls means
+   one million live frames — each with its own arguments, locals and return address — all pending until
+   the base case unwinds them, on a **finite** stack; CPython's soft limit (default around 1000) fires
+   `RecursionError` long before that. The `for` loop does the same million additions inside **one** frame,
+   mutating a counter and an accumulator in place, so the stack never grows at all. Same result, entirely
+   different memory behaviour.
+4. **Because the limit is a guardrail standing in front of the real, fixed-size OS stack — not the real
+   limit.** Raising it doesn't make the stack bigger; it just moves CPython's check past the point where
+   the *native* stack runs out. You trade a clean, catchable `RecursionError` for an uncatchable **stack
+   overflow** (segmentation fault), which kills the process with no traceback (§5). The actual fix is to
+   stop growing the stack: rewrite as a loop or an explicit stack/queue on the heap — Python has no
+   **tail-call optimization (TCO)** by design, precisely because eliminating frames would gut the
+   tracebacks of §4 (§12d).
+5. **`await` suspended the frame and took the whole chain off the native stack.** At a real suspension
+   point the coroutine chain **unwinds off the native stack** and each frame is parked on the **heap**,
+   linked by `await` — a parked continuation — while the event loop mounts some other chain (§7, §12c).
+   So the native stack at any instant holds the event loop at the bottom plus whichever chain is
+   currently running; the awaiting ancestors of your pipeline simply aren't *on* it, and the traceback,
+   being a walk of that stack, can't show them. That's why you need `Task`/exception-context information
+   to reconstruct the full logical path — the call stack is a **synchronous, single-threaded** abstraction
+   and `await` steps outside it.
+
+</details>
+
 ## 11. Optional: get your hands dirty (10 min, just Python)
 
 ```python

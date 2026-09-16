@@ -340,6 +340,66 @@ Reason first; check against a source where noted.
    inflation** figure. Is the current stance a tightening, easing, or hold — and which lever (slope / width /
    level) did they move? How does core inflation compare to their comfort zone (~2%)?
 
+<details>
+<summary>Answers</summary>
+
+1. **Because in an economy that trades about three times its GDP, most of the consumption basket is
+   imported, so the domestic price level is set by import prices — and import prices in local-currency terms
+   are set by the exchange rate.** The interest rate acts on *domestic* demand and wages, which is the small
+   part of the story here, so it would be a weak and roundabout tool; the currency hits the dominant driver
+   directly and fast (§1). The channel from §3 that becomes dominant is **channel 4, the exchange-rate
+   channel** — for Singapore it is not one of five, it is essentially the whole transmission (§5).
+2. **It must give up an independent monetary policy — corner 3 of the impossible trinity.** Keeping free
+   capital and a managed currency means any attempt to hold the local rate away from the world rate is
+   arbitraged away by capital flows that would break the exchange-rate target; formally, **covered interest
+   parity** pins $i_{\text{SGD}} \approx i_{\text{USD}}$ minus expected appreciation (§2). "Rates are
+   imported" in practice means SORA and Singapore mortgage rates track global (mostly US) rates regardless of
+   where Singapore is in its own cycle — no MAS decision is involved (§6). **China gave up free capital
+   movement instead**, keeping both its own interest rate and a managed currency and paying for it with
+   **capital controls** (§2; the capital-controls thread in §1 §10).
+3. **(a) the slope — tightening** (a faster appreciation path cheapens imports faster); **(b) the level, a
+   re-centring — tightening** (a discrete upward shift of the whole band); **(c) the width — neither** (it
+   accommodates volatility, it is about flexibility, not stance); **(d) the slope — an easing move** that
+   takes the stance to **neutral** (a zero crawl is no longer engineering appreciation; a *negative* slope
+   would be outright easing). All three levers are §3, and the slope is the most-used one.
+4. **MAS sells Singapore dollars and buys foreign currency** to push the rate back down into the band
+   (§4). The two by-products: **(i) the monetary base expands**, because MAS *creates* the local currency it
+   sells — so the base is endogenous, whatever the exchange-rate target requires; and **(ii) foreign-exchange
+   reserves accumulate**, which is why a small country ends up holding hundreds of billions. The caveat from
+   §10a: that liquidity injection would loosen policy if left alone, so MAS **sterilises** it — issuing MAS
+   Bills and Singapore Government Securities, taking government deposits, doing reverse repos — a real cost,
+   but not a hard ceiling the way finite reserves are on the depreciation side.
+5. **The Fed raises the price of domestic credit; MAS raises the price of the local currency.** A US hike
+   works through §3's five channels into domestic demand and wages, which is what drives **US** inflation —
+   and it takes 12–18 months. A steeper appreciation slope makes every imported good and imported input
+   cheaper in local-currency terms immediately, which is what drives **Singapore's** inflation — the direct
+   import-price channel, which passes through in months, not years, because imports are such a large share of
+   the basket (§5). Same disease, same goal, different underlying driver, different lever.
+6. **Instrument: the band — slope, width and level** (not a policy rate), because the exchange rate is the
+   thing that moves Singapore's inflation. **Balance sheet: foreign-exchange reserves** (not domestic
+   Treasuries), because the operating method is FX intervention rather than open-market operations in
+   domestic bonds. **Gives up: an independent interest rate**, imported from world markets, because the
+   trilemma charges that price for free capital plus a managed currency. **Meets twice a year** (April and
+   October) rather than eight times, because import-price transmission is fast, so there is no 12–18-month
+   lag to wait out (§5).
+7. **The US cannot copy it because the exchange rate is a *relative* price — not everyone can appreciate at
+   once, someone must be on the other side — and because US inflation is mostly domestic anyway, so the
+   currency lever would be too weak to do the job** (§6). The SGD NEER does not cool a property boom because
+   a house is a **domestic asset**, not an imported good: that is precisely why MAS targets **core
+   inflation**, which strips out accommodation and private transport (§5). Singapore fights property
+   inflation with a **separate toolkit** — **macroprudential** measures (loan-to-value limits, the additional
+   buyer's stamp duty, the Total Debt Servicing Ratio) plus **fiscal** tools — the "different lever for
+   financial stability" principle from E02 §4 §10a.
+8. **Read the Monetary Policy Statement by its three nouns.** "Raise slightly the slope of the band" is a
+   **tightening** and a slope-only move; "re-centre the band upward" is a tightening via the **level**;
+   "increase the width" is about volatility, **not** the stance; "no change to the slope, width and level" is
+   a **hold** (§3, §6). Then check MAS core inflation — which excludes accommodation and private transport —
+   against the roughly 2% comfort zone. For orientation: MAS tightened five times through 2021–23 (two of
+   them off-cycle) and then eased as global inflation cooled into 2024, keeping the slope positive but
+   flatter (§6).
+
+</details>
+
 ---
 
 ## 9. Optional: watch the MAS model on live data (15–20 min)

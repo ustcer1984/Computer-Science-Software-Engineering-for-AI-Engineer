@@ -472,6 +472,70 @@ the reasoning *before* looking anything up, then test it against a real number o
    curve*, and why "make my product feel non-substitutable" is the same thing as "escape the zero-profit
    tangency."
 
+<details>
+<summary>Answers</summary>
+
+1. **Accounting profit \$50k; economic profit −\$80k.** Accounting profit is revenue minus *explicit* cost:
+   \$400k − \$350k = \$50k. Economic profit also subtracts the **implicit (opportunity) costs** — the \$120k
+   salary forgone plus \$200k × 5% = \$10k of forgone return on your own capital — so economic cost is
+   \$480k and economic profit is \$400k − \$480k = **−\$80k** (§1). In the economist's sense it is **not
+   worth it**: your labour and capital are earning \$80k less than their next-best use, and you should
+   either expect that to change or redeploy them. The connection to "zero economic profit in the long run":
+   zero is the *benchmark*, not failure — it means resources earn exactly their next-best return (**normal
+   profit**), which free entry enforces in any industry without barriers (§4). Your −\$80k is *below* that
+   benchmark; a startup is only a rational bet if you expect a period of positive economic profit, and it
+   only *persists* if you can build a barrier to entry.
+2. **Fly it this quarter; drop the route at renewal.** This quarter the \$8,000 is **sunk** — owed whether
+   the plane moves or not — so it must be ignored, and the only comparison is \$4,000 of revenue against
+   \$3,000 of variable cost: the flight contributes \$1,000 toward the fixed cost you owe anyway, so flying
+   loses \$7,000 while parking loses \$8,000. That is the **shutdown rule: operate while $P \geq AVC$** (§2).
+   Next year the lease is avoidable, nothing is sunk, and the test becomes total cost: \$4,000 revenue
+   against \$11,000 of now-avoidable total cost means $P < ATC$, so **exit**. The answers differ because
+   *what counts as sunk depends on the horizon* — **short-run shutdown is not long-run exit**, and confusing
+   the two is the classic analyst error.
+3. With $A(q) = TC(q)/q$, the quotient rule gives
+   $A'(q) = \frac{q \cdot MC(q) - TC(q)}{q^2} = \frac{MC(q) - A(q)}{q}$.
+   Since $q > 0$, the sign of $A'$ is the sign of $MC - A$: the average **falls** while the marginal is below
+   it, **rises** while the marginal is above it, and is **flat exactly when $MC = A$** — so $A' = 0$, the
+   minimum of ATC, occurs precisely at the crossing (§1). **The marginal pulls the average toward itself.**
+   Non-economics example: a **GPA** — a new grade below your average drags it down, above it pulls it up, and
+   equal to it leaves it unchanged, so your GPA bottoms out exactly at the term where the new grade equals
+   the running average. The same statement covers a runner's average pace (a faster lap than your average
+   lowers it) and a fund's average return.
+4. **(a) Hair salons — fragmented.** MES is tiny: one chair, one stylist, and you are already at minimum unit
+   cost, so thousands of firms fit in the market. **(b) Commercial aircraft — concentrated.** The fixed cost
+   of designing and certifying an airframe is tens of billions against a market of a few thousand deliveries
+   a year, so MES is enormous relative to the market and the world supports about two firms (Boeing/Airbus,
+   §3). **(c) Smartphone operating systems — concentrated.** Huge fixed development cost, near-zero marginal
+   cost, and **network effects** on top (developers go where the users are), which is a barrier beyond scale
+   — a duopoly. **(d) Wheat farms — fragmented.** MES is small relative to a world market and the product is
+   identical: §3's textbook perfect competition. The common thread is **MES relative to market size**, with
+   the caveat that (c) shows network effects and lock-in can concentrate an industry even where the pure cost
+   argument would not (§4).
+5. **The profit is competed away by entry; the mechanism is the zero-profit pull under free entry.** Year
+   one's juicy returns are a signal; with **low barriers to entry**, imitators open nearby, the residual
+   demand facing your café shifts in and market supply shifts out (§2), price and volume per firm fall, and
+   entry stops only when **economic profit hits zero** — for a differentiated café, at the tangency of its
+   demand curve to ATC, leaving a normal return, a small markup and some excess capacity (§5). The profit
+   went to **consumers** (lower prices, more variety), not to the incumbent. The patented drug is
+   structurally different because entry is **blocked**: the word doing the work in §4's table is **barriers
+   to entry**, and the patent is one. Barriers pin the disequilibrium potential away from zero, which is why
+   they — not the number of firms — are what let economic profit persist.
+6. **The firm is trying to steepen its own demand curve** — to make its brand a poorer substitute for
+   everything outside its portfolio, so that a price rise leaks fewer customers to Pepsi or water (§5).
+   Running both Coke and Coke Zero at one price is **product-line versioning** that internalises
+   substitution: a health-conscious buyer switches *within* the firm rather than *out* of it, which is the
+   exact operational meaning of "less outside-option leakage" (§3 §8d). The tie to the tangency: the
+   zero-profit outcome in monopolistic competition arises because **free entry keeps shifting each firm's
+   residual demand inward until it merely touches ATC** — profit is squeezed out by substitutability. So
+   anything that makes your product feel non-substitutable weakens that inward pressure and lets demand sit
+   *above* ATC over some range — which is a durable markup, i.e. escaping the tangency. **Differentiation
+   decides how big the markup is; barriers to entry decide whether it survives** (§5), which is why brands
+   also fight for structural barriers like the grade-D advertising ban that keeps newcomers from building
+   one.
+
+</details>
+
 ## 8. Optional: read a real business through this lens (15–20 min)
 
 Pick a company or industry you can find a few numbers for — ideally one in the current news, or one whose

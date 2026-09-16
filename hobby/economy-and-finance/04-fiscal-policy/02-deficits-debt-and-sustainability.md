@@ -332,6 +332,71 @@ Reason first; check against a source where noted.
 8. **Singapore.** Singapore's gross debt is ~170% of GDP. Explain, in three sentences, why this is *not* a
    sustainability concern — using gross-vs-net, the borrowing-purpose rule (§1 §6), and where the proceeds go.
 
+<details>
+<summary>Answers</summary>
+
+1. **The debt went UP** — a smaller deficit is still a deficit, so the tap is still running and the water
+   level rises; only a **surplus** lowers the stock (§1's flow-vs-stock distinction). The second part works
+   because the measure that matters is the **ratio** $b = D/Y$: if nominal GDP (the denominator) grows
+   faster than the debt (the numerator), $b$ falls while $D$ keeps climbing. That is not a trick — it is the
+   normal way debt mountains have historically shrunk (§3).
+2. **The strongest version:** a country is not a household — for the **domestically held** portion, the
+   government's liability is a citizen's asset, so repaying it is an **internal transfer from taxpayers to
+   bondholders**, not wealth shipped out of the nation, and it need never be repaid in full because a state
+   is immortal and can roll over. **The four limits (§2):** regressive **distribution** (bondholders skew
+   wealthy, taxpayers don't), **foreign-held debt** as a genuine external claim, the **deadweight loss** of
+   the servicing taxes, and **crowding out** of private capital leaving a smaller future economy. (a) For
+   the **USA**, with about 30% foreign-held, the binding ones are **distribution and crowding out**, with
+   the foreign slice a real but minority external claim. (b) For a typical **emerging market**, mostly
+   foreign-held, limit 2 dominates outright — "ourselves" barely applies, and servicing genuinely exports
+   resources.
+3. **Rising, by about 3 percentage points of GDP this year** —
+   $\Delta b = (r-g)b - p = (0.04 - 0.015)\times 1.2 - 0 = 0.03$, so debt/GDP goes from 120% to about 123%
+   (§3). This is the **snowball regime**, because $r$ exceeds $g$. To *stabilize* it you need a **primary
+   surplus of 3% of GDP**: $p^{\ast} = (r-g)b = 0.025 \times 1.2 = 0.03$ — every year, forever, just to hold
+   the ratio still.
+4. **It never repaid the debt — it grew and inflated the ratio away**, with the denominator doing the work
+   (§3, fig 1). The **two forces** are (i) fast postwar **real growth**, which fattened nominal GDP, and
+   (ii) **interest rates held artificially below inflation**, which made the *real* rate the government paid
+   deeply negative. Together they drove $r - g$ strongly negative, so the snowball term ran in reverse and
+   the ratio melted from 250% to 30%. The term for the policy that pinned rates down is **financial
+   repression** (caps on deposit rates, captive domestic buyers, capital controls).
+5. **Because the bond market — not nature — sets $r$, and investors price a default/credit risk premium that
+   grows with $b$** (§4). That makes the system self-reinforcing: higher debt raises the demanded rate, a
+   higher rate enlarges the snowball term $(r-g)b$, worse dynamics raise perceived default risk, which
+   raises the rate again — so a country can sit at high debt for years with nothing visible happening, then
+   tip in months. **Rollover risk** is the fact that governments don't repay debt so much as **roll it
+   over**, issuing new bonds to redeem maturing ones; if markets refuse to roll — or only at punishing rates
+   — even a **solvent** government faces a liquidity crisis. Lengthening the average maturity reduces it
+   because only a small slice of the stock has to find buyers in any given window, and today's rate is
+   locked in on the rest.
+6. **Japan's debt is in a currency Japan controls; Greece's was not** — the yen can always be created by the
+   BoJ, whereas Athens owed euros it could not print, which made the euro effectively a **foreign currency**
+   for a Eurozone member. Greece could have done what Japan can: **create the money to pay, and/or let
+   inflation and a devaluation erode the real value of the debt** — so the risk would have been inflation,
+   not default (§5). **Monetary union took that option away** by stripping members of the printing press
+   without giving them a shared treasury or a backstop, converting their debt into de-facto foreign-currency
+   debt; the crisis only calmed when the ECB's 2012 "whatever it takes" supplied the missing backstop and
+   moved Greece and Italy from the bad equilibrium of §4 to the good one.
+7. **Grow** — the postwar UK and USA (fig 1); drawback: real growth cannot be summoned on demand.
+   **Austerity** — Greece and the Eurozone periphery 2010–15; drawback: politically brutal and
+   self-defeating in a slump. **Inflate it away** — the postwar melt, combined with financial repression;
+   drawback: it is a **stealth default** on bondholders, and it works only on long-maturity, own-currency
+   debt. **Default / restructuring** — Argentina 2001 and Greece's 2012 haircut; drawback: market exclusion
+   and a wrecked credit reputation, and it is mainly the exit of last resort for foreign-currency borrowers.
+   Austerity can **raise** the ratio in a deep recession because the multiplier is **large when there is
+   slack** (E04 §1 §5): cutting spending shrinks GDP — the *denominator* — proportionally more than it
+   shrinks the debt, so $b$ goes up. That is the Blanchard–Leigh finding on the euro-austerity years.
+8. **Because Singapore's gross figure is a capital-market artifact, not a solvency position.** First,
+   **gross vs. net** (§1): net of its enormous reserves, Singapore is a large **creditor**, not a debtor.
+   Second, the **borrowing-purpose rule** (E04 §1 §6): by law it cannot borrow to fund spending, so none of
+   that debt arose from covering deficits — it issues **SGS** to build a risk-free yield curve and a bond
+   market, **SSGS** to hold CPF savings, and SINGA for long-lived infrastructure. Third, **the proceeds are
+   invested**, managed by GIC, and the returns exceed the coupon — so the liability comes with a matching
+   (and larger) asset.
+
+</details>
+
 ---
 
 ## 9. Optional: read the debt like a bond investor (15–20 min)

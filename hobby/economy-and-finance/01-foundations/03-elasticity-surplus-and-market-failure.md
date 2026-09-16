@@ -493,6 +493,75 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    the deadweight loss and the transfer on a monopoly diagram, then argue *both* sides: why the patent
    monopoly might still be the efficient policy, and what that trade-off depends on.
 
+<details>
+<summary>Answers</summary>
+
+1. **Both are right if each is on the side of its demand curve it thinks it is** — the transit authority must
+   believe its demand is **inelastic** ($\lvert\varepsilon_d\rvert < 1$: commuters have few substitutes, the
+   trip is a necessity, and the short-run horizon leaves no time to move house or buy a car), so a fare rise
+   loses little ridership and **raises** total revenue. The retailer must believe its demand is **elastic**
+   ($\lvert\varepsilon_d\rvert > 1$: branded discretionary goods with close substitutes one shop away), so a
+   price cut wins enough extra volume to **raise** revenue (§1's total-revenue test). Checking it from data:
+   find a past price change and compute $\lvert\varepsilon\rvert$ from the percentage moves, or simply look
+   at whether **revenue rose or fell the last time price moved** — revenue *is* the test, no elasticity
+   estimate required. Two cautions: elasticity **slides along the curve**, so an estimate is local to the
+   current price; and demand is more elastic **in the long run**, so the transit authority's revenue gain can
+   erode as riders eventually re-optimize.
+2. **The tax transfers the green rectangle and destroys the grey triangle.** Revenue $t \times Q_{tax}$ moves
+   from buyers and sellers to the government — surplus relocated, not lost. The **deadweight loss** is the
+   surplus on the trades between $Q_{tax}$ and $Q^\ast$ that used to happen because $MB > MC$ and now do not:
+   nobody gets it, it simply stops existing (§3). With very **inelastic** demand the quantity barely moves,
+   so $\lvert\Delta Q\rvert$ is tiny and the triangle is tiny — while the near-unchanged $Q$ times the full
+   tax makes the rectangle large. That is the whole logic of sin taxes: **inelasticity means lots of revenue
+   and little distortion.** Burden: **the more inelastic side bears it**, whatever the statute says (§3's
+   incidence result) — it "can't get out of the way," so the price moves against it. Cigarette taxes land on
+   smokers; the 1990 yacht tax landed on boat-builders.
+3. **Because $Q^\ast$ is a stationary point of total surplus, the first-order term vanishes and the leading
+   loss is quadratic.** Total surplus is $W(Q) = \int_0^{Q}\big(MB(q) - MC(q)\big)\,dq$, so
+   $dW/dQ = MB - MC$, which is **zero at $Q^\ast$** (§2) — the first units of trade you destroy were worth
+   almost exactly what they cost, so they carry almost no surplus. Geometrically the triangle has area
+   $\approx \tfrac12 t \lvert\Delta Q\rvert$ and $\Delta Q \propto t$ for small $t$, giving
+   $DWL \propto t^2$ — the envelope theorem, and the energy $\tfrac12 k (\Delta x)^2$ of a displaced harmonic
+   well. **Policy implication:** doubling a tax roughly *quadruples* its deadweight loss, so spreading a
+   revenue target across **many small taxes beats one big one**, and the first small tax in an undistorted
+   market is nearly free at the margin. Where the approximation breaks: (a) large $t$, where curvature
+   matters and the linearization of $\Delta Q$ fails — at the limit the tax shuts the market and the triangle
+   is truncated by the whole remaining surplus; (b) **a market that is already distorted**, where
+   $MB \neq MC$ to begin with, so the first-order term is *not* zero — then a small tax has a **first-order**
+   welfare effect, which can be negative (stacking onto an existing tax or monopoly) or *positive* (a
+   Pigouvian tax on an externality, §4a). This is the theory of the second best: "small taxes are nearly
+   free" is a statement about an **undistorted** starting point only.
+4. (a) **A public beach at low tide is a public good** — non-rival, non-excludable — and the failure is
+   under-provision via **free-riding** (assumption (iii), non-excludability, plus nobody's private incentive
+   to fund upkeep); **at peak summer it becomes a common resource**, because congestion makes it **rival**
+   while still non-excludable, and the failure is the **tragedy of the commons** (over-use). Fix: price the
+   congestion or issue permits, i.e. restore excludability at the crowded margin. (b) **A new song on
+   streaming is a club good** — non-rival (my listening costs you nothing) but excludable (the paywall).
+   Markets basically work; the residual inefficiency is that price exceeds the near-zero marginal cost, which
+   is the copyright-monopoly issue of §4c, not a commons problem. (c) **Bluefin tuna is a common resource**
+   — rival, non-excludable — the tragedy again (assumption (iii)); fix by assigning **property rights /
+   tradable fishing quotas**, or Ostrom-style community governance. (d) **The formula for a new drug is a
+   public good** — non-rival and, absent law, non-excludable — so research is **under-provided**; the fix is
+   to manufacture excludability with a **patent** (or to fund it directly via prizes or public research).
+   Note what that fix costs: it repairs assumption (iii) by deliberately breaking assumption (i),
+   price-taking — which is question 5.
+5. On the monopoly diagram, the firm sets $MR = MC$, so output is restricted to $Q_m < Q_{comp}$ and price is
+   marked up above marginal cost. **The transfer** is the mark-up rectangle — consumer surplus moving to the
+   pharma company, a distributional effect, not a loss. **The deadweight loss** is the triangle over the
+   units between $Q_m$ and $Q_{comp}$: patients whose willingness to pay exceeds the pill's marginal cost and
+   who therefore go untreated (§4c). **For the patent:** the formula is a public good (question 4d), so with
+   free copying the drug's enormous R&D fixed cost is never recovered, nothing is invented, and the relevant
+   comparison is not "cheap drug vs expensive drug" but **"expensive drug vs no drug"** — the static
+   deadweight loss buys the dynamic incentive. **Against:** on a life-saving drug the triangle is measured in
+   lives rather than dollars, and the monopoly period is long. **What the trade-off depends on:** the size of
+   the R&D cost relative to the deadweight loss; how **elastic innovation is with respect to expected rents**
+   (if firms would have invented anyway, the monopoly is pure loss); patent length; whether **price
+   discrimination** across rich and poor countries is feasible, since tiered pricing can raise output and
+   *shrink* the triangle while preserving the incentive; and whether prizes, advance market commitments or
+   public funding could buy the same innovation without the mark-up.
+
+</details>
+
 ## 7. Optional: read a real market through this lens (15–20 min, no setup)
 
 Pick a market in the current news where price is contested — a "sin tax" (tobacco, sugar, alcohol), a

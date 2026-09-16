@@ -311,6 +311,43 @@ Try these before our Q&A — jot a one-line answer to each. We'll dig into which
 5. A teammate says "let's rewrite the hot loop in C." Under what circumstances is that worth it, and
    under what circumstances is it pointless? Tie your answer to §5.
 
+<details>
+<summary>Answers</summary>
+
+1. **Both — and the question itself is subtly wrong.** "Compiled vs interpreted" is a property of an
+   *implementation*, not a language (§3c). CPython **compiles** your source to **bytecode**, then a
+   bytecode **interpreter** written in C executes that bytecode (§4). So Python is compiled — just not to
+   machine code — and interpreted from there on, which puts it in the hybrid middle of §7's spectrum
+   alongside Java and C#.
+2. **Cached bytecode** — the output of step (1) of §4's pipeline, frozen to disk. It solves **startup
+   cost**: on the next run, if the source is unchanged, Python skips re-compiling and loads the `.pyc`
+   directly. That's why the filename carries the interpreter version (`cpython-313`) — bytecode is not
+   guaranteed stable across Python versions, so a cache from another version must not be reused. It is
+   the same cost that shows up as Lambda **INIT** time (§10c).
+3. **(a) Push the loop down into native code** — `numpy.arange(...).sum()` or any vectorized call — and
+   **(b) change the execution engine**, e.g. run it under **PyPy**'s JIT (just-in-time compiler), or
+   CPython 3.13's experimental one. They attack different layers: (a) removes Python from the inner loop
+   entirely, so the per-operation VM overhead of §5 (bytecode dispatch, dynamic type checks, boxing,
+   refcounting) is paid once instead of ten million times; (b) leaves your code as-is and attacks the
+   *interpretation step itself*, compiling the hot loop to machine code at run time (§6). Rewriting the
+   loop in C is a variant of (a), not a third lever.
+4. **Because Python is translated late and C is translated early.** The `.py` ships as source; the
+   translation to machine code happens on the *target* machine, by an interpreter that AWS already built
+   for ARM64 (§1's interpretation column, §10a). A C binary was translated **ahead of time** into machine
+   code for one **ISA** plus one OS (§3a), so an x86-64 `.o` is meaningless to a Graviton core. The
+   caveat that bites in practice: *pure* Python is portable, but **native extension wheels**
+   (`pydantic-core`, `numpy`, `psycopg`) ship pre-compiled `.so` files per ISA and are not — that's the
+   `invalid ELF header` failure in §10a.
+5. **Worth it only when the loop is genuinely CPU-bound and fine-grained; pointless when the time is
+   spent elsewhere.** §5's model says Python's tax is per-operation interpreter overhead, so you only
+   recover it if the program actually spends its time executing many small Python operations. If the
+   service is **I/O-bound** — waiting on an LLM call, Postgres, S3 — the CPU tax is noise and C buys
+   nothing (§10b). If the hot work is already inside numpy/torch/Pydantic, it is *already* native and
+   there is nothing to reclaim. And even in the genuine CPU-bound case, try **vectorizing** first: same
+   lever, a fraction of the cost and no new build toolchain.
+
+</details>
+
 ## 9. Optional: get your hands dirty (10 min, no setup beyond Python)
 
 ```python

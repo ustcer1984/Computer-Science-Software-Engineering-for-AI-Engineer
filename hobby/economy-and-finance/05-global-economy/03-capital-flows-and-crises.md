@@ -347,6 +347,71 @@ Reason first; check against a source where noted.
 8. **The Singapore puzzle.** Singapore is more open than Thailand was in 1997 and had no crisis. Give **four**
    specific buffers that explain the difference, and state the general lesson in one sentence.
 
+<details>
+<summary>Answers</summary>
+
+1. **Because *composition* decides the risk, not the size of the deficit** (§1). **FDI is the stickiest claim**: a
+   factory cannot be wheeled onto a plane, the foreign owner **shares** the losses when profits fall, and the claim
+   is in equity form with no repayment schedule — in a sudden stop the country's obligations simply become worth
+   less to the foreigner, and the asset stays. **A one-year foreign-currency bank loan must be repaid in full, on
+   schedule, in a currency the borrower cannot print** — in a sudden stop it is not rolled over, so the borrower
+   must find the dollars at once, exactly while the currency is collapsing and making each dollar dearer in local
+   terms (§2). Identical ledgers under §2's identity, completely different survival odds.
+2. **Because CA + KA = 0 is an identity, and an identity cannot be negotiated with** (§2). If KA collapses from a
+   large surplus toward zero, the current account must move by the *same amount* immediately — a country running a
+   6%-of-GDP deficit must close it within months. **The three channels are: imports collapse** (domestic demand is
+   crushed until the country can pay for what it buys), **the currency crashes** (the price adjustment that forces
+   expenditure switching), **and output contracts** (the real-side casualty of both). The tidy bookkeeping of §2
+   becomes a **guillotine**.
+3. **Currency mismatch = liabilities in foreign currency while income is in local currency. Maturity mismatch =
+   borrowing short to fund long assets.** Alone, each is survivable: a matched-currency borrower can refinance at a
+   worse price; a long-funded FX borrower has time. **Short-term foreign-currency debt is lethal because the two
+   interact** — refusal to roll over forces a scramble for foreign currency, the scramble crashes the exchange rate,
+   and the crash inflates the local-currency value of the very debt you are trying to repay (§2, §3's third
+   generation). **A solvent borrower still fails because the killer is illiquidity, not insolvency:** you do not
+   need negative net worth, only to be unable to **roll over** on the day the money is due — E04 §2 §4's rollover
+   risk, now in a currency you cannot print.
+4. **(a) First generation (Krugman, 1979)** — bad fundamentals: money-financed deficits drain reserves predictably
+   until speculators attack at the threshold; **the crisis you deserve.** **(b) Second generation (Obstfeld)** —
+   **self-fulfilling** with multiple equilibria: expecting an exit raises the cost of defending, which makes exit
+   optimal, so the same fundamentals support both a calm and a crisis outcome; **the crisis you don't deserve.**
+   **(c) Third generation (post-1997)** — the crisis running through **balance sheets**: devaluation destroys
+   mismatched firms and banks, producing **contractionary devaluation** and a **twin crisis** (all in §3).
+5. **Because with currency mismatch the depreciation raises the local-currency value of the debt while leaving
+   income untouched, so the balance-sheet effect overwhelms the expenditure-switching effect** (§4). In §2's world
+   a weaker currency cheapens exports and dears imports and eventually improves the trade balance; in 1997
+   corporate and bank liabilities were in dollars and revenues in baht, won and rupiah, so each step down
+   **multiplied the debt**, bankrupted firms, wrecked the banks, deepened the flight and drove the currency lower
+   still — **contractionary devaluation running as a doom loop** (the rupiah lost about 85%). **The deciding
+   condition is whether liabilities are denominated in foreign currency and unhedged** (E05 §2 §10d): matched
+   balance sheets make the exchange rate a **shock absorber**, mismatched ones make it a **shock amplifier**.
+6. **Because the IMF applied a first-generation remedy to a third-generation disease** (§4). These were economies
+   with **broadly sound budgets** — the problem was not fiscal profligacy but **balance-sheet mismatch**, so
+   punitive interest rates and fiscal austerity crushed demand, bankrupted the very firms whose solvency was the
+   issue, and deepened the collapse rather than restoring confidence (Stiglitz, Sachs). **A third-generation
+   diagnosis prescribes attacking the mismatch and the run directly**: liquidity and standstill or restructuring
+   of the short-term foreign-currency debt, bank recapitalization, supportive rather than contractionary fiscal
+   policy, and — where a run must simply be stopped — **temporary capital controls**, which is what Malaysia did in
+   September 1998 and recovered comparably well (§5, item 6).
+7. **Because Asia's lesson from 1997 was "never again be at the mercy of the IMF or foreign creditors," and the
+   answer was massive self-insurance** (§4, fig 3). Running a current-account **surplus** and hoarding
+   **foreign-exchange reserves** is how a country stops needing foreign financing — so the region swung from
+   deficits to persistent surpluses and accumulated reserves on an unprecedented scale. **The global link is the
+   balance-of-payments identity applied worldwide: those surpluses had to be somebody's deficit, and the reserves
+   had to be invested in somebody's assets** — overwhelmingly US Treasuries. That is the **global savings glut**
+   that held world interest rates down for two decades, and the mirror image of the US deficits of E04 §3 §10.
+   **Asia's surplus and the US deficit are one arrangement seen from two ends.**
+8. **Four buffers (§6): (i) no original sin plus a large net-creditor position** — Singapore borrows in SGD and its
+   external assets far exceed its liabilities, so a depreciation *helps* it and the third-generation mechanism
+   cannot get a grip; **(ii) enormous reserves plus exchange-rate-based monetary policy** run by MAS across
+   MAS/GIC/Temasek; **(iii) fiscal space, and the willingness to use it**, since with no domestic rate lever fiscal
+   does the stabilizing — the Singapore-versus-Greece contrast; **(iv) deliberate, fast internal devaluation** in
+   1998 (the sharp cut in employer CPF contributions and wage restraint) instead of adjustment suffered slowly as
+   unemployment — with **macroprudential rigour** and integrated MAS supervision as a fifth. **The one-sentence
+   lesson: openness is not the danger — unhedged balance-sheet mismatch and weak institutions are.**
+
+</details>
+
 > **Optional — stress-test a country yourself (15–20 min).** Pick any emerging market and assemble its risk
 > profile from public data: (a) **short-term external debt as a share of reserves** (the classic
 > Guidotti–Greenspan tripwire — reserves should cover a year of short-term debt); (b) the **share of external debt

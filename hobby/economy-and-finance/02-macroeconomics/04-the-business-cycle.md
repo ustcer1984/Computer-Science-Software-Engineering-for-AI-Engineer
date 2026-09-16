@@ -414,6 +414,53 @@ then test against a real series.
    like a recession." Using the **lagging** nature of unemployment (§3) and the leading/coincident/lagging
    split, explain why the *feeling* lags the *fact*.
 
+<details>
+<summary>Answers</summary>
+
+1. (a) **Supply shock** — costs rise everywhere, so output falls while prices **rise** (they move apart).
+   (b) **Demand shock** — wealth destroyed, spending falls, so output **and** prices fall together.
+   (c) **Supply shock** — a broad tariff raises the cost of producing everything; prices up, output down.
+   (d) **Demand shock** — a cut in $G$ shifts aggregate demand left; prices and output fall together (§3).
+   **The supply shocks — (a) and (c) — are the genuine bind:** one lever, two targets moving opposite ways.
+   Prop up demand and you feed the inflation; crush demand to kill the inflation and you deepen the
+   recession. That is **stagflation** (§3).
+2. **Output falls by 400 billion dollars:** $\Delta Y = -100 / (1 - 0.75) = -100 \times 4 = -400$ (§4). It is
+   the **paradox of thrift** because the multiplier runs through the fact that one agent's spending is
+   another's income — so when everyone cuts spending (or tries to save more) at once, they shrink the very
+   income they were saving out of, and the economy contracts by more than the initial cut (§4, and §2's own
+   session thread).
+3. **The output gap is positive** ($Y > Y^{\ast}$). By **Okun's law**, growth above potential keeps pulling
+   unemployment further **below the NAIRU**; by the **Phillips curve**, unemployment below $u^{\ast}$ keeps
+   pushing **inflation up**, and if it persists long enough **inflation expectations** rise and shift the
+   whole short-run curve upward (§2, §5). The news word for this state is **overheating** (an "inflationary
+   gap"), and the policy response it invites is a central bank leaning against demand.
+4. **It fails because each short-run Phillips curve is drawn for a given level of *expected* inflation.**
+   Holding unemployment below $u^{\ast}$ does raise inflation at first, but workers and firms notice, revise
+   $\pi^{e}$ upward, and demand bigger raises just to stand still — which shifts the whole short-run curve
+   **up**, returning unemployment to $u^{\ast}$ at a higher inflation rate. Formally the curve is
+   $\pi = \pi^{e} - \beta(u - u^{\ast})$, and with $\pi^{e} = \pi$ in the long run it forces
+   $u = u^{\ast}$: the **long-run curve is vertical at the natural rate**. What you get for the attempt is
+   **permanently higher inflation and the same unemployment** — and the ratchet repeats if you try again
+   (§5).
+5. **(i) The shock was a supply shock, not a demand one** — the oil-price spikes raised prices *and* cut
+   output, which is the one combination the naive curve says can't happen (§3). **(ii) Inflation expectations
+   un-anchored** — years of accommodating inflation pushed $\pi^{e}$ up, shifting the entire short-run curve
+   upward, so the economy ended with high inflation at high unemployment (§5).
+6. **Leading: the yield-curve spread and building permits. Coincident: real GDP. Lagging: the unemployment
+   rate, then the inflation rate** (§6). The yield-curve spread is the earliest of all — it is the bond market
+   forecasting future rate cuts, which happen only when a downturn is expected. On the check: the 10-year
+   minus 2-year spread has gone negative *before* each US recession band for decades, though with a variable
+   and sometimes long lead — and it has also given false signals, which is why §6 insists no single indicator
+   is the truth.
+7. **Because unemployment is a lagging indicator.** The NBER dates the trough from when broad activity turns
+   up, but firms meet the first recovery in demand by working existing staff harder (rising productivity) and
+   rehire only late, so the **unemployment rate keeps rising past the trough** and peaks after the recession
+   is officially over (§6, and §3's jobless-recovery and labour-hoarding points). People experience the cycle
+   through jobs and real income — the lagging and coincident sets — while the "it's over" call rests on the
+   turn itself, so the *feeling* trails the *fact* by months.
+
+</details>
+
 ---
 
 ## 9. Optional: read the cycle on live data (15–20 min)

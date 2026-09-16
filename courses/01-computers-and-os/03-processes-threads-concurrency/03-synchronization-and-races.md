@@ -503,6 +503,57 @@ mechanism together (your signature mode).
 7. (Synthesis) Explain, in terms of Coffman's four conditions and "shared mutable state," *why* the actor model and your immutable
    append-only pipeline state (Ch1 §2 §1) have **no** deadlocks and **no** data races by construction.
 
+<details>
+<summary>Answers</summary>
+
+1. **Because `counter += 1` is three bytecodes, not one: `LOAD_FAST counter` → `BINARY_OP +` → `STORE_FAST counter`** (§1). A thread can
+   be suspended *between* any two of them while still holding the stale value it read; the other thread completes a full read-modify-write;
+   the first resumes and stores `stale + 1`, overwriting it. Two increments happened, one was **lost**. The GIL does **not** prevent this:
+   it only guarantees that a *single* bytecode runs uninterrupted, and it is released on a **timer** (about 5 ms,
+   `sys.getswitchinterval()`) and on every blocking I/O call — so the switch can land after *any* bytecode, including mid-increment. The
+   GIL made the window small; small is not zero.
+2. **Data race** (数据竞争): two flows access the same memory, at least one **writes**, and nothing synchronises the ordering — a
+   *memory-safety* property, and undefined behaviour in C/C++/Rust. **Race condition** (竞态条件): a *correctness* bug whose outcome depends
+   on timing/ordering — strictly broader (§1). Example using only atomic operations: `if key not in cache: cache[key] = compute()`. The
+   membership test and the assignment are each individually atomic, yet two threads can both see "not in," both compute, and one result
+   silently overwrites the other — the classic **check-then-act** shape.
+3. **The one-question test: is there an `await` inside the region where the invariant is temporarily broken? No `await` → no lock needed;
+   yes → an `asyncio.Lock` held across the awaits** (§3). That is the right question — rather than "is the state shared?" — because on a
+   single loop the **only** place another coroutine can run, and therefore the only place anyone can *observe* a broken invariant, is a
+   suspension point; between awaits the coroutine is atomic by construction, so sharing alone is harmless. `self.n += 1` with no nearby
+   `await`: **100% safe in asyncio, a race in threads.** Same line, opposite verdicts, because the thread scheduler is **preemptive** (the
+   window opens between any two bytecodes) and the event loop is **cooperative** (the window opens only at `await`).
+4. The deadlocking interleaving: Thread 1 takes `lock_A` and then wants `lock_B`; Thread 2 takes `lock_B` and then wants `lock_A`; each
+   now waits forever on a lock the other holds — a **wait-for cycle** (§5). Fix 1: impose a **global lock ordering** (everyone acquires A
+   before B) — breaks **circular wait**. Fix 2: use `acquire(timeout=...)` and **release the lock you already hold** when the second one
+   doesn't arrive in time — breaks **no preemption** (and needs randomised backoff, or you trade deadlock for **livelock**). **Ship fix
+   1.** It is nearly free at runtime, it is a static discipline you can write down and lint for, and it makes deadlock *structurally
+   impossible* rather than merely recoverable; keep timeouts as the last-resort circuit breaker so a missed ordering degrades to a logged
+   error instead of a silent hang.
+5. **Because by the time you actually hold the lock again the predicate may be false, so it has to be re-checked, not assumed** (§4). The
+   two phenomena the `while` defends against: **spurious wakeups** (a waiter may wake with no notify at all — permitted by POSIX, so
+   portable code must tolerate it) and the **lost-wakeup / stolen-condition** race (between your wake and your re-acquire, a third flow
+   grabs the lock and consumes the very item you were notified about). The **second is the real correctness bug**; the first is only a
+   portability requirement. An `if` checks once and charges ahead on a stale assumption — check-then-act (§1) in disguise; the `while`
+   re-checks under the lock and is correct.
+6. **Buys: lower contention** — different flows touch different locks, so the serialised fraction shrinks (the Amdahl argument of §2; this
+   is why `ConcurrentHashMap` stripes buckets and a database row-locks instead of table-locking). **Risks: deadlock** — 50 locks means a
+   flow can hold one and want another, so wait-for cycles become possible for the first time — plus far harder reasoning and per-lock
+   overhead on every path. **The discipline that must accompany it: a written, globally-enforced lock order** (§5) — the one thing that
+   prevents circular wait. Push back entirely when the structure has a single natural owner: give it to one owner thread/task and feed it
+   a bounded `Queue` (§6). That **removes** the shared mutable state instead of subdividing its defences, and throws in back-pressure for
+   free. Also push back until profiling proves *that* lock is the bottleneck — start coarse, split only on evidence (§2).
+7. **Because both remove the shared mutable state, which deletes Coffman condition #1 (mutual exclusion) at the root** (§5, §6). An actor
+   owns its state and nobody else can touch it; all access is messages processed one at a time, so there is no contended resource to
+   exclude anyone from — no locks, therefore no wait-for graph, therefore no deadlock, and no second writer, therefore no data race.
+   Immutable append-only pipeline state (Ch1 §2 §1) kills it from the other side: **a data race requires a write to shared memory (§1), and
+   if the flowing state is never mutated there is no write to race on** — concurrent edges each *read* shared immutable inputs (reads never
+   race) and each *return a new value*. The one residual care point (§11) is the **fan-in / join**: combine functionally (return-and-reduce)
+   rather than appending into one shared mutable sink, and coordinate the join with structured concurrency (`gather`/`TaskGroup`, §2
+   §3–§4), not with a lock.
+
+</details>
+
 ---
 
 ## 10. Optional: get your hands dirty (15–20 min)

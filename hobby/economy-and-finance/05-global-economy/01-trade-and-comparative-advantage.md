@@ -320,6 +320,64 @@ Reason first; check against a source where noted.
 8. **Efficiency vs resilience.** Give one genuine argument for reshoring some production even though it's less
    efficient, and one cost of doing so. Why is this a "portfolio choice" rather than a right/wrong question?
 
+<details>
+<summary>Answers</summary>
+
+1. **They gain because specialization is decided by *opportunity cost*, not by who is more productive** (§2).
+   Canada's absolute superiority in both goods is irrelevant; what matters is how much syrup Canada must give up
+   per extra unit of lumber compared with how much Mexico gives up. **The single deciding number is the
+   opportunity-cost ratio** — each country exports the good in which its own ratio is lower. Comparative
+   advantage is by construction *relative*, so unless the two countries' ratios are identical, each has one, and
+   trade moves both onto a higher consumption path (§3).
+2. **USA: 1 software costs 2 textiles, 1 textile costs 0.5 software. Vietnam: 1 software costs 4 textiles, 1
+   textile costs 0.25 software.** So the **USA has the comparative advantage in software** (2 < 4) and **Vietnam
+   in textiles** (0.25 < 0.5), even though the USA out-produces Vietnam in both (§2). One sentence on why the USA
+   gains: **importing textiles releases American workers into software, where America's productivity edge is
+   biggest**, so the same total labour yields more of both goods (fig 1's right panel: +33% of each).
+3. **It means consuming at a point *outside* the production-possibility frontier (PPF), which the country could
+   never produce on its own** — specialize at P, trade at the world price, consume at C (§3, fig 2). **No
+   contradiction, because the PPF constrains what a country can *produce*, not what it can *consume*.** Trade
+   breaks the link between the two: production is set by comparative advantage, consumption by the world price
+   line. The wedge between the frontier and that line is the gains from trade, and it exists even for the country
+   that is absolutely worse at everything.
+4. **(a) Heckscher–Ohlin factor endowments** — each country exports the good using its **abundant factor**
+   intensively (labour-abundant China → textiles; capital- and skill-abundant US → aircraft). **(b) New-trade-theory
+   scale and variety (Krugman)** — **intra-industry** trade between similar rich countries, driven by economies of
+   scale plus consumers' taste for variety, which Heckscher–Ohlin cannot explain. **(c) Dynamic comparative
+   advantage** — advantage **built** through decades of investment and policy, the serious core of the
+   infant-industry argument (all three in §3).
+5. **Stolper–Samuelson: trade raises the real return to a country's *abundant* factor and lowers it for its
+   *scarce* factor.** In the China shock the winners were US **consumers** (cheaper goods), **capital**, and
+   skilled/college-educated labour plus exporting sectors; the losers were **less-skilled manufacturing workers**,
+   roughly 1–2 million jobs concentrated in specific towns (Autor, Dorn & Hanson — §4). The backlash follows from
+   **diffuse gains, concentrated losses**: the losers know exactly who they are and mobilize, while each winner's
+   gain is too small to notice or defend. The country gains in aggregate only in the **Kaldor–Hicks** sense — the
+   winners *could* compensate the losers (the **compensation principle**) — and when compensation does not happen,
+   the efficient policy becomes politically unsustainable (§4, §10b).
+6. **a = the producer-surplus gain to domestic producers; c = the government's tariff revenue; b and d = deadweight
+   loss; consumers lose the whole trapezoid a + b + c + d** (§5, fig 4). **b and d are the losses** because they are
+   captured by *nobody*: **b** is the **production distortion** (resources dragged into higher-cost domestic output)
+   and **d** the **consumption distortion** (buyers priced out of trades that were worth making). **Domestic
+   consumers bear most of the tariff**, not the foreign exporter — by E01 §3's incidence rule the burden falls on
+   the less elastic side, and for an ordinary importer world supply is close to perfectly elastic, so the domestic
+   price rises by nearly the full tariff. Only a **large** country can shift part of the burden abroad through its
+   terms of trade — the **optimal tariff**, which gains a bigger slice of a *smaller* world pie (§10a).
+7. **Because the trade balance is governed by CA = S − I (current account = national saving minus investment), and
+   a tariff changes neither S nor I** (§5; E04 §3). A tariff can reshuffle *which* countries you import from and
+   shrink one bilateral gap, but the overall gap is pinned by the saving–investment identity — and the induced
+   currency appreciation and foreign retaliation typically offset what the tariff cuts. **What would shrink it: a
+   rise in national saving** (a smaller fiscal deficit, higher private saving) **or a fall in investment** — and
+   the second is usually a cure worse than the disease.
+8. **One genuine argument: national security / strategic capability** — chips, defense, some pharmaceuticals, where
+   you must be able to produce in a crisis and are knowingly accepting a lower financial return for **resilience**;
+   the COVID and chokepoint experience of §6 is the evidence. **One cost: the forgone gains from trade** — higher
+   input and consumer prices, paid mostly by your own citizens (§5), plus the risk that temporary protection
+   becomes permanent. **It is a portfolio choice** because neither pole is correct: concentrating production where
+   it is cheapest maximizes efficiency *and* fragility, so the real questions are **how much efficiency to spend on
+   insurance, and who bears that cost** — the same distribution question as §4, not a right/wrong question (§6).
+
+</details>
+
 > **Optional — see comparative advantage in your own life (10–15 min).** The logic isn't just for countries. Think
 > of a skilled surgeon who also happens to type faster than any assistant. Should she type her own notes? Work the
 > opportunity cost: every hour typing is an hour *not* in surgery (her comparative advantage). She should
