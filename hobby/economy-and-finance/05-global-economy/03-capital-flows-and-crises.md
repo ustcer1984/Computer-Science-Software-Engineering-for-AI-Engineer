@@ -52,6 +52,38 @@ Understanding *why* is the single best test of whether you've absorbed the last 
 
 ## 1. The anatomy of capital flows — composition beats amount
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FDI** | foreign direct investment | buying or building a controlling stake in a real business abroad — the stickiest kind of inflow |
+| **CA** | **current account** | a country's net trade, income and transfers with the rest of the world. **In this module CA always means current account**, never *certificate authority* as in this repo's TLS chapter |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Capital inflow** | foreigners acquiring domestic assets — far too coarse a category on its own |
+| **Stickiness** | how hard it is for a given kind of foreign money to leave in a hurry |
+| **Foreign direct investment** | a controlling stake in real assets; it cannot be sold overnight, and it brings technology and management with it |
+| **Portfolio equity** | buying shares without control; sellable, but the foreign investor **shares** the loss when prices fall |
+| **Portfolio debt** | buying a country's bonds. *Unlike equity, debt must be repaid in full on schedule whatever happens* |
+| **Cross-border bank credit** | loans from foreign banks, often short-term and in foreign currency — the most dangerous form of all |
+| **Hot money** | short-term flows that can reverse within days |
+| **Current-account deficit** | spending more abroad than you earn there; it must be financed by a capital inflow of exactly the same size |
+| **Composition vs amount** | two countries can run the same deficit and face utterly different risk, because what finances it differs. *Composition is the variable that matters* |
+| **Gross vs net flows** | net flows can look small while gross positions — borrowing abroad and lending abroad at once — balloon. *It is the gross balance sheet that breaks* |
+| **Leverage** | operating with borrowed money, which magnifies both gains and losses |
+| **Capital-scarce economy** | one with more good investment opportunities than domestic savings, which is why borrowing abroad can be genuinely productive |
+| **Intertemporal current account** | the benign reading of a deficit: borrowing today against higher output tomorrow |
+| **Risk sharing** | spreading losses across investors in different countries |
+| **Lucas paradox** | the observation that capital does **not** flow from rich to poor countries as theory predicts, because institutions and risk, not just returns, decide where money goes |
+
+</details>
+
 "Capital inflows" is far too coarse a category. The single most useful analytical move is to sort them by
 **stickiness** — how fast they can leave:
 
@@ -80,6 +112,38 @@ predicts — the **Lucas paradox** — because institutions and risk, not just r
 ---
 
 ## 2. The double-edged sword — procyclicality and the sudden stop
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CA** | **current account** | net trade, income and transfers with the rest of the world — **not** *certificate authority* |
+| **KA** | capital and financial account | cross-border flows of asset ownership; the mirror image of the current account |
+| **GDP** | gross domestic product | annual national output; the scale against which a capital reversal is measured |
+| **USD** | US dollar | |
+| **Asia-5** | Indonesia, Korea, Malaysia, the Philippines and Thailand | the five economies at the centre of the 1997 crisis |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Procyclical** | amplifying the cycle rather than smoothing it — flooding in during booms and out during busts |
+| **Capital-flow bonanza** | a surge of inflows; one of the better warning signs that a crisis is approaching |
+| **Sudden stop** | an abrupt halt or reversal of capital inflows |
+| **Reversal** | inflows turning into outflows, so money is leaving rather than merely not arriving |
+| **The balance-of-payments identity** | the current and capital accounts always sum to zero. *Benign as bookkeeping; in a sudden stop it forces the current account to close within months, with no negotiation possible* |
+| **Forced adjustment** | the collapse in imports, the currency crash and the output contraction through which that identity is satisfied |
+| **Currency mismatch** | owing money in a foreign currency while earning in the local one. *It flips the exchange rate from shock absorber to amplifier — the depreciation that should cushion you instead doubles your debt* |
+| **Maturity mismatch** | borrowing short-term to fund long-term assets, so survival depends on being able to refinance continually |
+| **Roll over** | to repay a maturing loan by taking out a new one |
+| **Rollover risk** | the risk that nobody will lend you the replacement — fatal even for a borrower who is perfectly solvent |
+| **Solvency vs liquidity** | solvency is being able to pay eventually; liquidity is being able to pay *this week*. A liquidity failure kills a solvent borrower just as dead |
+| **The double mismatch** | short-term **and** foreign-currency debt together — the fingerprint on almost every emerging-market crisis of the last forty years |
+
+</details>
 
 Capital flows have one structural vice: **they are violently procyclical.** They flood *in* during booms — making
 booms bigger, currencies stronger, credit looser — and flood *out* during busts, making busts deeper. They
@@ -116,6 +180,39 @@ every emerging-market crisis of the last forty years.
 
 ## 3. How currency crises actually work — three generations
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ERM** | Exchange Rate Mechanism | the European system of pegged currency bands from which Britain was forced out in 1992 |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Currency crisis** | a forced, disorderly collapse of a currency's value or of the regime holding it up |
+| **Peg** | a commitment to hold the exchange rate at a stated level |
+| **Fundamentals** | the underlying budget, reserve and debt position, as opposed to what markets happen to believe |
+| **Reserves** | the foreign currency a central bank can spend defending its peg |
+| **Speculative attack** | investors selling a currency in size, betting the authorities will have to give up the peg |
+| **First-generation model** | the crisis you deserve: a peg plus deficits financed by printing drains reserves predictably, and speculators attack once the arithmetic is visible |
+| **Second-generation model** | the crisis you do not deserve: the government *chooses* between defending at the cost of recession and exiting, and the market's expectation of exit is what makes exit optimal |
+| **Multiple equilibria** | the same fundamentals supporting both a calm outcome and a crisis outcome, depending only on what people expect |
+| **Self-fulfilling crisis** | one caused by the expectation of it |
+| **Defending the peg** | raising interest rates and spending reserves to hold the rate, at the cost of recession and unemployment |
+| **Devaluation** | a deliberate official reduction of a pegged rate. *Devaluation is a policy act under a peg; depreciation is what a floating currency does by itself* |
+| **Third-generation model** | the crisis that runs through balance sheets: with currency and maturity mismatches, devaluation destroys the borrowers rather than rescuing them |
+| **Currency mismatch** | foreign-currency liabilities against local-currency income |
+| **Maturity mismatch** | short-term funding of long-term assets |
+| **Contractionary devaluation** | a currency fall that *shrinks* the economy instead of stimulating it, because it inflates the local value of foreign-currency debt |
+| **Twin crisis** | a banking collapse and a currency collapse happening together and feeding each other |
+| **Amplifier** | the role the exchange rate plays when balance sheets are mismatched — the opposite of its normal shock-absorbing role |
+
+</details>
+
 Crisis theory developed in three waves, each written after a crisis the previous generation couldn't explain. They
 are not rivals so much as three *mechanisms*, and modern crises mix all three.
 
@@ -143,6 +240,49 @@ balance sheets decide how bad it gets.**
 ---
 
 ## 4. The 1997 Asian financial crisis — the canonical case
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **USD** | US dollar | the currency the region's pegs were set against and its debts written in |
+| **IMF** | International Monetary Fund | the body that lends to countries in balance-of-payments crisis, with conditions attached |
+| **GDP** | gross domestic product | annual national output |
+| **BoP** | balance of payments | the full record of a country's transactions with the rest of the world |
+| **FX** | foreign exchange | currency trading, and by extension anything denominated in a foreign currency |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Asian Miracle** | the decades of rapid export-led growth in East and Southeast Asia before 1997 |
+| **Export-oriented growth** | a development strategy built on selling into world markets rather than on domestic demand |
+| **Peg (tightly managed rate)** | holding the currency near a fixed value against the dollar, which made dollar borrowing feel riskless when it was not |
+| **Financial liberalization** | removing restrictions on banking and cross-border borrowing — done here without matching supervision |
+| **Supervision** | the regulatory oversight of what banks are actually doing with their balance sheets |
+| **Connected (directed) lending** | banks lending on political or family connection rather than credit quality |
+| **Hedged** | protected against a currency move by an offsetting position. *The peg made borrowers feel hedged when nobody actually was* |
+| **Forwards** | contracts to exchange currency at a future date; Thailand used them in a way that concealed how little of its reserves remained |
+| **Contagion** | a crisis spreading from one country to others |
+| **Common creditor** | a lender exposed to many countries at once, which pulls back from all of them together |
+| **"Wake-up call"** | investors re-examining similar economies after one fails, and finding the same flaws |
+| **Capital flight** | residents and foreigners pulling money out of a country as fast as they can |
+| **Contractionary devaluation** | a currency fall that shrinks the economy because it multiplies the local value of foreign-currency debt |
+| **Doom loop** | a self-feeding cycle — here, bankruptcies wrecking banks, wrecked banks deepening the flight, the flight driving the currency lower still |
+| **Chaebol** | Korea's large family-controlled industrial conglomerates |
+| **Austerity** | tax rises and spending cuts; the IMF's prescription, and the one critics argued misdiagnosed a balance-sheet crisis as a fiscal one |
+| **Conditionality** | the policy changes a borrower must accept to receive IMF lending |
+| **Capital controls** | legal restrictions on money moving across the border — Malaysia's alternative to punitive interest rates in 1998 |
+| **Self-insurance** | protecting yourself by stockpiling reserves rather than relying on an outside lender |
+| **Reserve accumulation** | building up holdings of foreign currency, which is costly because those reserves earn little |
+| **Sterilization** | offsetting the domestic money created when a central bank buys foreign currency, so it does not fuel inflation; it carries a real fiscal cost |
+| **Chiang Mai Initiative** | the regional network of currency-swap arrangements set up in Asia after the crisis |
+| **Global savings glut** | the worldwide excess of desired saving over investment that held interest rates down for two decades — in substantial part the scar tissue of 1997 |
+
+</details>
 
 **The setup (and the tragedy of it):** these were the *success stories* — the export-oriented "Asian Miracle"
 economies of E05 §1, with high growth, high saving, and broadly sound budgets. This was **not** a first-generation
@@ -195,6 +335,46 @@ substantial part, **the scar tissue of 1997.**
 
 ## 5. The policy toolkit — what actually protects a country
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FDI** | foreign direct investment | a controlling stake in real assets abroad — the safest kind of inflow to receive |
+| **FX** | foreign exchange | currency, and anything denominated in one that is not your own |
+| **IMF** | International Monetary Fund | the global crisis lender, whose 2012 "Institutional View" accepted capital controls in defined circumstances |
+| **LOLR** | lender of last resort | the institution that lends when nobody else will, stopping a liquidity panic |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Composition of inflows** | the mix of FDI, equity, bonds and short-term bank credit — the vulnerability at its root |
+| **Local-currency finance** | borrowing in the currency you earn in, which removes the currency mismatch entirely |
+| **Macroprudential policy** | regulation aimed at the stability of the whole financial system rather than of one bank; it targets the **mismatch** rather than the flow |
+| **Loan-to-value cap** | a limit on how much can be borrowed against an asset's value |
+| **Countercyclical capital buffer** | extra bank capital required in good times and released in bad ones |
+| **Reserves as self-insurance** | stockpiling foreign currency so you never need an outside rescue; effective, proven and genuinely expensive |
+| **Global savings glut** | the worldwide surplus of saving that results when every country self-insures at once |
+| **Local-currency bond market** | a domestic market where the government and firms can borrow long, at home, in their own money |
+| **Original sin** | the historical inability of a country to borrow abroad in its own currency; developing a domestic bond market is the structural cure |
+| **Flexible exchange rate** | a genuine shock absorber — **but only if there is no currency mismatch**. Fix the balance sheets first, or the float will hurt you |
+| **Capital-flow management (capital controls)** | restrictions on cross-border money movement; once heresy, now accepted in defined circumstances |
+| **Encaje** | Chile's tax on short-term inflows — the textbook price-based capital control |
+| **Outflow controls** | emergency restrictions on money leaving, as opposed to restrictions on it arriving |
+| **Global financial safety net** | the combined IMF facilities, regional pools and central-bank swap lines available in a crisis |
+| **Dollar swap lines** | Federal Reserve facilities lending dollars to selected foreign central banks — the de-facto global lender of last resort, and a privilege not extended to everyone |
+| **Lender of last resort** | whoever will lend against good collateral when panic has closed every other source of funding |
+| **Global financial cycle** | the worldwide swing in capital flows, credit and asset prices driven largely by US monetary policy and global risk appetite |
+| **Risk appetite** | investors' collective willingness to hold risky assets; when it turns, it turns everywhere at once |
+| **The trilemma** | at most two of a stable exchange rate, free capital flows and independent monetary policy |
+| **"Dilemma, not trilemma"** | Rey's claim that the global financial cycle reaches a country whatever its exchange-rate regime, so free capital mobility and monetary autonomy are incompatible outright — unless capital flows are managed directly |
+
+</details>
+
 Ranked roughly by how much the profession now trusts them:
 
 1. **Get the composition right.** Favor **FDI and local-currency** finance; discourage **short-term
@@ -229,6 +409,51 @@ it, and it is the strongest modern argument for items 2 and 6 above.
 ---
 
 ## 6. Singapore as a trade & finance hub — the closing case
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | annual national output; Singapore's trade is roughly three times it |
+| **FX** | foreign exchange | currency trading, one of Singapore's largest financial industries |
+| **SGD** | Singapore dollar | the currency Singapore borrows in — which is why it has no original sin |
+| **SGS** | Singapore Government Securities | tradable Singapore government bonds |
+| **SSGS** | Special Singapore Government Securities | non-tradable government securities in which Central Provident Fund savings are invested |
+| **MAS** | Monetary Authority of Singapore | the integrated central bank and financial regulator |
+| **GIC** | Government of Singapore Investment Corporation | one of the funds managing the national reserves |
+| **IMF** | International Monetary Fund | the crisis lender Singapore never needed |
+| **CPF** | Central Provident Fund | the mandatory savings scheme whose employer contribution rate was cut in 1998 to lower business costs |
+| **LTV** | loan-to-value | the cap on how much may be borrowed against a property's value |
+| **ABSD** | Additional Buyer's Stamp Duty | an extra transaction tax on property purchases, used to cool the market |
+| **TDSR** | Total Debt Servicing Ratio | the cap on how much of a borrower's income may go to debt payments |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Open capital account** | money free to enter and leave the country without restriction |
+| **Original sin** | being unable to borrow abroad in your own currency — the condition Singapore does **not** have |
+| **Net creditor position** | owning more foreign assets than you owe abroad. *This inverts the usual crisis mechanism: a depreciation makes a net creditor richer, not bankrupt* |
+| **External assets and liabilities** | what a country owns abroad and what it owes abroad |
+| **Currency mismatch** | foreign-currency debt against local-currency income — the vulnerability Singapore's balance sheet does not contain |
+| **Third-generation mechanism** | the balance-sheet crisis channel, which cannot get a grip without that mismatch |
+| **Trade-weighted exchange rate** | the currency's value against a basket of partners, weighted by trade shares — Singapore's actual policy instrument |
+| **Reserves** | the stock of foreign assets backing the currency and available in a crisis |
+| **Fiscal space** | the room to borrow or spend more before running into trouble |
+| **Internal devaluation** | restoring competitiveness by cutting domestic costs and wages rather than by letting the currency fall — normally suffered slowly through unemployment, and in 1998 chosen deliberately and executed fast |
+| **Employer contribution rate** | the share of a worker's pay the employer must put into the savings scheme; cutting it lowers business costs directly |
+| **Integrated regulator** | one body supervising banking, insurance and securities together |
+| **Capital standards** | the minimum equity a bank must hold against its assets |
+| **Macroprudential policy** | system-wide financial regulation; Singapore's property cooling measures are the textbook case |
+| **Cooling measures** | policies deliberately restraining a property market before it overheats |
+| **Entrepôt trade** | importing goods in order to re-export them — being the node rather than the origin or destination |
+| **Hub strategy** | turning openness itself into an export industry, through trade, regional headquarters and finance |
+| **Control case** | the comparison that isolates the real cause: Thailand and Singapore were both small, open and trade-dependent, so openness was never the danger — openness *without the balance sheet* was |
+
+</details>
 
 Now the natural experiment that closes the module, and it is a genuine puzzle. Singapore is arguably **the most
 open economy on earth**: trade is roughly **three times GDP**, the capital account is **fully open**, and it is one

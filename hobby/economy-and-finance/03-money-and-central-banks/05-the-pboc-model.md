@@ -58,6 +58,48 @@ trilemma wall, and choose which corner to sacrifice *under fire*, is the payoff.
 
 ## 1. Why China is the trilemma's *third* corner
 
+<details>
+<summary><b>Vocabulary for this section</b> — the trilemma corner China chose, and the parity symbols (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PBoC** | People's Bank of China | China's central bank |
+| **CNY** | Chinese yuan (onshore) | the tightly controlled onshore market for the currency |
+| **CNH** | Chinese yuan (offshore) | the freely traded offshore market, mostly in Hong Kong — the same currency at a second price |
+| **USD** | US dollar | |
+| **MAS** | Monetary Authority of Singapore | the exchange-rate-targeting model of §4 |
+| **Fed** | the Federal Reserve | the interest-rate-targeting model of §3 |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $i_{\text{CNY}}$ | "i sub C-N-Y" | the nominal interest rate on onshore yuan; $i$ is the standard symbol for a **nominal** rate |
+| $i_{\text{USD}}$ | "i sub U-S-D" | the nominal interest rate on US dollars — the world rate in practice |
+| $\approx$ | "is approximately equal to" | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Impossible trinity (trilemma)** | a country can hold at most two of: an independent monetary policy, free capital mobility, and a managed exchange rate |
+| **Independent monetary policy** | setting your own interest rate for your own conditions rather than importing the world's |
+| **Free capital mobility** | money being able to cross the border freely in search of financial return |
+| **Capital controls** | restrictions on those flows — the corner China gives up the other two to keep |
+| **Managed exchange rate** | keeping the currency inside a chosen range rather than letting markets set it |
+| **Renminbi / yuan** | the currency (renminbi is the name of the money, yuan the unit) |
+| **Export-led industrialization** | a growth strategy built on selling manufactured goods abroad, which wants a stable and competitive currency |
+| **Competitive (cheap) currency** | one deliberately kept weak, which subsidises exporters by making their goods cheap abroad |
+| **Arbitrage** | exploiting a price difference between two markets; what capital controls are designed to block |
+| **Covered interest parity** | the arbitrage relation pinning a local rate to the world rate adjusted for the expected currency move |
+| **Spread** | the gap between two rates, which is what free capital would rush in to capture |
+| **Monetary autonomy** | the freedom to set a domestic rate different from the world's — what the controls buy |
+| **Onshore–offshore split** | the coexistence of a controlled CNY price and a free CNH price; the gap between them is the trilemma made visible |
+
+</details>
+
 Recall the impossible trinity (§4 §2): a country can hold **at most two** of {independent monetary policy, free
 capital mobility, a managed exchange rate}. §3 and §4 each showed you one choice. Here is all three at once —
 the completed triangle.
@@ -96,6 +138,45 @@ precisely because the wall between them blocks the arbitrage that would otherwis
 ---
 
 ## 2. The exchange-rate regime — from hard peg to a managed basket float
+
+<details>
+<summary><b>Vocabulary for this section</b> — the exchange-rate regime, its history and its two daily levers (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PBoC** | People's Bank of China | |
+| **USD** | US dollar | the currency the yuan was pegged to, at about 8.28 per dollar until 2005 |
+| **CNY / CNH** | onshore yuan / offshore yuan | the managed domestic market versus the free Hong Kong market |
+| **CFETS** | China Foreign Exchange Trade System | the PBoC-run platform that publishes the daily fix, and the name of China's trade-weighted currency index |
+| **NEER** | nominal effective exchange rate | a currency's value against a trade-weighted basket — MAS's target, and the concept behind the CFETS index |
+| **MAS** | Monetary Authority of Singapore | the comparison case, whose band works very differently |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Hard peg** | a fixed rate against one currency, held by intervention — China's regime from 1994 to 2005, and Hong Kong's to this day |
+| **Managed (dirty) float** | market trading permitted, but only inside limits the central bank enforces |
+| **Free float** | no target at all; the US regime |
+| **Central parity ("the fix", 中间价)** | the midpoint published every morning, around which the yuan may trade that day — a genuine policy instrument in its own right |
+| **Trading band (±2%)** | the maximum the onshore yuan may move from that day's fix before official buyers step in |
+| **Daily reset** | the feature that distinguishes China's band from MAS's: the reference point is re-set every morning, rather than crawling slowly |
+| **Appreciation / depreciation** | the currency getting stronger versus weaker |
+| **Devaluation** | a deliberate, discrete weakening by the authority — as in the 8·11 move of August 2015 |
+| **8·11 reform** | the August 2015 attempt to make the fix more market-determined, which produced a roughly 3% drop in days and triggered capital flight |
+| **Market-determined** | set by trading rather than by announcement; the direction the reform was meant to move in |
+| **Basket** | the set of partner currencies the yuan is framed against, replacing a single-dollar reference |
+| **CFETS index** | China's trade-weighted basket index, conceptually like Singapore's NEER |
+| **Counter-cyclical factor (逆周期因子)** | the discretionary term added to the fix formula, letting the PBoC lean against market moves it dislikes |
+| **Trade surplus** | exporting more than you import — the pressure that drove the 2005–14 appreciation |
+| **Capital flight** | residents and investors rushing money out of the country |
+| **Liberalize** | loosen official control over a price or a flow |
+| **Proxies (state banks)** | the large state-owned banks that intervene on the PBoC's behalf, so official action is not always visible as such |
+
+</details>
 
 China does not float the yuan (like the US) and — since 2005 — does not run a pure hard peg (like Hong Kong's
 fixed 7.8/USD). It runs a **tightly managed float** with two moving parts you must know: a **daily central
@@ -140,6 +221,41 @@ market grew up in Hong Kong (**CNH**), where the yuan trades freely. **CNY** (on
 
 ## 3. Capital controls — the machinery that pays the trilemma's bill
 
+<details>
+<summary><b>Vocabulary for this section</b> — the capital-control machinery and the metered gates (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SAFE** | State Administration of Foreign Exchange (国家外汇管理局) | the agency under the PBoC that administers the controls |
+| **PBoC** | People's Bank of China | |
+| **FX** | foreign exchange | foreign currency, and the market for it |
+| **USD** | US dollar | the currency the individual quota is denominated in |
+| **QFII / RQFII** | Qualified Foreign Institutional Investor / Renminbi QFII | licensing schemes letting approved foreign institutions invest onshore |
+| **ODI** | outbound direct investment | Chinese companies investing abroad, which is screened |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Capital controls** | quotas, approvals and licensed channels restricting cross-border movement of money seeking a financial return |
+| **Capital account** | the part of the balance of payments covering financial flows — investments, loans, deposits. ⚠ Distinct from the **current account**, which covers trade in goods and services; China keeps the current account fairly open and the capital account closed |
+| **Current account** | cross-border payments for goods, services and income — the flows that *are* allowed relatively freely |
+| **Quota** | a hard numerical cap on how much may be moved |
+| **Individual FX quota** | the per-resident limit of USD 50,000 a year that may be converted into foreign currency |
+| **Approval regime** | the requirement that a company document and obtain permission before moving capital |
+| **Over-invoicing** | disguising capital movement as trade by misstating the price on an invoice |
+| **"Smurfing"** | splitting a large transfer across many individuals' quotas |
+| **Underground banking** | informal cross-border settlement networks operating outside the official system |
+| **Leakage** | the general fact that controls always breed evasion channels |
+| **Stock Connect** | the metered Shanghai and Shenzhen to Hong Kong trading links for equities |
+| **Bond Connect** | the equivalent channel for the onshore bond market |
+| **"Liberalization by pipeline"** | opening narrow, monitored, widenable channels instead of opening the account itself |
+| **Load-bearing wall** | the section's framing: the controls are not a malfunction but the deliberate structural cost of the corner China chose |
+
+</details>
+
 "Capital controls" 资本管制 (資本管制) sounds abstract; concretely it is a dense system of **quotas, approvals,
 and licensed channels** administered mainly by **SAFE** (the State Administration of Foreign Exchange, 国家外汇
 管理局) under the PBoC. The point is always the same: **you may trade goods and services across the border fairly
@@ -168,6 +284,42 @@ life.**
 ---
 
 ## 4. Compulsory FX surrender (强制结汇) — how it built the world's biggest reserve pile
+
+<details>
+<summary><b>Vocabulary for this section</b> — compulsory surrender, sterilization and every piece of the reserve machine (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FX** | foreign exchange | foreign currency |
+| **USD** | US dollar | the currency exporters earned and had to hand over |
+| **RRR** | reserve requirement ratio (存款准备金率) | the share of deposits banks must park at the central bank — China's great sterilization tool, peaking at 21.5% in 2011 |
+| **PBoC** | People's Bank of China | |
+| **SAFE** | State Administration of Foreign Exchange | the agency that still steers FX flows under "voluntary" settlement |
+| **MAS** | Monetary Authority of Singapore | the discretionary version of the same intervention, from §4 |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Compulsory FX surrender (强制结汇)** | the rule that an exporter earning foreign currency had to sell it to a designated state bank, which passed it to the PBoC, in exchange for yuan at the official rate |
+| **Voluntary settlement (意愿结汇)** | the successor regime, in which firms may choose to hold foreign-currency accounts instead — but where the state still steers the plumbing |
+| **Designated state bank** | the licensed intermediary through which the surrender ran |
+| **Official rate** | the administered exchange rate at which the conversion was done |
+| **Dual exchange rates** | the pre-1994 arrangement of an official rate alongside a market rate, unified in the 1994 reform |
+| **Trade surplus** | exporting more than you import; the torrent of incoming dollars this machine automatically converted |
+| **Foreign-exchange reserves** | the resulting stock of foreign assets on the central bank's balance sheet, which peaked near USD 4 trillion in 2014 |
+| **Base money (monetary base)** | currency plus banks' reserves — what the PBoC created in order to buy those dollars |
+| **Monetization** | turning an inflow into newly created domestic money; here it happened automatically with every trade surplus |
+| **Sterilization** | offsetting that money creation so it does not fuel credit and inflation — ⚠ **unsterilised** intervention leaves the new money in the system, **sterilised** intervention mops it back up |
+| **Central-bank bills** | short-dated securities the PBoC sold to banks to absorb the excess yuan |
+| **Reserve requirement ratio** | the other, larger mop: forcing banks to park more yuan at the PBoC instead of lending it out |
+| **Leaning against the wind** | discretionary intervention to slow a currency move — what MAS does, as opposed to this standing legal requirement |
+| **"The engine and the brake"** | the section's summary: surrender created the yuan, the reserve requirement locked it up |
+| **Running in reverse** | the modern pattern — inflows slowed, sterilization is no longer needed, so cutting the reserve requirement releases locked money and *eases* policy |
+
+</details>
 
 This is the piece you specifically asked about, and it is the most vivid single mechanism in the whole model.
 **Compulsory FX surrender — 强制结汇 (qiángzhì jiéhuì).** For years, a Chinese
@@ -221,6 +373,45 @@ and freeing up locked reserves is now a way to *ease* (fig 4's long decline).
 
 ## 5. How the PBoC actually runs monetary policy
 
+<details>
+<summary><b>Vocabulary for this section</b> — the PBoC toolkit, from quantity levers to price levers (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PBoC** | People's Bank of China | |
+| **RRR** | reserve requirement ratio (存款准备金率) | the share of deposits banks must hold at the central bank; an actively used lever in China, and zero in the US |
+| **MLF** | Medium-term Lending Facility (中期借贷便利) | the PBoC facility whose rate is one of its policy anchors |
+| **LPR** | Loan Prime Rate (贷款市场报价利率) | the benchmark rate banks' lending is priced off |
+| **PSL** | Pledged Supplementary Lending (再贷款 family) | cheap central-bank funding earmarked for favoured sectors |
+| **ECB** | European Central Bank | the other operationally independent central bank contrasted here |
+| **Fed** | the Federal Reserve | the single-rate, deliberately neutral model of §3 |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Quantity-based tools** | levers that act on *how much* money or credit exists — reserve requirements, credit quotas |
+| **Price-based tools** | levers that act on the *cost* of money — policy rates; the direction China is moving in |
+| **Reserve requirement ratio** | China's signature lever: cutting it releases locked reserves into lending and counts as headline easing. Different ratios apply to large and small banks, making it a targeted tool |
+| **Credit quota** | an administrative cap on how much each bank may lend |
+| **Window guidance (窗口指导)** | the authorities simply telling banks how much to lend and to whom — direct administrative allocation, with no counterpart in an independent-central-bank model |
+| **Benchmark deposit and lending rates** | the older system of directly administered rates for banks' customers |
+| **7-day reverse repo rate** | a short-term money-market operation rate, increasingly the PBoC's main policy rate |
+| **Reverse repo** | the central bank lending cash against collateral for a short term, injecting liquidity |
+| **Loan Prime Rate** | the market-quoted benchmark that now anchors bank lending rates |
+| **Relending / targeted facilities (再贷款)** | cheap PBoC funding to banks earmarked for small business, agriculture, affordable housing, green or strategic industry |
+| **Credit allocation** | deciding *where* credit goes, not just how much — something the Fed deliberately refuses and the PBoC deliberately embraces |
+| **Neutrality** | the Fed principle of holding only generic government bonds so as not to steer credit to particular sectors |
+| **Allocative policy** | the opposite stance, treating the direction of credit as a legitimate policy objective |
+| **State Council** | China's cabinet; the PBoC is a ministry-level body under it, not an independent authority |
+| **Operational independence** | freedom to choose the means of policy without political direction — what the Fed and ECB have and the PBoC, by design, does not |
+| **Transmission** | how a policy move reaches the real economy; weaker and more administrative here than under the Fed model |
+
+</details>
+
 Because controls buy China its monetary autonomy (§1), the PBoC *can* run a genuinely independent domestic
 policy — but its toolkit looks nothing like the Fed's clean single-rate model (§3). It is a **hybrid, still
 mid-transition from quantity to price**, and it is unashamedly **allocative** — the opposite of the Fed's
@@ -267,6 +458,44 @@ neutrality principle you reasoned about in §3 §10.
 
 ## 6. The trilemma in action — the 2015–16 wall, and RMB internationalization
 
+<details>
+<summary><b>Vocabulary for this section</b> — the 2015–16 defence and the vocabulary of internationalization (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PBoC** | People's Bank of China | |
+| **USD** | US dollar | |
+| **RMB** | renminbi | the Chinese currency, the name used in the internationalization debate |
+| **CNH** | offshore yuan | the freely traded Hong Kong market used as the controllable half-opening |
+| **IMF** | International Monetary Fund | the body whose reserve-asset basket the yuan joined in 2016 |
+| **SDR** | Special Drawing Right | that IMF reserve asset, whose basket membership is a mark of global currency status |
+| **MAS** | Monetary Authority of Singapore | the §4 case whose asymmetry argument this section confirms at scale |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Intervention asymmetry** | a central bank has unlimited ammunition to hold its currency **down** (it can always create more of its own money) but only **finite reserves** to hold it **up** |
+| **Finite ammunition** | the constraint on the defensive side — China spent roughly USD 1 trillion of reserves between mid-2014 and early 2017 |
+| **Capital flight / outflows** | money leaving the country faster than it arrives, the pressure behind that defence |
+| **Disorderly slide** | an uncontrolled depreciation, which is what the intervention was meant to prevent |
+| **Re-tightening controls** | China's escape route: reasserting capital controls rather than continuing to burn reserves — paying the trilemma bill it had always chosen to pay |
+| **RMB internationalization** | the project of making the yuan a widely used trade and reserve currency |
+| **Reserve currency** | a currency other countries hold in their own reserves; requires being *freely usable*, which requires an open capital account |
+| **Freely usable** | convertible and available in deep markets without official permission — the condition the trilemma makes hard for China to meet |
+| **Cross-border settlement** | paying for trade directly in a currency, increasingly in renminbi |
+| **Connect pipes** | the metered Stock and Bond Connect channels through which controlled opening happens |
+| **"Liberalization on a leash"** | opening just enough, through channels that can be narrowed again |
+| **Currency manipulator** | the charge that a country holds its currency artificially cheap to win export share — the old critique of the surrender-and-sterilize machine |
+| **Global saving glut** | Bernanke's account of excess world savings, into which China's surpluses were the leading exhibit |
+| **Export surplus** | the trade surplus that cheap-currency policy supported |
+| **Depreciation defence** | the modern problem — spending reserves to stop the currency falling, the expensive side of the asymmetry |
+
+</details>
+
 Two live episodes show the model under stress, and both are direct payoffs of §4.
 
 **The 2015–16 wall — MAS's asymmetry, for real and at scale.** In §4 §10a you reasoned that a central bank has
@@ -297,6 +526,47 @@ expensive side of the asymmetry. The same model that once held the yuan down now
 ---
 
 ## 7. The completed trilemma — the three-way comparison
+
+<details>
+<summary><b>Vocabulary for this section</b> — every row of the three-way comparison table (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **Fed** | the Federal Reserve | the US central bank (§3) |
+| **MAS** | Monetary Authority of Singapore | (§4) |
+| **PBoC** | People's Bank of China | (§5) |
+| **SGD NEER** | Singapore-dollar nominal effective exchange rate | the trade-weighted index MAS targets |
+| **IORB** | interest on reserve balances | the Fed's single administered policy rate |
+| **RRR** | reserve requirement ratio | the PBoC's signature quantity lever |
+| **SAFE** | State Administration of Foreign Exchange | the agency running China's capital controls |
+| **FX** | foreign exchange | foreign currency and its market |
+| **tn** | trillion | as in reserves peaking near USD 4tn |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Primary target** | the variable each central bank actually steers — a domestic rate, an exchange rate, or in China's case both at once |
+| **Trilemma corner** | which two of the three incompatible goals each economy keeps |
+| **Free float** | letting markets set the currency, the Fed's sacrifice of exchange-rate stability |
+| **Managed float** | market trading inside official limits — a secret crawling basket band in Singapore, a daily fix plus a ±2% band in China |
+| **Crawling band** | a band whose centre moves gradually over time, MAS's design |
+| **Daily fix** | the central parity published each morning, China's design |
+| **Capital account** | the cross-border financial flows each regime leaves open or walls off |
+| **Balance sheet holdings** | domestic government bonds for the Fed, foreign-exchange reserves for MAS, both for the PBoC |
+| **Treasuries** | US government bonds, the Fed's deliberately neutral asset |
+| **Signature tool** | the lever each institution is known for: one policy rate, the band's slope and level, the reserve requirement plus the fix |
+| **Credit allocation neutrality** | refusing to steer credit to particular sectors — the Fed's choice, and the exact opposite of relending and window guidance |
+| **Relending** | cheap central-bank funding earmarked for favoured sectors |
+| **Window guidance** | telling banks directly how much to lend and to whom |
+| **Operational independence** | freedom over the means of policy; the Fed has it, the PBoC is an arm of the State Council and does not |
+| **Statutory authority** | MAS's status — established and empowered by legislation |
+| **Compulsory surrender (强制结汇)** | the rule that built China's reserves by forcing exporters to hand over their foreign currency |
+| **Leaning against appreciation** | how Singapore built its reserves instead — selling its own currency to stop it rising |
+
+</details>
 
 Here is the whole module in one table: three central banks, doing the *same job* (anchor the economy), each
 occupying a *different corner* of the same triangle. This is §4's Fed-vs-MAS table with the third column that

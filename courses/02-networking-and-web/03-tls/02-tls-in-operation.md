@@ -47,6 +47,39 @@ one asks *what do I have to run, and what will break*.
 
 ## 1. The lifecycle is the unit, not the certificate
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol under HTTPS; it terminates at one or more points you must inventory |
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it is always certificate authority |
+| **CDN** | Content Delivery Network | a distributed cache in front of your origin; usually terminates TLS itself |
+| **HTTPS** | HTTP Secure | HTTP carried over TLS |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Certificate** | the signed document binding a domain name to a public key. **It is public — every visitor receives it — so it cannot be 'stolen'** |
+| **Private key** | the secret half that never leaves the server. **This, not the certificate, is what proves identity** |
+| **Key pair** | the matched public and private key generated at the start of the loop |
+| **Certificate lifecycle** | the repeating loop: generate a key pair, prove control of the name, receive a signed certificate, deploy it, renew, repeat |
+| **Proof of control** | demonstrating to the issuer that you really run the domain you are asking for |
+| **Termination point** | a place where TLS is decrypted — each one needs its own valid certificate and its own renewal |
+| **Origin** | the backend server behind an edge or CDN |
+| **Browser interstitial** | the full-page warning shown instead of the site when the certificate is invalid |
+| **Days-to-expiry** | the number of days until the served certificate expires — the property worth alerting on |
+| **CA/Browser Forum** | the industry body of certificate authorities and browser vendors that sets the rules, including maximum certificate lifetimes |
+| **Certificate lifetime** | how long an issued certificate stays valid; falling from years toward roughly 47 days by 2029 |
+| **Key compromise** | an attacker obtaining the private key — undetectable in practice, which is the whole argument for short lifetimes |
+| **Revocation** | invalidating a certificate before its expiry; unreliable, which is why short lifetimes replaced it |
+| **Cron job** | a scheduled background task — here, the renewal job that can fail silently for months |
+
+</details>
+
 The instinct is to think of a certificate as a **thing you obtain**. Operationally it is a **loop you run**:
 
 ```
@@ -83,6 +116,47 @@ expiry outages. Shortening lifetimes was a way of making everyone automate.
 ---
 
 ## 2. ACME — how automated issuance actually works
+
+<details>
+<summary><b>Vocabulary for this section</b> — protocol terms, abbreviations and challenge types used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ACME** | Automated Certificate Management Environment | RFC 8555 — the protocol that automates proving domain control and fetching a certificate |
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it is always certificate authority |
+| **CSR** | Certificate Signing Request | a request containing your public key, self-signed with your private key to prove you hold it |
+| **DNS** | Domain Name System | the naming system; `dns-01` proves control by publishing a record in your zone |
+| **TXT** | text record | a DNS record type that holds arbitrary text — where the `dns-01` proof goes |
+| **ALPN** | Application-Layer Protocol Negotiation | the TLS extension naming the application protocol; `tls-alpn-01` abuses it to carry the proof |
+| **VPN** | virtual private network | a private network overlay; it hides a host from the public internet, so `http-01` fails behind one |
+| **API** | application programming interface | here, the DNS provider's programmatic interface the client needs a token for |
+| **RFC** | Request for Comments | the internet standards document series |
+| **TLS** | Transport Layer Security | the protocol whose certificates are being issued |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Challenge** | the task the certificate authority sets to prove you control the name |
+| **`http-01`** | serve a given token at a fixed path under `/.well-known/acme-challenge/` on port 80 |
+| **`dns-01`** | publish a given value as a `TXT` record at `_acme-challenge.<domain>`; the only option for wildcards, and it works without a public port 80 |
+| **`tls-alpn-01`** | answer a TLS handshake on port 443 using a special ALPN protocol; for proxies that already own the socket |
+| **Token** | the unpredictable string the certificate authority asks you to publish |
+| **Wildcard certificate** | one covering `*.example.com`; issuable only via `dns-01` |
+| **ACME client** | the software running the loop — `certbot`, `cert-manager`, Caddy, Traefik |
+| **Let's Encrypt** | the non-profit certificate authority that made free automated certificates normal |
+| **Leaf** | your server's own certificate, at the bottom of the chain |
+| **Intermediate chain** | the certificates linking your leaf up to a trusted root; you must serve them |
+| **Public key** | the half published inside the certificate and sent in the CSR |
+| **Private key** | the secret half — **never sent to the certificate authority** |
+| **Self-signature** | signing your own CSR with your private key, proving you hold the key for the public key inside |
+| **Allowlist** | a firewall rule permitting only named sources — blocks the certificate authority's `http-01` fetch |
+| **Reload** | making a running server pick up the new certificate file; without it the old certificate stays in memory |
+| **Rate limit** | the issuer's cap on how many certificates you may request in a window — a reason to renew early and retry |
+
+</details>
 
 **ACME** (Automated Certificate Management Environment, RFC 8555) is the protocol behind Let's Encrypt and
 now most other CAs (Certificate Authorities). It automates exactly the step that used to require a human: **proving you control the
@@ -144,6 +218,42 @@ broken deploy costs you an alert instead of an incident.
 
 ## 3. Who owns the renewal — mapping §1's termination points
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and products used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol; whoever terminates it owns a certificate and its renewal |
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it is always certificate authority |
+| **ALB** | Application Load Balancer | AWS's layer-7 load balancer; a managed termination point |
+| **ACM** | AWS Certificate Manager | AWS's managed issuance and renewal service; keys it issues for AWS services cannot be exported |
+| **HSM** | hardware security module | tamper-resistant hardware that holds a private key and performs signatures without ever releasing it |
+| **ACME** | Automated Certificate Management Environment | the automation protocol these tools run underneath |
+| **AWS** | Amazon Web Services | the cloud provider |
+| **DNS** | Domain Name System | the naming system; DNS validation is what lets ACM renew silently forever |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Termination point** | the place where TLS is decrypted; the unit of certificate ownership |
+| **Managed edge** | a provider-run front door — CloudFront, an ALB, API Gateway, Cloudflare — that handles issuance and renewal for you |
+| **Kubernetes ingress** | the component that routes external traffic into a Kubernetes cluster and terminates TLS for it |
+| **`cert-manager`** | the Kubernetes controller that runs ACME in a loop and stores the result in a Secret |
+| **Issuer / ClusterIssuer** | `cert-manager` resources describing which certificate authority to request certificates from |
+| **Secret** | the Kubernetes object that holds the certificate and private key |
+| **`certbot`** | the widely used standalone ACME client |
+| **Reload hook** | the step in the renewal job that makes the server pick up the new file |
+| **Non-extractable key** | a private key the platform will not let anyone export — the strongest available protection, since a key that cannot be copied cannot leak |
+| **`us-east-1`** | the AWS region CloudFront requires its certificate to live in |
+| **Origin** | the backend behind the edge; the edge-to-origin leg is a second TLS connection with its own certificate |
+| **Hop** | one leg of the path; each has its own certificate and expiry |
+| **Cloudflare Flexible / Full modes** | settings where the origin leg is unencrypted, or encrypted but unverified — so an expired origin certificate fails silently rather than loudly |
+
+</details>
+
 §1 §7 established that TLS terminates *somewhere*, and possibly more than once. Renewal ownership follows
 termination exactly — and the branch you land in decides how much of §1 you have to run yourself
 (a managed edge such as CloudFront or an **ALB** — Application Load Balancer — runs most of it for you): **whoever terminates TLS must hold a valid certificate and must renew it.**
@@ -192,6 +302,42 @@ an origin certificate that expired — and if the edge is configured to not veri
 
 ## 4. HSTS — closing the gap before the first HTTPS request
 
+<details>
+<summary><b>Vocabulary for this section</b> — headers, directives and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HSTS** | HTTP Strict Transport Security | a response header telling the browser never to speak plaintext to this host again |
+| **HTTP** | HyperText Transfer Protocol | the plaintext protocol the first request would otherwise use |
+| **HTTPS** | HTTP Secure | HTTP over TLS |
+| **SSL** | Secure Sockets Layer | TLS's obsolete predecessor; the name survives in the term 'SSL stripping' |
+| **TLS** | Transport Layer Security | the protocol HSTS forces you onto |
+| **CT** | Certificate Transparency | the public logging of every issued certificate; now enforced unconditionally, which retired `Expect-CT` |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`Strict-Transport-Security`** | the HSTS header itself |
+| **`max-age`** | how many seconds the browser must remember the rule; one year is 31536000 |
+| **`includeSubDomains`** | extends the rule to every subdomain — including a plaintext legacy one you forgot |
+| **`preload`** | your consent to be added to the browser-shipped list; close to irreversible |
+| **Preload list** | hostnames compiled into the browser binary, so plaintext is refused before the browser has ever contacted you |
+| **Apex domain** | the bare domain, e.g. `example.com` without a subdomain; preload requires the header there |
+| **SSL stripping** | an on-path attacker intercepting the plaintext first request and never letting the upgrade to HTTPS happen |
+| **Trust on first use** | a scheme that is only safe once you have already had one honest contact — HSTS's gap, which preload closes |
+| **`301` redirect** | the permanent redirect a server sends to move a client from `http://` to `https://` |
+| **Click-through** | the browser's 'Advanced → Proceed anyway' escape from a certificate warning; HSTS removes it |
+| **Scheme** | the `http://` or `https://` prefix of a URL |
+| **Mixed content** | an HTTPS page loading a sub-resource over `http://`, which browsers block |
+| **`Content-Security-Policy`** | the header that governs what a page may load; `upgrade-insecure-requests` rewrites its `http://` sub-resources |
+| **`Expect-CT`** | a now-retired header that demanded Certificate Transparency proof |
+| **One-way door** | a decision that is cheap to make and very expensive to undo |
+
+</details>
+
 There is a hole §1 did not close. A user types `example.com`. The browser has no scheme, so it tries
 **`http://`** first, and your server answers `301 → https://`. The redirect works — but **that first request
 went out in plaintext**, and an attacker on the path can intercept it and simply never let the upgrade
@@ -238,6 +384,40 @@ retired, since Certificate Transparency enforcement became unconditional.
 
 ## 5. Version and cipher policy — a decision you can defend
 
+<details>
+<summary><b>Vocabulary for this section</b> — versions, terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol; 1.2 and 1.3 are the versions to serve |
+| **SSL** | Secure Sockets Layer | TLS's broken predecessor; versions 2.0 and 3.0 must be disabled |
+| **MAC** | Message Authentication Code | a tag proving a message was not altered; a separate ingredient in TLS 1.2 cipher suites |
+| **AEAD** | Authenticated Encryption with Associated Data | encryption that provides integrity in the same operation; all TLS 1.3 suites are AEAD |
+| **RFC** | Request for Comments | the standards series; RFC 8996 deprecated TLS 1.0 and 1.1 |
+| **API** | application programming interface | an endpoint with a known client population, so it can run a stricter profile |
+| **POODLE** | Padding Oracle On Downgraded Legacy Encryption | the attack that finished off SSL 3.0 |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Protocol version** | which generation of TLS the two sides agree to speak |
+| **Deprecated** | formally discouraged and slated for removal; still present in some old configurations |
+| **Cipher suite** | the named bundle an older TLS version negotiates — key exchange, authentication, bulk cipher and MAC together |
+| **Key exchange** | how the two sides agree the session key; negotiated separately in TLS 1.3 |
+| **Bulk cipher** | the algorithm that actually encrypts the data |
+| **Forward-secret suite** | one whose session key cannot be recovered later even if the server's long-term private key leaks |
+| **Cipher string** | the hand-written ordered list of allowed suites in a server config — something you should copy from a maintained source, not invent |
+| **Mozilla Server Side TLS** | the maintained generator that publishes the three profiles below |
+| **Modern profile** | TLS 1.3 only; right for internal services and APIs with known clients |
+| **Intermediate profile** | TLS 1.2 plus 1.3, forward-secret suites only; the default for a public website |
+| **Old profile** | permits legacy clients at a stated security cost; use only for a named, documented client |
+| **Client population** | the set of clients you have actually committed to serving — the real input to the decision |
+
+</details>
+
 Two knobs, and §1's lesson applies to both: **TLS 1.3 got safer by removing choices**, so your policy should
 remove choices too.
 
@@ -274,6 +454,47 @@ can legitimately have different profiles.
 ---
 
 ## 6. Performance — which fixes actually remove a round-trip
+
+<details>
+<summary><b>Vocabulary for this section</b> — mechanisms, terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RTT** | round-trip time | one trip to the far end and back; the unit the whole section is measured in |
+| **0-RTT** | zero round-trip time | sending application data in the very first packet, using a key from a previous session |
+| **PSK** | Pre-Shared Key | the secret carried over from a previous session that TLS 1.3 resumption uses |
+| **TCP** | Transmission Control Protocol | the transport under TLS; its own handshake costs a round-trip too |
+| **TLS** | Transport Layer Security | the protocol whose handshake is being optimised |
+| **OCSP** | Online Certificate Status Protocol | a live query to a certificate authority asking whether one certificate is still valid |
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it is always certificate authority |
+| **QUIC** | (a protocol name, not an abbreviation) | the UDP-based transport under HTTP/3 that merges the transport and cryptographic handshakes |
+| **CPU** | central processing unit | the compute cost resumption removes — the asymmetric signature and its verification |
+| **HTTP/3** | HyperText Transfer Protocol version 3 | HTTP carried over QUIC |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Session resumption** | reusing a secret from an earlier connection so the certificate exchange and signature can be skipped. **Removes CPU cost and bytes, not the round-trip** |
+| **Session ticket** | the encrypted blob the server hands the client so a later connection can resume |
+| **Ticket encryption key** | the server-side key that encrypts session tickets; must be shared across a fleet and rotated, typically daily |
+| **Key rotation** | replacing a key on a schedule so a stolen one is useful only briefly; an unrotated ticket key undermines forward secrecy |
+| **Forward secrecy** | the property that recording today's traffic stays useless even if a key leaks later |
+| **Early data** | the application data sent with the ClientHello in a 0-RTT connection |
+| **`ClientHello`** | the client's first TLS message |
+| **Replay** | an on-path attacker capturing early data and sending it again; the server cannot tell the copy from the original |
+| **Idempotent** | a request whose repetition changes nothing further — `GET` and `HEAD`; the only kind safe for 0-RTT |
+| **OCSP stapling** | your server fetching the signed freshness proof itself and including it in the handshake, so the client never contacts the certificate authority |
+| **`must-staple`** | a certificate flag requiring a stapled proof; clients then hard-fail instead of soft-failing |
+| **Soft-fail / hard-fail** | proceeding anyway when a status check is unreachable, versus refusing the connection |
+| **Connection migration** | QUIC's ability to keep a session alive when the client's network address changes |
+| **Keep-alive** | holding a connection open for reuse instead of reopening it |
+| **Connection pooling** | maintaining a set of already-open connections so new work pays no setup cost |
+| **Multiplexing** | carrying many concurrent requests over one connection, as HTTP/2 and HTTP/3 do |
+
+</details>
 
 §1 priced the TLS 1.3 handshake at **one round-trip** on top of TCP's one. On the cross-ocean path from
 Ch1 §1 that is real money. Three mechanisms are sold as the fix, and **they are not equivalent**.
@@ -330,6 +551,39 @@ not instead of it.**
 
 ## 7. mTLS — authenticating your own services
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **mTLS** | mutual TLS | TLS in which the client also presents a certificate, so both ends are authenticated |
+| **TLS** | Transport Layer Security | ordinary TLS authenticates the server only |
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it is always certificate authority |
+| **API** | application programming interface | here, the shared API key mTLS replaces |
+| **UX** | user experience | the browser's client-certificate picker, which is why mTLS failed at consumer scale |
+| **OAuth** | Open Authorization | the standard delegated-authorization framework used for user-facing authentication instead |
+| **SPIFFE** | Secure Production Identity Framework For Everyone | a standard for giving each workload a cryptographic identity |
+| **SPIRE** | the SPIFFE Runtime Environment | the reference implementation that issues and rotates those identities |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Client certificate** | a certificate presented by the connecting side to prove which service or user it is |
+| **Internal CA** | a certificate authority you run yourself, trusted only inside your own systems |
+| **Bearer token** | a credential that works for whoever holds it, from anywhere — the weakness of a shared API key |
+| **Enrolment** | the process of getting a certificate onto every client that needs one |
+| **Certificate rotation** | replacing short-lived certificates automatically and continuously; the hard part of mTLS at scale |
+| **Service mesh** | infrastructure (Istio, Linkerd) that issues, rotates and verifies service identities via sidecars |
+| **Sidecar** | a helper process deployed alongside each service that handles its TLS |
+| **Internal hop** | the leg between your load balancer and your origin — a good first place to apply mTLS |
+| **Zero trust** | an architecture that assumes the network is hostile and authenticates every connection |
+| **Session / token** | the user-facing alternative to client certificates for authenticating people |
+
+</details>
+
 §1 introduced **mTLS** (mutual TLS): the client also presents a certificate, so **both** ends are
 authenticated. Normal TLS authenticates the server to the client only.
 
@@ -357,6 +611,48 @@ origin hop from §1 §7), with an internal CA, and keep public traffic on ordina
 ---
 
 ## 8. Debugging TLS failures — a method, not a list
+
+<details>
+<summary><b>Vocabulary for this section</b> — commands, error strings and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol whose handshake is failing |
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it is always certificate authority |
+| **SAN** | Subject Alternative Name | the certificate field listing the hostnames it covers |
+| **SNI** | Server Name Indication | the ClientHello field naming which hostname the client wants |
+| **AIA** | Authority Information Access | a certificate field pointing at the issuer's certificate; how Chrome fetches a missing intermediate |
+| **MITM** | man-in-the-middle | an attacker or proxy sitting between the two ends |
+| **HSTS** | HTTP Strict Transport Security | the browser-side rule that can pin a host to HTTPS and cause browser-only symptoms |
+| **IP** | Internet Protocol | connecting by raw IP address sends no SNI |
+| **CI** | continuous integration | the automated build environment — a common source of one-place-only failures |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`openssl s_client`** | the command that opens a raw TLS connection and prints the chain and the verification result |
+| **`curl -vI`** | a verbose HTTP `HEAD` request — the quickest second opinion after `openssl` |
+| **Verify return code** | `openssl`'s verdict line; `ok (0)` means the chain verified |
+| **`unable to get local issuer certificate`** | the error meaning the intermediate is missing from what the server sent |
+| **Incomplete chain** | the server serves only its leaf, so clients that cannot fetch the intermediate themselves fail |
+| **Intermediate certificate** | the middle link between your leaf and a trusted root |
+| **`self signed certificate in chain`** | usually means either a middlebox is intercepting, or the client has no root store at all |
+| **Root store / CA bundle** | the list of trusted roots on the client; `alpine`, `distroless` and `scratch` images ship without one |
+| **`ca-certificates`** | the package that installs that bundle into a slim container image |
+| **Trust anchor** | the root the client must already trust for the chain to verify |
+| **Clock skew** | a wrong clock on the failing side, which reports a valid certificate as expired |
+| **Policy mismatch** | client and server share no protocol version or cipher in common, so no handshake is possible |
+| **Mixed content** | an HTTPS page loading `http://` sub-resources; a browser-only symptom |
+| **Corporate root** | a certificate authority installed on a managed machine so a proxy can decrypt traffic |
+| **`curl -k`** | the flag that disables certificate verification — for diagnosis only |
+| **`verify=False`** | the same in Python `requests` |
+| **`InsecureSkipVerify`** | the same in Go |
+| **`rejectUnauthorized: false`** | the same in Node.js |
+
+</details>
 
 Almost every TLS failure is one of six things. The value is in **isolating which one before changing
 anything**, because the symptoms overlap badly.
@@ -413,6 +709,40 @@ $ curl -vI https://example.com
 ---
 
 ## 9. Failure modes — the operational checklist
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ACME** | Automated Certificate Management Environment | the protocol behind automated renewal |
+| **TLS** | Transport Layer Security | the protocol; legacy versions left enabled are row 10 |
+| **HSTS** | HTTP Strict Transport Security | the header whose `preload` and `includeSubDomains` directives are rows 5 and 6 |
+| **0-RTT** | zero round-trip time | sending application data in the first packet; replayable, hence row 8 |
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it is always certificate authority |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Days-to-expiry** | the number of days the live endpoint's certificate still has — the property to alert on |
+| **Reload hook** | the step that makes a running server serve the newly written certificate |
+| **Termination point** | a place where TLS is decrypted; each has its own certificate and expiry |
+| **Incomplete chain** | serving the leaf without its intermediate, so non-browser clients cannot verify |
+| **`preload`** | the HSTS directive that puts your domain on the browser-shipped list; effectively permanent |
+| **`includeSubDomains`** | the HSTS directive extending the rule to every subdomain, including plaintext legacy ones |
+| **Ticket key** | the server-side key encrypting session tickets; unrotated, it is a forward-secrecy hole |
+| **Forward secrecy** | the property that a later key leak cannot decrypt recorded past traffic |
+| **Idempotent method** | one safe to repeat — `GET`, `HEAD`; the only thing 0-RTT may carry |
+| **`must-staple`** | a certificate flag requiring a stapled OCSP proof, turning a soft failure into a hard one |
+| **Stapling path** | your server's route to the certificate authority's status responder, which now needs monitoring |
+| **Mozilla Intermediate** | the maintained TLS profile to use as your minimum policy |
+| **`InsecureSkipVerify` / `verify=False` / `rejectUnauthorized: false` / `-k`** | the four common ways verification gets disabled in code |
+| **Wildcard certificate** | one covering `*.example.com`; convenient, but one key compromise covers every subdomain |
+
+</details>
 
 | # | Failure | Why it happens | What to do |
 |---|---|---|---|

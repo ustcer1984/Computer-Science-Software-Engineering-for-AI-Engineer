@@ -47,6 +47,41 @@ or do them where the user can't see the wait.
 
 ## 1. The claim, made visceral
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every unit in the latency table (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ns** | nanosecond | one billionth of a second — the scale of an L1 cache hit (about 1 ns) and a RAM read (about 100 ns) |
+| **µs** | microsecond | one millionth of a second, i.e. 1000 ns — an SSD random read is about 100 µs, a same-datacentre round trip about 500 µs |
+| **ms** | millisecond | one thousandth of a second, i.e. 1000 µs — a disk seek is about 10 ms, an intercontinental round trip about 150 ms |
+| **L1** | level-1 cache | the CPU's smallest and fastest cache, one cycle or so away from the core |
+| **RAM** | random-access memory | physical main memory |
+| **SSD** | solid-state drive | flash storage with no moving parts |
+| **NVMe** | non-volatile memory express | the modern fast interface an SSD is reached through |
+| **HDD** | hard disk drive | spinning magnetic storage, whose *seek* is the mechanical head movement |
+| **CPU** | central processing unit | the processor core, from whose point of view all these waits are measured |
+| **I/O** | input/output | any transfer to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Latency** | how long one operation takes from start to finish |
+| **CPU cycle** | one tick of the processor clock, roughly a nanosecond at these scales |
+| **Cache reference** | reading a value that is already in a CPU cache rather than in main memory |
+| **Random read** | fetching a block from an arbitrary location, as opposed to streaming sequentially |
+| **Round trip** | one there-and-back exchange with another machine |
+| **Datacentre** | one facility of machines; a round trip within it is far cheaper than one between regions |
+| **Seek** | the mechanical repositioning a spinning disk does before it can read — why an HDD is milliseconds, not microseconds |
+| **Memory hierarchy** | the ladder of storage from cache to RAM to flash to disk to network, each tier orders of magnitude slower than the one above |
+| **Scaling analogy (Brendan Gregg's)** | stretching 1 ns into 1 second so the hierarchy maps onto human time — seconds to years |
+| **Blocking** | your thread sitting idle for the whole of one of these waits (§2 of this chapter) |
+
+</details>
+
 §1 gave the numbers; here's what they *mean* on a human scale. Take the classic trick (Brendan Gregg's): scale so that one CPU cycle
 (≈ 1 ns of L1 access) becomes **1 second**. Then the rest of the hierarchy stretches to times you can feel:
 
@@ -67,6 +102,49 @@ optimization but a necessity. Everything else in this section is about not payin
 ---
 
 ## 2. Three words people conflate: latency, throughput, bandwidth — and Little's Law
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in Little's Law (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ms** | millisecond | one thousandth of a second — the units of the 40 ms example call |
+| **Gbit/s** | gigabits per second | a billion bits per second, the usual unit for network bandwidth |
+| **LLM** | large language model | the service behind the fan-out example |
+| **p99** | 99th-percentile latency | the value 99% of requests come in under; a *latency* problem, distinct from a capacity problem (§5) |
+| **MIT** | Massachusetts Institute of Technology | John Little's institution |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $L$ |  | the average number of requests *in flight* inside the system at once — the concurrency |
+| $\lambda$ | "lambda" | the throughput: requests arriving and completing per second |
+| $W$ |  | the average latency one request spends inside the system, start to finish |
+| $\times$ | "times" | ordinary multiplication; $L = \lambda \times W$ is Little's Law |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Latency** | how long *one* operation takes — the thing a user waits for |
+| **Throughput** | how many operations complete per unit time — the thing a system is rated by |
+| **Bandwidth** | bytes moved per unit time; throughput measured in data volume rather than operations |
+| **Little's Law** | concurrency equals throughput times latency; rearranged, throughput equals concurrency divided by latency |
+| **In flight** | started but not yet finished — the requests currently inside the system |
+| **Concurrency** | how many operations are in progress at once |
+| **Fan-out** | issuing many calls from one request and waiting on them together |
+| **Event loop** | the one-thread architecture that makes holding many requests in flight cheap (§2 of this chapter) |
+| **Queuing theory** | the branch of applied maths that studies waiting lines; Little's Law is one of its most general results |
+| **Arrival pattern** | how requests show up over time — steady, bursty, random; Little's Law holds regardless |
+| **Service-time distribution** | how the per-request service times are spread out; also irrelevant to Little's Law |
+| **Queue discipline** | the order in which waiting items are served, e.g. first-in-first-out |
+| **Capacity problem** | not having enough throughput; distinct from a p99 problem, which is about the slow tail |
+
+</details>
 
 You cannot reason about performance until these are separate in your head:
 
@@ -99,6 +177,49 @@ concurrency* you need to get there. (And §2 is what makes holding 1,000 in flig
 ---
 
 ## 3. Where the time actually goes: serial round-trips and the critical path
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the symbols in the critical-path arithmetic (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ORM** | object-relational mapper | a library presenting database rows as objects — the usual source of the N+1 query problem |
+| **DB** | database | the store each of those queries is a round trip to |
+| **RTT** | round-trip time | the time for one request to reach a remote service and the reply to come back |
+| **API** | application programming interface | the interface one service calls another through |
+| **ms** | millisecond | one thousandth of a second — the units of every number in this section |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\max$ | "max" | the largest of the listed values — what concurrent branches cost, versus the sum they cost serially |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Critical path** | the longest chain of *dependent* operations through a request; its length is the request's latency |
+| **Dependent operation** | one that cannot start until an earlier one's result is in hand |
+| **Round trip** | one there-and-back exchange with a database, cache or service |
+| **N+1 query problem** | one query to fetch a list, then one more per item — 101 sequential round trips where 2 would do |
+| **Lazy loading** | fetching a related field only when it is first touched, which is what produces the extra N queries |
+| **Join** | asking the database to combine the related rows in a single query |
+| **Batched `IN (...)` query** | fetching all the needed rows at once by listing their keys in one query |
+| **Chatty API** | a design where each call's result is needed to make the next, forcing serial round trips |
+| **Cross-region** | between datacentres far apart, where each round trip is on the order of 150 ms |
+| **Sequential `await`** | awaiting two independent calls one after the other, paying their sum instead of their max |
+| **Fan out** | issuing independent calls concurrently and waiting for all of them |
+| **Straggler** | the slowest branch of a fan-out, which alone sets the finish time |
+| **Index** | a database structure that makes a lookup fast without scanning the table |
+| **Denormalize** | pre-store data in the shape it is read in, trading duplication for fewer or cheaper queries |
+| **API gateway** | the front-door service a client request arrives at before being routed onward |
+| **Render** | the final step assembling the fetched pieces into a response |
+
+</details>
 
 Zoom into one request. Its latency is not "the code" — it's the **critical path**: the longest chain of *dependent* operations, each of which
 must wait for the previous. The classic killers are all the same shape — **round-trips forced to happen one after another**:
@@ -148,6 +269,49 @@ separate a senior instinct from a junior one:
 
 ## 4. The four levers for fighting latency
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — the four levers, as a checklist (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RTT** | round-trip time | the time for a request to reach a remote service and the reply to return |
+| **CDN** | content delivery network | a network of edge caches serving content from near the user instead of from the origin |
+| **BFF** | backend-for-frontend | a service that collapses many chatty calls into one call shaped for a particular client |
+| **GraphQL** | (a query language for APIs) | lets a client ask for exactly what it needs in one request rather than several |
+| **LLM** | large language model | the generator whose token-by-token streaming is the worked example of hiding latency |
+| **ms** | millisecond | one thousandth of a second — the units in the five-call figure |
+| **I/O** | input/output | transfers to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Round trip** | one there-and-back exchange with a device or remote service; the unit latency is counted in |
+| **Lever 1 — fewer round-trips** | remove trips rather than speed them up; the highest-leverage move, because count multiplies latency |
+| **Batch** | ask for many things in one request — a multi-get, a bulk insert, one `IN (...)` query |
+| **Multi-get** | a single call fetching many keys at once |
+| **Bulk insert** | a single call writing many rows at once |
+| **Coalesce** | merge several pending identical or overlapping requests into one |
+| **Cache** | keep a nearer copy so the trip need not happen at all |
+| **Lever 2 — overlap** | run independent trips at once, so the total is the max rather than the sum |
+| **Pipelining** | sending the next request before the previous reply has arrived, so waits overlap |
+| **Lever 3 — move the data closer** | promote data up a tier of the §1 hierarchy: RAM instead of disk, in-region instead of cross-region, edge instead of origin |
+| **Read replica** | a copy of a database serving reads, placed near the service that reads it |
+| **Origin** | the authoritative server a CDN edge falls back to |
+| **Colocating** | placing services in the same datacentre so a cross-region round trip becomes a local one |
+| **Tier** | one rung of the latency hierarchy; each rung climbed is a 10–1000× cut |
+| **Lever 4 — hide the latency** | keep the wait off the path the user experiences |
+| **Prefetch** | fetch data before it is asked for, on the guess that it will be |
+| **Stream** | return the first piece of a result immediately and the rest as it is produced |
+| **Time-to-first-token** | how long until an LLM's first output token appears — the number streaming optimizes |
+| **Background work** | doing the slow part after responding, rather than before |
+| **Speculate** | start the probable next step before you are certain it is needed |
+| **Critical path** | the longest chain of dependent steps; the only place optimization changes the answer (§3) |
+
+</details>
+
 Every latency optimization is one of exactly four moves. Learn them as a checklist:
 
 **Lever 1 — Fewer round-trips (the biggest one).** Since each trip costs a full device latency, *removing* trips beats speeding them up.
@@ -180,6 +344,56 @@ responding; **speculate** (start the probable next step before you're sure). The
 ---
 
 ## 5. Tail latency: averages lie, and fan-out amplifies the tail
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the tail-at-scale arithmetic (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **p50 / p95 / p99 / p99.9** | 50th / 95th / 99th / 99.9th percentile latency | the value that share of requests come in under; p50 is the median, p99.9 the deep tail |
+| **SLA** | service-level agreement | the promised performance a service is held to, normally stated as a percentile |
+| **GC** | garbage collection | the runtime's automatic memory reclamation; its pauses are a classic tail-latency source |
+| **LLM** | large language model | the backend each fanned-out call goes to in the worked example |
+| **ms** | millisecond | one thousandth of a second |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $N$ |  | the fan-out: how many backends one user request waits on |
+| ${0.99}^{N}$ | "nought point nine nine to the N" | the chance *all* $N$ backends are fast when each is fast 99% of the time; one minus it is the chance of hitting at least one slow backend |
+| ${0.01}^{2}$ | "nought point nought one squared" | the chance both replicas of a hedged request land in their slow tail at once — one in ten thousand |
+| $\approx$ | "approximately equals" | the two sides are close, not exact |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Tail latency** | the slow end of the latency distribution — what percentiles measure and averages hide |
+| **Percentile** | the value a given share of requests come in under |
+| **Median (p50)** | the middle request; half are faster, half slower |
+| **Average / mean** | the arithmetic average, which hides the shape of the distribution and should not be alerted on |
+| **Tail at scale** | Dean and Barroso's result that a rare per-backend slowness becomes the typical experience once requests fan out |
+| **Fan-out** | one request waiting on many backends at once |
+| **Max of many samples** | the statistic a fan-out's completion time actually is — and the maximum of many draws lives in the tail |
+| **Garbage-collection pause** | a runtime stall while memory is reclaimed |
+| **Queueing** | waiting behind other work for a resource |
+| **Contention** | several workers competing for the same lock or resource |
+| **Noisy neighbour** | another tenant on the same hardware stealing the capacity you expected |
+| **Cascading failure** | one slow component causing timeouts and retries that overload the next, and so on |
+| **Timeout** | a cap on how long you will wait, converting an unbounded tail into a bounded one |
+| **Retry** | re-issuing a request after a timeout or failure — the cost paid for that bound |
+| **Hedged / backup request** | sending the same request to a second replica after a short delay and taking whichever answers first |
+| **Replica** | another copy of a service or dataset that can answer the same request |
+| **`as_completed`** | processing results as they arrive rather than blocking on the slowest |
+| **Partial harvest** | accepting the results that arrived within the deadline instead of waiting for all |
+| **Straggler** | the one slow call that would otherwise set the whole batch's completion time |
+| **Wall-clock** | elapsed real time, which for a fan-out batch is a tail statistic by construction |
+
+</details>
 
 This is the section that most separates people who've *operated* systems from those who've only built them — and it's the direct theory of
 your eval pipeline.
@@ -220,6 +434,45 @@ statistic, by construction. The figure's other lesson: each **10× improvement i
 
 ## 6. Latency-bound vs bandwidth-bound (so you optimize the right thing)
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the symbols in the bandwidth-delay product (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RTT** | round-trip time | the time for a request to reach the far end and the reply to return |
+| **GB** | gigabyte | a billion bytes |
+| **GB/s** | gigabytes per second | the unit of memory or link bandwidth — what sets LLM decode throughput |
+| **TCP** | Transmission Control Protocol | the reliable stream protocol whose *window* limits how many bytes may be in flight unacknowledged |
+| **LLM** | large language model | the workload whose decode phase is bandwidth-bound |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\times$ | "times" | ordinary multiplication — bandwidth $\times$ RTT gives the bytes needed in flight to keep a pipe full |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Latency-bound** | the payload is tiny, so nearly all the time is the round trip itself; fewer and overlapped trips are the only fixes |
+| **Bandwidth-bound** | the payload is huge, so the time is bytes divided by bandwidth and the round trip is negligible; a fatter pipe is the fix |
+| **Payload** | the bytes actually being transferred, as opposed to the cost of asking |
+| **Key-value get** | fetching one small value by its key — the canonical latency-bound operation |
+| **Decode (LLM)** | the token-by-token generation phase, which must stream the model's weights through the memory bus for every token |
+| **Weights** | the model's parameters, read repeatedly during decode |
+| **Memory bus** | the path between RAM and the processor, whose GB/s ceiling sets decode speed |
+| **Batching** | serving several requests together so one pass over the weights is amortized across them |
+| **Bandwidth-delay product** | bandwidth multiplied by round-trip time — the bytes that must be in flight to keep a long, fat link busy |
+| **TCP window** | how many bytes TCP allows in flight before waiting for an acknowledgement; too small a window starves a high-latency link |
+| **Satellite link** | the standard example of huge bandwidth with huge latency, which feels slow on one stream |
+| **Throughput** | operations or bytes completed per unit time (§2) |
+
+</details>
+
 One more distinction that decides which lever even applies, and it's a callback to your LLM-serving world. An I/O transfer is dominated by one
 of two things:
 
@@ -238,6 +491,36 @@ bandwidth-bound?" is the first question before you pick a lever — they have *o
 ---
 
 ## 7. The keeper for the whole section
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used in the closing keeper (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **p99 / p99.9** | 99th / 99.9th percentile latency | the value that share of requests come in under — the numbers to report and alert on, never the average |
+| **I/O** | input/output | transfers to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Critical path** | the longest chain of *dependent* round trips through one request; its length is that request's latency |
+| **Round trip** | one there-and-back exchange with disk, cache or network — each worth millions of instructions (§1) |
+| **Fewer trips** | the first lever: batch, cache, join (§4) |
+| **Overlap** | the second lever: run independent trips concurrently, turning a sum (Σ) into a maximum |
+| **Σ (sigma)** | the summation sign, used here as shorthand for "the sum of the individual latencies" |
+| **Move closer** | the third lever: promote data up the §1 tier ladder |
+| **Hide the wait** | the fourth lever: stream or prefetch so the user does not experience it |
+| **Tail statistic** | a number determined by the slow end of a distribution — what your latency becomes once you fan out |
+| **Fan out** | issuing many calls at once and waiting on all of them |
+| **Timeout** | a cap on waiting, which bounds the tail |
+| **Hedged request** | a duplicate request to a second replica, which cuts the tail |
+| **Little's Law** | concurrency equals throughput times latency — so throughput is bought with concurrency, not with a faster single request (§2) |
+| **Throughput** | operations completed per unit time; a separate axis from latency |
+
+</details>
 
 For anything that touches disk, cache, or network:
 

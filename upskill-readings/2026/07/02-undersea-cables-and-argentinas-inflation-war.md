@@ -12,6 +12,54 @@
 
 ## 1. 🌊 The internet is a bundle of glass threads in the mud — and it's under attack
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | here, the machine-learning workloads whose data centres are driving the new private cable builds |
+| **API** | application programming interface | the machine-to-machine interface one program calls on another over the network |
+| **NATO** | North Atlantic Treaty Organization | the trans-Atlantic military alliance now patrolling Baltic seabed infrastructure |
+| **km** | kilometre | |
+| **km/s** | kilometres per second | unit of speed — light in fibre travels at roughly 200,000 of them |
+| **kV** | kilovolt | one thousand volts; the scale of the power fed down a cable's copper conductor |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Submarine (undersea) cable** | a fibre-optic cable laid along the seabed; about 600 of them carry ~99% of intercontinental internet traffic |
+| **Optical fibre** | a glass strand thinner than a human hair that carries data as pulses of light |
+| **Repeater** | an amplifier built inline every ~50–100 km that re-boosts the light before it fades out |
+| **Copper conductor** | the metal layer inside the cable that carries high-voltage power from shore to feed every repeater along the route |
+| **Armour** | extra steel wrapping added to the near-shore sections, where anchors and fishing gear are the real danger |
+| **Landing (shore) station** | the coastal building where a cable comes ashore, receives its power feed, and hands traffic to land networks |
+| **Terabit per second** | a trillion bits per second — the unit in which a modern cable's capacity is quoted |
+| **Consortium** | a group of telecom companies that jointly finance, own and share a cable — the traditional ownership model |
+| **Project Waterworth** | Meta's announced private cable of over 50,000 km linking five continents, routed to avoid geopolitical flashpoints |
+| **Starlink** | SpaceX's low-Earth-orbit satellite internet constellation — the usual candidate in "could satellites replace cables?" |
+| **Trawler** | a fishing boat that drags gear along the seabed; a leading accidental cause of cable faults |
+| **Anchor drag** | a ship letting its anchor scrape along the bottom — the cheapest way to sever a cable, accidentally or otherwise |
+| **Cable fault** | any break or damage that takes a cable out of service; roughly 150–200 happen worldwide each year |
+| **Shadow fleet** | ageing, opaquely owned and flagged tankers used to move sanctioned oil outside normal shipping oversight |
+| **Cook Islands-flagged** | registered in a small state with light shipping regulation — a "flag of convenience" that obscures real ownership |
+| **EstLink-2** | the Finland–Estonia undersea electricity cable severed alongside data cables on Christmas Day 2024 |
+| **Grey zone (warfare)** | hostile action kept deliberately below the threshold that would justify an armed response |
+| **Deniability** | the attacker's ability to pass the act off as an accident — the whole point of cutting a cable with an anchor |
+| **Sabotage** | deliberate damage to infrastructure |
+| **Chokepoint** | a narrow sea passage through which a disproportionate share of traffic must pass, such as the Red Sea |
+| **Baltic Sentry** | NATO's January 2025 mission of frigates, maritime patrol aircraft and naval drones guarding Baltic seabed cables |
+| **Naval drone** | an uncrewed surface or underwater vessel, used here for persistent watch over the seabed |
+| **Nautical mile** | the distance unit used at sea, 1,852 m |
+| **Grapnel** | the hooked tool a repair ship drags along the seabed to snag a broken cable and haul it up |
+| **Splice** | the hand-made join, done under a microscope, that fuses two severed fibre ends back into one |
+| **Cable repair ship** | one of only a few dozen specialised vessels worldwide that recover and re-join broken cables; the fleet is ageing |
+| **Microwave / satellite backup** | alternative wireless links kept on standby for when the cables are cut, as Taiwan does for the Matsu Islands |
+
+</details>
+
 🔗 **See it for yourself (spend five minutes here — it's mesmerising):** [TeleGeography Submarine Cable Map](https://www.submarinecablemap.com/)
 🔗 **The "99%" myth, checked:** [Do submarine cables carry 99% of intercontinental traffic? — TeleGeography](https://resources.telegeography.com/2023-mythbusting-part-3) · [Invisible highways: the vast network of undersea cables — UN News, Feb 2026](https://news.un.org/en/story/2026/02/1166867)
 🔗 **Big Tech now builds its own:** [Project Waterworth — Engineering at Meta](https://engineering.fb.com/2025/02/14/connectivity/project-waterworth-ai-subsea-infrastructure/) · [Meta's cable "skirts conflict zones" — IEEE Spectrum](https://spectrum.ieee.org/undersea-internet-cables-meta-waterworth)
@@ -70,6 +118,52 @@ The unnerving part is the **deniability**. Was it an anchor accidentally dragged
 
 ## 2. 🪚 The chainsaw and the 211%: Argentina's shock war on inflation
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **IMF** | International Monetary Fund | the international lender governments turn to in a balance-of-payments crisis; agreed a fresh programme with Argentina |
+| **US** | United States | |
+| **bn** | billion | a thousand million |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Inflation** | the rate at which the general price level is rising |
+| **Annual inflation** | the price rise measured over twelve months — 211% means prices more than tripled in a year |
+| **Monthly inflation** | the price rise within a single month; Argentina's peaked at 25.5% in December 2023 |
+| **Hyperinflation** | inflation fast enough that money stops working as a store of value and people rush to spend or swap it |
+| **Disinflation** | inflation coming *down* — prices still rising, just more slowly. Not the same as deflation |
+| **Peso** | Argentina's national currency |
+| **Greenbacks** | slang for US dollar banknotes, the savings vehicle Argentines actually trust |
+| **Sovereign default** | a government failing to pay its debts; Argentina has done it nine times |
+| **Anarcho-capitalist** | someone who would shrink the state to nothing and leave markets to do the rest — Javier Milei's self-description |
+| **Fiscal** | to do with government taxing and spending, as opposed to monetary (interest rates and the money supply) |
+| **Fiscal deficit** | a government spending more than it takes in |
+| **Money printing** | the central bank creating new pesos to cover that gap — the fiscal root of the inflation, on Milei's diagnosis |
+| **Budget (fiscal) surplus** | taking in more than you spend; Argentina's first in about fourteen years |
+| **Austerity** | deliberately cutting government spending and subsidies to close the deficit |
+| **Subsidy** | a government payment that holds a price — energy, transport — below what it costs to supply |
+| **Public works** | state-funded construction and infrastructure spending; frozen as part of the cuts |
+| **Devaluation** | an official, deliberate cut in the currency's exchange rate — here about 50% overnight |
+| **Exchange rate** | the price of the peso in foreign currency |
+| **Overvalued (in real terms)** | a currency held stronger than domestic prices justify, which makes the country's exports uncompetitive |
+| **Reserves** | the central bank's stock of foreign currency; "thin reserves" means little ammunition left to defend the peso |
+| **Recession** | a sustained contraction in economic activity — here induced on purpose to stop the printing at its source |
+| **Output gap** | the distance between what an economy is producing and what it could produce at full employment |
+| **Credibility** | whether people believe the government will actually stick to the policy — what makes disinflation cheap rather than brutal |
+| **Central-bank independence** | insulating the central bank from a government that would rather print money than tax or cut |
+| **Dollarisation** | abandoning the national currency altogether and adopting the US dollar as legal tender |
+| **Poverty rate** | the share of the population below the official poverty line; it spiked above 50% in early 2024 |
+| **Front-loaded** | of pain or cost: arriving at the start, with the benefits arriving later — the core of Milei's bet |
+| **Stabilisation** | a programme that ends a high-inflation crisis and brings prices under control |
+
+</details>
+
 🔗 **The live data (watch it fall):** [Argentina inflation — Trading Economics](https://tradingeconomics.com/argentina/inflation-cpi)
 🔗 **The debate — miracle or warning?** [Milei's inflation "miracle" is a warning to the world, not a blueprint — The Conversation](https://theconversation.com/javier-mileis-inflation-miracle-in-argentina-is-a-warning-to-the-world-not-a-blueprint-278840)
 🔗 **The man and the method:** [Javier Milei — Wikipedia](https://en.wikipedia.org/wiki/Javier_Milei) · [Argentina's inflation hits a 7-year low (Nov 2025) — Semafor](https://www.semafor.com/article/11/13/2025/argentinas-inflation-slows-again-following-years-of-crisis)
@@ -113,7 +207,7 @@ xychart-beta
 </details>
 <!-- DIAGRAM:END -->
 
-**The cost, and the fight.** None of this was free. The engineered recession meant real pain: **poverty spiked above 50%** in early 2024, pensions and wages were crushed, and activity contracted before it recovered. Milei's bet — the classic disinflation gamble you met in your Econ track — is that the pain is *front-loaded and temporary*, and that low, stable inflation will unlock lasting growth. The IMF, which agreed a fresh **~$20bn** programme, has called the stabilisation one of the most successful in recent memory. Markets partly agree.
+**The cost, and the fight.** None of this was free. The engineered recession meant real pain: **poverty spiked above 50%** in early 2024, pensions and wages were crushed, and activity contracted before it recovered. Milei's bet — the classic disinflation gamble you met in your Econ track — is that the pain is *front-loaded and temporary*, and that low, stable inflation will unlock lasting growth. The IMF, which agreed a fresh **~USD 20bn** programme, has called the stabilisation one of the most successful in recent memory. Markets partly agree.
 
 But the critics — this is the live debate worth reading — argue two things. First, that it's **not a repeatable blueprint**: Argentina's starting point was so catastrophic that "shock" was politically survivable in a way it wouldn't be elsewhere, and the human cost was severe. Second, that it's **fragile**: hold the currency down to crush inflation and you risk an overvalued peso, thin reserves, and a fresh crisis — and indeed inflation showed signs of **re-accelerating into early 2026** (back toward the low-30s% annually), a reminder that Argentina has "won" this fight before and lost the peace. Milei even campaigned on **abolishing the central bank** and **dollarising** the economy outright — the ultimate "tie your own hands" move against money-printing (and a vivid real-world case of the *central-bank-independence* theme from your unemployment session). He hasn't done it, but the fact it's seriously on the table tells you how deep the distrust of the peso runs.
 

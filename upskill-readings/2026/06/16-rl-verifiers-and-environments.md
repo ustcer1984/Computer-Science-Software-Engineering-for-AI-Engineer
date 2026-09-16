@@ -12,6 +12,67 @@
 
 ## 1. From RLVR to LLM-as-judge — how RL actually trains agents in 2026
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RL** | reinforcement learning | training by trying things and updating on the reward the attempt earns |
+| **RLHF** | reinforcement learning from human feedback | RL where the reward comes from a model trained on human preference rankings |
+| **RLVR** | reinforcement learning from verifiable rewards | RL where the reward comes from a deterministic check instead of a learned reward model |
+| **LLM** | large language model | the model being trained, and also, in another role, the thing doing the grading |
+| **GRPO** | Group Relative Policy Optimization | the RL algorithm that scores a group of samples against their own mean and drops the critic |
+| **PPO** | Proximal Policy Optimization | the earlier policy-gradient algorithm GRPO simplifies, which needs a critic network |
+| **RAG** | retrieval-augmented generation | fetching documents and requiring the model to answer only from them |
+| **CRM** | customer relationship management | the business system in the "did the agent edit it correctly" example |
+| **AIME** | American Invitational Mathematics Examination | the competition maths benchmark quoted for the R1-Zero jump |
+| **RULER** | (OpenPipe's judge method) | a general LLM-as-judge reward that ranks several trajectories relative to each other |
+| **7B / 28B** | 7 billion / 28 billion parameters | model sizes; the point is how much extra machinery RLHF stacks around a small policy |
+| **arXiv** | (open preprint server) | where the cited papers live |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Policy** | the model being trained — the thing that chooses the next action or token |
+| **Reward model** | a separate network trained to predict human preference, standing in for a human grader |
+| **Critic (value model)** | in PPO, a network that estimates how good a state is, used as the baseline for the advantage |
+| **Reference model** | a frozen copy of the starting model, kept to penalise drifting too far from it |
+| **Verifier** | a deterministic check that returns a reward only when the output genuinely passes |
+| **Verifiable reward** | a reward you can compute by running something — a test suite, a compiler, an exact-match comparison |
+| **Ground truth** | the known-correct answer a candidate output is compared against |
+| **Unit test** | an automated test of a small piece of code; pass/fail is free reward signal |
+| **Binary signal** | a reward that is only right or wrong, with nothing in between |
+| **Partial credit** | a graded score between 0 and 1, rather than pass/fail |
+| **Rollout** | one complete attempt by the policy: prompt in, actions and output out |
+| **Trajectory** | the sequence of states and actions in a rollout |
+| **Group** | the batch of rollouts GRPO samples for a single prompt, scored against each other |
+| **Advantage** | how much better a rollout was than the baseline; in GRPO, its deviation from the group mean |
+| **Mean / standard deviation** | the group's average score and its spread — the two numbers GRPO normalises by |
+| **Relative ranking** | an ordering of candidates, without any claim about their absolute scores |
+| **Calibrated grader** | a scorer whose absolute numbers mean something consistent — which GRPO turns out not to need |
+| **Policy-gradient update** | adjusting the model's parameters in the direction that makes higher-reward outputs likelier |
+| **Chain-of-thought** | the model writing intermediate reasoning steps before its answer |
+| **Emergent behaviour** | a capability that appears from training pressure without being explicitly taught |
+| **Process supervision** | rewarding the intermediate steps rather than only the final answer |
+| **LLM-as-judge** | using a model to grade another model's output when no deterministic check exists |
+| **Reward function** | whatever maps an output to a number the training loop optimises |
+| **Hand-coded reward** | a hand-written scoring rule; brittle, and slow to iterate on |
+| **Faithfulness** | whether an answer stays within the sources it was given |
+| **Hallucination** | confidently asserting something not supported by the input or reality |
+| **Universal verifier** | OpenAI's term for extending checkable rewards into domains without an obvious automatic check |
+| **Constitutional AI** | Anthropic's approach of training against a written document of rules instead of mass human grading |
+| **Arena** | a setup where models compete and a judge picks winners, producing a ranking |
+| **Leaderboard** | the published ordering that comes out of such a competition |
+| **Exploration** | in RL, trying enough different things to find the good ones before committing |
+| **Cold start** | the early period when there is no usable signal yet, so rankings are mostly noise |
+| **Reward hacking** | scoring well by exploiting the grader rather than by doing the task well |
+| **Adversarial** | actively searching for the grader's weak spot — which a compiler has none of and a judge does |
+
+</details>
+
 🔗 **Primary (your level, technical-but-readable):** [How Top AI Labs Are Building RL Agents in 2026 — Daily Dose of DS](https://blog.dailydoseofds.com/p/how-top-ai-labs-are-building-rl-agents)
 🔗 **Canonical anchor (you've likely read it — the origin of RLVR-at-scale):** [DeepSeek-R1: Incentivizing Reasoning in LLMs via RL (arXiv 2501.12948)](https://arxiv.org/abs/2501.12948)
 🔗 **GRPO origin (the algorithm, if you want the math):** [DeepSeekMath / GRPO (arXiv 2402.03300)](https://arxiv.org/abs/2402.03300)
@@ -57,6 +118,68 @@ flowchart TB
 
 ## 2. Environments are the new moat — and the verifier *is* your eval
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RL** | reinforcement learning | training by acting and updating on the reward earned |
+| **RLVR** | reinforcement learning from verifiable rewards | RL driven by a deterministic check rather than a learned reward model |
+| **LLM** | large language model | the model being trained and, in the judge role, the thing grading |
+| **RLER** | reinforcement learning with evolving rubrics | co-evolving the grading rubric alongside the policy so it cannot be gamed into staleness |
+| **GRPO** | Group Relative Policy Optimization | the algorithm that needs only relative order within a group of rollouts |
+| **RAG** | retrieval-augmented generation | answering from retrieved documents; one of the hard-to-verify domains |
+| **ARR** | annual recurring revenue | the run-rate revenue figure quoted for the coding products |
+| **VC** | venture capital | the kind of firm that published the market thesis |
+| **E = (T, H, V, S, C)** | Tasks, Harness, Verifier, State, Config | the taxonomy's five components of an RL environment |
+| **arXiv** | (open preprint server) | where the cited frontier papers live |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Moat** | a durable advantage competitors cannot easily copy |
+| **Commoditized** | widely available and no longer a differentiator — the article's claim about base-model capability |
+| **Environment** | the whole apparatus an agent is trained in: tasks, tools, state, and the reward that grades it |
+| **Task (T)** | one problem instance the agent is asked to complete |
+| **Harness (H)** | the runtime around the model: the agent loop, its tools, system prompt, context manager and turn limit |
+| **Verifier (V)** | the component that turns an output into a reward between 0 and 1 |
+| **State (S)** | the environment's own mutable world, plus the ability to reset, replay and persist it |
+| **Config (C)** | the settings that pin down a run so it can be reproduced |
+| **Agent loop** | the repeated cycle of model call, tool call, observation, next decision |
+| **Rollout protocol** | the rules for how one attempt is run from start to finish |
+| **Atomic tools** | a small set of primitive actions — read, write, edit, shell — rather than many bespoke ones |
+| **Turn limit** | the cap on how many steps an attempt may take |
+| **Context manager** | the part of the harness deciding what stays in the model's window as the run grows |
+| **Long-horizon workflow** | a task spanning many steps over a long time, where the reward arrives only at the end |
+| **Learning signal** | the usable information about what was better, which is what training actually consumes |
+| **Benchmark** | a fixed task set with a fixed grader, used to compare systems — a *frozen* environment |
+| **Frozen** | not changing during or between runs, which is what makes comparisons meaningful |
+| **Eval** | your own measurement harness for whether a system is doing its job |
+| **Reward function** | whatever maps an output to the number being optimised |
+| **Rubric** | the written criteria a judge grades against |
+| **Static rubric** | a rubric that never changes, and therefore can be learned and exploited |
+| **Reward hacking** | finding the cheap path to a high score instead of doing the task well |
+| **Generation–verification gap** | producing plausible output keeps getting cheaper while telling good from subtly wrong gets harder |
+| **Turn-level reward** | grading each step rather than only the final outcome |
+| **Credit assignment** | working out which step in a long trajectory deserves the credit or the blame |
+| **Injected tool errors** | deliberately failing some tool calls during training so the agent learns to recover |
+| **Robustness** | continuing to work when conditions are worse than in training |
+| **Verifiable vs judgeable** | a check you can run versus a model's opinion; the first is cheaper, steadier and cannot be argued with |
+| **Deterministic check** | a check that gives the same verdict every time for the same input |
+| **Dense verification** | verification available at every step and for free — code's tests, compiler and diffs |
+| **Policy** | the model being trained |
+| **Rollout** | one complete attempt by the policy in the environment |
+| **Train/test leak** | letting the evaluation data or criteria bleed into training, so the score stops measuring anything |
+| **Ensemble (of judges)** | using several graders and combining them to reduce any single one's bias |
+| **Deterministic pre-filter** | a cheap mechanical check run before the judge, so the judge only sees what passed |
+| **Human-in-the-loop** | a person supplying the grading signal — the most accurate and least scalable option |
+| **Cold start** | the early phase with no trustworthy signal, where good rollouts and lucky ones look alike |
+
+</details>
+
 🔗 **Primary (the strategic/economic argument):** [Who Will Win the RL Environment Market — and Why (Wing VC)](https://www.wing.vc/content/who-will-win-the-rl-environment-market--and-why)
 🔗 **The technical anatomy (a taxonomy of RL environments):** [A Taxonomy of RL Environments for LLM Agents — Lee Hanchung](https://leehanchung.github.io/blogs/2026/03/21/rl-environments-for-llm-agents/)
 🔗 **Practitioner's view (building tasks & reward systems):** [RL Environments: Building Tasks & Reward Systems for Agents — SuperAnnotate](https://www.superannotate.com/blog/rl-environments)
@@ -96,9 +219,9 @@ flowchart LR
 
 **The two laws of verifiers (write these down).**
 1. **"Verifiable beats judgeable."** A programmatic check (string-match, code execution) is faster, cheaper, and *more consistent* than an LLM-judge — and crucially it **can't be talked into a good score.** So the design move is always: *push as much of your eval/verifier toward deterministic checks as the task allows*, and only fall back to a judge for the irreducibly subjective part. (This is the same instinct as "define errors out of existence" from your 06-15 session, applied to grading.)
-2. **The generation–verification gap widens with capability.** As agents get better, generating plausible output gets *cheaper* while telling good from subtly-wrong gets *harder* — "reward signals often become noisier, not cleaner" at scale. This is why **static rubrics get exploited** (the model finds the cheap path to a high score — reward hacking) and why frontier work **co-evolves the rubric with the policy** (RLER), uses **turn-level** rewards for finer credit assignment, and even **injects 5–10% tool errors** so agents stay robust. Auto-generating *environments* is now ~$4 each — so the bottleneck has fully shifted from *making* environments to *trusting their verifiers.*
+2. **The generation–verification gap widens with capability.** As agents get better, generating plausible output gets *cheaper* while telling good from subtly-wrong gets *harder* — "reward signals often become noisier, not cleaner" at scale. This is why **static rubrics get exploited** (the model finds the cheap path to a high score — reward hacking) and why frontier work **co-evolves the rubric with the policy** (RLER), uses **turn-level** rewards for finer credit assignment, and even **injects 5–10% tool errors** so agents stay robust. Auto-generating *environments* is now ~USD 4 each — so the bottleneck has fully shifted from *making* environments to *trusting their verifiers.*
 
-**Why "coding is the holy grail."** Code has *dense, free* verification — tests pass or fail, it compiles or doesn't, diffs are checkable — so RL signal is available at industrial scale. That's not a coincidence with where the money is: Wing notes **Claude Code ≈ $1B ARR in six months, Cursor ≈ $2B ARR.** The domains that are easy to *verify* are exactly the domains where agents are getting good fastest. Corollary for your roadmap: when you pick a problem for an agent to own, **ask "what's my verifier?" first** — if the answer is "a human eyeballs it," you're in the hard regime; if it's "a check I can run," you're on the holy-grail track.
+**Why "coding is the holy grail."** Code has *dense, free* verification — tests pass or fail, it compiles or doesn't, diffs are checkable — so RL signal is available at industrial scale. That's not a coincidence with where the money is: Wing notes **Claude Code ≈ USD 1B ARR in six months, Cursor ≈ USD 2B ARR.** The domains that are easy to *verify* are exactly the domains where agents are getting good fastest. Corollary for your roadmap: when you pick a problem for an agent to own, **ask "what's my verifier?" first** — if the answer is "a human eyeballs it," you're in the hard regime; if it's "a check I can run," you're on the holy-grail track.
 
 **Connect it to *you*.** Three concrete take-homes:
 1. Your **Arena judge rubric is a verifier with a reward-hacking surface.** If models can win by being verbose, confident, or formatting nicely rather than being *right*, your rubric is exploitable — same disease as a gameable RL reward. The fix is law #1: move what you can to deterministic checks; keep the judge for the residue.
@@ -108,7 +231,7 @@ flowchart LR
 **Questions to pressure-test while you read:**
 - A benchmark is a *frozen* environment; a training environment *evolves* its tasks/rubric mid-run. What goes wrong if you accidentally let your **eval** evolve (e.g. you keep "improving" the rubric while comparing models across weeks)? What's the eval analog of the train/test leak? (This is why benchmarks freeze — connect it to why you can't move the goalposts mid-experiment.)
 - "Verifiable beats judgeable," yet labs lean on LLM-judges anyway for most real tasks. Reconcile: when is paying the judge's *inconsistency + gameability* tax worth it, and what's the cheapest way to *bound* that tax? (Hint: ensembles, deterministic pre-filters, and reading 1's "relative-ranking-only" property.)
-- Auto-generated environments cost ~$4 and the bottleneck is verifier *quality*, not quantity. If you could spend a fixed budget either generating 1,000 new tasks or hardening the verifier on your existing 100, which buys more — and what does your answer say about where to point your own eval effort? (Wing: "environment diversity matters as much as quality" — so it's a *real* trade-off, not an obvious win either way.)
+- Auto-generated environments cost ~USD 4 and the bottleneck is verifier *quality*, not quantity. If you could spend a fixed budget either generating 1,000 new tasks or hardening the verifier on your existing 100, which buys more — and what does your answer say about where to point your own eval effort? (Wing: "environment diversity matters as much as quality" — so it's a *real* trade-off, not an obvious win either way.)
 
 ---
 

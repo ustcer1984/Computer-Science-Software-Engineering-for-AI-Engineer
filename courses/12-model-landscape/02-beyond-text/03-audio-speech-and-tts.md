@@ -43,6 +43,61 @@ high-quality TTS fast — **flow matching** — is the exact same one you dissec
 
 ## 1. The representation problem
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **STFT** | short-time Fourier transform | Fourier transform of successive short windows of the signal — the basis of the spectrogram |
+| **PCM** | pulse-code modulation | raw uncompressed audio: amplitude sampled at a fixed rate and quantised to a fixed bit depth |
+| **DSP** | digital signal processing | the classical signal-analysis toolkit the section borrows from |
+| **Hz / kHz** | hertz / kilohertz | cycles per second, and thousands of cycles per second |
+| **ms** | millisecond | thousandth of a second — the unit of STFT window and hop lengths |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $f_{s}$ | "f-sub-s" | the sampling rate; the $s$ subscript means "sampling" |
+| $f_{\max}$ | "f-max" | the highest frequency present in the signal |
+| $f_{0}$ | "f-zero" | the fundamental frequency (pitch); the zero subscript means the lowest harmonic |
+| $f$ | "f" | a frequency in hertz, the input to the mel warp |
+| $m$ | "m" | the warped frequency in mels, the output of the mel formula |
+| $\mu$-law | "mu-law" | the logarithmic companding curve used to quantise amplitude perceptually |
+| $L$ | "capital L" | sequence length in units the model must process |
+| $O(L^{2})$ | "big-O of L squared" | self-attention cost growing with the square of the sequence length |
+| `2^{16}` | "two to the sixteenth" | the number of amplitude levels 16-bit PCM can represent |
+| $\log_{10}$ | "log base ten" | the base-ten logarithm in the mel formula |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Sampling rate** | how many amplitude readings per second are taken from the pressure wave |
+| **Bit depth** | how many bits encode each amplitude reading |
+| **Quantisation** | rounding a continuous amplitude to one of a finite set of levels |
+| **Companding** | compressing amplitude non-linearly before quantising, so quiet detail survives |
+| **Nyquist–Shannon theorem** | you must sample at least twice the highest frequency you want to represent |
+| **Aliasing** | frequencies above half the sampling rate folding down and masquerading as lower ones |
+| **Receptive field** | how much of the input one output unit can actually see |
+| **Phoneme** | the smallest contrastive sound unit of a language |
+| **Spectrogram** | the magnitude of the STFT: a time × frequency image of energy |
+| **Window / hop** | the length of each analysed slice, and how far the analysis advances between slices |
+| **Time–frequency uncertainty** | the hard trade-off that a window cannot be sharp in both time and frequency |
+| **Mel scale** | a perceptually warped frequency axis, roughly logarithmic above a few hundred hertz |
+| **Mel-spectrogram** | a spectrogram passed through a mel-spaced triangular filterbank, usually log-scaled |
+| **Filterbank** | the set of overlapping band filters that pool STFT bins into mel channels |
+| **Harmonic** | an integer multiple of the fundamental frequency, visible as horizontal bands |
+| **Formant** | a resonance of the vocal tract; the pattern of formants distinguishes vowels |
+| **Fricative** | a turbulent consonant such as "s", broadband in frequency |
+| **Phase** | the timing offset of each frequency component — discarded by a magnitude spectrogram |
+| **Griffin–Lim** | the classical iterative algorithm for guessing a consistent phase from magnitudes |
+| **Vocoder** | the model that renders a waveform from a spectrogram, effectively synthesising the missing phase and fine detail |
+
+</details>
+
 ### What sound is, to a computer
 
 Sound is a pressure wave — a continuous 1-D function of time. A microphone samples it into a
@@ -140,6 +195,51 @@ With the representations in hand, the model families fall out naturally.
 
 ## 2. The classic TTS cascade (2017–2021)
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TTS** | text-to-speech | synthesising speech audio from written text |
+| **GAN** | generative adversarial network | a generator trained against discriminators that judge realism |
+| **seq2seq** | sequence-to-sequence | an encoder–decoder model mapping one variable-length sequence to another |
+| **AR / non-AR** | autoregressive / non-autoregressive | producing outputs one step at a time versus all at once in parallel |
+| **mel** | mel-spectrogram | the perceptually warped spectrogram from §1, used as the pipeline's interface |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\mathbf{x}$ | "bold x" | the whole waveform, as a vector of samples; bold marks the full sequence |
+| $x_{t}$ | "x-sub-t" | the single waveform sample at time index $t$ |
+| $x_{<t}$ | "x-less-than-t" | all samples before $t$ — the autoregressive conditioning history |
+| $p(\mathbf{x})$ | "p of bold x" | the probability of the whole waveform |
+| $\prod_{t}$ | "product over t" | multiply the per-sample conditional probabilities over all time steps |
+| $\mid$ | "given" | conditioning: what follows the bar is what is held fixed |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Cascade** | a pipeline of separately trained stages, here text → mel → waveform |
+| **Acoustic model** | the stage mapping text (or phonemes) to a mel-spectrogram |
+| **Alignment** | the correspondence between input symbols and output frames |
+| **Monotonic alignment** | an alignment that never goes backwards or skips — enforced structurally by a duration model |
+| **Duration predictor** | the module predicting how many frames each phoneme should occupy |
+| **Length regulator** | the operation that repeats each phoneme's hidden state for its predicted duration |
+| **Variance adaptor** | FastSpeech 2's module predicting pitch and energy alongside duration |
+| **Skipping / repeating / babbling** | the characteristic failure modes of soft attention-based alignment |
+| **Dilated causal convolution** | a convolution with gaps between kernel taps, giving a large receptive field with few layers, and seeing only the past |
+| **Inverse autoregressive flow** | an invertible model that generates all samples in parallel, used as the distilled student of WaveNet |
+| **Distillation** | training a fast student to match a slow teacher's distribution |
+| **Discriminator** | the adversarial judge; HiFi-GAN uses several, at multiple periods and scales |
+| **Transposed convolution** | the upsampling operation that expands frame-rate features up to sample-rate audio |
+| **Mel bottleneck** | the hand-designed, phase-free interface between the two stages, and the cascade's main weakness |
+
+</details>
+
 Text-to-speech was, for years, a pipeline of specialised models. Understanding the cascade is worth it:
 it names the sub-problems, and every "end-to-end" model since is best understood as *collapsing* one or
 more of these stages.
@@ -192,6 +292,51 @@ of the section is largely the story of **removing that bottleneck**.
 ---
 
 ## 3. Neural audio codecs — turning audio into discrete tokens
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VQ** | vector quantization | replacing a vector by the index of the nearest codebook entry |
+| **VQ-VAE** | vector-quantized variational autoencoder | an autoencoder with a discrete codebook bottleneck |
+| **RVQ** | residual vector quantization | a cascade of codebooks, each quantising what the previous one left over |
+| **GAN** | generative adversarial network | the adversarial training used for the codec's decoder |
+| **DAC** | Descript Audio Codec | a high-fidelity open neural codec |
+| **kHz** | kilohertz | thousands of samples per second |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $N$ | "capital N" | the number of codebooks in the RVQ cascade (equivalently, tokens per frame) |
+| $K$ | "capital K" | the number of entries in each codebook |
+| $K^{N}$ | "K to the N" | the number of distinct combinations the cascade can express |
+| $N \log_{2} K$ | "N log-base-two K" | the bits needed to store one frame: $\log_{2} K$ bits per codebook, $N$ of them |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Neural audio codec** | a learned encoder–quantiser–decoder that turns waveforms into discrete tokens and back |
+| **Encoder** | strided convolutions compressing the waveform to a low-rate sequence of latent vectors |
+| **Strided convolution** | a convolution that skips positions, downsampling as it goes |
+| **Latent vector** | the continuous per-frame representation before quantisation |
+| **Vector quantiser** | the module snapping a latent to its nearest codebook entry |
+| **Codebook** | the learned set of representative vectors; its indices are the tokens |
+| **Token (audio)** | the integer index of a codebook entry |
+| **Frame** | one time step of the encoder's output, costing $N$ tokens under RVQ |
+| **Residual** | what a quantiser failed to capture, passed on to the next codebook |
+| **Commitment loss** | the VQ term pulling encoder outputs toward the codebook entries they select |
+| **Reconstruction loss** | the term penalising difference between input and decoded waveform |
+| **Coarse-to-fine** | the first codebook carrying structure, later ones carrying refinement |
+| **Bitrate** | bits per second of encoded audio |
+| **Flattening vs parallel prediction** | emitting the $N$ codebook streams one after another versus all at once — the RVQ ordering problem |
+| **Delay / interleaving pattern** | offsetting the codebook streams in time as a middle ground between the two |
+
+</details>
 
 This is the pivotal idea of modern audio, and the one that connects the field to everything you know
 about LLMs. It answers the sequence-length problem from §1 not by moving to the frequency domain, but by
@@ -258,6 +403,45 @@ audio-specific wrinkle that has no clean analogue in text.
 ---
 
 ## 4. The LLM-ification of audio
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LM** | language model | a model predicting the next token in a sequence, here over audio tokens |
+| **AR / NAR** | autoregressive / non-autoregressive | token-by-token generation versus parallel generation |
+| **RVQ** | residual vector quantization | the multi-codebook scheme from §3 producing acoustic tokens |
+| **TTS** | text-to-speech | speech synthesis from text |
+| **HuBERT / w2v-BERT** | hidden-unit BERT / wav2vec-BERT | self-supervised speech models whose discrete units serve as semantic tokens (§6) |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $N$ | "capital N" | the number of RVQ codebook streams the generative model must order |
+| $i$ | "i" | the codebook index (which level of the residual cascade) |
+| $i-1$ | "i minus one" | the next-coarser codebook, used as context in MusicGen's delay pattern |
+| $t$ | "t" | the frame index along time |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Semantic token** | a low-rate discrete unit capturing linguistic content and phonetics, from a self-supervised speech model |
+| **Acoustic token** | an RVQ codec token capturing timbre, prosody and recording detail |
+| **Timbre** | the voice quality that identifies a speaker or instrument, independent of what is said |
+| **Prosody** | rhythm, stress and intonation |
+| **Staged generation** | model the semantic stream first, then condition the acoustic stream on it |
+| **Prompt (audio)** | a short reference recording, encoded to tokens and prepended so the model continues in that voice |
+| **In-context learning** | adapting behaviour from the prompt alone, with no weight update |
+| **Zero-shot voice cloning** | reproducing an unseen speaker's voice from a few seconds of reference audio |
+| **Codebook delay pattern** | offsetting each RVQ stream by one step so level $i$ at frame $t$ is predicted from level $i-1$ of the same frame |
+| **Long-range structure** | song- or discourse-level organisation over minutes, still only partly solved |
+
+</details>
 
 Once audio is discrete tokens, the entire autoregressive-transformer playbook applies. This is the
 dominant paradigm of the last three years, and it collapses the §2 cascade into a single language model.
@@ -330,6 +514,38 @@ form (a song has verse/chorus structure over minutes), which is still only partl
 
 ## 5. The diffusion / flow-matching branch
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TTS** | text-to-speech | speech synthesis from text |
+| **DiT** | diffusion transformer | the patch-token transformer denoiser from §1 and §2, reused here for speech |
+| **FM** | flow matching | training a velocity field along a straight noise-to-data path (§2) |
+| **DDPM** | denoising diffusion probabilistic models | the many-step stochastic diffusion sampler used as the speed baseline |
+| **NAR** | non-autoregressive | generating the whole output in parallel rather than step by step |
+| **AR** | autoregressive | token-by-token generation |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Score-based denoising** | generating by following the learned gradient of log-density, as in §1 |
+| **Conditional flow matching** | flow matching where the target velocity is defined per noise–data pair |
+| **Sampling steps** | the number of solver evaluations needed to go from noise to output |
+| **Infilling** | regenerating a masked region of audio so it fits its surrounding context |
+| **Speech editing** | replacing words or segments in an existing recording via infilling |
+| **Monotonic alignment** | a strictly forward, non-skipping text-to-frame correspondence |
+| **Duration predictor** | the module assigning a frame count to each input symbol — dropped entirely by E2/F5-TTS |
+| **Filler tokens** | padding added to the character sequence so it matches the audio length, letting alignment be learned implicitly |
+| **Latent diffusion (audio)** | diffusion run over codec latents rather than waveforms or mels |
+| **Factorised attributes** | modelling content, prosody, timbre and acoustic detail as separate controllable factors |
+| **Zero-shot TTS** | synthesising in a voice the model was never fine-tuned on |
+
+</details>
+
 Not everyone went autoregressive. The other major branch generates audio (usually the mel-spectrogram or
 a codec latent) with **diffusion or flow matching** — and this is where §2's machinery reappears
 verbatim.
@@ -365,6 +581,43 @@ strong on parallel speed and editing/infilling. The frontier (§7) increasingly 
 ---
 
 ## 6. Recognition and representation: ASR and self-supervised speech
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ASR** | automatic speech recognition | transcribing speech to text |
+| **HMM** | hidden Markov model | the classical state-sequence model used for frame-to-phone alignment |
+| **GMM** | Gaussian mixture model | the classical acoustic likelihood model paired with HMMs |
+| **DNN** | deep neural network | the neural replacement for the GMM in hybrid systems |
+| **CTC** | connectionist temporal classification | a loss that sums over all valid alignments of labels to frames, so no frame-level labels are needed |
+| **RNN-T** | recurrent neural network transducer | a streaming-friendly end-to-end ASR architecture |
+| **seq2seq** | sequence-to-sequence | encoder–decoder with attention |
+| **BERT** | bidirectional encoder representations from transformers | the masked-prediction pretraining recipe HuBERT borrows |
+| **log-mel** | log mel-spectrogram | the §1 representation used as Whisper's input |
+| **language-ID** | language identification | deciding which language is being spoken |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Pronunciation lexicon** | the hand-built dictionary mapping words to phone sequences in classical ASR |
+| **End-to-end** | one network from audio to text, replacing the separate acoustic, lexicon and language models |
+| **Marginalise over alignments** | sum the probability over every way the labels could line up with the frames |
+| **Weakly supervised** | trained on noisy, automatically harvested labels rather than curated transcripts |
+| **Multitask training** | one model trained on several tasks, selected by special tokens |
+| **Robustness** | working across accents, noise and domains without fine-tuning |
+| **Self-supervised learning** | learning representations from unlabelled audio by solving a pretext task |
+| **Contrastive task** | identifying the true latent among distractors, which forces informative representations |
+| **Masked prediction** | predicting the content of hidden spans from their context |
+| **Offline k-means** | clustering features into discrete IDs outside the training loop, to create prediction targets |
+| **Discrete unit** | a cluster or codebook index treated as a pseudo-phoneme — the source of semantic tokens |
+| **Fine-tuning** | further training a pretrained model on a small labelled dataset for a specific task |
+
+</details>
 
 Generation is half the story. The **encoder** side — turning audio into text or into useful
 representations — both matters on its own and *feeds* the generative side (semantic tokens come from
@@ -410,6 +663,37 @@ between understanding and generation.
 
 ## 7. The convergence: native audio LLMs and full-duplex speech
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ASR** | automatic speech recognition | the speech-to-text stage of a cascade |
+| **TTS** | text-to-speech | the text-to-speech stage of a cascade |
+| **LLM** | large language model | the text reasoning model in the middle of the cascade |
+| **ms** | millisecond | the unit conversational latency is measured in |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Cascade (voice assistant)** | ASR then LLM then TTS, three models in series |
+| **Native audio model** | one model consuming and producing audio tokens directly, with no text round-trip |
+| **Latency** | the delay between the user finishing (or not) and the system's audio starting |
+| **Turn-taking** | the strict alternation of speaker and listener assumed by cascades |
+| **Full-duplex** | modelling both participants' audio streams at once, so listening and speaking overlap |
+| **Backchannel** | the short listener noises ("mm-hm") that overlap the speaker's turn |
+| **Interruption (barge-in)** | the user speaking over the system, which requires full-duplex handling |
+| **Paralinguistics** | everything carried by speech beyond the words: emotion, tone, emphasis, laughter, speaker identity, background sound |
+| **Text bottleneck** | the loss of paralinguistics when audio is forced through a text representation |
+| **Inner monologue** | Moshi's jointly predicted, time-aligned text stream that guides the audio tokens and yields a transcript |
+| **Mimi** | the low-latency neural codec Moshi generates over |
+| **Speech-to-speech translation** | producing spoken output in another language directly from spoken input |
+
+</details>
+
 The obvious way to give an LLM a voice is a **cascade**: ASR (speech → text) → LLM (text → text) → TTS
 (text → speech). It works, and it's how most "talk to your assistant" systems were built. But it has two
 deep flaws:
@@ -446,6 +730,38 @@ systems parallel), and it's where the field is heading.
 
 ## 8. The current landscape (mid-2025)
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TTS** | text-to-speech | synthesis of speech from text |
+| **ASR** | automatic speech recognition | transcription of speech to text |
+| **GAN** | generative adversarial network | the vocoder training scheme behind HiFi-GAN |
+| **RVQ** | residual vector quantization | the multi-codebook tokenizer behind EnCodec and DAC |
+| **LM** | language model | here, an autoregressive model over audio tokens |
+| **NAR** | non-autoregressive | parallel rather than step-by-step generation |
+| **SFX** | sound effects | non-speech, non-music audio |
+| **omni** | omni-modal | a single model handling text, vision and audio together |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Vocoder** | mel-spectrogram to waveform renderer |
+| **Neural codec** | learned waveform-to-token-and-back compressor |
+| **Codec LM** | a language model trained over codec tokens |
+| **Latent diffusion (audio)** | diffusion over a compressed audio latent rather than the waveform |
+| **Self-supervised model** | pretrained on unlabelled audio; yields ASR features and semantic units |
+| **Factorised codec** | a codec whose latent separates content, prosody, timbre and acoustic detail |
+| **Full-duplex** | simultaneous listening and speaking over two modelled streams |
+| **Open-weight** | weights published for self-hosting (which is not the same as an open commercial licence) |
+| **Consumer hardware** | a single desktop GPU rather than a datacentre accelerator |
+
+</details>
+
 | Model | Org | Type | Representation | What it's for |
 |---|---|---|---|---|
 | HiFi-GAN | Kakao | GAN vocoder | mel → waveform | fast, high-quality vocoding (still a default) |
@@ -469,6 +785,71 @@ image (2022) and video (2024), the open/proprietary gap in audio narrowed sharpl
 ---
 
 ## 9. Choosing a model — an application cheatsheet
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TTS** | text-to-speech | synthesising speech from text |
+| **STT / ASR** | speech-to-text / automatic speech recognition | transcribing speech |
+| **S2S** | speech-to-speech | one model taking audio in and emitting audio out |
+| **S2TT** | speech-to-text translation | spoken input, translated text output |
+| **S2ST** | speech-to-speech translation | spoken input, spoken output in another language |
+| **VC** | voice conversion | changing speaker identity while keeping the words and prosody |
+| **SFX** | sound effects | non-speech, non-music audio generation |
+| **TTFA / TTFB** | time to first audio / time to first byte | how long before the first audio chunk arrives — the metric for streaming |
+| **e2e** | end-to-end | the whole pipeline's latency, not one stage's |
+| **WER** | word error rate | ASR accuracy: insertions plus deletions plus substitutions, over reference length |
+| **RTFx** | real-time factor (speed multiple) | how many seconds of audio are processed per second of compute |
+| **DER** | diarization error rate | the error metric for "who spoke when" |
+| **SSM** | state-space model | a non-attention sequence architecture, used by Cartesia for low latency |
+| **SALM** | speech-augmented language model | an LLM decoder conditioned on speech encoder output |
+| **MMAU** | massive multi-task audio understanding | an audio-reasoning benchmark |
+| **SDR** | signal-to-distortion ratio | the quality metric for source separation, in decibels |
+| **GPU / VRAM / CPU** | graphics processing unit / video RAM / central processing unit | the hardware, its memory, and the fallback processor |
+| **GGUF / AWQ** | GPT-generated unified format / activation-aware weight quantization | a quantized weight file format, and a quantization method |
+| **HF** | Hugging Face | the model hosting hub referenced throughout |
+| **GA** | general availability | a product released beyond preview |
+| **ctx** | context | the model's context-window length |
+| **MIT / Apache-2.0** | permissive open-source licences | commercial use allowed |
+| **CC-BY / CC-BY-NC** | Creative Commons attribution / attribution-non-commercial | the second forbids commercial use |
+| **CPML** | Coqui Public Model License | XTTS-v2's non-commercial licence |
+| **SOTA** | state of the art | the current best published result |
+| **LADSPA** | Linux audio developer's simple plugin API | the plugin format for the live-microphone denoiser |
+| **UVR** | Ultimate Vocal Remover | the community toolchain for music stem separation |
+| **NeMo** | NVIDIA's speech/LLM toolkit | the framework NVIDIA's ASR and diarization models ship in |
+| **EU / EN / ZH** | European Union / English / Chinese | language-coverage shorthand |
+| **QA** | question answering | answering questions about the audio |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Dominant axis** | the one constraint (quality, latency, cost, privacy, licence, languages) that actually decides the choice |
+| **Hosted** | run by a vendor behind an API; you pay per unit and your audio leaves your infrastructure |
+| **Self-host** | you run the weights on your own hardware; no per-call cost, full privacy |
+| **Open-weight** | weights are downloadable — which says nothing on its own about commercial rights |
+| **Non-commercial weights** | permissive code but weights you may not ship in a product |
+| **Streaming TTS** | emitting audio chunks as they are synthesised rather than after the whole utterance |
+| **Speaker diarization** | segmenting audio by who is speaking |
+| **Voice conversion** | keeping the words and delivery, replacing the speaker identity |
+| **Source separation** | splitting a mixture into its constituent sources |
+| **Stem separation** | the music case: vocals, drums, bass and other |
+| **Speech enhancement** | suppressing noise, echo or distortion in a recording |
+| **Bandwidth extension** | reconstructing missing high frequencies to restore fidelity |
+| **Quantization** | storing weights at lower precision so a model fits a smaller GPU |
+| **Watermarking** | an inaudible marker embedded in generated audio to identify it as synthetic |
+| **Code-switching** | changing language mid-utterance while keeping the same voice |
+| **End-of-turn detection** | deciding when the user has finished speaking so the agent may respond |
+| **Inpainting (music)** | regenerating a section inside an existing track |
+| **Foley** | synthesised everyday sound effects for picture |
+| **Leaderboard** | a public benchmark ranking — to be filtered by your task and language, not read as an overall score |
+| **Consent gating** | requiring verified permission before cloning a voice |
+
+</details>
 
 Sections 1–8 explain *how* these models work. This section is the practical companion you asked for
 — *which* one to reach for per use case (hosted/SOTA **and** best open-weight), and the trade-off that
@@ -541,7 +922,7 @@ VibeVoice for long-form multi-speaker.
 |---|---|---|---|
 | **[ElevenLabs v3](https://elevenlabs.io/v3)** | hosted | — | Most expressive hosted TTS (inline emotion "audio tags"), 70+ langs; GA ~Feb 2026 (⚡ supersedes Multilingual v2). *Not* the realtime model — use Flash for that |
 | **[Google Gemini 3.1 Flash TTS](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-tts/)** | hosted | — | Newest Google TTS, native multi-speaker dialogue, SynthID watermark (⚡ supersedes 2.5 TTS); [Chirp 3 HD](https://docs.cloud.google.com/text-to-speech/docs/chirp3-hd) for classic per-voice |
-| **[OpenAI gpt-4o-mini-tts](https://developers.openai.com/api/docs/models/gpt-4o-mini-tts)** | hosted | — | Cheap, steerable ("instruct how to say it"), ~$0.015/min; already-on-OpenAI convenience |
+| **[OpenAI gpt-4o-mini-tts](https://developers.openai.com/api/docs/models/gpt-4o-mini-tts)** | hosted | — | Cheap, steerable ("instruct how to say it"), ~USD 0.015/min; already-on-OpenAI convenience |
 | **[Azure Neural HD V3](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/high-definition-voices)** | hosted | — | Enterprise scale, 700+ voices |
 | **[Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M)** | open (Apache-2.0) | ✅ (even CPU) | The open default — 82M, faster-than-real-time, 8 langs/54 voices; zero per-char cost |
 | **[Microsoft VibeVoice-1.5B](https://github.com/microsoft/VibeVoice)** | open | ✅ | **Best open long-form multi-speaker** — up to ~90 min, 4 speakers; podcasts/dialogue audiobooks (Realtime-0.5B variant for streaming) |
@@ -611,7 +992,7 @@ in/out — lower latency, keeps tone/emotion). See §7.
 |---|---|---|---|
 | **[OpenAI GPT-Realtime-2.1](https://developers.openai.com/api/docs/models)** | hosted (S2S) | ~300–500 ms; tools, reasoning, 128k ctx; +Realtime-Translate & -Whisper siblings | Default production voice agent (⚡ supersedes gpt-4o-realtime) |
 | **[Google Gemini Flash Native Audio](https://blog.google/products-and-platforms/products/gemini/gemini-audio-model-updates/)** | hosted (S2S) | ~380 ms, 90+ langs; strong function-calling | Broad language coverage / on GCP |
-| **[Amazon Nova 2 Sonic](https://aws.amazon.com/bedrock/nova/)** | hosted (S2S) | On Bedrock; ~$0.27/hr input *(vendor)* | If you're on AWS |
+| **[Amazon Nova 2 Sonic](https://aws.amazon.com/bedrock/nova/)** | hosted (S2S) | On Bedrock; ~USD 0.27/hr input *(vendor)* | If you're on AWS |
 | **[Moshi](https://github.com/kyutai-labs/moshi)** | open (S2S) | Full-duplex, ~200 ms, "inner monologue"; ~7B, wants 16–24 GB | The open full-duplex option; self-host/on-prem |
 | **[Step-Audio 2 mini](https://github.com/stepfun-ai/Step-Audio2)** | open (Apache-2.0) | 8B, ~24 GB; #1 open on MMAU, beats GPT-4o-Audio on several | Self-hosted GPT-4o-class voice chat, no per-min fee |
 | **[GLM-4-Voice](https://github.com/zai-org/GLM-4-Voice)** | open | ~9B, EN/ZH, low latency | Bilingual EN/ZH self-hosted voice |
@@ -653,7 +1034,7 @@ in/out — lower latency, keeps tone/emotion). See §7.
 | **[Udio](https://www.udio.com)** | hosted | — | Realistic vocals — but ⚠ **downloads disabled since Oct 2025** (UMG settlement); verify before building on it |
 | **[ACE-Step 1.5 / XL](https://github.com/ace-step/ACE-Step)** | open (MIT) | ✅ (6 GB turbo → 20 GB XL) | Open standout — MIT (commercial OK), competitive with Suno on SongEval; the self-host default |
 | **[YuE 7B](https://github.com/multimodal-art-projection/YuE)** | open (Apache-2.0) | 24 GB (16 tight) | Full-length songs **with lyrics/vocals**, commercial-friendly |
-| **[Stable Audio 3.0 (open variants)](https://stability.ai/news-updates/meet-stable-audio-3-the-model-family-built-for-artistic-experimentation-with-open-weight-models)** | open (Community ≤$1M) | ✅ | 3 of 4 variants open-weight; instrumental/sound-design, duration control. (⚠ **there is no "Stable Audio Open 2.0"** — this is the successor) |
+| **[Stable Audio 3.0 (open variants)](https://stability.ai/news-updates/meet-stable-audio-3-the-model-family-built-for-artistic-experimentation-with-open-weight-models)** | open (Community ≤USD 1M) | ✅ | 3 of 4 variants open-weight; instrumental/sound-design, duration control. (⚠ **there is no "Stable Audio Open 2.0"** — this is the successor) |
 | **[MusicGen (stereo)](https://github.com/facebookresearch/audiocraft)** | open (⚠ weights CC-BY-NC) | ✅ | Mature instrumental baseline — but **weights non-commercial** |
 
 ### 9.11 Text-to-sound-effects / general audio generation (foley, SFX, ambience)
@@ -661,7 +1042,7 @@ in/out — lower latency, keeps tone/emotion). See §7.
 | Model | Type | When to reach for it |
 |---|---|---|
 | **[ElevenLabs Sound Effects v2](https://elevenlabs.io/docs/overview/capabilities/sound-effects)** | hosted | Quick 48 kHz SFX from a prompt, seamless looping, video-to-SFX; commercial on paid tiers |
-| **[Stable Audio Open / 3.0 Small SFX](https://huggingface.co/stabilityai/stable-audio-open-1.0)** | open (Community ≤$1M) | **Commercial-friendly** self-hosted SFX/foley/loops with duration control; on-device variants |
+| **[Stable Audio Open / 3.0 Small SFX](https://huggingface.co/stabilityai/stable-audio-open-1.0)** | open (Community ≤USD 1M) | **Commercial-friendly** self-hosted SFX/foley/loops with duration control; on-device variants |
 | **[TangoFlux](https://huggingface.co/declare-lab/TangoFlux)** | open (⚠ non-commercial) | Fast research-grade text-to-audio (up to 30 s @ 44 kHz, ~6 GB); prototypes only |
 | **[AudioGen (AudioCraft)](https://github.com/facebookresearch/audiocraft)** | open (⚠ weights CC-BY-NC) | Environmental audio / foley baseline — **weights non-commercial** |
 

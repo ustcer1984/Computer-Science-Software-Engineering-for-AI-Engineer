@@ -12,6 +12,72 @@
 
 ## 1. 🪤 The bug that cannot be patched
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | |
+| **GenAI** | generative AI | the category OWASP's list covers |
+| **LLM** | large language model | |
+| **SQL** | Structured Query Language | the database language whose injection problem is the analogy running through this section |
+| **OWASP** | Open Worldwide Application Security Project | the non-profit that publishes the industry's canonical Top 10 vulnerability lists |
+| **ASI01** | Agentic Security Issue #1 | the identifier of "Agent Goal Hijack", top entry in OWASP's Top 10 for Agentic Applications |
+| **CVE** | Common Vulnerabilities and Exposures | the public catalogue of individual disclosed vulnerabilities, each with an identifier |
+| **CVSS** | Common Vulnerability Scoring System | the 0–10 severity score attached to a CVE |
+| **MCP** | Model Context Protocol | the protocol agents use to reach external tools and data sources |
+| **CLI** | command-line interface | |
+| **URL** | uniform resource locator | a web address; an attacker-chosen one is an exfiltration channel |
+| **HTML** | hypertext markup language | a comment in it is one of the places hidden instructions get planted |
+| **PDF** | portable document format | another carrier of untrusted text |
+| **NAACL** | North American Chapter of the Association for Computational Linguistics | the conference where the adaptive-attack paper appeared |
+| **GTG-1002** | the threat-group label Anthropic assigned | the operator behind the November 2025 AI-orchestrated espionage campaign |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Prompt injection** | text that the model treats as instructions although it arrived as data |
+| **Indirect prompt injection** | the same thing arriving through content the agent fetched — an email, page, file or comment — rather than from the user |
+| **System prompt** | the operator's standing instructions, first in the stream and with no structural privilege over anything after it |
+| **Context window** | everything the model can currently see, which is where retrieved content lands |
+| **Token stream** | the single flat sequence the model actually processes; the absence of any "this part is data" marker in it is the bug |
+| **Agent** | a model given tools, so that its output causes actions rather than only text |
+| **Tool call** | the agent invoking an external capability — reading a file, sending a message, running a command |
+| **Lethal trifecta** | Willison's name for holding private data, exposure to untrusted content, and outward communication at once |
+| **Agents Rule of Two** | Meta's design rule that an autonomous agent may hold at most two of those three without a human in the loop |
+| **Human in the loop** | requiring a person to approve the dangerous step |
+| **Zero-click** | an attack needing no action at all from the victim beyond normal use of the product |
+| **Exfiltration** | getting data out to the attacker |
+| **Retrieval layer** | the component that pulls relevant documents into the context window automatically — the delivery mechanism in EchoLeak |
+| **Payload** | the attacker's hidden instruction text |
+| **Alt text** | the alternative description attached to an image; one of the invisible places text can hide |
+| **Prepared statement** | the SQL fix: the query's structure is compiled before any user data exists, so data can never become syntax |
+| **Escaping** | quoting dangerous characters — the filter-shaped non-fix that prepared statements replaced |
+| **Classifier / detector** | a model trained to spot injected instructions |
+| **LLM judge** | using a second model to answer "is this an attack?" |
+| **Perplexity filtering** | flagging text that the model finds statistically unusual; included in the study as the control that catches nothing |
+| **Adaptive attack** | an attack optimised with knowledge of the defence in place — the only evaluation that means anything |
+| **Static benchmark** | a fixed test set that the attacker never gets to respond to; the reason the published numbers looked good |
+| **Attack success rate** | the fraction of attempts that get through |
+| **InjecAgent / AgentDojo** | the benchmarks used to measure injection attacks and defences against agents |
+| **Agent Goal Hijack** | redirecting an agent's objective — the top OWASP agentic risk |
+| **Memory poisoning** | planting content that persists in an agent's stored memory and steers it later |
+| **Privilege abuse** | the agent using access it legitimately holds to do something it should not |
+| **CaMeL** | the DeepMind design that splits the agent so untrusted text can never influence control flow |
+| **Privileged model** | in CaMeL, the component that sees only the trusted query and writes the plan |
+| **Quarantined model** | the component that alone touches untrusted content, and emits typed values rather than instructions |
+| **Typed value** | data carrying a declared type, so it cannot occupy an instruction position |
+| **Capability** | metadata travelling with a value recording where it came from and where it may go |
+| **Provable security** | a guarantee that follows from the architecture rather than from a detector's hit rate |
+| **Reconnaissance** | the attacker's survey of a target before exploitation |
+| **Credential harvesting** | collecting usernames, keys and tokens once inside |
+| **Decision gate** | a point in an automated campaign where a human still chooses — reduced to a handful in the GTG-1002 case |
+
+</details>
+
 🔗 **Start here:** [Prompt injection remains the biggest LLM risk, despite limited incidents — Infosecurity Magazine (5 Aug 2026)](https://www.infosecurity-magazine.com/news/prompt-injection-llm-risk/) · [Prompt injection tops the 2026 OWASP GenAI / LLM Top Ten — SD Times](https://sdtimes.com/security/prompt-injection-tops-2026-owasp-genai-llm-top-ten-vulnerabilities/) · [The lethal trifecta for AI agents — Simon Willison (16 Jun 2025)](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/)
 🔗 **The "why now":** [Prompt injection still drives most agentic AI security failures in production — Help Net Security (11 Jun 2026)](https://www.helpnetsecurity.com/2026/06/11/owasp-prompt-injection-ai-security-failures/) · [A deep dive into the OWASP Top 10 for Agentic Applications 2026](https://neuraltrust.ai/blog/owasp-top-10-for-agentic-applications-2026) · [Disrupting the first reported AI-orchestrated cyber espionage campaign — Anthropic (13 Nov 2025)](https://assets.anthropic.com/m/ec212e6566a0d47/original/Disrupting-the-first-reported-AI-orchestrated-cyber-espionage-campaign.pdf)
 🔗 **Go deeper:** [*Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents* — Zhan et al., arXiv 2503.00061](https://arxiv.org/abs/2503.00061) · [*Defeating Prompt Injections by Design* (CaMeL) — Debenedetti et al., arXiv 2503.18813](https://arxiv.org/abs/2503.18813) · [*Design Patterns for Securing LLM Agents against Prompt Injections* — Beurer-Kellner et al., arXiv 2506.08837](https://arxiv.org/abs/2506.08837) · [*AgentDojo*: a dynamic environment for evaluating attacks and defences — arXiv 2406.13352](https://arxiv.org/abs/2406.13352)
@@ -121,6 +187,94 @@ flowchart TB
 ---
 
 ## 2. 🧲 The third kind of magnet
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **EPS** | European Physical Society | awarder of the 2026 Europhysics Prize |
+| **RuO₂** | ruthenium dioxide | the rutile oxide that made altermagnetism famous, and whose membership in the class is now contested |
+| **CrSb / MnTe / CuMnAs** | chromium antimonide / manganese telluride / copper manganese arsenide | the materials where the effects are undisputed, plus the antiferromagnetic memory cell of 2018 |
+| **TiO₂** | titanium dioxide | the substrate the strained RuO₂ films are grown on |
+| **μSR** | muon spin rotation / relaxation | a probe exquisitely sensitive to tiny static internal magnetic fields |
+| **ARPES** | angle-resolved photoemission spectroscopy | the technique, here spin-resolved, that images the electronic bands directly |
+| **TMR** | tunnelling magnetoresistance | the read signal of a magnetic tunnel junction, quoted as a ratio in percent |
+| **eV / meV** | electronvolt / millielectronvolt | energy units; 1 eV is about forty times room-temperature thermal energy |
+| **K** | kelvin | absolute temperature |
+| **T** | tesla | magnetic field unit. **Collision:** the section also uses THz and GHz for frequency |
+| **GHz / THz** | gigahertz / terahertz | a billion / a trillion cycles per second |
+| **nm** | nanometre | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\mathbf{m}_{i}$ | "m-i, a vector" | the magnetic moment of atom $i$ |
+| $\sum_{i}\mathbf{m}_{i} = 0$ | "the sum over i of m-i equals zero" | the moments cancel exactly — what makes an altermagnet *look* like an antiferromagnet from outside |
+| $\mathbf{k}$ | "k, a vector" | crystal momentum — position in the Brillouin zone |
+| $E_{\uparrow}(\mathbf{k})$ | "E-up of k" | the band energy for spin-up electrons at that momentum |
+| $E_{\downarrow}(\mathbf{k})$ | "E-down of k" | the same for spin-down; the altermagnet's defining fact is that these differ |
+| $d$-wave | "d-wave" | the momentum-space pattern of the splitting: it alternates sign four times as you rotate around the zone, averaging to zero |
+| $d_{xy}$ | "d-x-y" | the specific d-wave form factor reproduced in the photonic-crystal analogue |
+| $f$ | "f" | the resonance (uniform precession) frequency |
+| $\gamma$ | "gamma" | the gyromagnetic ratio; $\gamma/2\pi \approx 28$ GHz per tesla |
+| $\mu_{0}$ | "mu-nought" | the permeability of free space, converting a field in amperes per metre to tesla |
+| $H_{A}$ | "H-A" | the magnetic anisotropy field — what pins the moment to an easy axis |
+| $H_{E}$ | "H-E" | the exchange field coupling the two sublattices; of order $10^{2}$ to $10^{3}$ T |
+| $f = (\gamma/2\pi)\mu_{0}H_{A}$ | | the ferromagnetic case: frequency set by anisotropy alone, landing in the gigahertz |
+| $\sqrt{H_{A}(2H_{E}+H_{A})}$ | "root of H-A times two H-E plus H-A" | the compensated-magnet case; the geometric mean is what lifts the resonance into the terahertz |
+| $\mu_{B}$ | "Bohr magneton" | the natural unit of atomic magnetic moment; iron carries about 2.2 of them per atom |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Magnetic moment** | the tiny magnet carried by an atom, from its electrons' spin and orbital motion |
+| **Magnetisation** | the vector sum of those moments per unit volume |
+| **Ferromagnet** | moments aligned, large net magnetisation, spin-split bands — iron, and every hard-disk recording layer |
+| **Antiferromagnet** | moments alternating and cancelling, zero net magnetisation, and — under the textbook symmetries — no spin splitting |
+| **Altermagnet** | the third class: moments cancel exactly, yet the bands are spin-split, because the sublattices are related by a rotation |
+| **Sublattice** | one of the two interpenetrating sets of magnetic atoms carrying opposite moments |
+| **Spin-split bands** | the two spin species seeing different energies at the same momentum — the property that lets you read a magnetic state electrically |
+| **Degenerate** | equal in energy; the spin degeneracy that translation or inversion symmetry enforces in a normal antiferromagnet |
+| **Time-reversal symmetry** | the operation that flips all spins and velocities; combined with a spatial operation, it is what protects or fails to protect degeneracy |
+| **Inversion** | the symmetry operation sending every position to its opposite through a centre |
+| **Unit cell** | the repeating block of the crystal |
+| **Crystal environment** | the arrangement of non-magnetic neighbours around a magnetic atom — rotated by 90° between sublattices in an altermagnet |
+| **Brillouin zone** | the repeating unit of momentum space |
+| **Even parity** | unchanged under inversion; the splitting pattern is d-wave or higher even-parity, never s-wave |
+| **Magnetic space group** | the symmetry bookkeeping for magnetic crystals — which, the story notes, tracked the lattice but not the local environment |
+| **Spin-polarised current** | a current carrying more of one spin than the other; what a ferromagnet gives you and a plain antiferromagnet does not |
+| **Magnetic tunnel junction** | two magnetic layers separated by a thin barrier; the resistance depends on their relative orientation, and that is how a bit is read |
+| **Néel temperature** | the temperature above which antiferromagnetic or altermagnetic order is lost |
+| **Stray (dipolar) field** | the field a magnetised bit projects outside itself — how you read it, and how it disturbs its neighbours |
+| **Crosstalk** | that unwanted interaction between adjacent bits, the limit on packing them closer |
+| **Magnetic anisotropy** | the crystal's preference for the moment to point along particular axes; it sets thermal stability and write energy |
+| **Exchange interaction** | the strong quantum coupling that aligns or anti-aligns neighbouring moments |
+| **Exchange enhancement** | getting a resonance frequency from the geometric mean of anisotropy and exchange, so a weak anisotropy still gives a terahertz mode |
+| **Precession** | the moment's gyroscopic wobble about its equilibrium direction |
+| **Magnon** | a quantised spin wave; the 3.5 meV magnon in α-MnTe is the marked measured point |
+| **Memristor** | a device whose resistance depends on its history, and so holds multiple levels — the link to neuromorphic hardware |
+| **Spin-orbit torque** | using a current's spin-orbit coupling to switch a magnetic state electrically |
+| **Anomalous Hall effect** | a transverse voltage arising from magnetic order rather than from an applied field |
+| **Inverse spin Hall effect** | converting a spin current into a charge voltage — the ordinary mechanism that explained the RuO₂ terahertz data without altermagnetism |
+| **Rashba splitting** | spin splitting caused by broken inversion symmetry at an interface, a rival explanation for the RuO₂ photoemission result |
+| **Polarised neutron diffraction** | measuring magnetic order with spin-polarised neutrons; gave RuO₂ a small but non-zero moment |
+| **Structure factor** | the model of the crystal's scattering that neutron analysis must assume — and that muons do not need |
+| **Epitaxial growth** | growing a film whose crystal lattice is locked to the substrate's |
+| **Epitaxial strain** | the resulting lattice distortion: about −4.7% compressive on one axis and +2.3% tensile on another for RuO₂ on TiO₂ |
+| **Strain relaxation** | the film giving up that distortion above a critical thickness, here around 4 nm — and losing the effect with it |
+| **Rutile** | the crystal structure family RuO₂ and TiO₂ share |
+| **Ferroelastic** | switchable between distinct strain states, giving non-volatile control of the spin splitting |
+| **Non-volatile** | retaining its state without power |
+| **Photonic crystal** | a periodic dielectric lattice for light; the 2026 analogue reproduces altermagnetic band structure with no spins at all |
+| **Pseudospin** | a two-valued label playing spin's role in a system that has no real spin |
+| **Form factor** | the momentum-dependence of the splitting — what makes it "d-wave" rather than isotropic |
+
+</details>
 
 🔗 **Start here:** [2026 Europhysics Prize honours the discovery of altermagnetism as a third fundamental class of magnetism — Johannes Gutenberg University Mainz (July 2026)](https://press.uni-mainz.de/2026-europhysics-prize-honors-discovery-of-a-third-fundamental-class-of-magnetism/) · [2026 EPS Europhysics Prize for Outstanding Achievement in Condensed Matter Physics announced — European Physical Society](https://eps.org/2026-eps-europhysics-prize-for-outstanding-achievement-in-condensed-matter-physics-announced/) · [Scientists who uncovered altermagnetism win a major physics honour — SciTechDaily](https://scitechdaily.com/scientists-who-uncovered-altermagnetism-win-major-physics-honor/)
 🔗 **The "why now":** [*Altermagnetic spintronics* — Jungwirth et al., review, arXiv 2508.09748](https://arxiv.org/abs/2508.09748) · [*Exploring altermagnetism in RuO₂: from conflicting experiments to emerging consensus* — *Nano Convergence* (2026)](https://link.springer.com/article/10.1186/s40580-026-00532-6) · [*Absence of magnetic order in RuO₂: insights from μSR spectroscopy and neutron diffraction* — *npj Spintronics* (2024)](https://www.nature.com/articles/s44306-024-00055-y)

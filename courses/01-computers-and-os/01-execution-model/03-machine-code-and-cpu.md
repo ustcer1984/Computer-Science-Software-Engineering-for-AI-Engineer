@@ -46,6 +46,37 @@ equation for every carrier.
 
 ## 1. From transistor to instruction (the one layer you can skim)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the device-to-architecture bridge and the meaning of a cycle (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPU** | central processing unit | the chip built out of the blocks described here |
+| **GHz** | gigahertz | a billion clock ticks per second |
+| **SPICE** | Simulation Program with Integrated Circuit Emphasis | the standard circuit-level simulator; "SPICE-free" here means reasoning above the device layer |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Transistor** | a voltage-controlled switch — the physical element everything is built from |
+| **Logic gate** | a few transistors wired to compute AND, OR or NOT |
+| **Combinational logic** | a circuit whose output is a pure function of its current inputs, with no memory |
+| **Adder** | the combinational block that sums two binary numbers |
+| **Sequential logic** | a circuit that holds state, advancing on each clock tick |
+| **Flip-flop** | the one-bit storage element of sequential logic; groups of them form registers |
+| **Register** | a small, very fast storage slot inside the CPU |
+| **Latch (verb)** | capture a value into a register on a clock edge |
+| **Clock** | the square wave whose ticks advance the CPU's state |
+| **Clock cycle** | one clock tick — the natural unit of time for everything in this section |
+| **Frequency** | how many ticks per second, e.g. 3 GHz |
+| **State machine** | a system whose behaviour depends on stored state as well as inputs — what makes a CPU more than a calculator |
+| **Compact model** | an engineering abstraction that captures behaviour without simulating the underlying physics |
+
+</details>
+
 You know this floor better than I do, so just the bridge: a **transistor** is a voltage-controlled
 switch. Wire a few together and you get a **logic gate** (AND/OR/NOT). Wire gates together and you get
 two kinds of useful block:
@@ -67,6 +98,47 @@ electrons — the same move as using a SPICE-free compact model.
 ---
 
 ## 2. What an instruction *is*, concretely
+
+<details>
+<summary><b>Vocabulary for this section</b> — instruction anatomy, assembly examples, and CISC vs RISC (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ISA** | instruction set architecture | the published set of instructions a chip family provides |
+| **CISC** | complex instruction set computer | the x86-64 philosophy: many instructions, some complex and variable-length |
+| **RISC** | reduced instruction set computer | the ARM64 philosophy: fewer, simpler, fixed-length instructions |
+| **AMD** | Advanced Micro Devices | the other x86-64 chip maker alongside Intel |
+| **ARM** | Advanced RISC Machines | the instruction-set family used by Apple Silicon and AWS Graviton |
+| **AWS** | Amazon Web Services | Amazon's cloud platform |
+| **RAM** | random-access memory | main memory, outside the CPU, that loads and stores move data to and from |
+| **CPU** | central processing unit | the chip decoding and running the instructions |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Instruction** | a binary number the CPU decodes as one primitive operation |
+| **Decoder** | the CPU block that reads an instruction and works out what it commands |
+| **Opcode** | the field of an instruction saying **which** operation |
+| **Operand** | a field saying **what to operate on** — a register, a memory address, or a constant |
+| **Immediate** | a constant encoded directly inside the instruction, e.g. the `0` in `cmpq $0, %rax` |
+| **Assembly** | the readable text form of machine code, one line per instruction |
+| **Register (`%rax`, `%rbx`, …)** | the CPU's named internal storage slots; the `%` prefix is assembly syntax |
+| **Load** | an instruction that copies a value from memory into a register |
+| **Store** | an instruction that copies a value from a register into memory |
+| **Compare** | an instruction that subtracts without keeping the result, just to set flags |
+| **Flags** | single-bit results of a comparison (equal, negative, carry) that a following branch tests |
+| **Branch / jump** | an instruction that changes which instruction runs next, conditionally or not |
+| **Label** | a name for a position in the code, e.g. `.L_done`, that a jump targets |
+| **`call` / `ret`** | push the return address and jump; pop it and jump back — §2's call stack in silicon |
+| **Micro-op** | the simple internal operation a modern x86 chip cracks a complex instruction into |
+| **Fixed- vs variable-length** | whether every instruction occupies the same number of bytes — fixed makes decoding cheaper |
+| **Graviton** | AWS's ARM64 server chips, cheaper per request because ARM does the same work for fewer watts |
+| **Watt** | a unit of power; the currency that decides both heat and cloud price |
+
+</details>
 
 An instruction is a binary number that the CPU's **decoder** reads as "do this specific primitive
 operation." It splits into fields — an **opcode** (which operation) and **operands** (which registers /
@@ -104,6 +176,38 @@ point, now with the "why it's cheaper" attached.
 ---
 
 ## 3. Inside the core: the datapath and the fetch–decode–execute loop, revisited
+
+<details>
+<summary><b>Vocabulary for this section</b> — the parts inside a core and what control flow really is (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PC** | program counter | the register holding the address of the next instruction — on x86 it is called `rip`, the instruction pointer |
+| **ALU** | arithmetic logic unit | the block that performs `+`, `&`, `<` and friends |
+| **CPU** | central processing unit | the chip these blocks live in |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Datapath** | the wiring of registers, ALU and memory ports that data flows through as an instruction executes |
+| **Program counter** | the register saying which instruction is next; normal execution just increments it |
+| **Instruction pointer (`rip`)** | x86's name for the same register |
+| **Fetch** | read the next instruction from the instruction cache |
+| **Decode** | work out the opcode and operands |
+| **Execute** | do the arithmetic, or compute a memory address |
+| **Memory stage** | perform the load or store, if the instruction needs one |
+| **Write-back** | put the result into the destination register |
+| **Instruction cache** | the small fast store of recently used instructions the fetch stage reads from |
+| **Control unit** | the decoder — it turns an opcode into the internal switch settings that make the datapath do the right thing |
+| **Register file** | the collection of the CPU's named registers; the fastest storage that exists, sub-nanosecond |
+| **Branch** | an instruction that writes a new value into the PC instead of letting it advance |
+| **Control flow** | the order statements execute in — at this layer, simply "what we put in the PC" |
+| **Stack pointer** | another ordinary register, holding the top of the call stack from §2 |
+
+</details>
 
 §1 gave you the loop as a black box. Here's what's *inside* doing each step:
 
@@ -147,6 +251,42 @@ register the CPU bumps. Nothing magic — it's PC arithmetic plus a memory conve
 ---
 
 ## 4. The memory hierarchy — the single most important performance fact
+
+<details>
+<summary><b>Vocabulary for this section</b> — cache levels, locality, and why data layout beats cleverness (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RAM** | random-access memory | main memory — large, and roughly 200–300 cycles away from the core |
+| **L1 / L2 / L3** | level-1 / level-2 / level-3 cache | successively larger and slower caches between the registers and RAM |
+| **SSD** | solid-state drive | flash-based storage, roughly 100,000+ cycles away |
+| **KB / MB / GB / TB** | kilobyte / megabyte / gigabyte / terabyte | the size units used in the hierarchy diagram |
+| **CPU** | central processing unit | the core doing the accessing |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Memory hierarchy** | the layered arrangement registers → caches → RAM → disk, each larger and much slower than the one above |
+| **Cycle** | one clock tick; the unit the access costs here are quoted in |
+| **Latency** | how long one access takes, measured end to end |
+| **Cache** | a small, fast, automatic copy of recently or soon-needed memory, managed by hardware |
+| **Cache line** | the fixed block, about 64 bytes, that a cache always fetches as a unit — never a single byte |
+| **Cache hit** | the data was already in cache, about 4 cycles at L1 |
+| **Cache miss** | it was not, so a line must be dragged in from further down, about 200 cycles from RAM |
+| **Temporal locality** | having touched an address, you are likely to touch it again soon — so keep it cached |
+| **Spatial locality** | having touched an address, you are likely to touch its neighbours soon — so fetch the whole line |
+| **Contiguous** | laid out back-to-back in memory, so one fetched line contains the next values you need |
+| **Pointer chasing** | following addresses to scattered objects, producing a cache miss at nearly every step |
+| **Boxed `int`** | a Python integer as a full heap object with a header, reached through a pointer — the reason a list walk is cache-hostile |
+| **Heap** | the memory region those scattered objects live in (Ch1 §2) |
+| **Big-O** | the asymptotic count of operations an algorithm performs — which ignores that not all operations cost the same |
+| **B-tree index** | the standard database index structure; M03 revisits it with this same hierarchy in mind |
+| **Sequential scan** | reading a table straight through, which the hierarchy rewards far more than the operation count suggests |
+
+</details>
 
 Here is the thing that, once internalized, explains more real-world performance than anything else in
 this course. **Not all memory is equally far away**, and the distances are *enormous*. The CPU is so
@@ -210,6 +350,40 @@ shape, just shifted).
 
 ## 5. How a core does more than one instruction at a time
 
+<details>
+<summary><b>Vocabulary for this section</b> — pipelining, speculation, and why branches matter (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ALU** | arithmetic logic unit | the block that does the arithmetic; modern cores have several |
+| **CPU** | central processing unit | the core doing the overlapping |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Pipelining** | overlapping instructions so that while A executes, B decodes and C is fetched — like an assembly line |
+| **Pipeline stage** | one step of that line: fetch, decode, execute, memory, write-back |
+| **Throughput** | how many instructions finish per cycle — what pipelining improves |
+| **Latency** | how long one instruction takes end to end — what pipelining does **not** improve |
+| **Superscalar** | having several execution units so more than one instruction can finish per cycle |
+| **Out-of-order execution** | running independent instructions in whatever order keeps the units busy |
+| **Retire / commit** | making results architecturally visible in the original program order, so the reordering is invisible to you |
+| **Dependency** | one instruction needing a previous one's result, which prevents reordering |
+| **Branch** | a conditional jump — an `if`, a loop test, the `je` from §2 |
+| **Branch predictor** | hardware that guesses which way a branch will go, from the history of how it went before |
+| **Speculative execution** | running ahead down the predicted path before the branch is actually resolved |
+| **Misprediction penalty** | the roughly 15–20 cycles lost discarding speculative work and refilling the pipeline |
+| **Pipeline flush** | throwing away the wrongly speculated instructions |
+| **Stall** | cycles where the pipeline cannot make progress |
+| **Branchless code** | rewriting a branch as arithmetic so there is nothing to mispredict |
+| **Cache trace / side channel** | the observable cache state left behind by work the CPU later discarded |
+| **Spectre / Meltdown** | the 2018 attacks that read secrets by measuring those leftover cache traces |
+
+</details>
+
 Naively, one instruction per cycle. Real cores do *much* better by overlapping work — and the tricks
 have direct consequences for your code's behavior.
 
@@ -267,6 +441,38 @@ performance folklore.
 
 ## 6. Why the clock stopped getting faster — and why you now have cores
 
+<details>
+<summary><b>Vocabulary for this section</b> — the power wall and the move to multi-core (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GHz** | gigahertz | a billion clock cycles per second; clocks plateaued at roughly 3–4 GHz |
+| **GIL** | global interpreter lock | the CPython lock that lets only one thread execute Python bytecode at a time |
+| **CPU** | central processing unit | the chip whose clock stopped climbing |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Clock frequency** | ticks per second; for thirty years the main lever for making chips faster |
+| **Dennard scaling** | the historical rule that shrinking transistors kept power density constant — it broke around 2005 |
+| **Moore's law** | the observation that transistor count per chip keeps roughly doubling; it outlived Dennard scaling |
+| **Power density** | watts per unit area — the real wall, because heat has to be removed |
+| **Dynamic power** | the switching power, scaling roughly with frequency times voltage squared |
+| **Die** | the single piece of silicon a chip is made on |
+| **Core** | one complete CPU — its own pipeline and registers — on a shared die |
+| **Multi-core** | putting many cores on one die instead of making one core faster |
+| **Instruction stream** | one sequential flow of instructions; a single stream uses exactly one core |
+| **Concurrency** | structuring work as several logical streams that can be in progress at once |
+| **Parallelism** | actually running more than one of them at the same instant, on different cores |
+| **Thread** | one instruction stream inside a process, scheduled onto one core at a time |
+| **`multiprocessing`** | Python's module for running work in separate processes, each with its own interpreter and no shared GIL |
+| **"The free lunch is over"** | the industry shorthand for: your code no longer gets faster just by waiting for the next chip |
+
+</details>
+
 For ~30 years, chips got faster mostly by **raising the clock** (and shrinking transistors —
 Dennard scaling, which you know from the device side). Around **2004–2006 that wall hit**: power density.
 Dynamic power scales roughly with frequency × voltage², and you can only push so many watts through a
@@ -291,6 +497,45 @@ stoves instead of a hotter one.
 ---
 
 ## 7. SIMD and the GPU — why your AI workloads are a different animal
+
+<details>
+<summary><b>Vocabulary for this section</b> — vector execution, the accelerator vocabulary, and the abbreviations (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SISD** | single instruction, single data | an ordinary instruction: one operation on one pair of values |
+| **SIMD** | single instruction, multiple data | one operation applied to a whole vector of values at once |
+| **SIMT** | single instruction, multiple threads | the GPU variant: the same instruction run by thousands of lightweight threads on different data |
+| **SSE** | Streaming SIMD Extensions | Intel's older x86 vector instruction set |
+| **AVX** | Advanced Vector Extensions | Intel's newer, wider x86 vector instruction set |
+| **NEON** | ARM's SIMD extension | the ARM equivalent of SSE/AVX |
+| **GPU** | graphics processing unit | a chip with thousands of simple ALUs, used for massively parallel numeric work |
+| **TPU** | tensor processing unit | Google's custom accelerator for the same kind of workload |
+| **ALU** | arithmetic logic unit | the block that performs the arithmetic; a GPU has thousands of simple ones |
+| **CPU** | central processing unit | the general-purpose chip, optimized for latency on messy branchy code |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Vector** | a fixed-size group of values, e.g. eight floats, handled as one unit |
+| **Vectorized** | written so the work is issued as vector instructions instead of one element at a time |
+| **Kernel** | here, the compiled inner routine a library like `numpy` actually runs (not the operating-system kernel) |
+| **Element** | one value inside an array or vector |
+| **Boxed integer** | a Python `int` as a full heap object — the per-element overhead that a pure-Python loop pays |
+| **Interpreter loop** | the per-iteration cost of running Python bytecode, thousands of cycles heavier than the arithmetic itself (§1) |
+| **Thread *(GPU sense)*** | one lightweight lane of a SIMT group — **not** the operating-system thread of §2 §7 and Ch1 §3 |
+| **Embarrassingly parallel** | work that splits into independent pieces with essentially no coordination — matrix multiply is the canonical case |
+| **Matrix multiply** | the multiply-and-add over rows and columns at the core of every neural network layer |
+| **Neural network** | the model family behind modern AI, built out of those matrix multiplies |
+| **Training** | fitting a model's parameters to data — the heaviest numeric workload |
+| **Inference** | running a trained model to get an answer |
+| **Accelerator** | a chip specialized for one kind of work, such as a GPU or TPU |
+| **Throughput vs latency** | total work per second versus time for one item — the GPU optimizes the first, the CPU the second |
+
+</details>
 
 One more lever, and it's the one closest to your day job. Normal instructions are **SISD** — Single
 Instruction, Single Data: `addq` adds *one* pair of numbers. But a CPU core also has **SIMD** units —

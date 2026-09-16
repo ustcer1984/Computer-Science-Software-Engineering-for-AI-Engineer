@@ -51,6 +51,68 @@ That matters for all four of your goals, but two especially:
 
 ## 1. Where supply comes from: a firm's costs
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FC** | fixed cost | cost that does not change with output in the short run |
+| **VC** | variable cost | cost that rises with output |
+| **TC** | total cost | fixed cost plus variable cost |
+| **AFC** | average fixed cost | fixed cost divided by output; always falling as output grows |
+| **AVC** | average variable cost | variable cost divided by output |
+| **ATC** | average total cost | total cost divided by output — the firm's unit cost |
+| **MC** | marginal cost | the cost of producing one more unit |
+| **R&D** | research and development | spending on inventing and improving products; a large fixed cost |
+| **10-K** | (US) Form 10-K | the annual report a US-listed company files, which reports *accounting* profit |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $q$ |  | the firm's output — how many units it makes |
+| $FC$ | "F-C" | fixed cost |
+| $VC$ | "V-C" | variable cost |
+| $TC$ | "T-C" | total cost, equal to fixed plus variable cost |
+| $TC(q)$ | "T-C of q" | total cost as a function of output |
+| $FC / q$ | "F-C over q" | average fixed cost — the fixed cost spread over the units made |
+| $VC / q$ | "V-C over q" | average variable cost |
+| $TC / q$ | "T-C over q" | average total cost |
+| $\Delta TC / \Delta q$ | "delta T-C over delta q" | marginal cost as a ratio of small changes: extra cost divided by extra output |
+| $dTC/dq$ | "d-T-C by d-q" | the same thing in the limit — the slope of the total-cost curve |
+| $MC(q)$ | "M-C of q" | marginal cost at output $q$ |
+| $A(q)$ | "A of q" | the average cost at output $q$ |
+| $A'(q)$ | "A-prime of q" | the slope of the average-cost curve — how unit cost changes as output rises |
+| $A'(q) = (MC(q) - A(q))/q$ | "A-prime equals M-C minus A, all over q" | the marginal-average relationship: the average falls while the marginal is below it and rises while it is above |
+| $\Rightarrow$ | "implies" | the left-hand statement forces the right-hand one |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Explicit (accounting) cost** | out-of-pocket payments — wages, rent, materials, interest |
+| **Implicit (opportunity) cost** | value forgone with no money changing hands: the founder's forgone salary, the return the owner's capital could have earned elsewhere |
+| **Economic cost** | explicit cost plus implicit cost — the full cost including what was given up |
+| **Accounting profit** | revenue minus explicit cost only — the number in the published accounts |
+| **Economic profit** | revenue minus *economic* cost, so it also subtracts the opportunity cost of the owner's capital and time. Zero economic profit is a healthy business, not a failing one |
+| **Normal profit** | exactly zero economic profit — earning the going return on capital and no more |
+| **Opportunity cost** | the value of the next-best use of the same resource |
+| **Fixed cost** | unchanged by output in the short run — a lease, a fab, insurance, the core team |
+| **Variable cost** | rising with output — materials, hourly labour, shipping, power |
+| **Marginal cost vs average cost** | marginal is the cost of the *next* unit; average is total cost spread over *all* units. The marginal pulls the average toward itself |
+| **Marginal-average relationship** | the average falls when the marginal is below it, rises when above, and is at its minimum exactly where they cross |
+| **U-shaped cost curve** | falling then rising unit cost: efficiency gains first, diminishing returns later |
+| **Diminishing marginal returns** | with capital fixed, each extra worker adds less extra output than the last, which is why marginal cost eventually turns up |
+| **Operating leverage** | a cost structure of high fixed and low variable cost, so profit swings sharply once the fixed cost is covered |
+| **Short run** | the horizon over which at least one input, usually capital, is fixed; in the **long run** everything is variable |
+| **Break-even price** | the price equal to the minimum of average total cost — the lowest price at which the firm covers everything |
+| **Natural monopoly** | an industry whose cost structure makes a single firm the cheapest way to serve the market |
+| **Capital** | the firm's durable productive assets, and the money committed to funding them |
+
+</details>
+
 A firm turns inputs (labour, materials, capital) into output. Its **costs** are what those inputs cost it —
 but "cost" to an economist is broader and sharper than the accountant's version, and the gap is the first
 thing to nail because it drives everything later (including, eventually, why long-run competitive profit is
@@ -143,6 +205,65 @@ more unit costs progressively *more* — MC turns up, dragging the averages up a
 
 ## 2. The firm's decision: produce, how much, or shut down
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MR** | marginal revenue | the extra revenue from selling one more unit |
+| **MC** | marginal cost | the extra cost of producing one more unit |
+| **TR** | total revenue | price multiplied by quantity sold |
+| **TC** | total cost | fixed cost plus variable cost |
+| **ATC** | average total cost | total cost divided by output |
+| **AVC** | average variable cost | variable cost divided by output |
+| **FC** | fixed cost | cost owed regardless of how much is produced |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $q$ |  | the firm's output |
+| $q^\ast$ | "q-star" | the profit-maximising output — the star marks the chosen value |
+| $P$ |  | the price of one unit |
+| $\pi$ | "pi" | profit; here it means profit, **not** the number 3.14159 |
+| $\pi(q)$ | "pi of q" | profit as a function of output |
+| $TR(q)$ | "T-R of q" | total revenue at output $q$ |
+| $TC(q)$ | "T-C of q" | total cost at output $q$ |
+| $P \cdot q$ | "P times q" | price multiplied by quantity — total revenue for a price-taker |
+| $MR$ | "M-R" | marginal revenue |
+| $MC$ | "M-C" | marginal cost |
+| $MR = MC$ | "M-R equals M-C" | the profit-maximising rule: expand while the next unit earns more than it costs |
+| $MR = P$ | "M-R equals P" | true for a price-taker, whose extra unit sells at the going price without moving it |
+| $P = MC$ | "P equals M-C" | the price-taker's version of the rule — which is why the supply curve is the marginal-cost curve |
+| $ATC(q^\ast)$ | "A-T-C of q-star" | average total cost at the chosen output |
+| $AVC$ | "A-V-C" | average variable cost |
+| $\pi = (P - ATC(q^\ast)) \times q^\ast$ | "pi equals P minus A-T-C, times q-star" | profit as a rectangle: profit per unit multiplied by the number of units |
+| $\geq$ | "is greater than or equal to" | at least as large as |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Profit maximisation** | choosing output where marginal revenue equals marginal cost |
+| **Marginal revenue** | what one more unit adds to revenue; for a price-taker it simply equals the price |
+| **Price-taker** | a firm too small to move the market price, so it takes the price as given |
+| **Price-maker** | a firm whose own output choice moves the price it can charge; its marginal revenue is below price |
+| **Break even** | price exactly equal to average total cost — zero economic profit |
+| **Economic profit** | revenue minus *all* costs including the opportunity cost of the owner's capital; distinct from accounting profit |
+| **Fixed cost vs sunk cost** | a fixed cost is owed regardless of output *this period*; it is **sunk** when it is also unrecoverable, and only then should it be ignored in the decision |
+| **Shutdown rule (short run)** | keep operating while price at least covers **average variable** cost; stop when it does not |
+| **Exit (long run)** | leaving the industry altogether, which is right when price cannot cover **average total** cost once nothing is sunk any more |
+| **Shutdown vs exit** | shutdown is stopping production this period with the fixed cost still owed; exit is leaving for good. Confusing them is a classic error |
+| **Contribution** | the part of each unit's revenue left after its variable cost, which goes toward the fixed cost owed anyway |
+| **Shut-in price** | in oil, the price below which a well's revenue no longer covers its operating cost and it is stopped |
+| **Short-run supply curve (firm)** | the marginal-cost curve above the minimum of average variable cost; below that the firm supplies nothing |
+| **Market supply curve** | the horizontal sum of every firm's short-run supply curve — quantities added across firms at each price |
+| **Supply shifters** | input prices and technology, which move the cost curves and so move supply |
+
+</details>
+
 Now the single rule that turns costs into a supply curve. A firm wants to maximize **profit**
 $\pi(q) = TR(q) - TC(q) = P\cdot q - TC(q)$. This is just §1's marginal thinking applied to output:
 
@@ -216,6 +337,42 @@ now with a mechanism underneath each one.
 
 ## 3. Scale: why some industries are giants and others are swarms
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LRAC** | long-run average cost | unit cost when the firm is free to choose its own size, including its plant and capital |
+| **ATC** | average total cost | total cost divided by output, for a *given* plant size |
+| **MES** | minimum efficient scale | the smallest output at which a firm reaches its lowest achievable unit cost |
+| **R&D** | research and development | spending on inventing and improving products; typically a large fixed cost |
+| **TSMC** | Taiwan Semiconductor Manufacturing Company | the dominant contract chip manufacturer, cited as a large-scale example |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Long run** | the horizon over which every input, including plant and capital, can be changed |
+| **Long-run average cost curve** | the lower envelope of all the short-run average-total-cost curves the firm could choose, one per plant size |
+| **Envelope** | the curve that just touches each member of a family of curves — here, the cheapest unit cost available at each output |
+| **Economies of scale** | unit cost **falls** as output grows — from spreading fixed costs, bulk buying, specialisation and learning |
+| **Constant returns to scale** | unit cost is flat: size no longer changes cost per unit |
+| **Diseconomies of scale** | unit cost **rises** with size — coordination overhead, bureaucracy, communication breakdown, slow decisions |
+| **Learning curve** | unit cost falling with cumulative experience rather than with current output rate |
+| **Minimum efficient scale** | the smallest size at which a firm still achieves minimum unit cost |
+| **MES relative to market size** | the ratio that predicts industry structure: small relative to the market means many firms fit, large means only a few do |
+| **Fragmented industry** | one with many small firms, each able to reach efficient scale — restaurants, salons, farms |
+| **Concentrated industry** | one where a few firms hold most of the output, because efficient scale is large relative to demand |
+| **Natural monopoly** | the limiting case, where economies of scale persist over the whole market so one firm is cheapest |
+| **Oligopoly** | a market with a few firms |
+| **Barrier to entry** | anything that makes it costly or impossible for a newcomer to compete — here, having to enter at huge scale before selling a unit |
+| **Winner-take-most** | the tendency for one or two firms to capture most of a market when scale economies are strong |
+| **Antitrust regulators** | the authorities that scrutinise mergers and dominant firms in such industries |
+
+</details>
+
 So far capital was fixed. Let the firm choose its *size* — the long run — and a new question appears: how
 does cost-per-unit change as the whole operation scales up? The answer shapes how *concentrated* an
 industry is, which is the bridge to market structure in §4.
@@ -258,6 +415,58 @@ structure**, and this single ratio predicts a lot:
 ---
 
 ## 4. The spectrum of competition
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FX** | foreign exchange | the currency market, given as an example of a near-perfectly competitive market |
+| **MR** | marginal revenue | the extra revenue from one more unit sold |
+| **MC** | marginal cost | the extra cost of one more unit produced |
+| **ATC** | average total cost | total cost divided by output — the firm's unit cost |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ |  | the market price of one unit |
+| $MR$ | "M-R" | marginal revenue |
+| $MC$ | "M-C" | marginal cost |
+| $MR = P$ | "M-R equals P" | true for a price-taker facing a flat demand curve: one more unit sells at the going price |
+| $\min ATC$ | "min A-T-C" | the lowest point of the average-total-cost curve — the lowest unit cost the firm can achieve |
+| $P = MR = MC = \min ATC$ | "P equals M-R equals M-C equals min A-T-C" | the long-run competitive equilibrium: price driven down to the lowest achievable unit cost, so economic profit is zero |
+| $\pi$ | "pi" | economic profit |
+| $\partial\pi/\partial(\text{entry})$ | "partial pi with respect to entry" | how profit changes as more firms enter; entry continues until this pressure is exhausted and profit is zero |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Market structure** | the classification of a market by how many firms there are, how differentiated the product is, and how much pricing power each firm has |
+| **Perfect competition** | very many firms, identical product, no pricing power, no barriers — the price-taking benchmark |
+| **Monopolistic competition** | many firms with differentiated products and low barriers; a little pricing power, but entry still competes profit away |
+| **Oligopoly** | a few firms behind high barriers, whose choices are strategically interdependent |
+| **Monopoly** | a single seller of a product with no close substitute, behind very high barriers |
+| **Price-taker** | a firm that must accept the going price; **price-maker** is one that sets it |
+| **Pricing power** | the ability to raise price without losing all your customers — it rises as the demand curve the firm faces for its *own* output steepens |
+| **Differentiated product** | one buyers do not regard as interchangeable with a rival's |
+| **Barriers to entry** | anything keeping newcomers out — scale, networks, patents, licences, control of an input. They are what let profit *persist* |
+| **Free entry** | the defining assumption of perfect competition: any firm can join when there is profit to be had |
+| **Entry and exit** | firms joining the industry when economic profit is positive, and leaving when it is negative; this is the mechanism that drives profit to zero |
+| **Economic profit** | revenue minus all costs including the opportunity cost of capital; **zero economic profit is a normal, healthy return**, not failure |
+| **Accounting profit** | revenue minus out-of-pocket costs only; a firm at zero economic profit still posts positive accounting profit |
+| **Normal return** | the return capital could earn in its next-best use; earning exactly that is zero economic profit |
+| **Zero-profit condition** | the long-run result that with free entry, price is driven to the minimum of average total cost |
+| **Economic moat** | Buffett's term for a durable barrier to entry that protects a firm's excess returns |
+| **Commoditized** | so undifferentiated that buyers choose purely on price |
+| **Spot market** | a market for immediate delivery at today's price, as opposed to a contract for future delivery |
+| **Fixed point / relaxation** | the equilibrium the entry-and-exit dynamics settle at, reached by the same self-correcting logic as price adjustment |
+| **First welfare theorem** | the result that the competitive outcome is efficient; here it gains a dynamic story for *how* the market gets there |
+
+</details>
 
 §3 handed you the two extremes. The real world is a spectrum, classified by **how many firms**, **how
 differentiated the product**, and — the deepest axis — **how much pricing power** each firm has, which
@@ -328,6 +537,59 @@ The implications are strong and not obvious:
 ---
 
 ## 5. The middle of the spectrum: differentiation and interdependence
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MR** | marginal revenue | the extra revenue from selling one more unit |
+| **MC** | marginal cost | the extra cost of producing one more unit |
+| **ATC** | average total cost | total cost divided by output — the firm's unit cost |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ |  | the price the firm charges |
+| $MR$ | "M-R" | marginal revenue; for a firm with any pricing power it lies **below** price |
+| $MC$ | "M-C" | marginal cost |
+| $ATC$ | "A-T-C" | average total cost |
+| $MR = MC$ | "M-R equals M-C" | the profit-maximising rule, which applies to a price-maker too |
+| $P > MC$ | "P is greater than M-C" | the mark-up that survives even when economic profit is zero — the signature of monopolistic competition |
+| $\min ATC$ | "min A-T-C" | the lowest achievable unit cost; these firms produce to the *left* of it, which is what "excess capacity" means |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Monopolistic competition** | many firms, low barriers, but each selling a differentiated product, so each has a little pricing power over its own brand |
+| **Differentiation** | making your product a poorer substitute for a rival's, through brand, quality, location or variety |
+| **Downward-sloping firm demand curve** | the firm can raise price and keep *some* buyers — the geometric form of pricing power |
+| **Tangency** | the long-run outcome where the firm's demand curve just touches its average-total-cost curve: price equals unit cost exactly, so economic profit is zero |
+| **Zero economic profit** | earning only the normal return on capital; typical of low-barrier industries, and not a sign of failure |
+| **Excess capacity** | producing to the left of minimum average total cost, so unit cost is above the cheapest achievable — the empty tables and half-used chairs |
+| **Markup** | the gap between price and marginal cost |
+| **Price of variety** | the argument that this markup and excess capacity are what consumers pay for having genuinely different products to choose from |
+| **Barriers to entry** | what decides whether a markup *survives* in the long run; differentiation decides how *big* it is |
+| **Oligopoly** | a few firms behind high barriers, where each firm's best move depends on what it expects the others to do |
+| **Strategic interdependence** | the defining oligopoly feature: your optimal choice is a function of rivals' anticipated choices |
+| **Price war** | competitive price-cutting that rivals match, driving the whole industry toward competitive prices and away from profit |
+| **Tacit collusion** | firms sustaining high prices by mutual anticipation rather than by any explicit agreement |
+| **Cartel / price-fixing** | an explicit agreement to restrict output or fix prices; illegal in most jurisdictions |
+| **Duopoly** | an oligopoly of exactly two firms, such as Boeing and Airbus |
+| **Game theory** | the study of decisions where payoffs depend on others' choices — the right tool for oligopoly |
+| **Cournot competition** | the model where firms compete by choosing quantities |
+| **Bertrand competition** | the model where firms compete by choosing prices |
+| **Repeated game** | the same interaction played over and over, which is what can make tacit collusion sustainable |
+| **Entry deterrence** | actions taken to make entering the market unattractive to a potential rival |
+| **Antitrust** | competition enforcement — merger review, cartel-busting, policing dominance |
+| **Deadweight loss** | surplus destroyed by output being held below the efficient level; here it is small, and bought with real product variety |
+| **Product-line versioning** | offering tiers or variants of a product to differentiate and segment buyers |
+
+</details>
 
 ### Monopolistic competition — many firms, differentiated products
 

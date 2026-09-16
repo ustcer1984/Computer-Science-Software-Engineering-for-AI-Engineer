@@ -57,6 +57,35 @@ that actually decide it (dimension, context, multilingual, license, self-host on
 
 ## 1. The unifying idea: representation
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VAE** | variational autoencoder | the encoder–decoder that maps an image to a latent and back (§1) |
+| **DiT** | diffusion transformer | the transformer denoiser run over patch tokens (§1, §2) |
+| **RVQ** | residual vector quantization | the multi-codebook scheme producing discrete audio tokens (§3) |
+| **LM / LLM** | language model / large language model | a transformer predicting the next token in a sequence |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Representation** | the vector or sequence of vectors a model actually operates on, in place of the raw signal |
+| **Encoder** | the map from raw signal into the representation |
+| **Decoder** | the map from the representation back to a signal |
+| **Latent** | a learned, compressed continuous representation |
+| **Spacetime patch** | a video block across time, height and width, projected into one token |
+| **Codec token** | a discrete index from a learned audio codebook |
+| **Token embedding** | the vector a discrete token is looked up as |
+| **Decode (operation)** | turning a representation back into a signal — i.e. generation |
+| **Align / compare (operation)** | arranging the space so related items are geometrically close, then using distance |
+| **Vector space** | the coordinate system in which all of this arithmetic happens |
+
+</details>
+
 Look back at what each prior section actually did, stripped to one line:
 
 | Section | Modality | The representation it chose |
@@ -87,6 +116,48 @@ modalities in one space, you can *fuse* them into a single reasoning model.
 ---
 
 ## 2. What an embedding actually is (the geometry)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **L2** | Euclidean (2-norm) | the ordinary vector length; L2-normalising rescales a vector to unit length |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| **bold letters** | e.g. $\mathbf{v}$ | bold marks a vector; plain italic marks a scalar |
+| $\mathbf{v}$ | "bold v" | the embedding vector of an object |
+| $\mathbf{u}$ | "bold u" | a second embedding vector, the one being compared against |
+| $\mathbb{R}^{d}$ | "R to the d" | the space of real vectors with $d$ components; the superscript is the dimensionality |
+| $d$ | "d" | the embedding dimension — how many numbers per vector |
+| $\theta$ | "theta" | the angle between the two vectors |
+| $\cos(\theta)$ | "cosine theta" | cosine similarity: one when the vectors point the same way, zero when orthogonal |
+| $\mathbf{u} \cdot \mathbf{v}$ | "u dot v" | the dot product — sum of element-wise products |
+| $\lVert \mathbf{u} \rVert$ | "norm of u" | the vector's length, which the cosine divides out |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Embedding** | a learned map from an object to a vector, in which geometry carries meaning |
+| **Cosine similarity** | direction-only similarity: the angle between vectors, ignoring their magnitudes |
+| **L2 normalisation** | rescaling every vector to unit length, after which cosine similarity is just the dot product |
+| **Unit hypersphere** | the surface all normalised vectors live on |
+| **Euclidean distance** | straight-line distance; on the unit sphere it ranks neighbours identically to cosine distance |
+| **Semantic direction** | a direction in the space corresponding to an attribute, which can be added or subtracted |
+| **Steering** | shifting a vector along such a direction to change an attribute |
+| **Interpolation** | moving continuously between two points in the space |
+| **Anisotropy** | the space not being spread evenly over the sphere — real embeddings crowd into a narrow cone |
+| **Cone** | the narrow region of directions a set of embeddings actually occupies |
+| **Modality gap** | the offset between where image vectors and text vectors sit, even after alignment training (§4) |
+| **Retrieval** | finding the nearest vectors to a query vector |
+
+</details>
 
 You use text embeddings already, so this is fast — but the *geometric* framing is what makes CLIP
 and the modality gap make sense, so it's worth stating precisely.
@@ -126,6 +197,59 @@ the act of making two different sensors agree on the coordinates.
 ---
 
 ## 3. CLIP: aligning image and text in one space
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CLIP** | contrastive language–image pre-training | the dual-encoder trained to match images with their captions |
+| **ViT** | vision transformer | a patch-token transformer used as CLIP's image encoder |
+| **ResNet** | residual network | the convolutional alternative image encoder, and the fixed-label baseline being displaced |
+| **InfoNCE** | information noise-contrastive estimation | the softmax-over-candidates contrastive loss used here |
+| **VLM** | vision-language model | a model that ingests images and generates language about them (§6) |
+| **T5** | text-to-text transfer transformer | the stronger text encoder later models use for conditioning |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $d$ | "d" | the shared embedding dimension both encoders output into |
+| $N$ | "capital N" | the batch size — the number of image/text pairs compared at once |
+| $N \times N$ | "N by N" | the full matrix of similarities between every image and every text in the batch |
+| $N^{2} - N$ | "N squared minus N" | the count of off-diagonal (mismatched) entries |
+| $i$ | "i" | the row index — which image (or its true caption) |
+| $j$ | "j" | the column index — which candidate text (or image) is being scored |
+| $\mathbf{I}_{i}$ | "bold I-sub-i" | the normalised embedding of image $i$; bold marks a vector |
+| $\mathbf{T}_{i}$ | "bold T-sub-i" | the normalised embedding of the caption paired with image $i$ |
+| $\mathbf{T}_{j}$ | "bold T-sub-j" | the embedding of some other candidate caption in the batch |
+| $\langle \mathbf{I}_{i}, \mathbf{T}_{j}\rangle$ | "inner product of I-i and T-j" | their dot product, which on normalised vectors is the cosine similarity |
+| $\tau$ | "tau" | the learned temperature dividing the logits; smaller means a sharper distribution |
+| $\exp$ | "exponential" | the exponential function forming the softmax numerator and denominator |
+| $\sum_{j=1}^{N}$ | "sum over j from one to N" | sum across all candidates in the batch |
+| $\mathcal{L}$ | "script L" | the training loss |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Contrastive learning** | training by pulling matched pairs together and pushing mismatched pairs apart |
+| **Dual encoder** | two separate towers producing comparable vectors, with no interaction between them |
+| **Caption supervision** | using free-form alt-text as the label instead of a fixed class index |
+| **Fixed label set** | the closed vocabulary of classes a classifier can express |
+| **Negatives** | the mismatched candidates a positive pair must be distinguished from — free within a batch |
+| **Diagonal / off-diagonal** | the true pairs, versus every wrong pairing, in the similarity matrix |
+| **Temperature** | the scale on the logits controlling how harshly near-misses are penalised |
+| **Zero-shot classification** | classifying against class names embedded as sentences at inference time, with no task training |
+| **Open vocabulary** | the class set can be invented at query time rather than fixed at training time |
+| **Text-to-image retrieval** | ranking images by closeness to an embedded text query |
+| **Metric learning** | learning a distance function rather than a label prediction |
+| **Mutual information** | the shared information between two views; InfoNCE lower-bounds it |
+| **Conditioning signal** | CLIP's text embedding used as the target a generative model navigates toward |
+
+</details>
 
 This is the keystone of the whole section — arguably the single most influential idea in
 multimodal ML, and the direct ancestor of both the text-conditioning in your diffusion models and
@@ -221,6 +345,51 @@ navigates toward it. CLIP is the bridge that let "type a sentence, get an image"
 
 ## 4. The CLIP family, and where it breaks
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CLIP** | contrastive language–image pre-training | the original softmax-contrastive dual encoder |
+| **SigLIP** | sigmoid loss for language–image pre-training | the sigmoid-loss variant that trains well at smaller batch sizes |
+| **InfoNCE** | information noise-contrastive estimation | the softmax contrastive loss SigLIP replaces |
+| **CLAP** | contrastive language–audio pre-training | the same recipe applied to audio and text |
+| **VLM** | vision-language model | the downstream model whose vision front-end this encoder becomes |
+| **LAION** | large-scale artificial intelligence open network | the open image–text dataset OpenCLIP is trained on |
+| **DFN / MetaCLIP** | data filtering networks / Meta's CLIP reproduction | data-curation-focused retrainings of the recipe |
+| **EVA-CLIP** | — | a scaled-up CLIP training recipe |
+| **ARO / Winoground** | attribution-relation-order / — | benchmarks that probe word order and relational understanding |
+| **T5** | text-to-text transfer transformer | the richer text encoder that improved prompt following |
+| **GPU** | graphics processing unit | the device across which a global softmax must all-gather |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $N$ | "capital N" | the batch size |
+| $N \times N$ | "N by N" | every image-text pairing in the batch, each treated as an independent binary decision under SigLIP |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Sigmoid loss** | scoring each pair independently as match/no-match, removing the batch-global normalisation |
+| **Softmax coupling** | the dependence of every logit on all others, which forces communication across devices |
+| **All-gather** | the collective operation that shares every device's embeddings with every other |
+| **Data curation** | filtering and rebalancing the training pairs; the main lever once the recipe is fixed |
+| **Modality gap** | image and text embeddings occupying separate cones offset by a near-constant vector |
+| **Gap vector** | that roughly constant offset between the two clouds |
+| **Cross-modal threshold** | an absolute similarity cutoff, which must be calibrated per modality pair, never borrowed from same-modality scores |
+| **Compositionality** | encoding *how* concepts relate, not just which are present |
+| **Bag-of-words behaviour** | representing a caption as its set of concepts, losing word order and relations |
+| **Fine-grained blindness** | a single low-resolution global vector losing small text, counts and detail |
+| **Web bias** | the stereotypes and skew inherited from uncurated internet alt-text |
+| **Vision encoder** | the image tower, reused frozen as the "eyes" of a VLM |
+
+</details>
+
 CLIP is a *recipe*, not a single model, and understanding its improvements and failure modes is
 what separates "I've heard of CLIP" from being able to judge a system that uses it.
 
@@ -272,6 +441,34 @@ how it's used next.
 
 ## 5. Two grand strategies for going multimodal
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VLM** | vision-language model | one model that ingests images and generates language |
+| **RAG** | retrieval-augmented generation | retrieving relevant context and putting it in the model's prompt |
+| **CLIP / SigLIP** | contrastive (or sigmoid) language–image pre-training | the dual encoders used as the retrieval primitive and as VLM front-ends |
+| **GUI** | graphical user interface | the screens a VLM-driven agent reads and acts on |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Dual-encoder / alignment** | two encoders, one shared space, comparison by distance — cheap, cacheable, non-generative |
+| **Fusion** | projecting one modality into another model's token stream so a single model reasons over both |
+| **Cosine distance** | one minus cosine similarity, used to rank candidates |
+| **Frozen** | weights held fixed; here, vectors precomputed once and reused for every query |
+| **Non-generative** | the model ranks and retrieves but produces no new content |
+| **Deduplication** | finding near-identical items by embedding proximity |
+| **Conditioning** | feeding a text vector to a generative model as the target to navigate toward |
+| **Multimodal RAG** | embedding images and text into one space so retrieval spans both |
+| **Visual question answering** | answering a natural-language question about an image |
+
+</details>
+
 Here is the fork that organises the entire field. Given two modalities (say image and text), there
 are two fundamentally different things you can build, and they serve different jobs:
 
@@ -312,6 +509,50 @@ first because it's the reusable primitive; the VLM is what you get when you plug
 ---
 
 ## 6. How a modern VLM actually works
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VLM** | vision-language model | an LLM extended to take images as input |
+| **LLM** | large language model | the decoder-only transformer doing the reasoning and generation |
+| **MLP** | multi-layer perceptron | a small feedforward network; here, the projector |
+| **ViT** | vision transformer | the patch-token image encoder |
+| **CLIP / SigLIP** | contrastive (or sigmoid) language–image pre-training | the language-aligned encoders used as the frozen vision front-end |
+| **LLaVA** | large language and vision assistant | the reference open recipe: frozen encoder, MLP projector, instruction tuning |
+| **AnyRes** | any resolution | the tiling scheme that splits a large image into sub-tiles before encoding |
+| **KV cache** | key-value cache | the stored attention keys and values that make incremental decoding cheap — and that image tokens enlarge |
+| **OCR** | optical character recognition | reading text out of an image |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $L$ | "capital L" | the combined text-plus-visual sequence length |
+| $O(L^{2})$ | "big-O of L squared" | self-attention cost growing with the square of that length |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Vision encoder** | the frozen, language-aligned image tower producing a grid of patch features |
+| **Patch features** | the per-patch vectors, kept as a grid rather than pooled to one vector, so spatial detail survives |
+| **Projector** | the trained map from vision-feature dimension into the LLM's token-embedding dimension |
+| **Visual token** | a projected patch feature, shaped indistinguishably from a word embedding |
+| **Resampler** | a learned module that compresses many patch features into a fixed smaller set of vectors |
+| **Cross-attention fusion** | letting text tokens attend to vision features without those features occupying sequence slots |
+| **Alignment pre-training** | stage one: freeze encoder and LLM, train only the projector on image-caption data |
+| **Visual instruction tuning** | stage two: fine-tune on (image, question, answer) data so the model follows visual instructions |
+| **Early fusion / native multimodality** | training one transformer on all modalities from the start, rather than bolting vision on |
+| **Interleaving** | mixing image and text freely in both input and output |
+| **Tiling (image splitting)** | cutting a high-resolution image into sub-tiles, encoding each, and feeding all their tokens |
+| **Token compression / pruning** | discarding or merging visual tokens to control the sequence-length blow-up |
+| **Decoder-only transformer** | the standard causal LLM architecture receiving the combined sequence |
+
+</details>
 
 A **Vision-Language Model** (VLM / multimodal LLM) is the thing you mean when you say "GPT-4o can
 see" or "Claude can read a screenshot." Stripped to essentials it's three parts, and the LLaVA
@@ -402,6 +643,35 @@ KV-cache experience): the image is just more tokens in the sequence.
 
 ## 7. The idea generalises: any modality, one space
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **IMU** | inertial measurement unit | accelerometer/gyroscope motion data, one of ImageBind's modalities |
+| **OCR** | optical character recognition | extracting text from an image — the pipeline ColPali removes |
+| **RAG** | retrieval-augmented generation | retrieving context and putting it in the prompt |
+| **ColBERT** | contextualised late interaction over BERT | the token-level late-interaction retrieval scheme ColPali borrows |
+| **PDF** | portable document format | the page-image documents being retrieved over |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Shared embedding space** | one coordinate system into which several modalities are mapped |
+| **Hub modality** | the anchor (image, for ImageBind) that every other modality is trained to align with |
+| **Emergent cross-modal alignment** | pairs never trained together ending up aligned through the shared anchor |
+| **Any-to-any model** | one model that both ingests and generates several modalities |
+| **Modality-specific encoder / decoder** | the per-modality front and back ends around a shared core |
+| **Late interaction** | scoring a query against a document by matching their token vectors individually, instead of comparing two single vectors |
+| **Patch vectors (document)** | the grid of per-patch embeddings of a rendered page image |
+| **Chunking** | splitting a document into passages for indexing — the brittle step ColPali avoids |
+| **Multimodal embedding** | a vector index in which images, text and page renderings are directly comparable |
+
+</details>
+
 CLIP aligned two modalities. The obvious next question — *can we put **everything** in one space?*
 — has two influential answers worth knowing:
 
@@ -427,6 +697,51 @@ document RAG this is quietly a big deal.
 ---
 
 ## 8. Choosing an embedding / multimodal model — an application cheatsheet
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MTEB** | massive text embedding benchmark | the standard multi-task embedding leaderboard |
+| **ViDoRe** | visual document retrieval benchmark | the leaderboard for retrieval over page images |
+| **ANN** | approximate nearest neighbour | the index structure that makes vector search fast at scale |
+| **RAG** | retrieval-augmented generation | retrieve, then put the results in the model's prompt |
+| **STS** | semantic textual similarity | one of the MTEB task families, distinct from retrieval |
+| **MoE** | mixture of experts | a sparse architecture activating only some parameters per input |
+| **SOTA** | state of the art | the current best published result |
+| **OCR** | optical character recognition | text extraction from images, which ColPali-style retrieval bypasses |
+| **ctx** | context length | the maximum input length the embedder accepts |
+| **dim** | dimension | the number of components per embedding vector |
+| **GPU** | graphics processing unit | the accelerator the self-hosted models run on |
+| **SEA** | Southeast Asian | the language group relevant to the reader's multilingual work |
+| **MIT / Apache-2.0** | permissive open-source licences | commercial use allowed |
+| **CC-BY-NC** | Creative Commons attribution-non-commercial | commercial use *not* allowed |
+| **HF** | Hugging Face | the hub the open models are published on |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Dominant axis** | the single constraint (task, dimension, context, languages, licence, hosting) that decides the pick |
+| **Matryoshka representation** | training so that truncating a vector to its first components still gives a usable embedding |
+| **Dimension truncation** | cutting a vector short to shrink the index, trading a little accuracy for speed and storage |
+| **Bi-encoder** | encodes query and document separately, so document vectors can be cached — fast but coarse |
+| **Cross-encoder reranker** | reads query and candidate together with full attention and rescores — accurate but too slow for the whole corpus |
+| **Two-stage retrieval** | retrieve a wide candidate set cheaply, then rerank the top few accurately |
+| **Dense vector** | a single continuous embedding of the whole chunk |
+| **Sparse vector** | a term-weighted representation, complementary to dense retrieval |
+| **Late interaction** | token-level matching between query and document vectors |
+| **Query / passage prefixes** | the instruction strings some models require in front of the input, without which quality drops |
+| **Gated weights** | weights that require accepting terms or a token before download |
+| **Self-host** | run the weights on your own hardware; no per-call cost, data never leaves |
+| **Leaderboard task column** | the per-task score to filter on — the overall average hides task-specific weakness |
+| **Chunking** | splitting documents into indexable pieces; long-context embedders reduce the need for it |
+| **Cross-lingual retrieval** | querying in one language and retrieving documents in another |
+
+</details>
 
 Sections 1–7 are *how it works*. This is the part you'll actually live in: when you build
 retrieval, semantic search, or RAG (M13 Ch2), **which embedding model do you pick?** Written for

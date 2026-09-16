@@ -44,6 +44,53 @@ you may have hit without naming.
 
 ## 1. The layered model — just enough
 
+<details>
+<summary><b>Vocabulary for this section</b> — the layer names, their units, and the abbreviations used in the table and diagram (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OSI** | Open Systems Interconnection | the 7-layer reference model; used here only as shared jargon ("layer-7 proxy") |
+| **TCP/IP** | Transmission Control Protocol / Internet Protocol | the 4-layer model the internet actually implements |
+| **TCP** | Transmission Control Protocol | the transport that gives you a reliable, ordered byte stream |
+| **UDP** | User Datagram Protocol | the transport that just sends a datagram, with no reliability or ordering |
+| **QUIC** | (a name, not an acronym) | a modern transport built on UDP that carries its own reliability and encryption |
+| **IP** | Internet Protocol | the layer that gets a packet across networks to the right host |
+| **HTTP** | HyperText Transfer Protocol | the application protocol this whole module is about |
+| **gRPC** | (a recursive name; "g" varies by release) | a binary remote-procedure-call protocol that runs over HTTP/2 |
+| **DNS** | Domain Name System | the system that turns names into IP addresses |
+| **TLS** | Transport Layer Security | the encryption layer that turns `http://` into `https://` |
+| **MAC** | media access control | the hardware-level address of a network interface on one physical network |
+| **URL** | uniform resource locator | the address of a resource, e.g. `https://api.example.com/v1/thing` |
+| **L2 / L3 / L4 / L7** | layer 2 / 3 / 4 / 7 | shorthand for how deep into the headers a device reads — link / IP / port / application |
+| **v4 / v6** | version 4 / version 6 | the two IP address formats in use |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Encapsulation** | each layer wraps the layer above in its own header, like nested envelopes; the peer's matching layer unwraps it |
+| **Layer** | one level of the stack, with a single job and a narrow interface to the level above and below |
+| **Header** | the metadata a layer prepends to the data it was handed |
+| **Payload** | the data a layer was handed, which it treats as opaque |
+| **Message** | the application layer's unit — one HTTP request or response |
+| **Segment** | TCP's unit: a numbered chunk of the byte stream |
+| **Datagram** | UDP's unit: one self-contained packet, sent with no setup and no delivery promise |
+| **Packet** | the Internet layer's unit, addressed host-to-host |
+| **Frame** | the link layer's unit, addressed to the next physical hop only |
+| **Port number** | a 16-bit number identifying *which program* on a host a segment belongs to |
+| **IP address** | the address of a host on the internet |
+| **Switch** | a device that forwards frames using MAC addresses — a layer-2 device |
+| **Router** | a device that forwards packets using IP addresses — a layer-3 device |
+| **Load balancer** | a device that spreads requests across several servers; layer-4 if it decides on ports, layer-7 if it reads the URL or headers |
+| **`Host` header** | the HTTP header naming which site the request is for, so one IP can serve many sites |
+| **WebSocket** | a long-lived, two-way connection negotiated over HTTP |
+| **Deep module** | a module with a lot of functionality behind a small interface — the M04 term for what a good layer is |
+| **Leaky abstraction** | an abstraction whose hidden mechanism still shows through, e.g. TCP's "reliable stream" leaking packet loss as unexplained latency |
+
+</details>
+
 A networked request is built like a set of **nested envelopes**. Each layer wraps the layer above in
 its own header, sends it, and the peer's matching layer unwraps it. This is **encapsulation**, and it
 is the single structural idea that makes the whole stack comprehensible.
@@ -101,6 +148,56 @@ theme we'll hit repeatedly.
 
 ## 2. Names → addresses: DNS
 
+<details>
+<summary><b>Vocabulary for this section</b> — the resolver chain, the record types, and every abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DNS** | Domain Name System | the distributed database that translates names to IP addresses |
+| **TTL** | time to live | how many seconds an answer may be cached before it must be looked up again |
+| **TLD** | top-level domain | the last label of a name — `.com`, `.org`, `.sg` |
+| **NS** | name server | a record naming which servers are authoritative for a domain |
+| **A** | address | a record mapping a name to an IPv4 address |
+| **AAAA** | (four As, i.e. four times the size of an A record) | a record mapping a name to an IPv6 address |
+| **CNAME** | canonical name | a record making one name an alias for another; costs an extra resolution |
+| **MX** | mail exchanger | a record naming the mail servers for a domain |
+| **TXT** | text | a free-text record, used for verification and policy data |
+| **SPF** | Sender Policy Framework | a `TXT` record listing who may send mail for a domain |
+| **NXDOMAIN** | non-existent domain | the DNS answer meaning "this name does not exist" |
+| **UDP** | User Datagram Protocol | the connectionless transport classic DNS rides on — one datagram each way |
+| **TCP** | Transmission Control Protocol | the reliable transport DNS falls back to for large answers |
+| **TLS** | Transport Layer Security | the encryption layer used by the private DNS variants |
+| **DoH** | DNS over HTTPS | DNS queries tunnelled inside an HTTPS connection |
+| **DoT** | DNS over TLS | DNS queries sent over a dedicated TLS connection |
+| **HTTPS** | HTTP Secure | HTTP carried inside TLS |
+| **IPv4 / IPv6** | Internet Protocol version 4 / version 6 | the 32-bit and 128-bit address formats |
+| **CDN** | content delivery network | a globally distributed cache serving content from near the user |
+| **VPC** | Virtual Private Cloud | a private, isolated network inside a cloud provider |
+| **ISP** | internet service provider | the company that connects you to the internet, and usually runs your default resolver |
+| **OS** | operating system | here, the local machine's own DNS cache |
+| **ms** | milliseconds | thousandths of a second |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stub resolver** | the minimal DNS client built into your OS or application; it asks a recursive resolver and nothing else |
+| **Recursive resolver** | the server that does the whole root → TLD → authoritative walk on your behalf and caches the answer |
+| **Root servers** | the top of the DNS hierarchy; they tell you which servers handle `.com`, `.org` and so on |
+| **Authoritative server** | the server that holds the real records for a domain — the final source of truth |
+| **Record** | one entry in the DNS database: a name, a type, a value, and a TTL |
+| **Cold cache** | the state where nothing is cached yet, so the full resolution walk runs |
+| **Negative caching** | caching the *absence* of a record, so a just-created name still looks missing for a while |
+| **Split-horizon DNS** | the same name answering differently depending on where you ask from — private address inside a VPC, public address outside |
+| **Anycast** | announcing the same IP address from many locations so routing sends each client to the nearest one |
+| **Round-trip** | one out-and-back exchange with a remote machine; the unit of latency accounting in this section |
+| **Handshake** | the setup exchange a connection-oriented protocol runs before carrying data |
+| **Cold start** | the extra one-time cost paid the first time, before caches and connections are warm |
+
+</details>
+
 You typed a name (`api.example.com`); IP routes to *numbers*. **DNS** (the Domain Name System) is the
 distributed database that translates one to the other, and it's the **first round-trip of most
 requests** — often an invisible latency source.
@@ -156,6 +253,50 @@ not from my laptop" (and vice-versa).
 
 ## 2b. Finding the host: IP & routing (and why NAT complicates your WebSockets)
 
+<details>
+<summary><b>Vocabulary for this section</b> — routing terms, the NAT vocabulary, and the one symbol in the text (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **IP** | Internet Protocol | the best-effort, connectionless delivery layer |
+| **IPv4 / IPv6** | Internet Protocol version 4 / version 6 | the 32-bit (\~4.3 billion addresses) and 128-bit address formats |
+| **NAT** | Network Address Translation | rewriting addresses so many private hosts share one public IP |
+| **TCP** | Transmission Control Protocol | the reliable transport built on top of IP, covered in §4 |
+| **STUN** | Session Traversal Utilities for NAT | a helper protocol that tells a host what its public address looks like from outside |
+| **TURN** | Traversal Using Relays around NAT | a helper protocol that relays traffic through a third-party server when a direct path is impossible |
+| **AS** | autonomous system | one network under a single routing administration, e.g. an ISP or a large cloud |
+| **AWS** | Amazon Web Services | the cloud provider used in the applied section |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| ${2}^{128}$ | "two to the one hundred and twenty-eighth" | the size of the IPv6 address space — 128 bits, each independently 0 or 1 |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Best-effort delivery** | the network will try to deliver a packet, and promises nothing about arrival, ordering or duplication |
+| **Connectionless** | no setup exchange; each packet is routed independently of every other |
+| **Hop** | one router-to-router step along the path |
+| **Default gateway** | the router your machine sends everything non-local to |
+| **Longest-prefix match** | the forwarding rule: pick the most specific route that covers the destination address |
+| **`traceroute`** | a tool that reveals the chain of routers a packet passes through |
+| **Public address** | an address reachable from anywhere on the internet |
+| **Private address** | an address usable only inside one network, and not routable on the public internet |
+| **Dialable** | able to receive an inbound connection because it has a stable, reachable address |
+| **Peer-to-peer** | two clients connecting directly to each other rather than through a server |
+| **NAT mapping** | the translation entry a NAT box keeps per connection so replies find their way back |
+| **Idle timeout** | how long a NAT or firewall keeps that mapping without traffic before silently discarding it |
+| **WebSocket** | a long-lived two-way connection over HTTP — the thing a dropped NAT mapping kills |
+| **Heartbeat / keepalive** | a small periodic message sent purely to keep a mapping or connection alive |
+| **Latency floor** | the minimum possible delay, set by distance and hop count before any protocol overhead |
+
+</details>
+
 With an IP in hand, the packet has to *get there*. The **Internet layer (IP)** is a **best-effort,
 connectionless** delivery service: it will try to move a packet toward its destination address and
 makes **no promise** it arrives, arrives once, or arrives in order. (All the reliability you rely on
@@ -187,6 +328,44 @@ any protocol overhead — which §3 puts a number on.
 
 ## 3. The physics floor: distance is latency
 
+<details>
+<summary><b>Vocabulary for this section</b> — the latency terms and every symbol in the round-trip formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RTT** | round-trip time | the time for a message to reach the far end and its reply to come back |
+| **CDN** | content delivery network | a globally distributed cache serving content from near the user |
+| **ms** | milliseconds | thousandths of a second |
+| **km** | kilometres | distance |
+| **m/s** | metres per second | speed |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\text{RTT}_{\min}$ | "R-T-T min" | the smallest possible round-trip time on a path — the floor set by distance alone |
+| $\text{distance}$ | "distance" | the one-way path length between the two machines |
+| $c$ | "c" | the speed of light in vacuum, about ${3}\times10^{8}$ m/s |
+| $\frac{2}{3}c$ | "two-thirds c" | the actual signal speed in fibre, roughly ${2}\times10^{8}$ m/s |
+| ${2} \times \text{distance}$ | "two times distance" | the round trip — out and back — hence the factor of two |
+| $\approx$ | "approximately equals" | the two sides are close, not exactly equal |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Latency** | the delay before data arrives — distinct from **bandwidth**, which is how much arrives per second |
+| **Bandwidth** | throughput per unit time; adding more of it does *not* shorten a round trip |
+| **Fibre** | optical cable, where signals travel at about two-thirds the speed of light |
+| **Round-trip** | one out-and-back exchange; the unit in which setup cost is counted |
+| **Edge / PoP** | a provider location close to users, used to shorten the physical distance |
+| **Regional replica** | a copy of a service deployed nearer to its users for the same reason |
+| **Same-region** | both machines inside one data-centre region, where the floor is under a millisecond |
+
+</details>
+
 Here is the number that reframes everything. Signals in fibre travel at about **two-thirds the speed
 of light** — roughly $2\times10^{8}$ m/s. So a round trip has a **hard floor set by distance alone**,
 before any software:
@@ -205,6 +384,49 @@ quantitative.
 ---
 
 ## 4. The reliable pipe: TCP
+
+<details>
+<summary><b>Vocabulary for this section</b> — the handshake, the reliability machinery, and the TCP-vs-UDP vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TCP** | Transmission Control Protocol | turns IP's unreliable packets into a reliable, ordered byte stream |
+| **UDP** | User Datagram Protocol | fire-and-forget datagrams: no handshake, no ordering, no retransmission |
+| **IP** | Internet Protocol | the best-effort packet layer TCP is built on |
+| **RTT** | round-trip time | the time for a message and its reply |
+| **SYN** | synchronize | the first handshake packet, carrying the sender's starting sequence number |
+| **ACK** | acknowledge | a packet confirming which bytes have been received |
+| **SYN-ACK** | synchronize-acknowledge | the server's combined reply: yes, and here is my starting sequence number |
+| **HOL** | head-of-line | the blocking pattern where one stalled item holds up everything queued behind it |
+| **`cwnd`** | congestion window | how much data TCP allows in flight before waiting for acknowledgements |
+| **QUIC** | (a name, not an acronym) | the UDP-based transport that fixes TCP's head-of-line blocking; §7 |
+| **VoIP** | voice over IP | real-time voice traffic, a typical UDP user |
+| **HTTP** | HyperText Transfer Protocol | the application protocol carried over TCP here |
+| **DNS** | Domain Name System | name resolution, a typical UDP user |
+| **ms** | milliseconds | thousandths of a second |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Byte stream** | the abstraction TCP sells: an ordered, gap-free sequence of bytes, as if you were writing to a file |
+| **3-way handshake** | the SYN / SYN-ACK / ACK exchange that opens a TCP connection — one full RTT before any data |
+| **Sequence number** | the number identifying where a byte sits in the stream, so the receiver can reorder and spot gaps |
+| **Retransmission** | resending data that was not acknowledged within a timeout |
+| **Flow control** | the receiver advertising how much it can buffer, so a fast sender cannot drown a slow one |
+| **Sliding window** | the mechanism implementing flow control: a moving range of bytes the sender may have outstanding |
+| **Congestion control** | the sender limiting its rate to avoid overloading the *network* — distinct from flow control, which protects the *receiver* |
+| **Slow start** | the ramp-up phase: a new connection sends cautiously and grows its window as acknowledgements return |
+| **In-flight** | sent but not yet acknowledged |
+| **Head-of-line blocking** | in-order delivery means one lost segment stalls every byte behind it, even bytes that already arrived |
+| **Warm connection** | one that is already open and has already ramped up its congestion window — hence faster than a new one |
+| **Connection reuse** | sending later requests over an already-open connection instead of paying setup again |
+| **Datagram** | one self-contained UDP packet, delivered or lost independently |
+| **Fire-and-forget** | send it and do not track whether it arrived |
+
+</details>
 
 IP gives you unreliable packets; **TCP** turns them into the **reliable, ordered, byte-stream**
 abstraction almost everything above assumes. It costs a round-trip up front and adds machinery you
@@ -244,6 +466,37 @@ reliability on top of.*
 
 ## 5. Securing it: TLS (as a latency line-item)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the TLS handshake as a latency line-item (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol that encrypts and authenticates a connection before HTTP flows |
+| **HTTPS** | HTTP Secure | HTTP carried inside TLS; the `https://` scheme |
+| **RTT** | round-trip time | the time for a message and its reply |
+| **0-RTT** | zero round-trip time | resumption that lets a client send data on its very first flight, costing no extra round trip |
+| **TCP** | Transmission Control Protocol | the reliable transport TLS normally runs on top of |
+| **DNS** | Domain Name System | name resolution, the first round-trip of a cold request |
+| **HTTP** | HyperText Transfer Protocol | the application protocol that finally carries your request |
+| **ms** | milliseconds | thousandths of a second |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **TLS handshake** | the exchange in which client and server agree keys and the server proves its identity, before any HTTP is sent |
+| **TLS 1.2** | the older version, needing about two round-trips of handshake |
+| **TLS 1.3** | the modern default, needing one round-trip — and zero on resumption |
+| **Resumption** | reusing key material from a recent session with the same host, so the handshake can be shortened |
+| **Early data** | application data sent on the first 0-RTT flight, before the handshake completes |
+| **Cold request** | the first request to a host, with nothing cached and no connection open |
+| **Time to first byte** | how long after the request starts before the first byte of the response arrives |
+| **Latency line-item** | treating a protocol step as a row in a budget: how many round-trips does it cost |
+
+</details>
+
 Almost every request today is `https://`, so after TCP connects, client and server run a **TLS
 handshake** to agree on keys before any HTTP flows. Full crypto detail is M02 Ch3 / M10; here it's a
 **latency line-item**, and the version matters:
@@ -260,6 +513,35 @@ data was one of those four. *That ratio is the whole point of this section.*
 ---
 
 ## 6. The whole journey, assembled
+
+<details>
+<summary><b>Vocabulary for this section</b> — the four steps in the sequence diagram and their labels (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DNS** | Domain Name System | step ①: name to IP address |
+| **TCP** | Transmission Control Protocol | step ②: the reliable transport handshake |
+| **TLS** | Transport Layer Security | step ③: the encryption handshake |
+| **HTTP** | HyperText Transfer Protocol | step ④: the actual request and response |
+| **RTT** | round-trip time | the time for a message and its reply — the unit each step is counted in |
+| **SYN / SYN-ACK / ACK** | synchronize / synchronize-acknowledge / acknowledge | the three packets of the TCP handshake |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **ClientHello** | the first TLS message: the client's supported versions, ciphers and extensions |
+| **ServerHello** | the server's reply, choosing the parameters and starting the key exchange |
+| **Certificate** | the signed document by which the server proves it really is that hostname |
+| **`200 OK`** | the HTTP status code meaning the request succeeded |
+| **`GET`** | the HTTP method that asks for a representation of a resource without changing it |
+| **Keep-alive** | holding the TCP connection open after a response so the next request skips steps ② and ③ |
+| **Setup round-trip** | a round-trip spent on negotiation rather than on carrying your data — three of the four here |
+| **Connection reuse** | sending the next request over that still-open connection |
+
+</details>
 
 <!-- DIAGRAM:START -->
 ![Diagram 3](diagrams/01-how-a-request-travels-3.svg)
@@ -298,6 +580,40 @@ Four sequential round-trips, three of which are *setup*. The dashed lesson: keep
 
 ## 7. QUIC & HTTP/3 — the modern reshuffle
 
+<details>
+<summary><b>Vocabulary for this section</b> — QUIC's vocabulary and the HTTP version lineage (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **QUIC** | (a name, not an acronym — originally "Quick UDP Internet Connections") | a transport built on UDP that carries its own reliability, ordering and encryption |
+| **HTTP/1.1, HTTP/2, HTTP/3** | HyperText Transfer Protocol versions | the three wire formats in use; same meaning, different delivery |
+| **UDP** | User Datagram Protocol | the bare datagram transport QUIC builds on |
+| **TCP** | Transmission Control Protocol | the reliable transport HTTP/1.1 and HTTP/2 use |
+| **TLS** | Transport Layer Security | the encryption layer; QUIC folds TLS 1.3 into its own handshake |
+| **RTT** | round-trip time | the time for a message and its reply |
+| **0-RTT** | zero round-trip time | resumption with no extra handshake round-trip |
+| **HOL** | head-of-line | the blocking pattern where one stalled item holds up everything behind it |
+| **OS** | operating system | relevant because TCP lives in the kernel and QUIC does not |
+| **IP** | Internet Protocol | the addressing layer underneath |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **User space** | ordinary application code, outside the OS kernel — so QUIC can be updated by shipping a new app, not a new kernel |
+| **Kernel** | the core of the operating system, where the TCP implementation lives and changes slowly |
+| **Stream** | one independent ordered sequence of data inside a single connection |
+| **Multiplexing** | carrying many streams over one connection at the same time |
+| **Head-of-line blocking** | one lost packet stalling data behind it; in TCP it stalls *all* streams, in QUIC only its own |
+| **Connection migration** | a connection surviving a change of network because it is identified by an ID rather than by addresses |
+| **Connection ID** | the identifier QUIC uses in place of the address pair |
+| **4-tuple** | source IP, source port, destination IP, destination port — how TCP identifies a connection, which is why changing network kills it |
+| **Resumption** | reusing key material from a recent session to shorten or skip the handshake |
+
+</details>
+
 QUIC is what you get when you take the previous three sections seriously and ask "why are TCP and TLS
 *two* separate handshakes, and why does one lost packet stall unrelated streams?" It's the transport
 behind **HTTP/3**, and it's worth knowing because it's now a large fraction of real web traffic.
@@ -319,6 +635,41 @@ head-of-line blocking** — the two themes of this whole section.
 ---
 
 ## 8. The latency budget — put numbers on it
+
+<details>
+<summary><b>Vocabulary for this section</b> — the budget's phases and the three latency levers (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DNS** | Domain Name System | the name-resolution phase of the budget |
+| **TCP** | Transmission Control Protocol | the transport-handshake phase |
+| **TLS** | Transport Layer Security | the encryption-handshake phase |
+| **HTTP** | HyperText Transfer Protocol | the phase that actually carries the request and response |
+| **RTT** | round-trip time | the unit each phase is measured in |
+| **0-RTT** | zero round-trip time | TLS resumption that costs no extra round-trip |
+| **CDN** | content delivery network | a globally distributed cache serving content from near the user |
+| **PoP** | point of presence | one of a CDN's physical locations close to users |
+| **HTTP/2** | HyperText Transfer Protocol version 2 | the version that multiplexes many requests over one connection |
+| **ms** | milliseconds | thousandths of a second |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Latency budget** | the total time to first byte, broken into the round-trips that make it up |
+| **Time to first byte** | how long after a request starts before its first response byte arrives |
+| **Cold** | nothing cached, no connection open — the full four round-trips |
+| **Warm** | DNS cached and the connection still open, so only the HTTP round-trip remains |
+| **Keep-alive** | holding a connection open between requests so setup is paid once, not per request |
+| **Multiplexing** | sending many requests concurrently over one connection |
+| **Prefetch** | resolving DNS or opening a connection ahead of time, before the request is actually needed |
+| **Streaming** | sending the response body progressively so the client can start using it before the whole body exists |
+| **First paint** | the moment a browser first draws something for the user |
+| **Unit cost** | the size of one round-trip on a given path; moving closer shrinks it, reusing connections reduces how many you pay |
+
+</details>
 
 This is the payoff figure: the same first-byte cost, broken into its round-trips, for three real
 scenarios. It makes M01 Ch4's abstractions ("count the round-trips," "amortize setup," "move closer")

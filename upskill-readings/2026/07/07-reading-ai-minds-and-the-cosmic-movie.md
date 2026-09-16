@@ -12,6 +12,62 @@
 
 ## 1. 🔦 The black box is cracking open: reading the mind of an LLM
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | |
+| **LLM** | large language model | the kind of model being dissected here |
+| **MRI** | magnetic resonance imaging | the medical scanner used as the metaphor for a pre-deployment diagnostic on a model |
+| **DNA** | deoxyribonucleic acid | genetic material; one of the unrelated things a single polysemantic neuron was found to fire for |
+| **HTTP** | hypertext transfer protocol | the web's request protocol; another of those unrelated things |
+| **MIT** | Massachusetts Institute of Technology | publisher of *MIT Technology Review* and its annual breakthrough-technologies list |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n_{\text{features}}$ | "n-features" | the number of distinct concepts the model needs to represent |
+| $d_{\text{neurons}}$ | "d-neurons" | the width of the layer — how many neurons are actually available to represent them |
+| $\gg$ | "is much greater than" | the inequality that forces superposition: far more concepts than neurons to hold them |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Mechanistic interpretability** | reverse-engineering what a trained network actually computes internally, rather than judging it only by its outputs |
+| **Weights** | the billions of numbers adjusted during training; the model's entire learned content lives in them |
+| **Emergent property** | a behaviour nobody specified, which appears as a consequence of training rather than of code |
+| **Neuron** | one scalar unit in a layer, whose activation is what interpretability tools read |
+| **Activation** | a neuron's or layer's numeric output on a given input — the internal state at that moment |
+| **Polysemantic** | of a neuron: it fires for several unrelated concepts, so its value alone means nothing legible |
+| **Monosemantic** | of a feature: it fires for exactly one human-recognisable concept |
+| **Superposition** | the model packing more concepts than it has neurons by letting concepts share overlapping sets of neurons |
+| **Feature** | a direction in activation space that corresponds to one concept — the unit interpretability actually works with |
+| **Sparse autoencoder (SAE)** | a small second network trained to re-express a layer's activations as a large dictionary of features, under a constraint that almost all are off at once |
+| **Sparsity** | the constraint that only a tiny fraction of features may be active on any input; it is what makes the features come out monosemantic |
+| **Dictionary** | the full learned set of features an SAE produces — millions of them for a frontier model |
+| **Clamping (steering)** | forcing a chosen feature to a fixed value during inference, which changes behaviour without retraining |
+| **Golden Gate Claude** | the 2024 public demo in which Anthropic clamped the "Golden Gate Bridge" feature to maximum and the model became fixated on it |
+| **Circuit** | a connected path of features and weights that implements one piece of computation |
+| **Circuit tracing** | following those connections to see, step by step, how a prompt becomes an output |
+| **Attribution graph** | the resulting diagram of which features fed which, from prompt to answer |
+| **Next-token predictor** | the training objective — predict the next piece of text — that the planning finding complicates |
+| **Chain of thought** | the model's written-out reasoning; shown here to be sometimes a post-hoc story rather than the real computation |
+| **Motivated reasoning** | working backwards from a desired or supplied conclusion and dressing it up as a derivation |
+| **Jailbreak** | a prompt that gets a model to bypass its own safety behaviour |
+| **Sycophancy** | telling the user what they want to hear; one of the features found |
+| **Deception** | the model asserting something it internally represents as false |
+| **Power-seeking** | a hypothesised failure mode where a model pursues resources or influence; one thing an "MRI for AI" would scan for |
+| **Multimodal feature** | a feature that fires for a concept whether it arrives as text or as an image |
+| **Emotion vectors** | the ~171 emotion-concept directions reported in April 2026 that causally shift behaviour when nudged |
+| **Safety infrastructure** | tooling run as a precondition of deployment, rather than as research curiosity |
+
+</details>
+
 🔗 **Start here (both are gorgeous, accessible reads):** [Mapping the Mind of a Large Language Model — Anthropic](https://www.anthropic.com/research/mapping-mind-language-model) · [Tracing the thoughts of a language model — Anthropic](https://www.anthropic.com/research/tracing-thoughts-language-model)
 🔗 **The "why now":** [10 Breakthrough Technologies 2026 — MIT Technology Review](https://www.technologyreview.com/2026/01/12/1130697/10-breakthrough-technologies-2026/) · [The Urgency of Interpretability — Dario Amodei](https://www.darioamodei.com/post/the-urgency-of-interpretability)
 🔗 **Go deeper:** [Golden Gate Claude — Anthropic](https://www.anthropic.com/news/golden-gate-claude) · [On the Biology of a Large Language Model — Transformer Circuits](https://transformer-circuits.pub/2025/attribution-graphs/biology.html) · [Simon Willison's walkthrough](https://simonwillison.net/2025/Mar/27/tracing-the-thoughts-of-a-large-language-model/)
@@ -78,6 +134,65 @@ flowchart LR
 ---
 
 ## 2. 🌌 The 3,200-megapixel eye that films the whole sky every few nights
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LSST** | Legacy Survey of Space and Time | Rubin Observatory's ten-year survey, and the name of its camera |
+| **TB** | terabyte | a trillion bytes — Rubin produces about 20 of them per night |
+| **PB** | petabyte | a thousand terabytes — about 500 of them over the full survey |
+| **kg** | kilogram | |
+| **m** | metre | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $r$ | "r" | distance from the centre of the galaxy |
+| $v(r)$ | "v of r" | the orbital speed of a star at that distance — the quantity Rubin measured |
+| $M(r)$ | "M of r" | the total mass enclosed inside radius $r$ |
+| $\propto$ | "is proportional to" | scales as, ignoring the constant factor |
+| $\approx$ | "is approximately" | |
+| $v \propto 1/\sqrt{r}$ | "v is proportional to one over root r" | the Keplerian falloff expected if the visible mass is all there is |
+| $\text{const}$ | "constant" | flat — the same value at every radius, which is what was actually observed |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Vera C. Rubin Observatory** | the telescope in the Chilean Andes built to survey the whole southern sky repeatedly for ten years |
+| **Vera Rubin** | the American astronomer whose 1970s rotation-curve measurements made the case for dark matter |
+| **LSST Camera** | its 3,200-megapixel imager, a mosaic of 189 sensors, roughly the size of a small car |
+| **Megapixel / gigapixel** | a million / a billion pixels in one image |
+| **Sensor mosaic** | many separate imaging chips tiled into one focal plane to make a single huge image |
+| **Exposure** | one shot; Rubin's covers a patch of sky about as wide as 45 full Moons |
+| **Cadence** | how often the same patch of sky gets re-photographed — here every three to four nights |
+| **Survey** | an observing programme that covers the sky systematically instead of pointing at chosen targets |
+| **Commissioning** | the shakedown period before science operations, during which the ten hours of test data were taken |
+| **Template (reference image)** | the stored picture of a patch of sky that each new image is compared against |
+| **Image differencing** | subtracting the template from the new image so that only what changed survives |
+| **Alert** | a machine-readable notice that something moved, appeared, or changed brightness |
+| **Alert stream** | the live feed of those notices — up to 10 million a night, each within about 60 seconds |
+| **Data Preview 2** | the first science-grade public data release from the survey, landing in the second half of 2026 |
+| **Transient** | an object or event that changes on human timescales — a supernova, a flare, a moving asteroid |
+| **Supernova** | an exploding star, briefly as bright as its whole galaxy |
+| **Near-Earth asteroid / near-Earth object (NEO)** | a small body whose orbit brings it close to Earth's — the ones worth tracking |
+| **Interstellar visitor** | an object passing through the solar system on an unbound orbit, originating outside it |
+| **Rotation curve** | a plot of orbital speed against distance from a galaxy's centre |
+| **Keplerian falloff** | the speed-drops-with-distance pattern you get when nearly all the mass sits in the middle, as in the solar system |
+| **Flat rotation curve** | the observed pattern where outer stars orbit as fast as inner ones — the anomaly dark matter explains |
+| **Dark matter** | mass that has gravity but emits no light; roughly five times as much of it as of visible matter |
+| **Halo** | the extended, roughly spherical cloud of dark matter a galaxy sits inside |
+| **Dark energy** | whatever is driving the accelerating expansion of the universe |
+| **Precision cosmology** | measuring the universe's contents and expansion history to tight error bars, rather than qualitatively |
+| **Catalogue** | the survey's tabulated inventory of objects — about 20 billion galaxies and 17 billion stars, projected |
+| **Discovery by inventory** | the philosophy of imaging everything repeatedly so the data can answer questions not yet asked |
+
+</details>
 
 🔗 **See it for yourself (do this — the zoomable first images are staggering):** [First imagery from Rubin Observatory](https://rubinobservatory.org/news/first-imagery-rubin) · [First-ever images, explained — Astronomy.com](https://www.astronomy.com/science/first-ever-images-released-by-the-vera-c-rubin-observatory/)
 🔗 **The "why now":** [Rubin begins its unprecedented 10-year survey — CNN (July 2026)](https://edition.cnn.com/2026/07/01/science/rubin-observatory-legacy-survey-space-and-time) · [Early Science & data releases — Rubin](https://rubinobservatory.org/for-scientists/resources/early-science)

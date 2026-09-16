@@ -50,6 +50,46 @@ be able to say *exactly* which claim applies to which country and when.
 
 ## 1. Deficit vs. debt — flow vs. stock, and the right way to measure it
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | the total value of what an economy produces in a year — the proxy for its capacity to service debt |
+| **USD** | US dollar | |
+| **WWII** | the Second World War | the episode behind the debt peaks in the chart |
+
+**Symbols used below**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $b$ | "b" | **public debt as a share of GDP** — the ratio, not the dollar amount. This is the variable the whole section is about |
+| $D$ | "D" | the stock of government debt in money terms |
+| $Y$ | "Y" | GDP in money terms — the standard economics letter for national output |
+| $b = D / Y$ | "b equals D over Y" | the debt ratio: the pile of debt divided by the size of the economy |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Deficit** | this year's shortfall of revenue against spending — a **flow**, a rate per year |
+| **Debt** | the accumulated pile of all past deficits minus surpluses — a **stock**, a level. *A deficit adds to the debt; the two are not the same quantity* |
+| **Surplus** | revenue above spending; it pays debt down |
+| **Flow vs stock** | a flow is measured *per period* (the tap), a stock is measured *at a moment* (the water level) |
+| **Debt-to-GDP ratio** | debt measured against the size of the economy — the only meaningful way to compare debt across countries or eras |
+| **Tax base** | the economic activity a government can actually tax; GDP stands in for it |
+| **Gross debt** | everything the government owes |
+| **Net debt** | gross debt **minus** the financial assets the government owns. *Gross vs net can differ enormously — Singapore is gross-indebted and net-creditor* |
+| **Creditor (net creditor)** | a government that owns more financial assets than it owes |
+| **Debt held by the public** | debt owed to households, banks, foreigners and the central bank — a real market claim |
+| **Intragovernmental debt** | one government account owing another (e.g. a social-security trust fund holding government bonds); not a claim from outside |
+| **Trust fund** | a dedicated government account, typically for pensions, that holds government bonds as its assets |
+| **Domestic vs foreign holders** | whether the bonds are owned inside the country or abroad — the hinge of the whole section |
+
+</details>
+
 Start by nailing the distinction §1 introduced. The **deficit** is a **flow** — this year's shortfall (spending
 minus revenue). The **debt** is a **stock** — the accumulated pile of all past deficits minus surpluses. A deficit
 *adds to* the debt; a surplus *pays it down*. (The bathtub image: the deficit is the flow from the tap, the debt
@@ -83,6 +123,34 @@ to ~250% without a crisis is the puzzle that §5 resolves.
 
 ## 2. "We owe it to ourselves" — the comforting half-truth
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **Treasuries** | US Treasury securities | the bonds and bills issued by the US federal government |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **"We owe it to ourselves"** | the argument that domestically-held public debt is an internal transfer, not a national loss — true in part, and only in part |
+| **Bondholder** | whoever owns the government's debt and receives its interest |
+| **Taxpayer** | whoever funds that interest. *Bondholders and taxpayers are not the same people — that gap is the distributional problem* |
+| **Domestically-held debt** | debt owned by residents; servicing it moves money within the country |
+| **Foreign-held debt** | debt owned abroad; servicing it ships real resources out of the country |
+| **Distributional transfer** | a movement of income between groups with no change in the total |
+| **Regressive** | falling more heavily on the less well-off, as a share of income |
+| **Deadweight loss** | the output genuinely destroyed by a tax, over and above the money it raises, because the tax distorts decisions |
+| **Tax distortion** | the change in behaviour — working, saving, investing less — that a tax causes |
+| **Crowding out** | savings absorbed by government bonds instead of financing private capital, leaving a smaller future economy |
+| **Private capital** | the machines, buildings and equipment firms invest in |
+| **Emerging market** | a middle-income economy with less developed financial markets; typically far more reliant on foreign holders |
+
+</details>
+
 The most common reassurance is that public debt doesn't really impoverish a nation because **"we owe it to
 ourselves"** — the government's liability is some citizen's asset (the bondholder), so it nets out. There's a real
 truth here and four real limits, and holding both is the mark of understanding it.
@@ -114,6 +182,49 @@ distribution, foreign claims, tax distortion, and crowding out.
 ---
 
 ## 3. Debt dynamics — the one equation that governs everything
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the master equation (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | annual national output — the denominator of the debt ratio |
+| **WWII** | the Second World War | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\Delta$ | "delta" | the change in something over one period — here, this year's move in the debt ratio |
+| $\Delta b$ | "delta b" | the change in debt-to-GDP over the year; positive means the ratio is rising |
+| $b$ | "b" | public debt as a share of GDP |
+| $r$ | "r" | the **real** interest rate the government pays on its debt — the nominal rate less inflation |
+| $g$ | "g" | the **real** growth rate of GDP |
+| $r - g$ | "r minus g" | the interest-growth differential. **Its sign decides everything**: negative and the ratio melts, positive and it snowballs |
+| $(r - g)b$ | "r minus g, times b" | the **snowball term** — what the existing debt stock does to the ratio all by itself |
+| $p$ | "p" | the **primary balance** as a share of GDP — the budget balance *before* interest. **Not** a price |
+| $-p$ | "minus p" | the effort term: a primary surplus enters the equation negatively, pulling the ratio down |
+| $p^{\ast}$ | "p-star" | the **debt-stabilizing** primary balance — the surplus that exactly offsets the snowball, leaving the ratio flat |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Debt-dynamics equation** | the accounting identity linking the change in the debt ratio to the interest-growth gap and the primary balance |
+| **Accounting identity** | a relation that is true by definition, not a behavioural theory to be tested |
+| **Real interest rate** | the interest rate after subtracting inflation — what the lender gains in purchasing power |
+| **Real growth rate** | output growth after subtracting inflation |
+| **Primary balance** | revenue minus **non-interest** spending. *Primary vs overall (headline) balance differs by exactly the interest bill; the primary balance measures today's fiscal effort, interest is the bill for the past* |
+| **Primary surplus** | a positive primary balance — the government covers its non-interest spending and has something left for interest |
+| **Snowball** | debt growing on itself because interest compounds faster than the economy does |
+| **Melt** | the debt ratio falling without repayment, because the denominator grows faster than the debt |
+| **Financial repression** | policies that hold interest rates artificially below inflation — caps, captive buyers, regulation — producing a deeply negative real rate and quietly melting the debt |
+| **Denominator effect** | the ratio falling because GDP rose, not because debt fell |
+| **Percentage point** | the unit for a difference between two percentages — a gap of "2 points" between the interest rate and growth |
+
+</details>
 
 Here is the analytical heart of the section. Whether the debt ratio rises or falls each year is captured by a
 single accounting identity — the **debt-dynamics equation**:
@@ -160,6 +271,43 @@ back in the headlines. *The whole debate about whether today's debt is dangerous
 
 ## 4. The bond market and the non-linearity — why crises come "slowly, then suddenly"
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ECB** | European Central Bank | the central bank of the euro area — the missing backstop in the euro crisis |
+
+**Symbols used below**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $r$ | "r" | the real interest rate the government pays — set by the bond market, not by nature |
+| $b$ | "b" | public debt as a share of GDP. The danger is that $r$ itself rises with $b$ |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Bond market** | the market where government debt is bought and sold, and where its interest rate is actually determined |
+| **Sovereign** | a national government, in its role as a borrower |
+| **Term risk** | the extra return lenders want for tying money up for longer |
+| **Default (credit) risk** | the risk the borrower simply does not pay |
+| **Risk premium** | the extra interest demanded to compensate for that risk |
+| **Spiral (self-reinforcing feedback)** | a higher rate worsens the debt dynamics, which raises perceived risk, which raises the rate again |
+| **Non-linearity** | the property that nothing happens for years and then everything happens at once — "slowly, then suddenly" |
+| **Rollover** | issuing new bonds to repay maturing ones; how governments actually handle debt rather than paying it off |
+| **Rollover risk** | the risk that markets refuse to refinance maturing debt, or only at punishing rates |
+| **Maturity** | how long until a bond must be repaid. *Short-maturity debt rolls constantly and is far more exposed; long-maturity debt locks in today's rate* |
+| **Liquidity crisis** | being unable to find a lender this week even though the debt is affordable in the long run — as opposed to a **solvency** problem, where it genuinely is not |
+| **Self-fulfilling crisis** | one caused by the expectation of it: fear of default raises rates enough to cause the default |
+| **Multiple equilibria** | the same fundamentals supporting both a "good" outcome (low rates, sustainable) and a "bad" one (high rates, unsustainable) |
+| **Backstop** | a credible promise by a central bank to buy the bonds if nobody else will — which, being credible, usually means it need not |
+
+</details>
+
 $r$ in that equation is not handed down by nature — it's set by the **bond market** (E03 §2). Investors lend to a
 government at a rate that compensates them for expected inflation, term risk, and — the new ingredient here —
 **default/credit risk**. And this is where debt dynamics turn treacherous, because $r$ **depends on $b$ itself**:
@@ -186,6 +334,39 @@ the premium jumps, and the dynamics go from benign to explosive in *months*. Two
 ---
 
 ## 5. The decisive distinction — own-currency vs. foreign-currency debt
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **USD** | US dollar | the currency many emerging markets are obliged to borrow in |
+| **GDP** | gross domestic product | |
+| **ECB** | European Central Bank | the euro area's central bank; no single member state controls it |
+| **BoJ** | Bank of Japan | Japan's central bank |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Own-currency debt** | debt a government owes in the currency its own central bank issues; it can always create the money to pay |
+| **Foreign-currency debt** | debt owed in a currency the government cannot create. *Own vs foreign currency, not the size of the ratio, is the best predictor of a default crisis* |
+| **Monetary sovereignty** | the capacity to issue the currency your obligations are denominated in |
+| **Default** | failing to pay a debt as promised |
+| **Inflation** | a general rise in prices; the real risk for an own-currency borrower, in place of default |
+| **Inflation tax** | the loss bondholders and cash-holders suffer when money is printed to pay debts |
+| **Fiscal dominance** | the state where the central bank's decisions are driven by the government's financing needs rather than by its inflation target |
+| **Nominal vs real** | nominal is the money amount, real is what that money will buy. Bondholders can be repaid in full nominally and still lose in real terms |
+| **Foreign-exchange reserves** | the stock of foreign currency a government holds; running out of it is what turns foreign-currency debt into default |
+| **Original sin** | the historical inability of many countries to borrow abroad in their own currency, forcing them into foreign-currency debt |
+| **Monetary union** | a group of states sharing one currency and one central bank; members lose the printing press without gaining a shared treasury, so their debt behaves like foreign-currency debt |
+| **Eurozone** | the set of EU states using the euro |
+| **"Whatever it takes"** | the 2012 pledge by the ECB's president that the bank would backstop member states' bonds, which shifted markets from the bad equilibrium to the good one |
+| **Haircut** | the share of what a bondholder is owed that is written off in a restructuring |
+
+</details>
 
 If you remember one thing from this section, make it this. **The single best predictor of whether high debt turns
 into a default crisis is not the ratio — it's the *currency the debt is issued in*.**
@@ -218,6 +399,50 @@ euro spent.
 ---
 
 ## 6. How it resolves, and when debt *actually* matters
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | annual national output |
+| **SGS** | Singapore Government Securities | tradable Singapore government bonds and bills, issued to build a yield curve rather than to fund a deficit |
+| **SSGS** | Special Singapore Government Securities | non-tradable government securities that Central Provident Fund savings are invested in |
+| **CPF** | Central Provident Fund | Singapore's mandatory savings scheme |
+| **GIC** | Government of Singapore Investment Corporation | the fund that manages much of Singapore's reserves |
+
+**Symbols used below**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $b$ | "b" | public debt as a share of GDP — the thing a government tries to *stabilize* |
+| $r$ | "r" | the real interest rate paid on the debt |
+| $g$ | "g" | the real growth rate of GDP |
+| $(r - g)$ | "r minus g" | the interest-growth gap whose sign decides whether the ratio melts or snowballs |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Grow out of it** | shrinking the ratio by expanding the denominator — the painless exit, and the hardest to arrange |
+| **Austerity** | raising taxes and cutting spending to run primary surpluses |
+| **Self-defeating austerity** | cutting so hard in a slump that GDP falls faster than debt does, leaving the *ratio* higher |
+| **Multiplier** | output produced per dollar of fiscal action; it is high in a slump, which is what makes austerity self-defeating there |
+| **Inflate it away** | letting inflation erode the real value of nominal debt — a stealth default, most effective on long-maturity own-currency debt |
+| **Financial repression** | holding interest rates below inflation so that the real rate is negative and the debt quietly melts |
+| **Restructuring** | renegotiating the terms of debt — later repayment, lower interest, or a write-down |
+| **Haircut** | the fraction of principal or interest a bondholder is forced to give up |
+| **Reverse causality** | the direction-of-arrow error: slow growth causes high debt at least as much as high debt causes slow growth |
+| **Debt threshold** | the idea of a single ratio above which debt becomes dangerous — an idea the evidence does not support |
+| **Sustainability** | the condition that a government can hold the debt ratio at a level markets will finance; a dynamic condition, not a number |
+| **Maturity structure** | the profile of when a government's debt falls due; long maturities buy time, short ones expose it to rollover risk |
+| **Credibility** | markets' belief that the government will do what it says about its budget |
+| **Fiscal space** | how much more a government could borrow before running into trouble |
+| **Gross vs net debt** | everything owed, versus everything owed minus the financial assets owned — the distinction that makes Singapore's headline ratio a non-story |
+
+</details>
 
 **The four exits from a debt mountain** (all historically used — Reinhart & Rogoff catalogued centuries of them):
 

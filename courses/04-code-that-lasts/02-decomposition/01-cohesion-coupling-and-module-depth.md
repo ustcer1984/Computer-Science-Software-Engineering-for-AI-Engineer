@@ -41,6 +41,28 @@ Get these right and "where do I draw the line" stops being taste and becomes a j
 
 ## 1. The wrong metric: "decomposition = smaller files"
 
+<details>
+<summary><b>Vocabulary for this section</b> — the interface/implementation vocabulary used below (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Module** | any unit with a boundary — a function, class, file, package or service |
+| **Boundary** | the line between what a caller must know and what it may ignore |
+| **Interface** | what a caller must know to use a module: name, parameters, return type, errors, required call order, global state touched |
+| **Implementation** | everything inside the module that the caller does not need to know |
+| **Abstraction** | a boundary that genuinely lets you ignore what is behind it |
+| **Decomposition** | dividing a system into modules — *not* the same as splitting a file into smaller files |
+| **Splitting** | chopping code into more files; it changes lines-per-file without necessarily hiding anything |
+| **Hoisting state onto a class** | moving local variables into object fields and mutating them through methods — a common non-fix |
+| **Timsort** | Python's sorting algorithm; the large implementation hidden behind the one call `list.sort()` |
+| **Call-ordering rule** | a requirement that a caller invoke things in a particular order — part of the interface, and a cost |
+| **Shared state** | data several pieces of code read and write, making their behaviour interdependent |
+| **Lines per file** | the metric this section rejects — "a number nobody experiences" |
+
+</details>
+
 Kill the bad mental model first, because it's the one that produces monoliths *and* the bad fixes for
 them.
 
@@ -67,13 +89,40 @@ hid *nothing* behind it. You paid the cost of an interface and got no abstractio
 
 ## 2. What you're actually fighting: complexity
 
+<details>
+<summary><b>Vocabulary for this section</b> — Ousterhout's complexity vocabulary and its three symptoms (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **Y2K** | year 2000 problem | the bug from storing years as two digits, so "00" could not be told from 1900 |
+| **B** | billion | as in the estimated global Y2K remediation cost |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Complexity** | Ousterhout's definition: anything about the structure of a system that makes it hard to understand or modify |
+| **Change amplification** | one simple change forces edits in many places |
+| **Cognitive load** | how much you must hold in your head to make any change safely |
+| **Unknown unknowns** | you cannot even tell *what* you would need to know to change safely — the worst symptom |
+| **Positional parameter** | an argument identified by its position in the call, not by name; many of them are a load |
+| **Global** | a value visible process-wide, readable and writable from anywhere |
+| **Global mutable state** | such a value that can also be changed — a process-wide locale, timezone or config |
+| **Monkeypatching** | replacing a function or method at runtime, so distant code behaves differently than its source suggests |
+| **Decomposition** | dividing the system so that to change one thing you only need to understand one thing |
+| **Incremental complexity** | complexity that accretes from many small, individually harmless decisions — why this is a discipline, not a cleanup |
+
+</details>
+
 Ousterhout's framing is the sharpest definition: **complexity is anything about the structure of a
 system that makes it hard to understand or modify.** It shows up as three concrete symptoms — learn to
 name them, because "this feels messy" is not actionable and these are:
 
 | Symptom | What it is | A real-world shape of it |
 |---|---|---|
-| **Change amplification** | a simple change touches many places | **Y2K**: storing years as two digits was one decision, repeated across millions of lines — changing it cost an estimated \$300B+ globally |
+| **Change amplification** | a simple change touches many places | **Y2K**: storing years as two digits was one decision, repeated across millions of lines — changing it cost an estimated 300 billion dollars or more globally |
 | **Cognitive load** | you must hold a lot in your head to make *any* change safely | a function with 15 positional parameters, or config read from a global half a file away from where it's used |
 | **Unknown unknowns** | it's not even clear *what* you must know to change safely — the worst one | a global mutable setting (process-wide locale/timezone, a monkeypatched method) silently changes behaviour in a distant, unrelated module |
 
@@ -89,6 +138,38 @@ problem, which is precisely why this is a *discipline*, not a one-time cleanup.
 ---
 
 ## 3. Cohesion — does this module do one thing?
+
+<details>
+<summary><b>Vocabulary for this section</b> — the cohesion ladder and the packaging strategies it names (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPU** | central processing unit | used in §11's example of a pipeline grouped by CPU-bound versus I/O-bound steps |
+| **I/O** | input/output | work that waits on disk, network or another process rather than computing |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Cohesion** | how strongly the things inside one module belong together |
+| **Coincidental cohesion** | members grouped for no reason at all — the `utils.py` junk drawer; the worst rung |
+| **Logical cohesion** | members grouped because they are the same technical category (all validators, all I/O) |
+| **Temporal cohesion** | members grouped because they happen at the same time, e.g. an `init()` doing ten unrelated setups |
+| **Sequential cohesion** | members grouped because one's output feeds the next's input |
+| **Functional cohesion** | members grouped because they all serve one well-defined task — the goal |
+| **Smell** | a surface sign of a structural problem underneath |
+| **Kind flag** | a parameter that tells a function which of several things to do — the mark of logical cohesion |
+| **Package-by-layer** | organising directories by technical role: `controllers/`, `services/`, `repositories/` |
+| **Package-by-feature** | organising directories by what changes together: `billing/`, `auth/`, `search/`, each holding its own layers |
+| **Controller** | the code that receives a request and dispatches it |
+| **Service** | the code holding the business rules |
+| **Repository** | the code that reads and writes the store |
+| ***PresentationDomainDataLayering*** | Fowler's article laying out when layering genuinely is the right choice |
+| **The "and" test** | describe the module in one sentence; if you need "and", cohesion is low |
+
+</details>
 
 **Cohesion** measures how strongly the things *inside* a module belong together. High cohesion = the
 module has one clear job and everything in it serves that job. Low cohesion = it's a grab-bag.
@@ -120,6 +201,35 @@ there are that-many modules trying to get out.
 ---
 
 ## 4. Coupling — how entangled are the modules?
+
+<details>
+<summary><b>Vocabulary for this section</b> — the coupling ladder and the decomposition U-curve (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Coupling** | *(software sense)* how much changing one module forces changes in another |
+| **Content coupling** | B reaches directly into A's internals and pokes its data — the worst rung |
+| **Common coupling** | A and B communicate through shared mutable global state |
+| **Control coupling** | B passes a flag telling A *how* to behave, so A branches on the caller's intent |
+| **Stamp coupling** | B passes a whole big object when A needs only two of its fields |
+| **Data coupling** | B passes a few explicit parameters and gets a return value — the best rung |
+| **Global variable** | a value reachable from anywhere in the process; the textbook cause of common coupling |
+| **Singleton** | a single shared instance reached globally — a respectable-looking global |
+| **Module-level cache** | a dict or store at module scope that several functions read and write |
+| **Signature** | a function's parameters and return type; making a dependency visible here is the cure for hidden state |
+| **Call graph** | the graph of which function calls which — the visible wiring, as opposed to hidden shared state |
+| **God object** | one module that holds everything, so all coupling is internal and invisible |
+| **Monolith** | a single undivided unit; here, the far-left end of the granularity axis |
+| **Over-decomposition** | splitting so finely that understanding anything means chasing calls across many files |
+| **Granularity** | how finely the system is divided — the horizontal axis of the U-curve |
+| **Within-module complexity** | the mess inside each module; falls as you split |
+| **Between-module complexity** | the coupling between modules; rises as you split |
+| **U-curve** | total complexity as a function of granularity: high at both extremes, lowest in the valley |
+| **Valley** | the sweet spot — the fewest boundaries that each hide a real decision |
+
+</details>
 
 **Coupling** measures dependency *between* modules: if I change module A, how likely am I to have to
 change module B? Low coupling is the goal — modules you can understand, change, and test in isolation.
@@ -191,6 +301,49 @@ This is also the answer to "how small should a function be?" — small enough th
 
 ## 5. Module depth — the one idea that unifies the others
 
+<details>
+<summary><b>Vocabulary for this section</b> — module depth, with every symbol in the depth ratio (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | work that goes through disk, network or the operating system |
+| **TLS** | Transport Layer Security | the encryption layer `requests` hides behind `requests.get(url)` |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\text{depth}$ | "depth" | how good a module is as an abstraction — how much it hides per unit of interface cost |
+| $\approx$ | "is approximately equal to" | a rough proportionality, not an exact calculable formula |
+| $\frac{a}{b}$ | "a over b" | a ratio: functionality hidden (numerator) divided by interface cost (denominator) |
+| $\text{functionality hidden inside}$ | the numerator | how much work the implementation does for the caller — bigger is better |
+| $\text{cost of the interface}$ | the denominator | how much a caller must learn to use it — smaller is better |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Module depth** | Ousterhout's measure of a good module: much functionality behind a small interface |
+| **Deep module** | a small interface in front of a large implementation — high depth |
+| **Shallow module** | an interface nearly as complex as the implementation behind it; you learn as much to call it as to do the work |
+| **Negative depth** | a boundary that subtracts nothing from what the caller must know, e.g. a one-line pass-through |
+| **Pass-through** | a method whose body is about as complex as its call site and makes no decision of its own |
+| **Unix file abstraction** | `open`, `read`, `write`, `close` — four calls in front of filesystems, pipes, sockets, terminals and drivers; the canonical deep module |
+| **`io.Reader`** | Go's one-method interface (`Read`) that the whole standard library composes around |
+| **`requests.get(url)`** | Python's HTTP call that hides connection pooling, TLS, redirects, chunked encoding and retries |
+| **Connection pooling** | reusing open network connections instead of opening a new one per request |
+| **Chunked encoding** | an HTTP transfer mode that streams a response in pieces of unknown total length |
+| **Java stream stack** | `new BufferedReader(new InputStreamReader(new FileInputStream(path)))` — Ousterhout's example of shallow modules |
+| **Buffering** | reading in blocks instead of byte by byte; here the caller, not the library, must remember to add it |
+| **Syscall** | a call into the operating system kernel — expensive enough that one per byte is a performance bug |
+| **Interface cost** | everything a caller must learn: parameters, ordering, error cases, required wrapping |
+| **`State` / `Deps`** | the §11 pattern `def step(state: State, deps: Deps) -> State` — a one-line interface over a rich implementation |
+| **Narrow door, big room** | the slogan for depth: small entrance, large space behind it |
+
+</details>
+
 This is the concept to walk away with. Ousterhout's measure of a *good* module is its **depth**:
 
 $$\text{depth} \approx \frac{\text{functionality hidden inside}}{\text{cost of the interface}}$$
@@ -231,6 +384,28 @@ be. **Narrow door, big room.**
 ---
 
 ## 6. The two structures, side by side
+
+<details>
+<summary><b>Vocabulary for this section</b> — the vocabulary of the two side-by-side structures (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Shallow module** | an interface almost as complex as what it hides — the left-hand panel |
+| **Deep module** | a small interface over a large implementation — the right-hand panel |
+| **High coupling** | modules so entangled that any one can break any other |
+| **Data coupling** | modules that communicate only through explicit parameters and return values |
+| **Shared mutable state bag** | a single object every step reads and writes — the hub in the left-hand panel |
+| **Hub** | a node everything else connects to, making the dependency graph dense |
+| **Dependency graph** | which modules depend on which; here made visible by the arrows |
+| **Thin wrapper** | a module that forwards to something else without hiding a decision |
+| **Contract** | what a unit promises; in the right-hand panel the signature *is* the contract |
+| **Signature** | the declared inputs and outputs of a step, e.g. `State` in and `State` out |
+| **Testable in isolation** | you can exercise one step alone, by handing it an input and checking its output |
+| **Execution order** | the sequence steps actually run in; with a shared bag it matters and is invisible in the code |
+
+</details>
 
 Same functionality, two decompositions. The **❌ panel** is shallow modules + high coupling (thin
 wrappers all reaching into one shared state bag); the **✅ panel** is deep modules + data coupling (each
@@ -275,6 +450,45 @@ entire return on getting the boundary right.**
 
 ## 7. Information hiding & leaky abstractions
 
+<details>
+<summary><b>Vocabulary for this section</b> — information hiding, and every named leaky abstraction below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | hypertext transfer protocol | the web's request/response protocol |
+| **IP** | Internet Protocol | the unreliable packet-delivery layer underneath TCP |
+| **NFS** | Network File System | a protocol that makes a remote disk look like a local one |
+| **N+1** | "N plus one" queries | one query to fetch N rows, then one more query per row — N+1 in total |
+| **ORM** | object-relational mapper | a library that presents database rows as objects |
+| **SQL** | Structured Query Language | the language relational databases are queried in |
+| **TCP** | Transmission Control Protocol | provides a reliable, ordered byte stream over unreliable packets |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Information hiding** | a module's job of encapsulating a design decision so it can change without callers noticing |
+| **Design decision** | a choice like the storage format, the retry policy, the wire protocol or the scoring formula |
+| **Encapsulate** | to keep a decision inside a boundary, invisible from outside |
+| **Leaky abstraction** | an interface that forces the caller to know the very thing it was supposed to hide |
+| **Spolsky's law** | Joel Spolsky's "all non-trivial abstractions, to some degree, are leaky" |
+| **Byte stream** | a continuous ordered sequence of bytes, the illusion TCP sells over packets |
+| **Packet loss** | packets dropped in transit; TCP recovers them, but the delay leaks through as latency |
+| **Latency** | how long an operation takes to respond |
+| **N+1 problem** | an ORM firing one query per item in a loop instead of one query for all of them |
+| **Query planner** | the database component that decides how to execute a query — invisible from the query text |
+| **Index** | a database structure that makes some lookups fast; whether one exists decides if a query is quick or catastrophic |
+| **`KeyError`** | Python's dict-miss exception; raising it from `get_user(id)` leaks that a dict is behind the interface |
+| **Define errors out of existence** | designing the interface so a case is not an error at all — e.g. return `None` or a typed result rather than raising |
+| **Typed result** | a declared return type that expresses success and failure without exposing the storage choice |
+| **Postgres** | PostgreSQL, a relational database; the swap target in the litmus test |
+| **Litmus test** | swap the implementation for a completely different one and count the call sites that break; zero is the goal |
+| **Call site** | a place in the code where a function is called |
+
+</details>
+
 The mechanism underneath "deep" is **information hiding**: a module's job is to *encapsulate a design
 decision* so it can change without callers noticing — the storage format, the retry policy, the wire
 protocol, the scoring formula.
@@ -306,6 +520,34 @@ every break is a leak you're paying interest on.
 ---
 
 ## 8. When *not* to decompose — and the failure modes at the far wall
+
+<details>
+<summary><b>Vocabulary for this section</b> — the far-wall failure modes and the named cases behind them (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **U-curve** | total complexity against granularity; this section is about its right-hand wall |
+| **Valley** | the sweet spot of the U-curve — the fewest boundaries that each hide a real decision |
+| **Boundary cost** | what a boundary charges you: an interface to learn and a wire to trace |
+| **Classitis** | the belief that more and smaller classes are automatically better |
+| **`AbstractSingletonProxyFactoryBean`** | a real class name in the Spring framework, cited as shallow-module sprawl |
+| ***FizzBuzzEnterpriseEdition*** | a parody repository solving FizzBuzz across dozens of classes and interfaces |
+| **Shallow-module sprawl** | many interfaces stacked on interfaces, each hiding nothing |
+| **Microservices** | an architecture splitting a system into small independently-deployed services |
+| **Monolith** | the opposite: one deployable unit containing the whole system |
+| **Premature microservices** | splitting into services before you know where the boundaries belong — the U-curve's right wall at architecture scale |
+| **Segment** | the customer-data company that consolidated 100+ microservices back into a monolith in 2018 |
+| **Amazon Prime Video** | the 2023 case that moved a serverless media-monitoring pipeline back to a monolith and cut cost by about 90 percent |
+| **Serverless** | running code as managed short-lived functions rather than long-running services |
+| **Inter-service coupling** | the shared libraries, per-service operations and distributed failures that services pay for |
+| ***MonolithFirst*** | Fowler's rule of thumb: earn your boundaries by living with the code rather than guessing them up front |
+| **Speculative decomposition** | splitting for a change you imagine might come, rather than one you have seen |
+| **Plugin architecture** | a structure built so implementations can be swapped — valuable only where something actually varies |
+| **Temporal coupling** | when B cannot run before A; sometimes a reason to *merge* rather than split, so the order cannot be got wrong |
+
+</details>
 
 Decomposition has a cost, and the U-curve has a right-hand wall. Don't sprint past the valley. These are
 the failure modes of *too much* structure — the ones that bite teams who learned "split things up" as a

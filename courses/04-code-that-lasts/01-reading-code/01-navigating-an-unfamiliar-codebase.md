@@ -32,11 +32,50 @@ By the end you'll have a repeatable strategy for:
 
 The physics analogy that might resonate: reading a codebase is like reading an unknown circuit. You do
 not probe every node — you find the rails (power/ground = entry points), identify the main blocks
-(subsystems), and *then* trace the signal path of interest. You read the schematic, not the PCB (process control block) copper.
+(subsystems), and *then* trace the signal path of interest. You read the schematic, not the PCB (printed circuit board) copper.
 
 ---
 
 ## 1. The mental model: a codebase is a graph, not a document
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term and named idea used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **API** | application programming interface | the set of calls one piece of software offers another |
+| **AWS** | Amazon Web Services | Amazon's cloud platform |
+| **CLI** | command-line interface | a program you drive by typing a command in a terminal |
+| **DB** | database | the store the data layer talks to |
+| **HTTP** | hypertext transfer protocol | the request/response protocol the web runs on |
+| **LLM** | large language model | the kind of AI model called here as an external service |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Codebase** | all the source code of a project, taken together |
+| **Directed graph** | a set of nodes joined by one-way arrows; here the nodes are code units and the arrows are calls |
+| **Node** | one component in that graph — a file, module, class or function |
+| **Edge** | one arrow between nodes; in this model, "A calls B" |
+| **Sub-graph** | a small part of the whole graph — the only part you usually need to read |
+| **Traverse** | to walk the graph by following its edges |
+| **Module** | a unit of code with a name and a boundary (in Python, a `.py` file) |
+| **Entry point** | the place execution starts for a given scenario — a route handler, `main`, a CLI command |
+| **Route handler** | the function a web framework runs when a particular URL is requested |
+| **Cron job** | a task the system runs automatically on a schedule |
+| **Business logic** | the code that implements the rules of the product, as opposed to plumbing |
+| **Utility / helper** | a small support function called by the real work |
+| **Data layer** | the code that talks to the database, cache or an external API on everyone else's behalf |
+| **Cache** | a fast store of previously-computed or previously-fetched results |
+| **API client** | code that calls somebody else's service over the network |
+| **External service** | anything outside your process that you call over a network |
+| **Leaf** | a node with no outgoing calls — where the actual work usually happens |
+| **Hot path** | the specific chain of calls that a scenario you care about actually runs |
+
+</details>
 
 The single biggest mistake novice readers make is treating source code as a document to read
 *linearly*. A codebase is a **directed graph** of components (files, modules, classes, functions) with
@@ -74,6 +113,48 @@ context you load only when you hit a question mark.
 ---
 
 ## 2. The three altitudes — never start at ground level
+
+<details>
+<summary><b>Vocabulary for this section</b> — the altitude vocabulary and every tool named below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **API** | application programming interface | what a module offers its callers |
+| **DB** | database | the persistent store |
+| **HTTP** | hypertext transfer protocol | the protocol the "HTTP layer" speaks |
+| **IDE** | integrated development environment | a code editor with navigation, search and refactoring built in (VS Code, PyCharm) |
+| **ft** | feet | used metaphorically for reading altitude — 50,000 ft is a whole-project view, 500 ft one function |
+| **UUID** | universally unique identifier | a 128-bit identifier used as a key, seen in the example signature |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Altitude** | how zoomed-out your reading is: whole project, one file, or one function |
+| **File tree** | the directory structure of a repository, read as documentation of its parts |
+| **README** | the top-level file that says what the project is and how to run it |
+| **Config file** | a file that declares how a project is built and run — `package.json`, `pyproject.toml`, `Makefile`, `Dockerfile` |
+| **`package.json` scripts** | the named commands (`start`, `test`, `build`) a JavaScript project can run |
+| **`pyproject.toml` entry-points** | the declared commands a Python package installs |
+| **Makefile** | a file of named build/test/run recipes |
+| **Dockerfile** | the recipe that builds a container image — it names how the project actually starts |
+| **Executable surface** | the set of commands that run, test or build the project |
+| **Contract** | what a file or function promises its callers: its name, parameters, return type and errors |
+| **Interface** | the visible face of a unit — the part a caller must know |
+| **Import** | a declaration that this file depends on another |
+| **Export** | a name a file deliberately makes available to other files |
+| **Docstring** | the documentation string attached to a function, class or module |
+| **Type signature** | the declared input and output types of a function — machine-checked documentation |
+| **Schema** | the declared shape of stored data — the tables and columns |
+| **Happy path** | the run in which nothing goes wrong; read it before the error branches |
+| **Control flow** | the `if`/`for`/`while` skeleton of a function, as opposed to the arithmetic inside it |
+| **Black box** | a unit you deliberately do not open, trusting its name and signature |
+| **Smell** | a surface sign that something is probably badly structured underneath |
+| **Oscillate** | to move deliberately back and forth between altitudes as questions arise |
+
+</details>
 
 Reading code at the wrong altitude wastes enormous time. Good readers switch altitude deliberately.
 
@@ -149,6 +230,39 @@ back to 5k to find the definition, answer it, and zoom back in. Experienced read
 
 ## 3. Finding the entry point — the most important first move
 
+<details>
+<summary><b>Vocabulary for this section</b> — entry-point vocabulary and the frameworks named below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **API** | application programming interface | here, the set of HTTP endpoints a web app exposes |
+| **CLI** | command-line interface | a program run by typing a command |
+| **SPA** | single-page application | a web app that loads once and re-renders in the browser instead of fetching new pages |
+| **YAML** | YAML Ain't Markup Language | the indentation-based config format GitHub Actions workflows are written in |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Entry point** | where execution begins for the scenario you are tracing |
+| **Decorator** | in Python, an `@name` annotation attached to a function that registers or wraps it |
+| **Route decorator** | a decorator that binds a function to a URL, e.g. `@app.get("/...")` — the entry point of a web request |
+| **FastAPI / Flask** | Python web frameworks; both declare endpoints with route decorators |
+| **Celery** | a Python task queue; `@celery.task` functions run in a background worker |
+| **Background worker** | a process that picks jobs off a queue and runs them outside the request cycle |
+| **React Router** | the library that maps URLs to components in a React single-page application |
+| **Next.js** | a React framework where each file under `pages/` or `app/` *is* a route |
+| **Lambda handler** | the `handler(event, context)` function an AWS Lambda function starts at |
+| **GitHub Actions** | GitHub's automation system; workflows live in `.github/workflows/*.yml` |
+| **Cron** | a schedule expression that triggers a job at fixed times |
+| **`if __name__ == "__main__":`** | the Python idiom marking the code that runs when a file is executed directly |
+| **`[tool.poetry.scripts]`** | the `pyproject.toml` table declaring the commands a Python package installs |
+| **`grep`** | the command-line text search tool used to find those patterns fast |
+
+</details>
+
 Before you can trace anything, you need to know where execution *starts* for the scenario you care
 about. There is almost always a small set of entry points; once you have one, the graph opens up.
 
@@ -171,6 +285,34 @@ endpoint in seconds.
 ---
 
 ## 4. Data flow tracing — follow the data, not the code
+
+<details>
+<summary><b>Vocabulary for this section</b> — the data-flow tracing protocol and its terms (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **API** | application programming interface | here, the web endpoint layer in the diagram |
+| **DB** | database | the persistent store in the trace |
+| **LLM** | large language model | the external model the service calls |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Data flow tracing** | picking one unit of data and following exactly what happens to it from entry to exit |
+| **Scenario** | a named, specific thing that happens ("a user submits a turn") — specific enough to have one entry point |
+| **Entry point** | the function where execution starts for that scenario |
+| **Signature** | the declared parameters and return type of a function — what data goes in and comes out |
+| **Delegate** | to hand the work on to another function rather than doing it here |
+| **Hop** | one step from node to node in the trace |
+| **Opaque** | a hop whose name does not tell you what it does — the one worth opening |
+| **Sequence diagram** | a diagram showing participants as columns and messages between them as arrows over time |
+| **Queue** | a buffer that holds messages until a worker picks them up |
+| **Branch** | an alternative path through the code (error handling, edge cases) that you trace only if you need it |
+
+</details>
 
 The most powerful reading technique is to pick *one unit of data* — a user request, a message, a DB
 row — and trace exactly what happens to it from entry to exit. You are not reading the whole
@@ -224,6 +366,36 @@ is opaque (the function name does not tell you what it does), that is the node y
 
 ## 5. Navigating a monolith file
 
+<details>
+<summary><b>Vocabulary for this section</b> — monolith-file navigation terms and editor features (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **IDE** | integrated development environment | an editor with navigation and search built in |
+| **JSX** | JavaScript XML | React's syntax for writing markup inside JavaScript; a `.jsx` file |
+| **VS Code** | Visual Studio Code | the editor named as an example |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Monolith file** | a single very large source file — thousands of lines with many units inside it |
+| **Local graph** | the call graph formed by the units *inside* one file |
+| **Symbol** | a named thing in code — a function, class, constant or component |
+| **Symbol outline** | the editor panel listing every symbol in the open file — a table of contents |
+| **Breadcrumbs** | the editor strip showing which function or class the cursor is currently inside |
+| **Code folding** | collapsing function bodies in the editor so only the structure shows |
+| **`export default`** | the JavaScript declaration naming the file's main exported thing — in React, the root component |
+| **Root component** | the top component of a file's tree; reading upward from it reveals the composition |
+| **Composition** | which sub-components a component is built out of |
+| **Public function** | a function intended for callers outside the file |
+| **Private helper** | an internal function, marked in Python by a leading underscore (`_name`) |
+| **Submit handler** | the function that runs when a user submits a form — a typical trace starting point |
+
+</details>
+
 This is directly applicable to your situation. A 2,400-line Python file or a 3,200-line JSX (JavaScript XML) file is
 not qualitatively different from a smaller file — it just has more nodes in the local graph. The
 same altitude approach applies, but the file itself becomes the project:
@@ -258,6 +430,27 @@ file.
 
 ## 6. Git as a reading tool
 
+<details>
+<summary><b>Vocabulary for this section</b> — the git commands used as reading tools (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Commit** | one recorded change to the repository, with a message explaining it |
+| **Commit hash** | the identifier of a commit, used to refer to it in commands |
+| **Commit message** | the prose attached to a commit — often the only record of *why* a change was made |
+| **`git log`** | lists the commits, optionally restricted to one file, newest first |
+| **`--oneline`** | the flag that prints one compact line per commit |
+| **`git show`** | prints one commit's message and its full diff |
+| **Diff** | the line-by-line difference a commit introduced |
+| **`git blame`** | annotates each line of a file with the commit that last changed it |
+| **`git log -S`** | the "pickaxe" search — finds the commits where a given string was added or removed, e.g. when a function first appeared |
+| **History** | the accumulated record of decisions; source shows the *what*, history shows the *why* |
+| **Workaround** | code written to accommodate an external constraint rather than to express the design |
+
+</details>
+
 Source code shows you the *current state*; `git` shows you the *history of decisions* — often more
 informative.
 
@@ -285,6 +478,26 @@ documentation" — plant the flag now that commits are a reading tool, not just 
 ---
 
 ## 7. The five things you always reach for first
+
+<details>
+<summary><b>Vocabulary for this section</b> — the five first moves, restated as terms (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **File tree** | the directory structure, read as a map of the project's parts |
+| **README** | the top-level description of what the project is and how to run it |
+| **Schematic** | the metaphor for a whole-project overview: blocks and connections, not gate-level detail |
+| **Entry point** | where execution starts for the scenario you care about — find the door before tracing the path |
+| **Signature** | the parameters and return type of a function; the contract you read instead of the body |
+| **Contract** | what a unit promises its callers, independent of how it does it |
+| **Unit of data** | one concrete thing — a request, a message, a row — whose journey you follow |
+| **Sequence diagram** | participants as columns, messages as arrows over time; the mental artifact of a data-flow trace |
+| **`git log`** | the command that shows a file's commit history, answering *why* the code is as it is |
+| **Class hierarchy** | the inheritance relationships between classes — detail you decode after orienting, not before |
+
+</details>
 
 A cheat sheet you can apply immediately:
 

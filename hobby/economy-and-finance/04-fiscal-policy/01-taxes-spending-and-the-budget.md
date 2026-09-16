@@ -50,6 +50,37 @@ of motivated storytelling on top. This section gives you the mechanisms so you c
 
 ## 1. What fiscal policy is — the economy's second lever
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank and financial regulator |
+| **PBoC** | People's Bank of China | China's central bank |
+| **Fed** | the Federal Reserve | the central bank of the United States |
+| **mo** | months | unit shorthand, as in "12–18 mo lags" |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fiscal policy** | the government's use of taxation and public spending to influence the economy |
+| **Monetary policy** | the central bank's use of interest rates, the money supply or the exchange rate to do the same — the *other* lever, run by a different institution |
+| **Taxation** | compulsory payments the government collects from households and firms |
+| **Public spending** | everything the government pays out — purchases, transfers and interest |
+| **Government budget** | the annual plan of revenue and spending; the instrument through which fiscal policy is executed |
+| **Treasury / finance ministry** | the arm of the elected government that writes and runs the budget — **not** the central bank |
+| **Policy rate** | the short-term interest rate a central bank sets directly |
+| **Money supply** | the quantity of money circulating in the economy |
+| **Operational independence** | the arrangement where a central bank chooses its own instrument settings without political sign-off; fiscal policy has no equivalent |
+| **Legislature** | the elected body that must pass a budget into law — the source of fiscal policy's slowness to decide |
+| **Transmission lag** | the delay between a policy being set and the economy feeling it |
+| **Transfer** | a payment to a household with nothing bought in return (a pension, a benefit) — fiscal policy's fastest-acting tool |
+
+</details>
+
 **Fiscal policy** (财政政策 / 財政政策) is the government's use of **taxation** and **public spending** to influence
 the economy. Its instrument is the **government budget**; its operator is the **treasury / finance ministry** (the
 US Treasury, the UK Treasury, Singapore's Ministry of Finance) under the elected government — *not* the central
@@ -69,6 +100,47 @@ The budget is where the four jobs above are actually executed. The rest of this 
 ---
 
 ## 2. Where the money comes from — taxes (and non-tax revenue)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VAT** | value-added tax | a tax collected at each stage of production on the value added there; economically a tax on consumption |
+| **GST** | goods and services tax | Singapore's name for its VAT |
+| **CPF** | Central Provident Fund | Singapore's mandatory savings scheme for retirement, housing and health — a forced saving, not a tax into general revenue |
+| **NIRC** | Net Investment Returns Contribution | the slice of the expected long-run return on Singapore's national reserves that the budget is allowed to spend |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Revenue** | everything the government collects — taxes plus non-tax sources |
+| **Non-tax revenue** | receipts that are not taxes: investment income, fees, dividends from state holdings |
+| **Tax base** | the thing being taxed — income, spending or assets |
+| **Income tax** | a tax on what you earn, split into **personal** (on wages) and **corporate** (on company profits) |
+| **Capital gains tax** | a tax on the profit from selling an asset — levied in many countries, and **not at all in Singapore** |
+| **Payroll / social-insurance contribution** | a levy on wages earmarked for pensions and health rather than general revenue |
+| **Consumption tax** | a tax on what you spend — a VAT/GST, a retail sales tax, or an excise |
+| **Excise ("sin") tax** | a narrow tax on one good — alcohol, tobacco, fuel, carbon |
+| **Pigouvian tax** | a tax set to make a polluter or harm-causer face the cost they impose on others |
+| **Property tax** | a recurrent tax on the value of what you own |
+| **Stamp duty** | a tax on a transaction, typically a property or share transfer |
+| **Estate / inheritance tax** | a tax on wealth passed on at death |
+| **Tariff** | a tax on imports |
+| **Progressive tax** | one where the rich pay a **higher share of income** — most income taxes, via brackets |
+| **Proportional (flat) tax** | one where everyone pays the same rate regardless of income |
+| **Regressive tax** | one where the poor pay a higher **share of income** — most consumption taxes, because the poor spend a larger fraction of what they earn. *Progressive/regressive is about the share of income paid, not the amount* |
+| **Average tax rate** | total tax divided by total income — measures the **burden** |
+| **Marginal tax rate** | the tax on your **next** dollar of income — measures the **incentive**. Confusing the two is the commonest tax error in the news |
+| **Tax bracket** | an income band with its own marginal rate; crossing into a higher bracket re-rates only the dollars above the threshold, not your whole income |
+| **Tax incidence** | who actually bears a tax economically, as opposed to who legally hands over the money |
+| **Inelastic** | unresponsive to price — the more inelastic side of a market ends up carrying the tax |
+| **Laffer curve** | the hump-shaped relation between tax rate and revenue: zero at a 0% rate, zero again at 100%, a maximum in between |
+
+</details>
 
 Governments raise revenue by taxing one of three things — **what you earn, what you spend, or what you own** —
 plus some non-tax sources.
@@ -125,6 +197,37 @@ we actually on?"* — usually the answer is "the left side," where cuts lose mon
 
 ## 3. Where the money goes — spending
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | the total value of goods and services an economy produces in a year |
+| **G** | government consumption and investment | the government's own purchases of goods and services — one of the spending components of GDP |
+| **C** | household consumption | what households spend — another GDP component, and where a transfer eventually shows up |
+| **CPF** | Central Provident Fund | Singapore's mandatory savings scheme, which does the job a public pension does elsewhere |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Outlays** | total government payments out — the spending side of the budget |
+| **Government consumption** | the government buying goods and services to use now: salaries of teachers and soldiers, equipment |
+| **Government investment** | the government building assets that last: roads, schools, networks |
+| **Transfers** | money handed to people with nothing bought in return — pensions, unemployment benefits, welfare. **Not** part of G, because no resources are consumed; they move purchasing power, which shows up later as C |
+| **Interest on the debt** | the cost of servicing past deficits; a pure financing cost, not a purchase |
+| **Net interest** | interest paid minus interest received |
+| **Mandatory spending (entitlements)** | spending set by standing law and paid automatically to whoever qualifies — not voted on each year |
+| **Discretionary spending** | spending the legislature sets annually through appropriations |
+| **Appropriation** | the annual legislative act that authorises discretionary spending |
+| **Public goods** | things markets under-supply because nobody can be excluded from them — defence, law, basic research |
+| **Redistribution** | moving purchasing power between households, chiefly through transfers and progressive taxes |
+| **Stabilization** | using the budget to lean against the business cycle |
+
+</details>
+
 Spending splits two ways that both matter.
 
 **By economic type** (this is the E02 §1 subtlety, so get it right):
@@ -158,6 +261,45 @@ and topping up the reserves.)
 
 ## 4. The budget balance — deficit and surplus
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | the total annual output of an economy; deficits and debt are normally quoted as a share of it |
+| **SGS** | Singapore Government Securities | the bonds and bills issued by the Singapore government |
+| **SINGA** | Significant Infrastructure Government Loan Act | the law under which Singapore issues bonds to fund long-lived infrastructure |
+
+**Symbols used in the formula**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $T$ | "T" | total government revenue in a year (T for taxes, though it includes non-tax revenue too) |
+| $G$ | "G" | total government outlays in a year — used loosely here to include transfers and interest, not just the G of GDP |
+| $T - G$ | "T minus G" | the budget balance: positive is a surplus, negative a deficit |
+| $G_{\text{non-interest}}$ | "G non-interest" | outlays excluding interest payments — the subscript marks what has been taken out |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Budget balance** | revenue minus spending over a year |
+| **Surplus** | revenue exceeds spending; the government can repay debt or save |
+| **Deficit** | spending exceeds revenue; the shortfall must be borrowed |
+| **Flow vs stock** | the **deficit** is a flow — a rate per year; the **debt** is a stock — the accumulated total. Every deficit adds to the stock |
+| **Bond** | a tradable IOU the government sells to borrow |
+| **Issuance** | the act of selling new bonds into the market |
+| **Cyclical deficit** | the part of the deficit caused by the economy being weak — revenue falls, transfers rise, with no new decision taken |
+| **Structural (cyclically-adjusted) deficit** | what the deficit would be with the economy at normal output — the part that reflects deliberate policy |
+| **Automatic stabilizers** | the tax-and-transfer features that widen the deficit in a slump and narrow it in a boom by themselves, with no vote |
+| **Primary balance** | the balance **excluding interest payments** — the measure of *current* fiscal effort, because interest is the bill for the past |
+| **Headline balance** | the balance **including** interest — the number in the news. *Primary vs headline differs by exactly the interest bill* |
+| **Deficit bias** | the political tendency of democracies to run deficits in most years |
+
+</details>
+
 The **budget balance** is simply revenue minus spending:
 
 $$\text{Balance} = T - G,$$
@@ -190,6 +332,48 @@ recession (the stabilizers firing, biggest in 2009 and 2020). Both patterns are 
 ---
 
 ## 5. The budget as a stabilization tool — the fiscal multiplier
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MPC** | marginal propensity to consume | the fraction of an extra dollar of income a household spends rather than saves |
+| **ZLB** | zero lower bound | the point where the policy rate is already at (or near) zero and cannot usefully be cut further |
+| **IMF** | International Monetary Fund | the global institution that lends to countries in balance-of-payments trouble and publishes the multiplier literature cited here |
+| **CBO** | Congressional Budget Office | the US legislature's non-partisan fiscal analysis agency |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $c$ | "c" | the marginal propensity to consume — the fraction of each extra dollar of income that gets spent, between 0 and 1 |
+| $(1 - c)$ | "one minus c" | the fraction saved rather than spent — the leak that stops the series being infinite |
+| $\frac{1}{1 - c}$ | "one over one minus c" | the **spending multiplier**: total output produced per dollar of government spending |
+| $-c/(1-c)$ | "minus c over one minus c" | the **tax multiplier**: output change per dollar of tax cut. Negative because a tax *rise* cuts output, and smaller in size than the spending multiplier |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fiscal multiplier** | how much output you get per dollar of fiscal action |
+| **Expansionary fiscal policy** | cutting taxes or raising spending to add demand |
+| **Contractionary fiscal policy (austerity)** | raising taxes or cutting spending to remove demand |
+| **Aggregate demand** | total spending on the economy's output |
+| **Geometric series** | a sum where each term is a fixed fraction of the last — the arithmetic behind the multiplier |
+| **Balanced-budget multiplier** | raise spending and taxes by the same amount and output still rises, by roughly the amount raised, because the spending is fully spent while the tax only removes the part that would have been saved |
+| **Economic slack** | idle workers and unused capacity that extra demand can put to work without pushing up prices |
+| **Full employment** | the state where those idle resources are gone, so extra demand mostly raises prices |
+| **Open economy** | one with large trade flows, where stimulus **leaks into imports** instead of raising domestic demand |
+| **Leakage** | the part of a stimulus that escapes the domestic circuit — into saving, taxes or imports |
+| **Liquidity-constrained household** | one that cannot borrow, so it spends any extra cash immediately — which is why transfers to them have high multipliers |
+| **Crowding out** | government borrowing competing for savings, raising interest rates and displacing private investment; severe at full employment, near-absent at the ZLB |
+| **Ricardian equivalence** | the claim that households, foreseeing the future taxes needed to repay today's borrowing, save the whole tax cut — making the multiplier zero. True only in part |
+| **Public investment** | government spending that builds durable capacity; the highest-multiplier instrument in the figure |
+
+</details>
 
 Beyond funding and redistribution, the budget is a **demand lever** — the active version of E02 §4's damper.
 **Expansionary** fiscal policy (cut taxes or raise spending) adds demand in a slump; **contractionary** policy
@@ -234,6 +418,40 @@ work?" has no single answer: it depends on slack and on what the central bank is
 ---
 
 ## 6. The constraints — why governments can't just spend
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | annual national output; the denominator for deficit and debt limits |
+| **EU** | European Union | the bloc whose members are bound by the Stability and Growth Pact |
+| **SGP** | Stability and Growth Pact | the EU's fiscal rule — deficit under 3% of GDP, debt under 60% |
+| **SGS** | Singapore Government Securities | Singapore government bonds and bills |
+| **SINGA** | Significant Infrastructure Government Loan Act | the law under which Singapore borrows for long-lived infrastructure |
+| **NIRC** | Net Investment Returns Contribution | the spendable share of expected long-run returns on Singapore's reserves |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Government budget constraint** | the accounting fact that every deficit must be financed, and that borrowing carries interest and claims future taxes |
+| **Deficit bias** | the structural tilt to deficits: spending is visible and popular now, taxes are painful now |
+| **Fiscal rule** | a self-imposed legal limit on deficits or debt, adopted to buy credibility at the cost of flexibility |
+| **Debt ceiling** | a statutory cap on the total stock of government borrowing |
+| **Balanced-budget amendment** | a constitutional requirement that revenue cover spending |
+| **Fiscal council** | an independent body that scores and critiques the government's budget numbers |
+| **Monetary offset** | the central bank deliberately tightening against a fiscal expansion, cancelling part of the multiplier |
+| **Recognition lag** | the time taken to notice the economy needs help |
+| **Decision lag** | the time taken to legislate a response — fiscal policy's central weakness |
+| **Implementation lag** | the time between a measure passing and the money moving |
+| **Automatic stabilizers** | the parts of the budget that respond instantly and without a vote — the case for leaning on them rather than on discretionary stimulus |
+| **National reserves** | accumulated past surpluses invested as a national endowment |
+| **The "second key"** | Singapore's rule that drawing on protected past reserves requires the President's separate assent |
+
+</details>
 
 If spending boosts the economy and taxes are unpopular, why not spend freely? Because the budget faces real limits.
 

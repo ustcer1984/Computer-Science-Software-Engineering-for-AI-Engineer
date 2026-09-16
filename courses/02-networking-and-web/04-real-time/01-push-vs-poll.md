@@ -49,6 +49,37 @@ descends from that one revocation, and §8 is where we make it explicit. That is
 
 ## 1. The asymmetry: HTTP has no way for the server to speak first
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **NAT** | Network Address Translation | the router function that lets many private devices share one public address — and which leaves a browser with no address anyone can dial |
+| **SSE** | Server-Sent Events | a one-way server-to-client stream carried inside an ordinary HTTP response |
+| **RFC** | Request for Comments | the internet standards document series; WebSocket is RFC 6455 |
+| **API** | application programming interface | here, the browser's `EventSource` interface |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Request/response** | HTTP's governing shape: the client opens the connection, asks, and receives exactly one answer |
+| **Server-initiated event** | something that happens at the server which the client has no way to learn about on its own |
+| **Routable address** | a public address another machine can connect to; browsers normally have none |
+| **Listening port** | a port on which a process accepts inbound connections; browsers have none |
+| **Polling** | the client asking repeatedly on a timer |
+| **Comet** | the 2006 umbrella name for long-polling and hidden-iframe streaming, used by the original Gmail and Google Talk |
+| **Hidden-iframe streaming** | an early trick that kept an invisible frame's response open to push data into the page |
+| **`EventSource`** | the browser API that consumes an SSE stream, standardised in HTML5 |
+| **WebSocket** | the first genuinely bidirectional web transport, standardised in 2011 |
+| **WebTransport** | the newest option, running over HTTP/3 |
+| **Bidirectional** | either side may send at any time, without being asked |
+
+</details>
+
 Strip HTTP down to its governing shape and you get one sentence: **the client opens the connection, the
 client sends a request, the server sends exactly one response.** There is no verb for "server has news."
 There is no address at which a server could reach a browser even if there were — the browser is almost
@@ -80,6 +111,53 @@ covers where it fits.
 ---
 
 ## 2. Short polling — and the arithmetic that makes it a real choice
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **CDN** | Content Delivery Network | a distributed cache near users; can serve a polled endpoint without touching your origin |
+| **ETag** | entity tag | a response header identifying a version of a resource, so an unchanged one can be answered cheaply |
+| **`304`** | `304 Not Modified` | the response saying nothing changed — a few hundred bytes instead of a body |
+| **`GET`** | (an HTTP method) | the read request; safe, idempotent and cacheable |
+| **API** | application programming interface | the endpoint being polled |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $N$ | "big N" | the number of concurrent clients polling |
+| $T$ | "big T" | the poll period in seconds — the one knob you control |
+| $R$ | "big R" | the resulting request rate, in requests per second |
+| $S$ | "big S" | the mean staleness in seconds — how old the client's data is on average |
+| $R = N/T$ | "R equals N over T" | request rate: more clients or a shorter period means more requests |
+| $S = T/2$ | "S equals T over two" | mean staleness: an event lands at a random moment in the interval, so it waits half of one on average |
+| $R \times S = N/2$ | "R times S equals N over two" | the product is fixed by the client count — tuning $T$ moves you along the curve, never off it |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Short polling** | the client asks again on a fixed timer and the server answers immediately, usually with nothing |
+| **Poll interval / poll period** | the wait between one request and the next |
+| **Staleness** | how old the data the client is showing can be |
+| **Cursor** | a marker such as `?since=41` telling the server where the client got to, so only newer items come back |
+| **Cacheable** | a response that can be reused for another request or another client |
+| **Idempotent** | a request whose repetition changes nothing further |
+| **Stateless** | no server-side memory tied to a particular client between requests — what lets you add identical servers freely |
+| **Middlebox** | any device on the path that inspects or alters traffic — a proxy, firewall or corporate gateway |
+| **`max-age`** | the cache header saying how long a response may be reused |
+| **Origin** | your own backend, behind any cache or CDN |
+| **Hyperbola** | the curve traced when two quantities multiply to a constant — the shape of the polling trade-off |
+| **Synchronization** | independent clients drifting into firing at the same instant, turning steady load into spikes |
+| **Jitter** | adding a small random amount to each interval so clients spread out |
+| **Thundering herd** | many clients doing the same thing at the same moment and overwhelming the server |
+
+</details>
 
 **The mechanism.** The client sets a timer and issues an ordinary request every $T$ seconds: `GET
 /api/messages?since=<cursor>`. The server answers immediately, with new data or with nothing. That is the
@@ -136,6 +214,44 @@ single most common way a "low-load" polling design takes down its own origin.
 
 ## 3. Long polling — the hanging GET
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **SQS** | Simple Queue Service | AWS's managed message queue; its long polling is exactly this mechanism |
+| **C10K** | "connection ten thousand" | the classic problem of holding ten thousand concurrent connections on one machine |
+| **I/O** | input/output | reading and writing to sockets and files; blocking versus non-blocking I/O is the distinction that made long polling viable |
+| **API** | application programming interface | here, the Kubernetes API whose `watch` uses this shape |
+| **`GET`** | (an HTTP method) | the read request being held open — hence "hanging GET" |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Long polling** | the client sends an ordinary request and the server holds it open, answering only when there is news or when a timeout expires |
+| **Hanging GET** | the same thing named after the held-open request |
+| **Waiter** | a client registered on the server as awaiting news |
+| **Timeout** | the point, typically 20 to 60 seconds, at which the server answers with nothing so the connection does not die of neglect |
+| **Re-poll** | the client immediately sending the next request after receiving a response |
+| **Thread-per-request** | the older server model where each in-flight request occupies one operating-system thread; fatal for held-open connections |
+| **Async / non-blocking server** | a server that suspends a waiting connection cheaply instead of tying up a thread — `asyncio`, Node.js, Go, nginx |
+| **Event loop** | the single-threaded scheduler that drives an async server |
+| **`epoll` / `kqueue`** | the Linux and BSD kernel interfaces that let one thread watch thousands of sockets at once |
+| **Coroutine** | a suspended function an async runtime resumes when its socket becomes ready |
+| **Cursor** | the `?since=43` marker that lets the server replay anything the client missed between responses |
+| **`ReceiveMessage` / `WaitTimeSeconds`** | the AWS SQS call and parameter that hold the request open rather than returning empty |
+| **Socket.IO** | a client/server library that falls back to long polling when a WebSocket upgrade is blocked |
+| **Fallback transport** | the mechanism used when the preferred one is unavailable |
+| **Kubernetes `watch`** | the control-plane streaming API that uses a hanging request plus a resource-version cursor |
+| **Reverse proxy** | a server in front of your application; its read timeout is what most often kills a hanging request |
+| **`proxy_read_timeout`** | nginx's limit on how long it will wait for the upstream to respond |
+
+</details>
+
 **The mechanism.** The client sends the same request, but the server **does not answer.** It holds the
 request open — registering the client as a waiter — and responds only when there is data, or when a timeout
 (typically 20–60 seconds) expires. The client receives the response and **immediately sends the next
@@ -180,7 +296,7 @@ roughly one request per client per message (plus one per timeout window). But yo
 1. **A held-open connection per waiting client.** This is the real one, and it is the moment the
    architecture changes. Under the classic thread-per-request server this was fatal — 10,000 waiting clients
    meant 10,000 blocked threads — which is exactly why long polling and the **C10K problem** ("can one box hold ten thousand concurrent
-   connections?" — Ch1 Ch4 §2's `epoll`/`kqueue` event-loop machinery) grew up together. On an async server (`asyncio`, Node.js, Go,
+   connections?" — M01 Ch4 §2's `epoll`/`kqueue` event-loop machinery) grew up together. On an async server (`asyncio`, Node.js, Go,
    nginx) a waiting connection is cheap: a socket, a small buffer, and a suspended coroutine. **The move
    from blocking to non-blocking I/O is what made long polling viable**, and you have already studied the
    mechanism — this is what it was for.
@@ -207,6 +323,49 @@ roughly one request per client per message (plus one per timeout window). But yo
 ---
 
 ## 4. Server-Sent Events — one response that never ends
+
+<details>
+<summary><b>Vocabulary for this section</b> — wire-format fields, terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SSE** | Server-Sent Events | one ordinary HTTP response that never ends, carrying a stream of text records |
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **UTF-8** | Unicode Transformation Format, 8-bit | the text encoding SSE requires; binary must be base64-encoded first |
+| **LLM** | Large Language Model | the token-streaming workload that made SSE the busiest real-time transport in use |
+| **SDK** | software development kit | a vendor's client library; LLM SDKs parse the event-stream format under the hood |
+| **API** | application programming interface | here, `EventSource` and `fetch` |
+| **TLS** | Transport Layer Security | the encryption layer, usually terminated at the load balancer |
+| **`GET`** | (an HTTP method) | the single request that opens the stream |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`text/event-stream`** | the content type that marks a response as an SSE stream |
+| **Chunked transfer encoding** | the HTTP/1.1 mechanism for sending a body of unknown length in pieces |
+| **Flush** | forcing written bytes out to the client instead of holding them in a buffer |
+| **Record / event** | one block of the stream, ended by a blank line |
+| **`data:`** | the payload field; several `data:` lines in one record are joined with newlines |
+| **`event:`** | a named event type, so one stream can carry several kinds of message |
+| **`id:`** | the field the browser remembers so it can resume after a drop |
+| **`retry:`** | the server telling the client how many milliseconds to wait before reconnecting |
+| **Comment line** | a line starting with `:` — ignored by the parser, and the usual way to send a keep-alive heartbeat |
+| **Heartbeat / keep-alive** | traffic sent purely to stop an idle timeout closing a healthy connection |
+| **`Last-Event-ID`** | the request header the browser sends on reconnect, naming the last record it saw — **the resume mechanism SSE gives you free and WebSocket does not** |
+| **`EventSource`** | the built-in browser client for SSE; automatic reconnect and resume, but **it cannot set request headers** |
+| **`withCredentials`** | the `EventSource` option that makes it send cookies cross-origin |
+| **`Authorization: Bearer`** | the standard token header — the one `EventSource` cannot send |
+| **`fetch` + `ReadableStream`** | the modern workaround: make the request yourself, stream the body, and parse the format by hand |
+| **Base64** | an encoding that carries binary as text, costing about 33 percent in size |
+| **Multiplexing** | carrying many concurrent streams over one connection, as HTTP/2 does — which removes SSE's connection-limit problem |
+| **Six-connection limit** | a browser's cap of about six simultaneous HTTP/1.1 connections per origin; an open SSE stream permanently consumes one per tab |
+| **Origin** | here, the scheme-plus-host-plus-port a browser counts connections against |
+| **Buffering proxy** | an intermediary that holds the response body until it looks complete, which destroys a stream |
+
+</details>
 
 **The mechanism.** The client makes one ordinary `GET`. The server responds `200 OK` with
 `Content-Type: text/event-stream` and then **just never finishes the body.** It writes a small text record
@@ -274,6 +433,52 @@ pipe nobody needed. When you next reach for a WebSocket, this is the comparison 
 ---
 
 ## 5. WebSocket — leaving HTTP behind
+
+<details>
+<summary><b>Vocabulary for this section</b> — handshake headers, frame terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TCP** | Transmission Control Protocol | the reliable ordered byte stream the connection runs on and keeps using after the upgrade |
+| **TLS** | Transport Layer Security | the encryption layer; a WebSocket on port 443 reuses the same TLS session |
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **RFC** | Request for Comments | the standards series; WebSocket is RFC 6455 and Extended CONNECT is RFC 8441 |
+| **SHA-1** | Secure Hash Algorithm 1 | the hash used to compute `Sec-WebSocket-Accept`; a public fixed-string hash, therefore not a credential |
+| **XOR** | exclusive or | the bitwise operation used to mask client-to-server frames |
+| **L7** | layer 7 | the application layer; a proxy loses layer-7 visibility once the connection is no longer HTTP |
+| **SDK** | software development kit | a vendor client library; most smuggle the token in `Sec-WebSocket-Protocol` |
+| **MQTT** | Message Queuing Telemetry Transport | one of the named subprotocols a WebSocket can negotiate |
+| **CRIME / BREACH** | (attack names) | compression-oracle attacks — the reason not to compress a stream mixing attacker-controlled and secret data |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Upgrade handshake** | the ordinary HTTP request carrying `Upgrade: websocket` that asks to switch protocols |
+| **`101 Switching Protocols`** | the status code accepting that switch — after it, the connection is no longer HTTP |
+| **`Sec-WebSocket-Key`** | a random client value echoed back in transformed form; a confused-intermediary guard, not a credential |
+| **`Sec-WebSocket-Accept`** | the server's transformed echo, proving it understood the protocol rather than replaying a cached `101` |
+| **`Sec-WebSocket-Version`** | the protocol version, currently 13 |
+| **`Sec-WebSocket-Protocol`** | negotiates an application-level subprotocol — and is the one header the browser API lets you populate |
+| **Subprotocol** | an agreed message layer on top of the raw pipe, e.g. `graphql-transport-ws`, `wamp.2.json`, `mqtt` — WebSocket itself gives you no schema, routing, correlation or errors |
+| **Frame** | one WebSocket message unit; its header is 2 to 14 bytes against several hundred for HTTP headers |
+| **Opcode** | the frame-type field — `0x1` text, `0x2` binary, `0x9` ping, `0xA` pong |
+| **Ping / pong frames** | the built-in heartbeat, used to keep an idle connection alive and to detect a dead peer |
+| **Masking** | exclusive-or'ing each client-to-server frame with a per-frame random 32-bit key; not confidentiality, since the key travels in the frame |
+| **Cache-poisoning attack** | tricking an old proxy into reading crafted payload bytes as a new HTTP request and caching the result for other users — what masking prevents |
+| **Transparent proxy** | an intermediary the client is unaware of, which may believe it is carrying HTTP |
+| **`permessage-deflate`** | the optional compression extension; costs memory per connection (historically around 300 KB of zlib window) and is unsafe on mixed-secret streams |
+| **Extension** | an optional capability negotiated during the handshake |
+| **Query-string token** | putting a credential in the URL, where it lands in access logs, proxy logs and browser history — use a short-lived single-use ticket instead |
+| **Ticket** | a short-lived single-use credential exchanged for a real session once the connection is open |
+| **Reconnect and replay** | re-establishing after a drop and re-delivering missed messages — entirely your problem with WebSocket |
+| **Sequence number** | an application-level counter that lets a client say where it got to, reinventing `Last-Event-ID` |
+| **Extended CONNECT** | the RFC 8441 mechanism for tunnelling WebSocket over an HTTP/2 stream, since HTTP/2 has no `Upgrade` header |
+| **Observability** | being able to see what a system is doing; a single opaque connection gives you far less than per-request metrics |
+
+</details>
 
 **The mechanism.** The client sends an ordinary HTTP request carrying upgrade headers:
 
@@ -390,6 +595,56 @@ Latency is one network trip and nothing else.
 
 ## 6. The three that sit off the main axis
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HMAC** | Hash-based Message Authentication Code | a keyed fingerprint over a message body, used to prove a webhook really came from the sender |
+| **SCTP** | Stream Control Transmission Protocol | the message-oriented transport a WebRTC data channel runs on |
+| **DTLS** | Datagram Transport Layer Security | TLS adapted for unreliable datagrams |
+| **UDP** | User Datagram Protocol | the unreliable, unordered transport underneath |
+| **ICE** | Interactive Connectivity Establishment | the procedure for finding a working path between two peers behind NAT |
+| **STUN** | Session Traversal Utilities for NAT | a server that tells a peer its own public address |
+| **TURN** | Traversal Using Relays around NAT | a relay used when a direct peer-to-peer path cannot be found |
+| **NAT** | Network Address Translation | the router function that hides devices behind one public address |
+| **QUIC** | (a protocol name) | the UDP-based transport under HTTP/3, with independent streams and connection migration |
+| **HTTP/2** | HyperText Transfer Protocol version 2 | the multiplexed version of HTTP; gRPC streaming rides it |
+| **HTTP/3** | HyperText Transfer Protocol version 3 | HTTP over QUIC; WebTransport rides it |
+| **gRPC** | (Google's remote procedure call framework) | a schema-driven RPC system with streaming, excellent between your own services |
+| **MQTT** | Message Queuing Telemetry Transport | the publish/subscribe protocol that dominates device messaging |
+| **IoT** | Internet of Things | networked devices and sensors — MQTT's home ground |
+| **TCP** | Transmission Control Protocol | the ordered reliable transport everything on the main axis rides |
+| **URL** | Uniform Resource Locator | the address a webhook recipient registers |
+| **`POST`** | (an HTTP method) | the ordinary write request a webhook actually is |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Webhook** | the notifying server making an ordinary HTTP request to a URL the recipient registered — the right answer when the recipient is itself a server |
+| **At-least-once delivery** | a guarantee that a message will arrive, possibly more than once — so the receiver must be idempotent |
+| **Idempotency key** | a client-supplied identifier letting a receiver recognise and discard a duplicate |
+| **Retries with backoff** | re-attempting a failed delivery after progressively longer waits |
+| **Signature verification** | checking the sender's HMAC over the body, because a webhook endpoint is publicly reachable |
+| **Replay protection** | rejecting a captured-and-resent request, usually via a signed timestamp |
+| **Head-of-line blocking** | one lost packet stalling every message queued behind it, because TCP insists on delivering in order |
+| **`RTCDataChannel`** | WebRTC's arbitrary-data channel, which can be configured unreliable and unordered |
+| **Unreliable delivery** | lost packets are not retransmitted — correct when only the newest value matters |
+| **Unordered delivery** | messages may arrive out of order, removing head-of-line blocking |
+| **Peer-to-peer** | a direct connection between two clients that does not pass through your server |
+| **NAT traversal** | the work of establishing that direct path despite both peers being behind routers |
+| **Signalling channel** | the side channel (usually a WebSocket) the two peers use to exchange connection details before the direct path exists |
+| **WebTransport** | the HTTP/3-based successor offering multiple independent streams and unreliable datagrams |
+| **Datagram** | a single self-contained packet with no delivery or ordering guarantee |
+| **Connection migration** | QUIC keeping a session alive when the client's network address changes, e.g. Wi-Fi to cellular |
+| **`grpc-web`** | the shim that lets a browser speak a subset of gRPC; notably cannot do client-streaming |
+| **Publish/subscribe** | a pattern where senders publish to topics and any number of subscribers receive |
+
+</details>
+
 The four above answer "how does a *browser* get server-originated data." Three more mechanisms answer
 neighbouring questions, and choosing the wrong axis is a common design error.
 
@@ -431,6 +686,53 @@ protocol that dominates IoT (Internet of Things), commonly tunnelled over WebSoc
 ---
 
 ## 7. Choosing — the decision procedure
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the symbols in the comparison table (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SSE** | Server-Sent Events | a server-to-client stream inside an ordinary HTTP response |
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **HMAC** | Hash-based Message Authentication Code | the keyed signature on a webhook body |
+| **CDN** | Content Delivery Network | a distributed cache; only the pollable option can use one |
+| **TCP** | Transmission Control Protocol | the ordered transport whose head-of-line blocking is the last question in the procedure |
+| **HTTP/3** | HyperText Transfer Protocol version 3 | HTTP over QUIC, where WebTransport lives |
+| **LLM** | Large Language Model | the token-streaming workload SSE fits exactly |
+| **`POST`** | (an HTTP method) | the ordinary upstream request that pairs with a downstream SSE stream |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $T$ | "big T" | the poll period in seconds, from §2 |
+| $T/2$ | "T over two" | mean short-polling latency — half an interval on average |
+| $N$ | "big N" | the number of concurrent clients |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Staleness** | how old the displayed data may be — write it down as a number before choosing anything |
+| **Short polling** | ask again on a timer; cacheable, stateless, works everywhere |
+| **Long polling** | the server holds the request open until there is news; the universal fallback |
+| **Server-Sent Events** | one never-ending HTTP response, server to client only, with built-in resume |
+| **WebSocket** | a bidirectional non-HTTP pipe after a one-time upgrade; you build resume yourself |
+| **WebRTC data channel** | peer-to-peer, optionally unreliable and unordered; for media and twitch-latency games |
+| **WebTransport** | the HTTP/3 successor with independent streams and datagrams |
+| **Webhook** | a plain `POST` to an address the recipient registered; the answer when the recipient is a server |
+| **Routable address** | a public address that can accept an inbound connection |
+| **Head-of-line blocking** | one lost packet stalling everything queued behind it under TCP's ordering guarantee |
+| **Cursor** | a client-held marker of where it got to, so a reconnect can replay what was missed |
+| **`Last-Event-ID`** | SSE's built-in resume header — what you give up by choosing WebSocket for one-way data |
+| **Subprotocol trick** | smuggling a credential in `Sec-WebSocket-Protocol`, because the browser API allows no other header |
+| **Per-message overhead** | the bytes of framing each message carries — full HTTP headers versus roughly 10 bytes for SSE and 2 to 14 for a WebSocket frame |
+| **Event loop** | the async server model every held-open mechanism requires |
+| **Fallback transport** | what a library switches to when the preferred one is blocked |
+
+</details>
 
 Answer four questions in order. The first one you answer "yes" to is your answer.
 
@@ -489,6 +791,51 @@ Three heuristics that settle most arguments:
 
 ## 8. The bill: a long-lived connection revokes statelessness
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the symbol in the text (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **ALB** | Application Load Balancer | AWS's layer-7 load balancer; its default idle timeout is 60 seconds |
+| **TLS** | Transport Layer Security | the encryption layer; its per-connection session state is part of the memory bill |
+| **CPU** | central processing unit | idle connections cost almost none of it — memory is the constraint |
+| **TCP** | Transmission Control Protocol | its flow control is what stops the socket accepting writes when a client falls behind |
+| **SSE** | Server-Sent Events | shares every one of these costs with long polling and WebSocket |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $M$ | "big M" | the number of identical stateless servers behind a load balancer — the thing you change to scale |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Statelessness** | no server-side memory tied to a client between requests — the property that buys horizontal scaling |
+| **Horizontal scaling** | adding more identical servers rather than bigger ones |
+| **Sticky connection** | a client bound to one specific server process for the life of its connection |
+| **Rolling deploy** | replacing instances a few at a time; invisible for stateless HTTP, and disconnects everyone on a connection fleet |
+| **Connection fleet** | the tier of servers holding long-lived connections |
+| **Thundering herd** | every disconnected client reconnecting at once, which can stop new instances ever becoming healthy |
+| **Exponential backoff with jitter** | waiting progressively longer plus a random amount before each retry — load-bearing here, not optional |
+| **Fan-out** | delivering one incoming message to many connected recipients |
+| **Backplane** | a shared bus between your own servers — Redis pub/sub, a message queue, a connection registry — needed because connections are sticky |
+| **Pub/sub** | publish/subscribe messaging, the usual backplane shape |
+| **Connection registry** | a shared record of which server currently holds which client |
+| **Idle timeout** | a middlebox closing a connection with no traffic in either direction for some period; 60 seconds on an ALB by default |
+| **Heartbeat** | traffic sent solely to defeat that timeout — WebSocket ping/pong frames or SSE comment lines, tuned below the smallest timeout on the path |
+| **`permessage-deflate`** | WebSocket's compression extension; raises per-connection memory substantially |
+| **Backpressure** | what you do when a client cannot consume as fast as you produce — buffer, drop oldest, coalesce to latest value, or disconnect. **Not choosing is choosing 'buffer forever'** |
+| **Flow control** | TCP's mechanism for stopping a sender that is outrunning the receiver; it stalls your writes rather than solving the problem |
+| **Coalesce to latest value** | discarding superseded updates and sending only the newest — the right policy for tickers and positions |
+| **Autoscaling metric** | the number your scaler reacts to; requests per second measures the wrong thing for a connection fleet |
+
+</details>
+
 This is the architectural payoff of the section, and the reason §2 of this chapter exists.
 
 Ch2 §1 made the case that HTTP's **statelessness** is what buys horizontal scaling: because no request
@@ -532,6 +879,49 @@ real-time is not "which transport" — it is what §2 of this chapter covers.
 ---
 
 ## 9. Failure modes — the operational checklist
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, headers and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SSE** | Server-Sent Events | the mechanism a buffering proxy most often breaks |
+| **CDN** | Content Delivery Network | some also buffer response bodies |
+| **QUIC** | (a protocol name) | the HTTP/3 transport whose connection migration survives a network change |
+| **TCP** | Transmission Control Protocol | a connection is bound to an address pair, so changing network kills it |
+| **IP** | Internet Protocol | the address that changes when a phone moves from Wi-Fi to cellular |
+| **HTTP/1.1** | HyperText Transfer Protocol version 1.1 | the version with the roughly six-connections-per-origin browser limit |
+| **HTTP/2** | HyperText Transfer Protocol version 2 | the multiplexed version that removes that limit |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Buffering proxy** | an intermediary holding the response body until it looks complete; converts a stream into a delayed batch |
+| **`proxy_buffering`** | the nginx setting, **on** by default, that causes exactly that — turn it off for streaming locations |
+| **`X-Accel-Buffering: no`** | a response header the application can send to tell nginx not to buffer this response |
+| **Compression middleware** | `gzip` and friends, which buffer to build a compression window and so batch your stream |
+| **Idle timeout** | a middlebox closing a connection with no traffic for some period; the tell is deaths at a suspiciously round interval |
+| **Heartbeat** | traffic sent purely to defeat an idle timeout — ping/pong frames or SSE comment lines |
+| **Reconnect storm** | every client reconnecting simultaneously after a deploy or a network blip |
+| **Exponential backoff with jitter** | progressively longer waits plus randomness, with a cap, so clients do not return in lockstep |
+| **`retry:`** | the SSE field letting the server slow clients down from its own side during an incident |
+| **Cursor / sequence number** | the client's marker of where it got to; without one, messages are lost exactly when the network is worst |
+| **Duplicate delivery** | the other side of replay-from-cursor — the consumer must be idempotent |
+| **Idempotent** | safe to process more than once with no additional effect |
+| **Six-connection limit** | the browser's per-origin cap under HTTP/1.1; one open stream per tab exhausts it |
+| **Query-string credential** | a token in the URL, which lands in access logs, proxy logs and browser history |
+| **Single-use ticket** | a short-lived credential exchanged for the real session once the connection is open |
+| **`Connection: Upgrade`** | the header some corporate proxies and older load balancers strip, killing the WebSocket handshake |
+| **Fallback ladder** | the ordered list of alternative transports to try when the preferred one is blocked |
+| **Backpressure policy** | your explicit decision about what to do with a client that cannot keep up |
+| **Connection migration** | QUIC's ability to keep a session across a client address change |
+| **Close code** | the numeric reason a WebSocket connection ended — one of the few signals available after the `101` |
+| **`101`** | `101 Switching Protocols` — after it there are no status codes left to alert on |
+
+</details>
 
 The things that actually take real-time features down, roughly in order of how often they do it.
 

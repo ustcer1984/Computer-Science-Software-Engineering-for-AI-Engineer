@@ -57,6 +57,41 @@ This matters for all four of your goals, but three especially:
 
 ## 1. What inflation is — a rate of change of the *price level*
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the inflation formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPI** | consumer price index | a basket-based measure of the price level facing households |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $t$ | "t" | the time period — this quarter or this year |
+| $P_{t}$ | "P-t" | the price index in period $t$; the *level* of prices, an index number |
+| $P_{t-1}$ | "P-t-minus-one" | the price index one period earlier |
+| $\pi_{t}$ | "pi-t" | the inflation rate in period $t$; in macroeconomics $\pi$ always means inflation, never the circle constant |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Price level** | the overall level of prices across the economy, reported as an index number such as 117 |
+| **Index number** | a figure set to 100 in a chosen base period, so later readings show the change relative to it |
+| **Inflation** | the percentage **rate of change** of the price level — a rate, not a level |
+| **Level vs rate** | the price level is the *position*; inflation is its *speed*. Almost every inflation confusion is mixing these two |
+| **Relative price** | the price of one good compared with others; a single price rising is a relative-price change, **not** inflation |
+| **Disinflation** | inflation still positive but **slowing** — prices still rising, just less fast. This is what "inflation is coming down" means |
+| **Deflation** | the price level actually **falling** — a negative inflation rate. Distinct from disinflation, and far more dangerous |
+| **Basket** | the fixed set of goods and services whose cost the index tracks |
+| **Value of money** | how much a unit of currency buys; inflation is the same event described from the money side |
+| **Percentage point** | the unit for a difference between two percentages — 8% falling to 4% is a fall of four percentage points |
+
+</details>
+
 Three precise statements, because the looseness here is where most confusion lives.
 
 - **Inflation is about the *general* price level, not one price.** If tomatoes get dearer because of a bad
@@ -95,6 +130,40 @@ means for reading headlines:
 ---
 
 ## 2. How we measure it — the basket and the Consumer Price Index (CPI)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the index formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPI** | consumer price index | the cost of a fixed representative household basket, expressed as an index set to 100 in a base period |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $t$ | "t" | the period being priced — the subscript in $\text{CPI}_{t}$ means "as at period $t$" |
+| $\text{CPI}_{t}$ | "CPI-t" | the value of the consumer price index in period $t$ |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Representative basket** | a fixed list of goods and services, in fixed quantities, chosen to stand in for what a typical household buys |
+| **Weight** | a category's share of household spending, which sets how much its price change moves the index |
+| **Weighted average** | an average where each item counts in proportion to its weight, not equally |
+| **Base period** | the period whose basket cost is set to 100, so all later readings are relative to it |
+| **Current prices** | the prices actually prevailing in the period being measured |
+| **Price level** | the overall level of prices, as captured by the index |
+| **Inflation rate** | the percentage change in the index over a year |
+| **Laspeyres index** | an index that holds quantities fixed at base-period weights — the standard CPI construction |
+| **Substitution bias** | the overstatement that results because a fixed basket assumes people keep buying the same things even when relative prices change |
+| **Personal inflation** | the rate an individual actually experiences, which differs from the headline because their spending weights differ |
+| **Accommodation (housing) component** | rents and mortgage-linked housing costs — typically the largest single weight in a developed-economy basket |
+
+</details>
 
 You can't average "the price of everything," so statisticians do something concrete: they fix a
 **representative basket** of goods and services a typical household buys, and track **what that same basket
@@ -150,6 +219,51 @@ The index, **15.4%**, is the weighted blend — exactly what Fig 1 is telling yo
 
 ## 3. The family of price indices — same idea, different lens
 
+<details>
+<summary><b>Vocabulary for this section</b> — the index family, its abbreviations, and the GDP letters (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPI** | consumer price index | the fixed consumer basket, including imports — the number in headlines |
+| **PPI** | producer price index | prices producers *receive* at the factory gate or wholesale; an early-warning gauge |
+| **PCE** | personal consumption expenditures price index | a broader consumption measure with frequently-updated weights; the US Federal Reserve's preferred gauge |
+| **GDP** | gross domestic product | total output produced domestically in a period |
+| **NX** | net exports | exports minus imports |
+| **Fed** | Federal Reserve | the central bank of the United States |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $C$ | "C" | consumption — household spending, one component of GDP |
+| $I$ | "I" | investment in the economic sense — spending on new real capital |
+| $G$ | "G" | government purchases of goods and services |
+| $NX$ | "N-X" | net exports, exports minus imports |
+| $C+I+G+NX$ | "C plus I plus G plus N-X" | the expenditure identity — everything the GDP deflator covers |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Headline CPI** | the full consumer basket including food and energy — what the public feels |
+| **Core CPI** | CPI **excluding food and energy**, whose prices are volatile; shows the underlying trend, not a claim that you do not eat |
+| **Core PCE** | the same food-and-energy exclusion applied to PCE; what the Fed means by its 2% target |
+| **Volatility** | how much a series jumps around period to period, independently of its trend |
+| **Cost-of-living adjustment** | an automatic increase in wages or benefits linked to a price index |
+| **Leading indicator** | a series that tends to move *before* the thing you care about — PPI ahead of consumer prices |
+| **GDP deflator** | the price index implied by nominal divided by real GDP; the broadest measure, covering investment, government and exports but **excluding imports** |
+| **CPI vs PCE vs GDP deflator** | CPI is a fixed consumer basket including imports; PCE is broader consumption with updating weights, so it usually reads slightly lower; the deflator covers all *domestic output* and excludes imports |
+| **Laspeyres index** | fixed **base-period** basket; reads highest |
+| **Paasche index** | uses the **current** basket instead |
+| **Fisher index** | the geometric mean of the Laspeyres and Paasche indices |
+| **Geometric mean** | the square root of the product of two numbers — an average that suits ratios and index numbers |
+| **Chained index** | an index that updates its basket continuously, so substitution is captured; reads lower than a fixed-basket index |
+| **Imported inflation** | price rises arriving through the cost of imported goods, which show up in CPI but not in the deflator |
+
+</details>
+
 "Inflation" in the news is never just one number. Each index covers **different goods**, from **different
 buyers**, computed **slightly differently** — and they disagree, sometimes by a lot. Knowing which is which
 is most of reading inflation news correctly.
@@ -183,6 +297,40 @@ Two distinctions worth burning in, because the news blurs them constantly:
 ---
 
 ## 4. Real vs nominal, applied — deflating with a price index
+
+<details>
+<summary><b>Vocabulary for this section</b> — deflating, the Fisher relation, and the indexation vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **COLA** | cost-of-living adjustment | an automatic pay or pension increase linked to a price index |
+| **TIPS** | Treasury Inflation-Protected Securities | US government bonds whose principal rises with the CPI |
+| **CPI** | consumer price index | the price index most commonly used to deflate consumer figures |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Nominal value** | an amount as actually quoted, in current dollars of the day |
+| **Real value** | the same amount restated in constant purchasing power, by dividing out a price index |
+| **Deflating** | the operation of dividing a nominal figure by a price index to get the real figure |
+| **Purchasing power** | how much a sum of money actually buys |
+| **Real wage** | nominal pay adjusted for inflation; real wage growth is roughly nominal wage growth minus inflation |
+| **Real return** | an investment's return after inflation; it can be negative even when the nominal return is positive |
+| **Nominal interest rate** | the rate a bank or bond actually quotes |
+| **Real interest rate** | the nominal rate minus inflation — the rate that matters for what a saver gains or a borrower owes in goods |
+| **Fisher relation** | the approximation that the real interest rate equals the nominal rate minus inflation |
+| **Expected inflation** | the inflation people anticipate; it is expected, not realised, inflation that gets priced into a loan when it is struck |
+| **Anchored expectations** | the state in which the public expects inflation to return to target regardless of recent readings — what central banks work to maintain |
+| **Indexation** | writing a contract so payments move automatically with a price index |
+| **Inflation-linked bond** | a bond whose payments rise with a price index; "linkers" in UK usage |
+| **Indexed tax brackets** | income-tax thresholds raised with inflation so that inflation alone does not push people into higher bands |
+| **Wage-price spiral** | inflation feeding into wage demands and back into prices, which can entrench inflation once indexation is widespread |
+| **Time value of money** | the principle that a sum today is worth more than the same sum later, because it can earn a return |
+
+</details>
 
 §1 introduced real vs nominal for *GDP*. The same move works on **any** money figure: divide a **nominal**
 (current-dollar) amount by the relevant price index to get a **real** (constant-purchasing-power) amount.
@@ -225,6 +373,40 @@ a price rise auto-feeds into wages and back into prices, the **wage-price spiral
 
 ## 5. Every index is biased — why CPI overstates the cost of living
 
+<details>
+<summary><b>Vocabulary for this section</b> — the four biases and the chained-index vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPI** | consumer price index | the fixed-basket consumer price measure that carries these biases |
+| **C-CPI-U** | chained consumer price index for all urban consumers | the US chained index, which updates the basket and therefore reads lower |
+| **GPS** | global positioning system | one of the new goods cited as entering the basket years late |
+| **GLP-1** | glucagon-like peptide-1 | the drug class cited as a recent new good |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Laspeyres index** | a fixed base-period basket — the standard CPI construction, and the source of the upward bias |
+| **Upward bias** | the tendency of the index to overstate how much the cost of maintaining a given living standard actually rose |
+| **Cost of living** | what it costs to reach a given standard of living, which is not the same as the cost of a fixed basket |
+| **Boskin Commission (1996)** | the US inquiry that estimated CPI overstated inflation by roughly 1.1 percentage points a year |
+| **Percentage point** | the unit for a gap between two percentage rates |
+| **Substitution bias** | people buy more of what got relatively cheaper, but a fixed basket keeps pricing the old mix |
+| **Chained index** | an index that updates its basket continuously, so substitution is captured and the measured rate is lower |
+| **Quality-change bias** | the same nominal price buying a better product means the real price fell, which the index struggles to net out |
+| **Hedonic adjustment** | statistically pricing a product's individual features so quality improvements can be separated from price rises |
+| **New-goods bias** | genuinely new products enter the basket years late, so their early value and steep price falls are missed |
+| **Outlet-substitution bias** | shoppers move to cheaper channels such as discounters and e-commerce, and a survey pinned to traditional outlets misses the saving |
+| **Indexation** | linking payments — pensions, benefits, tax thresholds — to the index, which is why the choice of index is worth billions |
+| **Bracket creep** | inflation pushing incomes into higher tax bands when thresholds rise more slowly than prices |
+| **Social Security** | the US public pension system, whose annual increase is set by a price index |
+| **Goodhart's law** | once a measure becomes a target, pressure builds on the measure itself rather than on what it was meant to track |
+
+</details>
+
 A fixed-basket (Laspeyres) CPI has a built-in **upward bias**: it tends to **overstate** how much the cost of
 *maintaining a given standard of living* actually rose. This isn't fraud — it's structural, and the famous
 **Boskin Commission (1996)** estimated US CPI overstated inflation by roughly **1.1 percentage points a
@@ -260,6 +442,60 @@ Four sources:
 ---
 
 ## 6. Why target a *little* inflation (≈2%) — not zero, not high
+
+<details>
+<summary><b>Vocabulary for this section</b> — the case for a positive target, its abbreviations and symbols (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **Fed** | Federal Reserve | the central bank of the United States |
+| **ECB** | European Central Bank | the central bank of the euro area |
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank, which manages the exchange rate rather than an interest rate |
+| **ZLB** | zero lower bound | the floor below which a central bank cannot usefully push nominal interest rates |
+| **CPI** | consumer price index | the headline measure of consumer prices |
+| **COE** | Certificate of Entitlement | Singapore's quota licence for owning a car, which makes car prices swing sharply |
+| **SG** | Singapore | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $g$ | "g" | the growth rate of the economy — in this comparison, how fast incomes and output grow |
+| $r$ | "r" | the interest rate or rate of return on capital |
+| $r > g$ | "r greater than g" | Piketty's condition: returns on capital outrunning growth, so existing wealth pulls ahead of earned income |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Inflation target** | the rate a central bank publicly commits to aiming for, typically about 2% |
+| **Menu costs** | the literal cost of re-printing and re-quoting prices when inflation is high |
+| **Shoe-leather costs** | the effort spent avoiding holding cash whose value is eroding |
+| **Arbitrary redistribution** | unexpected inflation transferring wealth from lenders to borrowers, by accident of who held what |
+| **Relative-price signal** | the information a price carries about scarcity, which gets lost when every price is galloping |
+| **Inflation expectations** | what people believe inflation will be, which feeds into wage and price setting |
+| **Wage-price spiral** | expectations feeding wage demands feeding prices feeding expectations again |
+| **Hyperinflation** | inflation so extreme that money loses meaning and trade reverts toward barter |
+| **Stagflation** | high inflation together with high unemployment — the combination that defined the 1970s |
+| **Deflation** | a falling price level, distinct from disinflation (a positive but slowing rate) |
+| **Deferred spending** | waiting to buy because things will be cheaper later, which cuts demand and deepens a deflationary slump |
+| **Debt deflation** | falling prices raising the *real* burden of fixed nominal debt, forcing deleveraging and deepening the slump |
+| **Deleveraging** | paying down debt across the economy at once, which suppresses spending |
+| **Zero lower bound** | nominal rates cannot go far below zero, so with deflation the *real* rate stays high exactly when it needs to be low |
+| **Fisher relation** | real interest rate approximately equals nominal rate minus inflation |
+| **Downward nominal wage rigidity** | workers resist cuts in *stated* pay, so firms freeze pay instead of cutting it |
+| **Nominal pay freeze** | holding stated pay flat, which with positive inflation quietly delivers a real pay cut |
+| **Greasing the wheels** | the argument that mild inflation lets real wages adjust without nominal cuts, so adjustment happens through pay restraint rather than layoffs |
+| **Measurement bias headroom** | since CPI overstates true inflation, a *measured* 2% target corresponds to a lower true rate — targeting a measured zero could mean actual deflation |
+| **Core inflation** | a measure stripped of volatile or policy-distorted components; MAS Core Inflation excludes accommodation and private road transport |
+| **Headline inflation** | the unstripped rate, including everything in the basket |
+| **Accommodation** | the housing component of the Singapore basket |
+| **Imported inflation** | price pressure arriving through the cost of imports — dominant for a small, ultra-open economy |
+| **Exchange-rate policy** | managing the currency's value as the main monetary instrument, as MAS does, instead of setting an interest rate |
+
+</details>
 
 Here's the question that puzzles almost everyone, and the keystone of all monetary policy to come: nearly
 every modern central bank — Fed, ECB (European Central Bank), Bank of England, and (in its own way) MAS (Monetary Authority of Singapore) — aims for **about 2%**

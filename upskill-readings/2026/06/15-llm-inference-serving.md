@@ -12,6 +12,62 @@
 
 ## 1. Continuous batching — stop letting the slowest request idle your GPU
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LLM** | large language model | the text model being served |
+| **GPU** | graphics processing unit | the accelerator the model runs on |
+| **KV cache** | key-value cache | the stored attention keys and values for tokens already processed, re-read on every decode step |
+| **FLOPs** | floating-point operations | the unit of arithmetic work; the compute axis |
+| **HF** | Hugging Face | the company and library ecosystem; here the baseline `transformers` server |
+| **TGI** | Text Generation Inference | Hugging Face's production LLM serving stack |
+| **vLLM** | (a serving engine; no official expansion) | the open-source inference server built around PagedAttention |
+| **p50** | 50th percentile | the median — half of requests are faster, half slower |
+| **MB** | megabyte | one million bytes, the unit in the "load 1MB" comparison |
+| **N** | (count) | the number of requests gathered into one batch |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Inference** | running a trained model to produce output, as opposed to training it |
+| **Serving** | running inference as a service: many concurrent requests, latency targets, shared hardware |
+| **Batching** | processing several requests together in one pass so the cost of loading weights is shared |
+| **Static / request-level batching** | gathering N prompts and running them together until all N finish before starting the next batch |
+| **Continuous / iteration-level batching** | rescheduling after every forward pass: evict finished sequences, splice waiting ones into their slots |
+| **Forward pass (iteration)** | one run of the model over the batch, producing one more token per active sequence |
+| **Sequence** | one request's token stream inside the batch |
+| **Slot** | one sequence's place in the batch, occupying its share of the KV-cache pool |
+| **Eviction** | removing a finished (or preempted) sequence so its slot can be reused |
+| **Prompt** | the input text a request sends in |
+| **Prefill** | processing the whole prompt in one parallel pass, before any output token is generated |
+| **Decode** | generating output tokens one at a time, each pass reading the weights and the growing KV cache |
+| **Token** | the sub-word unit a model reads and emits |
+| **Throughput** | total useful work per second — here, tokens or requests per second across all users |
+| **Latency** | how long one request or one token takes |
+| **Median latency** | the typical experience, as opposed to the average, which outliers distort |
+| **Memory-bandwidth-bound** | time dominated by moving bytes between memory and the compute units, not by arithmetic |
+| **Compute-bound** | time dominated by the arithmetic itself — the efficient place to be |
+| **Arithmetic intensity** | FLOPs performed per byte moved; batching raises it by reusing one weight load across more sequences |
+| **Roofline** | the model that plots achievable performance against arithmetic intensity, showing which bound you hit |
+| **Amortize** | spreading a fixed cost (loading the weights) over more work, lowering the cost per unit |
+| **PagedAttention** | vLLM's technique of storing the KV cache in fixed-size pages, like OS virtual memory, instead of one contiguous block |
+| **Internal fragmentation** | reserved-but-unused memory inside an allocation — here, the tail of a `max_seq_len` reservation |
+| **`max_seq_len`** | the maximum sequence length a slot is sized for; over-reserving it is what wastes KV memory |
+| **KV pool** | the GPU memory set aside to hold all active sequences' KV caches; it sets the batch-size ceiling |
+| **`gpu_memory_utilization`** | the vLLM knob for what fraction of GPU memory the engine may claim, most of it becoming KV pool |
+| **FasterTransformer** | NVIDIA's optimised transformer inference library — better kernels, still static batching |
+| **Ray** | the distributed-execution framework Anyscale builds on, used in the benchmarked stack |
+| **Kernel** | one GPU program; "better kernels" means faster hand-tuned implementations of the same maths |
+| **Orthogonal** | independent — changing one does not constrain the other, so the two wins multiply |
+| **Benchmark** | a measured comparison under a stated workload; the source of the throughput multiples quoted |
+
+</details>
+
 🔗 **Primary (the canonical article, your level):** [How continuous batching enables 23x throughput in LLM inference while reducing p50 latency — Anyscale](https://www.anyscale.com/blog/continuous-batching-llm-inference)
 🔗 **Deeper companion (mechanism + diagrams):** [LLM Inference: Continuous Batching and PagedAttention — insujang](https://insujang.github.io/2024-01-07/llm-inference-continuous-batching-and-pagedattention/)
 🔗 **Tie-back to yesterday (the memory half):** [vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention — vLLM blog](https://vllm.ai/blog/2023-06-20-vllm)
@@ -73,6 +129,59 @@ The other reported edge: continuous batching **also lowers median latency** at t
 ---
 
 ## 2. Prefill vs decode — two phases, opposite bottlenecks, one GPU
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LLM** | large language model | the text model being served |
+| **GPU** | graphics processing unit | the accelerator each phase runs on |
+| **KV cache** | key-value cache | the stored attention keys and values, which grow as a sequence decodes |
+| **K and V** | keys and values | the two tensors per token that the cache holds — hence the factor of 2 in the sizing |
+| **TTFT** | time to first token | how long the user waits before anything appears; set by prefill |
+| **TPOT** | time per output token | how fast the stream flows once it starts; set by decode |
+| **TBT** | time between tokens | the same quantity as TPOT, named from the gap rather than the rate |
+| **SLO** | service-level objective | the latency target a request is supposed to meet |
+| **P/D** | prefill/decode | shorthand for the two phases, as in "P/D-disaggregated mode" |
+| **A100 / Falcon-180B / Mistral-7B** | (GPU and model names) | the hardware and models the quoted benchmarks ran on; `7B`/`180B` are parameter counts |
+| **PCIe / NVLink** | Peripheral Component Interconnect Express / NVIDIA's GPU interconnect | the links data crosses between GPUs, and the toll a KV transfer pays |
+| **arXiv** | (open preprint server) | where the cited papers are published |
+| **SGLang / TensorRT-LLM** | (serving engines) | alternative LLM inference servers that also support disaggregated prefill and decode |
+| **vLLM** | (a serving engine) | the open-source inference server the learner runs |
+| **`-ngl`** | number of GPU layers | the `llama.cpp` flag deciding how many layers sit on the GPU — the earlier interconnect analysis |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Prefill** | processing the entire prompt in one parallel forward pass — many tokens at once, high arithmetic intensity |
+| **Decode** | generating output one token per pass, each pass re-reading all weights plus the growing KV cache |
+| **Compute-bound** | time dominated by arithmetic; prefill's regime |
+| **Memory-bandwidth-bound** | time dominated by moving bytes; decode's regime |
+| **Arithmetic intensity** | FLOPs per byte moved — the number that tells you which regime you are in |
+| **Arithmetic-intensity slack** | the compute a memory-bound decode batch leaves unused, which chunked prefill spends |
+| **Forward pass (iteration)** | one run of the model over the current batch |
+| **Continuous batching** | rescheduling the batch every iteration, from section 1 — the setting in which the two phases collide |
+| **Prefill–decode interference** | a long prefill monopolising an iteration's compute, stalling the decodes sharing that batch |
+| **Stall / hitch** | a visible pause in a user's token stream caused by that interference |
+| **Throughput** | tokens or requests per second, regardless of whether they were on time |
+| **Goodput** | requests per second that actually met both their TTFT and TPOT targets — the metric that counts |
+| **Tail latency** | the slow end of the distribution, where SLO violations live even when the average looks fine |
+| **Chunked prefill** | splitting a long prefill into fixed chunks and piggybacking each onto a batch of decodes |
+| **Piggyback** | attaching the chunk to an iteration that was going to run anyway, using its spare compute |
+| **Scheduler** | the component deciding which sequences and chunks run in each iteration |
+| **Disaggregation** | running prefill and decode on separate GPU groups, streaming the KV cache across at handoff |
+| **Handoff** | the moment a request moves from the prefill group to the decode group, carrying its KV cache |
+| **Interconnect** | the link between GPUs or nodes that the transferred KV cache crosses |
+| **Parallelism (of a group)** | how a model is split across GPUs; each phase can be configured differently once disaggregated |
+| **Single node / multi-node** | one machine's GPUs versus several machines — the axis that decides which answer fits |
+| **Layer** | one transformer block; the KV cache holds keys and values per layer, hence the multiplication |
+| **Streaming** | delivering tokens to the user as they are produced rather than all at the end |
+
+</details>
 
 🔗 **Frontier — disaggregation:** [DistServe: Disaggregating Prefill and Decoding for Goodput-optimized LLM Serving (arXiv 2401.09670)](https://arxiv.org/abs/2401.09670)
 🔗 **Frontier — the other answer, chunked prefill:** [Taming Throughput-Latency Tradeoff with Sarathi-Serve (arXiv 2403.02310)](https://arxiv.org/abs/2403.02310)

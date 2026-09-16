@@ -51,6 +51,38 @@ on: inflation (§2) is what separates *real* from *nominal* GDP; unemployment (�
 
 ## 1. What GDP is — one sentence, dissected
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used in the definition (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | the market value of all final goods and services produced inside a country in a period |
+| **GNI** | gross national income | income earned by a country's residents wherever in the world it is earned — the *ownership* counterpart to GDP's *geography* |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Market value** | valuing every different good by the price it sold for, so unlike things can be added up in one unit |
+| **Final good** | a good or service sold to its end user — the only kind GDP counts |
+| **Intermediate good** | a good bought by one firm as an input to make something else; excluded, because its value is already inside the final price |
+| **Double counting** | the error of adding both an intermediate good and the final good that contains it |
+| **Value added** | a firm's sales minus what it bought from other firms — its own contribution to output |
+| **Production** | making something new; GDP counts production, not transactions that merely move existing things around |
+| **Second-hand sale** | resale of an existing asset — no new production, so it is excluded (the dealer's service margin is not) |
+| **Service margin** | the fee or mark-up a middleman earns for a service actually rendered; newly produced, so it counts |
+| **Financial transaction** | swapping money for a paper claim such as a share or bond; nothing produced, so excluded |
+| **Transfer payment** | money moved without anything produced in return — pensions, welfare, unemployment benefit; excluded from GDP |
+| **Flow vs stock** | a **flow** is measured *per period* (GDP, income); a **stock** is a quantity held at a point in time (wealth, debt, capital). GDP is a flow |
+| **Capital stock** | the accumulated buildings, machines and infrastructure an economy has — a stock, not a flow |
+| **Depreciation** | the wearing-out of the capital stock each period; subtracting it is what turns gross into net |
+| **Debt-to-GDP ratio** | government debt (a stock) divided by *annual* GDP (a flow) — expressed as a ratio precisely because the two are different kinds of quantity |
+| **Purchasing power** | how much a unit of money actually buys |
+
+</details>
+
 > **Gross Domestic Product (GDP)** = the **market value** of all **final** goods and services **produced**
 > **within a country** **in a given period** (a quarter or a year).
 
@@ -102,6 +134,43 @@ hiding in one of these words.
 
 ## 2. Three ways to count the same thing
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the symbols in the identity (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | the market value of all final goods and services produced inside a country in a period |
+| **NX** | net exports | exports minus imports |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $GDP$ | "G-D-P" | total output of the economy over the period |
+| $C$ | "C" | consumption — household spending on final goods and services |
+| $I$ | "I" | investment in the economic sense — spending on new real capital, not on financial assets |
+| $G$ | "G" | government purchases of goods and services |
+| $NX$ | "N-X" | net exports, exports minus imports; can be negative |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Production (output / value-added) approach** | measuring GDP as it is *made*, by summing every firm's value added |
+| **Expenditure approach** | measuring GDP as it is *bought*, by summing final spending |
+| **Income approach** | measuring GDP as it is *paid out*, by summing wages, rent, interest and profit |
+| **Value added** | a firm's sales minus what it bought from other firms |
+| **Circular flow** | the loop in which one agent's spending is another's income, which is why the three approaches must agree |
+| **Accounting identity** | an equation true by definition of its terms, not an empirical claim that could turn out false |
+| **Statistical discrepancy** | the small leftover when agencies compute the three approaches from different raw data and reconcile them |
+| **Profit as the residual** | what is left after wages, rent and interest are paid — the term that makes income equal expenditure exactly |
+| **Rent** | payment for the use of land or property |
+| **Interest** | payment for the use of borrowed money |
+
+</details>
+
 Here is the elegant part. GDP can be measured **three completely different ways**, and — by an accounting
 identity, not luck — they give the **same number**. Statistical agencies compute all three and reconcile
 them (the small leftover is the "statistical discrepancy").
@@ -135,6 +204,46 @@ view; "corporate profits and wages rose" is the *income* view; "manufacturing ou
 ---
 
 ## 3. The expenditure approach: $GDP = C + I + G + NX$
+
+<details>
+<summary><b>Vocabulary for this section</b> — every letter of the identity and the buckets behind them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | total output produced inside the country in a period |
+| **NX** | net exports | exports minus imports |
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank and financial regulator |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $GDP$ | "G-D-P" | total output over the period — the thing the four letters add up to |
+| $C$ | "C" | consumption: household spending on goods and services, usually the largest share |
+| $I$ | "I" | investment: business spending on new capital, **plus** new housing, **plus** the change in inventories |
+| $G$ | "G" | government purchases of goods and services — excluding transfer payments |
+| $NX$ | "N-X" | net exports: exports minus imports; negative for a country running a trade deficit |
+| $NX < 0$ | "N-X less than zero" | net exports are negative, i.e. the country imports more than it exports |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Consumption** | household spending on final goods and services; new housing is **not** here, it sits in investment |
+| **Investment** *(economic sense)* | building real productive capacity — factories, machines, software, housing, inventories — **not** buying shares or bonds |
+| **Capital formation** | another name for that real investment: adding to the economy's stock of productive assets |
+| **Inventories** | unsold goods a firm holds; the *change* in them counts as investment because it was produced but not yet sold |
+| **Government spending** | purchases of goods and services by government — teachers' salaries, roads, defence equipment |
+| **Transfer payment** | money moved without production in return (pensions, welfare); excluded from $G$ |
+| **Net exports** | exports minus imports — what foreigners buy from us, less what we buy from abroad |
+| **Trade deficit** | imports exceed exports, so net exports are negative |
+| **Import content** | the part of household, business or government spending that went on foreign-made goods, and which the minus sign on imports removes |
+| **Entrepôt** | a trading hub that imports goods largely in order to re-export them, which inflates both trade flows relative to the domestic economy |
+| **Trade balance** | the same quantity as net exports, stated as a surplus or a deficit |
+
+</details>
 
 This is the decomposition you'll see most, because each piece is a different *engine* of the economy and
 moves for different reasons. Learn what's in each bucket — and, just as important, what is **not**.
@@ -180,6 +289,49 @@ at:
 ---
 
 ## 4. Nominal vs real: what "grew 2%" actually means
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the growth formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | total output produced inside the country in a period |
+| **CPI** | consumer price index | a basket-based measure of the prices households face; narrower than the GDP deflator |
+| **PPP** | purchasing power parity | adjusting cross-country comparisons for the fact that the same goods cost different amounts in different countries |
+| **BEA** | Bureau of Economic Analysis | the US agency that publishes the GDP release |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $g_{\text{nom}}$ | "g-nominal" | the growth rate of nominal GDP over the period |
+| $g_{\text{real}}$ | "g-real" | the growth rate of real GDP — growth in quantity alone |
+| $\pi$ | "pi" | the inflation rate; in macroeconomics $\pi$ never means the circle constant |
+| $\ln$ | "natural log" | the natural logarithm, which turns compounding into addition so the growth terms add exactly |
+| $\ln(1+g)$ | "log of one plus g" | the continuously-compounded version of a growth rate $g$ |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Nominal GDP** | output valued at this year's prices; moves with both quantity **and** prices |
+| **Real GDP** | output valued at a fixed base year's prices; moves with quantity only — this is what "the economy grew 2%" means |
+| **Base year** | the year whose prices are held fixed when computing real GDP |
+| **Current prices** | this period's actual prices — the basis of the nominal measure |
+| **Constant prices** | a fixed year's prices — the basis of the real measure |
+| **GDP deflator** | nominal GDP divided by real GDP, times 100 — the price index implied by the pair, covering everything in GDP |
+| **Inflation** | the rate at which the general price level is rising |
+| **Real GDP per capita** | real GDP divided by population — the closest single number to average material prosperity |
+| **Annualized quarterly growth** | a quarter's growth compounded as though it ran for a full year; the US convention, roughly four times a small quarterly number |
+| **Year-on-year growth** | this quarter compared with the same quarter a year earlier |
+| **Quarter-on-quarter growth** | this quarter compared with the previous quarter, not compounded |
+| **Purchasing power parity (PPP)** | a conversion that prices each country's output at a common set of prices, so living standards can be compared |
+| **Market exchange rate** | the rate currencies actually trade at; converting at it understates poorer countries' real consumption |
+| **Cross-term** | the small product of two growth rates that makes the simple sum of real growth and inflation approximate rather than exact |
+
+</details>
 
 Now the distinction that separates someone who *reads* GDP from someone who's fooled by it. Suppose a
 country produces the **exact same** basket of goods two years running, but every price rises 10%. Measured
@@ -236,6 +388,44 @@ living standards over the long run.
 ---
 
 ## 5. What GDP misses — read the headline with the right skepticism
+
+<details>
+<summary><b>Vocabulary for this section</b> — the blind-spot vocabulary and the GNI identity (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | output produced **inside the borders**, whoever owns it — a geographic measure |
+| **GNI** | gross national income | income earned by a country's **residents**, wherever in the world it is earned — an ownership measure |
+| **GNP** | gross national product | the older name for GNI; the same idea |
+| **GNI\*** | modified gross national income | Ireland's adjusted measure, which strips out distortions from multinational accounting |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $GNI$ | "G-N-I" | gross national income — income accruing to residents |
+| $GDP$ | "G-D-P" | gross domestic product — output produced on the territory |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Welfare** | how well off people actually are; GDP measures market production, which is not the same thing |
+| **Non-market production** | useful work done outside the market — cooking, childcare, home repair — which has no price and so is not counted |
+| **Informal (shadow) economy** | cash-in-hand work, subsistence farming and black markets; real output that is partly missing from GDP |
+| **Distribution** | how income is shared across people; GDP per capita is an average and says nothing about it |
+| **Mean vs median** | the **mean** (average) can rise while the **median** (the typical person in the middle) stagnates, if the gains pool at the top |
+| **Externality** | a cost or benefit falling on someone outside the transaction — pollution being the standard case |
+| **Depletion** | using up a non-renewable resource; the output is counted, the loss of the asset is not netted off |
+| **Green GDP** | attempts to adjust GDP for environmental damage and resource depletion |
+| **Natural-capital accounting** | treating environmental assets as a stock that can be run down, alongside the usual accounts |
+| **Quality adjustment** | the problem that today's product may be far better than a same-priced one a decade ago, which raw spending figures miss |
+| **Remittance** | money sent home by citizens working abroad; it raises national income without raising domestic production |
+| **Multinational profit booking** | recording profits in a low-tax jurisdiction where little of the real activity happened, which inflates that country's measured GDP |
+
+</details>
 
 GDP is the best single summary we have, but it is a **measure of market production, not of welfare** — and
 its inventor, Simon Kuznets, warned against exactly that confusion. Knowing the blind spots is what turns you

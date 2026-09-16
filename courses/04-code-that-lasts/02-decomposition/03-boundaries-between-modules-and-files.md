@@ -48,6 +48,39 @@ The payoff idea, stated up front:
 
 ## 1. What a module boundary actually is
 
+<details>
+<summary><b>Vocabulary for this section</b> — what a module boundary is in each language named below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **API** | application programming interface | the set of names a package deliberately offers its callers |
+| **JS/TS** | JavaScript / TypeScript | the two languages treated together here; a file is a module in both |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Module** | any unit with a public face and a hidden inside; at this scale it is a file or a directory |
+| **Package** | a directory-level module — in Python a directory with an `__init__.py`, in Go a directory, in Java a declared `package` |
+| **Namespace** | the naming scope a module creates, so `orders.service` cannot collide with `users.service` |
+| **Public API** | the names a package exports; what you re-export in `__init__.py` is what callers should import |
+| **`__init__.py`** | the file that makes a Python directory a package and defines what it re-exports |
+| **Import** | a declaration that this module depends on another — the concrete dependency edge |
+| **Dependency edge** | one arrow in the graph: module A imports module B |
+| **Package-private** | visible inside the package but not outside it — Java's default access |
+| **Capitalization as access modifier** | Go's rule that an exported name starts with a capital letter |
+| **`internal/`** | Go's special directory the compiler refuses to let outside packages import — a language-enforced boundary |
+| **Barrel file** | a JS/TS `index.ts` that re-exports a directory's contents to define its public surface |
+| **Fat barrel** | a barrel that re-exports everything, so the package hides nothing and becomes a hub |
+| **Kitchen-sink `__init__.py`** | the Python equivalent of a fat barrel |
+| **Deep module** | §1's idea one level up: a small public API in front of many internal files |
+| **Hub** | a module that everything else depends on |
+| **Contract** | an exported name you will pay to change; un-exported internals are free to churn |
+
+</details>
+
 A **module** is any unit with a public face and a hidden inside — but at this scale it has a
 *physical* form (files and directories) and a *logical* form (a namespace and its public API).
 
@@ -72,6 +105,31 @@ hub every other package binds to.
 ---
 
 ## 2. Grouping files: package-by-layer vs package-by-feature
+
+<details>
+<summary><b>Vocabulary for this section</b> — the two packaging strategies and the frameworks that embody them (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Package-by-layer** | grouping files by technical role: `controllers/`, `services/`, `repositories/` |
+| **Package-by-feature** | grouping files by what changes together — the domain concept: `orders/`, `users/`, `billing/` |
+| **Controller** | the code that receives a request and dispatches it |
+| **Service** | the code holding the business rules for a feature |
+| **Repository** | the code that reads and writes the store for a feature |
+| **Logical cohesion** | §1's rung where members are grouped by technical category rather than purpose — what by-layer is |
+| **Domain** | the business concepts the system is about, as opposed to the framework it is built on |
+| **Change locality** | the decisive test: when you change one feature, how many packages do you touch? |
+| **Smear** | one conceptual change spread across several packages |
+| **Screaming architecture** | Robert Martin's idea that your top-level directories should announce what the system *does*, not which framework it uses |
+| ***PresentationDomainDataLayering*** | Fowler's article setting out when layering genuinely is the right choice |
+| **Feature slice** | one vertical package holding all the layers of a single feature |
+| **Ruby on Rails** | the framework whose `app/controllers`, `app/models`, `app/views` layout is package-by-layer |
+| **Django app** | Django's unit of feature-level packaging, closer to a feature slice |
+| **Default versus deliberate choice** | by-feature should be the default; by-layer should be chosen on purpose, not by reflex |
+
+</details>
 
 This is the first big decision and the most common place teams get it wrong. §1 named the trap as
 *logical cohesion*; here it takes its full-scale form.
@@ -145,6 +203,39 @@ Neither is "correct"; they're different bets on where change will concentrate.
 
 ## 3. The new concern: dependency **direction** and the acyclic rule
 
+<details>
+<summary><b>Vocabulary for this section</b> — dependency direction, cycles, and the principle that forbids them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ADP** | Acyclic Dependencies Principle | the rule that the package dependency graph must contain no cycles |
+| **DAG** | directed acyclic graph | a graph of one-way arrows with no cycle — what a healthy dependency graph is |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Directed graph** | nodes joined by one-way arrows; here packages joined by imports |
+| **Dependency direction** | which way an import arrow points — A imports B, not the reverse |
+| **Acyclic Dependencies Principle** | the package dependency graph must be a DAG: no package may depend, directly or transitively, on itself |
+| **Cycle** | A depends on B which depends back on A |
+| **Transitive dependency** | a dependency reached through other dependencies: A imports B imports C, so A depends on C |
+| **Strongly-connected component** | a set of nodes that can all reach each other — a cycle's true extent, and the real unit you must reason about |
+| **Cohesion** | how well a module holds together; inside a cycle it is a lie, because the modules are really one |
+| **Seam** | a place to substitute an implementation; a cycle prevents one because no acyclic sub-piece can be pulled out |
+| **Independent deployment** | releasing one package or service without releasing the others — impossible across a cycle |
+| **Circular import** | Python's concrete symptom of a cycle: `ImportError: cannot import name X` |
+| **Deferred / local import** | moving an import inside a function to silence a circular-import error — a workaround that hides the cycle rather than fixing it |
+| **Extract the shared thing downward** | the first cycle-breaking move: put what entangles A and B into a third, lower module both depend on |
+| **Leaf module** | one that depends on nothing else — the stable bottom of the graph |
+| **Move Function / Field** | §2's catalog move, applied here to whole modules |
+| **Dependency inversion** | the second cycle-breaking move: define the interface in the high-level module's world and have the low-level one implement it, flipping the arrow |
+| **Port** | such an interface, owned by the module that needs the capability |
+
+</details>
+
 Inside a function there are no "cycles." Between modules, the import graph is a **directed graph**,
 and its single most important health property is:
 
@@ -204,6 +295,43 @@ flowchart LR
 ---
 
 ## 4. Which way should the arrows point? Stability & dependency inversion
+
+<details>
+<summary><b>Vocabulary for this section</b> — stability, dependency inversion, and the architectures built on them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DIP** | Dependency Inversion Principle | high-level policy must not depend on low-level detail; both depend on an abstraction |
+| **SDK** | software development kit | a vendor-supplied library — a typical volatile detail |
+| **DAG** | directed acyclic graph | a dependency graph with no cycles; necessary but not sufficient — it can still point the wrong way |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stable module** | one that many things depend on and that itself depends on little, so changing it is expensive and it is kept still |
+| **Volatile module** | one that changes often — a UI widget, a vendor SDK, a database adapter |
+| **Stable Dependencies Principle** | dependencies should flow from volatile to stable, never the reverse |
+| **Dependency Inversion Principle** | high-level policy and low-level detail should both depend on an abstraction owned by the policy side |
+| **High-level policy** | the business rules — the important, slow-changing code |
+| **Low-level detail** | the mechanisms: a specific database, web framework or vendor client |
+| **Abstraction** | the interface both sides agree on, so neither depends on the other directly |
+| **Port** | an interface defined by the domain describing a capability it needs (`OrderRepository`, `PaymentPort`) |
+| **Adapter** | a low-level module that implements a port for one concrete technology |
+| **`Protocol`** | Python's structural interface: a class satisfies it by having the right methods, with no inheritance required |
+| **Structural typing** | satisfying an interface by shape rather than by declaring you implement it |
+| **Dependency injection** | passing the implementation in from outside rather than constructing it inside — which also creates a seam |
+| **Seam** | §2's term: a place where you can substitute an implementation without editing the code there |
+| **Hexagonal Architecture** | Alistair Cockburn's architecture in which the domain sits at the centre and all technology plugs in through ports |
+| **Ports and Adapters** | the other name for the same architecture, after its two roles |
+| **Clean Architecture** | Robert Martin's layered formulation of the same idea |
+| **Dependency Rule** | Clean Architecture's rule that source-code dependencies always point inward, toward higher-level policy |
+| **Postgres / DynamoDB** | two concrete databases; swapping one for the other is the litmus test that no domain code changes |
+| **Litmus test** | §1's check: swap the implementation and count the broken call sites — zero is the goal |
+
+</details>
 
 Acyclic is necessary but not sufficient — a DAG can still point the *wrong way*. Two principles set
 the direction.
@@ -293,6 +421,26 @@ through ports. The center depends on nothing external, so it's the most stable a
 
 ## 5. Seams become module edges (the §2 callback)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the one idea that unites testability, direction and depth (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Seam** | Feathers' term from §2: a place where you can change behaviour without editing the code at that place |
+| **Test double** | a stand-in for a real dependency in a test — a fake, stub or mock |
+| **Port** | an interface the high-level module defines for a capability it needs |
+| **Protocol** | the Python form of such an interface, satisfied by having the right methods |
+| **Module edge** | a permanent boundary between two packages, where the import arrow crosses |
+| **Narrow interface** | a small set of names the arrow must cross through — what makes the boundary cheap |
+| **Depth** | §1's measure: how much a module hides behind how small an interface |
+| **Design decision** | what a boundary exists to hide — the storage choice, the protocol, the policy |
+| **Substitutability** | the ability to swap one implementation for another without changing callers |
+| **Well-architected** | here, the claim that the testable place and the correctly-bounded place are the same place |
+
+</details>
+
 In §2 you created a **seam** — a place to substitute a test double — usually by passing a dependency
 in as a parameter instead of constructing it internally. Now zoom out: **a well-placed port is a seam
 that has become a permanent module boundary.** The `OrderRepository` protocol above is exactly the
@@ -310,6 +458,38 @@ seam is the same act as drawing the module edge in the right spot.
 ---
 
 ## 6. Failure modes at the codebase scale
+
+<details>
+<summary><b>Vocabulary for this section</b> — the codebase-scale failure modes, by name (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **JS/TS** | JavaScript / TypeScript | where a fat barrel also breaks tree-shaking |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Junk-drawer package** | a `utils` / `common` / `helpers` package that everything imports and nothing defines — logical cohesion at package scale |
+| **Logical cohesion** | §1's rung where members are grouped by technical category rather than purpose |
+| **Maximally-unstable hub** | a package everything depends on, so any change to it risks the whole system |
+| **Leaf package** | a small, named, stable package that depends on nothing (`money`, `time`, `ids`) — the right home for genuinely shared primitives |
+| **Fat barrel** | an `index.ts` or `__init__.py` that re-exports a whole subtree, making the package shallow and coupling every importer to every internal |
+| **Tree-shaking** | a bundler's removal of unused code; a fat barrel defeats it by making everything look used |
+| **Import cycle** | two modules that import each other, directly or transitively |
+| **Public surface** | the deliberately-chosen set of exported names |
+| **Big ball of mud** | a codebase with no discernible boundaries and a dense, cyclic import graph |
+| **Accretion** | §1's point that complexity arrives one convenient cross-import at a time, not in one bad decision |
+| **Distributed monolith** | services split physically but with a cyclic runtime dependency graph, so you pay distribution's costs and keep coupling's |
+| **Microservices** | an architecture of small, independently-deployed services |
+| **Runtime dependency graph** | which service calls which at run time, as opposed to which module imports which |
+| **Partial failure** | one service being down or slow while the others are up — a cost you take on by distributing |
+| **Shotgun surgery** | one conceptual change forcing edits in many packages — the sign your boundaries cut across the grain of change |
+| **Grain of change** | the axis along which the system actually changes; boundaries should follow it |
+
+</details>
 
 The far-wall failure modes of §1 have architecture-scale cousins. Recognize them by name:
 
@@ -336,6 +516,37 @@ The far-wall failure modes of §1 have architecture-scale cousins. Recognize the
 ---
 
 ## 7. A note for the AI-agent workflow
+
+<details>
+<summary><b>Vocabulary for this section</b> — the agent-workflow terms and the enforcement tooling named below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | here, a coding agent that reads and edits the repository |
+| **API** | application programming interface | a package's exported surface |
+| **CI** | continuous integration | the automated build-and-check pipeline that runs on every change |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Context** | the code an agent must load to reason about a change; bounded modules keep it small |
+| **Transitive closure** | everything reachable by following dependencies — what an agent must pull in when boundaries are bad |
+| **Token-efficient** | costing little context to work inside; a property of deep modules with small public APIs |
+| **Port** | an interface a module depends on instead of a concrete implementation |
+| **Strongly-connected import cluster** | a group of modules that all reach each other — a cycle, which forces whole-cluster loading |
+| **Reviewable diff** | a change small and focused enough that a human can check it |
+| **Architectural invariant** | a rule that must always hold, such as "`domain/` must not import `infra/`" |
+| **Project instructions file** | `CLAUDE.md`, `.cursor/rules` or `AGENTS.md` — where you write such a rule for the agent to follow |
+| **Lint rule** | an automated check that fails when a rule is violated |
+| **import-linter** | a Python tool that enforces declared contracts about which packages may import which |
+| **`eslint-plugin-boundaries`** | the equivalent ESLint plugin for JavaScript/TypeScript projects |
+| **ArchUnit** | the equivalent architecture-rule test library for Java |
+| **Governance surface** | a place where a design decision can be written down and mechanically enforced |
+
+</details>
 
 The dependency graph isn't only a human-comprehension tool — it's also **the thing an AI agent must
 traverse to work in your codebase**, and the same properties help or hurt it:

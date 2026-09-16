@@ -12,6 +12,62 @@
 
 ## 1. Data classes — stop hand-writing `__init__`, and get immutability for free
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LLM** | large language model | the text model whose loosely-structured JSON output motivates validation at the boundary |
+| **JSON** | JavaScript Object Notation | the text data format used for API payloads and model output |
+| **API** | application programming interface | the calls a service or library exposes; here, a source of untrusted input |
+| **`repr`** | representation | the developer-facing string form of an object, printed in the shell and in logs |
+| **stdlib** | standard library | what ships with Python itself, needing no extra dependency |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Dataclass** | a class decorated with `@dataclass`, whose boilerplate methods Python generates from its annotated fields |
+| **Decorator** | a function applied with `@name` above a class or function to modify or extend it |
+| **Type annotation** | the declared type of a field or argument (`prompt: str`), which the type checker reads |
+| **Field** | one declared attribute of a dataclass |
+| **Boilerplate** | repetitive mechanical code you would otherwise write by hand — here `__init__`, `__repr__`, `__eq__` |
+| **`__init__`** | the constructor: what runs when you create an instance |
+| **`__repr__`** | the method producing the object's printable representation |
+| **`__eq__`** | the method defining `==`; dataclasses make it compare field values |
+| **Value-based equality** | two objects are equal when their contents match, not only when they are the same object |
+| **`frozen=True`** | makes instances read-only: assigning to a field afterwards raises `FrozenInstanceError` |
+| **Immutability** | the property that an object cannot change after construction |
+| **Shallow immutability** | freezing the reference but not what it points at — a frozen field holding a list can still be appended to |
+| **Aliasing** | two names referring to the same object, so a mutation through one is visible through the other |
+| **Temporal coupling** | code that only works if things happen in a particular order, e.g. mutate-then-read |
+| **`slots=True`** | generates `__slots__`, giving instances a fixed layout instead of a per-instance attribute dictionary |
+| **`__dict__`** | the per-instance dictionary that normally holds an object's attributes |
+| **`AttributeError`** | the error raised when you touch an attribute that does not exist — what `slots` turns typos into |
+| **`field(default_factory=...)`** | supplies a fresh default object per instance, instead of one object shared by all of them |
+| **Mutable default** | the classic bug of using `[]` or `{}` as a default, so every instance shares the same object |
+| **`replace(obj, **changes)`** | returns a new instance with some fields changed, leaving the original untouched |
+| **Functional update** | producing a new value instead of mutating the old one — how you "change" frozen state |
+| **Reducer** | a function that folds an update into existing state; LangGraph's generalisation of the same move |
+| **LangGraph** | a library for building stateful multi-step LLM pipelines as a graph |
+| **Hashable** | usable as a dictionary key or set member, which requires a stable hash and therefore immutability |
+| **`NamedTuple`** | a tuple subclass with named fields — immutable and lightweight, but also iterable and indexable |
+| **Tuple semantics** | being unpackable and indexable (`a, b = x`, `x[2]`) — convenient, and a place bugs hide |
+| **Pydantic** | a validation library: it checks and coerces untrusted data into a declared model |
+| **Coercion** | converting a value to the declared type, e.g. the string `"3"` into the integer `3` |
+| **Validation** | checking that incoming data actually matches the shape you expect, and failing loudly if not |
+| **Boundary** | the edge of your system where untrusted data arrives — the right place to validate |
+| **`attrs`** | the third-party library dataclasses were modelled on; more powerful, with validators and converters |
+| **Domain model / internal data** | your own already-trusted objects, as opposed to data crossing a boundary |
+| **`Dict[str, Any]`** | an untyped dictionary used as an ad-hoc record — the habit dataclasses replace |
+| **Type checker** | a tool (mypy, pyright) that verifies annotations without running the code |
+| **`functools.cached_property`** | a decorator that computes a property once and stores it on the instance — which needs a `__dict__` |
+| **C-struct layout** | a fixed block of memory with one slot per field, which is why `slots` is smaller and faster |
+
+</details>
+
 🔗 **Primary (tutorial, your level):** [Data Classes in Python — Real Python](https://realpython.com/python-data-classes/)
 🔗 **Canonical reference (the one to bookmark):** [`dataclasses` — Python docs](https://docs.python.org/3/library/dataclasses.html)
 🔗 **Comparative (the "which container?" question):** [Why not…? — attrs docs](https://www.attrs.org/en/stable/why.html) · [Battle of the Data Containers — Towards Data Science](https://towardsdatascience.com/battle-of-the-data-containers-which-python-typed-structure-is-the-best-6d28fde824e/)
@@ -78,6 +134,50 @@ The sharp distinctions (from the attrs docs and the comparison piece, both linke
 ---
 
 ## 2. `typing.Protocol` — duck typing that the type checker can actually see
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ABC** | abstract base class | Python's inheritance-based way of declaring a contract, `abc.ABC` |
+| **PEP** | Python Enhancement Proposal | the numbered design document; PEP 544 is the one that introduced Protocols |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Duck typing** | if it has the method you need, it will do — no declared relationship required |
+| **Static duck typing** | the same idea, but written down so a type checker can verify it before the code runs |
+| **`typing.Protocol`** | the class you subclass to declare a contract by shape: the methods and attributes a type must have |
+| **Structural subtyping** | membership decided by shape — you match if you have the right methods with the right signatures |
+| **Nominal subtyping** | membership decided by declared lineage — you match only if you inherited from the named base |
+| **Signature** | a method's name, parameters and return type together |
+| **Type checker** | mypy or pyright, which verifies annotations statically rather than at runtime |
+| **Static check** | verification done by reading the code, before it runs |
+| **Runtime check** | verification done while the program is executing |
+| **`isinstance()`** | the runtime test "is this object of that type"; on a Protocol it fails unless you opt in |
+| **`@runtime_checkable`** | the decorator that lets `isinstance` work on a Protocol — checking method *names* only, not signatures |
+| **`TypeError`** | the error raised when an operation gets a type it cannot handle |
+| **Coupling** | how much one piece of code must know about another; the thing Protocols remove here |
+| **Dependency inversion** | making both sides depend on an abstraction, rather than the concrete one depending on the framework |
+| **Dependency arrow** | which module imports which; Protocols reverse it so the implementations import nothing |
+| **Information hiding** | keeping a decision inside one module so nothing else has to know it |
+| **Deep seam** | a boundary where a simple interface can hide a lot — Ousterhout's framing, carried over from reading 06-11 |
+| **Retrofit** | making an existing class (including third-party code you cannot edit) satisfy a contract |
+| **Accidental match** | an unrelated type satisfying a Protocol by coincidence, because the required shape was too generic |
+| **File-like / iterable / context manager** | Python's long-standing informal contracts, now expressible as Protocols |
+| **`__subclasshook__`** | the hook that lets an ABC accept classes structurally rather than only by inheritance |
+| **Framework-less** | building the pipeline from plain classes and functions instead of adopting an orchestration framework |
+| **Graph-lite pipeline** | the learner's own design: steps wired as a small graph without a framework |
+| **Node / step** | one unit of work in that pipeline — the thing the `Step` Protocol describes |
+| **Contract** | what a caller may rely on: which methods exist, what they take, what they return |
+| **Frozen dataclass** | an immutable data object; here the data half, with the Protocol as the behaviour half |
+| **Decomposition** | how responsibilities are split across units — here, behaviour contract apart from data container |
+
+</details>
 
 🔗 **Primary (tutorial, your level):** [Python Protocols: Leveraging Structural Subtyping — Real Python](https://realpython.com/python-protocol/)
 🔗 **The spec (why it exists, conceptually):** [PEP 544 — Protocols: structural subtyping](https://peps.python.org/pep-0544/)

@@ -46,6 +46,35 @@ that bookkeeping, automatically, millions of times a second.
 
 ## 1. The core problem: calling means you have to come back
 
+<details>
+<summary><b>Vocabulary for this section</b> — what a call has to remember, and the words for it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPU** | central processing unit | the chip executing the instructions |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Function call** | transferring execution into another function, with the intent of coming back |
+| **Caller** | the function that makes the call |
+| **Callee** | the function being called |
+| **Return** | handing control back to the caller, optionally with a value |
+| **Return address** | the exact instruction to resume at after the callee finishes — different for each call site |
+| **Call site** | the specific place in the code where a call is made |
+| **Argument** | a value passed into a function at the call |
+| **Local variable** | a name that exists only for the duration of one call |
+| **Register** | one of the CPU's few ultra-fast internal storage slots (from §1) |
+| **Clobber** | overwrite a register whose old value someone else still needed |
+| **Stack frame** | the per-call bundle of return address, arguments, locals and saved registers |
+| **Activation record** | the formal name for a stack frame — the same thing |
+| **Call stack** | the collection of all frames for calls that have started and not yet finished |
+
+</details>
+
 Consider the most boring code imaginable:
 
 ```python
@@ -75,6 +104,30 @@ collection of all the active frames is the **call stack**.
 ---
 
 ## 2. Why a *stack* — the LIFO insight
+
+<details>
+<summary><b>Vocabulary for this section</b> — the stack data structure and why calls fit it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LIFO** | last-in, first-out | the last item added is the first removed — the ordering a stack enforces |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stack (data structure)** | a container you only ever add to or remove from at one end, the top |
+| **Push** | add an item on top of the stack |
+| **Pop** | remove the item currently on top |
+| **Top** | the most recently pushed, not-yet-popped item; for a call stack, the function running right now |
+| **Nesting** | calls contained inside other calls; they never partially overlap, which is what makes LIFO correct |
+| **Stack frame** | the per-call record that gets pushed and popped |
+| **Call stack** | the region of memory holding those frames, used as a stack |
+| **Call/return discipline** | the rule that a callee always finishes before its caller resumes |
+
+</details>
 
 Here's the elegant part. Function calls have a strict shape: **the last function you called is always
 the first one to finish.** If `A` calls `B` and `B` calls `C`, then `C` must return before `B` can
@@ -113,6 +166,39 @@ call/return discipline is inherently LIFO (last-in, first-out).* Nothing forced 
 ---
 
 ## 3. What a stack frame contains, and how call/return works
+
+<details>
+<summary><b>Vocabulary for this section</b> — frame contents, the machine instructions, and the calling convention (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SP** | stack pointer | the CPU register holding the address of the current top of the stack |
+| **ABI** | application binary interface | the binary-level contract — calling convention, register use, data layout — that lets separately compiled code interoperate |
+| **ISA** | instruction set architecture | which instructions a chip family provides, e.g. x86-64 or ARM64 |
+| **OS** | operating system | the software that owns the machine; part of what an ABI is defined against |
+| **CPU** | central processing unit | the chip running the instructions |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Process** | one running program, with its own private memory — the stack lives inside it |
+| **Stack pointer** | the register that tracks the top of the stack; allocating a frame is usually just subtracting from it |
+| **Stack frame** | one call's record: return address, arguments, locals, saved registers |
+| **Return address** | the instruction to jump back to when this call returns |
+| **Saved registers** | the caller's live register values parked in the frame so the callee may reuse those registers |
+| **`call` (instruction)** | machine instruction that pushes the return address and jumps to the function |
+| **`ret` (instruction)** | machine instruction that pops the return address and jumps back to it |
+| **Stack allocation** | making room by moving the stack pointer — near-free, and automatically undone on return |
+| **Heap allocation** | asking a memory manager for a block that outlives the call — far more expensive; Ch2's subject |
+| **Calling convention** | the agreed rules for who pushes arguments, in which registers, and who cleans up |
+| **System V** | the standard calling convention on x86-64 Linux and macOS; Windows x64 uses a different one |
+| **Toolchain** | the compiler, assembler and linker used to build a binary |
+| **Native wheel** | a Python package shipping precompiled machine code, which is therefore tied to one ISA and OS |
+
+</details>
 
 Let's make it concrete. The stack lives in your process's memory; the CPU keeps a special register, the
 **stack pointer (SP)**, pointing at the current top. (Recall registers from §1 — the CPU's "hands.")
@@ -175,6 +261,38 @@ on it.
 
 ## 4. Reading a traceback = reading the stack (your highest-leverage payoff)
 
+<details>
+<summary><b>Vocabulary for this section</b> — traceback anatomy and the debugging vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AWS** | Amazon Web Services | Amazon's cloud platform |
+| **JSON** | JavaScript Object Notation | the text data format log lines are commonly written in |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Traceback** | Python's printout of the call stack at the moment an exception was raised |
+| **Exception** | an error object raised at runtime that unwinds the stack until something catches it |
+| **Raise** | throw an exception, interrupting normal flow |
+| **`TypeError`** | the built-in exception for an operation applied to the wrong type of value |
+| **Frame** | one call's entry in the stack, shown as a `File … line … in …` block |
+| **Innermost frame** | the deepest call — where execution actually was when it broke; printed **last** |
+| **Outermost frame** | the first call in the chain, e.g. module level; printed **first** |
+| **"Most recent call last"** | Python's header telling you the bottom entry is the top of the stack — start reading there |
+| **Symptom vs defect** | where the error surfaced (usually the bottom frame) versus where the wrong value came from (usually above) |
+| **`traceback` module** | the standard library for printing or capturing stacks, e.g. `traceback.print_stack()` |
+| **Live stack** | the stack as it is right now, printable without any exception having occurred |
+| **CloudWatch** | AWS's logging and metrics service, where Lambda output lands |
+| **Structured logging** | emitting logs as machine-parsable fields rather than free text |
+| **Request-scoped tracing** | tagging every log line from one request with a shared identifier so the path can be reassembled |
+| **Callback** | a function handed to something else to be called later, which makes "how did we get here?" hard to answer by eye |
+
+</details>
+
 This is the part that pays for the whole section. A Python **traceback is a snapshot of the call stack
 at the moment something blew up** — printed from the *outermost* caller down to the *innermost* frame
 where the exception actually fired.
@@ -235,6 +353,35 @@ That's the same data structure, on demand — useful when you want to answer "ho
 
 ## 5. Recursion, depth limits, and the stack overflow
 
+<details>
+<summary><b>Vocabulary for this section</b> — recursion, its limits, and the failure modes (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OS** | operating system | the software that allocates the real stack region and kills the process if it is exceeded |
+| **CPython** | the C implementation of Python | the standard `python` binary |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Recursion** | a function calling itself; each call pushes another frame |
+| **Base case** | the condition under which the function returns without recursing again — without it, recursion never stops |
+| **Unwind** | the pops as the pending calls return one after another, innermost first |
+| **Stack overflow** | running past the end of the fixed-size stack region — at the OS level a hard crash |
+| **Segmentation fault** | the OS killing a process for touching memory it is not allowed to touch |
+| **Recursion limit** | CPython's soft cap on Python-level call depth, default about 1000 |
+| **`sys.getrecursionlimit()` / `setrecursionlimit()`** | read and change that cap |
+| **`RecursionError`** | the clean, catchable Python exception raised at the cap, **before** the real stack overflows |
+| **Guardrail** | a deliberate early failure that prevents a worse, uncatchable one |
+| **Tail call** | a recursive call in "return position" — its result is returned directly, with nothing left to do afterwards |
+| **Tail-call optimization** | reusing the current frame for such a call so depth stays constant; **Python deliberately does not do this**, to preserve full tracebacks |
+| **Explicit stack/queue** | keeping the pending work in a list or deque of your own instead of in call frames, so depth is bounded by heap memory, not the stack |
+
+</details>
+
 Recursion is just a function calling *itself* — which means **push another frame** each time. Each
 pending call holds its own frame (its own `n`, its own return address) until the base case lets them
 unwind:
@@ -289,6 +436,37 @@ a **stack overflow**, which at the OS level is a hard crash (segmentation fault)
 
 ## 6. Where Python keeps *its* stack (CPython specifics)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the two layered stacks and CPython's frame objects (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VM** | virtual machine | the CPython bytecode interpreter from §1 |
+| **CPython** | the C implementation of Python | itself a C program, so it has a C stack of its own |
+| **JIT** | just-in-time (compilation) | compiling hot code to machine code while running — CPython 3.13's experimental feature, met in §1 |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **C call stack** | the ordinary native stack of the `python` process itself |
+| **Native stack** | the same thing — the stack the hardware and OS know about |
+| **Frame object** | CPython's own per-Python-call record, separate from the C frame |
+| **`PyFrameObject`** | the C struct behind a frame object |
+| **Locals** | the function's local variables, stored in the frame |
+| **Value stack** | the per-frame scratch stack that bytecode operands are pushed onto and popped from |
+| **Data stack** | the contiguous, heap-managed region CPython 3.11+ keeps Python frames in, instead of on the C stack |
+| **Contiguous** | laid out back-to-back in memory, which makes allocating the next frame cheap |
+| **Faster CPython** | the ongoing project behind CPython 3.11+ performance work, including the frame rework and the 3.13 JIT |
+| **`sys._getframe()`** | returns the current frame object; an internals hook, not for production code |
+| **`f_back`** | a frame's pointer to its caller's frame — the link that makes the stack a chain |
+| **`f_code`** | the code object a frame is executing; `f_code.co_name` is the function's name |
+| **Version-specific** | behaviour that may change between Python releases, so do not build on it |
+
+</details>
+
 A subtlety that connects straight back to §1: there are really **two stacks layered here**, mirroring
 the bytecode/VM idea.
 
@@ -323,6 +501,31 @@ concrete.)
 
 ## 7. The crack in the model: async, threads, and generators
 
+<details>
+<summary><b>Vocabulary for this section</b> — the concurrency constructs that break the one-stack picture (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Thread** | an independent stream of execution inside one process, **with its own call stack** |
+| **Thread dump** | a printout of every thread's stack at once, needed precisely because there is more than one |
+| **`faulthandler`** | a standard-library module that can dump tracebacks for all threads, e.g. `dump_traceback_later` |
+| **Coroutine** | a function defined with `async def` that can pause partway through and be resumed later |
+| **`await`** | the point where a coroutine suspends and control goes back to the event loop |
+| **Suspend** | pause a function without returning — its state is saved off to the side rather than left on the native stack |
+| **Event loop** | the scheduler that decides which suspended coroutine to resume next |
+| **`asyncio`** | Python's standard asynchronous framework, built around that event loop |
+| **`Task`** | an `asyncio` handle wrapping a running coroutine; it carries the context needed to reconstruct the full path |
+| **Heap** | the memory region where suspended coroutine and generator state is kept |
+| **Generator** | a function containing `yield`, which freezes its frame at the yield and resumes there on the next request |
+| **`yield`** | the statement that produces a value and freezes the generator's frame |
+| **Synchronous** | one step strictly after another in a single stream — the assumption the call stack encodes |
+| **Single-threaded** | one stream of execution, hence exactly one call stack |
+| **Concurrency** | structuring a program as several logical streams that can be in progress at once |
+
+</details>
+
 Everything above assumes one straight thread of execution with one stack. Three things in *your* daily
 code bend that — flagged here, paid off later:
 
@@ -346,6 +549,31 @@ the exceptions make sense later.
 ---
 
 ## 8. Stack vs heap (a one-paragraph bridge to Ch2)
+
+<details>
+<summary><b>Vocabulary for this section</b> — the two memory regions and how they differ (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LIFO** | last-in, first-out | the ordering the stack follows — the last frame pushed is the first popped |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stack** | the memory region holding call frames: short-lived, LIFO, freed automatically on return, and dirt-cheap to allocate in |
+| **Heap** | the memory region for objects that must outlive the call that made them, or whose size is not known up front |
+| **Stack frame** | one call's record on the stack |
+| **Stack pointer** | the register that marks the top of the stack; "allocating" is just bumping it |
+| **Allocation** | reserving memory for a value |
+| **Garbage collector** | the machinery that frees heap objects nobody references any more — in Python, automatic |
+| **Object** | a value with its own identity and header, living on the heap — a dict, a list, even an `int` |
+| **Name (local variable)** | a binding in the frame that *points at* a heap object; the name is stack-ish, the object is not |
+| **Lifetime** | how long a value must stay valid — the real criterion for which region it belongs in |
+
+</details>
 
 You'll keep hearing "stack" paired with "heap," so plant the seed now. **The stack** holds frames —
 short-lived, LIFO, automatically freed on return, and dirt-cheap (bump the stack pointer). **The heap**

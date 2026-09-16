@@ -12,6 +12,53 @@
 
 ## 1. Stop using `git blame` to understand code — use the pickaxe
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term, flag and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PR** | pull request | the proposed-change unit on GitHub-style hosts, where the review discussion lives |
+| **I/O** | input/output | reading and writing data outside the program |
+| **LLM** | large language model | the text model an agent is built on; used here for the "next agent that reads your commits" |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Git** | the version-control system that stores a project's full history as a chain of snapshots |
+| **Commit** | one recorded change, with an author, a message and a pointer to the whole tree at that moment |
+| **Commit message** | the human-written note attached to a commit; usually the only record of *why* |
+| **`git blame`** | shows, for each line, the last commit that touched it — and nothing before that |
+| **`git log`** | lists commits; the base command all the search flags below attach to |
+| **`git log -L <start>,<end>:<file>`** | the full history of one line range: every commit that touched it, with diffs |
+| **Pickaxe (`-S`)** | searches all of history for commits that changed *how many times* a string appears — i.e. introduced or deleted it |
+| **`-G <regex>`** | like the pickaxe but matches the diff text with a regular expression, so it also catches lines that merely moved |
+| **`--reverse`** | lists matching commits oldest-first, so the introducing commit is the first result |
+| **`-p`** | prints the patch (the diff) alongside each matching commit |
+| **`--grep`** | searches the *commit messages*, not the code |
+| **Regex (regular expression)** | a pattern language for matching text |
+| **Diff** | the line-by-line difference between two versions of a file |
+| **Blob** | in git's data model, the stored contents of one file |
+| **Tree** | in git's data model, a snapshot of a directory: names pointing at blobs and sub-trees |
+| **Branch / tag** | a small file holding one commit ID — a movable (branch) or fixed (tag) label |
+| **`git cat-file -p <hash>`** | prints any raw git object, which is how you see that the data model really is just blobs and trees |
+| **Immutable** | never modified in place; a new state is a new object, which is why history can be searched |
+| **Rebase** | replaying commits onto a new base, rewriting them in the process |
+| **Squash-merge** | collapsing a branch's commits into a single commit, discarding the individual authoring steps |
+| **Merge strategy** | the team's chosen way of integrating branches — and therefore how much history survives |
+| **Refactor / rename** | changing code's structure or names without changing behaviour; the noise that defeats `blame` |
+| **Copy-paste inheritance** | duplicating a class's methods instead of inheriting, so the two copies silently diverge |
+| **Method signature** | a method's name and parameters — a good pickaxe search string |
+| **Docstring scaffolding** | adding generated documentation to unfamiliar code as a way in |
+| **Blast radius** | how much else a change can break |
+| **Vibe coding** | working mainly by prompting an AI and steering the result rather than writing the code yourself |
+| **Context engineering** | curating what an agent sees; here, commit messages as high-signal context for the next reader |
+| **High-signal token** | a small amount of text that carries a lot of the meaning — what you want in a commit message |
+
+</details>
+
 🔗 **Primary:** [Patterns for searching Git revision histories — Tekin Süleyman (2020)](https://tekin.co.uk/2020/11/patterns-for-searching-git-revision-histories)
 🔗 **Mental-model companion (read first if internals feel fuzzy):** [Inside `.git` — Julia Evans (2024)](https://jvns.ca/blog/2024/01/26/inside-git/)
 🔗 **Reference (for the flags):** [`git log` documentation](https://git-scm.com/docs/git-log)
@@ -69,6 +116,56 @@ flowchart TD
 ---
 
 ## 2. A Philosophy of Software Design — deep modules & the war on complexity
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LoC** | lines of code | the crude size measure used for the two monolithic files |
+| **API** | application programming interface | the set of calls a module or service exposes to its users |
+| **I/O** | input/output | reading and writing data outside the program; the Unix file calls are the canonical example |
+| **JSON** | JavaScript Object Notation | the text data format an LLM is often asked to emit, and which often comes back malformed |
+| **LLM** | large language model | the text model whose unreliable output motivates the "design the error away" move |
+| **SRP** | single responsibility principle | the common advice that a class should do one thing — the advice Ousterhout partly disputes |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Software design** | deciding what the pieces of a system are and what each one hides — as opposed to writing the lines |
+| **Complexity** | anything about a system's structure that makes it hard to understand or modify |
+| **Change amplification** | one conceptual change forcing edits in many places |
+| **Cognitive load** | how much a developer must hold in their head to make a safe change |
+| **Unknown unknowns** | not being able to tell what a change might break, or which code matters — the worst symptom |
+| **Obscurity** | important information not being evident from the code, which is what breeds unknown unknowns |
+| **Module** | any unit with an interface and an implementation — a class, a file, a package, a service |
+| **Interface** | everything a user of the module must learn: calls, arguments, behaviours, assumptions |
+| **Implementation** | the hidden machinery behind the interface |
+| **Deep module** | a simple interface hiding a lot of functionality — the goal |
+| **Shallow module** | an interface nearly as complex as what it hides, so it costs more to learn than it saves |
+| **Pass-through method** | a method that does nothing but call another one, adding surface without adding value |
+| **Classitis** | the habit of chopping code into many small classes, increasing total interface surface |
+| **Decomposition** | splitting a system into modules; the skill is choosing *where*, not splitting more |
+| **Deep seam** | a place in a monolith where a simple interface could hide a large chunk of the code |
+| **Monolith / god-module** | a single very large unit that does many unrelated things |
+| **Information hiding** | keeping a design decision inside one module so nothing else depends on it |
+| **Information leakage** | the same design decision showing up in several modules, so a change chases through all of them |
+| **"Define errors out of existence"** | redesigning the semantics so the error case is simply normal behaviour, instead of handling it |
+| **No-op** | an operation that legitimately does nothing, e.g. deleting something that is already gone |
+| **Schema-constrained output** | forcing a model's output to fit a declared structure, so malformed output cannot occur |
+| **Tool-call output** | the model returning a structured function call rather than free text, which is checkable by construction |
+| **Tactical programming** | doing whatever makes it work now, accreting complexity |
+| **Strategic programming** | continuously investing a slice of effort in design so the system stays workable |
+| **Tactical tornado** | the developer who ships fast and leaves a mess for everyone else |
+| **Anti-pattern** | a common approach that looks reasonable and reliably makes things worse |
+| **Design smell** | a surface symptom (here, code that is hard to comment) that points at a structural problem |
+| **Defensive programming / fail-fast** | checking aggressively and crashing early rather than continuing in an unknown state |
+| **Quadrant (deep/shallow chart)** | the two-axis map used here: how much a module hides against how complex its interface is |
+
+</details>
 
 🔗 **Primary:** [*A Philosophy of Software Design* — review by Gergely Orosz, The Pragmatic Engineer](https://blog.pragmaticengineer.com/a-philosophy-of-software-design-review/)
 🔗 **Quick concept refs:** [Software Design: Deep Modules (dev.to)](https://dev.to/gosukiwi/software-design-deep-modules-2on9) · [Pragmatic Engineer interview with Ousterhout](https://newsletter.pragmaticengineer.com/p/the-philosophy-of-software-design)

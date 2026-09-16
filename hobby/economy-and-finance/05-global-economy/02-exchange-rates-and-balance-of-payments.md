@@ -52,6 +52,49 @@ to each other.
 
 ## 1. The exchange rate — what it is, and why the quote confuses everyone
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the real-exchange-rate formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SGD** | Singapore dollar | |
+| **USD** | US dollar | |
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank, which runs monetary policy by steering the currency basket |
+| **NEER** | nominal effective exchange rate | a currency's value against a trade-weighted basket of others, before adjusting for prices — MAS's policy variable |
+| **DXY** | the US dollar index | a trade-weighted basket measure of the dollar |
+
+**Symbols used in the formula**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $e_{\text{nominal}}$ | "e nominal" | the **nominal** exchange rate — the sticker price of one currency in another |
+| $e_{\text{real}}$ | "e real" | the **real** exchange rate — the nominal rate adjusted for the two countries' price levels; the measure of competitiveness. *Nominal is the quote you see; real is the one that decides whether your goods undercut theirs* |
+| $P_{\text{domestic}}$ | "P domestic" | the general price level at home |
+| $P_{\text{foreign}}$ | "P foreign" | the general price level abroad |
+| $\frac{P_{\text{domestic}}}{P_{\text{foreign}}}$ | "P domestic over P foreign" | the ratio of the two price levels; if home prices rise faster, this ratio rises and the real rate appreciates even with the nominal rate pinned |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Exchange rate** | the price of one currency in terms of another |
+| **Direct quote** | how much local currency one unit of foreign currency costs |
+| **Reciprocal (indirect) quote** | the same rate the other way up. *The two move in opposite directions, which is why "the dollar went up" is ambiguous until you know which currency is on top* |
+| **Numerator currency** | the currency on top of the quote; the thing to check before reading any exchange-rate headline |
+| **Appreciation** | a currency rising in value, so it buys more foreign currency |
+| **Depreciation** | a currency falling in value, so it buys less. *Appreciation and depreciation are market moves under a float; a deliberate change to a pegged rate is called revaluation or devaluation instead* |
+| **Nominal exchange rate** | the quoted rate, with no adjustment for inflation |
+| **Real exchange rate** | the rate adjusted for relative price levels — what determines competitiveness |
+| **Competitiveness** | whether a country's goods are cheap enough, in a common currency, to win foreign orders |
+| **Overvalued** | a currency whose real rate is above the level that would balance trade — goods priced out of world markets |
+| **Peg** | a commitment to hold the nominal rate fixed; it does not stop the *real* rate appreciating if domestic inflation runs hot |
+| **Big Mac index** | the informal test of over- or undervaluation by comparing the price of one identical good across countries |
+| **Effective (trade-weighted) exchange rate** | a currency's value against a basket of partners, weighted by how much trade is done with each — "the" exchange rate for a whole economy |
+
+</details>
+
 An **exchange rate** is simply the **price of one currency in another** — but it's the price that trips up more
 smart people than any other, for a boring reason: it can be quoted **two ways**, and they're reciprocals.
 
@@ -82,6 +125,51 @@ $$e_{\text{real}} = e_{\text{nominal}} \times \frac{P_{\text{domestic}}}{P_{\tex
 ---
 
 ## 2. What moves a currency — the two horizons
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the interest-parity formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PPP** | purchasing power parity | the idea that exchange rates should move until the same basket costs the same everywhere |
+| **UIP** | uncovered interest parity | the condition that an interest-rate advantage is offset by expected currency depreciation |
+| **CIP** | covered interest parity | the same condition with the future rate locked in by a forward contract, so it holds by arbitrage |
+| **USD** | US dollar | |
+| **CNY** | onshore Chinese yuan | the yuan as traded inside mainland China |
+| **CNH** | offshore Chinese yuan | the yuan as traded outside the mainland, chiefly in Hong Kong |
+| **Fed** | the Federal Reserve | the US central bank |
+
+**Symbols used in the formula**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $i_{\text{home}}$ | "i home" | the interest rate on domestic-currency assets |
+| $i_{\text{foreign}}$ | "i foreign" | the interest rate on foreign-currency assets |
+| $\approx$ | "is approximately equal to" | the relation holds as an approximation, not an exact equality |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Foreign-exchange market** | where currencies trade; the largest market in the world, and mostly capital flows rather than trade |
+| **Capital flows** | money moving across borders to buy assets, as opposed to goods |
+| **Law of one price** | identical goods should cost the same everywhere once converted to a common currency |
+| **Purchasing power parity** | the law of one price applied to whole baskets; a real anchor over a decade, useless over a quarter |
+| **Arbitrage** | buying where something is cheap and selling where it is dear, which is what forces prices together |
+| **Real effective exchange rate** | the trade-weighted rate adjusted for relative price levels |
+| **Non-tradables** | goods and services that cannot cross borders — haircuts, rent — so no arbitrage disciplines their price |
+| **Balassa–Samuelson effect** | the tendency of richer, higher-productivity countries to have systematically higher price levels, so their currencies look permanently overvalued on a PPP measure |
+| **Uncovered interest parity** | if home assets pay more, capital flows in and bids the currency up until the expected future depreciation exactly cancels the yield advantage |
+| **Covered interest parity** | the same relation locked in with a forward contract; a pure no-arbitrage condition |
+| **Forward contract** | an agreement today to exchange currency at a fixed rate on a future date |
+| **Carry trade** | borrowing in a low-interest currency and investing in a high-interest one, collecting the gap and bearing the currency risk |
+| **Risk premium** | the extra return investors demand to hold a currency or asset they consider risky — the thing that can flip the interest-parity prediction |
+| **Real rate** | the interest rate less inflation; a high nominal rate with high inflation is a thin real rate and attracts no capital |
+| **Emerging-market sign-flip** | the case where a rate rise *weakens* rather than strengthens a currency, because it is read as a distress signal rather than a yield opportunity |
+
+</details>
 
 The foreign-exchange market is the **largest market on earth** (~7.5 trillion USD traded *per day*) — and the
 crucial fact is that **the vast majority of that is not trade.** It's capital: investors moving money for return
@@ -120,6 +208,53 @@ Fed-independence) — capital demanded compensation and stepped back, the emergi
 ---
 
 ## 3. The balance of payments — the ledger that always sums to zero
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the two identities (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **BoP** | balance of payments | the complete record of a country's transactions with the rest of the world |
+| **CA** | **current account** | a country's net trade, income and transfers with the rest of the world. **In this module CA always means current account** — elsewhere in this repo (the TLS chapter) the same two letters mean *certificate authority* |
+| **KA** | capital and financial account | the flows of asset *ownership* across the border — the mirror image of the current account |
+| **GDP** | gross domestic product | annual national output; both accounts are quoted as a share of it |
+| **NIRC** | Net Investment Returns Contribution | the spendable slice of returns on Singapore's reserves — an example of cross-border investment income |
+| **US** | United States | |
+
+**Symbols used in the identities**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $CA$ | "C-A" | the current account balance; positive is a surplus, negative a deficit |
+| $KA$ | "K-A" | the capital and financial account balance |
+| $CA + KA = 0$ | "C-A plus K-A equals zero" | the balance-of-payments identity: the two accounts are always equal and opposite, because every real flow has a financial counterpart |
+| $S$ | "S" | **national saving** — everything the country's households, firms and government do not consume |
+| $I$ | "I" | **domestic investment** — spending on real productive capacity (factories, equipment, housing), *not* "buying shares" |
+| $CA = S - I$ | "C-A equals S minus I" | the current account **is** the gap between what a country saves and what it invests at home |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Balance of payments** | the double-entry record of every transaction between a country's residents and the rest of the world; it sums to zero by construction |
+| **Double-entry** | every transaction recorded twice, once on each side, which is why the ledger balances |
+| **Current account** | flows of goods, services and income — what the country earns and spends abroad this year |
+| **Capital and financial account** | flows of asset ownership — who ends up owning what. *Current account = this year's earnings; capital account = changes in the stock of claims* |
+| **Trade balance (net exports)** | exports minus imports of goods and services; the largest part of the current account |
+| **Primary income** | cross-border investment income — dividends and interest earned on assets held abroad |
+| **Secondary income** | cross-border transfers with nothing received in return: remittances, aid |
+| **Remittances** | money workers send home from abroad |
+| **Foreign direct investment** | buying or building a controlling stake in a real business abroad |
+| **Portfolio flows** | buying foreign stocks and bonds without control. *Direct investment is sticky and hard to reverse; portfolio flows can leave overnight* |
+| **Official reserves** | the foreign currency a central bank holds; changes in it are part of the capital account |
+| **Current-account deficit** | importing more than you earn abroad — necessarily financed by selling assets or borrowing, i.e. a capital inflow |
+| **Capital inflow** | foreigners acquiring domestic assets; identically equal to the current-account deficit |
+| **National saving** | income not consumed, by households, firms and government together |
+| **Saving–investment gap** | the difference between the two; it *is* the current account, which is why a tariff cannot close a trade deficit without changing saving or investment |
+
+</details>
 
 Now the accounting, and it's the backbone of the whole module. The **balance of payments (BoP)** is the complete
 double-entry record of every transaction between a country's residents and the rest of the world. Because it's
@@ -160,6 +295,45 @@ stay. The exchange rate and the trade balance are downstream of this identity, n
 
 ## 4. Fixed vs floating — the regime spectrum *is* the trilemma
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **USD** | US dollar | |
+| **EUR** | euro | |
+| **JPY** | Japanese yen | |
+| **GBP** | pound sterling | |
+| **HKD** | Hong Kong dollar | pegged to the US dollar through a currency board |
+| **HK** | Hong Kong | |
+| **CNY** | Chinese yuan | managed against a basket rather than floating |
+| **NEER** | nominal effective exchange rate | the trade-weighted currency basket MAS steers within a band |
+| **MAS** | Monetary Authority of Singapore | |
+| **Fed** | the Federal Reserve | the US central bank |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Exchange-rate regime** | how a country decides its currency's value — float, peg, or something in between |
+| **Floating rate** | the market sets the rate; the central bank targets inflation instead |
+| **Shock absorber** | the role a floating currency plays — a bad export year weakens it, which automatically cheapens exports |
+| **Peg (hard fix)** | a public commitment to hold the rate at a stated level |
+| **Currency board** | the strictest peg: local money is issued only against foreign-currency reserves held one-for-one |
+| **Gold standard** | the historical regime in which currencies were fixed to a weight of gold |
+| **Bretton Woods** | the post-1944 system of currencies fixed to the dollar, which was fixed to gold |
+| **Reserves** | the stock of foreign currency a central bank can spend defending its rate |
+| **Monetary autonomy** | the ability to set interest rates for the domestic economy's needs — what a peg surrenders |
+| **Managed float (basket band)** | guiding the currency within a band against a basket, intervening as needed |
+| **The trilemma (impossible trinity)** | a country can have at most two of: a stable exchange rate, free capital movement, an independent monetary policy |
+| **Free capital movement** | money allowed in and out without restriction |
+| **Capital controls** | legal restrictions on cross-border money flows — the price a country pays to keep both a managed rate and its own interest rates |
+| **Intervention** | a central bank buying or selling its own currency to move the rate |
+
+</details>
+
 A country must choose **how** its exchange rate is set, and the menu is a spectrum:
 
 - **Floating** (USD, EUR, JPY, GBP). The market sets the rate; the central bank targets *inflation*, not the
@@ -189,6 +363,38 @@ trilemma it picks*, expressed as its exchange-rate regime. That choice sets the 
 
 ## 5. How a currency move fixes the trade balance — the J-curve, and its limit
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **S** | national saving | income the country does not consume |
+| **I** | domestic investment | spending on real productive capacity — not share-buying |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Depreciation** | a currency falling in value against others |
+| **Expenditure switching** | buyers moving from foreign goods to domestic ones (and vice versa) because relative prices changed — the channel a depreciation is supposed to work through |
+| **Net exports** | exports minus imports |
+| **Trade balance** | the same quantity, viewed as a surplus or deficit |
+| **J-curve** | the path of the trade balance after a depreciation: it worsens first, then improves — the shape of the letter J |
+| **Prices vs volumes** | prices move immediately, quantities do not; that lag *is* the dip in the J |
+| **Sticky contracts** | existing agreements that fix quantities and terms for months, delaying any volume response |
+| **Elasticity of demand** | how strongly the quantity bought responds to a price change |
+| **Marshall–Lerner condition** | a depreciation improves the trade balance only if export and import demand elasticities sum to more than one — otherwise the price effect dominates and the balance never recovers |
+| **Real exchange rate** | the nominal rate adjusted for relative prices; if domestic inflation follows the depreciation, the real rate reverts and the gain evaporates |
+| **Saving–investment gap** | the difference between what a country saves and what it invests; the *cause* of a trade imbalance, of which the exchange rate is only the mechanism |
+| **Currency manipulation** | deliberately holding a currency cheap, typically by accumulating foreign reserves, to sustain a trade surplus |
+| **Reserve accumulation** | a central bank buying foreign currency and stockpiling it — the operation behind that charge |
+| **Persistent surplus** | a long-running current-account surplus, which reflects high national saving rather than merely a cheap currency |
+
+</details>
+
 If a currency **depreciates**, the textbook says the trade balance should improve: exports get cheaper to
 foreigners, imports get dearer at home, so net exports rise. This is the **expenditure-switching** channel. But it
 works **slowly, and with a nasty first act.**
@@ -212,6 +418,37 @@ Germany) reflect **high saving**, not just a cheap currency.
 ---
 
 ## 6. Mundell–Fleming — the open-economy policy mix (the payoff)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Mundell–Fleming model** | the open-economy account of how monetary and fiscal policy work under mobile capital, and how the exchange-rate regime decides which lever is effective |
+| **Open economy** | one with large cross-border flows of goods and capital |
+| **Mobile capital** | money free to move across borders in response to interest-rate differences |
+| **Policy mix** | the combination of the monetary and fiscal stances |
+| **Floating rate** | the market sets the currency; monetary policy is powerful and fiscal policy is weak |
+| **Fixed rate (peg)** | the central bank holds the currency at a stated level; monetary policy is impotent and fiscal policy is powerful |
+| **Dirty float** | a nominally floating currency that the authorities nonetheless lean against from time to time |
+| **Rate cut** | lowering the policy interest rate; under a float it pushes capital out and weakens the currency, reinforcing the stimulus |
+| **Fiscal expansion** | tax cuts or spending increases; under a float it raises rates, pulls capital in, strengthens the currency and cuts net exports |
+| **Exchange-rate crowding out** | the loss of fiscal stimulus through a stronger currency and weaker exports, rather than through higher interest rates alone |
+| **Net exports** | exports minus imports — the channel the exchange rate operates through |
+| **Monetary autonomy** | the freedom to set rates for the domestic economy; a peg removes it, because rates must defend the currency |
+| **Defending the peg** | buying or selling reserves, and moving rates, to hold the currency at its committed level |
+| **Reindustrialization** | the policy goal of rebuilding domestic manufacturing — here fought by the exchange rate the policy mix itself produced |
+| **The trilemma** | at most two of a stable rate, free capital flows and independent monetary policy; the constraint underlying this whole grid |
+
+</details>
 
 Now the theorem the whole course was walking toward: put the **policy mix** (E04 §3) into an **open economy with
 mobile capital**, and the exchange-rate regime decides **which lever works.**

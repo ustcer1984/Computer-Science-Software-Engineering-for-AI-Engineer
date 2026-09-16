@@ -64,6 +64,51 @@ conserved quantity is physical frames; OOM is what happens when demand for the c
 
 ## 1. The abstraction that's about to tear: virtual vs. physical memory
 
+<details>
+<summary><b>Vocabulary for this section</b> — the address-translation machinery and the two "memory" numbers `top` shows (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RAM** | random-access memory | the physical working memory of the machine |
+| **DRAM** | dynamic random-access memory | the specific chip technology RAM is built from |
+| **MMU** | memory management unit | the hardware block inside the CPU that translates virtual addresses to physical ones on every access |
+| **TLB** | translation lookaside buffer | the small cache of recent address translations, so the MMU need not walk the page table every time |
+| **CPU** | central processing unit | the processor |
+| **OS** | operating system | the kernel and its services |
+| **OOM** | out of memory | the condition where demand for physical memory exceeds supply |
+| **VIRT / VSZ** | virtual size | total virtual address space a process has mapped — usually huge and mostly meaningless |
+| **RES / RSS** | resident set size | the physical memory actually backing the process right now — the number that competes for RAM |
+| **TB / GB / KB** | terabyte / gigabyte / kilobyte | a million, a thousand, and a thousandth of a megabyte respectively |
+| **x86-64** | — | the 64-bit Intel/AMD instruction set most servers and laptops run |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Virtual address space** | the private, contiguous-looking range of addresses one process sees — the map |
+| **Physical RAM** | the actual chips, shared by every process and the kernel — the territory |
+| **Kernel** | the core of the OS, which owns the physical memory and maintains the maps |
+| **User space** | where your processes run, as opposed to inside the kernel |
+| **Page** | the fixed-size unit memory is managed in, typically 4 KB |
+| **Frame** | one page-sized slot of physical RAM; here the resource that actually runs out (not the same as §1's *stack frame*) |
+| **Page table** | the kernel's per-process table mapping each virtual page to a physical frame, or marking it not-present |
+| **Page table entry** | one row of that table |
+| **Not-present** | a page that has been reserved in the map but has no physical frame behind it yet |
+| **Page fault** | the hardware trap taken when a program touches a not-present page; the kernel services it and resumes the program |
+| **Lazy (demand) allocation** | assigning a physical frame only on the first read or write to a page, not when the address space was reserved |
+| **Touch** | to actually read or write a page, which is the event that costs physical memory |
+| **`mmap`** | the system call that maps a region of address space, optionally backed by a file |
+| **Swap** | disk space the kernel uses to hold pages evicted from RAM |
+| **Evict** | write a page out to swap and reuse its frame for something else |
+| **Shared library** | code loaded once and mapped into many processes; it inflates VIRT without costing each process its own RAM |
+| **Resident** | currently held in physical RAM |
+| **`top` / `htop`** | the interactive process monitors that display VIRT and RES |
+| **pymalloc** | CPython's small-object allocator, which holds on to freed memory and so keeps RSS high (§2) |
+
+</details>
+
 §1 showed each process a private, contiguous address space — its own stack, heap, code, all laid out in a clean map.
 Here is the part §1 deferred: **that map is a fiction maintained by hardware, and it is deliberately bigger than the
 RAM behind it.**
@@ -135,6 +180,50 @@ RSS** (plus the kernel's own use) exceeding physical RAM + swap.
 
 ## 2. The capacity hierarchy: RAM, swap, and paging
 
+<details>
+<summary><b>Vocabulary for this section</b> — swap, the two kinds of page fault, and thrashing (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RAM** | random-access memory | physical working memory |
+| **L1 / L2 / L3** | level-1, -2, -3 cache | the CPU's cache tiers, fastest and smallest first |
+| **LRU** | least recently used | the eviction policy: throw out the page untouched for the longest |
+| **CPU** | central processing unit | the processor, which sits idle while a page is fetched from disk |
+| **ns / ms** | nanosecond / millisecond | a billionth and a thousandth of a second — the gap between a RAM access and a disk access |
+| **OOM** | out of memory | the clean failure that many operators prefer to a slow thrash |
+| **RDS** | Relational Database Service | AWS's managed database service |
+| **k8s** | Kubernetes | the container orchestrator, which historically disabled swap outright |
+| **`sar`** | system activity reporter | the Linux tool that reports per-second system statistics, including major faults |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Capacity hierarchy** | the tier *below* RAM, chosen for size rather than speed — in contrast to Ch1's speed hierarchy above it |
+| **Swap** | a region of disk the kernel uses as overflow for RAM (Linux); Windows calls it the **page file** |
+| **Paging** | moving pages between RAM and swap to free frames for whoever needs them now |
+| **Page** | the fixed-size unit memory is managed in, typically 4 KB |
+| **Frame** | one page-sized slot of physical RAM |
+| **Evict** | write a page out to swap and reuse its frame |
+| **Page fault** | the trap taken when a program touches a page that is not currently mapped to a frame |
+| **Minor fault** | the cheap fault: the page needs a frame (first touch) or is already in RAM but unmapped here; microseconds, no disk |
+| **Major fault** | the expensive fault: the page's data is on disk and must be read back; milliseconds |
+| **Lazy allocation** | assigning frames only on first touch — the mechanism whose normal operation produces minor faults |
+| **File mapping** | a region of address space backed by a file, whose first touch is a major fault because the data must be read |
+| **Disk seek** | the physical latency of fetching data from a spinning disk, roughly ten milliseconds |
+| **Working set** | the set of pages a task actually needs resident to make progress |
+| **Thrashing** | the working set exceeding RAM, so the system evicts a page and immediately needs it back; throughput collapses while the machine looks busy |
+| **Death spiral** | the self-reinforcing version of that, as in a database whose buffer pool no longer fits in RAM |
+| **Buffer pool** | a database's in-memory cache of data pages |
+| **`majflt/s`** | `sar`'s major-faults-per-second column — the early-warning metric for paging |
+| **`/proc/vmstat` / `pgmajfault`** | the kernel's statistics file and its cumulative major-fault counter |
+| **Graceful degradation** | getting slower rather than failing — which swap provides, and which operators often do not want |
+| **Clean kill** | an immediate, unambiguous OOM kill, preferred over a slow ambiguous thrash |
+
+</details>
+
 Ch1 §3 gave you the *speed* hierarchy (registers → L1/L2/L3 → RAM), each tier faster and smaller going up. There's a
 second tier *below* RAM, and it's about **capacity, not speed**: **swap** (Linux) / the **page file** (Windows) —
 a region of *disk* the kernel uses as overflow for RAM.
@@ -166,6 +255,49 @@ predictable failure beats unpredictable degradation.
 
 ## 3. What `malloc` actually does — and why it (almost) never fails on Linux
 
+<details>
+<summary><b>Vocabulary for this section</b> — overcommit, the system calls beneath `malloc`, and the three policies (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OOM** | out of memory | the condition where physical memory demand exceeds supply |
+| **RAM** | random-access memory | physical working memory |
+| **GB** | gigabyte | one thousand megabytes |
+| **`brk`** | break | the system call that moves the top of the heap, growing or shrinking it |
+| **`mmap`** | memory map | the system call that maps a fresh region of address space |
+| **CoW** | copy-on-write | sharing pages between two processes until one writes, at which point that page is duplicated |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`malloc`** | the C library call that returns a pointer to a newly allocated heap chunk |
+| **Allocator** | the code that manages the heap and decides where a chunk comes from; CPython's is pymalloc, layered over `malloc` |
+| **Heap** | the region for dynamically sized, dynamically lived data (§1) |
+| **Kernel** | the OS core, which actually grants address space and physical frames |
+| **Overcommit** | the kernel promising more memory than it physically has, betting the programs will not touch all of it |
+| **`NULL`** | the zero pointer `malloc` returns when it cannot satisfy a request — the clean failure signal |
+| **Physical frame** | one page-sized piece of real RAM |
+| **Lazy assignment** | frames handed out only on first touch, page by page |
+| **Minor fault** | the cheap page fault that merely hands over a frame, with no disk read |
+| **Page fault** | the trap taken on touching a page with no mapping; it interrupts mid-instruction and so cannot return an error code to your line of source |
+| **`fork()`** | the system call that duplicates a process; the copy shares the parent's pages copy-on-write instead of really copying them |
+| **Copy-on-write** | pages shared until written, then duplicated — why `fork` looks like it doubles memory but usually does not |
+| **Sparse array** | a large allocation of which only a small part is ever written |
+| **Redis** | the in-memory data store that forks to take snapshots and therefore wants permissive overcommit |
+| **Snapshot** | a point-in-time copy of in-memory data written to disk |
+| **`/proc/sys/vm/overcommit_memory`** | the kernel tunable selecting the policy: `0` heuristic (default), `1` always allow, `2` strict |
+| **Heuristic policy** | allow reasonable overcommit but refuse a wildly oversized single request |
+| **Strict overcommit** | never promise more than RAM plus swap times a ratio; `malloc` then fails cleanly with `NULL` |
+| **Commitment** | memory the kernel has promised, whether or not it has been touched |
+| **OOM killer** | the kernel's last resort when a touch cannot be backed: pick a process and kill it (§4) |
+| **`MemoryError`** | the Python exception raised when the in-process allocator gets `NULL` — the clean, catchable failure |
+| **Traceback** | Python's printed stack of the call chain where an exception was raised |
+
+</details>
+
 Here's the subtlety that surprises careful people, and it directly explains the "vanished process" signature in §4.
 
 When your program (or CPython's allocator under it — §2) needs heap memory, it ultimately asks the kernel via `brk`
@@ -194,6 +326,63 @@ case §4 untangles.
 ---
 
 ## 4. The four signatures of "out of memory" — read them like a failure analyst
+
+<details>
+<summary><b>Vocabulary for this section</b> — the four failure signatures and every tool, signal and exit code they use (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OOM** | out of memory | demand for physical memory exceeding supply |
+| **RSS** | resident set size | the physical memory actually backing a process — the score the OOM killer mostly weighs |
+| **RAM** | random-access memory | physical working memory |
+| **cgroup** | control group | the Linux kernel feature that caps and accounts a group of processes' resources; how containers get memory limits |
+| **k8s** | Kubernetes | the container orchestrator |
+| **ECS** | Elastic Container Service | AWS's container orchestrator |
+| **AWS** | Amazon Web Services | the cloud this learner deploys to |
+| **IaC** | infrastructure as code | configuration such as a Terraform or Kubernetes manifest, where a memory limit is raised |
+| **GPU** | graphics processing unit | the accelerator with its own separate memory |
+| **VRAM** | video RAM | the GPU's own memory, separate from host RAM and not covered by the kernel's paging |
+| **CUDA** | Compute Unified Device Architecture | NVIDIA's GPU programming platform |
+| **SIGKILL** | signal kill (signal 9) | the uncatchable termination signal; a process given it cannot clean up or log |
+| **GB / GiB** | gigabyte / gibibyte | a thousand megabytes; a gibibyte is the binary version, 1,024 mebibytes |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Signature** | the observable shape of a failure, which tells you which layer produced it |
+| **`MemoryError`** | the Python exception raised in-process when the CPython allocator gets `NULL`; comes with a traceback and the process survives |
+| **Traceback** | the printed call chain locating the failing line |
+| **Allocator** | the in-process code handing out heap memory |
+| **`NULL`** | the zero pointer signalling an allocation could not be satisfied |
+| **Overcommit** | the kernel promising memory it does not have, so the reckoning arrives at write time rather than allocation time (§3) |
+| **Strict overcommit** | the policy under which `malloc` fails cleanly instead, producing signature 1 |
+| **`np.zeros`** | the NumPy call that allocates a zero-filled array; a single huge one is the classic `MemoryError` trigger |
+| **OOM killer** | the kernel routine that, when a write cannot be backed, picks a process and kills it to reclaim RAM |
+| **`oom_score`** | the kernel's badness rating per process, weighted heavily by how much killing it would free |
+| **`oom_score_adj`** | the per-process knob that biases that score up or down |
+| **Victim** | the process the OOM killer chooses — **not necessarily the one that exhausted memory** |
+| **Exit code 137** | 128 plus signal 9: the shell's way of reporting a SIGKILL, the fingerprint of an OOM kill |
+| **`dmesg` / `journalctl -k`** | the commands that show the kernel log, where the OOM kill is recorded |
+| **`total-vm` / `anon-rss`** | fields in that kernel log line: the victim's virtual size and its anonymous (non-file-backed) resident memory |
+| **Container** | a process group packaged with its own filesystem view and resource limits |
+| **Control group (cgroup)** | the kernel mechanism enforcing that memory limit; it has its own OOM killer scoped to the group |
+| **Orchestrator** | the system that schedules containers and sets their limits — Kubernetes, ECS, Docker |
+| **`resources.limits.memory`** | the Kubernetes field setting a container's memory cap |
+| **`docker run -m`** | the Docker flag doing the same thing |
+| **Pod** | Kubernetes' smallest deployable unit, one or more containers scheduled together |
+| **`OOMKilled`** | the status Kubernetes reports when a container was killed by its cgroup limit |
+| **Lambda** | AWS's serverless function service, whose memory is a per-function configuration |
+| **Invocation** | one run of a Lambda function |
+| **Quota** | your configured allotment, which in the cloud is what "out of memory" usually means |
+| **Leak** | memory that grows without bound, the case where raising the limit only postpones the crash (§5) |
+| **`torch.cuda.OutOfMemoryError`** | PyTorch's in-process exception when the CUDA allocator cannot find room in VRAM |
+| **Non-swappable** | not eligible to be paged out to disk, which is the normal state of VRAM |
+| **Page fault** | the trap on touching an unbacked page; it cannot report an error to one line of your source, which is why the kernel kills instead |
+
+</details>
 
 This is the heart of the practitioner skill. "Out of memory" presents as **four distinct symptoms**, and the
 *signature tells you the layer.* Treat it like a failure-analysis decision tree — your home turf.
@@ -269,6 +458,58 @@ that the OS paging machinery above does **not** rescue. Layer: the GPU and its a
 
 ## 5. Leak vs. legitimately-too-much — the question that decides the fix
 
+<details>
+<summary><b>Vocabulary for this section</b> — the two diagnoses, the tools that tell them apart, and each one's fixes (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RSS** | resident set size | the physical memory a process actually occupies; its *shape over time* is the discriminator here |
+| **GC** | garbage collection / garbage collector | automatic reclaiming of unreachable memory; CPython's cycle collector is the `gc` module |
+| **DAG** | directed acyclic graph | a graph with no loops, so its objects can never form a reference cycle |
+| **RAM / VRAM** | random-access memory / video RAM | host memory; the GPU's own memory |
+| **GB** | gigabyte | one thousand megabytes |
+| **cgroup** | control group | the kernel-enforced memory limit a container runs under |
+| **DB** | database | a datastore whose reads can be paginated to shrink the working set |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Leak** | live, reachable memory that grows without bound over time for work that should not need it — a bug *in time* |
+| **Legitimately-too-much** | one honest unit of work whose working set exceeds the machine — a bug *in space* |
+| **Working set** | the memory a task actually needs resident at once to make progress |
+| **Monotonic climb** | RSS rising steadily and never levelling off — the leak signature |
+| **Plateau** | RSS jumping to a high level and then staying flat — the too-much signature |
+| **`tracemalloc`** | the standard-library tool that records allocation sites, so snapshot diffs show which objects keep accumulating |
+| **Snapshot diff** | comparing two `tracemalloc` captures to see what grew between them |
+| **Live-object count** | how many Python objects are currently reachable — the Python-level evidence of a leak, as opposed to RSS |
+| **Reference cycle** | objects referring to each other so refcounting alone never frees them; `gc.collect()` reclaiming the memory proves this is the cause |
+| **`gc.collect()`** | forces a cycle-collection pass, and so doubles as a diagnostic |
+| **Strong reference** | an ordinary reference, which keeps its target alive by definition |
+| **`weakref`** | a reference that does not keep its target alive, the right kind for a cache |
+| **Module-level cache** | a dict living for the whole process, a classic never-evicting retainer |
+| **Evict** | drop an entry from a cache so its memory can be reclaimed |
+| **Unclosed handle** | a file, socket or connection never released, each pinning kernel and user memory |
+| **C-extension leak** | memory allocated by compiled code that Python's own tools cannot see or reclaim |
+| **Process isolation** | bounding a worker's lifetime so the process dies before the leak does |
+| **`maxtasksperchild`** | the `multiprocessing.Pool` option that retires a worker after a set number of tasks |
+| **gunicorn `max_requests`** | the same idea for a web worker: recycle it after N requests |
+| **Time bomb** | a slow leak inside a cgroup: harmless in dev, fatal days into production when it finally crosses the limit |
+| **Stream / chunk** | process input a piece at a time instead of loading it whole |
+| **`chunksize=`** | the pandas argument that reads a file in pieces rather than all at once |
+| **Out-of-core** | computing on data larger than RAM by keeping most of it on disk |
+| **Dask** | a Python library that executes array and dataframe work in out-of-core, parallel chunks |
+| **Polars streaming** | Polars' execution mode that processes a query in batches rather than materialising everything |
+| **`np.memmap`** | a NumPy array backed by a file on disk, paged in by the kernel as touched |
+| **Batch size** | how many samples are processed at once; the most direct working-set knob in ML |
+| **Quantize** | store weights at lower precision (int8, int4) to cut memory |
+| **Dataframe** | a table-shaped in-memory data structure, as in pandas or Polars |
+| **Distribute** | spread one workload across several machines so no single one must hold it all |
+
+</details>
+
 Before reaching for *any* fix, answer one question, because the two diagnoses have **disjoint** remedies and the
 classic time-sink is treating one as the other. This is the §2 material, now elevated to a diagnostic stance.
 
@@ -331,6 +572,40 @@ flowchart TB
 
 ## 6. A subtlety you already half-know: freed ≠ returned to the OS
 
+<details>
+<summary><b>Vocabulary for this section</b> — arenas, and fragmentation as an out-of-memory cause with memory to spare (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OS** | operating system | the kernel, which actually owns the physical frames |
+| **RSS** | resident set size | the physical memory still charged to your process even after Python has freed the objects |
+| **OOM** | out of memory | an allocation failing for want of memory |
+| **GB** | gigabyte | one thousand megabytes |
+| **GPU** | graphics processing unit | the accelerator whose allocator makes fragmentation a first-class failure |
+| **RAM** | random-access memory | physical working memory |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **pymalloc** | CPython's small-object allocator, sitting between Python objects and the system allocator |
+| **Arena** | a large block pymalloc obtains from the kernel once and then carves smaller allocations out of |
+| **Pool** | a subdivision of an arena serving one size of object |
+| **Block** | one unit of memory handed out by an allocator |
+| **Freed to Python vs returned to the OS** | the distinction of this section: memory reusable by your process, versus memory given back to the kernel |
+| **Kernel** | the OS core that accounts frames against your process regardless of whether Python considers them free |
+| **Leak** | unbounded growth of live objects — which high-but-flat RSS after a delete is *not* |
+| **Fragmentation** | free memory broken into pieces too small to satisfy a large request, even though the total would suffice |
+| **Contiguous** | one unbroken run of addresses, which a single large allocation requires |
+| **`mmap`** | the system call CPython uses for large allocations, which *are* returned to the kernel when freed |
+| **Caching allocator** | one that holds freed blocks for reuse instead of returning them — pymalloc on the CPU, PyTorch's on the GPU |
+| **Tensor** | a multi-dimensional numeric array; large ones need large contiguous spans, which is what fragmentation denies |
+| **Geometry, not quantity** | the shape of the failure here: enough total free memory, wrong shape |
+
+</details>
+
 §2 §7.3 planted this; OOM is where it pays off. When Python frees objects, **pymalloc** keeps the memory in its own
 arenas to serve future allocations, rather than returning it to the kernel — so your **RSS can stay high after a big
 structure dies**, and the OS still counts those frames against you. Two consequences for OOM specifically:
@@ -348,6 +623,78 @@ structure dies**, and the OS still counts those frames against you. Two conseque
 ---
 
 ## 7. The GPU wall: why a 16 GB model won't fit on a 12 GB GPU, and what `CUDA out of memory` means
+
+<details>
+<summary><b>Vocabulary for this section</b> — the VRAM budget line by line, plus every precision, sharding and allocator term used (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GPU** | graphics processing unit | the accelerator that holds the model and does the arithmetic |
+| **VRAM** | video RAM | the GPU's own memory — separate from host RAM, smaller, and effectively unswappable |
+| **HBM** | high-bandwidth memory | the stacked memory technology on datacentre GPUs |
+| **GDDR** | graphics double data rate | the memory technology on consumer GPUs |
+| **CUDA** | Compute Unified Device Architecture | NVIDIA's GPU platform, and the name in the error message |
+| **PCIe** | Peripheral Component Interconnect Express | the bus connecting GPU to host, over which unified memory would have to migrate pages |
+| **NVLink** | — | NVIDIA's faster GPU-to-GPU interconnect |
+| **OOM** | out of memory | the allocation failure this section is about |
+| **KV-cache** | key-value cache | the stored attention keys and values for tokens already generated, so they need not be recomputed |
+| **fp32 / fp16 / bf16 / FP8** | 32-, 16-, brain-16- and 8-bit floating point | number formats; halving the bits roughly halves the weight memory |
+| **int8 / int4 / NF4** | 8-bit integer / 4-bit integer / 4-bit NormalFloat | quantized weight formats, progressively smaller and lossier |
+| **7B** | seven billion | the parameter count of the example model |
+| **ZeRO** | Zero Redundancy Optimizer | DeepSpeed's scheme for splitting optimizer state, gradients and weights across GPUs |
+| **FSDP** | Fully Sharded Data Parallel | PyTorch's equivalent sharding scheme |
+| **LoRA / QLoRA** | Low-Rank Adaptation / quantized LoRA | fine-tuning small adapter matrices while the base weights stay frozen (and quantized) |
+| **cuDNN / cuBLAS** | CUDA Deep Neural Network / Basic Linear Algebra Subprograms libraries | NVIDIA's kernel libraries, which reserve scratch workspaces in VRAM |
+| **GB / GiB / MB** | gigabyte / gibibyte / megabyte | a thousand megabytes; the binary gigabyte; a million bytes |
+| **RAM** | random-access memory | host memory, as distinct from VRAM |
+| **LLM** | large language model | the kind of model whose serving this section describes |
+| **vLLM** | — | the LLM inference server that introduced PagedAttention |
+| **K** | thousand | as in a 100 K-token prompt |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Demand paging** | assigning physical memory only when a page is touched — the host trick that VRAM does *not* give you |
+| **Unified Memory** | CUDA's option to oversubscribe VRAM and migrate pages over PCIe; usually too slow to rely on |
+| **Oversubscribe** | promise more memory than the device physically has |
+| **Graceful degradation** | getting slower instead of failing; VRAM has no such tier, so the wall is hard |
+| **Model weights** | the trained parameters; their size is parameter count times bytes per parameter |
+| **Parameter** | one learned number in the model |
+| **Gradients** | the per-parameter derivatives held during training, roughly the same size as the weights |
+| **Optimizer state** | the extra per-parameter values an optimizer keeps; Adam keeps two, so about twice the weights |
+| **Adam** | the standard optimizer, storing a momentum and a variance estimate per parameter |
+| **Momentum / variance estimate** | Adam's two running averages of the gradient and its square |
+| **Activations** | the intermediate outputs kept for the backward pass; they scale with batch size times sequence length times depth |
+| **Backward pass** | the gradient-computing phase of training, which needs those activations |
+| **Gradient checkpointing** | storing only some activations and recomputing the rest — trading compute for memory |
+| **Sequence length (context length)** | how many tokens are in flight; the KV-cache grows linearly with it |
+| **Batch size / concurrency** | how many samples or requests are processed at once; the KV-cache grows linearly with this too |
+| **Head / head_dim / layers** | attention heads, the width of each, and the model's depth — the factors in the KV-cache size |
+| **CUDA context** | the per-process GPU state created on initialization, costing roughly half a gigabyte to two gigabytes before any tensor |
+| **Workspace** | scratch VRAM a kernel library reserves for its own working space |
+| **Fragmentation slack** | VRAM effectively lost because free space is not in usable contiguous pieces |
+| **Quantization** | storing weights in fewer bits to shrink them, at some accuracy cost |
+| **Mixed precision** | training with lower-precision arithmetic and selectively higher-precision accumulation |
+| **Sharding** | splitting one model's weights or optimizer state across several GPUs so no one device holds it all |
+| **Adapter** | a small trainable matrix added beside a frozen weight matrix, as in LoRA |
+| **Frozen (base weights)** | left unchanged during fine-tuning, so they need no gradients or optimizer state |
+| **Caching allocator** | PyTorch's VRAM allocator, which claims big blocks from the driver and sub-allocates tensors from them |
+| **`cudaMalloc`** | the driver call for VRAM, slow enough that PyTorch caches blocks to avoid it |
+| **Allocated** | VRAM currently holding live tensors |
+| **Reserved** | VRAM PyTorch has claimed from the driver — allocated plus its cached-free blocks |
+| **Free** | what is left on the device, outside anything PyTorch has reserved |
+| **Contiguous** | one unbroken span, which a tensor needs and which fragmented free space cannot provide |
+| **`torch.cuda.empty_cache()`** | returns PyTorch's cached-but-unused blocks to the driver |
+| **`PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`** | an allocator setting that lets segments grow, reducing fragmentation |
+| **Offloading** | keeping part of the model in host RAM or on disk and bringing it to the GPU as needed |
+| **PagedAttention** | vLLM's KV-cache scheme: fixed-size blocks allocated on demand and mapped through an indirection table — demand paging reinvented for VRAM |
+| **Indirection table** | the lookup that maps logical positions to wherever their blocks physically sit, exactly as a page table does |
+| **Token** | one unit of text the model processes; each generated token adds to the KV-cache |
+
+</details>
 
 This is the one you feel, so we'll do it properly — and you already own every prerequisite (Ch1 §3's GPU hierarchy;
 your KV-cache and quantization knowledge). The headline: **GPU memory is a different country.** The virtual-memory
@@ -440,6 +787,68 @@ quantization, offloading, and sharding across GPUs.
 ---
 
 ## 8. Where this bites *you* — the practitioner's playbook
+
+<details>
+<summary><b>Vocabulary for this section</b> — the playbook's tools, knobs and acronyms in one place (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OOM** | out of memory | the failure being diagnosed |
+| **RSS** | resident set size | the physical memory a process occupies; the series to graph, not the snapshot to read |
+| **GC** | garbage collection | automatic reclaiming of unreachable memory — no help at all against a too-large working set |
+| **RAM / VRAM** | random-access memory / video RAM | host memory; the GPU's own memory |
+| **GPU** | graphics processing unit | the accelerator |
+| **cgroup** | control group | the kernel-enforced memory limit a container runs under; the usual cloud OOM |
+| **k8s** | Kubernetes | the container orchestrator |
+| **ECS** | Elastic Container Service | AWS's container orchestrator |
+| **DB** | database | a datastore whose reads can be paginated |
+| **CUDA** | Compute Unified Device Architecture | NVIDIA's GPU platform |
+| **KV-cache** | key-value cache | stored attention keys and values, growing with context length and concurrency |
+| **LoRA / QLoRA** | Low-Rank Adaptation / quantized LoRA | fine-tuning small adapters instead of the whole model |
+| **FSDP / ZeRO** | Fully Sharded Data Parallel / Zero Redundancy Optimizer | schemes that shard weights and optimizer state across GPUs |
+| **GB** | gigabyte | one thousand megabytes |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Signature** | the observable shape of the failure, which identifies the layer that produced it (§4) |
+| **`MemoryError`** | the in-process Python exception with a traceback |
+| **`Killed` / exit 137** | the kernel OOM killer's fingerprint: SIGKILL, no traceback |
+| **`OOMKilled`** | the orchestrator's report that a container hit its cgroup limit |
+| **`CUDA out of memory`** | the GPU allocator's in-process failure |
+| **Leak** | memory growing without bound; raising the limit only postpones the crash |
+| **Working set** | the memory one unit of work must hold at once |
+| **Red herring** | here, the host having free RAM while your cgroup limit is what actually bound you |
+| **`top`** | the process monitor; a single reading cannot distinguish a leak from too-much |
+| **`tracemalloc`** | the allocation tracker whose snapshot diffs show what keeps growing |
+| **Trend / time series** | the sequence of readings, which is where the leak signal lives |
+| **Stream / chunk** | read and process input in pieces rather than whole |
+| **`chunksize`** | the pandas argument that does this for file reads |
+| **Out-of-core** | computing on data larger than RAM, keeping the bulk on disk |
+| **Dask / Polars streaming / `np.memmap`** | three out-of-core tools: parallel chunked execution, batched query execution, and a disk-backed array |
+| **Paginate** | fetch database rows a page at a time instead of all at once |
+| **Batch size** | how many samples are processed together; the most direct memory knob |
+| **Quantization** | lower-precision weights, trading accuracy for memory |
+| **Gradient checkpointing** | recomputing activations instead of storing them |
+| **Sharding** | splitting weights or optimizer state across several GPUs |
+| **Paged-KV serving** | vLLM's PagedAttention — fixed-size, on-demand KV-cache blocks (§7) |
+| **Fragmentation** | free memory in pieces too small for a large contiguous request — the OOM that happens with memory to spare |
+| **`empty_cache()`** | returns PyTorch's cached-but-unused VRAM blocks to the driver |
+| **`expandable_segments:True`** | the PyTorch allocator setting that lets segments grow, reducing fragmentation |
+| **Swap** | disk used as overflow for RAM; less of it turns slow thrashing into a fast, clean kill |
+| **Thrash** | the state where the machine spends nearly all its time paging instead of working |
+| **Memory limit** | the configured cap that makes failure predictable and alertable |
+| **Alerting on RSS trend** | watching the slope, not the value, so a leak is caught before it kills |
+| **Process isolation** | bounding a worker's lifetime so it dies before the leak does |
+| **`maxtasksperchild=1`** | retire a `multiprocessing` worker after a single task |
+| **gunicorn `max_requests`** | recycle a web worker after N requests |
+| **Recycle** | deliberately restart a worker to reset its memory |
+| **Containment** | the general strategy of bounding a fault's blast radius rather than eliminating it |
+
+</details>
 
 Concrete, ranked, and mapped to the signatures above.
 

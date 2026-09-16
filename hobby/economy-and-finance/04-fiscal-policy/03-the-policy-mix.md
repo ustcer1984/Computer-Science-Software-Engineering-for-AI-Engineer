@@ -50,6 +50,42 @@ mix, name the mechanism, and name who was in charge.**
 
 ## 1. Two levers, one economy
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **Fed** | the Federal Reserve | the US central bank |
+| **ECB** | European Central Bank | the euro area's central bank |
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank, which runs policy through the exchange rate |
+| **BoJ** | Bank of Japan | Japan's central bank |
+| **T** | taxes | total government revenue, the first fiscal lever |
+| **G** | government spending | total government outlays, the second fiscal lever |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Aggregate demand** | total spending on the economy's output — the thing both levers move |
+| **Monetary policy** | the central bank's setting of the interest rate and its balance sheet |
+| **Fiscal policy** | the government's setting of taxes and spending |
+| **Overnight interest rate** | the rate on lending between banks for one day; the central bank's direct control variable |
+| **Balance sheet (of a central bank)** | the assets it has bought and the money it created to buy them; the second monetary lever |
+| **Operational independence** | the central bank's insulation from political direction on its instrument settings |
+| **Zero lower bound** | the point where the policy rate is already near zero and cannot usefully be cut further |
+| **"Can't push on a string"** | the observation that a central bank can always restrain an economy but cannot force anyone to borrow and spend |
+| **Crowding out** | government borrowing or spending displacing private investment |
+| **Policy mix** | the *combination* of the two stances — the real object, because neither lever's effect can be read without the other |
+| **Stance** | whether a lever is set loose (expansionary) or tight (contractionary) |
+| **Tinbergen's rule** | to hit N independent targets you need N independent instruments |
+| **Mundell's assignment problem** | given several instruments and targets, assign each instrument to the target it moves most efficiently |
+| **Composition of output** | the split of demand between consumption, investment, government and exports — as distinct from its total |
+| **Fiscal dominance** | the regime where government debt is so large the central bank can no longer set rates freely — the breakdown of the standard assignment |
+
+</details>
+
 Line the levers up side by side. They both move aggregate demand, but they are utterly different instruments:
 
 | | **Monetary** (E03) | **Fiscal** (E04) |
@@ -81,6 +117,40 @@ Two classic principles organize the combination:
 ---
 
 ## 2. The policy-mix matrix — reading the four quadrants
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **QE** | quantitative easing | a central bank creating money to buy bonds, pushing down long-term interest rates |
+| **GDP** | gross domestic product | annual national output; deficits are quoted as a share of it |
+| **UK** | United Kingdom | |
+| **ZLB** | zero lower bound | the floor under the policy rate |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Loose (expansionary) stance** | policy set to add demand — low rates, or tax cuts and higher spending |
+| **Tight (contractionary) stance** | policy set to remove demand — high rates, or tax rises and spending cuts |
+| **Maximum stimulus quadrant** | both levers loose; powerful, and inflationary if demand outruns supply |
+| **Disinflation** | deliberately bringing an inflation rate down |
+| **Great Inflation** | the sustained high inflation of the 1970s in the advanced economies |
+| **Roosevelt recession** | the 1937 downturn caused by tightening both levers before the recovery was secure |
+| **Austerity** | fiscal consolidation — tax rises and spending cuts to shrink the deficit |
+| **Consolidation** | reducing the deficit; the fiscal side of austerity |
+| **Real interest rate** | the interest rate after subtracting inflation — what a borrower truly pays |
+| **Real federal funds rate** | the US overnight policy rate less inflation; the measure of how tight monetary policy really is |
+| **Twin deficits** | a budget deficit and a trade deficit widening together, the signature of loose fiscal plus tight monetary policy |
+| **Trade deficit** | importing more than you export |
+| **Volcker shock** | the early-1980s US episode of driving real rates to unprecedented highs to break inflation |
+| **Plaza Accord** | the 1985 international agreement to bring the over-strong US dollar down |
+| **Side effects of the mix** | the real rate, the exchange rate, the debt path and who gets crowded out — the things that differ even when the demand outcome is the same |
+
+</details>
 
 Because each lever can be **loose** (expansionary) or **tight** (contractionary), the mix lives on a **2×2 grid**.
 This one picture is the mental model for the whole section.
@@ -121,6 +191,43 @@ who gets crowded out). *Choosing the mix is choosing the side effects.*
 
 ## 3. When the levers fight — monetary offset & crowding out
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the multiplier formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MPC** | marginal propensity to consume | the fraction of an extra dollar of income that gets spent |
+| **G** | government spending | |
+| **C** | household consumption | |
+| **I** | private investment | firms' spending on capital goods |
+| **ZLB** | zero lower bound | where the policy rate cannot be cut further, so the central bank cannot offset |
+
+**Symbols used in the formula**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $c$ | "c" | the marginal propensity to consume — the fraction of each extra dollar of income that is spent rather than saved |
+| $(1 - c)$ | "one minus c" | the fraction saved, which is what makes the cascade converge |
+| $\frac{1}{1 - c}$ | "one over one minus c" | the fiscal multiplier with the interest rate **held fixed** — the assumption the section proceeds to drop |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fiscal multiplier** | output produced per dollar of fiscal action |
+| **Geometric cascade** | each round of spending becoming the next round's income, in ever-smaller instalments |
+| **Full employment** | the state where idle resources are gone, so extra demand mostly raises prices |
+| **Inflation targeting** | the regime where the central bank commits to hold inflation at a stated number |
+| **Monetary offset (the "Sumner critique")** | the central bank tightening in response to fiscal stimulus, cancelling it; at full employment the central bank, not the government, has the last word on demand |
+| **Accommodate** | to let the extra demand through without raising rates against it |
+| **Financial crowding out** | government borrowing bidding up the interest rate and discouraging private investment |
+| **Real (resource) crowding out** | at full employment, extra government use of workers and materials necessarily coming out of private use |
+| **Monetary regime** | what the central bank is doing and committed to — offsetting, neutral, or stuck at the floor |
+
+</details>
+
 Here is the mechanism that decides whether fiscal policy "works" at all, and it is almost always missing from the
 public argument. **The fiscal multiplier depends on what the central bank does in response.**
 
@@ -152,6 +259,37 @@ fiscal policy is most powerful *exactly* when monetary policy is stuck.
 
 ## 4. When the levers must cooperate — the ZLB, coordination & helicopter money
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ZLB** | zero lower bound | the floor under the policy rate, below which cutting achieves little |
+| **QE** | quantitative easing | the central bank creating money to buy bonds, holding long-term rates down |
+| **QT** | quantitative tightening | the reverse — letting those bond holdings run off, withdrawing the money again |
+| **OMF** | overt monetary financing | the central bank openly and permanently funding government spending with newly created money |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **"Pushing on a string"** | the limit of monetary stimulus — cheap money cannot compel anyone to borrow and spend |
+| **Diminishing returns** | each additional round of the same policy achieving less than the last |
+| **Monetary offset** | the central bank tightening against a fiscal expansion — absent at the ZLB, which is why the multiplier is large there |
+| **Issuance** | the government selling new bonds to finance a deficit |
+| **Long yields** | the interest rates on long-maturity government bonds, which a flood of issuance can push up |
+| **Coordination** | the two authorities deliberately moving the same way — the treasury issuing while the central bank buys |
+| **Helicopter money** | money created and handed to citizens or the treasury with no intention of ever taking it back — the theoretical maximum-power stimulus |
+| **Monetary base** | the currency and central-bank reserves in existence; helicopter money raises it permanently |
+| **Secondary market** | where existing bonds trade between investors. *The firewall is that a central bank buys there, never directly from the treasury* |
+| **Primary market** | where the treasury sells new bonds in the first place |
+| **Monetization** | financing the government by creating money — the thing the firewall exists to prevent |
+| **Temporary vs permanent money creation** | a temporary expansion (QE) is expected to be unwound, a permanent one (helicopter) is not. *This distinction, not the mechanics, is what determines the inflation consequence* |
+
+</details>
+
 At the **zero lower bound** (ZLB), monetary policy is constrained — you can't cut much below zero, and QE has
 diminishing returns ("pushing on a string," E03 §3 §6). This flips the assignment of §1. Now:
 
@@ -181,6 +319,41 @@ That cooperation shades toward a limit case worth naming carefully:
 ---
 
 ## 5. When fiscal *forces* monetary — fiscal dominance
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the interest-bill formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | annual national output; the interest bill is measured against it |
+| **pp** | percentage point | the unit for a difference between two percentages — "a +1pp hike" is a one-point rise in the rate |
+
+**Symbols used in the formula**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\Delta$ | "delta" | the change in something |
+| $\Delta r$ | "delta r" | the change in the interest rate the government pays, in percentage points |
+| $b$ | "b" | government debt as a share of GDP |
+| $\Delta r \times b$ | "delta r times b" | the extra annual interest bill, as a share of GDP. The debt ratio is the **slope**: the bigger $b$, the more a rate rise costs |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fiscal dominance** | the regime where debt is so large that the central bank can no longer set rates for the economy's sake, because doing so would wreck the budget |
+| **Central-bank independence** | the ability to set policy without regard to the government's financing needs — what fiscal dominance destroys in practice, whatever the law says |
+| **Interest bill (debt service)** | the annual cost of paying interest on the debt, roughly the rate times the debt |
+| **Solvency** | the ability to meet obligations over the long run, as opposed to merely this week |
+| **Unpleasant Monetarist Arithmetic** | Sargent and Wallace's result that if the fiscal authority refuses to adjust, tight money today merely forces more money-printing and inflation later |
+| **Primary deficit** | the budget shortfall **before** interest payments — the part the fiscal authority actually controls |
+| **Monetize** | to pay government debt by creating money |
+| **Own-currency issuer** | a government borrowing in the currency it can print; safe from default, but not from this |
+| **"Inflate it away"** | resolving a debt problem by letting inflation erode the real value of the debt — here it arrives whether or not anyone chose it |
+
+</details>
 
 This is the dangerous regime, and it's where §2's obsession with debt finally pays off. **Fiscal dominance** 财政
 主导 is the situation where government debt is so large that the central bank **loses its independence in
@@ -212,6 +385,39 @@ debt problem into an inflation problem (the §2 "inflate it away" exit, arriving
 ---
 
 ## 6. Who's in charge? — the game of chicken & the case for independence
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ZLB** | zero lower bound | where the policy rate can go no lower and the two levers must cooperate |
+| **Fed** | the Federal Reserve | the US central bank |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Game of chicken** | a situation where each side is better off if the other yields, so both have an incentive to look immovable |
+| **Fiscal discipline** | keeping the primary balance on a sustainable path |
+| **Primary balance** | revenue minus non-interest spending — the measure of current fiscal effort |
+| **Debt service** | the interest cost of existing borrowing, which the treasury wants kept cheap |
+| **Electoral cycle** | the political incentive to have the economy hot at the time of a vote |
+| **Accommodate** | for the central bank to allow the fiscal expansion through rather than tighten against it |
+| **Credible commitment** | a promise structured so that keeping it is in your interest, which is why others believe it |
+| **Commitment device** | an institution set up precisely to make a promise credible — central-bank independence being the example here |
+| **Monetize deficits** | to fund the government by creating money; what an independent central bank can credibly refuse to do |
+| **Inflation expectations** | what people believe future inflation will be; "anchored" means those beliefs do not move when inflation does |
+| **Fiscal rules** | self-imposed legal limits on deficits or debt |
+| **Structural-balance rule** | a fiscal rule written on the cyclically-adjusted deficit, so the stabilizers are allowed to work |
+| **Debt brake** | a constitutional cap on borrowing |
+| **Coordination protocol** | an agreed way for the two authorities to act together in an emergency |
+| **Firewall** | the institutional barrier against permanent monetization — in practice, the rule that the central bank buys only in the secondary market |
+| **Fiscal dominance** | the state where the budget's needs override the inflation target; it makes the central bank's threat to hold rates high non-credible |
+
+</details>
 
 Strip the interaction to its game-theoretic bones and you get a **game of chicken** (Nordhaus). Both authorities
 would prefer the *other* to do the painful adjustment:
@@ -247,6 +453,37 @@ same tension behind the Warsh/Fed appointment thread (E02 §3 §11) and the "act
 ---
 
 ## 7. The Singapore inversion — the closing case
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank, which runs monetary policy through the exchange rate rather than an interest rate |
+| **SGD** | Singapore dollar | |
+| **Fed** | the Federal Reserve | the US central bank, the contrasting case |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **The trilemma** | the impossibility of having all three of a stable exchange rate, free capital flows and an independent domestic interest rate — at most two |
+| **Free capital flows** | money allowed to move into and out of the country without restriction |
+| **Independent domestic interest rate** | the ability to set the local rate to suit the local economy — what Singapore gave up |
+| **Trade-weighted exchange rate** | the currency's value against a basket of trading partners, weighted by how much trade is done with each |
+| **Imported interest rates** | local rates determined by global markets rather than by the domestic central bank |
+| **Stabilization** | the job of leaning against the business cycle — which in Singapore falls chiefly on the budget |
+| **Counter-cyclical** | acting against the cycle: supporting demand in a slump, restraining it in a boom |
+| **Past reserves** | Singapore's accumulated national savings, protected constitutionally |
+| **The "second key"** | the requirement that the President separately assent before past reserves are drawn on |
+| **Imported inflation** | price rises arriving through the cost of imports, which a stronger currency blunts |
+| **Appreciate** | for a currency to rise in value against others |
+| **Assignment** | which lever is given which job — the thing Singapore inverts relative to the standard arrangement |
+| **Mundell–Fleming** | the open-economy model of how monetary and fiscal policy work under fixed versus floating exchange rates |
+
+</details>
 
 Singapore is the perfect capstone, because it **inverts the standard assignment of §1** and shows the whole
 section is about *choices*, not a universal recipe.

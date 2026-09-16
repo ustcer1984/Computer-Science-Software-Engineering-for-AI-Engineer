@@ -59,6 +59,55 @@ symmetry — **resume-with-a-value vs resume-with-an-exception** — is the spin
 
 ## 1. The event loop, one tick at a time
 
+<details>
+<summary><b>Vocabulary for this section</b> — the loop's three structures and every step of a tick (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | network, disk or database traffic — anything the program waits on rather than computes |
+| **FD** | file descriptor | the small integer the kernel uses to name an open socket or file; the selector watches FDs |
+| **IOCP** | I/O completion ports | Windows' kernel readiness/completion mechanism, the counterpart of `epoll` and `kqueue` |
+| **CPU** | central processing unit | the processor; a loop asleep in the kernel consumes none of it |
+| **ms** | millisecond | one thousandth of a second |
+| **OS** | operating system | the software that owns the hardware and does the actual waiting for you |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Event loop** | the in-process scheduler that repeatedly waits for events and runs the callbacks they unblock |
+| **Tick** | one iteration of the loop — compute a timeout, select, schedule ready callbacks, move due timers, drain the run queue |
+| **`_run_once`** | CPython's internal method that performs exactly one tick |
+| **`_ready`** | the loop's run queue: a `deque` of callbacks that can run right now |
+| **`deque`** | double-ended queue — a list you can push and pop efficiently at both ends |
+| **Callback** | a plain function the loop will call later; resuming a parked task is one of these |
+| **`Handle`** | the loop's wrapper object around a scheduled callback |
+| **`_scheduled`** | the loop's timer queue: a min-heap of `TimerHandle`s ordered by when they should fire |
+| **Min-heap** | a structure that always gives you the smallest element (here, the earliest deadline) cheaply |
+| **`TimerHandle`** | a callback plus the time at which it is due |
+| **`call_later` / `call_at`** | schedule a callback after a delay, or at an absolute loop time |
+| **`asyncio.sleep`** | suspend a coroutine for a duration by putting a timer in `_scheduled` — it does **not** block the thread |
+| **`time.sleep`** | the synchronous sleep: it parks the whole *thread*, so the loop never reaches `select` and nothing else runs |
+| **Deadline** | the absolute time at which a timer or timeout is due |
+| **Selector** | the object wrapping the kernel's readiness mechanism — `epoll` on Linux, `kqueue` on macOS, IOCP on Windows |
+| **`epoll` / `epoll_wait`** | the Linux syscall family for "tell me which of these many FDs are ready"; `epoll_wait` is where the loop sleeps |
+| **Syscall** | a call into the kernel; the one blocking call per tick is a syscall |
+| **Readiness** | the kernel's report that a socket now has data to read, or room to write |
+| **Select timeout** | how long the loop is willing to sleep in the kernel — zero if work is ready, otherwise the time to the nearest timer |
+| **Busy-wait** | spinning in a loop checking a condition, burning CPU; what `asyncio.sleep` deliberately is not |
+| **Park** | to suspend a coroutine at an `await` so the loop can run something else |
+| **Resume** | to continue a parked coroutine from exactly where it suspended |
+| **Run queue** | the list of things ready to run — the loop's `_ready`, analogous to an OS scheduler's queue |
+| **`ntodo` snapshot** | counting the ready callbacks before draining and running only that many, so callbacks scheduled mid-drain wait for the next tick |
+| **Starvation** | a runnable task never getting a turn because others keep monopolizing the scheduler |
+| **Fairness** | the guarantee that every ready callback gets its turn within a bounded number of ticks |
+| **Cooperative scheduling** | the loop can only switch *between* callbacks, never inside one — so a callback that never yields freezes everything |
+| **Preemption** | involuntary interruption by a scheduler; the OS does this to threads, the event loop cannot do it to a coroutine |
+
+</details>
+
 In §1 you said the loop is "the scheduler running inside your own process." True, but vague. Here is what it concretely *is* and what
 one iteration (a **tick**) actually does. CPython's loop (`asyncio.base_events.BaseEventLoop`) holds three structures:
 
@@ -121,6 +170,47 @@ Four facts to read off this, because they answer real questions you've hit:
 ---
 
 ## 2. Coroutine vs Future vs Task — the three things people call "a coroutine"
+
+<details>
+<summary><b>Vocabulary for this section</b> — the three objects and the await/park/wake cycle (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | network, disk or database traffic — the thing an `await` usually waits on |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Coroutine** | the object you get by *calling* an `async def` function: a paused frame, inert until awaited or wrapped in a Task |
+| **`async def`** | the syntax that defines a coroutine function; calling it builds a coroutine object instead of running the body |
+| **Frame** | the per-call state of a function (its locals and its position in the code); a coroutine's frame lives on the heap so it can be paused |
+| **Inert** | does nothing on its own — a recipe, not a running job |
+| **Single-use** | a coroutine object can be awaited exactly once; a Task, being a handle, can be inspected and awaited repeatedly |
+| **Future** | a low-level "result box": a state plus a result-or-exception plus a list of done-callbacks fired on resolution |
+| **`PENDING` / `FINISHED` / `CANCELLED`** | the three Future states — not done yet, done with a result or exception, and cancelled |
+| **Done-callback** | a function registered to run when a Future resolves; how a parked Task gets woken |
+| **`add_done_callback`** | the method that registers one |
+| **Task** | a Future subclass that also *drives* a coroutine; creating one schedules it on the loop immediately |
+| **`asyncio.create_task`** | the modern way to make a Task from a coroutine and start it running |
+| **`ensure_future`** | the older, more permissive wrapper that returns a Task for a coroutine or passes a Future through |
+| **`loop.create_future()`** | how library code makes a bare Future |
+| **`Task.__step`** | the internal driver that resumes the coroutine once and re-parks it |
+| **`coro.send(value)`** | resume the coroutine, delivering `value` as the result of the `await` it was parked on |
+| **`coro.throw(exc)`** | resume the coroutine by raising `exc` at that same `await` — the mirror image, used for cancellation |
+| **`await`** | suspend here until the awaited thing resolves; the only point at which the loop can switch |
+| **Park / wake** | suspend at an `await`, then be rescheduled when the awaited Future resolves |
+| **`set_result`** | what the I/O machinery calls on a Future when the answer arrives, which resolves it and schedules its done-callbacks |
+| **Transport** | asyncio's low-level connection object that moves bytes and resolves the Futures your coroutine is waiting on |
+| **Synchronization primitive** | a building block for coordinating flows; the Future is the one everything else here is built from |
+| **Chaining frames** | `await coro` runs the inner coroutine *inside the current Task*, so the two never overlap — concurrency needs more Tasks |
+| **`asyncio.gather`** | run several awaitables concurrently and collect their results |
+| **`TaskGroup`** | the 3.11+ scoped way to spawn several tasks that must all finish before the block exits |
+| **"coroutine was never awaited"** | the warning you get for building a coroutine object and discarding it without running it |
+
+</details>
 
 You used these words interchangeably in 9b and mostly got away with it. They are three distinct objects, and the distinction is the
 difference between *code that does nothing* and *code that's actually running*.
@@ -195,6 +285,36 @@ x, y = await asyncio.gather(fetch(url_a), fetch(url_b))
 
 ## 3. The spawning primitives — `gather`, `as_completed`, `wait`, `TaskGroup`
 
+<details>
+<summary><b>Vocabulary for this section</b> — the spawn/collect primitives and their error policies (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Awaitable** | anything you can `await` — a coroutine, a Future or a Task |
+| **`await coro`** | run the awaited thing inside the current task; nothing else of yours overlaps with it |
+| **`create_task(coro)`** | schedule a coroutine as an independent Task right now and hand you the handle |
+| **`gather(*aws)`** | run several awaitables concurrently and return their results in **input** order |
+| **`return_exceptions=True`** | `gather`'s harvest mode: a child's exception comes back as an object in the result list instead of propagating, and the batch always completes |
+| **`as_completed(aws)`** | yields the awaitables in **completion** order, so you can persist each result the moment it lands |
+| **`wait(aws, return_when=…)`** | the low-level primitive: returns `(done, pending)` sets and never raises — you decide what to do with the stragglers |
+| **`TaskGroup()`** | the 3.11+ scoped spawner: `async with` block, cancels siblings on a failure, raises an `ExceptionGroup` |
+| **`ExceptionGroup`** | a single exception carrying several underlying exceptions at once |
+| **Propagate** | for an exception to travel outward to the caller rather than being stored or ignored |
+| **Sibling** | another task spawned by the same call; the key question is whether a failure cancels them |
+| **Orphan** | a task nobody is waiting on any more — still running, still consuming connections and quota, its result discarded |
+| **Fail-fast** | stop the whole batch as soon as one part fails |
+| **Harvest mode** | the opposite policy: let everything finish and sort successes from failures afterwards |
+| **Fan-out** | issuing many concurrent operations from one place |
+| **Rate-limit budget** | the allowance of requests per interval a remote API grants you; orphans keep spending it |
+| **Straggler** | the one slow or hung item holding up a collection point |
+| **Join barrier** | a single point that waits for *all* children — `gather`'s shape, and why one straggler withholds every finished result |
+| **Index-aligned** | position `i` of the result list corresponds to input `i`, so failures can be mapped back to their inputs |
+| **Eval harvest** | the pipeline pattern of running many independent evaluations and keeping every outcome, success or failure |
+
+</details>
+
 Once you accept "concurrency needs more than one task," the question is *how you spawn and collect them*, and asyncio gives you several
 tools that look interchangeable but differ on the axes that bite in production: **ordering, error policy, and what happens to siblings
 when one fails.**
@@ -226,6 +346,38 @@ Three traps hide in that table:
 ---
 
 ## 4. Structured concurrency — why `TaskGroup` exists
+
+<details>
+<summary><b>Vocabulary for this section</b> — nurseries, scopes, and aggregated errors (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PEP** | Python enhancement proposal | the numbered design documents; PEP 654 added `ExceptionGroup` and `except*` |
+| **GC** | garbage collection | automatic reclamation of unreachable objects — when an abandoned Task is collected is when its lost exception is finally logged |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Structured concurrency** | the discipline that every spawned task lives inside a lexical block which cannot exit until all its children finish |
+| **`TaskGroup`** | asyncio's 3.11+ implementation of that discipline, used as an `async with` block |
+| **Nursery** | Trio's name for the same scope — the vocabulary the idea was first published in |
+| **Trio** | the third-party async library where structured concurrency was worked out before asyncio adopted it |
+| **`create_task`** | the unstructured spawn: the task's lifetime is unbounded and its errors have nowhere to go |
+| **Lifetime (of a task)** | how long it may keep running; unstructured tasks can outlive the function that spawned them |
+| **Lexical scope** | the block of source text something belongs to — here, the hard boundary a child task cannot escape |
+| **`async with`** | the asynchronous context manager syntax; its exit is where `TaskGroup` waits for children |
+| **Call graph** | which function calls which; `goto`-like spawning breaks the guarantee that a call returns to its caller |
+| **`go` statement / `goto`** | the analogy: a jump that abandons the caller-returns-to-caller discipline, which is why unowned background tasks are hard to reason about |
+| **Swallowed exception** | one that is raised, stored on an un-awaited Task, and never surfaced — visible only as a late "Task exception was never retrieved" log line |
+| **`ExceptionGroup` (PEP 654)** | the container that lets more than one simultaneous failure be reported without losing any |
+| **`except*`** | the syntax for handling one exception type across every member of an `ExceptionGroup` |
+| **Fail-fast** | cancel the remaining children as soon as one fails — `TaskGroup`'s policy, and the wrong one for a harvest |
+| **Cancellation** | asking a task to stop by raising `CancelledError` in it at its next `await` (the mechanism is §5) |
+
+</details>
 
 `create_task` has a quiet design flaw that the industry took ~a decade to name. When you write `asyncio.create_task(work())` and move on,
 you've created a job whose **lifetime is unbounded** (it can outlive the function that spawned it) and whose **errors have nowhere to go**
@@ -266,6 +418,45 @@ Two consequences worth holding:
 ---
 
 ## 5. Cancellation — the part everyone gets wrong (and the cash-in of 9b)
+
+<details>
+<summary><b>Vocabulary for this section</b> — cancellation, timeouts, and the re-raise rule (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | network, disk or database traffic — what a parked-forever coroutine is usually waiting on |
+| **CPU** | central processing unit | the processor; CPU-bound code never yields, so cancellation cannot reach it |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Cancellation** | asking a task to stop by *injecting an exception* into it — it does not kill a thread or interrupt a running line |
+| **`task.cancel()`** | sets the cancel flag so the task is next resumed with an exception instead of a value |
+| **`CancelledError`** | the exception that is thrown in; it inherits from `BaseException`, **not** `Exception` |
+| **`BaseException` vs `Exception`** | `except Exception:` deliberately does not catch `CancelledError`, so ordinary error handling cannot silently eat a shutdown |
+| **`coro.throw(CancelledError)`** | the actual delivery: the exception is raised *at* the `await` where the coroutine is suspended |
+| **Suspension point / await point** | a place where the coroutine can be paused and resumed — the only place an injected exception can land |
+| **Parked** | suspended at an `await` and therefore cancellable; a coroutine spinning in Python or stuck in a blocking C call is not |
+| **Unwind** | the exception travelling outward through the coroutine's frames, running `try/finally` blocks on the way |
+| **`try/finally`** | cleanup that runs even when the exception is a cancellation — how locks and connections get released |
+| **Re-raise** | the mandatory `raise` after catching `CancelledError`; without it the task swallows its own cancellation and shutdown hangs |
+| **`asyncio.timeout()`** | the 3.11+ context manager that schedules a deadline, cancels the work inside on expiry, and converts the `CancelledError` into `TimeoutError`; it nests correctly |
+| **`asyncio.wait_for()`** | the older wrapper doing the same job around a single awaitable |
+| **`TimeoutError`** | what a timeout re-raises at its block boundary, so callers see a timeout rather than a cancellation |
+| **Watchdog** | a passive observer that checks a clock; a timeout is explicitly *not* this — it actively reaches in and throws |
+| **Timer / `_scheduled`** | the loop's deadline queue; a timeout is an entry in it and fires as an ordinary tick event |
+| **`asyncio.shield()`** | protects an inner awaitable from an outer cancellation — the outer `await` still raises, and the shielded work continues detached |
+| **Detached** | still running with nobody awaiting it |
+| **`Task.uncancel()`** | decrements the 3.11+ cancellation counter, which is what lets nested timeouts tell each other's cancellations apart |
+| **Cancellation count** | the per-task tally of pending cancellations that makes nested `asyncio.timeout()` blocks correct |
+| **`return_exceptions=True`** | `gather`'s harvest flag; it can only capture an exception the coroutine raises itself, so it is powerless against silence |
+| **Silence** | a response that simply never arrives — nothing raises, so only an externally injected cancellation can end the wait |
+| **Blocking the loop** | running without yielding, so no `await` is ever reached — the same root cause as uncancellable code |
+
+</details>
 
 This is the section. Your 06-16 keeper was *"only a timeout handles silence."* Correct — and the mechanism behind it is the single most
 misunderstood thing in asyncio. Get this and you can reason about every timeout, shutdown, and "task won't die" bug you'll ever hit.
@@ -355,6 +546,48 @@ Now every property of cancellation falls out of "it's an injected exception":
 
 ## 6. The footgun gallery — real failure modes, ranked
 
+<details>
+<summary><b>Vocabulary for this section</b> — each failure mode's machinery in one place (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection | automatic reclamation of unreachable objects; it is what destroys an unreferenced pending Task and what finally logs a lost exception |
+| **DB** | database | a data store reached over a connection; a synchronous driver blocks the calling thread |
+| **p99** | 99th-percentile latency | the response time 99% of requests beat — the first metric a stalled loop wrecks |
+| **CPU** | central processing unit | the processor; CPU-heavy steps belong off the loop |
+| **I/O** | input/output | network, disk or database traffic |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fire-and-forget** | spawning a task and not keeping the handle — the shape behind failure modes 1 and 5 |
+| **Weak reference** | a reference that does not keep an object alive; the loop holds only these to tasks, which is why you must hold a strong one |
+| **Strong reference** | an ordinary reference that keeps the object alive |
+| **`add_done_callback`** | used here to drop the strong reference once the task completes, so the set does not grow forever |
+| **"Task was destroyed but it is pending!"** | the warning for a task collected mid-flight — the work silently never finished |
+| **"Task exception was never retrieved"** | the late log line for an exception stored on a task nobody awaited |
+| **Orphan / sibling** | a task still running after the call that spawned it has given up on it; `gather` leaves siblings running on the first error |
+| **`gather` / `return_exceptions=True` / `TaskGroup`** | the three error policies: propagate-but-leak, capture-everything, and cancel-siblings |
+| **`CancelledError`** | the exception cancellation injects; catching it without re-raising breaks timeouts and shutdown |
+| **Bare `except:` / `except BaseException:`** | over-broad handlers that do catch `CancelledError`, which is how it gets swallowed |
+| **Blocking the loop** | a call that never yields — a sync DB driver, `requests`, `time.sleep`, a heavy pure-Python parse, a `boto3` call — so `selector.select` is never reached and every task starves |
+| **`selector.select`** | the loop's single blocking call per tick; not reaching it is the precise definition of blocking the loop |
+| **`requests` / `boto3`** | popular synchronous libraries; they must not be called directly from a coroutine |
+| **`httpx` / `aiohttp`** | async-native HTTP clients that cooperate with the loop |
+| **`loop.run_in_executor`** | hand a blocking or CPU-heavy function to a thread or process pool so the loop stays free |
+| **Process pool** | worker processes with their own interpreters — the right home for CPU-bound Python work |
+| **`asyncio.run()`** | creates a fresh loop, runs a coroutine to completion, then closes the loop — it cannot be called from inside a running loop |
+| **`RuntimeError`** | what you get for that nesting mistake |
+| **Jupyter** | the notebook environment, which already runs a loop — so top-level `await` works there but `asyncio.run` does not |
+| **`nest_asyncio`** | the shim that patches the loop to allow re-entrant `asyncio.run` in environments like Jupyter |
+| **One loop per thread** | the invariant behind all of the above: a thread runs at most one event loop at a time |
+| **Structured concurrency** | scoping tasks to a block so their errors cannot vanish — the root fix for modes 1, 2 and 5 |
+
+</details>
+
 Canonical async bugs, each one a corollary of §1–§5. The first three are the ones that bite even experienced people.
 
 1. **Fire-and-forget tasks get garbage-collected mid-flight.** `asyncio.create_task(bg_work())` *without keeping a reference* is a live
@@ -387,6 +620,41 @@ Canonical async bugs, each one a corollary of §1–§5. The first three are the
 ---
 
 ## 7. Where this bites *you* — the practitioner's playbook
+
+<details>
+<summary><b>Vocabulary for this section</b> — the harness recipe and the audit checklist (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection | automatic reclamation of unreachable objects; it is what makes a dropped task handle vanish mid-flight |
+| **p99** | 99th-percentile latency | the response time 99% of requests beat |
+| **CPU** | central processing unit | the processor; CPU-heavy steps must leave the event loop |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`Semaphore`** | a counting permit holder: at most N coroutines inside the guarded region at once — how you cap concurrency to a rate limit |
+| **Rate limit** | the cap a remote API puts on requests per interval |
+| **`asyncio.timeout`** | per-request deadline; the only construct that can end a coroutine parked forever on silence |
+| **`gather(return_exceptions=True)`** | capture every child's outcome, exceptions included, instead of propagating the first one |
+| **`as_completed`** | consume results in completion order so a hang late in the batch does not withhold what already finished |
+| **Persist** | write each result out as it arrives, rather than at one collection point at the end |
+| **Idempotent retry** | re-running a failed item safely, because doing it twice has the same effect as doing it once |
+| **`TaskGroup`** | scoped spawning with fail-fast cancellation — right for "all must succeed", wrong for a harvest |
+| **Fail-fast** | cancel the rest as soon as one fails |
+| **`create_task`** | unstructured spawn; dropping its handle risks the task being garbage-collected while pending |
+| **Blocking call** | a call that never yields to the loop, stalling every other task and spiking p99 |
+| **Executor** | a thread or process pool that runs blocking or CPU-bound work off the loop |
+| **`CancelledError`** | the cancellation exception; catching it without `raise` turns a cooperative shutdown into a hang |
+| **Serial `await`s** | awaiting items one after another in a loop — correct but with no concurrency at all |
+| **Straggler / upstream** | the slow item, and the remote service behind it; a dead upstream parks a task indefinitely without a timeout |
+| **`loop.set_debug(True)` / `PYTHONASYNCIODEBUG=1`** | asyncio's debug mode, which warns on slow callbacks, un-awaited coroutines and tasks destroyed while pending |
+| **Slow callback** | a single callback that held the loop too long — debug mode's name for blocking the loop |
+
+</details>
 
 Ranked, concrete, mapped to the sections — and aimed at the eval pipeline and the arena from §1's session.
 

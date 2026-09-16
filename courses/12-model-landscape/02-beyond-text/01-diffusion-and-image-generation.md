@@ -60,6 +60,49 @@ The one conceptual pivot to internalize up front:
 
 ## 1. The two generative paradigms, side by side
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AR** | autoregressive | generating one unit at a time, each conditioned on all previous ones |
+| **CFG** | classifier-free guidance | the sampling knob that trades prompt fidelity against diversity (§7) |
+| **LLM** | large language model | an autoregressive transformer over text tokens |
+| **VQ-GAN** | vector-quantized generative adversarial network | an image tokenizer: encodes an image to discrete codebook indices a transformer can predict |
+| **top-p** | nucleus sampling | truncating the token distribution to the smallest set whose mass exceeds $p$ |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n$ | "n" | sequence length — the number of autoregressive steps |
+| $T$ | "capital T" | the number of diffusion (denoising) steps |
+| $x_0$ | "x-sub-zero" | the clean data sample; the subscript is the diffusion step, and zero means no noise |
+| $x_T$ | "x-sub-capital-T" | the fully noised sample at the end of the forward process — pure Gaussian noise |
+| $p(x)$ | "p of x" | the probability density the generative model is trying to represent |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Diffusion model** | a generative model that learns to invert a fixed noising process, refining a whole canvas over $T$ steps |
+| **Autoregressive model** | a generative model that factorises the joint into a product of next-unit conditionals, sampled sequentially |
+| **Token** | a discrete unit from a fixed vocabulary; the native currency of AR models |
+| **Latent** | a continuous vector representation of the data, usually lower-dimensional than the raw signal |
+| **Causal** | attending only to positions at or before the current one |
+| **Exact likelihood** | the model can evaluate $p(x)$ directly rather than bounding it |
+| **Variational bound** | a tractable lower bound on the log-likelihood, optimised in place of the intractable quantity |
+| **Score-based** | trained on the gradient of the log-density rather than the density itself (§4) |
+| **Temperature** | the logit rescaling that sharpens or flattens an AR sampling distribution |
+| **Guidance scale** | the diffusion analogue of temperature — how hard sampling is pushed toward the condition |
+| **PixelCNN** | an early autoregressive image model that predicts pixels in raster order |
+| **Stable Diffusion / Imagen / Sora** | production diffusion models for image (first two) and video (Sora) |
+| **DALL·E** | OpenAI's text-to-image line; early versions were token-based autoregressive |
+
+</details>
+
 <!-- DIAGRAM:START -->
 ![Diagram 1](diagrams/01-diffusion-and-image-generation-1.svg)
 
@@ -97,6 +140,42 @@ where the field's center of mass for images/video sits, so we start there.
 ---
 
 ## 2. The forward process — destroy structure with noise (your home turf)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $t$ | "t" | the diffusion step index, running from one up to $T$; larger $t$ means more noise |
+| $T$ | "capital T" | the total number of forward noising steps |
+| $x_0$ | "x-sub-zero" | the clean image at the zero-noise end of the chain |
+| $x_t$ | "x-sub-t" | the partially noised sample after $t$ noising steps |
+| $x_{t-1}$ | "x-sub-t-minus-one" | the slightly less noisy sample one step earlier |
+| $x_T$ | "x-sub-capital-T" | the endpoint: indistinguishable from pure Gaussian noise |
+| $\beta_t$ | "beta-sub-t" | the noise schedule — how much variance is injected at step $t$ |
+| $\bar{\alpha}_t$ | "alpha-bar-sub-t" | the cumulative product of $(1-\beta_s)$ up to step $t$; the bar denotes accumulation over all steps so far |
+| $\epsilon$ | "epsilon" | a standard Gaussian noise sample drawn once and mixed into $x_0$ |
+| $q(x_t \mid x_{t-1})$ | "q of x-t given x-t-minus-one" | the fixed forward transition density; the bar $\mid$ reads "conditioned on" |
+| $\mathcal{N}(\mu, \Sigma)$ | "normal with mean mu and covariance Sigma" | a Gaussian distribution |
+| $I$ | "identity" | the identity covariance matrix — isotropic, uncorrelated noise |
+| $\prod_s$ | "product over s" | multiply the terms for every step $s$ up to $t$ |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Forward process (diffusion)** | the fixed, parameter-free chain that progressively corrupts data into noise |
+| **Markov chain** | a process whose next state depends only on the current one |
+| **Noise schedule** | the chosen sequence of $\beta_t$ values controlling how fast structure is destroyed |
+| **Gaussian noise** | noise drawn from a normal distribution |
+| **Variance-preserving process** | a noising parameterisation whose marginal variance stays bounded as $t$ grows |
+| **Ornstein–Uhlenbeck process** | the mean-reverting stochastic process the variance-preserving chain discretises |
+| **Closed form** | a direct expression for $x_t$ given $x_0$, with no need to iterate the chain |
+| **Isotropic** | identical in every direction — the noise has no preferred axis |
+
+</details>
 
 Take a real image `x₀`. Define a **Markov chain** that adds a little Gaussian noise at each step `t = 1…T`:
 
@@ -141,6 +220,43 @@ in reversing it.
 
 ## 3. The reverse process — and what the network actually predicts
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DDPM** | denoising diffusion probabilistic models | Ho et al. 2020 — the formulation that made noise-prediction training work |
+| **MSE** | mean squared error | the squared-difference loss used here between true and predicted noise |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $p(x_{t-1} \mid x_t)$ | "p of x-t-minus-one given x-t" | the learned reverse transition — one denoising step |
+| $\epsilon$ | "epsilon" | the true noise that was added to form $x_t$ |
+| $\epsilon_\theta(x_t, t)$ | "epsilon-theta of x-t and t" | the network's prediction of that noise; the $\theta$ subscript marks it as the learned model |
+| $\theta$ | "theta" | the network's parameters |
+| $L$ | "L" | the training loss |
+| $\mathbb{E}$ | "expectation over" | average over the quantities listed in its subscript |
+| $\lVert \cdot \rVert^2$ | "squared norm" | sum of squared components — the MSE |
+| $\bar{\alpha}_t$ | "alpha-bar-sub-t" | the cumulative noise factor from §2, fixing the blend of $x_0$ and $\epsilon$ in $x_t$ |
+| $\beta_t$ | "beta-sub-t" | the per-step noise variance; small $\beta_t$ is what makes the reverse step near-Gaussian |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reverse process** | the learned chain that walks from noise back to data, one step at a time |
+| **Reverse conditional** | the distribution of the slightly cleaner sample given the noisier one |
+| **Noise prediction (epsilon-prediction)** | the training target: recover the injected noise rather than the clean image |
+| **Denoiser** | the network viewed as a function that removes noise at a given noise level |
+| **Time embedding** | the vector encoding of $t$ fed into the network, usually sinusoidal, so one network serves all noise levels |
+| **Conditioning input** | any extra signal (here $t$) the network is given alongside $x_t$ |
+
+</details>
+
 We want `p(xₜ₋₁ | xₜ)`: given a noisier image, produce a slightly cleaner one. For small `βₜ`, this reverse
 conditional is also approximately Gaussian (a result from the diffusion literature / Feller) — so a
 network only needs to predict its **mean** (the variance is often fixed or a small learned correction).
@@ -180,6 +296,60 @@ know). Sampling then runs the denoiser `T` times from pure noise down to a clean
 ---
 
 ## 4. The score view — where your physics pays off
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SDE** | stochastic differential equation | a differential equation with a random (Brownian) driving term |
+| **ODE** | ordinary differential equation | a deterministic differential equation |
+| **NCSN** | noise-conditional score network | Song & Ermon 2019 — score estimation across many noise levels |
+| **Score-SDE** | score-based generative modelling through SDEs | Song et al. 2021 — the continuous-time unification |
+| **DDPM** | denoising diffusion probabilistic models | the discrete stochastic sampler |
+| **DDIM** | denoising diffusion implicit models | the deterministic, ODE-like sampler |
+| **EDM** | elucidating the design space of diffusion models | Karras et al.'s analysis of samplers, schedules and noise injection |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $s_\theta(x_t, t)$ | "s-theta of x-t and t" | the learned score network; $\theta$ marks the learned parameters |
+| $\nabla_{x_t} \log p_t(x_t)$ | "gradient with respect to x-t of log p-t of x-t" | the score — the direction in sample space along which log-density rises fastest |
+| $p_t$ | "p-sub-t" | the data distribution after $t$ steps of noising; the subscript is the noise level, not time in a sample |
+| $\epsilon_\theta$ | "epsilon-theta" | the noise-prediction network, equal to the score up to a known negative scale factor |
+| $\bar{\alpha}_t$ | "alpha-bar-sub-t" | the cumulative noise factor that converts between score and noise prediction |
+| $\eta$ | "eta" | the Langevin step size |
+| $z$ | "z" | a fresh standard Gaussian sample added at each Langevin step |
+| $f(x,t)$ | "f of x and t" | the drift term of the forward SDE |
+| $g(t)$ | "g of t" | the diffusion coefficient — how strongly noise enters the SDE |
+| $dw$ | "d-w" | an increment of Brownian motion (the random driver) |
+| $d\bar{w}$ | "d-w-bar" | the Brownian increment of the time-reversed SDE; the bar marks reverse time |
+| $dx / dt$ | "d-x by d-t" | the deterministic velocity of the probability-flow ODE |
+| $\mathbb{E}[x_0 \mid x_t]$ | "expected x-zero given x-t" | the posterior mean clean image — Tweedie's optimal one-shot denoiser output |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Score function** | the gradient of the log-density with respect to the sample |
+| **Langevin dynamics** | sampling by repeated small steps along the score plus injected noise |
+| **Probability-flow ODE** | the deterministic ODE whose marginals at every noise level match the SDE's |
+| **Marginals** | the per-noise-level distributions, ignoring how a trajectory got there |
+| **Drift** | the deterministic part of an SDE's motion |
+| **Brownian motion** | the random, uncorrelated part of an SDE's motion |
+| **Energy landscape** | the negative log-density viewed as a surface; the score is minus its gradient |
+| **Basin / mode** | a local region of high probability — one family of plausible images |
+| **Annealing** | lowering the noise level (the "temperature") gradually during sampling |
+| **Tweedie's formula** | the identity giving the posterior mean of the clean sample from the score at a known noise level |
+| **Posterior mean** | the average over all clean images consistent with the observed noisy one — blurry at high noise |
+| **Seed** | the initial noise draw, which under a deterministic sampler fully determines the output |
+| **Coarse-to-fine** | high-noise steps fixing layout, low-noise steps painting detail |
+| **`1/f` spectrum** | the roughly inverse-frequency energy falloff of natural images, which is why layout is low-frequency and texture high-frequency |
+
+</details>
 
 Here's the reframing that, from your background, is probably *more* natural than the noise-prediction
 story. Predicting the noise is — up to a known scale factor — equivalent to estimating the **score
@@ -242,6 +412,46 @@ Two precise hooks worth carrying:
 
 ## 5. Sampling — the latency story (the part that bites in production)
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DDPM** | denoising diffusion probabilistic models | the stochastic sampler needing many steps |
+| **DDIM** | denoising diffusion implicit models | the deterministic ODE sampler, 20–50 steps |
+| **ODE** | ordinary differential equation | the deterministic trajectory being integrated |
+| **SDE** | stochastic differential equation | the noise-driven version of the same trajectory |
+| **DPM-Solver** | diffusion probabilistic model solver | a higher-order ODE solver specialised to the diffusion ODE |
+| **EDM** | elucidating the design space of diffusion models | the paper analysing stochastic "churn" as error correction |
+| **GAN** | generative adversarial network | a generator trained against a discriminator, modelling $p(x)$ in one shot |
+| **FP16 / FP32** | 16-bit / 32-bit floating point | numeric precision of the arithmetic, distinct from step-size error |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $T$ | "capital T" | the number of denoising steps taken at sampling time |
+| $x$ | "x" | the sample being integrated along the noise-to-data trajectory |
+| $p(x)$ | "p of x" | the data density a one-shot generator would have to model directly |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Denoising step** | one full network evaluation that moves the sample a little toward data |
+| **Decode loop** | the iterative, sequential generation phase — the diffusion analogue of LLM token-by-token decoding |
+| **Distillation** | training a student to reproduce in few steps what the teacher does in many |
+| **Consistency model** | a distilled model trained so any point on a trajectory maps directly to the clean endpoint |
+| **Progressive distillation** | repeatedly halving the step count by distilling two teacher steps into one student step |
+| **Truncation error** | the integration error from taking a finite step along a curved path; grows with step size |
+| **Curvature** | the bending of the sampling trajectory, which is what caps the usable step size |
+| **Churn** | deliberate noise re-injection in a stochastic sampler, used to scrub accumulated integration error |
+| **Discretisation** | the choice of how many steps and where to place them along the continuous trajectory |
+
+</details>
+
 Naive DDPM uses `T ≈ 1000` denoising steps → 1000 forward passes per image. That's the diffusion
 analogue of the LLM **decode** problem you know: generation is an iterative loop, and each step is a full
 network evaluation. The progression of fixes:
@@ -278,6 +488,36 @@ optional and never a detail-source.
 
 ## 6. Latent diffusion — why Stable Diffusion is affordable
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VAE** | variational autoencoder | the encoder–decoder pair that maps images to a compact latent and back |
+| **MLA** | multi-head latent attention | DeepSeek's compressed-KV attention — the same "do the expensive work in a compressed space" move |
+| **GPU** | graphics processing unit | the accelerator the reduced compute makes this fit on |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $T$ | "capital T" | the number of denoising steps, each of which now runs in latent rather than pixel space |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Pixel space** | operating directly on the full-resolution image tensor |
+| **Latent space** | the compressed vector space the diffusion process actually runs in |
+| **Latent diffusion** | running the entire forward/reverse process on VAE latents, decoding to pixels only once at the end |
+| **Encoder** | the network mapping an image down to its latent |
+| **Decoder** | the network mapping a latent back to pixels |
+| **Compression ratio** | the factor by which the latent is smaller than the image — roughly the compute saving |
+
+</details>
+
 Running diffusion in **pixel space** (512×512×3) is brutally expensive — every one of `T` steps is a
 full-resolution network pass. Rombach et al. (**Latent Diffusion / Stable Diffusion**, 2022) made it
 practical with one move:
@@ -311,6 +551,42 @@ operation in a compressed space.** You already have the intuition; this is the i
 
 ## 7. Conditioning & guidance — how you actually control the output
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CFG** | classifier-free guidance | extrapolating away from the unconditional prediction to strengthen the condition |
+| **CLIP** | contrastive language–image pre-training | the image/text dual encoder whose text tower is a standard prompt encoder (§4 of the next section) |
+| **T5** | text-to-text transfer transformer | a text-only encoder–decoder whose encoder is a stronger prompt encoder than CLIP's |
+| **SD** | Stable Diffusion | the reference open latent-diffusion text-to-image model |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\hat{\epsilon}$ | "epsilon-hat" | the guided noise prediction actually used for the step; the hat marks a constructed, not directly predicted, quantity |
+| $\epsilon_{\text{cond}}$ | "epsilon-cond" | the network's noise prediction with the text condition supplied |
+| $\epsilon_{\text{uncond}}$ | "epsilon-uncond" | the same network's prediction with the condition dropped (empty prompt) |
+| $w$ | "w" | the guidance scale; $w = 1$ is plain conditional sampling, larger pushes harder toward the prompt |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Conditioning** | supplying the denoiser with side information (text, class, image) that steers what it generates |
+| **Text encoder** | the model turning a prompt into a sequence of embedding vectors |
+| **Embedding** | a vector representation of the prompt tokens |
+| **Cross-attention** | attention where queries come from image features and keys/values from the text embeddings |
+| **Query / Key / Value** | the three projections of attention; here Q is image-side, K and V are text-side |
+| **Unconditional model** | the same weights evaluated with the condition dropped, obtained by randomly blanking the prompt during training |
+| **Condition dropout** | randomly removing the text during training so one network serves both conditional and unconditional roles |
+| **Fidelity–diversity trade-off** | higher guidance means more prompt-faithful but less varied and eventually oversaturated output |
+
+</details>
+
 Everything so far generates *some* plausible image. Text-to-image needs **conditioning**. Two pieces:
 
 **(a) How the text gets in.** The prompt is encoded by a text encoder (**CLIP** text encoder, or **T5**)
@@ -335,6 +611,47 @@ file it next to those.
 ---
 
 ## 8. The backbone — and why your transformer knowledge transfers
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DiT** | diffusion transformer | a transformer denoiser over patch tokens, replacing the U-Net |
+| **ViT** | vision transformer | the patchify-then-transformer recipe DiT borrows |
+| **adaLN** | adaptive layer normalisation | conditioning by predicting the norm's scale and shift from the timestep/class embedding |
+| **SD3** | Stable Diffusion 3 | a DiT-based, flow-matching text-to-image model |
+| **LLM** | large language model | the autoregressive text model in the unified/decoupled discussion |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\epsilon_\theta$ | "epsilon-theta" | the denoiser network — the thing whose architecture this section is about |
+| $t$ | "t" | the diffusion step, supplied to the backbone as a conditioning embedding |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **U-Net** | a convolutional encoder–decoder with resolution-matched skip connections between the two halves |
+| **Skip connection** | a direct path carrying encoder features to the matching decoder stage |
+| **Inductive bias** | architectural assumptions (locality, multi-scale) that help at small scale and constrain at large scale |
+| **Patchify** | cut the latent into fixed-size patches and linearly project each into a token |
+| **Positional embedding** | the vector telling the transformer where a patch sits in the grid |
+| **Scaling laws** | the predictable power-law relation between model/compute size and loss |
+| **FlashAttention** | an IO-aware exact attention kernel; applies unchanged to a DiT |
+| **Flow matching** | training a velocity field that transports noise to data along a prescribed probability path |
+| **Rectified flow** | the straight-line-interpolant instance of flow matching |
+| **Velocity field** | the per-point direction and speed of transport from noise toward data |
+| **Probability path** | the prescribed family of intermediate distributions between noise and data |
+| **Decoupled generation** | an LLM writes a prompt, a separate diffusion model renders it; no shared weights |
+| **Unified generation** | one transformer carrying both an autoregressive text loss and a diffusion image loss |
+| **Transfusion / Chameleon** | reference unified text-plus-image models |
+
+</details>
 
 What network *is* `ε_θ`? Two eras:
 
@@ -372,6 +689,28 @@ Two regimes, and the distinction matters:
 ---
 
 ## 9. The bridge to video (preview of §2)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DiT** | diffusion transformer | the transformer denoiser, here run over spacetime patches |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Spacetime patch** | a patch cut across height, width *and* time, flattened into one token |
+| **Temporal axis** | the added frame dimension that turns an image tensor into a video tensor |
+| **Temporal coherence** | the requirement that consecutive frames describe a physically possible trajectory |
+| **Object permanence** | objects continuing to exist and stay consistent when occluded or off-frame |
+| **3D consistency** | a scene's geometry holding up as the camera moves |
+| **World model** | a model whose internal state tracks how a scene evolves, not merely how pixels look |
+
+</details>
 
 Video = add a **time axis**. Modern video models (Sora, and the open ones) are **DiT over spacetime
 patches**: cut the video into patches across height, width, *and* time; run a transformer with attention

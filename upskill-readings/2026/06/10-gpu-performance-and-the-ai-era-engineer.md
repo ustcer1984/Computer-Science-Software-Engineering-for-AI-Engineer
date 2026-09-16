@@ -12,6 +12,62 @@
 
 ## 1. Making Deep Learning Go Brrrr From First Principles (Horace He, 2022)
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FLOP** | floating-point operation | one arithmetic operation on a real number — the unit of "compute done" |
+| **FLOPs/s** | floating-point operations per second | how fast a chip can compute; **TFLOP/s** is trillions per second |
+| **TB/s** | terabytes per second | how fast bytes can be moved between memory and the compute units |
+| **GPU** | graphics processing unit | the parallel accelerator that runs the deep-learning work |
+| **CPU** | central processing unit | the general-purpose processor that drives the GPU from Python |
+| **HBM** | high-bandwidth memory | the GPU's large off-chip global memory — fast, but still the bottleneck |
+| **SRAM** | static random-access memory | the small, very fast on-chip memory (shared memory / scratchpad) next to the compute units |
+| **L1** | level-1 cache | the CPU's smallest and fastest cache — the comparison point for "a cache miss costs ~100×" |
+| **KV cache** | key-value cache | the stored attention keys and values for tokens already generated, re-read on every new token |
+| **LLM** | large language model | the text model whose inference behaviour is the running example |
+| **ML** | machine learning | the field; "ML-systems" is the engineering discipline of running these models fast |
+| **XLA** | Accelerated Linear Algebra | a compiler that fuses and optimises tensor graphs |
+| **A100** | (an NVIDIA data-centre GPU) | the concrete chip whose compute-to-bandwidth ratio anchors the arithmetic |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Kernel** | one GPU program launched to do a piece of work, e.g. "the add kernel" |
+| **Kernel launch** | the CPU-side act of queuing a kernel; cheap individually, ruinous if you do millions of tiny ones |
+| **Tensor** | a multi-dimensional array — the data deep learning moves around |
+| **Compute-bound** | time is going into actual arithmetic; the only lever is more or cheaper FLOPs |
+| **Memory-bandwidth-bound** | time is going into moving tensors to and from HBM; the only lever is moving fewer bytes |
+| **Overhead-bound** | time is going into Python, the framework and kernel launches rather than the work itself |
+| **Arithmetic intensity** | FLOPs performed per byte moved — the number you compare against the hardware's FLOPs-per-byte ratio |
+| **Back-of-envelope** | a rough order-of-magnitude calculation used to decide which regime you are in |
+| **Cargo-culting** | copying an optimisation because it worked elsewhere, without knowing why |
+| **Operator fusion** | merging adjacent operations into one kernel so intermediate results never round-trip to memory |
+| **Memory round-trip** | one write out to global memory plus the read back in — the cost fusion deletes |
+| **Elementwise op** | an operation applied independently to every element (`cos`, `relu`, add) — almost no FLOPs per byte |
+| **Activation** | the intermediate tensor produced between layers of a network |
+| **Eager mode** | PyTorch's default: each operation dispatched immediately from Python, no whole-graph optimisation |
+| **`torch.compile`** | PyTorch's compiler, which traces the graph and fuses kernels instead of running ops one by one |
+| **Triton** | a Python-like language for writing custom fused GPU kernels |
+| **CUDA graphs** | a mechanism that records a whole sequence of kernel launches and replays it with one call |
+| **Asynchronous execution** | Python queues GPU work and races ahead instead of waiting, hiding launch overhead behind big kernels |
+| **Attention** | the transformer operation in which every token weighs every other token |
+| **FlashAttention** | an attention implementation that tiles and fuses the computation so the large attention matrix never reaches HBM |
+| **Tiling** | processing a big computation in on-chip-sized blocks so intermediates stay in fast memory |
+| **Decode** | the token-by-token generation phase of inference: read all weights plus the KV cache to emit one token |
+| **Batching** | processing many requests together so each byte read from memory serves more work |
+| **Quantization** | storing weights and activations in fewer bits, cutting both the maths and the bytes moved |
+| **Precision** | the number format used — FP32, FP16, FP8, INT8 — trading accuracy for speed and bytes |
+| **Memory hierarchy** | the ladder from tiny fast on-chip memory to large slow off-chip memory |
+| **Cache miss** | a lookup that is not in the fast cache and must be fetched from a slower level |
+| **Cache locality** | arranging access so data you need next is already in fast memory |
+
+</details>
+
 🔗 https://horace.io/brrr_intro.html
 
 **Why it's worth your time even though it's from 2022.** It's the standard reference in ML-systems for *reasoning* about performance instead of cargo-culting tricks. The framework predates and explains the tools you now use by default — `torch.compile`, Triton, XLA (Accelerated Linear Algebra). It's short, first-principles, and exactly your style (you re-derive, you don't memorize).
@@ -60,6 +116,47 @@ flowchart TD
 ---
 
 ## 2. The Next Two Years of Software Engineering (Addy Osmani, Jan 5 2026)
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | here, coding assistants and agents built on large language models |
+| **LLM** | large language model | the text model behind those assistants; also the author's named deep area |
+| **GPU** | graphics processing unit | the accelerator behind the "GPU-systems intuition" referenced as a forming specialism |
+| **DB** | database | one of the breadth subjects listed in the plan |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Coding agent** | an AI system that executes whole development tasks in a loop, not just suggesting the next line |
+| **Autocomplete** | the earlier, weaker mode: predicting the rest of the line or block you are typing |
+| **Autonomous task execution** | the agent taking a goal and running the edit/test/fix cycle itself |
+| **Skill atrophy** | losing the ability to judge output because you have stopped producing it yourself |
+| **The hard 20%** | the residual work AI does not do well — architecture, edge cases, design judgement |
+| **Edge case** | an input or condition at the boundary of what the code handles, where bugs concentrate |
+| **Architecture** | the structure of a system: its components, boundaries and the decisions that are expensive to reverse |
+| **Verification** | establishing that output is actually correct — tests, review, reasoning — as distinct from producing it |
+| **Composer** | Osmani's term for the engineer who orchestrates agents and services rather than writing the keystrokes |
+| **Orchestration** | coordinating several agents or services toward one outcome |
+| **T-shaped** | one deep specialism (the vertical) plus broad working knowledge across many areas (the horizontal) |
+| **Deep spike** | the vertical of the T — the area where you go further than a generalist |
+| **Generalist / specialist** | broad across many areas versus deep in one; the article argues narrow-only is the most automatable |
+| **Vibe coding** | working mainly by prompting an AI and steering the result, rather than writing the code yourself |
+| **AI-fluent** | able to use AI tools well *and* judge what they produce |
+| **Domain knowledge** | understanding of the business or subject the software serves, which AI does not supply |
+| **Portfolio** | demonstrated end-to-end work, offered as evidence in place of a credential |
+| **Credential** | a degree or certificate; the article argues it now counts for less than shipped systems |
+| **Entry-level / junior work** | the routine implementation tasks most exposed to automation |
+| **Types** | static type annotations and checking, one of the named verification tools |
+| **Testing** | automated checks that the code does what it should — the other named verification tool |
+| **Frontend** | the user-facing part of a system, one of the breadth areas in the plan |
+
+</details>
 
 🔗 https://addyosmani.com/blog/next-two-years/
 

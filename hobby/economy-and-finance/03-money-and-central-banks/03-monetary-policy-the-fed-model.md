@@ -60,6 +60,57 @@ exchange rate to speed up or slow down a 25-trillion-dollar economy — and wher
 
 ## 1. What a central bank is for — mandate, independence, and the goals
 
+<details>
+<summary><b>Vocabulary for this section</b> — mandates, independence, and the institutions named here (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **Fed** | the Federal Reserve | the central bank of the United States |
+| **ECB** | European Central Bank | the euro area's central bank, with a single price-stability mandate |
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank, which targets the exchange rate instead (§4 of this module) |
+| **SVB** | Silicon Valley Bank | the 2023 US bank failure that re-activated the lender-of-last-resort role |
+| **BTFP** | Bank Term Funding Program | the emergency Fed lending facility opened after that failure |
+| **M0** | monetary base | tier-1 money — currency plus reserves, the thing a central bank monopolises |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Central bank** | the government's bank and the banks' bank: issuer of tier-1 money, monopoly supplier of reserves, manager of the currency |
+| **Tier-1 money** | central-bank money — cash and reserves — as opposed to tier-2 commercial-bank deposits |
+| **Reserves** | electronic central-bank money held by banks; **not** the same as deposits or currency |
+| **Monetary policy** | steering inflation and activity by setting the policy rate and, now, the balance sheet |
+| **Policy rate** | the short-term interest rate the central bank administers |
+| **Balance sheet** *(as a tool)* | the size and composition of the central bank's own assets, used as a second lever |
+| **Lender of last resort** | lending freely against good collateral in a panic, to stop a liquidity run from killing a solvent bank |
+| **Bagehot's rule** | the classic version of that: lend freely, against good collateral, at a penalty rate |
+| **Collateral** | assets pledged to secure such a loan |
+| **Liquidity run** | depositors or creditors demanding cash faster than assets can be turned into it |
+| **Solvent versus illiquid** | assets genuinely worth less than liabilities, versus merely unable to raise cash in time — the lender of last resort exists for the second case |
+| **Financial stability** | keeping the system as a whole functioning, as distinct from steering inflation |
+| **Supervision** | regulating individual banks' risk-taking and capital |
+| **Payment system** | the plumbing through which payments settle, run by the central bank |
+| **Systemic risk** | risk to the whole system rather than to one institution |
+| **Macroprudential tools** | system-wide safety rules — loan-to-value caps, capital buffers — a separate lever from the policy rate |
+| **Mandate** | what a central bank is legally told to optimise |
+| **Dual mandate** | the Fed's: maximum employment *and* stable prices, which can conflict under a supply shock |
+| **Single mandate** | the ECB's: price stability first, everything else subordinate |
+| **Price stability** | low, predictable inflation — conventionally about 2% |
+| **Maximum employment** | the highest employment consistent with stable prices |
+| **Supply shock** | a disturbance that pushes inflation up *and* output down at once, forcing a genuine trade-off |
+| **Central bank independence** | insulation from day-to-day political direction |
+| **Operational (instrument) independence** | freedom to choose the *means* — where to set the rate — while the legislature sets the *goal*; this is what "independent" actually means |
+| **Goal independence** | choosing the target itself, which would be undemocratic and is not what central banks have |
+| **Time inconsistency / inflation bias** | the Kydland–Prescott problem: a government able to print will always be tempted to goose the economy, so markets expect inflation unless the printer is insulated |
+| **Credibility** | whether markets believe the central bank will do what it says; the asset independence is meant to buy |
+| **Credibility paradox** | political pressure to *cut* can *raise* long yields, because markets price in the future inflation it implies |
+| **Long yields** | interest rates on long-dated government debt, set by markets rather than announced |
+
+</details>
+
 A central bank is the **government's bank and the banks' bank** — the issuer of tier-1 money (§1), the
 monopoly supplier of reserves, and the institution charged with managing the currency in the public
 interest. Its jobs, in rough order of how often they make the news:
@@ -102,6 +153,47 @@ returns to what happens when that assumption frays.
 ---
 
 ## 2. The one lever — how the Fed actually sets "the" interest rate
+
+<details>
+<summary><b>Vocabulary for this section</b> — the market for reserves, and the two regimes it can be in (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **IORB** | interest on reserve balances | the rate the Fed *pays* banks on their reserves; today's main policy lever and the floor under the overnight rate |
+| **OMO** | open-market operations | buying or selling Treasuries to change the *quantity* of reserves — the pre-2008 lever |
+| **ON RRP** | overnight reverse repurchase agreement | a companion facility paying a slightly lower rate to non-banks, forming a sub-floor |
+| **QE** | quantitative easing | large-scale asset purchases, which is how reserves went from scarce to abundant |
+| **QT** | quantitative tightening | the reverse — letting the balance sheet shrink and draining reserves |
+| **FOMC** | Federal Open Market Committee | the Fed body that votes on the policy rate |
+| **bp** | basis point | one hundredth of a percentage point; "50 bps" is half a point |
+| **M0** | monetary base | currency plus reserves — the quantity that is now decoupled from the policy rate |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Federal funds rate** | the overnight rate at which US banks lend reserves to each other — the one rate the Fed targets |
+| **Overnight rate** | a rate on lending repaid the next business day, the shortest point on the curve |
+| **Market for reserves** | the supply and demand for central-bank money among banks, which is where the policy rate is actually set |
+| **Reserve demand curve** | how much reserves banks want at each overnight rate: downward-sloping when reserves are scarce, flat once they are abundant |
+| **Scarce-reserves regime** | the pre-2008 world where banks genuinely needed reserves, so small quantity changes moved the rate |
+| **Ample-reserves regime** | today's world of trillions in reserves, where an extra reserve is worth nothing at the margin and the quantity lever stops working |
+| **Reserve requirement** | a regulatory minimum ratio of reserves to deposits; zero in the US since 2020 |
+| **Settlement** | the transfer of reserves that finalises payments between banks |
+| **Discount rate** *(the Fed's)* | what the Fed charges banks to borrow reserves directly — a ceiling on the overnight rate. ⚠ **Not** the §2 *discount rate* used to compute present value; same words, unrelated concept |
+| **Open-market operations** | buying or selling government bonds to shift the supply of reserves left or right |
+| **Treasuries** | US government bonds, the instrument used in those operations |
+| **Floor system** | the modern arrangement in which the rate the central bank pays on reserves sets a hard floor under the market rate — no bank lends for less than it can earn risk-free |
+| **Administered rate** | a rate the central bank simply announces, rather than one produced by adjusting quantities |
+| **Steering by price, not quantity** | the section's core claim: the central bank announces a price and lets the quantity of reserves be whatever it needs to be |
+| **Decoupled** | the property that the size of the balance sheet and the level of the policy rate are now independent tools — which is why QT and rate cuts can happen together |
+| **Basis point** | 0.01 of a percentage point |
+| **Short end of the yield curve** | the shortest maturities, which the overnight rate anchors directly; the rest of the curve reprices off expected *future* announcements |
+
+</details>
 
 Here is the piece almost every explainer skips, and it's the most satisfying: the Fed does **not** set
 mortgage rates, or corporate-bond yields, or even most of the yield curve. It sets **one** rate — the
@@ -149,6 +241,58 @@ quantity story says is impossible.
 ---
 
 ## 3. The reaction function — how they decide where to set it
+
+<details>
+<summary><b>Vocabulary for this section</b> — the Taylor rule and every symbol, star and gap in it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FOMC** | Federal Open Market Committee | the Fed's rate-setting body, which publishes the "dot plot" |
+| **Fed** | the Federal Reserve | the US central bank |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $i$ | "i" | the **nominal** policy rate the rule prescribes — the number actually announced |
+| $r^{\ast}$ | "r-star" | the **neutral real interest rate**: the real rate that neither stimulates nor restrains. The superscript star marks an equilibrium benchmark, not an observed market price |
+| $\pi$ | "pi" | current inflation. In macroeconomics $\pi$ always means inflation, never the circle constant |
+| $\pi^{\ast}$ | "pi-star" | the **inflation target**, conventionally 2%; again the star marks the desired value |
+| $\pi - \pi^{\ast}$ | "pi minus pi-star" | the **inflation gap** — how far inflation sits above (or below) target |
+| $y$ | "y" | actual output |
+| $y^{\ast}$ | "y-star" | **potential output** — what the economy can produce at full employment without accelerating inflation |
+| $y - y^{\ast}$ | "y minus y-star" | the **output gap**, the single state variable of the demand story; via Okun's law it is equivalent to an unemployment gap |
+| **0.5** *(the two coefficients)* | "nought point five" | the rule's response weights — move the rate half a point for each point of gap |
+| $r^{\ast} + \pi^{\ast}$ | "r-star plus pi-star" | the **neutral nominal rate**, what the rule prescribes when both gaps are zero |
+| $r = i - \pi$ | "r equals i minus pi" | the real rate, nominal minus inflation — the number that actually bites on spending |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reaction function** | a rule linking the state of the economy to the rate the central bank should set |
+| **Inflation targeting** | publicly committing to a numeric inflation goal and setting policy to hit it over the medium term |
+| **Nominal anchor** | the publicly known number that pins down what people expect prices to do |
+| **Expectations management** | the real point of announcing a target: if everyone believes it, wage- and price-setters build it in and the belief becomes self-fulfilling |
+| **Medium term** | the horizon over which the target must be met, which allows looking through temporary shocks |
+| **Expectations-augmented Phillips curve** | the relation in which inflation depends on expected inflation plus the state of demand — why a credible target stabilises inflation for free |
+| **Taylor rule** | John Taylor's 1993 benchmark reaction function, setting the rate from the inflation gap and the output gap |
+| **Neutral rate (r-star)** | the real rate consistent with output at potential and stable inflation |
+| **Potential output** | the economy's sustainable production level |
+| **Output gap** | actual output minus potential |
+| **Okun's law** | the empirical link between the output gap and the unemployment gap, which lets one stand in for the other |
+| **Taylor principle** | the crucial property that the inflation coefficient exceeds one: the nominal rate must rise *more* than one-for-one with inflation, or the **real** rate never rises and policy never actually tightens |
+| **Real versus nominal rate** | in purchasing-power terms versus in money terms; only a rising real rate restrains spending |
+| **Great Inflation** | the 1970s episode diagnosed as a Taylor-principle violation — rates rose, but not enough, so real rates stayed negative |
+| **Rules versus discretion** | predictable commitment versus the freedom to react to an unanticipated shock |
+| **Time inconsistency** | the trap discretion falls into: the policy that is optimal to promise is not the one it is tempting to deliver |
+| **Constrained discretion** | the modern compromise — commit to the goal, choose the path pragmatically |
+| **Forward guidance** | communicating the expected *future* path of rates, which moves long yields today because the curve is driven by expected future short rates |
+| **Dot plot** | the chart of individual FOMC members' projected rate paths, a formal channel for that communication |
+
+</details>
 
 Setting the rate is the easy part; choosing its *level* is the hard part. A central bank needs a
 **reaction function**: a rule linking the state of the economy to the rate it should set. You met the
@@ -204,6 +348,47 @@ projected rate paths), and press conferences — is now as much of the toolkit a
 ---
 
 ## 4. The transmission mechanism — from one overnight rate to the whole economy
+
+<details>
+<summary><b>Vocabulary for this section</b> — the five transmission channels and the lag vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **IORB** | interest on reserve balances | the administered rate that *is* the policy lever (§2) |
+| **NPV** | net present value | discounted future cash flows minus upfront cost; a higher discount rate pushes projects below the bar |
+| **FX** | foreign exchange | the currency market, where the fourth channel operates |
+| **E02 / E05** | internal cross-references | to earlier modules, not abbreviations to expand |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Transmission mechanism** | the set of routes by which one overnight interest rate changes inflation and employment across a whole economy |
+| **Interest-rate channel** | the workhorse: the policy rate anchors the short end, the curve reprices, mortgage and corporate borrowing costs rise, fewer projects clear the net-present-value bar, interest-sensitive spending falls |
+| **Discount rate** *(in valuation)* | the rate used to convert future cash into today's money; monetary policy moves every one of them in the economy |
+| **Interest-sensitive spending** | housing, business investment, cars — the spending most affected by borrowing costs |
+| **Credit / bank-lending channel** | a higher policy rate raises banks' cost of funding, so fewer loans clear the profitability bar and money creation itself slows |
+| **Cost of funding** | what a bank pays for the money it lends |
+| **Credit standards** | how strict banks are about who qualifies; tightening them amplifies the channel |
+| **Asset-price / wealth channel** | rates up, bond prices down, equity valuations down, housing cools |
+| **Wealth effect** | households that feel poorer spending less |
+| **Exchange-rate channel** | higher domestic rates attract foreign capital, the currency appreciates, imports get cheaper and exports less competitive |
+| **Appreciation** | a rise in the currency's value against others |
+| **Capital inflow** | foreign money moving in to chase the higher yield |
+| **Small open economy** | one where trade and capital flows dominate, so this channel is powerful enough to be targeted directly — Singapore's case |
+| **Expectations channel** | the route through beliefs: a credible target makes wage- and price-setters expect 2%, so inflation self-stabilises — which is why communication is a tool |
+| **Aggregate demand** | total spending in the economy, the thing all five channels converge on |
+| **Output gap** | actual output minus potential — the single state variable the channels move |
+| **Phillips curve** | the relation translating that gap into inflation |
+| **Long and variable lags** | Milton Friedman's phrase: a rate change hits activity in roughly half a year to a year and a half, and inflation later still |
+| **Impulse response** | the plotted path of the economy's reaction over time to a one-off policy change |
+| **Forecast-based policy** | the consequence of the lag — today's rate must be set for the economy of 12 to 18 months from now |
+| **Overshoot** | doing too much because you are steering on stale information; the source of policy-induced oscillations |
+| **"Behind the curve"** | the commentary phrase for a central bank that has not tightened or eased fast enough given where inflation is heading |
+
+</details>
 
 This is the heart of the section and the payoff of §1 + §2: how does moving *one overnight interest rate*
 change inflation and employment across a whole economy? Through **five channels**, all of which you already
@@ -277,6 +462,47 @@ single fact drives most policy mistakes and most of the "is the Fed behind the c
 
 ## 5. When the rate hits zero — the unconventional toolkit
 
+<details>
+<summary><b>Vocabulary for this section</b> — the zero lower bound and every unconventional tool (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ZLB / ELB** | zero lower bound / effective lower bound | the point below which cutting the nominal rate stops working, because holders can just switch to physical cash at 0% |
+| **QE** | quantitative easing | creating reserves to buy long-dated assets, to push down *long* yields when the short rate is already at zero |
+| **QT** | quantitative tightening | the reverse — letting bonds mature without replacement so the balance sheet shrinks |
+| **NIRP** | negative interest rate policy | charging banks to hold reserves, taking the policy rate slightly below zero |
+| **YCC** | yield curve control | promising to buy whatever it takes to pin a chosen *long* yield at a target |
+| **ECB** | European Central Bank | one of the central banks that went slightly negative |
+| **BoJ** | Bank of Japan | ran explicit yield curve control from 2016 to 2024 |
+| **M0 / M2** | monetary base / broad money | the two layers whose weak link QE demonstrated |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Zero lower bound (effective lower bound)** | the floor on nominal rates set by the option to hold physical cash at zero |
+| **Liquidity trap** | the state where more base money does not help because the price of money cannot fall further. ⚠ Distinct from a *thin market's* liquidity problem, which is about finding a buyer |
+| **Unconventional policy** | the toolkit reached for once the conventional short-rate lever is jammed |
+| **Quantitative easing** | large-scale purchases of long-dated government and mortgage bonds, paid for with newly created reserves |
+| **Long-dated assets** | bonds with many years to maturity, and therefore high duration |
+| **Portfolio-balance effect** | the first route QE works through: removing duration from the market forces holders into other assets and bids their prices up |
+| **Term-premium compression** | the resulting fall in the extra yield demanded for going long — the actual target of QE |
+| **Duration** | a bond's sensitivity to yield changes; "buying duration" is how QE removes interest-rate risk from private hands |
+| **Signalling** | the second route: a large purchase programme is read as a commitment to hold rates low |
+| **"QE is not printing money to spend"** | the section's punchline — QE ballooned the monetary base without runaway broad money or inflation, because banks never lend out reserves; it works on yields and expectations |
+| **Forward guidance** | promising to stay low for longer, which drags down the long rates that actually matter |
+| **Negative interest rates** | a policy rate set below zero; a little works, but it is constrained by the cash-hoarding floor and squeezes bank profitability |
+| **Cash hoarding** | the escape route that puts a floor under how negative rates can go |
+| **Yield curve control** | targeting a long *yield* rather than a *quantity* of purchases — the most aggressive form of "price, not quantity" |
+| **Quantitative tightening** | shrinking the balance sheet and draining reserves |
+| **Floor system** | the reason QT and rate cuts are compatible: with the rate administered, the balance sheet is a separate tool (§2b) |
+| **Balance sheet** | the central bank's holdings, the "unconventional tool" plotted against the funds rate in fig 3 |
+| **Effective federal funds rate** | the actual traded overnight rate, as opposed to the announced target |
+
+</details>
+
 The Taylor rule sometimes prescribes a *negative* rate (fig 2's shaded region): in a deep slump with
 inflation below target, the rule wants the policy rate below zero. But you can't cut nominal rates much
 below zero — depositors would just hold physical cash at 0% instead (the **zero lower bound / effective
@@ -319,6 +545,42 @@ after 2008 central banks built an **unconventional toolkit**.
 ---
 
 ## 6. Limits, side effects, and the live record
+
+<details>
+<summary><b>Vocabulary for this section</b> — where policy fails, and the vocabulary of the 2021–2026 record (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ZLB** | zero lower bound | the floor at which the conventional rate lever jams |
+| **QE / QT** | quantitative easing / quantitative tightening | expanding versus shrinking the central bank's balance sheet |
+| **SVB** | Silicon Valley Bank | the 2023 failure caused by long-duration bonds bought cheap and crushed by hikes |
+| **COVID** | the COVID-19 pandemic | the shock preceding the 2021 inflation surge |
+| **Fed** | the Federal Reserve | the US central bank |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Long and variable lags** | policy acts on a forecast of next year's economy, so overshoot is structural rather than incompetence |
+| **"Pushing on a string"** | cutting rates *enables* borrowing but cannot force it; in a slump, cheap money may simply sit there |
+| **Fiscal policy** | government taxing and spending — the active lever when monetary policy is tapped out at the lower bound |
+| **Reach for yield** | investors taking more risk to hit a return target when safe rates are low |
+| **Hiking cycle** | a run of successive rate increases, which detonates the risks accumulated in the easy years |
+| **Duration risk** | the loss on long-dated bonds when yields rise — the mechanism inside the SVB failure |
+| **Macroprudential toolkit** | system-wide safety rules, a separate lever precisely because inflation-fighting and financial stability can pull in opposite directions |
+| **Distributional effects** | low rates and asset purchases lift asset prices, benefiting asset owners — a standing criticism of an unelected institution |
+| **Fiscal dominance** | the point at which government debt is so large that high rates become budgetarily unbearable, and monetary independence quietly ends |
+| **Central bank independence** | operational freedom from political direction, the assumption every other section here rests on |
+| **"Transitory"** | the 2021 judgement that the inflation surge would pass without policy action — a forecast error under the lag risk |
+| **Look-through** | deliberately ignoring a shock expected to fade, rather than responding to it |
+| **Sticky inflation** | inflation that stays above target longer than forecast |
+| **Hawkish / dovish** | leaning toward tighter policy (more worried about inflation) versus looser policy (more worried about employment) |
+| **Funds rate** | the Fed's policy rate, lifted from near zero to over 5% in 18 months in the 2022–23 cycle |
+| **"Behind the curve"** | the charge that a central bank has reacted too late relative to where inflation is heading |
+
+</details>
 
 Monetary policy is powerful but blunt, and knowing *where it fails* is what separates reading the news from
 being fooled by it.
@@ -450,7 +712,7 @@ Reason first; check against a source where noted.
    floor to be. The single 2008 innovation is **interest on reserve balances (IORB)** — paying interest on
    reserves, which floors the overnight market by arbitrage since no bank lends below what it earns risk-free
    at the Fed (§2b, §10b).
-2. **No — it *loosened*.** The real rate was about $2.5 - 2 = 0.5\%$ before and about $4 - 5 = -1\%$ after,
+2. **No — it *loosened*.** The real rate was about $2.5 - 2 = 0.5$ percent before and about $4 - 5 = -1$ percent after,
    so despite a 150-basis-point nominal hike the rate that actually bites on spending **fell** by about 1.5
    percentage points (§3b). That is exactly why the **Taylor principle** demands a coefficient **greater than
    one** on inflation: only a nominal rate that rises *more* than one-for-one with inflation raises the real

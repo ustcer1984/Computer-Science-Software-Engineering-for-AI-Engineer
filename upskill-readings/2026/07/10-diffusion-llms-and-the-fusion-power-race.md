@@ -12,6 +12,56 @@
 
 ## 1. 🌀 The model that writes all at once: diffusion comes for language
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LLM** | large language model | |
+| **API** | application programming interface | calling a model over the network instead of running it yourself |
+| **GPT** | generative pre-trained transformer | OpenAI's model family; GPT-4o Mini is the speed-tuned model Mercury Coder Mini beat |
+| **JSON** | JavaScript object notation | a strict bracketed data format — exactly the kind of output diffusion's revision ability helps with |
+| **H100** | NVIDIA H100 | the data-centre GPU the throughput figures are quoted on |
+| **tok/s** | tokens per second | the generation-speed unit |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $N$ | "N" | the number of tokens in the output — which is also the number of sequential model runs an autoregressive model needs |
+| $t$ | "t" | the index of a token in the sequence; token $t$ is the one being generated now |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Autoregressive** | generating text one token at a time, left to right, each token conditioned on everything already written |
+| **Token** | the sub-word unit a model reads and emits |
+| **Causal (generation)** | each position can only see positions before it — the constraint autoregressive models are trained under |
+| **Latency** | how long until the answer is complete; floored by length when generation is serial |
+| **Throughput** | how many tokens per second come out overall |
+| **Noise** | the random or masked starting state a diffusion process begins from |
+| **Denoising** | iteratively refining that state toward a clean sample |
+| **Denoising step** | one refinement pass; a diffusion LLM uses a handful of them regardless of output length |
+| **Diffusion model** | a model trained to reverse a noising process, producing the whole output at once and sharpening it over a few steps |
+| **Masked tokens** | placeholder positions standing in for text not yet decided — text diffusion's version of noise |
+| **Parallel decoding** | updating many token positions in the same step rather than one per step |
+| **Coarse-to-fine** | early steps settle the rough shape, later steps fix the details |
+| **Block length** | the fixed-size output window a diffusion LLM commits to up front — a real limitation |
+| **Infilling** | generating text to fill a hole in the *middle* of a document, with both sides as context |
+| **Self-repair** | the model correcting tokens it already wrote, which a strictly causal model cannot do |
+| **Gemini Diffusion** | Google DeepMind's text-diffusion model, quoted at 1,479 tokens per second |
+| **Mercury** | Inception Labs' commercial diffusion LLM; **Mercury Coder Mini** is its code-completion variant |
+| **DiffusionGemma** | the open-weights text-diffusion model DeepMind released on 10 June 2026, built on Gemma 4 |
+| **Open weights** | model parameters published for download, so you can run the model on your own hardware |
+| **Copilot Arena** | a public leaderboard that ranks code-completion models by developer preference |
+| **Agent loop** | an application pattern that makes many sequential model calls, so per-call latency compounds |
+| **Paradigm** | here, the two rival generation schemes — autoregressive and diffusion — that may end up combined |
+
+</details>
+
 🔗 **Start here (both are accessible and short):** [Gemini Diffusion — Google DeepMind](https://deepmind.google/models/gemini-diffusion/) · [Introducing Mercury, the first commercial diffusion LLM — Inception Labs](https://www.inceptionlabs.ai/blog/introducing-mercury)
 🔗 **The "why now":** [DiffusionGemma (open-weights) — Google DeepMind](https://deepmind.google/models/gemma/diffusiongemma/) · [Inception's Mercury is 10× faster than the frontier — The New Stack](https://thenewstack.io/inception-labs-mercury-2-diffusion/)
 🔗 **Go deeper (the paper):** [Mercury: Ultra-Fast Language Models Based on Diffusion — arXiv 2506.17298](https://arxiv.org/abs/2506.17298)
@@ -65,6 +115,74 @@ flowchart TB
 ---
 
 ## 2. ⭐ Bottling a star with a ribbon of tape — and selling its power to a data center
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | the demand driver behind the power deals in this story |
+| **CFS** | Commonwealth Fusion Systems | the private company building SPARC and ARC |
+| **MIT** | Massachusetts Institute of Technology | CFS's research partner on the record-setting magnet |
+| **HTS** | high-temperature superconductor | the magnet material that made a compact tokamak plausible |
+| **REBCO** | rare-earth barium copper oxide | the specific HTS compound, manufactured as a thin tape |
+| **ITER** | the large international tokamak under construction in France | the stadium-sized machine built around lower-field magnets |
+| **NIF** | National Ignition Facility | the US laser facility that reached ignition in December 2022 |
+| **T** | tesla | the unit of magnetic field strength. **Collision:** in the triple product below, $T$ means temperature, not tesla |
+| **MW** | megawatt | a million watts of power |
+| **°C** | degrees Celsius | |
+| **m** | metre | |
+| **IPO** | initial public offering | a private company first selling shares to the public |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n$ | "n" | plasma density — how many particles per unit volume |
+| $T$ | "T" | plasma temperature. Not the unit tesla, which is also written T |
+| $\tau$ | "tau" | energy confinement time — how long the plasma holds its heat before it leaks away |
+| $n T \tau$ | "n T tau" | the **triple product**; all three must be high *at the same time* for net fusion |
+| $P$ | "P" | fusion power density — power produced per unit of plasma volume |
+| $B$ | "B" | the on-axis magnetic field strength, in tesla |
+| $P \propto B^{4}$ | "P is proportional to B to the fourth" | doubling the field gives sixteen times the power density in the same volume |
+| $Q$ | "Q" | fusion gain — fusion energy out divided by the heating energy put into the plasma |
+| $Q > 1$ | "Q greater than one" | net energy gain: the plasma produces more than it took to heat it |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fusion** | forcing light nuclei together so they merge into a heavier one and release energy — what powers stars |
+| **Deuterium** | hydrogen with one neutron; one half of the reactor fuel |
+| **Tritium** | hydrogen with two neutrons; the other half, and radioactive |
+| **Plasma** | gas heated until electrons are stripped from nuclei, so it is electrically charged and can be held by magnets |
+| **Tokamak** | the dominant reactor design: a donut-shaped chamber holding plasma in a magnetic field |
+| **Magnetic bottle (magnetic confinement)** | using magnetic fields to keep the plasma off the walls, since no material survives contact |
+| **Lawson criterion** | the condition for net fusion, expressed as a threshold on the triple product |
+| **Confinement time** | how long the plasma retains its energy — the hardest of the three factors to raise |
+| **Power density** | fusion power produced per unit volume; what the fourth-power law multiplies |
+| **On-axis field** | the magnetic field strength at the centre of the plasma ring, the number a tokamak is characterised by |
+| **Toroidal-field magnet** | one of the coils wrapped around the donut that produce the main confining field; SPARC has 18 |
+| **Major radius** | the distance from the centre of the donut hole to the centre of the plasma ring; SPARC's is 1.85 m |
+| **Superconductor** | a material that carries current with zero resistance below a critical temperature |
+| **Low-temperature superconductor** | the older magnet material, which capped tokamak fields near 5 T |
+| **REBCO tape** | the thin ribbon of high-temperature superconductor whose maturation, not any fusion physics result, reset the economics |
+| **Cryogenic cooling** | holding the magnets near −253 °C so they stay superconducting |
+| **SPARC** | CFS's compact demonstration tokamak in Devens, Massachusetts, targeting ~140 MW in 10-second bursts |
+| **First plasma** | the milestone of a new machine producing its first confined plasma at all |
+| **ARC** | CFS's planned first commercial plant near Richmond, Virginia, at about 400 MW |
+| **Digital twin** | a full simulation of the physical machine, used to test changes before touching the hardware |
+| **Power purchase agreement** | a contract to buy electricity from a plant, here signed years before the plant exists |
+| **Helion Energy** | a rival fusion company pursuing a different design, contracted to supply Microsoft 50 MW by 2028 |
+| **Field-reversed configuration** | Helion's pulsed confinement scheme, an alternative to the tokamak |
+| **Aneutronic fuel** | a fuel combination that releases most of its energy as charged particles rather than neutrons |
+| **Direct electricity conversion** | recovering power straight from the plasma's changing magnetic field instead of boiling water for a turbine |
+| **Inertial confinement** | the rival approach that crushes a fuel pellet with lasers, as at NIF |
+| **Ignition** | the point where the fusion burn releases more energy than was delivered to start it |
+
+</details>
 
 🔗 **Start here:** [SPARC — Commonwealth Fusion Systems](https://cfs.energy/technology/sparc/) · [SPARC (tokamak) — Wikipedia](https://en.wikipedia.org/wiki/SPARC_(tokamak))
 🔗 **The "why now":** [Google inks its first fusion power deal with Commonwealth Fusion Systems — TechCrunch](https://techcrunch.com/2025/06/30/google-inks-its-first-fusion-power-deal-with-commonwealth-fusion-systems/) · [Fusion power nearly ready for prime time — Fortune (Jan 2026)](https://fortune.com/2026/01/07/fusion-power-commonwealth-sparc-nuclear-fusion-pilot-ai-siemens-nvidia/)

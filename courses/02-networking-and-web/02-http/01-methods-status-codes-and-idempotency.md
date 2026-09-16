@@ -45,6 +45,50 @@ by nature.
 
 ## 1. Stateless, and a uniform interface
 
+<details>
+<summary><b>Vocabulary for this section</b> — the two design choices, and every header shown in the example messages (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the application protocol this chapter is about |
+| **URL** | uniform resource locator | the address that names a resource |
+| **API** | application programming interface | the machine-facing interface a service exposes |
+| **JSON** | JavaScript Object Notation | the usual text format for API bodies, seen here as `application/json` |
+| **REST** | Representational State Transfer | an architectural style layered on top of HTTP; not the same thing as "an HTTP API" |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stateless** | the protocol keeps no memory between requests; each request carries everything the server needs |
+| **Session** | a notion of an ongoing conversation — *not* an HTTP concept; it is reconstructed each request from a cookie or token |
+| **Cookie** | a small value the browser stores and sends back on later requests, commonly used to carry identity |
+| **Token** | a credential string (often in `Authorization`) that identifies the caller on every single request |
+| **Horizontally scalable** | able to grow by adding more identical servers, which statelessness is what makes possible |
+| **Load balancer** | the device that spreads requests across those servers; safe to do only because any server can take any request |
+| **Uniform interface** | the fixed, small set of methods that applies to every resource, so intermediaries can act generically |
+| **Resource** | the thing a URL names — the noun a method acts on |
+| **Method (verb)** | `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS` — what you want done to the resource |
+| **Representation** | the concrete bytes in the body that stand for the resource — JSON, HTML, an image |
+| **Request line** | the first line of a request: method, target and version |
+| **Status line** | the first line of a response: version, status code and reason phrase |
+| **Header** | one line of key/value metadata about the message |
+| **Body** | the optional payload after the blank line |
+| **Intermediary** | any box between client and server — proxy, cache, load balancer — that acts on the message without understanding your domain |
+| **`Host`** | the header naming which site the request is for |
+| **`Authorization`** | the header carrying the caller's credential, e.g. `Bearer <token>` |
+| **`Idempotency-Key`** | a client-generated key letting the server recognise a retry of the same operation (§3) |
+| **`Content-Type`** | the header declaring the media type of the body |
+| **`Content-Length`** | the header declaring the body's size in bytes |
+| **`Location`** | the response header giving the URL of the newly created (or redirected-to) resource |
+| **`ETag`** | a validator token identifying a specific version of a resource (Ch2 §2) |
+| **`201 Created`** | the status code meaning the request succeeded and created a new resource |
+| **Cache** | a store that keeps a response and serves it again instead of asking the server |
+
+</details>
+
 Two design choices shape everything below.
 
 **HTTP is stateless.** Each request carries everything the server needs to process it; the protocol keeps
@@ -87,6 +131,43 @@ is about.
 
 ## 2. The three properties that govern everything: safe · idempotent · cacheable
 
+<details>
+<summary><b>Vocabulary for this section</b> — the three properties, the methods in the table, and the infrastructure that keys off them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CORS** | Cross-Origin Resource Sharing | the browser rules for calling a different origin, whose preflight uses `OPTIONS` |
+| **HTTP** | HyperText Transfer Protocol | the protocol defining these properties |
+| **URL** | uniform resource locator | the address the method is applied to |
+| **N** | (a count) | "doing it N times" — an arbitrary number of repeats |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Safe** | the method has no intended side effect — it only reads. `GET`, `HEAD`, `OPTIONS` |
+| **Idempotent** | doing it many times has the same effect as doing it once. `GET`, `PUT`, `DELETE` |
+| **Cacheable** | the response may be stored and reused for a later equivalent request |
+| **Side effect** | any change to server state caused by handling the request |
+| **`GET`** | read a resource |
+| **`HEAD`** | read only the headers a `GET` would return, with no body |
+| **`OPTIONS`** | ask what may be done at this URL; also the CORS preflight |
+| **`PUT`** | create-or-replace the resource at a URL the client chose |
+| **`DELETE`** | remove a resource |
+| **`POST`** | create something, or process something, with the server deciding the URL |
+| **`PATCH`** | apply a partial change to a resource |
+| **Prefetch** | a browser fetching a link in advance, unprompted — legitimate only because `GET` is safe |
+| **Crawler** | a search-engine robot that follows links automatically, for the same reason |
+| **`404`** | the status code meaning the resource is not there |
+| **Revalidation** | asking the server whether a stored copy is still good, instead of refetching it (Ch2 §2) |
+| **`ETag`** | a validator token identifying a specific version of a resource |
+| **`Cache-Control`** | the header stating how long and by whom a response may be cached |
+| **State** | what the server holds after the request — the thing idempotency is a claim about, not the response |
+
+</details>
+
 Every method is defined by three yes/no properties. These are not trivia — each one licenses a *different*
 piece of infrastructure to do something on your behalf.
 
@@ -120,6 +201,43 @@ infrastructure keys off each.
 ---
 
 ## 3. Idempotency, deeply — the property that makes retries safe
+
+<details>
+<summary><b>Vocabulary for this section</b> — the ambiguous-timeout problem and the idempotency-key pattern (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **UUID** | universally unique identifier | a 128-bit random identifier, the usual form of an idempotency key |
+| **TTL** | time to live | how long the server keeps a recorded key before forgetting it |
+| **TCP** | Transmission Control Protocol | the transport whose connection can drop mid-request |
+| **2xx / 4xx / 5xx** | the 200-, 400- and 500-numbered status classes | success · client error · server error |
+| **IETF** | Internet Engineering Task Force | the body that standardises internet protocols, including HTTP |
+| **HTTP** | HyperText Transfer Protocol | the protocol in question |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Idempotent** | repeating the operation leaves the system in the same **state** as doing it once — a claim about state, not about the response |
+| **Ambiguous timeout** | the client got no answer, and cannot tell "never arrived" from "succeeded but the response was lost" |
+| **Retry** | sending the same request again after a failure |
+| **Blind retry** | retrying without knowing whether the first attempt took effect — dangerous for a non-idempotent operation |
+| **Backoff** | waiting longer before each successive retry |
+| **Jitter** | adding randomness to that wait so many clients do not retry in lockstep |
+| **Idempotency key** | a client-generated value, identical across retries of one logical operation, that the server dedupes on |
+| **Dedupe** | recognising a repeat by its key and returning the stored result instead of doing the work again |
+| **At-least-once delivery** | a delivery guarantee where a message may arrive more than once, never zero times |
+| **Effectively-once** | the observable result of at-least-once delivery plus an idempotent handler: the work happens once |
+| **Logical operation** | one business intent ("charge this customer once"), as opposed to one network request |
+| **Reconcile** | checking after the fact whether the operation actually took effect, when you cannot safely retry |
+| **`POST /charges`** | the canonical non-idempotent operation: each call creates a new charge |
+| **`404`** | "not there" — the answer a second `DELETE` may give, while still being idempotent in state |
+| **`5xx`** | a server-side error, generally transient and therefore retryable |
+| **State convergence** | designing so repeated attempts end at the same state, rather than trying to make responses identical |
+
+</details>
 
 This is the section's core, and it's your territory (retries, at-least-once delivery, effectively-once).
 HTTP gives it a precise home.
@@ -177,6 +295,44 @@ IETF (Internet Engineering Task Force) as a standard header). The key points wor
 
 ## 4. Choosing the method — the real design decisions
 
+<details>
+<summary><b>Vocabulary for this section</b> — the method trade-offs and the CORS preflight vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CORS** | Cross-Origin Resource Sharing | the browser rules governing requests to a different origin |
+| **URL** | uniform resource locator | the address naming the resource |
+| **API** | application programming interface | the service interface being designed |
+| **JSON** | JavaScript Object Notation | the body format; JSON-Patch is a standard way to express partial changes |
+| **L7** | layer 7 | a device that reads the application-layer message, i.e. the HTTP request itself |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`POST`** | "process this, or create something, and *you* choose the URL" — not idempotent |
+| **`PUT`** | "make the resource at *this* URL equal to this representation" — idempotent, client-chosen URL |
+| **`PATCH`** | apply a partial change; usually **not** idempotent, so it needs the same retry care as `POST` |
+| **`GET`** | read only — never use it for anything that changes state |
+| **`OPTIONS`** | ask what is allowed at this URL; the method the browser uses for a preflight |
+| **Replace vs partial update** | `PUT` overwrites the whole resource, so fields you omit are cleared; `PATCH` touches only what you send |
+| **JSON-Patch** | a format describing a change as a list of operations; an "append" operation makes it non-idempotent |
+| **Idempotency key** | a client-supplied value that makes a `POST` safe to retry (§3) |
+| **`201`** | "created" — the success code for a `POST` that minted a new resource |
+| **`Location`** | the response header giving the URL of that new resource |
+| **Origin** | the scheme, host and port of a page; two URLs differing in any of the three are different origins |
+| **Cross-origin request** | a request from a page on one origin to a different origin |
+| **Preflight** | the automatic `OPTIONS` request a browser sends first, asking whether the real request is permitted |
+| **Simple request** | a cross-origin request plain enough that the browser sends it without a preflight |
+| **`Access-Control-Allow-*`** | the response headers by which a server states which origins, methods and headers it permits |
+| **`curl`** | a command-line HTTP client; it is not a browser, so no CORS rules apply to it |
+| **Crawler** | an automated link-follower — the reason a state-changing `GET` is a disaster (§2) |
+
+</details>
+
 The verbs encode intent; picking the right one is an API-design call with real consequences.
 
 - **`POST` vs `PUT`.** `POST` = "process this / create something, *you* decide the URL" — **not**
@@ -200,6 +356,53 @@ The verbs encode intent; picking the right one is an API-design call with real c
 ---
 
 ## 5. Status codes — a semantic protocol clients act on
+
+<details>
+<summary><b>Vocabulary for this section</b> — every status class and every individual code named below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **1xx / 2xx / 3xx / 4xx / 5xx** | the five status classes | informational · success · redirect · client error · server error |
+| **HTTP** | HyperText Transfer Protocol | the protocol defining the codes |
+| **API** | application programming interface | the service whose responses these are |
+| **JSON** | JavaScript Object Notation | the body format in the "`200` with an error inside" anti-pattern |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Status code** | a three-digit machine-readable verdict that clients, caches, proxies and monitoring all branch on |
+| **`100 Continue`** | an interim answer telling a client it may go ahead and send the body |
+| **`101 Switching Protocols`** | the response that hands the connection over to another protocol, e.g. WebSocket |
+| **`200 OK`** | success, with a body |
+| **`201 Created`** | success, and a new resource now exists — normally with a `Location` header |
+| **`204 No Content`** | success, and there is deliberately nothing to return |
+| **`301` / `308`** | permanent redirect — `308` additionally preserves the method and body |
+| **`302` / `307`** | temporary redirect — `307` additionally preserves the method and body |
+| **`400 Bad Request`** | the request is malformed |
+| **`401 Unauthorized`** | *unauthenticated* — the server does not know who you are; log in |
+| **`403 Forbidden`** | *unauthorized* — it knows who you are and you may not do this |
+| **`404 Not Found`** | there is no such resource |
+| **`408 Request Timeout`** | the server gave up waiting for the request; may be worth retrying |
+| **`409 Conflict`** | the request clashes with the resource's current state — an edit collision, or a duplicate idempotency key still in flight |
+| **`422 Unprocessable Content`** | well-formed but semantically invalid — a validation failure |
+| **`429 Too Many Requests`** | rate-limited; retry later, guided by `Retry-After` |
+| **`500 Internal Server Error`** | the server failed in an unspecified way |
+| **`502 Bad Gateway`** | a proxy got an invalid answer from the server behind it |
+| **`503 Service Unavailable`** | the server is temporarily unable to handle the request |
+| **`504 Gateway Timeout`** | a proxy waited for the server behind it and gave up |
+| **`Location`** | the header a redirect (or a `201`) uses to name the URL to go to |
+| **`Retry-After`** | the header saying how long to wait before trying again, in seconds or as a date |
+| **Method mangling** | old clients turning a redirected `POST` into a `GET`, discarding the body — what `307`/`308` were created to stop |
+| **Exponential backoff** | doubling the wait between successive retries |
+| **Jitter** | randomising that wait so clients do not retry in lockstep |
+| **Transient** | a failure likely to go away on its own, so retrying makes sense |
+| **Health check** | an automated probe that decides whether a server is fit to receive traffic — it reads the status code |
+| **Idempotency key** | a client-supplied value that makes a repeat safe (§3) |
+
+</details>
 
 The status code is not decoration; it's a **machine-readable verdict** that clients, proxies, caches, and
 your monitoring all branch on. Five classes, each with a default meaning:
@@ -251,6 +454,50 @@ The distinctions that actually bite in API work:
 
 ## 6. Headers — the extensible metadata channel
 
+<details>
+<summary><b>Vocabulary for this section</b> — every header in the category table, and the ideas behind them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the protocol whose headers these are |
+| **IP** | Internet Protocol | the network address many sites can share thanks to `Host` |
+| **IPv4** | Internet Protocol version 4 | the 32-bit address format whose scarcity makes sharing necessary |
+| **L7** | layer 7 | a device that reads the HTTP message itself, e.g. to route on `Host` |
+| **`br`** | Brotli | a compression algorithm, alongside `gzip` |
+| **ID** | identifier | as in `X-Request-Id` |
+| **URL** | uniform resource locator | the address of the resource |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Header** | a key/value line of metadata about the message — the open-ended half of HTTP's vocabulary |
+| **`Content-Type`** | what the body *is*, as a media type such as `application/json` |
+| **`Content-Length`** | the body's size in bytes |
+| **`Content-Encoding`** | how the body was compressed, e.g. `gzip` or `br` |
+| **`Accept`** | what media types the client is willing to receive |
+| **`Accept-Language`** | what human languages the client prefers |
+| **`Accept-Encoding`** | what compressions the client can decode |
+| **Content negotiation** | the client stating preferences and the server picking a representation (Ch2 §3) |
+| **`Cache-Control`** | how long and by whom the response may be cached |
+| **`ETag`** | a validator token identifying a specific version of a resource |
+| **`If-None-Match`** | the request header carrying an `ETag` back, asking "has it changed?" |
+| **`Last-Modified`** | the timestamp validator — when the resource last changed |
+| **Revalidation** | checking with the server whether a stored copy is still usable |
+| **`Authorization`** | who is asking, e.g. `Bearer <token>` |
+| **`Bearer` token** | a credential where merely holding the string is the proof — so it must be kept secret |
+| **`Cookie`** | client-stored state sent back on each request; the other way a stateless protocol carries identity |
+| **`Host`** | which site on a shared IP this request is for — what makes name-based virtual hosting and L7 routing work |
+| **Virtual host** | one of many sites served from a single IP address, distinguished by `Host` |
+| **`Idempotency-Key`** | the dedupe key from §3 |
+| **`X-Request-Id`** | a per-request identifier used to correlate log lines across services |
+| **`traceparent`** | the standard header carrying distributed-tracing context from one service to the next |
+| **Distributed tracing** | stitching one request's path across many services into a single timeline |
+
+</details>
+
 If methods and status codes are the fixed vocabulary, **headers are the open-ended one** — key/value
 metadata that carries everything the message *is not* (the body) but the infrastructure needs to *know*.
 The categories worth having a map of:
@@ -272,6 +519,40 @@ message, every time, by design.
 ---
 
 ## 7. Failure modes — the decision checklist
+
+<details>
+<summary><b>Vocabulary for this section</b> — the terms behind each failure mode in the checklist (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **4xx / 5xx** | the 400- and 500-numbered status classes | client error · server error |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Safe method** | one with no intended side effect — `GET`, `HEAD`, `OPTIONS`; never mutate on one |
+| **Crawler / prefetcher** | automated agents that issue `GET`s unprompted, and so will trigger anything hidden behind one |
+| **Blind retry** | resending without knowing whether the first attempt took effect |
+| **Idempotency key** | a client-supplied value that makes a `POST` retry-safe (§3) |
+| **Double write** | the same effect applied twice because a retry was not deduped — e.g. a double charge |
+| **`200` with an error body** | returning success while the payload says failure; it lies to caches, retries, health checks and dashboards |
+| **Health check** | an automated probe that reads the status code to decide if a server is healthy |
+| **`301` / `302`** | permanent and temporary redirects that historically flip a `POST` into a `GET` |
+| **`307` / `308`** | the redirects that preserve the method and the body |
+| **`PUT` vs `PATCH`** | full replacement (omitted fields cleared — data loss) versus partial update |
+| **Backoff** | waiting progressively longer between retries |
+| **`429`** | rate-limited — retry later, per `Retry-After` |
+| **`503`** | service temporarily unavailable — may also carry `Retry-After` |
+| **`Retry-After`** | the header stating how long to wait before retrying |
+| **`401` (unauthenticated)** | the server does not know who you are — the client should log in |
+| **`403` (unauthorized)** | the server knows who you are and refuses — re-authenticating will not help |
+| **Deterministically wrong** | a request that will fail identically every time, so retrying it only adds load |
+
+</details>
 
 The section as a set of real-world calls, most of which you'll recognize the moment they're named:
 

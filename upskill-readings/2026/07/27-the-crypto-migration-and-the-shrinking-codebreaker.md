@@ -12,6 +12,93 @@
 
 ## 1. 🔐 The great cryptographic migration
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PQC** | post-quantum cryptography | classical algorithms designed to resist attack by a large quantum computer |
+| **NIST** | National Institute of Standards and Technology | the US body that runs the standardisation competition and publishes the winners |
+| **FIPS** | Federal Information Processing Standard | the US standards series the finalised algorithms are published under |
+| **ML-KEM** | Module-Lattice Key Encapsulation Mechanism | FIPS 203, the standardised key-agreement algorithm, formerly called Kyber |
+| **ML-DSA** | Module-Lattice Digital Signature Algorithm | FIPS 204, the standardised signature algorithm, formerly Dilithium |
+| **SLH-DSA** | Stateless Hash-Based Digital Signature Algorithm | FIPS 205, formerly SPHINCS+; slow and large but resting only on hash security |
+| **HQC** | Hamming Quasi-Cyclic | the code-based backup key-encapsulation algorithm added in March 2025 |
+| **FN-DSA** | FFT over NTRU-Lattice Digital Signature Algorithm | formerly Falcon; smaller signatures but needs delicate floating-point arithmetic |
+| **KEM** | key encapsulation mechanism | the modern formulation of key agreement — one side sends a ciphertext, both end up with a shared secret |
+| **RSA** | Rivest–Shamir–Adleman | the classical public-key algorithm based on factoring |
+| **ECC** | elliptic-curve cryptography | the other classical public-key family; P-256 and X25519 are curves in it |
+| **AES** | Advanced Encryption Standard | the dominant symmetric cipher; not broken by quantum computers |
+| **SHA** | Secure Hash Algorithm | the standard hash family; SHA-256 survives, SHA-1 is the cautionary migration tale |
+| **TLS** | Transport Layer Security | the protocol behind HTTPS, and the place this migration actually happens |
+| **TCP** | Transmission Control Protocol | the transport whose initial congestion window limits how big a handshake can be |
+| **PKI** | public-key infrastructure | the whole system of certificates, authorities and trust roots |
+| **CA** | certificate authority | the organisation that signs certificates vouching for a site's identity |
+| **CT** | Certificate Transparency | the public append-only logs that record every certificate issued |
+| **MTC** | Merkle Tree Certificate | the 2026 scheme that replaces per-certificate signatures with one signature over a batch |
+| **IETF** | Internet Engineering Task Force | the standards body where the MTC work is being done, in its PLANTS working group |
+| **EO** | Executive Order | a US presidential directive; EO 14412 sets the federal migration deadlines |
+| **NSA** | National Security Agency | publisher of CNSA 2.0, the requirements for US national-security systems |
+| **CNSA** | Commercial National Security Algorithm suite | that requirement set |
+| **CBOM** | cryptographic bill of materials | an inventory of which algorithms and libraries a system actually depends on |
+| **SBOM** | software bill of materials | the same idea for software dependencies generally |
+| **SDK** | software development kit | a vendor-supplied library bundle, a common place for crypto to hide |
+| **HSM** | hardware security module | dedicated hardware that stores keys — often old, and hard to upgrade |
+| **IR** | Internal Report | NIST's report series; IR 8547 sets the deprecation dates |
+| **kB / bytes** | kilobyte | a thousand bytes; the unit the whole signature problem is argued in |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $x$ | "x" | how many years your migration will take |
+| $y$ | "y" | how many years your data must remain secret |
+| $z$ | "z" | how many years until a cryptographically relevant quantum computer exists — the one you cannot know |
+| $x + y > z$ | "x plus y is greater than z" | Mosca's inequality: if it holds, some of your data is already lost |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Public-key cryptography** | schemes where the key that locks is not the key that unlocks; the half that quantum computers threaten |
+| **Symmetric encryption** | schemes where both sides share one key; only mildly weakened, and fixed by doubling key length |
+| **Key agreement** | deriving a shared secret over a public channel — what provides confidentiality |
+| **Signature** | a proof that a message came from the holder of a private key — what provides authenticity |
+| **Certificate chain** | the sequence of signed certificates linking a website to a trusted root |
+| **Handshake** | the opening exchange of a TLS connection, where key agreement and authentication happen |
+| **ClientHello** | the first message a client sends in that handshake; it is what grows past what old middleboxes expect |
+| **Shor's algorithm** | the quantum algorithm that breaks both factoring and discrete logarithms, and so both RSA and elliptic curves |
+| **Grover's algorithm** | the quantum search algorithm; only a square-root speedup, which symmetric crypto absorbs |
+| **Hidden-period problem** | the common mathematical structure in RSA and ECC that Shor's algorithm exploits |
+| **Harvest now, decrypt later** | recording encrypted traffic today to decrypt once a quantum computer exists |
+| **Mosca's inequality** | the risk model above, which says the deadline depends on your data's shelf life, not only on the machine |
+| **Cryptographically relevant quantum computer** | one actually large and reliable enough to run Shor's algorithm against deployed key sizes |
+| **Lattice-based** | hardness resting on problems in high-dimensional lattices; the basis of ML-KEM and ML-DSA |
+| **Code-based** | hardness resting on error-correcting-code problems; HQC's basis, deliberately different from lattices |
+| **Hash-based** | hardness resting only on hash functions; SLH-DSA's basis, the most conservative option |
+| **SIKE** | a NIST candidate broken in 2022 on one ordinary CPU core in about an hour, using a 1997 theorem |
+| **Rainbow** | a signature finalist that also died in 2022 |
+| **Security level 1** | NIST's weakest target category, roughly comparable to breaking AES-128 |
+| **Hybrid** | running a classical and a post-quantum algorithm together so an attacker must break both |
+| **X25519** | the widely deployed classical elliptic-curve key agreement |
+| **X25519MLKEM768** | the hybrid of that with ML-KEM-768, now the browser default |
+| **Congestion window** | how much data TCP will send before waiting for an acknowledgement; overflowing it costs a round trip |
+| **Middlebox** | a firewall or proxy that inspects traffic and may break on messages larger than it was written to expect |
+| **Side channel** | leaking secret information through timing or power rather than through the maths — the risk with floating-point signature code |
+| **SNOVA / MAYO** | newer signature schemes with smaller sizes but too little cryptanalysis behind them to trust yet |
+| **Merkle tree** | a tree of hashes in which one root value commits to every leaf |
+| **Inclusion proof** | the short list of hashes showing a given leaf is in a tree with a known root |
+| **Landmark** | a signed Merkle root that browsers fetch and cache ahead of time, so servers need not send a signature |
+| **Root programme** | a browser or operating-system vendor's policy governing which CAs are trusted |
+| **Non-resumed connection** | a fresh handshake with no cached session to shortcut it — the expensive case |
+| **Let's Encrypt** | the free certificate authority securing over 500 million sites, driving the MTC proposal |
+| **Cryptographic agility** | being able to swap a cryptographic primitive quickly — the real deliverable of this whole exercise |
+| **Deprecate / disallow** | NIST's two stages: discouraged from 2030, forbidden from 2035 |
+
+</details>
+
 🔗 **Start here:** [State of the post-quantum Internet in 2025 — Cloudflare](https://blog.cloudflare.com/pq-2025/) · [NIST releases the first three finalized post-quantum encryption standards (Aug 2024)](https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards)
 🔗 **The "why now":** [Executive Order 14412 — Securing the Nation Against Advanced Cryptographic Attacks (22 June 2026)](https://www.whitehouse.gov/presidential-actions/2026/06/securing-the-nation-against-advanced-cryptographic-attacks/) · [Cloudflare on the EO: "it's time to get to work"](https://blog.cloudflare.com/post-quantum-eo-2026/) · [A post-quantum future for Let's Encrypt (3 June 2026)](https://letsencrypt.org/2026/06/03/pq-certs)
 🔗 **Go deeper:** [Why we cannot wait for better post-quantum signature algorithms — Cloudflare](https://blog.cloudflare.com/ml-dsa-will-have-to-do/) · [NIST IR 8547 — transition to post-quantum standards](https://csrc.nist.gov/pubs/ir/8547/ipd)
@@ -98,6 +185,84 @@ flowchart LR
 ---
 
 ## 2. ⚛️ The codebreaker that keeps shrinking
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RSA** | Rivest–Shamir–Adleman | the classical public-key algorithm whose 2048-bit form is the benchmark target here |
+| **ECDLP** | elliptic-curve discrete logarithm problem | the hard problem underlying elliptic-curve cryptography, and the target of Google's 2026 circuits |
+| **P-256** | NIST curve P-256 | the standard elliptic curve used across the web |
+| **`secp256k1`** | the elliptic curve used by Bitcoin | the specific target of the March 2026 ECDLP whitepaper |
+| **qLDPC** | quantum low-density parity-check (code) | a family of error-correcting codes roughly ten times cheaper than the surface code, at the cost of needing long-range links |
+| **FFT** | fast Fourier transform | used only as the analogy for an algorithmic win over brute force |
+| **IBM** | International Business Machines | publisher of the hardware roadmap quoted at the end |
+| **TB** | terabyte | the scale of measurement data a real-time decoder would have to consume |
+| **CEO** | chief executive officer | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\Lambda$ | "lambda" | the error-suppression factor: how much the logical error rate drops for each step of two in code distance |
+| $\Lambda = 2.14 \pm 0.02$ | "lambda equals 2.14 plus or minus 0.02" | Google's measured value — errors roughly halve each time the code grows, which is what "below threshold" means |
+| $\pm$ | "plus or minus" | the experimental uncertainty on the measured value |
+| $T$ | "T gate" | the cheap-to-name, expensive-to-run non-Clifford gate that requires an imported magic state |
+| $O(n^{2})$ | "big-O of n squared" | cost growing with the square of the input size — the slow algorithm in the FFT analogy |
+| $\log_{2}$ | "log base two" | how many doublings (or halvings) a ratio represents |
+| $\approx$ | "is approximately" | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Qubit** | the quantum bit — the basic unit of a quantum computer, able to be in a superposition of 0 and 1 |
+| **Physical qubit** | one actual noisy device: an atom, or a superconducting circuit |
+| **Logical qubit** | one reliable qubit synthesised out of many physical ones by an error-correcting code |
+| **Superposition** | the quantum state that is a combination of both basis values; destroyed by uncontrolled interaction with the environment |
+| **Coherence time** | how long a qubit holds its state before that happens — 12.6 seconds in the Caltech array |
+| **Quantum error correction** | spreading one logical qubit over many physical ones so errors can be detected and undone without measuring the data |
+| **Surface code** | the default code: a two-dimensional grid needing only nearest-neighbour links, but costing around 1,000 physical qubits per logical one |
+| **Code distance** | the size parameter of the code; larger distance tolerates more errors |
+| **Threshold** | the physical error rate below which making the code bigger makes the machine better rather than worse |
+| **Below threshold** | the regime Google's Willow chip demonstrated in December 2024 — the result that turned scaling into an engineering problem |
+| **Decoder** | the classical computation that reads error syndromes and works out what correction to apply |
+| **Decoding latency** | how fast that must happen; it has to keep up with the machine in real time, and qLDPC makes it harder |
+| **Mid-circuit measurement** | measuring some qubits partway through a computation without disturbing the rest — a required capability, not yet shown at this scale |
+| **Two-qubit gate** | the entangling operation, and the hardest one to make accurate at scale |
+| **Fault tolerance** | running a computation correctly even though every component is faulty |
+| **Register** | hardware that merely holds and moves qubits, as distinct from one that computes on them — the distinction the headline chart blurs |
+| **Clifford gate** | the class of quantum gates that error-corrected hardware performs almost for free |
+| **Non-Clifford gate** | the gates outside that class, needed for real computation, and expensive |
+| **Magic state** | a specially prepared quantum state consumed to perform a non-Clifford gate |
+| **Magic state distillation** | the traditional way to make them: a large on-chip "factory" that used to dominate the machine's footprint |
+| **Magic state cultivation** | the 2024 method that grows the state in place far more cheaply — a large part of the recent savings |
+| **Toffoli gate** | the three-qubit controlled-controlled-NOT gate; the unit in which Shor's arithmetic cost is priced |
+| **Modular exponentiation** | the arithmetic that dominates Shor's algorithm's cost |
+| **Approximate residue arithmetic** | the 2024 trick that gets the right answer without computing that exponentiation exactly |
+| **Windowed arithmetic** | an earlier optimisation that precomputes lookup tables to cut gate count |
+| **Yoked surface codes** | a layout that shares error-correction overhead across several logical qubits |
+| **Neutral-atom processor** | a machine whose qubits are individual uncharged atoms held by light rather than etched into a chip |
+| **Optical tweezers** | tightly focused laser beams that trap a single atom — and can be moved, carrying the atom with them |
+| **Tweezer array** | a grid of such traps; the Caltech device holds over 6,100 atoms in about 12,000 sites |
+| **Hyperfine qubit** | a qubit encoded in an atom's nuclear-spin-related energy levels, prized for long coherence |
+| **Atom transport** | physically moving a trapped atom across the array while preserving its quantum state |
+| **Long-range connectivity** | the ability to entangle distant qubits, which qLDPC codes need and fixed chips cannot provide |
+| **Nearest-neighbour connectivity** | each qubit talking only to its immediate neighbours, which is all the surface code requires |
+| **Willow** | Google's 2024 superconducting chip that demonstrated below-threshold error correction |
+| **c-coupler** | IBM's on-chip long-range connector, validated by the Loon device, needed for qLDPC on superconducting hardware |
+| **Verified quantum advantage** | a quantum result that beats classical computation *and* can be checked |
+| **Q-Day** | the day a quantum computer can break deployed public-key cryptography |
+| **Resource estimate** | a costed projection of the qubits and runtime a given attack would need — the thing that keeps shrinking |
+| **Zero-knowledge proof** | a proof that a claim is true which reveals nothing else — used by Google to substantiate its circuit costs without publishing the attack |
+| **Block interval** | Bitcoin's roughly ten-minute gap between blocks, the window an attack would have to finish inside |
+| **Moore's law** | the historical doubling of transistor count about every 24 months, used here only as a pace comparison |
+| **Series A** | the first large venture-capital funding round; Oratomic's was 300 million dollars |
+
+</details>
 
 🔗 **Start here:** [New findings shorten the road to cryptographically relevant quantum computers — *Physics World*](https://physicsworld.com/a/new-findings-shorten-the-road-to-cryptographically-relevant-quantum-computers/) · [Caltech: useful quantum computers could be built with as few as 10,000 qubits](https://www.caltech.edu/about/news/caltech-team-finds-useful-quantum-computers-could-be-built-with-as-few-as-10000-qubits)
 🔗 **The "why now":** [*Shor's algorithm is possible with as few as 10,000 reconfigurable atomic qubits* — Cain et al., arXiv (30 Mar 2026)](https://arxiv.org/abs/2603.28627) · [Q-Day just got closer: three papers in three months — *The Quantum Insider*](https://thequantuminsider.com/2026/03/31/q-day-just-got-closer-three-papers-in-three-months-are-rewriting-the-quantum-threat-timeline/)

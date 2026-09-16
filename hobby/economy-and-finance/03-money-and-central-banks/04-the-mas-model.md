@@ -52,6 +52,39 @@ the two side by side (§5) and the logic of *both* snaps into focus in a way nei
 
 ## 1. Why an exchange rate, not an interest rate?
 
+<details>
+<summary><b>Vocabulary for this section</b> — openness, imported inflation and the terms behind the choice of lever (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank |
+| **GDP** | gross domestic product | the total value of what an economy produces in a year |
+| **SGD** | Singapore dollar | Singapore's currency |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Open economy** | one where trade with the rest of the world is large relative to its own output |
+| **Trade openness** | exports plus imports as a share of GDP; Singapore's runs at roughly three times its GDP |
+| **Exports / imports** | goods and services sold abroad versus bought from abroad |
+| **Re-export** | goods imported and then shipped out again, which inflates trade volumes further |
+| **Exchange rate** | the price of one currency in terms of another — here, what a Singapore dollar buys abroad |
+| **Appreciation / depreciation** | a currency becoming stronger versus weaker against others |
+| **Imported inflation** | a rise in the domestic price level driven by the local-currency price of imports rather than by domestic demand |
+| **Price level** | the average price of the consumption basket; what monetary policy ultimately steers |
+| **Domestic demand** | spending by households and firms at home — the thing an interest rate acts on |
+| **Wages** | the other main domestic inflation driver in a large economy |
+| **Transmission** | the route by which a policy lever reaches inflation |
+| **Pass-through** | how much, and how fast, an exchange-rate move shows up in consumer prices |
+| **Exchange-rate-centred monetary policy** | aiming the policy instrument at the currency rather than at an interest rate; MAS has run this since 1981 |
+| **Interest rate (as a lever)** | the standard instrument, which works through domestic demand — weak and roundabout where most consumption is imported |
+
+</details>
+
 Start with the fact that decides everything: **Singapore is one of the most open economies on earth.** Its
 total trade (exports plus imports) runs to **roughly three times its GDP (Gross Domestic Product)** — it imports its food, its
 energy, its water, its raw materials, and most of what it consumes, and re-exports an enormous volume on top.
@@ -78,6 +111,49 @@ since 1981, essentially alone among major central banks.
 ---
 
 ## 2. The impossible trinity — why MAS *can't* also keep an independent rate
+
+<details>
+<summary><b>Vocabulary for this section</b> — the trilemma, the parity condition and every symbol in it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MAS** | Monetary Authority of Singapore | |
+| **Fed** | the Federal Reserve | the US central bank, whose model §3 of this module described |
+| **SGD / USD** | Singapore dollar / US dollar | |
+| **US** | United States | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $i_{\text{SGD}}$ | "i sub S-G-D" | the nominal interest rate on Singapore dollars; $i$ is the standard symbol for a **nominal** rate |
+| $i_{\text{USD}}$ | "i sub U-S-D" | the nominal interest rate on US dollars — the world rate, in practice |
+| $\approx$ | "is approximately equal to" | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Impossible trinity (trilemma)** | the result that a country can have at most two of: a managed exchange rate, free capital movement, and an independent interest rate |
+| **Mundell–Fleming model** | the open-economy framework the trilemma comes from |
+| **Managed / stable exchange rate** | keeping the currency's value inside a chosen range instead of letting markets set it freely |
+| **Free capital mobility** | money being able to enter and leave the country without restriction |
+| **Capital controls** | restrictions on those flows — the corner China historically gave up instead |
+| **Independent monetary policy** | the ability to set your own interest rate irrespective of world rates |
+| **Floating exchange rate** | letting the market set the currency's value; the corner the US and the euro area give up |
+| **Hard peg** | fixing the currency at a stated rate, as Hong Kong does against the US dollar |
+| **World rate** | the interest rate prevailing in global markets, in practice dominated by US rates |
+| **Imported interest rate** | the consequence for Singapore: local rates track world rates rather than being chosen by MAS |
+| **Capital inflow** | foreign money arriving to chase a higher return, which pushes the currency up and breaks an exchange-rate target |
+| **Covered interest parity** | the arbitrage relation that ties the local rate to the world rate adjusted for the expected currency move |
+| **Expected appreciation** | the currency move markets anticipate, which is what the local rate is adjusted by |
+| **Financial hub** | an economy whose business *is* cross-border finance, making free capital movement non-negotiable |
+| **Eurodollar** | a US-dollar deposit held outside the US, part of the offshore market that makes capital so mobile |
+| **Interest-rate autonomy** | the thing Singapore deliberately spends, in order to keep its one lever pointed at the exchange rate |
+
+</details>
 
 There's a deeper reason MAS doesn't set an interest rate: **it isn't allowed to by the laws of open-economy
 macro.** This is the **impossible trinity** (or **trilemma**, from the Mundell–Fleming model), one of the
@@ -119,6 +195,43 @@ inflation, and lets rates be imported.
 
 ## 3. The mechanism — the BBC band: Basket, Band, Crawl
 
+<details>
+<summary><b>Vocabulary for this section</b> — the Basket-Band-Crawl framework and its three levers (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **BBC** | Basket, Band, Crawl | the nickname for the MAS framework |
+| **NEER** | nominal effective exchange rate | a currency's value against a trade-weighted basket of others, rather than against one currency |
+| **SGD NEER** | the Singapore-dollar NEER | MAS's actual target; written **S\$NEER** in MAS's own statements |
+| **MPS** | Monetary Policy Statement | the twice-yearly announcement (April and October) of the band's settings |
+| **MAS** | Monetary Authority of Singapore | |
+| **SGD / US** | Singapore dollar / United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Managed float** | letting the market move the currency, but only inside limits the central bank enforces — between a hard peg and a free float |
+| **Hard peg** | a fixed rate against one currency, Hong Kong's choice |
+| **Free float** | no target at all, the US choice |
+| **Basket** | the set of trading partners' currencies the target is measured against; the exact weights are kept secret to make the band harder to speculate against |
+| **Trade-weighted** | each currency counted in proportion to how much Singapore trades with that country |
+| **Nominal effective exchange rate** | the resulting index of the currency's overall strength — *nominal* because it is not adjusted for inflation |
+| **Policy band** | the range around a central midpoint inside which the index is allowed to move freely |
+| **Midpoint (centre of the band)** | the level the band is built around |
+| **Crawl** | the band's slope over time — usually gently upward, a slow programmed appreciation to offset persistent imported-inflation pressure |
+| **Slope (the crawl rate)** | the most-used lever: steeper upward means faster appreciation and cheaper imports, so **tightening**; flat is neutral; downward-sloping is **easing** |
+| **Width** | the range around the midpoint; widened to accommodate volatility, and about flexibility rather than the policy stance |
+| **Level (re-centring)** | a discrete one-off shift of the whole band up (tightening) or down (easing) |
+| **Tightening / easing** | making policy more restrictive versus more supportive — here expressed in the band, not in a rate |
+| **Speculation** | betting against the target; the secrecy of the basket and the flexibility of a band are defences against it |
+| **Off-cycle move** | a change made outside the two scheduled statements, reserved for emergencies |
+| **Policy stance** | whether policy is currently tight, neutral or loose |
+
+</details>
+
 MAS doesn't fix the dollar (a hard peg like Hong Kong's) and doesn't let it float (like the US). It runs a
 **managed float** inside a **policy band**, and the framework is nicknamed **BBC** — **Basket, Band, Crawl.**
 
@@ -156,6 +269,38 @@ rate transmits to inflation *fast* (§5), MAS needs to adjust far less often tha
 
 ## 4. How MAS actually operates the band — FX intervention
 
+<details>
+<summary><b>Vocabulary for this section</b> — foreign-exchange intervention and what it does to the money supply (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **FX** | foreign exchange | the currency market, and the assets held in foreign currencies |
+| **SGD NEER** | Singapore-dollar nominal effective exchange rate | the trade-weighted index MAS keeps inside its band |
+| **MAS** | Monetary Authority of Singapore | |
+| **GIC** | Government of Singapore Investment Corporation | one of the state investors that manages Singapore's broader reserves alongside MAS |
+| **QE** | quantitative easing | the Fed's base-expanding asset purchases, which MAS's FX buying resembles mechanically |
+| **M0** | monetary base | currency plus reserves — the quantity that becomes a by-product here rather than a choice |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **FX intervention** | buying or selling currency in the market to move the exchange rate — MAS's operating method, in place of the Fed's bond operations |
+| **Leaning against appreciation** | selling your own currency to stop it rising above the band; the by-product is newly created local money and a growing pile of foreign assets |
+| **Defending the floor** | the reverse — buying your own currency with foreign reserves when it threatens to fall below the band |
+| **Foreign-exchange reserves** | the stock of foreign-currency assets accumulated by that intervention; Singapore's runs to hundreds of billions |
+| **Monetary base** | currency plus banks' reserves — the quantity of central-bank money |
+| **Endogenous monetary base** | the consequence of the exchange-rate target: the quantity of local money is whatever hitting the target requires, not something MAS chooses |
+| **Capital inflow** | foreign money arriving, the usual reason the currency threatens to overshoot the band |
+| **Draining** | absorbing local currency out of the system, the effect of buying it back |
+| **Balance sheet composition** | what a central bank owns — domestic government bonds for the Fed, foreign-currency assets for MAS |
+| **Treasuries** | US government bonds, the Fed's domestic holding |
+| **Sovereign wealth management** | running that foreign portfolio for return, a role a domestic-bond central bank does not have |
+
+</details>
+
 How does MAS *keep* the SGD NEER inside the band? Not by decree — by **buying and selling currency in the
 foreign-exchange market**, exactly the "manage the monetary base via FX, not bonds" model you reasoned your
 way to in §3 §10d.
@@ -184,6 +329,45 @@ Two consequences complete the mirror-image of §3:
 ---
 
 ## 5. Transmission, and the comparison that makes both models click
+
+<details>
+<summary><b>Vocabulary for this section</b> — the transmission channels and every term in the Fed-versus-MAS table (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SGD NEER** | Singapore-dollar nominal effective exchange rate | the trade-weighted index MAS targets |
+| **IORB** | interest on reserve balances | the Fed's administered policy rate |
+| **OMO** | open-market operations | buying or selling domestic bonds to move reserves |
+| **MAS** | Monetary Authority of Singapore | |
+| **Fed** | the Federal Reserve | |
+| **FX** | foreign exchange | |
+| **COVID** | the COVID-19 pandemic | the shock behind the 2021–23 inflation surge both were fighting |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Transmission** | how moving the instrument reaches inflation; one short channel here versus the Fed's five |
+| **Import-price channel** | the dominant route: a stronger currency immediately cuts the local-currency price of imported goods and inputs, and imports are a large share of the basket |
+| **Imported inputs** | foreign materials and components firms buy, whose price also feeds through |
+| **Consumption basket** | the bundle of goods whose average price defines inflation |
+| **Pass-through** | the speed and extent of that feed-through — months here, rather than the Fed's 12 to 18 months |
+| **Demand channel** | the secondary route: a stronger currency makes exports less price-competitive, cooling external demand and the domestic economy |
+| **Price competitiveness** | how attractive your exports are on price once the currency move is counted |
+| **External demand** | foreign spending on your output |
+| **MAS core inflation** | Singapore's targeted measure, which strips out **accommodation** and **private transport** — the two components driven by domestic policy rather than import prices |
+| **Accommodation** | housing rental costs, excluded from the core measure |
+| **Private transport** | car-related costs, dominated in Singapore by the certificate-of-entitlement system rather than by imports |
+| **Long and variable lags** | the Fed's problem, and precisely what MAS's fast channel spares it — which is why two meetings a year suffice |
+| **Policy rate** | the Fed's instrument, a domestic interest rate |
+| **Anchor** | the variable a central bank pins down to give the price level a reference point |
+| **Small ultra-open economy** | the structural condition that makes the exchange-rate lever the right choice |
+| **Contingent versus universal** | the section's payoff: *some* anchor is universal, but the *choice* of the interest rate as the anchor is contingent on being a large, relatively closed economy |
+
+</details>
 
 **Transmission for a small open economy.** How does moving the SGD NEER control inflation? Mostly through one
 short, powerful channel — the opposite of §3's five-channel web:
@@ -231,6 +415,42 @@ worked. That parallel is the single clearest demonstration that §3 and §4 are 
 ---
 
 ## 6. Strengths, limits, and the live record
+
+<details>
+<summary><b>Vocabulary for this section</b> — the strengths, the trilemma bill, and the terms in the live record (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ERM** | Exchange Rate Mechanism | the European currency grid whose 1992 break-up is the cautionary case for rigid pegs |
+| **SORA** | Singapore Overnight Rate Average | Singapore's benchmark interest rate, which tracks global rates rather than an MAS decision |
+| **MPS** | Monetary Policy Statement | the twice-yearly announcement whose language this section teaches you to read |
+| **SGD NEER** | Singapore-dollar nominal effective exchange rate | the targeted index |
+| **MAS** | Monetary Authority of Singapore | |
+| **ABSD** | additional buyer's stamp duty | a Singapore property tax used as a cooling measure |
+| **LTV** | loan-to-value | the cap on how much of a property's price may be borrowed |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fast transmission** | the exchange rate reaching prices in months rather than a year and more |
+| **Band versus peg** | a range with a moving centre, which can bend to fundamentals, versus a fixed rate that can only hold or break |
+| **Speculative attack** | a concerted bet that a fixed rate cannot be defended — the failure mode a flexible band is designed to avoid |
+| **Trilemma cost** | the price Singapore pays for its choice: no independent interest rate |
+| **Imported tightening** | domestic rates rising because the Fed hiked, regardless of where Singapore is in its own cycle |
+| **Mortgage rate** | where households feel that imported tightening directly |
+| **Relative price** | the reason a large economy cannot copy the model — an exchange rate is a price *between* currencies, and not everyone can appreciate at once |
+| **Closed-ish economy** | one where most consumption is domestically produced, so the interest rate is the correct lever |
+| **Asset inflation** | rising prices of property and financial assets, which the exchange rate does little about |
+| **Macroprudential measures** | the separate toolkit used for that — loan-to-value limits, the additional buyer's stamp duty |
+| **Fiscal tools** | taxes and spending, the other non-monetary lever on the property market |
+| **Slope-only move** | an MPS that changes the crawl rate while leaving width and level unchanged |
+| **Re-centring** | shifting the whole band, the discrete level move |
+| **Core inflation projection** | MAS's stated forecast, the number to check the stance against |
+
+</details>
 
 **Strengths.**
 - **It targets the actual inflation driver** (import prices) directly, rather than working around the houses

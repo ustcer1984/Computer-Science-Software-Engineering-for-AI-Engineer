@@ -52,6 +52,42 @@ By the end, these collapse into one model:
 
 ## 1. The map: a process's address space
 
+<details>
+<summary><b>Vocabulary for this section</b> — the regions of an address space and the words used to describe them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OS** | operating system | the software layer that owns the hardware and hands each program a controlled slice of it |
+| **RAM** | random-access memory | the physical working memory chips; fast, volatile, and shared by every process |
+| **BSS** | block started by symbol | the historical assembler name for the region holding zero-initialised globals and static data |
+| **MB** | megabyte | one million bytes (1,024 × 1,024 in memory-sizing convention) |
+| **GB** | gigabyte | one thousand megabytes |
+| **LIFO** | last-in, first-out | the discipline where the most recently added item is the only one you may remove |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Process** | one running program, with its own memory and its own view of the machine |
+| **Virtual address space** | the private, contiguous-looking range of addresses the kernel shows a process, from 0 upward |
+| **Address** | a number naming one byte of memory |
+| **Kernel** | the core of the operating system — the code that maps virtual addresses onto real RAM |
+| **Paged** | split into fixed-size blocks (pages) that the kernel can place anywhere in physical RAM |
+| **Contiguous** | occupying one unbroken run of addresses, with no gaps |
+| **Text (code) segment** | the region holding the program's machine instructions; read-only and fixed in size |
+| **Data / BSS segment** | the region holding globals, constants and static data; fixed size, alive for the whole run |
+| **Heap** | the region for objects whose size and lifetime are not known until the program runs |
+| **Stack** | the region holding one frame per active function call; LIFO and bounded |
+| **Frame (call frame / stack frame)** | the block of memory one function call gets for its arguments, locals and return address |
+| **Return address** | the stored address the CPU jumps back to when the current function returns |
+| **Local** | a variable belonging to one function call, living in that call's frame |
+| **Runtime** | while the program is executing, as opposed to when it was compiled or loaded |
+| **Load time** | the moment the OS reads the program into memory and sizes its fixed regions |
+
+</details>
+
 When the OS launches your program, it hands the process the illusion of a single, private, contiguous block
 of memory addressed from `0` up to a huge number — its **virtual address space**. (It's an illusion the
 kernel maintains; the *real* RAM underneath is shared, paged, and scattered — that's an M01 Ch4 / OS story.
@@ -90,6 +126,49 @@ when the process dies. The action is in the two dynamic regions, and they have *
 
 ## 2. The stack — fast, automatic, and bounded
 
+<details>
+<summary><b>Vocabulary for this section</b> — stack mechanics, the recursion limit and the crash it guards (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LIFO** | last-in, first-out | the stack discipline: only the most recently pushed frame can be popped |
+| **MB** | megabyte | one million bytes; the usual unit for a thread's stack size |
+| **L1** | level-1 cache | the smallest and fastest CPU cache, a few cycles from the core |
+| **TCO** | tail-call optimization | reusing the current frame for a call in tail position, so recursion costs no extra stack |
+| **CPU** | central processing unit | the chip that executes the instructions |
+| **OS** | operating system | the software layer that gives each thread its stack region |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stack** | the memory region holding one frame per active call, growing downward toward lower addresses |
+| **Frame** | the block of stack a single call occupies: its arguments, locals and return address |
+| **Push / pop** | adding a frame on call, removing it on return |
+| **Stack pointer** | the CPU register holding the address of the current top of the stack |
+| **Register** | a handful of bytes of storage inside the CPU itself — the fastest memory that exists |
+| **Allocate** | reserve memory for use |
+| **Deallocate (free)** | give memory back so it can be reused |
+| **Automatic lifetime** | memory freed as a mechanical consequence of the function returning, with no decision by anyone |
+| **Leak** | memory that is never returned and so is lost for the rest of the run — impossible on the stack |
+| **Cache-hot** | already sitting in CPU cache, so reading it is cheap |
+| **Guard page** | a deliberately unusable page just past the end of the stack, so running off the end faults instead of corrupting other memory |
+| **Fault** | a hardware trap raised when a program touches memory it may not touch |
+| **Stack overflow** | running the stack pointer past the end of the stack region — the hard crash at the bottom of runaway recursion |
+| **Recursion** | a function calling itself; each call adds a frame |
+| **Base case** | the branch of a recursive function that stops the recursion |
+| **`RecursionError`** | the Python exception raised when the interpreter's own depth counter is exceeded — a soft railing, not the hardware limit |
+| **CPython** | the standard C implementation of Python — the one you get from python.org; several limits in this section are its choices, not the language's |
+| **Recursion limit** | CPython's cap on how many Python frames may be active at once, default about 1000; `sys.setrecursionlimit()` changes it |
+| **Native (C) stack** | the real machine stack underneath the interpreter; each Python call sits on one or more of its frames |
+| **`SIGSEGV` / segfault** | the signal the kernel sends when a process touches invalid memory; here, the crash you get by raising the recursion limit too far |
+| **Tail-call optimization** | compiling a call in tail position into a jump that reuses the frame, so deep recursion never grows the stack |
+| **Bytecode** | the compact instruction format CPython compiles Python source into before executing it |
+
+</details>
+
 You already know the stack's *behavior* from Ch1 §2: every function call pushes a **frame** (its locals,
 arguments, and the return address); every return pops it; it's strictly **LIFO (last-in, first-out)**. Now look at it as *memory*.
 
@@ -126,6 +205,45 @@ Python it is **not** true, and that difference is the whole back half of this se
 ---
 
 ## 3. The heap — flexible, long-lived, and not free
+
+<details>
+<summary><b>Vocabulary for this section</b> — allocators, the heap's failure modes, and why it is cache-cold (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collector / garbage collection | the machinery that finds heap objects nothing can reach any more and frees them for you |
+| **LIFO** | last-in, first-out | the stack's discipline, which the heap deliberately does not have |
+| **GB** | gigabyte | one thousand megabytes; the rough scale of a heap |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Heap** | the memory region for objects whose size or lifetime does not follow the call pattern |
+| **Allocator** | the code that hands out and reclaims heap chunks — it decides *where* in the heap your object goes |
+| **Chunk** | one contiguous piece of heap handed out by the allocator |
+| **`malloc` / `free`** | the C library calls that request and return a heap chunk |
+| **pymalloc** | CPython's own pooled allocator, layered on top of `malloc`, specialised for the many small objects Python creates |
+| **Pooled allocator** | one that grabs big blocks from the system once and then carves small objects out of them cheaply |
+| **Free list** | the allocator's record of which chunks are currently unused |
+| **Size class** | a bucket of one fixed chunk size, so requests of that size can be served without searching |
+| **Amortize** | spread a one-off cost over many later operations so the average cost is small |
+| **Lifetime** | the span between an object being created and being freed |
+| **Garbage collector** | the runtime component that frees unreachable heap objects automatically — the whole subject of §2 |
+| **Dangling pointer** | an address that still refers to memory which has already been freed |
+| **Use-after-free** | reading or writing through a dangling pointer; a classic security vulnerability |
+| **Memory leak** | heap memory that is never freed, so the process's usage grows without bound |
+| **Fragmentation** | free space broken into many small pieces, so a large request fails even though total free memory is ample |
+| **Contiguous** | one unbroken run of addresses — what a large allocation needs and what fragmentation destroys |
+| **Cache-cold** | not in CPU cache, so each access pays a trip to RAM |
+| **Pointer chasing** | following a chain of addresses through scattered memory, which defeats the cache |
+| **Cache miss** | an access the CPU could not serve from cache, costing a much slower fetch from RAM |
+| **Pointer** | a value that holds the address of something else |
+| **numpy** | the Python numerical library whose arrays store their numbers in one contiguous heap block rather than as scattered objects |
+
+</details>
 
 The stack can only hold things whose size and lifetime match the LIFO call pattern. But most real data doesn't:
 a list that grows, an object returned from a function and used by the caller, a cache that outlives the
@@ -174,6 +292,40 @@ Keep this table in your head; everything else in the chapter hangs off it.
 ---
 
 ## 4. The pivot: what a "variable" actually is
+
+<details>
+<summary><b>Vocabulary for this section</b> — value semantics versus reference semantics, and what a Python name really holds (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **KB** | kilobyte | one thousand bytes; the size of the example struct being copied |
+| **JS** | JavaScript | the browser/Node language, used here as another reference-semantics example |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Variable** | a name in your source code — but *what* it names differs completely between the two models below |
+| **Value semantics** | the model where a variable **is** storage holding the bytes, and assignment copies them (C, C++, Rust, Go structs) |
+| **Reference semantics** | the model where a variable is a label pointing at an object stored elsewhere, and assignment copies the label (Python, and JS/Java for objects) |
+| **Box** | the shorthand for a named piece of storage that directly contains a value |
+| **Name (binding)** | in Python, a label in the current frame that refers to a heap object; it holds no value of its own |
+| **Object** | a self-describing block of heap memory holding a value plus its type; in Python *everything* is one, integers included |
+| **Assignment** | the `=` operation; in Python it points a name at an object, and never copies the object |
+| **Pointer** | a value holding the address of something else; `int *p = &x;` in C makes `p` hold the address of `x` |
+| **`&x`** | C's "address of `x`" operator — the explicit request to share rather than copy |
+| **Pointee** | the thing a pointer points at, as distinct from the pointer itself |
+| **Struct** | C's record type: several fields packed together as one value |
+| **Primitive** | a built-in scalar type (int, float, char, boolean) which in Java/JavaScript uses value semantics |
+| **Heap** | the region where Python objects live; names on the stack point into it |
+| **Mutate** | change an object in place, so everyone holding a reference to it sees the change |
+| **`append`** | the list method that mutates the list in place by adding an element |
+| **`bit_length()`** | an integer method; it works on the literal `5` because `5` is a real object, not raw bytes |
+| **Effective theory** | a simplified description that is correct within limits — here, "names refer to objects" standing in for the pointer machinery |
+
+</details>
 
 Now the conceptual core — and where Python diverges hard from the C mental model, in a way that explains your
 bugs. The question is deceptively simple: **when you write `x = something`, what is `x`?**
@@ -247,6 +399,45 @@ even a list's *elements* are pointers to other objects.
 ---
 
 ## 5. Why this is invisible most of the time — mutability
+
+<details>
+<summary><b>Vocabulary for this section</b> — mutability, identity, and the two ways CPython silently shares an object (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **REPL** | read-eval-print loop | the interactive Python prompt, where each line you type is compiled separately |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`==`** | the equality operator — asks whether two objects have equal *value* |
+| **`is`** | the identity operator — asks whether two names point at the literally *same* object |
+| **Rebinding** | pointing a name at a different object; it changes the label, not the object |
+| **Mutating** | changing an object in place, so every name pointing at it sees the change |
+| **Mutable** | able to be changed in place — `list`, `dict`, `set`, most custom classes |
+| **Immutable** | with no operation that changes it in place — `int`, `float`, `str`, `bytes`, `tuple`, `frozenset` |
+| **`frozenset`** | the immutable version of a set |
+| **Aliasing** | two or more names referring to one object, so a change made through one is visible through the others |
+| **Value-like behaviour** | acting as though assignment copied, which immutable objects do because nothing can change them underneath you |
+| **`__eq__`** | the method `==` calls to compare values |
+| **`__iadd__`** | the method `+=` calls on a mutable object, which changes it in place instead of rebinding |
+| **`id()`** | returns an object's identity number, which in CPython is literally its memory address |
+| **Identity** | being the same object, as opposed to merely having an equal value |
+| **Singleton** | an object that exists exactly once, so `is` against it is meaningful — `None`, `True`, `False`, sentinel objects |
+| **Sentinel object** | a unique object used purely as a marker, compared with `is` |
+| **Small-int cache** | CPython's pre-created, shared integer objects for −5 through 256, reused every time one of those values is needed |
+| **Code object** | the compiled form of one unit of Python source, carrying its bytecode and a table of its constants |
+| **Constants table** | the list of literal values stored inside a code object; the compiler stores a repeated literal only once |
+| **Constant dedup(lication)** | the compile-time effect of that table: two identical literals in one compiled unit become one object |
+| **Literal** | a value written directly in the source, like `257` |
+| **Language spec** | the definition of Python itself, as opposed to how CPython happens to implement it |
+| **Implementation detail** | behaviour true of CPython but not guaranteed by the language — not safe to rely on |
+| **`SyntaxWarning`** | the warning Python 3.8+ emits for `is` against a literal, because the answer is an implementation artifact |
+
+</details>
 
 If Python copies nothing and everything is shared, why doesn't `a = b; a += 1` corrupt `b` the way the list
 example did? Because of one extra fact:
@@ -325,6 +516,33 @@ objects, and sometimes — at runtime *or* at compile time — the runtime hands
 ---
 
 ## 6. Where this actually bites *you*
+
+<details>
+<summary><b>Vocabulary for this section</b> — the three aliasing bugs and the copying vocabulary that resolves them (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Mutable default argument** | a default value like `log=[]` that is created once when `def` runs and then shared by every call that omits the argument |
+| **`def` time** | the moment the `def` statement executes and the function object (including its defaults) is built — not the moment it is called |
+| **Default value object** | the one heap object a default expression produced, reused on every subsequent call |
+| **Idiom** | the conventional fix — here `log=None` plus creating a fresh object inside the call |
+| **Aliasing** | two names on one object, so a change through either is seen by both |
+| **Shared state** | one object several pipeline steps hold references to and can mutate |
+| **Pipeline step** | one stage of a processing chain, receiving state or config from the previous stage |
+| **Spooky action at a distance** | a change made in one place showing up somewhere unrelated, because both places share an object |
+| **Shallow copy** | a new outer container whose elements are still the *same* nested objects — `a.copy()`, `dict(a)`, `list(a)`, `a[:]` |
+| **Deep copy** | `copy.deepcopy(a)` — recursively rebuilds the whole object graph so no sharing is left; costs proportional to the graph |
+| **Object graph** | the network of objects reachable from one object by following its references |
+| **Nested object** | an object stored inside another, such as the dict under `a["user"]` |
+| **Mutable** | able to be changed in place |
+| **Immutable** | with no in-place change operation; Python's only built-in protection against aliasing bugs |
+| **`@dataclass(frozen=True)`** | a decorator producing a class whose attributes cannot be reassigned after construction |
+| **Value vs pointer (in C)** | C's per-call choice between copying the data and passing its address; Python removes the choice and always shares |
+| **Environment leakage** | state managed at too high a level and mutated where it should not be — the M04 Ch1 case, the same mechanism as aliasing |
+
+</details>
 
 This isn't trivia — it's a recurring shape of bug in exactly the kind of code you write (pipelines passing
 `dict`s of state and config between steps). Three canonical ones:

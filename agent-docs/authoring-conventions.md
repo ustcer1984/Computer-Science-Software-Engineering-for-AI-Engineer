@@ -579,9 +579,37 @@ to the section that uses the terms turns a stall into a two-second expand.
   the exact trap documented on 2026-07-09 and re-shipped on 2026-08-14) and it was caught only because the
   detector was run before committing.
 
-**Applied so far:** hobby econ E06 §1 and §2 (7 content sections each, 14 blocks). **The rest of the corpus is
-not yet backfilled** — the same situation rule 9 was in before its bulk pass. Treat this as a *maintenance*
-rule for new sections, and see rule 9's "lessons from that bulk pass" before attempting a corpus-wide backfill.
+**Corpus-wide backfill completed 2026-09-16** at his request ("Do the backfill using subagents"): **360 blocks
+across all 62 material files**, via 14 parallel subagents grouped one-per-module so each had real domain
+context. The baseline is now clean — from here this is a *maintenance* rule, applied per new section.
+
+**Lessons from that bulk pass (they differ from rule 9's — read both):**
+
+- **The backfill is an even better audit than the answers pass was.** Writing a definition for every term
+  forces someone to look up every abbreviation, which is how it found **four wrong expansions shipped by the
+  rule-8 sweep**: `PCB (process control block)` in a sentence about circuit-board copper, `CS (computer
+  science)` for *consumer surplus*, `MPC (marginal propensity to consume)` for *marginal private cost*, and
+  `RSS (resident set size)` for *Really Simple Syndication*. **An automated abbreviation sweep can inject
+  confident, wrong expansions; only a human-or-agent reading for meaning catches them.**
+- **Two genuinely broken renders surfaced**, both invisible to a reader of the source: an unmatched `~$36T`
+  that opens a math span and swallows the rest of its sentence, and a blockquote where two `O(...)` spans
+  leaked as literal `$` on the published page.
+- **A NEW render trap, found twice: two inline math spans separated only by a delimiter** — `$O(1)$/$O(\text{degree})$`,
+  `$P^\ast$/$Q^\ast$`, `$I$–$V$`. GitHub typesets the first and leaves the second literal. **Fix: merge into
+  one span, or drop to plain text / inline code** (the precedent set by the `O(L²)` fix).
+- **Things that are NOT traps, verified against live GitHub rather than assumed:** a closing `$` followed by
+  `)`, an opening `$` glued to `**`, and a math span that merely opens with a digit (`$2^{128}$`) all render
+  correctly. Bare `$` currency in prose renders literally and correctly too — GitHub declines to typeset a
+  prose-looking span — so it is a *latent* hazard (it flips parity and can swallow text later), not a visible
+  break. It was still converted to `USD n` house style corpus-wide so the detector is usable as a gate.
+- **Watch the detector itself.** Mid-pass I reverted a bad rule with a line-range slice and silently deleted
+  the banned-macro check along with it; every "CLEAN" for the next several files was therefore not testing for
+  `\,` `\;` `\%` at all. **A subagent caught it**, and restoring it immediately found a real `0.5\%` inside
+  inline math. *A detector you broke is worse than no detector, because it reports success.*
+- **Never blanket-apply a transform you designed with a filter.** Converting bare `$` currency with a plain
+  `\$(?=\d)` regex — when the enumeration that justified it had excluded LaTeX-structured matches — destroyed
+  three real math spans (`$2^{16}$`, `$240{,}000$`, `$5.76 \times 10^{10}$`). The parity check caught it.
+- **Give each agent a uniquely-named scratchpad subdirectory** (rule 9's lesson held: no collisions this time).
 
 **Detector** (lists every material file whose content sections have no vocabulary block):
 

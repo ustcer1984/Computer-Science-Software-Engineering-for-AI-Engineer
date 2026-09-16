@@ -64,6 +64,48 @@ are just three ways to buy it.
 
 ## 1. The root problem: shared mutable state + non-atomic operations
 
+<details>
+<summary><b>Vocabulary for this section</b> — the lost update, the two kinds of race, and what the GIL does and does not promise (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | CPython's lock ensuring only one thread executes Python bytecode at a time; it is part of the interpreter, **not** the kernel |
+| **PEP** | Python enhancement proposal | the numbered design documents; PEP 703 is the free-threaded (no-GIL) build |
+| **I/O** | input/output | network, disk or database traffic; CPython releases the GIL around it |
+| **CPU** | central processing unit | the processor |
+| **ms** | millisecond | one thousandth of a second; the default GIL switch interval is about 5 ms |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Shared mutable state** | data more than one flow of control can both see and change — the precondition for every bug in this section |
+| **Flow of control** | one independently-scheduled stream of execution: a thread, a process, or a coroutine |
+| **Bytecode** | the low-level instructions CPython executes; `dis` shows them |
+| **`dis`** | the standard-library disassembler that prints a function's bytecode |
+| **Read-modify-write** | load a value, change it, store it back — three steps, interruptible between any two |
+| **Atomic** | completing indivisibly, so no other flow can observe a half-done state |
+| **Non-atomic** | the opposite: another flow can be scheduled in the middle |
+| **Interleaving** | one particular ordering in which the scheduler mixes the steps of several flows |
+| **Scheduler** | whatever decides which flow runs next — the OS kernel for threads, the event loop for coroutines |
+| **Lost update** | two increments, one result: both flows read the same old value and the later write overwrites the earlier |
+| **Invariant** | a condition your code assumes is always true; bugs live in the windows where it is temporarily false |
+| **Data race** *(memory-safety sense)* | two flows access the same memory, at least one writes, with no synchronization ordering them — undefined behaviour in C/C++/Rust |
+| **Race condition** *(correctness sense)* | any bug whose outcome depends on timing; broader than a data race, and possible even when every individual operation is atomic |
+| **Undefined behaviour** | the language gives no guarantee at all — the compiler may reorder, tear or delete the operation |
+| **Torn write** | a write observed half-complete, because it was not a single indivisible operation |
+| **Check-then-act** | test a condition, then act on it — racy because the condition can change in between (`if key not in cache: cache[key] = …`) |
+| **Switch interval** | the ~5 ms timer (`sys.getswitchinterval()`) after which CPython forces a GIL hand-off; it is time-based, not bytecode-count-based since 3.2 |
+| **Free-threading (PEP 703)** | the 3.13+ build with no GIL; CPython adds per-object locks so containers do not corrupt, but your application invariants get no protection |
+| **Per-object lock** | a fine-grained internal lock guarding one container's own structure, not your logic |
+| **Segfault** | a memory-access violation that kills the process — what internal locking prevents, and what application-level races are *not* about |
+| **Thread-safe** | usable concurrently from several threads without corrupting state or violating invariants |
+| **Latent bug** | one already present in the code that only becomes reachable when conditions change — here, when the GIL goes away |
+
+</details>
+
 Take the most innocent line in programming:
 
 ```python
@@ -140,6 +182,49 @@ the current value of `counter`") had silently expired.
 
 ## 2. The cure: atomicity, critical sections, and mutual exclusion
 
+<details>
+<summary><b>Vocabulary for this section</b> — locks, critical sections, and the granularity dial (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | CPython's interpreter-wide lock — the extreme case of a coarse-grained lock |
+| **MVCC** | multi-version concurrency control | a database technique that keeps several versions of a row so readers need not block writers |
+| **CPU** | central processing unit | the processor; a blocked thread is de-scheduled and burns none of it |
+| **CAS** | compare-and-swap | the atomic hardware instruction an uncontended lock acquisition is built on |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n$ | | the number of times a reentrant lock has been acquired by its owning thread — it must be released exactly that many times |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Mutual exclusion** | the guarantee that at most one flow is inside a given region at a time |
+| **Critical section** *(临界区)* | the region of code where an invariant is temporarily broken, and which therefore must be mutually exclusive |
+| **Lock / mutex** *(互斥锁)* | the device that enforces one-at-a-time entry; "mutex" is short for mutual exclusion |
+| **`threading.Lock`** | Python's basic non-reentrant thread lock |
+| **`acquire` / `release`** | take the lock (waiting if held) and give it back |
+| **Context manager (`with`)** | the `__enter__`/`__exit__` protocol that acquires on entry and releases on exit *even if the body raises* — which is why you rarely call `acquire`/`release` by hand |
+| **Blocking** | the waiting thread is de-scheduled by the OS until the lock frees, so it consumes no CPU while waiting |
+| **Deadlock** | flows blocked forever, each waiting on something another holds; leaking an unreleased lock produces one immediately |
+| **Contention** *(锁争用)* | many flows competing for the same lock, so they serialize and the lock becomes the bottleneck |
+| **Amdahl's law** | the rule that overall speedup is capped by the fraction of work that must run sequentially — here, the locked region |
+| **Granularity** | how much state one lock covers; the dial between coarse and fine |
+| **Coarse-grained locking** | one big lock over a whole structure: simple and nearly deadlock-free, but high contention |
+| **Fine-grained locking** | many small locks (per bucket, row or node): low contention, but complex and the main source of deadlock |
+| **Lock striping** | splitting one structure's lock into several by key range or bucket — Java's `ConcurrentHashMap` does this |
+| **Row lock vs table lock** | a database locking one record versus the whole table — the same granularity trade-off at storage level |
+| **Isolation level** | how much concurrent transactions may see of each other's in-progress work |
+| **Reentrant lock (`RLock`)** *(可重入锁)* | a lock the owning thread may acquire repeatedly, counting acquisitions, and must release the same number of times |
+| **Self-deadlock** | a thread blocking forever on a non-reentrant lock it already holds |
+
+</details>
+
 The fix for "an invariant is briefly false and others can see it" is to make the broken-invariant region **mutually exclusive**: only one
 flow of control may be inside it at a time. That region is a **critical section** (临界区), and the device that enforces "one at a time" is a
 **lock** / **mutex** (互斥锁 — *mut*ual *ex*clusion).
@@ -185,6 +270,41 @@ grown tangled.
 ---
 
 ## 3. The async twist: why single-threaded code still needs a lock
+
+<details>
+<summary><b>Vocabulary for this section</b> — await points as the only danger points (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | network, disk or database traffic — the usual reason a coroutine is at an `await` |
+| **CPU** | central processing unit | the processor; a CPU-heavy critical section still freezes the whole loop |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Coroutine** | a suspendable function; between two `await`s it runs without interruption |
+| **Event loop** | the single-threaded cooperative scheduler that resumes coroutines one at a time |
+| **`await` / await point** | the only place a coroutine can suspend — and therefore the only place another coroutine can interleave |
+| **Suspension** | pausing at an `await` so the loop can run something else; when you resume, the world may have changed |
+| **Interleaving** | flows taking turns; it needs no parallelism at all, which is why single-threaded async can still race |
+| **Cooperative scheduling** | the running flow keeps control until it yields voluntarily — asyncio's model |
+| **Preemptive scheduling** | the scheduler can interrupt anywhere — the threaded model, where *every* read-modify-write is a hazard |
+| **Atomic by construction** | code between two `await`s: nothing else on the loop can run, so no lock is needed |
+| **Invariant** | a condition your code assumes holds; the hazard is exactly a suspension inside a window where it is false |
+| **Lost update** | two flows read the same stale value and one write overwrites the other — the same bug as §1, with `await` in place of the thread switch |
+| **`asyncio.Lock`** | a lock for coroutines on one event loop; `async with` suspends rather than blocking the thread |
+| **`threading.Lock`** | the thread lock — the one you need when threads are involved, since `asyncio.Lock` does not cross a thread boundary |
+| **Thread-safe** | safe under concurrent use from multiple threads; `asyncio.Lock` is explicitly not |
+| **`loop.call_soon_threadsafe`** | the sanctioned way for another thread to hand work to the event loop |
+| **Reentrant** | acquirable again by the current holder; `asyncio.Lock` is not |
+| **`asyncio.timeout()`** | the context manager that bounds how long you wait, including on a lock acquisition |
+| **Blocking the loop** | running synchronous or CPU-heavy code inside a coroutine so nothing else progresses — worse inside a lock, which is then held throughout |
+| **`time.sleep`** | the synchronous sleep that parks the whole thread; the async equivalent is `asyncio.sleep` |
+
+</details>
 
 Here is the question that trips up good engineers, and the one §2 set you up to answer cold: **asyncio runs on one thread with no
 parallelism (§1's bottom-left cell). So how can there possibly be a race? There's no second flow running at the same time.**
@@ -264,6 +384,57 @@ flowchart TB
 
 ## 4. The full primitive toolkit
 
+<details>
+<summary><b>Vocabulary for this section</b> — every primitive in the table, plus the symbols in their capacities (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **API** | application programming interface | both the shape of a library's calls, and (in "API fan-out") a remote service you call |
+| **DB** | database | a data store reached over a connection; its connection pool is a capacity to be capped |
+| **LLM** | large language model | the remote model behind the rate-limited fan-out this section's semaphore caps |
+| **POSIX** | portable operating system interface | the Unix standards family, which permits spurious wakeups and so forces the `while` idiom |
+| **OS** | operating system | the software that owns the hardware and can wake a waiting thread |
+| **FIFO** | first in, first out | queue order; also the fair ordering a lock's wait queue may use |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n$ | | the capacity of a primitive — the number of semaphore permits, or the number of flows a barrier waits for |
+| $N$ | "big N" | a generic count of flows that must be coordinated |
+| $K$ | | the cap you want to enforce: "run at most $K$ of these at once" |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Primitive** | a basic building block for coordination, provided by the library rather than written by you |
+| **`Lock` / `Mutex`** | mutual exclusion with exactly one holder — the baton |
+| **`RLock`** | a reentrant lock the same thread may re-acquire, counting acquisitions (`threading` only) |
+| **`Semaphore(n)`** | a counter of $n$ permits: `acquire` takes one and waits at zero, `release` returns one — the concurrency cap |
+| **Permit** | one unit of the semaphore's capacity |
+| **`BoundedSemaphore(n)`** | a semaphore that raises `ValueError` if released more times than acquired, so an over-release bug surfaces instead of silently inflating the cap |
+| **Over-release** | calling `release()` more often than `acquire()`, which turns a "cap of 10" into no cap at all |
+| **Connection pool** | a fixed set of reusable database connections — a capacity naturally guarded by a semaphore |
+| **Fan-out** | issuing many concurrent calls at once |
+| **Rate limit** | the remote service's cap on requests per interval, which your semaphore mirrors locally |
+| **`Event`** | a one-bit, sticky, broadcast flag: once set it stays set and wakes everyone waiting |
+| **`Condition`** | a lock bundled with wait/notify, for waiting on an arbitrary changing predicate |
+| **Predicate** | the condition you are waiting to become true |
+| **`wait()` / `notify()`** | release the lock and sleep until signalled; and signal a waiter that something changed |
+| **Spurious wakeup** | a waiter waking with no corresponding notify — permitted by POSIX, so portable code must re-check |
+| **Lost wakeup / stolen condition** | between your wake and your re-acquire, a third flow takes the item you were notified about, so the predicate is false again |
+| **The `while` idiom** | always re-test the predicate in a loop after `wait()`, never with a single `if`, because of the two phenomena above |
+| **`Barrier(n)`** | a rendezvous point that releases all flows only once $n$ have arrived |
+| **Phase synchronization** | making every worker finish step 1 before any starts step 2 |
+| **Producer/consumer** | one set of flows generating work and another consuming it, coordinated by a queue or a condition |
+| **Blocking vs suspending** | the `threading` flavour parks the OS thread; the `asyncio` flavour suspends only the coroutine |
+| **Check-then-act** | test then act on a condition that may change in between — the race an `if`-instead-of-`while` reintroduces |
+
+</details>
+
 `Lock` is the floor. Real coordination — "wait until ready," "let $N$ through," "everyone meet here" — needs richer primitives. Each exists
 in both `threading` (preemptive, thread-safe, may block the thread) and `asyncio` (cooperative, single-loop, `await`-able) flavours with the
 **same name and almost the same API** — the difference is always *blocks the thread* vs *suspends the coroutine*.
@@ -310,6 +481,45 @@ for my item" → `Condition` (or just a `Queue`, below).
 ---
 
 ## 5. Deadlock — not bad luck, four conditions
+
+<details>
+<summary><b>Vocabulary for this section</b> — Coffman's four conditions and the liveness failures around them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | network, disk or database traffic; holding a lock across it is a deadlock and contention magnet |
+| **FIFO** | first in, first out | the wait-queue order that makes a lock fair and prevents starvation |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Deadlock** *(死锁 / TW 死結)* | a set of flows each blocked forever waiting for a resource another holds, in a cycle |
+| **Wait-for graph** | the graph whose nodes are flows and whose edges are "waits for a lock held by"; a cycle in it *is* the deadlock |
+| **Circular wait** | that cycle, considered as one of the four conditions |
+| **Lock ordering** | the discipline of always acquiring locks in one global order (by `id`, account number, layer), which makes a cycle impossible |
+| **Dining philosophers** | Dijkstra's five-fork illustration: each philosopher takes the left fork and waits forever for the right |
+| **Coffman conditions** | the four requirements — mutual exclusion, hold-and-wait, no preemption, circular wait — all of which must hold, so breaking any one prevents deadlock |
+| **Mutual exclusion** *(as a condition)* | the resource cannot be shared; removed only by not sharing mutable state at all |
+| **Hold-and-wait** | holding one resource while waiting for another; broken by acquiring the whole set at once |
+| **Try-acquire-all** | attempt every needed lock, and on failure release everything and retry |
+| **No preemption** *(as a condition)* | a held lock cannot be taken away; broken by `acquire(timeout=…)` and voluntarily releasing |
+| **`acquire(timeout=…)`** | a bounded wait for a lock, so failure becomes a handled error rather than an infinite hang |
+| **Livelock** *(活锁)* | flows are running, not blocked, but make no progress because they keep reacting to each other — the corridor dance |
+| **Lockstep** | flows retrying in perfect synchrony, which is what sustains a livelock |
+| **Randomised backoff** | waiting a random jitter before retrying so the lockstep breaks — the same fix Ethernet uses for collisions |
+| **Jitter** | the random component of that wait |
+| **Starvation** *(饥饿)* | a flow is able to run but never gets the resource because others keep jumping the queue |
+| **Reader-writer lock** | a lock allowing many concurrent readers or one writer; a naïve one starves writers under a steady stream of readers |
+| **Fairness** | a lock policy (FIFO queue, writer priority) that guarantees every waiter eventually gets its turn |
+| **Liveness** | the property that the system keeps making progress; deadlock, livelock and starvation are its three failure modes |
+| **Lock scope** | how many lines a lock is held across; smaller is safer, and never across an `await` or an I/O call if avoidable |
+| **Circuit breaker** | a bounded failure path (here, a timeout) that turns an unbounded hang into a logged error |
+| **Hang** | a service that stops making progress without crashing — worse operationally, since nothing alerts |
+
+</details>
 
 A **deadlock** (死锁 / TW 死結) is a set of flows each blocked forever waiting for a resource another holds, in a cycle. The two-lock case is
 the whole story in miniature:
@@ -379,6 +589,51 @@ all** (§6), which removes condition #1 at the root.
 
 ## 6. The escape hatch: don't share memory — pass messages
 
+<details>
+<summary><b>Vocabulary for this section</b> — queues, back-pressure and the actor model (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CSP** | communicating sequential processes | Hoare's formalism where independent processes interact only by passing messages — the ancestor of Go's channels |
+| **FIFO** | first in, first out | queue order: the first item put in is the first taken out |
+| **OOM** | out of memory | the failure when an unbounded queue grows until the process runs out of memory |
+| **SQS** | Simple Queue Service | AWS's hosted message queue — this pattern across machines |
+| **CPU** | central processing unit | the processor; a blocking `get()` burns none of it, a busy-poll does |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $N$ | "big N" | the number of flows that would otherwise reach into one shared structure behind a lock |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Message passing** | flows exchanging copies of data instead of sharing one mutable structure |
+| **Queue** *(队列 / TW 佇列)* | a FIFO channel between flows; its internal locking is the only synchronization, written once inside the library |
+| **`queue.Queue` / `asyncio.Queue`** | the thread-safe and loop-safe implementations |
+| **`put` / `get`** | add an item (waiting if full) and take one (waiting if empty) |
+| **`task_done`** | tells the queue an item taken with `get` has been fully processed, so `join` can know when the work is finished |
+| **`maxsize`** | the queue's bound — the knob that creates back-pressure |
+| **Back-pressure** *(背压)* | a full queue blocking producers so they slow to the consumers' pace, instead of the backlog growing without limit |
+| **Load shedding** | deliberately refusing or slowing work when overloaded rather than failing catastrophically |
+| **Busy-poll / busy-wait** | repeatedly checking in a loop and burning CPU; a blocking `get()` avoids it |
+| **Producer / consumer** | the flow generating items and the flow processing them |
+| **Unbounded queue** | one with no `maxsize`, which converts a slow consumer into a memory leak and then an OOM |
+| **Actor model** | state lives inside an actor that nothing else can touch; other flows only send it messages, which it handles one at a time |
+| **Actor** | that single owner of a piece of state — a worker thread or task serving all access through a queue is one |
+| **"Let it crash"** | Erlang's reliability style: let a failing actor die and be restarted clean, since it shares no state with anyone |
+| **Message broker** | infrastructure (Kafka, SQS, RabbitMQ) that carries messages between machines — the same pattern at distributed scale |
+| **Immutability** | never mutating a value after creation; with no mutation there is no critical section, no lock and no race |
+| **Append-only state** | a structure that is only ever extended, never rewritten in place — the immutable form of shared data |
+| **Lock-free (at your level)** | your application code contains no locks because the coordination lives inside the queue |
+| **Data race** | concurrent access with at least one write and no ordering — removed at the root when nothing is shared |
+
+</details>
+
 Every primitive so far defends shared mutable state. The most effective move is usually to **not share it.** Tony Hoare's CSP (communicating sequential processes) and the design
 of Go crystallised the slogan:
 
@@ -431,6 +686,44 @@ senior move is to arrange not to have any.*
 
 ## 7. The hardware floor: why "just take turns" isn't the whole story
 
+<details>
+<summary><b>Vocabulary for this section</b> — memory models, barriers and atomic instructions (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPU** | central processing unit | the processor; each core has its own cache, which is where visibility problems begin |
+| **MESI** | modified / exclusive / shared / invalid | the four states of a cache line in the standard cache-coherence protocol |
+| **CAS** | compare-and-swap | the atomic instruction "if this location still holds X, set it to Y" — the basis of lock-free structures and of locks themselves |
+| **JMM** | Java memory model | Java's formal specification of what one thread is guaranteed to see of another's writes |
+| **GIL** | global interpreter lock | CPython's interpreter-wide lock, which incidentally gave Python a very coarse and forgiving memory model |
+| **PEP** | Python enhancement proposal | the numbered design documents; PEP 703 is free-threading |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reordering** | the compiler or CPU executing memory operations in a different order than written, for speed |
+| **Visibility** | whether a write made by one core can yet be seen by another; not automatic, and not instant |
+| **Cache line** | the unit (typically 64 bytes) in which memory moves between RAM and a core's cache |
+| **Cache coherence** | the hardware protocol keeping per-core caches consistent with each other |
+| **Publishing a write** | making it visible to other cores, which a lock release guarantees for everything written inside the critical section |
+| **Memory model** | the contract specifying what one thread is guaranteed to observe of another's writes and in what order |
+| **Memory barrier / fence** *(内存屏障)* | an instruction forcing ordering and visibility; acquiring and releasing a lock acts as one — half of what a lock buys you |
+| **Happens-before** | the formal ordering relation a memory model defines: if A happens-before B, B is guaranteed to see A's writes |
+| **`std::memory_order`** | C++11's explicit spelling of these ordering guarantees |
+| **`volatile` (Java)** | a field declaration giving reads and writes visibility and ordering guarantees across threads |
+| **`Ordering` (Rust)** | Rust's equivalent enum for atomic operation ordering |
+| **Atomic instruction** | a hardware operation that performs read-modify-write indivisibly |
+| **Lock-free** | a structure coordinating without locks, using atomic instructions directly — an expert-only optimisation |
+| **Double-checked locking** | the pattern of testing an initialization flag without a lock, then locking and re-testing; broken in Java for a decade without a barrier |
+| **Singleton** | an object created once and shared thereafter — the usual subject of double-checked locking |
+| **Visibility bug** | seeing a pointer before seeing the fully-constructed object it points at — a failure of ordering, not of mutual exclusion |
+| **Free-threading** | the no-GIL CPython build, which removes the implicit coarse ordering the GIL used to provide |
+
+</details>
+
 One level under the locks (the Ch1 §3 §11 cash-in), so the abstraction isn't a black box. On real multi-core hardware, two deeper hazards
 lurk beneath the logical race:
 
@@ -458,6 +751,43 @@ ordering is exactly what's at risk.
 ---
 
 ## 8. Where this bites *you* — the practitioner's playbook
+
+<details>
+<summary><b>Vocabulary for this section</b> — every rule's underlying term in one place (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | network, disk or database traffic; never hold a lock across it if you can help it |
+| **GIL** | global interpreter lock | CPython's bytecode lock; removing it makes today's latent races loud |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Queue** | a FIFO channel between flows whose internal locking replaces your own; a bounded one adds back-pressure for free |
+| **Back-pressure** | a full queue slowing producers to the consumers' pace instead of letting the backlog grow unbounded |
+| **Single owner** | one flow that exclusively owns a structure and serves every other flow through a queue — the actor pattern |
+| **One-question test** | "is there an `await` inside the region where my invariant is broken?" — if no, no `asyncio.Lock` is needed |
+| **Broken-invariant region** | the window in which your assumed condition is temporarily false; the only region that needs protecting |
+| **Cargo-culted lock** | one added by reflex where nothing can interleave: pure contention and extra deadlock surface |
+| **Contention** | flows queueing on the same lock, serializing work that could have overlapped |
+| **`asyncio.Lock`** | the coroutine lock, held across the awaits inside a critical section |
+| **Read-modify-write** | load, change, store — non-atomic in threads, so `counter += 1` and `d[k] += 1` are races |
+| **Check-then-act** | test a condition then act on it, when it may change in between (`if k not in cache: cache[k] = …`) |
+| **`collections.Counter`** | a dict subclass for counting; its `+=` is still several operations and is **not** atomic |
+| **Free-threading** | the no-GIL build, under which these races become far more reachable |
+| **Global lock order** | the fixed acquisition order that prevents circular wait, and therefore nearly every real deadlock |
+| **Lint rule** | an automated check, here for "a lock acquired while already holding another" |
+| **Lock scope** | how long a lock is held; compute under it and do slow I/O outside it |
+| **Upstream** | the remote dependency you call; a lock spanning it serializes everyone behind its slowest response |
+| **Re-check after re-acquire** | after releasing and retaking a lock, verify your assumption again — the `Condition` `while` discipline |
+| **`BoundedSemaphore`** | a capacity cap that raises on over-release, so a broken limit fails loudly rather than silently admitting more |
+| **`asyncio.timeout`** | a bounded wait, including around a lock acquisition, so a deadlock degrades to an error instead of an infinite hang |
+| **Liveness** | the guarantee that the system keeps making progress |
+
+</details>
 
 Ranked, concrete, mapped to the sections.
 

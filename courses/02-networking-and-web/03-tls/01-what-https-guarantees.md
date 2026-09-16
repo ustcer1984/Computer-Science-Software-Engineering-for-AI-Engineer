@@ -51,6 +51,38 @@ direct continuation of Ch2 §1 §10c's *never trust the client; the boundary is 
 
 ## 1. The three guarantees — and the fourth thing people assume
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol that encrypts and authenticates a connection; HTTPS is HTTP carried over it |
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol of the web |
+| **HTTPS** | HTTP Secure | HTTP carried inside a TLS connection |
+| **ISP** | internet service provider | the company carrying your traffic to the internet; sits on the path and can see it |
+| **DV** | Domain Validated | the cheapest certificate class — proves only control of the domain name, nothing about the organisation |
+| **JSON** | JavaScript Object Notation | the usual text format for API request and response bodies |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Confidentiality** | nobody on the network path can read the traffic |
+| **Integrity** | nobody on the path can modify the traffic without it being detected |
+| **Authentication** | proof that the server really is the domain named in the address bar |
+| **Channel** | the connection between two endpoints — the only thing TLS makes promises about |
+| **On-path attacker** | anyone who can see or alter your packets in transit — café Wi-Fi, a compromised router, a transit provider |
+| **Plaintext** | data not encrypted, readable by anyone who can see it |
+| **Session cookie** | the small token a browser sends on every request to prove it is already logged in |
+| **Certificate** | a signed document binding a domain name to a public key — public by design, and not itself a secret |
+| **Impostor / impersonation** | a server that answers for a name it does not own |
+| **Phishing site** | a site that imitates a real one to harvest credentials; it can hold a perfectly valid certificate for its own name |
+| **Padlock** | the browser icon indicating a TLS connection — a statement about the pipe, not about the site's honesty |
+
+</details>
+
 When a browser shows `https://` and a padlock, TLS is asserting exactly three properties about the channel:
 
 | Guarantee | Plain-English claim | Broken without it |
@@ -77,6 +109,41 @@ about the **peer's intentions** or the application's quality.
 ---
 
 ## 2. Just enough cryptography (the protocol's working parts)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AES** | Advanced Encryption Standard | the standard symmetric block cipher |
+| **GCM** | Galois/Counter Mode | a mode that encrypts and authenticates in one pass; the -GCM in AES-GCM |
+| **AEAD** | Authenticated Encryption with Associated Data | an encryption mode that gives confidentiality and integrity together, so tampering fails to decrypt |
+| **RSA** | Rivest-Shamir-Adleman | the classic public-key algorithm, named after its inventors |
+| **SHA-256** | Secure Hash Algorithm, 256-bit | the hash function TLS normally uses for fingerprints |
+| **ECDHE** | Elliptic Curve Diffie-Hellman Ephemeral | the key-agreement method TLS 1.3 uses — elliptic-curve maths, with a fresh throwaway key pair per connection |
+| **TLS** | Transport Layer Security | the protocol under HTTPS |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Symmetric encryption** | one shared key both encrypts and decrypts; fast, but both sides must already share the secret |
+| **Asymmetric / public-key cryptography** | a key pair where what one key does only the other undoes; slow, but it works between strangers |
+| **Key pair** | a matched public key and private key |
+| **Public key** | the half you may publish freely; used to verify signatures and to agree keys |
+| **Private key** | the half that never leaves the server — the only thing that actually proves identity |
+| **ChaCha20-Poly1305** | an alternative authenticated cipher, faster than AES on hardware without AES instructions |
+| **Signature** | a value produced with a private key that anyone can check with the matching public key — proof of possession |
+| **Cryptographic hash** | a one-way fingerprint of data; any change to the data changes the fingerprint |
+| **Hybrid scheme** | TLS's design: asymmetric crypto once to agree a symmetric key, then symmetric crypto for the whole session |
+| **Session key** | the fresh symmetric key that actually encrypts the traffic |
+| **Diffie-Hellman exchange** | a method where two parties publicly exchange values and each computes the same shared secret, which an eavesdropper cannot |
+| **Ephemeral** | thrown away after use — here, a key pair generated per connection and never stored |
+| **Elliptic curve** | the family of mathematics that gives the same strength as RSA with much smaller keys |
+
+</details>
 
 You need three primitives and one trick. (M03 Ch2 does the real treatment; this is the working set.)
 
@@ -106,6 +173,50 @@ The **E** (ephemeral) matters enormously, and §5 explains why.
 ---
 
 ## 3. The TLS 1.3 handshake, step by step
+
+<details>
+<summary><b>Vocabulary for this section</b> — protocol messages, abbreviations and terms used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol; version 1.3 is the current one |
+| **RFC** | Request for Comments | the document series that publishes internet standards; TLS 1.3 is RFC 8446 |
+| **RTT** | round-trip time | the time for one message to reach the far end and a reply to come back |
+| **0-RTT** | zero round-trip time | sending application data in the very first packet on a resumed connection |
+| **TCP** | Transmission Control Protocol | the reliable byte-stream transport TLS runs on top of |
+| **SNI** | Server Name Indication | a ClientHello field naming which hostname the client wants, so one IP address can serve many HTTPS sites |
+| **ALPN** | Application-Layer Protocol Negotiation | a ClientHello field listing which application protocols the client speaks, e.g. `h2` or `http/1.1` |
+| **SAN** | Subject Alternative Name | the certificate field listing the hostnames the certificate covers |
+| **ECDHE** | Elliptic Curve Diffie-Hellman Ephemeral | the per-connection key agreement |
+| **IP** | Internet Protocol | the addressing layer; an IP address identifies a host |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Handshake** | the opening exchange in which the two sides agree keys and the client verifies the server |
+| **`ClientHello`** | the client's first TLS message: supported ciphers and curves, a guessed key share, SNI and ALPN |
+| **`ServerHello`** | the server's reply: the chosen cipher, curve and its own key share |
+| **`Certificate`** | the handshake message carrying the server's certificate chain — a public claim of identity |
+| **`CertificateVerify`** | the handshake message carrying a signature over the transcript, made with the private key — the actual proof of identity |
+| **`Finished`** | the message each side sends to confirm the handshake was not tampered with |
+| **`HelloRetryRequest`** | the server's reply when the client guessed the wrong key-exchange parameters; costs one extra round-trip |
+| **Key share** | a party's public half of the Diffie-Hellman exchange, sent in the hello messages |
+| **Cipher suite** | the named bundle of algorithms the two sides agree to use |
+| **Curve** | the specific elliptic curve used for the key exchange |
+| **Handshake transcript** | the running record of every handshake message so far, which the signature covers |
+| **Certificate chain** | the leaf certificate plus the intermediate certificates linking it to a trusted root |
+| **Root** | a certificate authority certificate the client already trusts, shipped with the operating system or browser |
+| **Validity window** | the not-before / not-after dates inside a certificate |
+| **Revoked** | declared invalid before its expiry date, usually because the private key leaked |
+| **Session resumption** | reusing a secret from a previous connection so the certificate exchange can be skipped |
+| **Pre-shared key** | the secret carried over from that previous session |
+| **Replay attack** | capturing a message and sending it again later; the reason 0-RTT data must be safe to repeat |
+| **Idempotent** | a request that has the same effect whether it runs once or many times — safe to replay |
+
+</details>
 
 TLS 1.3 (RFC 8446, 2018) reduced the handshake to **one round-trip** — the Ch1 §5 line-item — largely by
 making the client *guess* the key-exchange parameters up front instead of asking first.
@@ -165,6 +276,51 @@ charges a card. This is one of the cleanest examples of why §1's idempotency ta
 ---
 
 ## 4. Certificates and the chain of trust
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CA** | certificate authority | an organisation browsers and operating systems trust to vouch for who owns a domain. **Note the collision:** in this repo's economics track `CA` means *current account* — here it always means certificate authority |
+| **SAN** | Subject Alternative Name | the certificate field listing which hostnames it covers — the authoritative one |
+| **CN** | Common Name | the legacy single-name field, superseded by SAN |
+| **DV** | Domain Validated | proves only that the applicant controlled the domain |
+| **OV** | Organization Validation | additionally confirms the company exists as a legal entity |
+| **EV** | Extended Validation | adds an audited check of premises, history and an authorised signatory; browsers no longer show it specially |
+| **ACME** | Automated Certificate Management Environment | the protocol that automates proving domain control and fetching a certificate |
+| **CT** | Certificate Transparency | the system of public append-only logs that every issued certificate must be recorded in |
+| **CRL** | Certificate Revocation List | a published list of certificates that have been revoked |
+| **OCSP** | Online Certificate Status Protocol | a live query asking a certificate authority whether one certificate is still valid |
+| **HTTPS** | HTTP Secure | HTTP over TLS |
+| **OS** | operating system | ships the root store on your device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Certificate** | a signed document binding a domain name to a public key for a fixed period. **It is public — it is sent to every visitor, so it cannot be 'stolen'** |
+| **Private key** | the secret half that never leaves the server. **This, not the certificate, is what proves identity** — a leaked private key is the real compromise |
+| **Public key** | the half published inside the certificate |
+| **Leaf certificate** | the certificate for your actual server name, at the bottom of the chain |
+| **Intermediate CA** | a certificate authority that signs leaves day to day; revocable without destroying the root |
+| **Root CA** | the top of the chain, self-signed, with its private key kept offline |
+| **Chain of trust** | the path of signatures from your leaf up to a root the client already trusts |
+| **Root store** | the list of pre-trusted root certificates shipped with your operating system or browser — the trust anchor of the whole system |
+| **Trust anchor** | the thing you trust without being able to check it; here, that bundled list |
+| **Air-gapped** | kept on hardware with no network connection at all |
+| **Wildcard certificate** | one covering `*.example.com` — a single label, so it does not cover `a.b.example.com` |
+| **Validity period** | how long the certificate is accepted before it must be replaced |
+| **Let's Encrypt** | the non-profit certificate authority that made DV certificates free and automated |
+| **Mis-issuance** | a certificate authority issuing a certificate to someone who should not have had it |
+| **Rogue certificate** | a valid-looking certificate for a domain issued to an attacker |
+| **Revocation** | invalidating a certificate before it expires — unreliable in practice, which is why lifetimes keep shrinking |
+| **Soft-fail** | the browser proceeds anyway when a status check cannot be reached — why OCSP provides little protection |
+| **Append-only log** | a record that can be added to but never edited or deleted, so removals are detectable |
+
+</details>
 
 A **certificate** is a small signed document binding **an identity (a domain name) to a public key**, with
 a validity period — signed by someone else. That's all. Its power comes entirely from **who signed it**.
@@ -238,6 +394,41 @@ better safety property than a 2-year certificate you hope you can revoke.
 
 ## 5. Forward secrecy — and what TLS 1.3 deleted
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and attack names used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol; 1.3 is the version that made forward secrecy mandatory |
+| **ECDHE** | Elliptic Curve Diffie-Hellman Ephemeral | key agreement with a fresh, discarded key pair per connection |
+| **RSA** | Rivest-Shamir-Adleman | the public-key algorithm; also the name of the deleted key-transport mode |
+| **3DES** | Triple Data Encryption Standard | an obsolete symmetric cipher, removed in TLS 1.3 |
+| **RC4** | Rivest Cipher 4 | an obsolete stream cipher, removed |
+| **MD5** | Message Digest 5 | an obsolete hash function, removed |
+| **SHA-1** | Secure Hash Algorithm 1 | a broken hash function, removed |
+| **CBC** | Cipher Block Chaining | an older block-cipher mode whose constructions were repeatedly attacked |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Forward secrecy** | the property that recording today's traffic is useless even if the server's long-term private key leaks tomorrow |
+| **RSA key transport** | the deleted TLS 1.2-and-earlier mode where the client encrypted the session key with the server's public key — recoverable later from that one key |
+| **Static Diffie-Hellman** | key agreement with a fixed, long-lived key instead of a fresh one; also deleted |
+| **Ephemeral key pair** | a key pair generated for one connection and thrown away |
+| **Session key** | the symmetric key that encrypts a single session's traffic |
+| **Long-term private key** | the server's durable key, the one the certificate is bound to; in TLS 1.3 used only to sign |
+| **Retroactive decryption** | decrypting stored past traffic after later obtaining a key |
+| **Renegotiation** | re-running a handshake inside an existing connection; removed in TLS 1.3 |
+| **Downgrade attack** | tricking two peers into negotiating an older, weaker option they both still support |
+| **Attack surface** | the set of features an attacker can reach and try to abuse |
+| **CRIME** | an attack that recovered secrets from TLS compression; the reason compression was removed |
+| **BEAST, POODLE, FREAK, Logjam, DROWN** | named attacks that all exploited legacy modes or downgrade paths rather than the strong primitives |
+
+</details>
+
 **Forward secrecy** is the property that **recording today's encrypted traffic is useless even if the
 server's private key leaks tomorrow.**
 
@@ -265,6 +456,41 @@ something old." TLS 1.3's defence was **deleting the options.**
 
 ## 6. What HTTPS does *not* protect
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DNS** | Domain Name System | the lookup that turns a hostname into an IP address; traditionally plaintext |
+| **SNI** | Server Name Indication | the hostname field in the ClientHello, sent before encryption exists |
+| **DoH** | DNS over HTTPS | DNS queries carried inside HTTPS so they cannot be read on the path |
+| **DoT** | DNS over TLS | DNS queries carried inside a TLS connection on a dedicated port |
+| **ECH** | Encrypted Client Hello | the extension that encrypts SNI so the requested hostname stops leaking |
+| **ISP** | internet service provider | sits on your path and sees hostnames even when it cannot read content |
+| **MITM** | man-in-the-middle | an attacker or proxy that sits between the two ends and sees or alters the traffic |
+| **CA** | certificate authority | an issuer of certificates; a corporate proxy works by installing its own into your root store |
+| **XSS** | cross-site scripting | injecting attacker script into a page — unaffected by TLS |
+| **CSRF** | cross-site request forgery | tricking a logged-in browser into making a request — unaffected by TLS |
+| **HTTPS** | HTTP Secure | HTTP over TLS |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Endpoint** | either of the two machines at the ends of the connection; TLS protects the path between them, not them |
+| **Traffic analysis** | inferring what someone is doing from packet sizes, timing and volumes alone, without reading any content |
+| **Traffic shape** | those observable sizes, timings and volumes |
+| **Middlebox** | any device on the path that inspects or alters traffic — a proxy, firewall, antivirus or corporate gateway |
+| **TLS-terminating proxy** | a middlebox that decrypts, inspects, then re-encrypts with its own certificate |
+| **Root store** | the list of trusted roots on your device; whoever controls it controls what 'authenticated' means |
+| **Injection** | supplying input that the application executes as code or as a query |
+| **Broken authorization** | letting a user reach data or actions they should not be allowed |
+| **Channel guarantee** | a promise about the pipe between two endpoints, not about either endpoint's behaviour |
+
+</details>
+
 The honest boundary of the guarantee — and the part that produces bad security assumptions:
 
 - **It does not hide *who* you're talking to.** The **hostname leaks** twice: in plaintext **DNS** (Ch1 §1)
@@ -287,6 +513,43 @@ The honest boundary of the guarantee — and the part that produces bad security
 ---
 
 ## 7. Where TLS terminates — the reverse-proxy job, and the hop you own
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TLS** | Transport Layer Security | the protocol being terminated |
+| **ALB** | Application Load Balancer | AWS's layer-7 load balancer, a common termination point |
+| **L4** | layer 4 | the transport layer — TCP ports and bytes, with no visibility into HTTP |
+| **L7** | layer 7 | the application layer — HTTP methods, paths, headers and bodies |
+| **WAF** | Web Application Firewall | a filter that inspects HTTP requests for attacks; needs plaintext to work |
+| **TCP** | Transmission Control Protocol | the byte stream a layer-4 balancer forwards without decrypting |
+| **CPU** | central processing unit | the compute cost re-encryption adds |
+| **SSL** | Secure Sockets Layer | TLS's obsolete predecessor; the name survives in product branding such as Cloudflare's 'Flexible SSL' |
+| **mTLS** | mutual TLS | TLS where the client also presents a certificate, so both ends are authenticated |
+| **HTTPS** | HTTP Secure | HTTP over TLS |
+| **CA** | certificate authority | the issuer; for mTLS inside a cluster this is usually an internal one you run |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **TLS termination** | the point where the encrypted connection is decrypted — usually the edge, rarely your application process |
+| **Reverse proxy** | a server that sits in front of your application, accepting client connections on its behalf |
+| **Edge** | the outermost layer that clients actually connect to — a CDN, load balancer or API gateway |
+| **Origin** | the backend your edge forwards to |
+| **Hop** | one leg of the path, e.g. client-to-edge or edge-to-origin; each hop has its own encryption setting |
+| **Re-encryption** | the edge decrypts, does its work, then opens a second TLS connection to the backend |
+| **Passthrough** | the balancer forwards encrypted bytes untouched and your app terminates TLS itself |
+| **Private key** | the secret the terminating component must hold in order to decrypt |
+| **Zero trust** | an architecture that assumes the internal network is hostile and authenticates every hop |
+| **Service mesh** | infrastructure that gives each service an identity and handles mTLS between them |
+| **Flexible SSL** | Cloudflare's setting where browser-to-Cloudflare is encrypted but Cloudflare-to-origin is plain HTTP — a padlock with no end-to-end protection |
+
+</details>
 
 This is where the section meets your architecture, and it's Ch2 §2 §11's TLS-termination job made concrete.
 **Termination** means the point where the encrypted connection is decrypted. That point is almost never
@@ -352,6 +615,43 @@ authenticate an anonymous public browser, but you *can* authenticate your own se
 ---
 
 ## 8. Failure modes — the decision checklist
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and commands used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ACME** | Automated Certificate Management Environment | the protocol that automates certificate renewal |
+| **SAN** | Subject Alternative Name | the certificate field listing covered hostnames; a mismatch here is a hard browser error |
+| **CA** | certificate authority | the issuer; also what a naive pin may be pinned to |
+| **IoT** | Internet of Things | embedded devices, a common source of wrong clocks |
+| **CI** | continuous integration | the automated build system; its containers often have wrong clocks or no root store |
+| **HSTS** | HTTP Strict Transport Security | a response header telling the browser never to use plaintext for this host again |
+| **TLS** | Transport Layer Security | the protocol; versions 1.0 and 1.1 are deprecated |
+| **HTTPS** | HTTP Secure | HTTP over TLS |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Expired certificate** | one past its not-after date; produces a hard browser error and a full outage |
+| **Incomplete chain** | the server sends its leaf but not the intermediate, so clients without a cached copy cannot build a path to a root |
+| **Intermediate certificate** | the middle link of the chain; must be served by you, not assumed |
+| **Cold client** | a client with no cached intermediates and no prior state — what you must test with, e.g. `openssl s_client` |
+| **Hostname mismatch** | the name the client asked for is not in the certificate's SAN list |
+| **Wildcard** | a certificate for `*.example.com`; covers one label only |
+| **Clock skew** | a client whose clock is wrong, making valid certificates look expired or not yet valid |
+| **Mixed content** | an HTTPS page loading `http://` sub-resources, which browsers block |
+| **`Strict-Transport-Security`** | the HSTS response header itself |
+| **Preload list** | a set of hostnames compiled into browsers so plaintext is refused even on a first-ever visit |
+| **Certificate pinning** | hard-coding which certificate or key a client will accept; rotating without backup pins bricks deployed clients |
+| **`curl -k`** | the flag that disables certificate verification — a debugging tool, never something to ship |
+| **`verify=False`** | the same disabling of verification in Python's `requests` library |
+| **Browser interstitial** | the full-page warning a browser shows instead of the site when verification fails |
+
+</details>
 
 Nearly every TLS incident is operational, not cryptographic:
 

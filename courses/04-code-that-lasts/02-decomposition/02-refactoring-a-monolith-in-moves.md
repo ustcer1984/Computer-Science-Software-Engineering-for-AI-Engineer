@@ -43,6 +43,29 @@ stay live, without a scary "big merge" at the end. Everything below is in servic
 
 ## 1. What "refactoring" actually means (and what it doesn't)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the definition of refactoring and the named rules behind it (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Refactoring** | Fowler's definition: a change to the internal structure of software that makes it easier to understand and cheaper to modify, without changing its observable behaviour |
+| **Internal structure** | how the code is organised — the part a refactoring is allowed to change |
+| **Observable behaviour** | what the code does as seen from outside: same outputs, same side effects, same errors; the part a refactoring must not change |
+| **Side effect** | anything a function does beyond returning a value — writing to a store, sending a message, mutating shared state |
+| **Change** | *(as contrasted here)* an edit that does alter behaviour, and so must be reviewed and tested as one |
+| **Two Hats** | Kent Beck's rule: you are either restructuring or changing behaviour, never both at once |
+| **Refactoring hat** | the mode in which you change structure only and the tests stay green throughout |
+| **Feature hat** | the mode in which you add or change behaviour and do not restructure |
+| **Green** | all tests passing — the signal that the last structural move preserved behaviour |
+| **Red** | a failing test; during refactoring it points at the move you just made, which you undo |
+| **Risk profile** | how a mistake shows up: mechanically checkable for a refactoring, a judgement call for a behaviour change |
+| **"Make the change easy, then make the easy change"** | Beck's line: reshape the code first with behaviour frozen, then make the now-small feature edit |
+| **Opportunistic timing** | doing the reshaping right before a feature, on the part of the code that feature touches |
+
+</details>
+
 The word gets used loosely to mean "I changed some code and it's nicer now." Fowler's definition is
 narrower and load-bearing:
 
@@ -83,6 +106,36 @@ thing you do *right before* a feature, to the part of the code that feature touc
 ---
 
 ## 2. The safety net — and what to do when you don't have one
+
+<details>
+<summary><b>Vocabulary for this section</b> — the safety net, and the legacy-code vocabulary (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Safety net** | whatever lets you tell quickly and reliably whether behaviour changed after a move |
+| **Test suite** | the set of automated tests you run after every move; usefulness depends on it running in seconds |
+| **Green** | all tests pass — behaviour preserved, keep going |
+| **Red** | a test fails — undo the last move |
+| **Commit on green** | recording each verified step so you can always retreat to a known-good state |
+| **Move** | one small, individually-safe structural transformation from the catalog |
+| **Legacy code** | Feathers' definition: simply code without tests — not necessarily old or bad |
+| **Ossify** | to become untouchable: no tests, so no safe change, so no improvement, so it stays scary |
+| **Characterization test** | a test that asserts what the code *currently* does, bugs included, rather than what it should do |
+| **Pinning test** | another name for a characterization test — it pins current behaviour in place |
+| **Golden master** | the captured reference output that later runs are compared against |
+| **Representative input** | an input chosen to exercise a branch you can see in the code |
+| **Branch** | one alternative path through the code |
+| **Seam** | Feathers' term: a place where you can change behaviour without editing the code at that place |
+| **Test double** | a stand-in for a real dependency in a test — a fake, stub or mock |
+| **Fake** | a simple working substitute for a real dependency (an in-memory database, a recording emailer) |
+| **Dependency injection** | passing a dependency in as a parameter instead of constructing it inside — how you create a seam |
+| **Data coupling** | §1's best coupling rung: communicate through explicit parameters and return values; it gives you seams for free |
+| **Test harness** | the scaffolding that lets you call the code under test at all |
+| **Unit test** | a test of one clean piece against what it *should* do — the reward after decomposition |
+
+</details>
 
 The whole method rests on one assumption: **after each move, you can quickly and reliably tell whether
 behaviour changed.** The standard instrument for that is a **test suite** you can run in seconds. Green
@@ -164,6 +217,40 @@ makes code testable, and tests are what make decomposition safe. The two skills 
 
 ## 3. The catalog of moves — a vocabulary, mapped to what each one fixes
 
+<details>
+<summary><b>Vocabulary for this section</b> — the catalog of named moves and the problems they fix (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Catalog** | Fowler's named list of small transformations, each with a mechanical step-by-step recipe |
+| **Extract Function** | pull a cohesive chunk of a long function into its own named function — the workhorse move |
+| **Inline Function** | the reverse: fold a shallow pass-through back into its caller |
+| **Extract Variable** | give a complex sub-expression a name by assigning it to a local variable |
+| **Replace Temp with Query** | turn a local temporary into a small function so extracted code no longer depends on statement order |
+| **Introduce Parameter Object** | bundle arguments that always travel together into one typed object |
+| **Preserve Whole Object** | pass the object rather than three fields pulled out of it — use with care, it can create stamp coupling |
+| **Split Phase** | separate code that does two things in sequence into two stages with a clear data hand-off |
+| **Replace shared state with return value** | stop mutating a shared bag; return what you computed and let the caller wire it — common coupling becomes data coupling |
+| **Move Function / Field** | relocate a function or field to the module it actually belongs with |
+| **Replace Conditional with Polymorphism** | swap a sprawling `if type == …` for one type per case |
+| **Polymorphism** | letting the object's type decide which implementation runs, instead of a branch on a flag |
+| **Change amplification** | §1's symptom: one simple change touches many places |
+| **Cognitive load** | §1's symptom: how much you must hold in your head to change anything safely |
+| **Cohesion** | how strongly the things inside one module belong together |
+| **Temporal coupling** | a hidden requirement that one thing run before another |
+| **Control coupling** | a caller passing a flag that tells the callee how to behave |
+| **Stamp coupling** | passing a whole object when only a couple of its fields are used |
+| **Data coupling** | communicating through explicit parameters and a return value — the target |
+| **Data clump** | a group of arguments that always appear together, asking to become one object |
+| **Feature envy** | a function more interested in another module's data than its own — it wants to move there |
+| **Shallow module** | a boundary that hides nothing; "negative depth" in §1's terms |
+| **U-curve** | §1's curve of total complexity against granularity; the catalog moves walk you toward its valley |
+| **Reversible** | each move maps to an undo, which is what makes a red test unambiguous |
+
+</details>
+
 Fowler's *Refactoring* is, at its core, a **catalog** — a named list of small transformations, each with
 a mechanical step-by-step recipe. You do not need to memorise the catalog; you need to know that it
 *exists*, that the moves have names (naming them is how you think and communicate about them), and
@@ -196,6 +283,29 @@ rewriting. Named moves are small, verifiable, and reviewable; a freehand rewrite
 ---
 
 ## 4. Attacking a monolith you can't hold in your head — Sprout and Wrap
+
+<details>
+<summary><b>Vocabulary for this section</b> — Feathers' two additive moves, and the habits around them (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Monolith** | here, a single enormous function or class you cannot hold in your head |
+| **Sprout Method / Sprout Class** | write the new behaviour as a new, cohesive, fully-tested unit and call out to it from the one place in the mess where it is needed |
+| **Wrap Method / Wrap Class** | rename the old operation and put a new tested method in front of it that does the extra work and then calls it |
+| **Cohesive** | doing one well-defined job |
+| **Pure** | computing only from its inputs, with no side effects — trivially testable |
+| **Call site** | the single place in the monolith where the sprouted unit is invoked |
+| **Seam** | a place where behaviour can be changed without editing the code at that place; a wrapper adds behaviour at one |
+| **Untouchable** | code you cannot safely open — the reason to wrap rather than edit |
+| **Boy Scout Rule** | leave the code a little cleaner than you found it |
+| **Opportunistic refactoring** | Fowler's term for cleaning the part you were touching anyway, as part of the task |
+| **Comprehension refactoring** | a kind of opportunistic refactoring: when you finally understand a gnarly bit, encode that understanding by cleaning it |
+| **Planned refactoring** | rarer, deliberately scheduled restructuring work, as opposed to the opportunistic kind |
+| **"Boil the ocean"** | attempting to fix everything at once — explicitly not required |
+
+</details>
 
 Extract-and-clean assumes you can understand the function well enough to carve it. Sometimes you can't —
 it's 2,000 lines, you need to add *one* feature today, and fully comprehending it first is neither
@@ -245,6 +355,30 @@ codebases got that way through a thousand opportunistic cleanups, not one heroic
 ---
 
 ## 5. The one you must resist — the Big Rewrite
+
+<details>
+<summary><b>Vocabulary for this section</b> — the rewrite trap and the pattern that replaces it (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Big Rewrite** | throwing the existing code away and building it again from scratch |
+| **Ground-up rewrite** | the same thing, named for starting from nothing |
+| **Greenfield** | a fresh start with no existing code or constraints — the emotional appeal of a rewrite |
+| **Joel Spolsky** | author of *Things You Should Never Do, Part I* (2000), which calls the ground-up rewrite "the single worst strategic mistake that any software company can make" |
+| **Netscape** | the browser company that rewrote its engine from scratch in the late 1990s, shipped almost nothing for about three years, and lost the market to Internet Explorer |
+| **Browser engine** | the component that parses and renders web pages |
+| **Scar tissue** | the ugly special cases in old code that encode years of real bug fixes and edge cases — knowledge a rewrite deletes |
+| **Edge case** | an unusual input or situation that the code has learned to handle |
+| **Shippable** | in a state you could release right now — refactoring keeps this true after every step, a rewrite does not |
+| **Moving target** | the old system, which keeps gaining features while the rewrite tries to catch up |
+| **Strangler Fig** | Fowler's pattern, named after the vine that grows around a tree and replaces it: build the new system around the old one and migrate one slice at a time until the old one can be deleted |
+| **Façade / router** | the front layer that decides, per request, whether to send traffic to the legacy system or the new one |
+| **Slice** | one piece of traffic or functionality migrated at a time |
+| **Stable interface** | a contract unlikely to change — the one condition under which a small rewrite is defensible |
+
+</details>
 
 The most expensive mistake in this whole area is refusing to refactor and reaching instead for the
 **ground-up rewrite**: "this code is hopeless, let's throw it away and build it fresh." It is emotionally
@@ -308,6 +442,43 @@ flowchart LR
 
 ## 6. Worked example — a monolith to deep modules, move by move
 
+<details>
+<summary><b>Vocabulary for this section</b> — the terms the worked example executes, move by move (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | work that goes to the database, network or another process rather than computing in memory |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Monolith** | here, one function doing five jobs in a single flow |
+| **The "and" test** | §1's cohesion check: if describing the module needs "and", it is doing too much |
+| **Shared mutable bag** | state that several steps read and write; in miniature, one local variable reused to mean three different things |
+| **Variable reuse** | assigning new meanings to the same name as the function proceeds — what blocks extraction |
+| **Characterization test** | a test that pins whatever the code produces today, bugs included, so later moves can be checked against it |
+| **Pin** | to freeze current behaviour as the expected value |
+| **Seam** | a place where you can substitute an implementation without editing the code there — here, `db` and `emailer` being parameters |
+| **Fake** | a simple substitute for a real dependency in a test (`FakeDB`, `FakeEmailer`) |
+| **Extract Variable** | give each distinct meaning its own name — the move that unblocks all the others here |
+| **Extract Function** | pull each cohesive chunk into its own named function |
+| **Split Phase** | separate the pure computation from the effects — the highest-value move in this example |
+| **Pure function** | one that computes only from its inputs and has no side effects; testable with no fakes at all |
+| **Effects** | the parts that talk to the world: persisting a row, sending an email |
+| **Pure core** | the part of the design that is a pure function of its inputs |
+| **Thin runner** | the small outer function that owns the effects and orchestrates the pure core |
+| **Deep module** | a small interface over a large implementation — §1's target, realised here |
+| **Policy** | a rule that can change independently, such as the discount rule or the tax rate |
+| **Replace Conditional with Polymorphism** | swapping a growing chain of conditionals for one type per case |
+| **Strategy object** | an object that carries one policy's implementation, chosen at runtime |
+| **U-curve / valley** | §1's picture of total complexity against granularity, and its sweet spot |
+| **Feature hat** | the mode in which behaviour changes — deliberately never worn during this example |
+
+</details>
+
 Let's make it concrete. Here is a compact but genuinely tangled function — the kind that starts at 30
 lines and grows to 300. It validates, computes, applies rules, persists, and notifies, all in one flow,
 mutating and reusing locals as it goes. (Nothing here is anyone's production code — it's a distilled
@@ -332,7 +503,7 @@ def process_order(order, db, emailer):
     return total
 ```
 
-Read it with §1's eyes: it does **five** things (the "and" test fails hard — validate *and* total *and*
+Read it with §1's eyes: it does **six** things (the "and" test fails hard — validate *and* total *and*
 discount *and* tax *and* persist *and* notify), and the local `total` is a **shared mutable bag** in
 miniature — it's reused to mean subtotal, then discounted subtotal, then grand total, so you can't extract
 any middle piece without untangling what `total` means at that line. That variable reuse is precisely what
@@ -409,6 +580,38 @@ row, same email. That's what makes it a refactoring, and that's why it was safe.
 ---
 
 ## 7. Refactoring with an AI agent — the workflow that keeps you safe
+
+<details>
+<summary><b>Vocabulary for this section</b> — the agent workflow vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | here, a coding agent driven by a large language model |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Agent** | an AI system that reads and edits your code on instruction |
+| **Two Hats** | Beck's rule that you restructure or change behaviour, never both at once — the discipline an agent violates by default |
+| **Wholesale rewrite** | the model's default response to "clean this up": one large diff mixing structure and behaviour |
+| **Diff** | the set of line changes a step produced; small diffs make an unintended behaviour change visible |
+| **Characterization test** | a test capturing current behaviour, bugs included; making the agent write it first turns "trust" into "verify" |
+| **Contract** | here, the pinned tests that the subsequent refactor must not break |
+| **Named move** | a specific catalog transformation (Extract Function, Split Phase) requested by name instead of "refactor this" |
+| **Green between every move** | running the tests after each move and stopping on red |
+| **Commit on green** | recording each verified step so you can retreat to it |
+| **Bisect** | using the commit history to find which step introduced a problem |
+| **Observable behaviour** | what the code does from outside — the only question that matters when reviewing a refactoring diff |
+| **Edge case** | an unusual input the old code handled; a favourite thing for a model to silently drop |
+| **`==` vs `is`** | Python's value equality versus object identity — a silent behaviour change if swapped |
+| **Defaulted parameter** | a parameter given a default value, which quietly changes what callers get |
+| **Regression** | a previously-working behaviour that stops working |
+| **Call site** | one of the places a function is called; agents are good at applying the same change across many of them |
+
+</details>
 
 You work primarily by driving AI agents, and refactoring is one of the things they're genuinely good at —
 *if* you impose the discipline of this section on them, because their default behaviour violates it.

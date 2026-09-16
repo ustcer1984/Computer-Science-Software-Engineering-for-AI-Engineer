@@ -48,6 +48,33 @@ along the **Phillips curve**.
 
 ## 1. Who counts as "unemployed" — the labour-force accounting
 
+<details>
+<summary><b>Vocabulary for this section</b> — the labour-force accounting terms and abbreviations (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **NILF** | not in the labour force | of working age, but neither employed nor actively searching for work |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Unemployed** *(official sense)* | without work, available to start, **and** actively searching in the recent period — all three at once |
+| **Employed** | holding a job, including as little as an hour of paid work in the reference week |
+| **Labour force** | the employed **plus** the officially unemployed — the job-seeking population |
+| **Working-age population** | everyone above the age threshold (typically 15+ or 16+), which the labour force and NILF partition between them |
+| **Reference week** | the specific week the survey asks about, so the count is a snapshot rather than a rolling average |
+| **Actively searching** | having applied, interviewed or otherwise looked for work, usually within the past four weeks — the gate that decides unemployed versus NILF |
+| **Available to start** | able to take a job now, rather than blocked by study, illness or caring duties |
+| **Discouraged worker** | someone who wants a job but has stopped looking, and is therefore counted as NILF rather than unemployed |
+| **Not in the labour force (NILF)** | students, retirees, full-time carers, the long-term sick and discouraged workers |
+| **Institutionalized population** | people in prisons, care homes and similar settings, excluded from the standard measure along with the military |
+| **Partition** | a split into groups that are exhaustive and non-overlapping, so every person lands in exactly one |
+
+</details>
+
 The word is narrower than everyday usage. To be counted **unemployed** in the official statistics, a person
 must be **all three** of:
 
@@ -75,6 +102,40 @@ to do with hiring.
 ---
 
 ## 2. The two headline ratios — and why one is never enough
+
+<details>
+<summary><b>Vocabulary for this section</b> — the two ratios, the third one, and the local abbreviations (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **NILF** | not in the labour force | of working age but neither employed nor actively searching |
+| **GFC** | global financial crisis | the 2008–09 crisis |
+| **COVID** | coronavirus disease 2019 | the 2020 pandemic shock |
+| **PR** | permanent resident | a non-citizen with permanent residency; Singapore's "resident" figures cover citizens plus PRs |
+| **MOM** | Ministry of Manpower | the Singapore ministry that publishes the labour-market statistics |
+| **EP** | Employment Pass | Singapore's work pass for higher-earning foreign professionals |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Unemployment rate** | the unemployed divided by the **labour force** — *not* by the population |
+| **Participation rate** | the labour force divided by the **working-age population** — how many people are in the job market at all |
+| **Unemployment rate vs participation rate** | the first asks "of those looking, how many have not found work"; the second asks "how many are looking at all". Both can improve on paper while the situation worsens |
+| **Employment-to-population ratio** | the employed divided by the working-age population; it sidesteps the labour-force denominator, so discouragement cannot flatter it |
+| **Denominator** | the bottom of a fraction; here, the choice of denominator is what makes the unemployment rate misleadable |
+| **Discouraged worker** | someone who stops searching, leaving both the numerator and the denominator of the unemployment rate |
+| **Natural rate of unemployment** | the rate that persists even in a healthy economy, from ordinary churn and mismatch — the dashed reference line on the chart |
+| **Cyclical movement** | the part of a series that rises and falls with the business cycle |
+| **Structural drift** | a slow trend underneath the cyclical wiggle, driven by ageing, schooling and social norms rather than by the cycle |
+| **Baby boomers** | the large post-war birth cohort whose retirement pulls the participation rate down |
+| **Resident vs non-resident workforce** | Singapore's resident figures cover citizens and PRs; non-residents on work permits and Employment Passes are counted separately |
+| **Buffer** | a group whose headcount is cut first in a downturn, cushioning the measured rate for everyone else |
+| **Long-term unemployment rate** | the share of the labour force jobless for an extended spell, published alongside the headline |
+
+</details>
 
 From that partition come the two numbers you must read **together**:
 
@@ -115,6 +176,31 @@ Two readings the chart makes concrete:
 
 ## 3. A stock fed by flows — why *duration* matters
 
+<details>
+<summary><b>Vocabulary for this section</b> — stocks, flows and the duration vocabulary (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stock vs flow** | a **stock** is a count at a point in time (how many are unemployed today); a **flow** is a movement per period (how many lost or found a job this month) |
+| **Unemployment rate as a stock** | a snapshot count, which says nothing about how fast people are moving through the pool |
+| **Hires** | flows into employment |
+| **Layoffs** | involuntary flows out of employment |
+| **Quits** | voluntary flows out of a job, usually a sign of worker confidence |
+| **Labour-market entry / re-entry** | people starting or resuming a job search, which feeds the unemployment pool from outside |
+| **High-flow, short-duration** | many people pass through unemployment but leave quickly — painful but fluid |
+| **Low-flow, long-duration** | fewer people enter unemployment, but those who do get stuck for a year or more; the same headline rate, a far worse reality |
+| **Duration of unemployment** | how long a spell lasts — the variable the headline rate hides |
+| **Median duration** | the length of the middle spell, so half last longer and half shorter |
+| **Long-term unemployment share** | the fraction jobless for 27 weeks or more — the dangerous kind |
+| **Skills atrophy** | skills decaying while out of work, which makes re-employment progressively harder |
+| **Employer screening** | firms filtering out the long-jobless on sight, which turns duration into a self-perpetuating trap |
+| **Hysteresis** | a temporary shock leaving a permanent mark — cyclical unemployment hardening into structural unemployment |
+| **Frictional floor** | the positive unemployment a healthy economy always has, because people are perpetually between jobs |
+
+</details>
+
 The unemployment rate is a **stock** (a snapshot count), but it is the result of relentless **flows**: every
 month people are *hired*, *laid off*, *quit*, *retire*, and *enter* or *re-enter* the search. A given 5%
 unemployment rate can mean two completely different things:
@@ -134,6 +220,36 @@ them.
 ---
 
 ## 4. The four types — and why "full employment" isn't zero
+
+<details>
+<summary><b>Vocabulary for this section</b> — the four types, the natural rate and the NAIRU (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **NAIRU** | non-accelerating-inflation rate of unemployment | the unemployment rate at which wage and price inflation is stable; below it inflation accelerates, above it inflation eases |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Frictional unemployment** | the normal churn of people moving between jobs or newly entering the search; a sign of a working market, not a failure |
+| **Structural unemployment** | a mismatch between the skills or locations workers have and the jobs on offer; the cure is retraining and mobility, not more demand |
+| **Cyclical unemployment** | the part that rises and falls with the business cycle, when spending collapses and firms everywhere need fewer workers — the part macro policy targets |
+| **Seasonal unemployment** | predictable calendar swings in retail, agriculture and tourism |
+| **Seasonal adjustment** | statistically stripping the calendar pattern out of a series, so the remaining movement is genuine news |
+| **Mismatch** | workers and vacancies existing at the same time but not fitting each other |
+| **Automation displacement** | workers losing jobs to machines or software, a common source of structural unemployment |
+| **Natural rate of unemployment** | frictional plus structural unemployment — the floor that persists even at full health |
+| **Full employment** | cyclical unemployment near zero, **not** a zero unemployment rate; churn and mismatch never vanish |
+| **Overheated labour market** | unemployment pushed below the natural rate, workers scarce, so wage growth accelerates |
+| **Slack** | the opposite: unused labour capacity, which cools wage and price growth |
+| **Wage-price thread** | the channel by which a tight labour market turns into consumer-price inflation |
+| **Phillips curve** | the short-run trade-off between unemployment and inflation that follows from that channel |
+| **Unobservable variable** | a quantity that must be estimated from a model rather than measured — the NAIRU is one, and it drifts with demographics, technology and institutions |
+
+</details>
 
 Not all unemployment is the same animal, and the distinction is the heart of policy:
 
@@ -165,6 +281,35 @@ unemployment** (the dashed line in Fig 2), the rate that persists even when the 
 
 ## 5. The headline understates slack — broad measures (U-6)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the broad measures and the kinds of slack they capture (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **U-3** | unemployment measure 3 | the official headline rate: without work, available, actively searching |
+| **U-6** | unemployment measure 6 | the broadest standard measure, adding marginally attached workers and involuntary part-timers |
+| **NILF** | not in the labour force | of working age but neither employed nor actively searching |
+| **U-3 vs U-6** | — | U-3 tracks the cycle; U-6 shows how much labour is actually going unused, and the gap widens in downturns |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Slack** | unused labour capacity in the economy — people who could be working, or working more |
+| **Hidden slack** | the part of that capacity the headline rate does not count, i.e. the gap between U-6 and U-3 |
+| **Marginally attached worker** | wants a job and is available, but has not searched recently enough to count as unemployed |
+| **Discouraged worker** | the subset who stopped searching because they believe no job is available |
+| **Involuntary part-timer** | working part-time only because full-time work cannot be found |
+| **Underemployment** | being employed but under-used — too few hours, or far below one's skill level |
+| **Informal economy** | cash work outside formal employment records |
+| **Gig economy** | platform-mediated piecework, which counts as employment however few the hours |
+| **Underemployment by skill** | someone working far below their training; invisible to every unemployment measure, yet a real waste of capacity |
+| **Headline rate** | the single number quoted in news, which is U-3 |
+
+</details>
+
 Even read alongside participation, the official rate (in US parlance **U-3**) misses people who are
 *economically* underused but don't fit the three-part definition. The broadest standard measure, **U-6**, adds
 them back:
@@ -193,6 +338,45 @@ slack**, **participation for who's dropped out**, and **duration for how bad it 
 
 ## 6. Okun's law — the bridge from GDP (§1) to jobs
 
+<details>
+<summary><b>Vocabulary for this section</b> — Okun's law and every symbol in it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | total output produced inside the country in a period |
+| **pp** | percentage point | the unit for a difference between two percentage rates — a move from 4% to 3.5% is 0.5 pp |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $u$ | "u" | the unemployment rate |
+| $\Delta u$ | "delta-u" | the **change** in the unemployment rate over the year; $\Delta$ (capital delta) always means "change in" |
+| $g$ | "g" | actual real GDP growth over the year |
+| $g^{\ast}$ | "g-star" | **potential** (trend) growth — the growth rate the economy can sustain; the star superscript marks the benchmark or equilibrium value of a variable, never a multiplication |
+| $g - g^{\ast}$ | "g minus g-star" | the growth shortfall or surplus relative to potential — the quantity that actually drives unemployment |
+| $\beta$ | "beta" | the Okun coefficient: how many points unemployment moves per point of growth gap; roughly 0.5 for the US |
+| $\approx$ | "approximately equals" | the relationship is an empirical regularity, not an exact identity |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Okun's law** | the empirical regularity that growing faster than potential pulls unemployment down, and growing slower pushes it up |
+| **Empirical regularity** | a pattern that holds well in the data without being derived from an accounting identity, so it can weaken or shift |
+| **Potential (trend) growth** | the growth rate consistent with full employment and stable inflation — the break-even rate |
+| **Break-even growth** | the growth rate at which unemployment is flat: fall short and it rises, exceed it and it falls |
+| **Growth shortfall** | growth below potential, which Okun's law converts into a jobs shortfall even when growth is positive |
+| **Percentage point** | the unit for a gap between two rates, distinct from a percentage change |
+| **Coefficient** | the multiplier in a fitted relationship; Okun's is estimated from data and varies by country and era |
+| **Jobless recovery** | output rebounding without employment following, because firms meet demand with existing staff |
+| **Labour productivity** | output per worker or per hour; rising productivity is how a firm can produce more without hiring |
+| **Labour hoarding** | firms keeping scarce workers through a mild downturn rather than laying off and re-hiring later, which flattens the relationship in the other direction |
+
+</details>
+
 Why does any of this connect to output? Because producing more usually takes more workers. **Okun's law** is
 the empirical regularity that ties the two headlines together — the formal version of §1's §9d "treadmill":
 
@@ -220,6 +404,43 @@ runs both ways:
 ---
 
 ## 7. How wages clear (or don't) — the most unusual market
+
+<details>
+<summary><b>Vocabulary for this section</b> — wage-setting, rigidity and market power (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **NAIRU** | non-accelerating-inflation rate of unemployment | the rate below which a tight labour market starts accelerating inflation |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Wage** | the price of labour — what balances the supply of workers against firms' demand for them |
+| **Labour supply** | how much work people are willing to offer at a given wage |
+| **Labour demand** | how many workers firms want to hire at a given wage |
+| **Marginal revenue product** | the extra revenue one more worker brings in; a firm hires up to the point where this equals the wage |
+| **Nominal wage** | pay as stated on the payslip, before adjusting for prices |
+| **Real wage** | nominal pay deflated by prices — what the pay actually buys, and the thing a worker cares about |
+| **Real pay cut** | pay rising more slowly than inflation, so purchasing power falls even though the number went up |
+| **Downward nominal wage rigidity** | stated pay very rarely falls, because of morale, contracts and norms |
+| **Sticky wages** | the same phenomenon stated generally: wages adjust slowly, so shocks show up elsewhere |
+| **Quantity adjustment vs price adjustment** | when wages cannot fall, a demand collapse is absorbed through **layoffs** (quantity) rather than **wage cuts** (price) — the chief reason recessions produce unemployment |
+| **Greasing the wheels** | mild inflation letting real wages fall without a nominal cut, so fewer jobs need to be destroyed |
+| **Price-taker** | a buyer or seller too small to move the market price; the textbook model assumes both sides are price-takers |
+| **Monopsony** | a single or dominant **buyer** — here an employer with wage-setting power, the mirror image of a monopoly on the selling side |
+| **Monopoly** | a single dominant **seller**, with price-setting power |
+| **Bargaining power** | each side's ability to influence the wage, which the simple supply-and-demand picture assumes away |
+| **Union** | a collective bargaining organisation of workers, one of the institutions that offsets employer power |
+| **Minimum wage** | a legal floor under the wage |
+| **Non-compete clause** | a contract term restricting where a worker may work next, which reduces their bargaining power |
+| **Institution-heavy market** | a market whose outcomes depend heavily on laws, norms and organisations, which is why labour markets differ so much across countries |
+| **Phillips curve** | the short-run trade-off in which lower unemployment comes with higher inflation, and vice versa |
+| **Inflation expectations** | what people expect inflation to be, which shifts the whole trade-off rather than moving along it |
+
+</details>
 
 The labour market is a *market* — a price (the wage) balancing supply (workers) and demand (firms, who hire up
 to where the wage equals the worker's marginal revenue product, the E01 §4 logic). But it is the market that
@@ -349,7 +570,7 @@ then test against a real release.
    employment" means **cyclical unemployment ≈ 0**, not a zero rate (§4). It's undesirable because frictional
    churn is people matching to better jobs, and pushing unemployment **below** the natural rate (the NAIRU)
    means a labour market so tight that wage growth accelerates into inflation (§4).
-5. **Unemployment rises by about 0.75 percentage points:** $\Delta u \approx -0.5\,(0.5 - 2) = +0.75$ (§6).
+5. **Unemployment rises by about 0.75 percentage points:** $\Delta u \approx -0.5 \times (0.5 - 2) = +0.75$ (§6).
    Note the sign — positive growth, rising unemployment, which is precisely §1's "+3% can be a crisis"
    argument made quantitative. When you check it against a real country-year, expect a loose fit: the Okun
    coefficient isn't a constant of nature (labour hoarding and jobless recoveries flatten it, §6), and
@@ -476,7 +697,7 @@ hikes — is a clean lens on **central-bank independence**. The two sides reason
 
 - **The President's case:** cheaper borrowing means stronger growth, more jobs, higher asset prices — good
   politics, especially into an election. And a heavily indebted government has a direct fiscal motive: every
-  extra point of interest on ~$36T of US debt costs *hundreds of billions* a year, so low rates slash the
+  extra point of interest on ~USD 36T of US debt costs *hundreds of billions* a year, so low rates slash the
   **debt-servicing bill**. Plus a genuine view that inflation is beaten and rates are needless drag.
 - **The Fed's case:** its mandate is price stability and employment, *not* to finance the deficit or serve the
   White House. Cutting before inflation is durably at 2% risks re-igniting it — doubly so under a supply shock.

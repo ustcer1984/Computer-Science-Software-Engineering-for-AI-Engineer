@@ -53,6 +53,44 @@ and, if not, *has it actually changed?* (answerable with a **cheap** network rou
 
 ## 1. The two questions every cache answers
 
+<details>
+<summary><b>Vocabulary for this section</b> — the freshness/validation vocabulary and the headers and codes it uses (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the protocol whose caching rules these are |
+| **RTT** | round-trip time | the time for a request to reach the origin and its reply to return |
+| **CDN** | content delivery network | a globally distributed shared cache serving content from near the user |
+| **URL** | uniform resource locator | the address a cache normally keys its stored copies by |
+| **ms** | milliseconds | thousandths of a second |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Cache** | a store sitting between client and origin that keeps past responses and may serve them again |
+| **Origin** | the authoritative server that actually produces the response — the end of the chain |
+| **Freshness** | stage 1: the stored copy is still inside its allowed lifetime, so it is served with **no network at all** |
+| **Validation** | stage 2: the copy is stale, so the cache asks the origin whether it is still current — **one round-trip, almost no bytes** |
+| **Stale** | past its allowed lifetime; not necessarily wrong, just no longer known to be current |
+| **Lifetime** | how long a response may be considered fresh, normally from `max-age` |
+| **`Cache-Control`** | the header carrying the caching instructions |
+| **`max-age`** | the directive giving the freshness lifetime in seconds |
+| **`Expires`** | the older, absolute-date form of the same idea |
+| **Conditional request** | a request that says "I already have this version — only send a body if it changed" |
+| **`304 Not Modified`** | the origin's answer meaning "your copy is still good"; it carries **no body**, which is the whole point |
+| **`200`** | the origin's answer meaning "here is a new body" — the full transfer |
+| **`If-None-Match`** | the request header carrying the version token the client holds |
+| **`If-Modified-Since`** | the timestamp form of the same question |
+| **Cold** | nothing cached yet, so the full fetch is paid |
+| **Revalidated** | stale but confirmed unchanged — the middle case |
+| **Fresh hit** | served straight from the cache with zero round-trips |
+| **Connection reuse** | keeping a connection open between requests (Ch1) — the other big latency lever, which stacks with caching |
+
+</details>
+
 A cache sits between a client and an origin and holds past responses. When a request comes in, it runs a
 two-stage decision — and the whole chapter hangs off these two stages:
 
@@ -107,6 +145,45 @@ reuse: the two combine, and both attack the round-trip, which is the part you ca
 
 ## 2. `Cache-Control` — the freshness contract
 
+<details>
+<summary><b>Vocabulary for this section</b> — every `Cache-Control` directive in the table, plus the four traps (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CDN** | content delivery network | a globally distributed shared cache close to users |
+| **HTTP** | HyperText Transfer Protocol | the protocol defining these directives |
+| **N** | (a number of seconds) | the value in `max-age=N`, `s-maxage=N`, `stale-while-revalidate=N` |
+| **s** | seconds | the unit of every lifetime here |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`Cache-Control`** | the header that governs caching; sent on responses as instructions, sometimes on requests as an override |
+| **Directive** | one comma-separated instruction inside that header |
+| **`max-age=N`** | fresh for N seconds after it was fetched — the primary freshness knob |
+| **`s-maxage=N`** | `max-age` for **shared** caches only, overriding `max-age` there |
+| **`no-cache`** | you **may** store it, but you must revalidate before every reuse — it does **not** mean "don't cache" |
+| **`no-store`** | never write it to any cache at all — this is the directive that means "don't cache" |
+| **`private`** | only the end user's own browser may store it; about **ownership**, not secrecy |
+| **`public`** | any cache may store it, even a response that would not normally be cacheable |
+| **`must-revalidate`** | once stale, it may not be served at all without a successful revalidation |
+| **`immutable`** | this body will never change for its whole lifetime — do not revalidate even on a reload |
+| **`stale-while-revalidate=N`** | keep serving the stale copy for up to N seconds while refreshing in the background |
+| **Shared cache** | a cache serving many users — a CDN edge or a proxy |
+| **Private cache** | a cache serving exactly one user — the browser's own store |
+| **Revalidate** | ask the origin whether the stored copy is still current |
+| **Stale** | past its freshness lifetime |
+| **`Age`** | the response header saying how many seconds a shared cache has already held this object |
+| **Heuristic freshness** | a cache guessing a lifetime when no explicit directive was given, often from `Last-Modified` |
+| **`Last-Modified`** | the timestamp of the resource's last change, used as a validator and as the basis of that guess |
+| **Fingerprinted asset** | a file whose URL contains a hash of its contents, so it can safely be marked `immutable` |
+| **Security control** | the framing this section urges for `Cache-Control` on personalised responses — a wrong directive leaks data, not just performance |
+
+</details>
+
 `Cache-Control` is the header that governs everything. It appears on **responses** (the server's caching
 instructions) and sometimes on **requests** (the client overriding). The directives that carry their
 weight:
@@ -148,6 +225,45 @@ Four traps worth burning in, because their names lie:
 ---
 
 ## 3. Validators & the conditional request — how `304` saves the round-trip
+
+<details>
+<summary><b>Vocabulary for this section</b> — validators, the conditional exchange, and strong vs weak (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **`ETag`** | entity tag | an opaque server-chosen version identifier for the current representation |
+| **RTT** | round-trip time | the time for a request and its reply |
+| **KB** | kilobytes | thousands of bytes |
+| **ms** | milliseconds | thousandths of a second |
+| **`W/`** | weak | the prefix marking an `ETag` as a weak validator |
+| **`mtime`** | modification time | a file's last-modified timestamp, the usual source of `Last-Modified` |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+| **CSS** | Cascading Style Sheets | the stylesheet format in the worked example |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Validator** | a cheap fingerprint of a version, which the client echoes back so the origin can say "changed" or "unchanged" |
+| **`ETag`** | the version-token validator, e.g. `"9e1f-a83c"`; opaque — the client never interprets it |
+| **Opaque** | meaningless to the client by design, so the server can change how it is computed without breaking anyone |
+| **`If-None-Match`** | the request header echoing an `ETag`: "send a body only if the version differs" |
+| **`Last-Modified`** | the timestamp validator — when the resource last changed |
+| **`If-Modified-Since`** | the request header echoing that timestamp |
+| **`304 Not Modified`** | unchanged; reuse your stored copy — and no body is sent |
+| **`200`** | changed; here is the new body and a new `ETag` |
+| **Representation** | the concrete bytes that stand for the resource right now |
+| **Strong validator** | one that changes if even a single byte changes — an `ETag` with no `W/` prefix |
+| **Weak validator** | `W/"..."` — promises only *semantic* equivalence, not byte-identity |
+| **Semantically equivalent** | the user would see the same thing, though the bytes may differ (a different compression level, a changed comment) |
+| **Byte-range request** | asking for part of a file; needs a **strong** validator so the pieces are known to come from one version |
+| **Stale** | past its freshness lifetime, which is what triggers the conditional request |
+| **`Cache-Control: max-age`** | the freshness lifetime the `304` can reset |
+| **Uniform interface** | the discipline of acting on the contract rather than the content — why an opaque `ETag` works |
+
+</details>
 
 When a copy goes stale, the cache needs to ask "has this actually changed?" without re-downloading it. It
 needs a cheap **fingerprint** of the version it holds. HTTP has two, called **validators**:
@@ -192,6 +308,48 @@ validators (no `W/`) mean byte-for-byte identical.
 ---
 
 ## 4. The cache hierarchy — private vs shared, and where each lives
+
+<details>
+<summary><b>Vocabulary for this section</b> — every box in the cache chain, and the two production caching patterns (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CDN** | content delivery network | a globally distributed shared cache close to users |
+| **PoP** | point of presence | one physical CDN location |
+| **ALB** | Application Load Balancer | AWS's layer-7 load balancer; a reverse proxy |
+| **AWS** | Amazon Web Services | the cloud provider behind ALB, CloudFront and API Gateway |
+| **API** | application programming interface | the machine-facing service interface |
+| **SPA** | single-page application | a web app that loads once and then updates in the browser |
+| **HTML** | HyperText Markup Language | the document format of `index.html` |
+| **URL** | uniform resource locator | the address a cache keys on |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Private cache** | the browser's own store, serving exactly one user — so it may keep `private` responses |
+| **Shared cache** | one cache serving many users: a CDN edge, a reverse proxy, a corporate forward proxy |
+| **Forward proxy** | a proxy the *client* goes through, on the client's side of the network |
+| **Reverse proxy** | a proxy that sits in front of the *origin* and answers on its behalf — ALB, CloudFront and API Gateway all are (§11) |
+| **Edge** | a cache location close to users rather than close to the origin |
+| **Origin** | the authoritative server the chain eventually reaches |
+| **`private`** | only the end user's browser may store this |
+| **`public`** | any cache may store this |
+| **`no-store`** | never store it anywhere |
+| **`s-maxage`** | the shared-cache-only freshness lifetime, tunable independently of `max-age` |
+| **`max-age=0, s-maxage=600`** | "browsers, always revalidate; CDN, hold it ten minutes" — a common split |
+| **`immutable`** | never revalidate; this URL's content will not change |
+| **Fingerprinting** | putting a content hash in the filename (`app.9e1f2a.css`) so the URL *is* the version |
+| **Content hash** | a short digest of the file's bytes, which changes whenever the bytes do |
+| **`no-cache`** | store it, but revalidate before every reuse — what `index.html` typically gets so deploys are picked up at once |
+| **`ETag`** | the validator that makes revalidation cheap |
+| **Invalidation** | removing a cached copy before its lifetime expires — the hard problem fingerprinting sidesteps (§7) |
+| **Cache breach** | a shared cache storing one user's response and serving it to another |
+
+</details>
 
 A response doesn't hit one cache; it passes through a **chain**, and the split between **private** and
 **shared** caches is the one that governs both performance and safety.
@@ -239,6 +397,42 @@ The hierarchy is why the two big performance patterns exist:
 
 ## 5. The *other* use of conditional requests — optimistic concurrency (the `409` fix)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the lost-update problem and the full family of precondition headers (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **`ETag`** | entity tag | the opaque version token the whole mechanism turns on |
+| **OCC** | optimistic concurrency control | proceeding without locks and checking the version at write time |
+| **CAS** | compare-and-swap | the low-level primitive this is the HTTP spelling of: write only if the value is still what I read |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+| **JSON** | JavaScript Object Notation | the body format in the example |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Lost update** | two clients read the same version, both write, and the second silently overwrites the first |
+| **Precondition** | a condition attached to a request; if it fails, the request is not carried out |
+| **`If-Match`** | "act only if the resource is still the version I read" — the write-side precondition |
+| **`If-None-Match`** | "act only if the version is *not* one I already have" — the read-side one, used for revalidation |
+| **`If-None-Match: *`** | "create only if nothing exists at this URL yet" — a race-free create |
+| **`If-Unmodified-Since`** | the timestamp form of `If-Match` |
+| **`If-Modified-Since`** | the timestamp form of `If-None-Match` |
+| **`412 Precondition Failed`** | the precondition did not hold, so the write was **rejected, not applied** |
+| **`409 Conflict`** | the request clashes with the resource's current state — the symptom `If-Match` prevents |
+| **`200` / `204`** | success with a body / success with deliberately no body — what a successful conditional `PUT` returns |
+| **Optimistic concurrency control** | assume conflicts are rare, do not lock, and catch the rare collision at write time |
+| **Pessimistic locking** | the opposite: take a lock up front so no one else can write while you hold it |
+| **Compare-and-swap** | update only if the current value equals the one you read — the same idea one layer down |
+| **Read-heavy workload** | one with far more reads than writes, where optimistic control scales much better |
+| **Merge** | reconciling your edit with the version that won, after a `412` |
+| **Validator** | the version fingerprint (`ETag` or `Last-Modified`) every one of these headers is built on |
+
+</details>
+
 Here is the section's "two mechanisms, one machine" payoff, and the part that connects straight back to
 §1. The same `ETag` machinery solves a completely different problem: the **lost update**.
 
@@ -285,6 +479,39 @@ The full family of preconditions (all reusing validators):
 
 ## 6. `Vary` — caching when the response depends on the request
 
+<details>
+<summary><b>Vocabulary for this section</b> — cache keys, variants, and the two symmetrical `Vary` failures (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **URL** | uniform resource locator | the address a cache keys stored responses by, before `Vary` extends the key |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+| **JSON** | JavaScript Object Notation | one possible representation of the same resource |
+| **HTML** | HyperText Markup Language | another one |
+| **gzip** | GNU zip | a common compression format for response bodies |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Cache key** | what a cache looks a stored response up by — the URL, plus any headers named in `Vary` |
+| **`Vary`** | the response header listing which *request* headers the content depends on |
+| **Variant** | one of several different bodies the same URL can legitimately return |
+| **Content negotiation** | the client stating preferences and the server picking a variant (Ch2 §3) |
+| **`Accept-Encoding`** | the request header saying which compressions the client can decode |
+| **`Accept-Language`** | the request header giving the client's preferred human languages |
+| **`Accept`** | the request header giving the client's preferred media types |
+| **`User-Agent`** | the request header identifying the client software — nearly unique per client, so a terrible thing to vary on |
+| **`Cookie`** | the request header carrying per-user state — varying on it means "cache per user", i.e. never shared |
+| **High cardinality** | having very many distinct values, which is what makes a `Vary` header destroy the hit rate |
+| **Hit rate** | the fraction of requests a cache can answer itself; fragmenting the key collapses it |
+| **Correctness bug** | too few headers in `Vary` — the wrong variant is served |
+| **Performance bug** | too many headers in `Vary` — the cache fragments and stops helping |
+
+</details>
+
 A subtlety that bites hard in practice: a cache keys stored responses **by URL**. But the *same URL* can
 legitimately return *different* bodies depending on request headers — a gzipped body for a client that sent
 `Accept-Encoding: gzip`, English vs French for different `Accept-Language`, JSON vs HTML for different
@@ -311,6 +538,40 @@ The failure modes are symmetrical and both real:
 ---
 
 ## 7. Invalidation — the genuinely hard problem, and how the web ducks it
+
+<details>
+<summary><b>Vocabulary for this section</b> — invalidation strategies and the terms that describe their limits (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CDN** | content delivery network | a globally distributed shared cache, and the only place an active purge is available |
+| **API** | application programming interface | how a purge is normally triggered |
+| **URL** | uniform resource locator | the address whose stability or instability is the whole question here |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Invalidation** | removing or replacing a cached copy **before** its freshness lifetime expires |
+| **Versioned URL / fingerprinting** | changing the URL whenever the content changes, so there is nothing to invalidate — the dominant web strategy |
+| **Immutable content** | a body that will never change under that URL, which is what makes the versioned-URL trick safe |
+| **Active purge** | explicitly telling a CDN to evict an object, via `PURGE` or a provider API |
+| **`PURGE`** | the non-standard method some CDNs accept to evict an object |
+| **Eventually consistent** | the effect spreads over seconds to minutes rather than applying everywhere at once |
+| **Edge** | one of the many CDN locations a purge has to reach |
+| **Purge lag** | the delay between asking for eviction and every edge actually honouring it |
+| **Stable URL** | an address that must keep working while its content changes — the case fingerprinting cannot serve |
+| **`max-age`** | the freshness lifetime; kept large for immutable assets and small for mutable ones |
+| **`no-cache`** | store but always revalidate — the strongest option short of not caching |
+| **`ETag`** | the validator that makes short-freshness revalidation cheap |
+| **Revalidation** | one cheap round-trip to confirm a copy is still current |
+| **Mutability** | whether a resource's content can change under a fixed URL — the axis this section says to split your caching policy along |
+| **`private` / `no-store`** | the directives for per-user and sensitive responses, which barely get cached at all |
+
+</details>
 
 > *"There are only two hard things in Computer Science: cache invalidation and naming things."* — Phil
 > Karlton
@@ -340,6 +601,42 @@ the whole site is always wrong for part of it.
 ---
 
 ## 8. Failure modes — the decision checklist
+
+<details>
+<summary><b>Vocabulary for this section</b> — the terms and headers behind each failure mode listed (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+| **CDN** | content delivery network | the shared cache most of these failures happen in |
+| **gzip** | GNU zip | a common body compression, and the classic `Vary` casualty |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Shared cache** | a cache serving many users, where a personalised response becomes a data breach |
+| **`private`** | only the end user's own browser may store this response |
+| **`public`** | any cache may store it — dangerous on anything per-user |
+| **`no-store`** | never store it anywhere; the right directive for secrets |
+| **`no-cache`** | store it but always revalidate — **not** "don't store", the most confused pair in HTTP |
+| **Heuristic caching** | a cache inventing a freshness lifetime because you set no `Cache-Control` at all |
+| **`Cache-Control`** | the header that should always be set explicitly rather than defaulted |
+| **`Vary`** | the response header naming which request headers the body depends on |
+| **`Accept-Encoding`** | the compression preference header — the one most often missing from `Vary` |
+| **`Cookie` / `User-Agent`** | high-cardinality headers whose presence in `Vary` drives the hit rate to nearly zero |
+| **Hit rate** | the fraction of requests the cache answers itself |
+| **`If-Match`** | the precondition that makes a `PUT` fail rather than clobber a newer version |
+| **`412 Precondition Failed`** | the response when it does fail — the signal to re-read, merge and retry |
+| **Lost update** | one client's write silently overwritten by another's |
+| **`200 OK`** | success — dangerous when a stale cached one masks a backend that is now failing |
+| **Stale** | past its freshness lifetime |
+| **`Set-Cookie`** | the response header that issues a credential; caching it in a shared cache replays one user's session to others |
+| **Strip / deny at the shared layer** | configuring the CDN or reverse proxy to refuse to store such responses at all |
+
+</details>
 
 The real-world calls, most of which you'll recognize once named:
 

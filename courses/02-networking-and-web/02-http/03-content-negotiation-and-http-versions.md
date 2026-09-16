@@ -50,6 +50,52 @@ question resolves into one word: **head-of-line blocking**, attacked at a lower 
 
 ## 1. Content negotiation — one URL, many representations
 
+<details>
+<summary><b>Vocabulary for this section</b> — the negotiation headers, the media types, and the status codes involved (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **REST** | Representational State Transfer | the architectural style behind "a URL names a resource, and you send a representation of it" |
+| **URL** | uniform resource locator | the address that names the resource |
+| **JSON** | JavaScript Object Notation | a text data format, `application/json` |
+| **CSV** | comma-separated values | a tabular text format, `text/csv` |
+| **HTML** | HyperText Markup Language | the document format, `text/html` |
+| **WebP** | (a format name) | a modern image format, `image/webp` |
+| **`br`** | Brotli | a compression algorithm |
+| **gzip** | GNU zip | the universally supported compression algorithm |
+| **zstd** | Zstandard | a newer, fast compression algorithm |
+| **UTF-8** | 8-bit Unicode Transformation Format | the character encoding the web has standardised on |
+| **`en` / `fr` / `fr-CH` / `zh-Hans`** | English / French / Swiss French / Simplified Chinese | language tags: a language, optionally a region or script |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Resource** | the thing a URL names, independent of any particular format |
+| **Representation** | the concrete bytes sent to stand for that resource — JSON or CSV, English or French, compressed or not |
+| **Content negotiation** | client and server agreeing which representation to use, without inventing separate URLs |
+| **Server-driven (proactive) negotiation** | the client sends preferences, the server chooses — what the web actually runs on |
+| **Agent-driven negotiation** | the server lists the options and the client picks; rare |
+| **`Accept`** | the request header giving preferred media types |
+| **`Accept-Language`** | the request header giving preferred human languages |
+| **`Accept-Encoding`** | the request header giving acceptable compressions |
+| **`Accept-Charset`** | the request header giving acceptable character sets; largely obsolete |
+| **`Content-Type`** | the response header stating the media type actually sent |
+| **`Content-Language`** | the response header stating the language actually sent |
+| **`Content-Encoding`** | the response header stating the compression actually applied |
+| **Media type** | the format label, e.g. `application/json` — also called a MIME type |
+| **`Vary`** | the response header naming which request headers the chosen representation depended on, so caches key correctly |
+| **Cache key** | what a cache looks a stored response up by: the URL plus everything in `Vary` |
+| **`;q=`** | the quality-value suffix expressing relative preference (§2) |
+| **`406 Not Acceptable`** | the honest status when the server can satisfy none of the client's acceptable options |
+| **`300 Multiple Choices`** | the status used by the rare agent-driven style to hand the client a list |
+| **`200 OK`** | success, with the negotiated representation in the body |
+
+</details>
+
 A core REST idea (§1's §10a) is that a URL names a **resource**, and what travels on the wire is a
 **representation** of it. The same `/report/42` can legitimately be delivered as JSON or CSV, in English or
 French, gzip'd or raw. **Content negotiation** is how client and server agree on which representation,
@@ -89,6 +135,41 @@ negotiation is what the web runs on.
 
 ## 2. Quality values — the preference algorithm
 
+<details>
+<summary><b>Vocabulary for this section</b> — the q-value notation, the wildcards, and the `identity` special case (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **`q`** | quality | the weight in `;q=0.8`, expressing relative preference |
+| **JSON** | JavaScript Object Notation | one candidate media type |
+| **CSV** | comma-separated values | another candidate media type |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`q=1`** | the default and highest preference — "this is what I want" |
+| **`q=0.8`** | a lesser but still acceptable option — "80% as welcome" |
+| **`q=0`** | an explicit rejection — "do not send me this" |
+| **`*/*`** | the media-type wildcard: any type at all |
+| **`*`** | the same wildcard for a language or an encoding |
+| **Quality value** | a number from 0 to 1 attached to an option, giving its relative preference; the default is 1 |
+| **Dimension / axis** | one negotiable property — media type, language, or encoding — each negotiated independently |
+| **Most specific acceptable match** | the server's selection rule: prefer the narrowest matching option with the highest q-value, among those it can actually produce |
+| **Wildcard** | `*/*` or `*`, meaning "anything is acceptable" — which is what most browsers send |
+| **`identity`** | the "no compression at all" encoding; implicitly acceptable unless explicitly refused with `identity;q=0` |
+| **`Accept`** | the media-type preference header |
+| **`Accept-Language`** | the language preference header |
+| **`Accept-Encoding`** | the compression preference header |
+| **`Vary`** | the response header you owe for every axis you actually negotiated on |
+| **Shared cache** | a cache serving many users, which will serve the wrong variant if `Vary` is missing |
+| **Preference, not contract** | negotiation expresses what the client would like; it does not bind the server to any particular answer |
+
+</details>
+
 The `;q=` weights above are **quality values**: a number from `0` to `1` (default `1`) expressing relative
 preference. `Accept: application/json, text/csv;q=0.8` means "JSON ideally; CSV is 80% as welcome; nothing
 else." A `q=0` explicitly *rejects* an option.
@@ -109,6 +190,41 @@ serves French to an English reader. Negotiation and caching are the same problem
 ---
 
 ## 3. Compression — the negotiation that pays for itself
+
+<details>
+<summary><b>Vocabulary for this section</b> — the codecs, and the end-to-end vs hop-by-hop distinction (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **`br`** | Brotli | the best-ratio text compressor, near-universal over HTTPS |
+| **gzip** | GNU zip | the universal fallback compressor |
+| **zstd** | Zstandard | a newer, fast compressor gaining ground |
+| **HTML / CSS / JSON** | HyperText Markup Language / Cascading Style Sheets / JavaScript Object Notation | the text formats that compress dramatically |
+| **JPEG / PNG / WebP / MP4** | image and video formats | already-compressed media that should be passed through untouched |
+| **HTTPS** | HTTP Secure | HTTP carried inside TLS |
+| **CPU** | central processing unit | the compute that compression burns |
+| **`ETag`** | entity tag | the version token that fingerprints the representation — including its `Content-Encoding` |
+| **HTTP** | HyperText Transfer Protocol | the protocol |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Codec** | a specific compression algorithm the two sides can agree on |
+| **`Accept-Encoding`** | the request header listing which codecs the client can decode |
+| **`Content-Encoding`** | the response header naming the codec actually used — an **end-to-end** property of the representation |
+| **`Transfer-Encoding: chunked`** | a **hop-by-hop** framing of the message, used to stream a body whose length is not known in advance |
+| **End-to-end** | a property of the representation itself, meaningful from origin to client and covered by the `ETag` |
+| **Hop-by-hop** | a property of one connection only, which each intermediary may undo and redo |
+| **Entropy-coded** | already compressed to near its information-theoretic limit — which is why re-compressing it gains nothing |
+| **`Vary: Accept-Encoding`** | the obligation that comes with compressing: without it a cache serves a Brotli body to a gzip-only client |
+| **Variant** | one of the several bodies the same URL may return |
+| **Shared cache** | a cache serving many users, where the wrong variant reaches the wrong person |
+| **Transfer time** | the part of latency spent moving bytes, which is what compression attacks |
+
+</details>
 
 `Accept-Encoding` / `Content-Encoding` is content negotiation's highest-leverage case, so it's worth its
 own treatment. Text compresses dramatically — HTML, CSS, JavaScript and JSON routinely shrink **70–90%** — and that
@@ -136,6 +252,35 @@ shrinkage comes straight off transfer time, the blue bar in §2's latency figure
 
 ## 4. The versions change the *delivery*, never the *meaning*
 
+<details>
+<summary><b>Vocabulary for this section</b> — semantics vs wire format, and the head-of-line idea the versions chase (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP/1.1, HTTP/2, HTTP/3** | HyperText Transfer Protocol versions | the three wire formats in use |
+| **RFC** | Request for Comments | an IETF standards document; RFC 9110 specifies HTTP's version-independent semantics |
+| **IETF** | Internet Engineering Task Force | the body that publishes those documents |
+| **HOL** | head-of-line | the blocking pattern where one stalled item holds up everything queued behind it |
+| **ASCII** | American Standard Code for Information Interchange | the plain-text encoding HTTP/1.1 messages are written in |
+| **URL** | uniform resource locator | the address — which, notably, never carries the version |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **HTTP semantics** | methods, status codes, headers, idempotency and caching — the *meaning*, identical across all versions |
+| **Wire format** | how a message is serialised: readable text lines, or binary frames |
+| **Frame** | one binary unit of a HTTP/2 or HTTP/3 message |
+| **Concurrency model** | how many requests may be in flight on one connection, and how independent they are |
+| **In-flight** | sent but not yet answered |
+| **Head-of-line blocking** | one slow or lost item at the front of a queue stalling everything behind it, even work that is ready |
+| **Layer** | the level at which the blocking happens — HTTP in 1.1, TCP in 2, nowhere in 3 |
+| **`Cache-Control: max-age=60`** | an example of a semantic that behaves identically over all three versions |
+
+</details>
+
 Here's the framing that makes the rest of the section easy, and that closes the chapter. Everything in
 §1–§2 — methods, status codes, headers, idempotency, caching — is **HTTP semantics**, specified in RFC 9110
 **independently of any version**. The version (HTTP/1.1, /2, /3) governs only two things:
@@ -156,6 +301,44 @@ and does it ever reach your desk as an application developer? Both are worked in
 ---
 
 ## 5. HTTP/1.0 → 1.1: persistent connections, and the wall
+
+<details>
+<summary><b>Vocabulary for this section</b> — persistent connections, pipelining, and the browser workarounds (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP/1.0, HTTP/1.1** | HyperText Transfer Protocol versions | the pre-persistent and persistent text-based versions |
+| **HTTP/2** | HyperText Transfer Protocol version 2 | the multiplexed version built to remove this section's workaround |
+| **TCP** | Transmission Control Protocol | the reliable transport each connection is |
+| **TLS** | Transport Layer Security | the encryption handshake paid on top of it |
+| **HOL** | head-of-line | one slow item stalling everything queued behind it |
+| **IPv4** | Internet Protocol version 4 | the address format whose scarcity made name-based virtual hosting necessary |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Persistent connection** | one kept open across several requests, so the handshake is paid once — the HTTP/1.1 default |
+| **`Connection: keep-alive`** | the header that requests or confirms that behaviour |
+| **Handshake** | the TCP (and TLS) setup exchange paid before any data flows |
+| **Amortize** | spread a one-off cost across many later requests |
+| **Warm connection** | one already open and already ramped up, hence faster than a fresh one |
+| **Serial** | strictly one at a time: request, wait for the full response, then the next |
+| **Pipelining** | sending the next request before the previous response arrives; specified in 1.1 but effectively dead |
+| **In-order responses** | the rule that killed pipelining: replies must come back in request order, so one slow reply blocks ready ones |
+| **Head-of-line blocking at the HTTP layer** | exactly that stall — the problem HTTP/2 removes |
+| **Parallel connections** | a browser opening about six TCP connections per origin to fake concurrency |
+| **Origin** | scheme, host and port taken together — the unit that per-origin connection limits apply to |
+| **Domain sharding** | spreading assets across extra hostnames to get past that per-origin limit; an anti-pattern under HTTP/2 |
+| **Congestion-control state** | the per-connection ramp-up each extra connection has to build from scratch |
+| **`Host`** | the header HTTP/1.1 added, letting many sites share one IP address |
+| **Name-based virtual hosting** | serving many sites from one IP, distinguished by `Host` |
+| **Chunked transfer** | sending a body in pieces when its total length is not known up front |
+| **Multiplex** | carry several requests concurrently on one connection — what 1.1 cannot do |
+
+</details>
 
 - **HTTP/1.0** opened a **fresh TCP (and later TLS) connection per request** — pay the whole Ch1 §1
   handshake budget for *every* file on a page. Catastrophic once pages had dozens of assets.
@@ -211,6 +394,42 @@ flowchart TB
 
 ## 6. HTTP/2: one connection, many streams
 
+<details>
+<summary><b>Vocabulary for this section</b> — framing, streams, HPACK, server push, and the flaw left behind (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP/2** | HyperText Transfer Protocol version 2 | the 2015 binary, multiplexed version |
+| **SPDY** | (a name, pronounced "speedy") | Google's experimental protocol that HTTP/2 grew out of |
+| **HPACK** | header compression for HTTP/2 | the scheme that sends repeated headers once and refers back to them |
+| **HOL** | head-of-line | one stalled item holding up everything behind it |
+| **TCP** | Transmission Control Protocol | the single connection all HTTP/2 streams still share |
+| **ASCII** | American Standard Code for Information Interchange | the text encoding HTTP/2 replaces with binary |
+| **API** | application programming interface | header-heavy traffic, where HPACK pays off most |
+| **HTTP/3** | HyperText Transfer Protocol version 3 | the version that fixes the flaw left here |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Binary framing** | messages carried as binary frames rather than text lines — cheaper and unambiguous to parse |
+| **Frame** | one binary unit; frames from different streams interleave on the wire |
+| **Stream** | one request-and-response pair, as an independent sequence inside the connection |
+| **Multiplexing** | interleaving many streams over a single connection so they progress concurrently |
+| **Header compression** | sending repeated header values once and referencing them thereafter |
+| **`User-Agent` / `Cookie` / `Accept*`** | the repetitive headers HPACK is aimed at |
+| **Server push** | the server sending resources the client never asked for; shipped, then removed in practice |
+| **`103 Early Hints`** | the status that replaced push's useful part — telling the client what to fetch, rather than sending it |
+| **Domain sharding** | the HTTP/1.1 workaround that becomes an anti-pattern here, since it fragments the one connection |
+| **In-order byte delivery** | TCP's guarantee — and the reason a single lost packet stalls every stream above it |
+| **TCP head-of-line blocking** | the remaining flaw: one lost packet blocks all multiplexed streams, even those whose data arrived |
+| **Retransmission** | resending the lost packet, which is what everything is waiting on |
+| **Lossy network** | one where packets are dropped often — mobile links especially, where this flaw can make HTTP/2 worse than HTTP/1.1 |
+
+</details>
+
 HTTP/2 (2015, born from Google's experimental SPDY protocol) keeps every HTTP semantic and rewrites the transport:
 
 - **Binary framing.** Messages become binary **frames** instead of ASCII text — cheaper and unambiguous to
@@ -233,6 +452,44 @@ layer down to the **TCP** layer — which is where HTTP/3 goes to kill it.
 ---
 
 ## 7. HTTP/3 + QUIC: no head-of-line blocking left
+
+<details>
+<summary><b>Vocabulary for this section</b> — QUIC's properties, and the fallback negotiation (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **HTTP/3** | HyperText Transfer Protocol version 3 | the 2022 version that runs over QUIC |
+| **QUIC** | (a name, not an acronym) | the transport built on UDP that carries its own reliability, ordering and encryption |
+| **UDP** | User Datagram Protocol | the bare datagram transport QUIC is built on |
+| **TCP** | Transmission Control Protocol | the transport HTTP/2 uses, and the source of its remaining blocking |
+| **TLS** | Transport Layer Security | the encryption protocol; TLS 1.3 is folded into QUIC's own handshake |
+| **RTT** | round-trip time | the time for a message and its reply |
+| **0-RTT** | zero round-trip time | resumption that needs no extra handshake round-trip |
+| **HOL** | head-of-line | one stalled item holding up everything behind it |
+| **ALPN** | Application-Layer Protocol Negotiation | the TLS extension in which client and server agree which HTTP version to speak |
+| **`Alt-Svc`** | alternative service | the response header by which a server advertises that it is also reachable over HTTP/3 |
+| **CPU** | central processing unit | the compute cost of QUIC's per-packet encryption |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stream** | one independent request-and-response sequence — in QUIC, understood by the *transport* itself |
+| **Independent streams** | a lost packet stalls only its own stream; the others keep flowing |
+| **Head-of-line blocking** | the stall this version finally removes at every layer |
+| **Transport handshake** | the setup exchange QUIC merges with the TLS handshake, giving roughly one round-trip to a secure connection |
+| **Resumption** | reusing key material from a recent session so a repeat visit costs no handshake round-trip |
+| **Connection migration** | the connection surviving a change of network, because it is identified by an ID |
+| **Connection ID** | QUIC's identifier for a connection, used instead of addresses |
+| **4-tuple** | source IP, source port, destination IP, destination port — how TCP identifies a connection, which is why changing network breaks it |
+| **Fallback** | using HTTP/2 over TCP when QUIC is blocked or unavailable |
+| **Firewall blocking** | some corporate networks drop or throttle UDP, which is why the fallback is needed |
+| **Lossy / mobile link** | a network with frequent packet loss and network changes — where HTTP/3 helps most |
+| **Semantics** | the meaning of methods, codes and headers — unchanged throughout all three versions |
+
+</details>
 
 HTTP/3 (2022) keeps HTTP/2's semantics and multiplexing but **replaces the transport underneath**: instead
 of TCP+TLS (Transport Layer Security) it runs on **QUIC** (your Ch1 §7 acquaintance), a transport built on **UDP**.
@@ -257,6 +514,43 @@ throughout.**
 ---
 
 ## 8. What to actually do — the decision checklist
+
+<details>
+<summary><b>Vocabulary for this section</b> — the terms behind each recommendation (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **`br`** | Brotli | the preferred text compressor |
+| **gzip** | GNU zip | the universal fallback compressor |
+| **HTTP/2 / HTTP/3** | HyperText Transfer Protocol versions 2 and 3 | the multiplexed versions to enable |
+| **ALB** | Application Load Balancer | AWS's layer-7 load balancer |
+| **CloudFront** | (a product name) | AWS's CDN |
+| **CDN** | content delivery network | a distributed cache and edge terminator |
+| **nginx** | (a product name) | a widely used web server and reverse proxy |
+| **TCP** | Transmission Control Protocol | the transport HTTP/2 rides |
+| **HOL** | head-of-line | one stalled item holding up everything behind it |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`Vary`** | the response header naming every request header the chosen representation depended on |
+| **Negotiated axis** | one dimension you actually varied on — media type, language or encoding — each of which owes a `Vary` entry |
+| **Shared cache** | a cache serving many users, which serves the wrong variant if `Vary` is incomplete |
+| **`406 Not Acceptable`** | the honest status when nothing the client accepts can be produced |
+| **`422 Unprocessable Content`** | well-formed but semantically invalid — a validation failure |
+| **Silent default** | quietly returning your own format instead of saying you could not satisfy `Accept` |
+| **Domain sharding** | spreading assets over extra hostnames; an HTTP/1.1 workaround that *hurts* under HTTP/2 and HTTP/3 |
+| **Inlining** | embedding assets inside the HTML to avoid extra requests; the same kind of obsolete workaround |
+| **Edge** | the CDN or load balancer that terminates the connection and negotiates the HTTP version on your behalf |
+| **Tail latency** | the slowest few percent of requests — what HTTP/3 improves, rather than the average |
+| **Connection migration** | a connection surviving a network change, a resilience win on mobile |
+| **`Content-Encoding`** | end-to-end: what the representation *is*, and part of what an `ETag` fingerprints |
+| **`Transfer-Encoding`** | hop-by-hop: how the message is framed on one connection |
+
+</details>
 
 - **Turn on compression, correctly.** Serve `br` (fall back to `gzip`) for text; **don't** compress
   already-compressed media; **always** send `Vary: Accept-Encoding`. This is the cheapest big latency win

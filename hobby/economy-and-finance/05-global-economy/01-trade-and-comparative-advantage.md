@@ -51,6 +51,28 @@ real losers (the China shock). Holding both is the whole skill.
 
 ## 1. Why trade at all? — absolute advantage, and the puzzle it can't solve
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **US / USA** | United States of America | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Absolute advantage** | being able to produce more of a good per worker than another country can |
+| **Comparative advantage** | being able to produce a good at a lower **opportunity cost** than another country — giving up *less* to make it. *Absolute advantage is about who is better; comparative advantage is about who sacrifices least. They are different questions, and only the second decides who should make what* |
+| **Productivity** | output per worker (or per hour) |
+| **Gains from trade** | the extra consumption both sides get from specializing and exchanging rather than each making everything |
+| **Specialize** | to concentrate a country's labour on the goods it is relatively best at |
+| **Ricardo** | David Ricardo, whose 1817 argument resolved the "better at everything" puzzle with comparative advantage |
+
+</details>
+
 Start with the intuitive answer. **Adam Smith's absolute advantage** (绝对优势): if Canada is better at growing
 wheat and Japan is better at making cars, obviously Canada should grow wheat, Japan should make cars, and they
 should trade. Each does what it's best at; both get both goods more cheaply than making everything at home. True,
@@ -69,6 +91,25 @@ Absolute advantage says Vietnam has nothing to offer and shouldn't trade. **That
 ---
 
 ## 2. Comparative advantage — the counterintuitive core
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Opportunity cost** | the true cost of producing something: the *other* thing you gave up to make it |
+| **Comparative advantage** | having a **lower opportunity cost** in a good than the other country does |
+| **Absolute advantage** | simply producing more per worker. *A country can be absolutely worse at everything and still have a comparative advantage in something — it is arithmetically impossible not to* |
+| **Specialization** | each country concentrating on the good in which its opportunity cost is lowest |
+| **World output** | the combined production of all countries; specialization raises it from the same total labour |
+| **Mercantilism** | the doctrine that exports are good and imports bad, so a country should hoard surpluses. *Backwards: imports are what you get, exports are what you give up to pay for them* |
+| **Exports** | goods sold abroad |
+| **Imports** | goods bought from abroad — the *point* of trading, not the cost of it |
+| **Allocation** | the assignment of a country's labour and capital across activities; the entire gain here comes from allocating better, not from inventing anything |
+
+</details>
 
 The key concept is **opportunity cost** (机会成本, from E01): the true cost of producing one good is *the other
 good you give up* to make it. **Comparative advantage** (比较优势) means having a **lower opportunity cost** in a
@@ -108,6 +149,39 @@ imports are the *point* (they're what you get), exports are what you *give* to p
 
 ## 3. Consuming beyond your frontier — and where comparative advantage comes from
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PPF** | production-possibility frontier | the set of output combinations a country could make using all its own resources |
+| **H–O** | Heckscher–Ohlin | the theory that a country exports goods using its abundant factor intensively |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Production-possibility frontier** | the limit of what a country can produce on its own; trade lets it *consume* outside it |
+| **World price** | the rate at which goods exchange internationally — the line a country trades along once it specializes |
+| **Gains from trade** | the wedge between what a country could produce alone and what it can consume once it specializes and trades |
+| **Factor endowment** | how much labour, capital, land and skill a country has |
+| **Abundant factor** | the one a country has relatively a lot of; it exports goods that use it intensively |
+| **Scarce factor** | the one it has relatively little of |
+| **Labour-intensive** | production that uses a lot of labour per unit of output |
+| **Capital-intensive** | production that uses a lot of machinery and equipment per unit of output |
+| **Heckscher–Ohlin theory** | the prediction that the *pattern* of trade follows from what a country **has**, rather than from technology differences |
+| **Economies of scale** | unit costs falling as output rises, which rewards each firm concentrating on one variety |
+| **New trade theory** | Krugman's explanation of why similar rich countries trade similar goods with each other — scale economies plus consumers' taste for variety |
+| **Intra-industry trade** | two countries swapping different varieties of the *same kind* of good, such as cars for cars |
+| **Dynamic comparative advantage** | an advantage a country deliberately builds over time rather than inherits |
+| **Infant-industry argument** | the case for protecting a young industry until it reaches the scale at which it can compete |
+| **Reshoring** | moving production back to the home country |
+
+</details>
+
 There's an even sharper way to see the gain, and it settles the "worse at everything" case for good.
 
 ![A production-possibility-frontier chart for a country that is worse at everything. Its frontier is a straight line running from 50 computers and zero wheat to zero computers and 100 wheat. Without trade it produces and consumes on the frontier — for example 25 computers and 50 wheat. With trade it fully specializes in wheat, producing at zero computers and 100 wheat, then trades along a world-price line at one computer per one wheat, reaching a consumption point of 40 computers and 60 wheat — which lies outside and above its own production frontier. The wedge between the frontier and the trade line is shaded as the gains from trade.](diagrams/01-trade-and-comparative-advantage-fig2.svg)
@@ -142,6 +216,34 @@ trade, and it exists even for the country that's worse at everything — which i
 
 ## 4. Winners and losers — the honest part
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **WTO** | World Trade Organization | the body that sets and enforces multilateral trade rules; China joined in 2001 |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Stolper–Samuelson theorem** | trade raises the return to a country's **abundant** factor and lowers the return to its **scarce** factor |
+| **Abundant factor** | the input a country has relatively a lot of — capital and skilled labour, in the US case here |
+| **Scarce factor** | the input it has relatively little of — less-skilled labour, in the same case |
+| **Return to a factor** | what that input earns: wages for labour, profit or interest for capital |
+| **The China shock** | the concentrated US manufacturing job losses that followed China's post-2001 surge in exports, documented by Autor, Dorn and Hanson |
+| **Aggregate gains** | the country-wide increase in income from trade — real, but spread thin |
+| **Diffuse gains, concentrated losses** | everyone gains a little, a few lose a lot; the standard recipe for political backlash, because the losers know exactly who they are |
+| **Compensation principle** | the fact that the winners *could* fully repay the losers and still be better off — the pie really is bigger. The problem is that they usually do not |
+| **Redistribution** | actually moving some of the gains to the losers, through transfers or retraining |
+| **Efficiency vs distribution** | how big the pie is, versus who gets which slice. *The economics question is the first; the politics is the second; conflating them is how the trade debate goes wrong* |
+| **Tariff** | a tax on imports — what politics reaches for when the distribution problem is never addressed |
+
+</details>
+
 Here is the honesty that mercantilist slogans and naïve free-trade slogans *both* dodge, and it's the crux of the
 modern politics. **Trade raises a country's *total* income — but it does not raise *everyone's* income.** It
 creates winners and losers *inside* each country.
@@ -172,6 +274,34 @@ problem is distribution; confusing the two is how the whole debate goes wrong.**
 ---
 
 ## 5. Tariffs & protection — the tools and their true cost
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Tariff** | a tax on imports |
+| **Quota** | a hard cap on the quantity that may be imported — the same price effect as a tariff, but the extra margin goes to whoever holds the licence rather than to the government |
+| **Protection** | any policy that shields domestic producers from foreign competition |
+| **World price** | the price at which the good is available internationally, before the tariff |
+| **Domestic price** | the price inside the country, which a tariff raises to the world price plus the tariff |
+| **Producer surplus** | the gain to sellers from being able to sell above the price at which they would have been willing to |
+| **Consumer surplus** | the gain to buyers from paying less than what the good was worth to them |
+| **Tariff revenue** | the tariff rate times the imports that still come in — the government's share |
+| **Deadweight loss** | value destroyed and captured by nobody — the part of the consumer's loss that is neither producer gain nor government revenue |
+| **Production distortion** | the deadweight loss from pulling resources into higher-cost domestic production |
+| **Consumption distortion** | the deadweight loss from buyers priced out of purchases that were worth making |
+| **Tax incidence** | who actually bears a tax. *For a tariff it is largely the importing country's own consumers, not the foreign exporter* |
+| **Infant-industry argument** | protecting a young industry until it reaches competitive scale; sound in theory, hard to end in practice |
+| **Dynamic comparative advantage** | an advantage created by sustained investment rather than inherited |
+| **Anti-dumping duty** | a tariff imposed against foreign selling below cost; a real remedy, frequently abused as disguised protection |
+| **Retaliation** | a trading partner responding to your tariff with one of its own |
+| **Trade war** | escalating mutual tariffs, in which everybody's deadweight loss rises |
+| **Trade deficit** | importing more than you export; it is determined by a country's saving relative to its investment, which is why tariffs cannot fix it |
+
+</details>
 
 A **tariff** (关税) is a tax on imports. Its analysis is a direct application of the surplus machinery from E01 §3.
 
@@ -214,6 +344,35 @@ deficit**, which is set by **saving minus investment**, not by import taxes.
 ---
 
 ## 6. Supply chains & the retreat from hyperglobalization
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | annual national output; trade is measured against it to judge how globalized the world is |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Global value chain** | a production process split across many countries, with components crossing borders repeatedly before the finished good exists |
+| **Gross trade statistics** | trade measured by the full invoice value at each border crossing, which double-counts imported content |
+| **Value-added trade** | trade measured by the value each country actually contributes — the honest denominator, and much smaller for assembly hubs |
+| **Re-exported imported content** | parts a country buys in, assembles, and ships out again; counted in full as its "exports" in gross terms |
+| **Hyperglobalization** | the roughly 1990–2008 era when trade grew far faster than GDP as supply chains fragmented worldwide |
+| **Slowbalization** | the period since roughly 2016 in which trade relative to GDP has plateaued |
+| **Reshoring** | bringing production home |
+| **Friendshoring** | relocating production to politically aligned countries rather than the cheapest ones |
+| **De-risking** | reducing dependence on a single supplier or country without full decoupling |
+| **Chokepoint** | a stage of a supply chain that only one or two suppliers can perform, where a disruption halts everything downstream |
+| **Export ban** | a government forbidding the sale abroad of a good it controls |
+| **Efficiency vs resilience** | concentrating production where it is cheapest maximises the gains from trade and the fragility at the same time; diversifying buys insurance by giving up some of those gains |
+| **Portfolio choice** | the framing of that trade-off as a deliberate decision about how much efficiency to exchange for security |
+
+</details>
 
 One more modern reality, because "which country makes it" is now the wrong question. Most manufactured goods are
 made by **global value chains** — an iPhone is designed in California, runs on chips from Taiwan and Korea, uses a

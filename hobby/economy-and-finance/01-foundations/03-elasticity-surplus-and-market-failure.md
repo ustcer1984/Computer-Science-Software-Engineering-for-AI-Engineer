@@ -55,6 +55,75 @@ where the beautiful §2 coordination story earns its asterisks.
 
 ## 1. Elasticity: the magnitude that comparative statics left open
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TR** | total revenue | price multiplied by quantity sold — what the seller takes in before costs |
+| **OPEC** | Organization of the Petroleum Exporting Countries | the cartel of oil-producing states that restricts output to influence the oil price |
+| **10-K** | (US) Form 10-K | the annual report a US-listed company files with the securities regulator |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\varepsilon$ | "epsilon" | elasticity — a ratio of percentage changes, with no units |
+| $\varepsilon_d$ | "epsilon-sub-d" | price elasticity of **demand**; the subscript $d$ marks the demand side. It is negative because demand slopes down |
+| $\lvert\varepsilon_d\rvert$ | "mod epsilon-d" | its absolute value — the sign dropped, which is how elasticity is usually quoted |
+| $\varepsilon_s$ | "epsilon-sub-s" | price elasticity of **supply**; the subscript $s$ marks the supply side |
+| $\varepsilon_Y$ | "epsilon-sub-Y" | **income** elasticity of demand; the subscript $Y$ marks income |
+| $\varepsilon_{xy}$ | "epsilon-sub-x-y" | **cross-price** elasticity: how the quantity of good $x$ responds to the price of good $y$ |
+| $P$ |  | the price of the good |
+| $Q_d$ | "Q-sub-d" | quantity demanded |
+| $Q_s$ | "Q-sub-s" | quantity supplied |
+| $Q_x$, $P_y$ | "Q-sub-x", "P-sub-y" | the quantity of one good and the price of a *different* good — the pair that defines cross-price elasticity |
+| $Y$ |  | income |
+| $\Delta$ | "delta" | "change in" — so $\Delta P$ is the change in price |
+| $\Delta Q_d / Q_d$ | "delta Q-d over Q-d" | the **percentage** change in quantity demanded |
+| $\Delta P / P$ | "delta P over P" | the percentage change in price |
+| $dQ_d/dP$ | "d-Q-d by d-P" | the slope of the demand curve — the change in quantity per unit change in price, in the goods' own units |
+| $TR = P \times Q$ | "T-R equals P times Q" | total revenue is price multiplied by quantity |
+| $\infty$ | "infinity" | unboundedly large; elasticity tends to this at the top of a straight-line demand curve |
+| $d\ln Q / d\ln P$ | "d-log-Q by d-log-P" | the log-slope: elasticity written as a derivative on a log–log scale |
+| $Q = AP^{k}$ | "Q equals A times P to the k" | a power-law demand curve, with $A$ a scaling constant and $k$ the exponent |
+| $k$ |  | that exponent — for a power law it *is* the elasticity, the same at every point |
+| $\equiv$ | "is identically equal to" | equal everywhere, not just at one point |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Elasticity** | responsiveness expressed as a ratio of **percentage** changes, so it has no units and can be compared across different goods |
+| **Price elasticity of demand** | the percentage change in quantity demanded per one percent change in price |
+| **Elastic** | absolute elasticity above one — quantity responds *more* than proportionally |
+| **Inelastic** | absolute elasticity below one — quantity responds *less* than proportionally |
+| **Unit elastic** | absolute elasticity exactly one — quantity and price move proportionally; revenue is at its maximum here |
+| **Perfectly inelastic** | elasticity zero: a vertical demand curve, quantity unchanged at any price |
+| **Perfectly elastic** | infinite elasticity: a horizontal demand curve, where the slightest price rise loses every buyer — the demand a single price-taking farmer faces |
+| **Elasticity is not slope** | slope has units and is constant along a straight line; elasticity is unit-free and varies all along that same line, because it also depends on where you are |
+| **Dimensionless** | having no units, so the number means the same thing for oil and for airline seats |
+| **Substitutes** | goods that can replace each other; more and closer substitutes make demand more elastic |
+| **Complements** | goods used together, so cheaper consoles raise game sales |
+| **Necessity** | a good bought regardless of price — inelastic; a **luxury** is the opposite |
+| **Share of budget** | how much of income the good absorbs; big-ticket items get noticed and are more elastic |
+| **Short run vs long run** | demand is almost always more elastic in the long run, because substitution takes time — the single most often forgotten determinant |
+| **Total revenue test** | if demand is inelastic a price rise raises revenue; if elastic it lowers it; at unit elasticity revenue peaks |
+| **Loss-leader** | a deliberately cheap item used to pull in buyers, which only pays when demand is elastic |
+| **Sin tax** | a tax on an inelastic disfavoured good such as tobacco; it raises a lot of revenue while changing quantity only modestly |
+| **Market definition** | how wide a set of goods counts as "the market"; defining it wider makes demand look more inelastic, which is why it is fought over in antitrust and tax cases |
+| **Income elasticity** | the percentage change in quantity per one percent change in income |
+| **Normal good** | one bought more of as income rises; an **inferior good** is bought *less* of as income rises, which is why some businesses do better in a recession |
+| **Cross-price elasticity** | the percentage change in one good's quantity per one percent change in another good's price; positive means substitutes, negative means complements |
+| **Price elasticity of supply** | the same responsiveness measure on the sell side; high when output can be ramped instantly, low when capacity takes years |
+| **Constant-elasticity demand** | a power-law demand curve, which plots as a straight line on log–log axes and has the same elasticity everywhere |
+| **Comparative statics** | signing the direction in which equilibrium price and quantity move after a shift; elasticity supplies the magnitude it leaves open |
+| **Susceptibility / linear response** | the physics name for the same object: how strongly an output responds to a fractional change in a control |
+
+</details>
+
 §2's comparative statics told you a demand increase raises both $P^\ast$ and $Q^\ast$. **Elasticity** tells you
 the *split* — does the adjustment show up mostly as a price move or mostly as a quantity move? It is the
 **responsiveness** of one variable to another, expressed as a ratio of **percentage** changes.
@@ -167,12 +236,57 @@ its demand curve is pricing blind.
 
 ## 2. Surplus: putting a number on who gains from a market
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CS** | consumer surplus | the value buyers capture above what they pay *(in this section CS is **not** "computer science")* |
+| **PS** | producer surplus | the value sellers capture above their cost |
+| **MB** | marginal benefit | the value of one more unit to a buyer, read off the demand curve |
+| **MC** | marginal cost | the cost of one more unit to a seller, read off the supply curve |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P^\ast$ | "P-star" | the equilibrium price |
+| $Q^\ast$ | "Q-star" | the equilibrium quantity — the quantity that maximises total surplus |
+| $q$ |  | a running index over units, from the first one produced up to $Q^\ast$ |
+| $MB(q)$ | "M-B of q" | the marginal benefit of the $q$-th unit — the height of the demand curve there |
+| $MC(q)$ | "M-C of q" | the marginal cost of the $q$-th unit — the height of the supply curve there |
+| $W(Q)$ | "W of Q" | total surplus when quantity $Q$ is traded; $W$ stands for welfare |
+| $\int_0^{Q^\ast}$ | "the integral from zero to Q-star" | add up the expression that follows over every unit from the first to $Q^\ast$ |
+| $dW/dQ$ | "d-W by d-Q" | how total surplus changes with one more unit traded; setting it to zero gives $MB = MC$ |
+| $\Rightarrow$ | "implies" | the statement on the left forces the one on the right |
+| $\nabla W = 0$ | "grad W equals zero" | the stationary point of the welfare function — where it stops rising |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Surplus** *(welfare sense)* | the gap between what something is worth to you and what you actually pay or receive — **not** the "unsold goods" surplus of the supply-and-demand chapter |
+| **Consumer surplus** | the area below the demand curve and above the price: value buyers get beyond what they hand over |
+| **Producer surplus** | the area above the supply curve and below the price: value sellers get beyond their cost. It is **not profit** — it ignores fixed costs |
+| **Total surplus** | consumer surplus plus producer surplus — the whole gains from trade the market creates |
+| **Willingness to pay** | the most a buyer would pay for a unit; the height of the demand curve at that unit |
+| **Gains from trade** | the value created by the exchange itself, because the buyer values the good more than it cost to make |
+| **Welfare** *(economic sense)* | total surplus — the measure used to judge whether an outcome is efficient; nothing to do with social benefits payments |
+| **Demand curve as the marginal-benefit curve** | the demand curve's height at each unit *is* the marginal benefit of that unit, which is what makes surplus an area |
+| **Supply curve as the marginal-cost curve** | likewise, the supply curve's height at each unit is the marginal cost of that unit |
+| **First welfare theorem** | the result that the competitive equilibrium quantity maximises total surplus, with no one computing it |
+| **Marginal vs total** | marginal benefit is the worth of the *next* unit; total surplus is the accumulated gap between marginal benefit and marginal cost over all units |
+
+</details>
+
 To judge a market we need a yardstick for "welfare." Economics uses **surplus** — the gap between what
 something is *worth* to you and what you actually *pay or receive*. It's measurable straight off the
 supply-and-demand diagram, because §2 already told us the curves *are* the marginal-benefit and
 marginal-cost curves read sideways.
 
-- **Consumer surplus (CS — computer science).** Each buyer's marginal benefit is read off the **demand curve**; they pay only
+- **Consumer surplus (CS).** Each buyer's marginal benefit is read off the **demand curve**; they pay only
   $P^\ast$. The difference, summed over every unit bought, is the area **below demand and above the price** —
   the value buyers capture beyond what they hand over. (Your willingness to pay \$8 for a coffee you got
   for \$4 is \$4 of consumer surplus.)
@@ -205,6 +319,59 @@ from §2 §5, now visible as an area.
 ---
 
 ## 3. Deadweight loss: the cost of pushing the market off $Q^\ast$
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DWL** | deadweight loss | surplus destroyed rather than transferred, because trades that were worth doing no longer happen |
+| **MB** | marginal benefit | the value of one more unit to a buyer |
+| **MC** | marginal cost | the cost of one more unit to a seller |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $Q^\ast$ | "Q-star" | the untaxed equilibrium quantity, which maximises total surplus |
+| $P^\ast$ | "P-star" | the untaxed equilibrium price |
+| $t$ |  | the per-unit tax — a fixed amount charged on each unit traded |
+| $P_b$ | "P-sub-b" | the price **buyers** pay, including the tax |
+| $P_s$ | "P-sub-s" | the price **sellers** keep, after the tax; it equals $P_b$ minus $t$ |
+| $Q_{tax}$ | "Q-sub-tax" | the quantity still traded once the tax is in place; smaller than $Q^\ast$ |
+| $t \times Q_{tax}$ | "t times Q-tax" | tax revenue — the green rectangle on the figure |
+| $\Delta Q$ | "delta Q" | the fall in quantity traded caused by the tax |
+| $\lvert\Delta Q\rvert$ | "mod delta Q" | the size of that fall, ignoring sign |
+| $\tfrac12 t \lvert\Delta Q\rvert$ | "a half t times mod delta Q" | the area of the deadweight-loss triangle |
+| $t^2$ | "t squared" | the tax multiplied by itself — deadweight loss grows with the *square* of the tax, so doubling a tax roughly quadruples the loss |
+| $\propto$ | "is proportional to" | grows in step with |
+| $\approx$ | "is approximately equal to" | equal to a good enough approximation for small changes |
+| $W$ |  | total surplus, treated as the quantity the market maximises |
+| $\tfrac12 k (\Delta x)^2$ | "a half k times delta-x squared" | the energy of a spring of stiffness $k$ displaced by $\Delta x$ — the physics analogue of the triangle |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Deadweight loss** | surplus that simply disappears because mutually beneficial trades stop happening; it is *not* transferred to anyone |
+| **Transfer** | surplus that moves from one party to another — tax revenue is a transfer, deadweight loss is a destruction |
+| **Per-unit tax** | a fixed charge per unit sold, as opposed to a percentage of the price |
+| **Tax wedge** | the gap the tax opens between what buyers pay and what sellers keep |
+| **Tax revenue** | the tax rate multiplied by the quantity still traded |
+| **Tax incidence** | who actually bears the tax, as opposed to who the law names as the payer |
+| **Statutory vs economic incidence** | statutory is whom the statute bills; economic is whose income actually falls. The law's split is largely theatre |
+| **The inelastic side bears more** | whichever side of the market cannot easily get out of the way absorbs most of the tax |
+| **Elastic / inelastic** | quantity responds a lot / a little to price; elastic curves mean a bigger quantity fall and so a bigger deadweight loss |
+| **Luxury tax** | a tax on high-end goods; the 1990 US yacht tax is the cautionary case because yacht demand turned out to be elastic |
+| **Payroll tax** | a tax on wages, statutorily split between employer and employee but economically shared according to elasticities |
+| **Price ceiling / price floor** | a legal maximum or minimum price; a binding one opens the same deadweight-loss triangle a tax does |
+| **Short side of the market** | whichever of quantity demanded and quantity supplied is smaller once the price is pinned away from equilibrium; it is what actually gets traded |
+| **Envelope theorem** | at an optimum the first-order effect of a small perturbation is zero, so the leading loss is quadratic — why the first small tax is nearly free and a big one is not |
+| **Second-order** | proportional to the square of the distortion, hence small for small distortions and disproportionately large for big ones |
+
+</details>
 
 If $Q^\ast$ maximizes total surplus, then **any** policy or friction that moves the traded quantity away from
 $Q^\ast$ destroys some surplus. The chunk that vanishes — not transferred to anyone, simply *gone* because
@@ -268,6 +435,88 @@ control are the same geometry — both pin the system off its surplus-maximizing
 
 ## 4. When the invisible hand fails — the four canonical breakdowns
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MSC** | marginal social cost | the full cost of one more unit including what falls on third parties |
+| **MPC** | marginal private cost | the cost of one more unit as borne by the producer alone *(in this section MPC is **not** "marginal propensity to consume")* |
+| **MR** | marginal revenue | the extra revenue from selling one more unit |
+| **MC** | marginal cost | the extra cost of producing one more unit |
+| **DWL** | deadweight loss | surplus destroyed because worthwhile trades no longer happen |
+| **R&D** | research and development | spending on inventing and improving products, a standard positive-externality example |
+| **EU ETS** | European Union Emissions Trading System | the EU's cap-and-trade market for greenhouse-gas permits |
+| **ERP** | Electronic Road Pricing | Singapore's congestion tolls, the live example of pricing a common resource |
+| **IP** | intellectual property | patents, copyrights and the like — legally granted, temporary monopolies |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ |  | the price of one unit |
+| $MR$ | "M-R" | marginal revenue — what one more unit adds to total revenue |
+| $MC$ | "M-C" | marginal cost — what one more unit adds to total cost |
+| $MR < P$ | "M-R is less than P" | for a price-setting firm, marginal revenue sits **below** price, because selling one more unit means cutting the price on all the earlier ones too |
+| $MR = MC$ | "M-R equals M-C" | the profit-maximising condition, which for a monopolist lands at a lower quantity than the competitive one |
+| $P = MC$ | "P equals M-C" | the competitive outcome, where price is driven down to the cost of the last unit |
+| $Q_m$ | "Q-sub-m" | the quantity a **monopolist** chooses |
+| $Q_{comp}$ | "Q-sub-comp" | the quantity a **competitive** market would produce; larger than $Q_m$ |
+| $P_m$ | "P-sub-m" | the price the monopolist charges; higher than marginal cost |
+| $SO_2$ | "S-O-two" | sulphur dioxide, the pollutant capped in the original US acid-rain permit market |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Market failure** | a situation where the competitive equilibrium still forms but no longer maximises total surplus, because one of the welfare theorem's assumptions is broken |
+| **Price-taker** | an agent too small to move the price; **price-maker** is one whose own output choice moves it |
+| **Market power** | the ability to raise price above marginal cost without losing all your customers |
+| **Externality** | a cost or benefit landing on someone outside the transaction, so it never enters the price |
+| **Negative externality** | the external effect is a cost (pollution, congestion); the market **over-produces** |
+| **Positive externality** | the external effect is a benefit (vaccination, education, research); the market **under-produces** |
+| **Private vs social cost** | private cost is what the decision-maker pays; social cost adds what everyone else pays. The gap *is* the externality |
+| **Pigouvian tax** | a tax set equal to the marginal external damage, so private cost is raised to social cost and the market's own optimisation lands on the efficient quantity |
+| **Pigouvian subsidy** | the mirror image for a positive externality |
+| **Carbon tax** | the headline modern Pigouvian tax, levied on greenhouse-gas emissions |
+| **Cap-and-trade** | fixing the total *quantity* of a pollutant and letting a market discover its price — the dual of a tax, which fixes the price and lets quantity adjust |
+| **Coase theorem** | with clear property rights and cheap bargaining, parties can negotiate to the efficient outcome without government, whoever holds the initial right |
+| **Transaction costs** | the cost of finding, negotiating with and enforcing agreements on the other party; externalities persist exactly where these are too high |
+| **Rivalry** | one person's consumption prevents another's (a sandwich); **non-rival** means it does not (a broadcast) |
+| **Excludability** | non-payers can be kept out (a cinema); **non-excludable** means they cannot (the open ocean) |
+| **Private good** | rival and excludable — the case ordinary markets handle well |
+| **Club good** | non-rival but excludable — a cinema, satellite TV, a toll bridge |
+| **Common resource** | rival but non-excludable — fish stocks, groundwater, a congested road |
+| **Public good** | non-rival and non-excludable — national defence, street lighting, basic research |
+| **Free-rider problem** | since non-payers cannot be excluded, each person's incentive is to enjoy a public good without paying, so markets under-provide it |
+| **Tragedy of the commons** | each user of a common resource takes the full private benefit of one more unit but bears only a fraction of the shared cost, so the resource is over-used |
+| **Property rights** | legally enforceable claims over a resource; assigning them clearly is one standard fix for the commons |
+| **Tradable quota** | a transferable right to take a set amount, used to cap and allocate fishing and emissions |
+| **Community governance** | Ostrom's finding that local users often craft and enforce workable rules themselves, without either privatisation or central control |
+| **Monopoly** | a single seller facing the whole market demand curve |
+| **Natural monopoly** | an industry where economies of scale are so large that one firm serving everyone is genuinely cheapest |
+| **Economies of scale** | unit cost falling as output grows |
+| **Network effects** | a product becoming more valuable to each user as more people use it |
+| **Marginal revenue** | what one more unit adds to revenue; for a price-setter it is below price, because the price cut applies to earlier units too |
+| **Inframarginal units** | the units the firm was already selling, on which a price cut also costs it revenue |
+| **Mark-up** | the gap between price and marginal cost |
+| **Price discrimination** | charging different buyers different prices for the same thing; it can raise output and shrink deadweight loss while transferring more surplus to the firm |
+| **Antitrust / competition policy** | law and enforcement aimed at market power: blocking mergers, breaking up or constraining dominant firms |
+| **Oligopoly** | a few interacting firms, whose outcome depends on how each anticipates the others — game theory, not ordinary supply and demand |
+| **Asymmetric information** | one side of a trade knows something material the other does not |
+| **Adverse selection** | hidden **type**, known before the deal: the worst risks are keenest to trade, which can unravel the market |
+| **Market for lemons** | Akerlof's used-car model of adverse selection, where good cars withdraw and only bad ones remain |
+| **Signalling** | the informed side taking a costly action that credibly conveys quality — a warranty, a credential, an audited account |
+| **Screening** | the uninformed side designing the deal so that different types sort themselves out |
+| **Moral hazard** | hidden **action**, after the deal: being insured or spending someone else's money changes how carefully you behave |
+| **Deductible** | the portion of a loss the insured bears themselves, used to blunt moral hazard |
+| **Principal–agent problem** | one party acting on another's behalf with different incentives and better information |
+| **Corporate governance** | the machinery — boards, disclosure, auditing, standards — built to contain those information and incentive problems |
+
+</details>
+
 Everything above lives inside §2's "clean case": the **first welfare theorem** says a *competitive*
 equilibrium is efficient — but only under assumptions. Spell them out and the failures are just the list
 of assumptions, each one broken:
@@ -292,7 +541,7 @@ the gap is the externality.
 
 - **Negative externality** (pollution, traffic congestion, a noisy bar): the **marginal social cost (MSC)**
   exceeds the **marginal private cost (MPC)** by the external damage. The market produces where demand meets
-  *MPC (marginal propensity to consume)*; the efficient quantity is where demand meets *MSC* — which is **smaller**. So a market with
+  *MPC (marginal private cost)*; the efficient quantity is where demand meets *MSC* — which is **smaller**. So a market with
   negative externalities **over-produces**, and the gap is a deadweight loss.
 
 <!-- FIGURE -->
@@ -517,7 +766,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    incidence result) — it "can't get out of the way," so the price moves against it. Cigarette taxes land on
    smokers; the 1990 yacht tax landed on boat-builders.
 3. **Because $Q^\ast$ is a stationary point of total surplus, the first-order term vanishes and the leading
-   loss is quadratic.** Total surplus is $W(Q) = \int_0^{Q}\big(MB(q) - MC(q)\big)\,dq$, so
+   loss is quadratic.** Total surplus is $W(Q) = \int_0^{Q}\big(MB(q) - MC(q)\big)  dq$, so
    $dW/dQ = MB - MC$, which is **zero at $Q^\ast$** (§2) — the first units of trade you destroy were worth
    almost exactly what they cost, so they carry almost no surplus. Geometrically the triangle has area
    $\approx \tfrac12 t \lvert\Delta Q\rvert$ and $\Delta Q \propto t$ for small $t$, giving
@@ -605,7 +854,7 @@ an information failure), not a tax (the matched fix for an externality). **The t
 
 You correctly read the policy as **shifting demand left** (a less-sweet / labelled / un-advertisable drink
 is wanted less at each price) → lower $P^\ast$ and $Q^\ast$. One wire we uncrossed: that **direction comes
-from the shift, not from elasticity.** "Soft drinks are elastic, *therefore* $P^\ast$/$Q^\ast$ fall" mixes
+from the shift, not from elasticity.** "Soft drinks are elastic, *therefore* $P^\ast / Q^\ast$ fall" mixes
 two things — elasticity sets the *magnitude split and incidence*, and for a *demand* shift the price-vs-
 quantity split actually leans on the **supply** slope. Elasticity is the right lens for "consumers can flee
 to substitutes," not for the *direction* of a shift.

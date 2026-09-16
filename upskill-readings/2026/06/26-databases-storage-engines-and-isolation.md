@@ -12,6 +12,82 @@
 
 ## 1. How a database stores your bytes — B-tree vs LSM-tree
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **LSM-tree** | Log-Structured Merge tree | a storage engine that only ever appends, then merges files in the background |
+| **B+ tree** | (the B-tree variant that stores all data in the leaves) | what "B-tree" means in every real database |
+| **RDBMS** | relational database management system | the classic SQL database family — Postgres, MySQL, Oracle, SQL Server |
+| **WAL** | write-ahead log | an append-only journal written *before* the data pages, so a crash can be replayed |
+| **SSTable** | sorted string table | an immutable file of key-value pairs in sorted order, flushed from the memtable |
+| **I/O** | input/output | reads and writes to the storage device |
+| **RUM** | Read, Update, Memory | the three overheads the conjecture says you cannot all minimise at once |
+| **CAP** | Consistency, Availability, Partition tolerance | the older impossibility result, cited as the same kind of hard boundary |
+| **KB** | kilobyte | one thousand bytes; the typical B-tree page is 8 KB |
+| **RAM** | random-access memory | main memory — where the buffer pool and memtable live |
+| **SSD** | solid-state drive | flash-based storage, with no seek time but an erase-block granularity |
+| **NAND** | (the flash memory cell type) | the storage medium inside an SSD, which wears out with use |
+| **P/E cycle** | program/erase cycle | one write-and-wipe of a flash block; each cell tolerates a bounded number |
+| **FTL** | flash translation layer | the SSD's internal firmware that remaps writes, adding its own write amplification |
+| **OOM** | out of memory | the failure mode when the working set outgrows RAM |
+| **p99** | 99th percentile | the slow tail: the value 99% of requests come in under |
+| **GPU** | graphics processing unit | referenced as the earlier session whose bandwidth reasoning transfers here |
+| **FAST** | (USENIX Conference on File and Storage Technologies) | the storage-research venue of the cited hardware paper |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $O(\cdot)$ | "order of" | big-O notation: how the cost grows as the data grows, ignoring constant factors |
+| $n$ | "n" | the number of keys stored in the tree |
+| $b$ | "b" | the branching factor — how many children one tree page points to |
+| $O(\log_{b} n)$ | "order log base b of n" | the number of page hops from root to leaf; with a large $b$ the tree is very shallow |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Storage engine** | the layer that turns "store this row" into actual bytes written to actual blocks |
+| **Access method** | the data structure and algorithm used to find and update data on disk |
+| **Page** | the fixed-size block a database reads and writes as a unit, typically 8 KB |
+| **Leaf page** | the bottom level of a B-tree, where the rows themselves live |
+| **Update in place** | overwriting the existing bytes where the row already sits |
+| **Read-modify-write** | having to read a whole page in just to change a few bytes and write it all back |
+| **Random I/O** | reads or writes scattered across the device, which it handles far less efficiently |
+| **Sequential I/O** | reads or writes in contiguous order, which every storage device prefers |
+| **Seek time** | the mechanical delay while a spinning disk's head moves — what makes random I/O expensive there |
+| **Erase-block granularity** | an SSD's rule that flash must be wiped in large blocks, not per byte |
+| **Memtable** | the in-memory sorted buffer an LSM write lands in first |
+| **Flush** | writing a full memtable out as a new immutable file |
+| **Immutable** | never modified after creation; new data supersedes old rather than overwriting it |
+| **Compaction** | the background process that merges SSTables, discarding superseded and deleted versions |
+| **Level** | one tier of an LSM's file hierarchy; compaction moves data down through the levels |
+| **Bloom filter** | a tiny probabilistic index that can say "definitely not in this file", letting a read skip it |
+| **Block cache** | in-memory copies of recently read blocks, so a repeat read avoids the device |
+| **Buffer pool** | the database's cache of pages in RAM; its hit rate decides whether a B-tree read is fast |
+| **Working set** | the portion of data actually being touched — the thing that has to fit in RAM |
+| **Range scan** | reading all keys between two bounds, which an LSM must merge across every level |
+| **Write amplification** | bytes physically written per byte of logical data |
+| **Read amplification** | work done per logical read — how many places you must look |
+| **Space amplification** | disk consumed per byte of live data |
+| **Fragmentation** | wasted space inside partially-filled pages |
+| **RUM conjecture** | the result that tightening any two of read, update and memory overhead forces the third up |
+| **Impossibility result** | a proof that no design can have everything — a boundary, not an unfinished to-do |
+| **Pareto frontier** | the curve of best possible trade-offs; an implementation gain can slide along it without moving it |
+| **Constant factor** | the part of the cost big-O throws away, and the part engineering usually improves |
+| **Asynchronous I/O** | issuing reads without waiting for each one, so several are in flight at once |
+| **Skip scan** | an index-scan optimisation that jumps over ranges of a leading column instead of reading them |
+| **Endurance** | how many writes a flash device can absorb before it wears out |
+| **Derating** | operating a component below its rated limit to extend its life — the learner's own hardware practice |
+| **PostgreSQL / MySQL / InnoDB / SQLite / Oracle / SQL Server** | the classic B-tree databases named here; InnoDB is MySQL's default storage engine |
+| **RocksDB / LevelDB / Cassandra / ScyllaDB / HBase / TiKV** | the LSM-tree engines named here |
+
+</details>
+
 🔗 **Primary (clean, quantitative comparison):** [B-Tree vs LSM-Tree — TiKV deep dive](https://tikv.org/deep-dive/key-value-engine/b-tree-vs-lsm/)
 🔗 **The LSM side, explained from scratch:** [Log Structured Merge Trees — Ben Stopford](https://benstopford.com/2015/02/14/log-structured-merge-trees/)
 🔗 **The law behind the trade-off:** [The RUM Conjecture — DASlab @ Harvard](http://daslab.seas.harvard.edu/rum-conjecture/) (Athanassoulis et al., EDBT 2016)
@@ -78,6 +154,80 @@ flowchart TB
 
 ## 2. How a database isolates concurrent transactions — MVCC & the anomaly ladder
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and product name used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ACID** | Atomicity, Consistency, Isolation, Durability | the four guarantees a classic transaction promises; this section is about the "I" |
+| **MVCC** | multi-version concurrency control | keeping several versions of each row so readers see a snapshot and never block writers |
+| **SI** | snapshot isolation | a level where a transaction reads one consistent snapshot throughout — **note the collision: `SI` elsewhere means SI units** |
+| **SSI** | serializable snapshot isolation | Postgres's way of getting true serializability by detecting dangerous dependencies and aborting one transaction |
+| **ANSI** | American National Standards Institute | the body whose SQL standard named the isolation levels |
+| **PG** | PostgreSQL | shorthand for the database throughout the table |
+| **SQL** | Structured Query Language | the query language of relational databases |
+| **DB** | database | the system as a whole |
+| **2PL** | two-phase locking | the pessimistic locking scheme that acquires locks, then releases them only at the end |
+| **RAG** | retrieval-augmented generation | fetching documents to ground a model's answer — the learner's stack that uses a vector store |
+| **S3** | (Amazon's object storage service) | the cheap durable store the separated-storage architectures build on |
+| **CMU** | Carnegie Mellon University | the author's institution for the *Databases in 2025* retrospective |
+| **B-tree** | (the classic balanced on-disk index) | the storage structure from section 1, named again as part of Postgres's design |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Transaction** | a group of statements that should take effect all together or not at all |
+| **Isolation level** | how much concurrent transactions are allowed to see of each other's in-progress work |
+| **Anomaly** | a specific concurrency bug a given isolation level does or does not prevent |
+| **Dirty read** | reading data another transaction wrote but has not committed |
+| **Non-repeatable read** | reading the same row twice in one transaction and getting different values |
+| **Phantom read** | re-running the same query and finding rows that were not there before |
+| **Lost update** | two transactions read-modify-write the same row and one's change silently disappears |
+| **Write skew** | two transactions each read the same data, each write a *different* row, and together break an invariant |
+| **Read Uncommitted / Read Committed / Repeatable Read / Serializable** | the four ANSI levels, from weakest to strongest |
+| **Snapshot** | a fixed view of the database as of one moment, which a transaction reads from |
+| **Consistent snapshot** | a snapshot containing only committed data, with no half-applied transaction visible |
+| **Visibility rule** | the test deciding which version of a row a given transaction is allowed to see |
+| **Row version** | one copy of a row, tagged with the transaction that created it and the one that deleted it |
+| **Transaction ID** | the sequence number identifying a transaction, used to tag versions and order snapshots |
+| **Commit** | making a transaction's effects permanent and visible to others |
+| **Abort / rollback** | discarding a transaction's effects entirely |
+| **Serialization failure** | the error Postgres raises when SSI aborts a transaction to preserve serializability |
+| **Serializability** | the guarantee that the result is as if the transactions had run one after another |
+| **Invariant** | a rule the data must always satisfy, such as "at least one doctor on call" |
+| **Write-write conflict** | two transactions writing the same row — the conflict SI can detect, and write skew avoids |
+| **Read-write dependency** | one transaction reading what another is about to write; the pattern SSI watches for |
+| **Optimistic concurrency** | let transactions run and detect conflicts at commit, aborting if needed |
+| **Pessimistic concurrency** | take locks up front so conflicts cannot happen |
+| **Two-phase locking** | the pessimistic scheme that holds every lock until the transaction ends |
+| **Predicate lock** | a lock on a *condition* rather than on existing rows, needed to block phantoms |
+| **Lock** | a claim on data that makes others wait |
+| **Advisory lock (`pg_advisory_lock`)** | an application-defined Postgres lock on an arbitrary number, used to hand-roll mutual exclusion |
+| **`SELECT … FOR UPDATE`** | a query that locks the rows it returns so nobody else can change them until you commit |
+| **Constraint (`CHECK`, `UNIQUE`, exclusion)** | a rule the database itself enforces, making a bad state impossible rather than merely guarded |
+| **Idempotency** | designing an operation so re-running it has the same effect as running it once — what makes retries safe |
+| **Retry loop** | re-running an aborted transaction, which is the price of using `SERIALIZABLE` |
+| **`VACUUM`** | Postgres's housekeeping that reclaims row versions no transaction can still see |
+| **Bloat** | disk wasted on dead row versions that have not been vacuumed — space amplification in the transaction layer |
+| **Dead tuple** | an obsolete row version awaiting vacuum |
+| **High churn** | a workload that inserts and deletes the same rows rapidly, e.g. a queue, which stresses `VACUUM` |
+| **Durability** | the guarantee that a committed write survives a crash — what a pure cache declines to provide |
+| **Sharding** | splitting one logical database horizontally across several machines |
+| **Extension** | a plug-in that adds capability to Postgres without forking it |
+| **Hermitage** | Kleppmann's test suite that determines what an engine's isolation levels actually do |
+| **Benchmark freeze** | fixing the evaluation so two runs are comparable — the analogy drawn to a read-only snapshot |
+| **Postgres / Neon / Lakebase / Crunchy Data / Databricks / Snowflake** | the Postgres-ecosystem companies and products named in the 2026 backdrop, including the separated-storage offerings |
+| **Multigres / Neki / PgDog** | the three projects competing to add horizontal sharding to Postgres |
+| **`pgvector` / pgvectorscale** | Postgres extensions for vector search, the alternative to a dedicated vector database |
+| **Pinecone** | a managed vector database — the specialist those extensions compete with |
+| **TimescaleDB / JSONB / `pgmq` / PostGIS** | Postgres extensions and types for time-series, JSON documents, queues and geospatial data |
+| **Redis** | an in-memory data store, cited as the cache that skips the durability a B-tree pays for |
+
+</details>
+
 🔗 **Primary (the canonical, hands-on tour):** [Hermitage: Testing the "I" in ACID — Martin Kleppmann](https://martin.kleppmann.com/2014/11/25/hermitage-testing-the-i-in-acid.html) · [test suite on GitHub](https://github.com/ept/hermitage)
 🔗 **Build the intuition by building it:** [Implementing MVCC and the major SQL isolation levels (400 lines of Go) — Phil Eaton](https://notes.eatonphil.com/2024-05-16-mvcc.html)
 🔗 **The reference (read the table):** [PostgreSQL docs — Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html)
@@ -131,7 +281,7 @@ sequenceDiagram
 2. **`SERIALIZABLE` (SSI) is the lock you didn't write — and its cost is the retry you already do.** Postgres's Serializable Snapshot Isolation gives true serializability by *detecting* dangerous read-write dependencies and **aborting one transaction with a serialization failure**. The price is that you must be ready to **retry** the aborted transaction — which is *exactly your idempotency-and-retry pattern* already in place. So for you, `SERIALIZABLE` is unusually cheap to adopt: you have the retry machinery; you'd be trading bespoke advisory locks for a declarative guarantee + a retry loop you already run.
 3. **The eval/Arena angle (light, since we're swinging out of AI):** "consistent snapshot" is the same idea as freezing a benchmark — if two model-comparison runs read the leaderboard mid-update, they disagree for non-model reasons. A read-only snapshot transaction gives you a stable view, the DB-level version of the frozen-environment point from 06-16.
 
-**The 2026 backdrop (why this is current, not just textbook).** Andy Pavlo's *Databases in 2025* retrospective: the year's biggest stories were **Postgres** ones — Databricks bought Neon (~$1B), Snowflake bought Crunchy Data (~$250M), and **three** competing projects launched to add horizontal sharding to Postgres (Multigres, Neki, PgDog). The popular framing — *"It's 2026, just use Postgres"* — is that one engine plus extensions now replaces a zoo of specialized systems: `pgvector`/pgvectorscale for vector search (vs Pinecone — *your* RAG (retrieval-augmented generation) stack), TimescaleDB for time-series, JSONB for documents, `pgmq` for queues, PostGIS for geo. Worth reading **with** Pavlo's skepticism: consolidating onto one engine trades operational simplicity for the cost of pushing Postgres into workloads its **B-tree, MVCC, single-writer** design (everything in §1–§2) wasn't built for — which is precisely *why* the sharding race and the separate-storage architectures (Neon/Lakebase on S3) exist. The storage-engine and isolation fundamentals above are the lens for judging when "just use Postgres" is right and when it isn't.
+**The 2026 backdrop (why this is current, not just textbook).** Andy Pavlo's *Databases in 2025* retrospective: the year's biggest stories were **Postgres** ones — Databricks bought Neon (~USD 1B), Snowflake bought Crunchy Data (~USD 250M), and **three** competing projects launched to add horizontal sharding to Postgres (Multigres, Neki, PgDog). The popular framing — *"It's 2026, just use Postgres"* — is that one engine plus extensions now replaces a zoo of specialized systems: `pgvector`/pgvectorscale for vector search (vs Pinecone — *your* RAG (retrieval-augmented generation) stack), TimescaleDB for time-series, JSONB for documents, `pgmq` for queues, PostGIS for geo. Worth reading **with** Pavlo's skepticism: consolidating onto one engine trades operational simplicity for the cost of pushing Postgres into workloads its **B-tree, MVCC, single-writer** design (everything in §1–§2) wasn't built for — which is precisely *why* the sharding race and the separate-storage architectures (Neon/Lakebase on S3) exist. The storage-engine and isolation fundamentals above are the lens for judging when "just use Postgres" is right and when it isn't.
 
 **Questions to pressure-test while you read:**
 - Read Committed gives a fresh snapshot *per statement*; Repeatable Read/SI gives one *per transaction*. Construct the smallest two-statement transaction that returns inconsistent results under Read Committed but not under SI — and decide whether any code you've shipped has that shape. (This is the "non-repeatable read" row made concrete.)
@@ -183,7 +333,7 @@ You read both topics, and **parked §2 (isolation levels / MVCC / write skew / s
 ### 1. "What data structure suits a graph database?" — it's two layers, not one
 The keystone re-rank: the question splits into **storage engine** vs **access method**, and conflating them is the usual trap.
 - **Storage engine** (how bytes hit disk): graph DBs don't invent a third engine — underneath they still use **B-tree or LSM** (§1 holds).
-- **Access method** (how you get from a node to its neighbours): *this* is the real answer — **index-free adjacency** (无索引邻接 / 無索引鄰接). A native graph DB (Neo4j) stores each node with **direct physical pointers to its adjacent edges** — an adjacency list persisted as **fixed-size records + doubly-linked relationship lists**, so a hop is pointer-chasing at $O(1)$/$O(\text{degree})$, *independent of total graph size*. Contrast the relational hop: a `JOIN` = a B-tree index probe at $O(\log_{b} n)$ that grows with the **whole** dataset $n$, and compounds over depth × fan-out.
+- **Access method** (how you get from a node to its neighbours): *this* is the real answer — **index-free adjacency** (无索引邻接 / 無索引鄰接). A native graph DB (Neo4j) stores each node with **direct physical pointers to its adjacent edges** — an adjacency list persisted as **fixed-size records + doubly-linked relationship lists**, so a hop is pointer-chasing at `O(1)` / `O(degree)`, *independent of total graph size*. Contrast the relational hop: a `JOIN` = a B-tree index probe at $O(\log_{b} n)$ that grows with the **whole** dataset $n$, and compounds over depth × fan-out.
 - The second data structure worth knowing (landed well via your linear-algebra fluency): the **adjacency matrix + sparse matrix–vector multiply (GraphBLAS)** — BFS as iterated SpMV — which suits *whole-graph analytics* where pointer-chasing suits *local OLTP (online transaction processing) traversals*. Same RUM-flavoured "no structure wins everything."
 - Two caveats you took: index-free adjacency still needs a **B-tree at the entry point** (find the start node by property), and pointer-chasing is **random access** → it loves RAM and degrades when the hot subgraph spills past memory (your working-set/OOM point resurfacing).
 
@@ -192,7 +342,7 @@ Confirmed and sharpened (and notably, **correctly ranked on the first try** — 
 
 ### 3. The payoff — your aquarium `nexus` Neptune-vs-RDS cost call
 Your hypothesis — *"we can use the existing RDS only, to save cost"* — was **right, and stronger than you framed it.** From the repo (you asked me to look): a **Neptune Serverless** cluster (openCypher) sits beside a **Postgres 17** RDS. The `nexus` knowledge graph is ~8 relationship types (`TAGGED_WITH`, `PRODUCED_BY`, `LICENSED_UNDER`, `HAS_RAI_PROFILE`, `HAS_RECORD_SET`, `HAS_FIELD`, `CLASSIFIED_AS`, `SUPERSEDES`), and **every query is a fixed-depth star/chain (1–3 hops following the schema)** — i.e. a relational catalog drawn as a graph. The *only* variable-length query is `(:Dataset)-[:SUPERSEDES*0..]-(:Dataset)`, a short linear version chain → a trivial `WITH RECURSIVE` CTE.
-- **Verdict:** consolidate onto the RDS. Neptune Serverless floors at 1 NCU and **never scales to zero** (~$100+/mo per environment) vs ≈$0 marginal on the Postgres you already run.
+- **Verdict:** consolidate onto the RDS. Neptune Serverless floors at 1 NCU and **never scales to zero** (~USD 100+/mo per environment) vs ≈USD 0 marginal on the Postgres you already run.
 - **The bigger win (your §2 theme, applied):** today ingestion **dual-writes** metadata into Neptune while Postgres is the source of truth — a two-store consistency problem with no transaction spanning both, exactly the isolation hazard §2 is about. Consolidating *deletes that whole failure mode* — a correctness win, not just a cost one. (So §2 wasn't wasted; it came back as the decisive argument.)
 - **Steelman / caveats given:** keep Neptune only if the *roadmap* is graph-shaped — multi-hop "related datasets," recommendations, or GraphRAG for the chatbot — plus open-ended schema churn and a real one-time migration cost. Decision rule landed: *a dedicated graph DB earns its keep only for variable-depth traversal, graph algorithms, or a graph too large for recursive SQL.*
 - Output: a discussion memo (relational target schema + the recursive-CTE replacement + questions for the colleague) in `temp/graph-db-vs-rds-consolidation-memo.md` (gitignored), for you to take to the discussion.

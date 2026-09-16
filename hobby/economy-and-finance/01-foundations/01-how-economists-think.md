@@ -37,6 +37,32 @@ reduces to. Economics has scarcity and "people respond to incentives." This sect
 
 ## 1. The founding constraint: scarcity
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PDE** | partial differential equation | a differential equation in several variables; used here only in the physics analogy |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Scarcity** | wants exceed the means available to satisfy them, so every use of a resource forecloses another use — **not** the same as *rare*, and not the same as *poverty* |
+| **Economics** | the study of how people, firms and societies allocate scarce resources among competing uses |
+| **Resources** *(economic sense)* | anything usable to satisfy a want — time, money, materials, labour, attention, capital |
+| **Rival** | a resource one person's use denies to another; the property that makes something scarce in the economic sense |
+| **Capital** | productive resources — machines, buildings, and the money committed to funding them |
+| **Labour** | human effort used in production |
+| **Allocation** | the assignment of scarce resources across competing uses |
+| **Competing uses** | the alternative purposes a single resource could serve, only one of which it can serve at a time |
+| **Constraint** | a limit the choice must respect; the *binding* constraint is the one actually restricting you |
+| **Axiom** | a starting assumption a body of reasoning is built on, not itself derived |
+
+</details>
+
 **Scarcity** is the starting axiom of all economics: *wants are effectively unlimited, but the resources
 to satisfy them — time, money, materials, labour, attention — are finite.* Therefore you cannot have
 everything, and **every economy (and every person) must constantly choose what to do with limited means.**
@@ -65,6 +91,31 @@ Everything below is a consequence of scarcity.
 
 ## 2. The signature concept: opportunity cost
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TANSTAAFL** | "there ain't no such thing as a free lunch" | the slogan form of opportunity cost: every apparently free thing consumes resources that had another use |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Opportunity cost** | the value of the **next-best alternative you gave up** in order to make this choice — the economist's definition of cost, not the money on the price tag |
+| **Forgone alternative** | the option you did not take, whose value *is* the opportunity cost |
+| **Accounting reasoning** | counting only what was paid; contrast with **economic reasoning**, which also counts what was forgone |
+| **Time value of money** | a sum available today is worth more than the same sum later, because today's sum can earn a return in the meantime |
+| **Return** | the gain earned on capital, usually quoted as a percentage per year |
+| **Opportunity cost of capital** | the return the same money could have earned in its next-best use — the hurdle any project must clear |
+| **Shadow price** | the value of relaxing a binding constraint by one unit; formally the Lagrange multiplier on that constraint, and the same object as opportunity cost |
+| **Lagrange multiplier** | in a constrained optimisation, the number measuring how much the objective improves per unit of slack in the constraint |
+| **Marginal value** | the value of *one more* unit, as opposed to the total value of all units |
+
+</details>
+
 Because resources are scarce, **using them for one thing means *not* using them for the next-best thing.**
 The value of that forgone next-best alternative is the **opportunity cost** of your choice.
 
@@ -76,10 +127,10 @@ accounting reasoning. Examples:
 
 - **A "free" two-hour meeting** isn't free: its cost is the most valuable thing those two hours (× everyone
   in the room) could have produced instead.
-- **A government that spends $1B on a stadium** hasn't just spent $1B; it has *not* spent it on schools,
+- **A government that spends USD 1B on a stadium** hasn't just spent USD 1B; it has *not* spent it on schools,
   tax cuts, or debt reduction. The stadium's real cost is the best forgone use. ("There is no such thing as
   a free lunch" — TANSTAAFL — is just this idea sloganized.)
-- **Holding $50k in cash** "costs" nothing in dollars but has an opportunity cost: the return you'd have
+- **Holding USD 50k in cash** "costs" nothing in dollars but has an opportunity cost: the return you'd have
   earned investing it. (This exact idea, the *time value of money*, returns in E03 §2 and E09 §1 — it's the
   backbone of finance.)
 
@@ -110,6 +161,33 @@ isolation, only relative to the best alternative you passed up.
 
 ## 3. The behavioural engine: people respond to incentives
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **COE** | Certificate of Entitlement | Singapore's tradable permit that a buyer must win at auction before being allowed to register a car |
+| **ERP** | Electronic Road Pricing | Singapore's system of road tolls that vary with the level of congestion |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Incentive** | anything that changes the perceived benefit or cost of an action, and so changes how much of it people do |
+| **Cobra effect** | the pattern where an incentive produces the opposite of its intended result because people optimise against the rule rather than the goal |
+| **Rent control** | a legal cap on residential rents |
+| **Congestion pricing** | charging for road use at a price that rises with congestion, so drivers ration themselves |
+| **Externality** | a cost or benefit falling on someone who is not party to the transaction, and therefore missing from the price |
+| **Internalizing an externality** | changing the price the decision-maker faces so that the external cost or benefit shows up in their own calculation |
+| **Quota** | a hard limit on quantity, as opposed to a price that limits quantity indirectly |
+| **Second-order consequence** | the follow-on behavioural response to a policy, as distinct from its immediate first-order effect |
+| **Rational (as used here)** | pursuing one's own objectives given the incentives faced — including by gaming a rule |
+| **Aggregate equilibrium** | the system-level outcome produced by many individuals each following their own incentives; it can resemble nobody's intention |
+
+</details>
+
 If scarcity forces choices, what governs *which* choices? The economist's working assumption:
 
 > **People respond to incentives** — they tend to do more of something when the (perceived) benefit rises
@@ -138,6 +216,43 @@ incentive failures, not intention failures.
 
 ## 4. The decision rule: think at the *margin*
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MB** | marginal benefit | the extra benefit from one more unit |
+| **MC** | marginal cost | the extra cost of one more unit |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $MB$ | "M-B" | marginal benefit — the benefit of one more unit, not of all units |
+| $MC$ | "M-C" | marginal cost — the cost of one more unit |
+| $x$ |  | how much of the activity you are doing — the quantity being chosen |
+| $MB = MC$ | "M-B equals M-C" | the optimality condition: stop where the next unit's benefit exactly equals its cost |
+| $\partial / \partial x$ | "partial with respect to x" | the derivative with respect to the quantity chosen, holding everything else fixed; marginal analysis *is* this derivative |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Margin** | the next unit — the edge of the decision, as opposed to the whole of it |
+| **Marginal analysis** | deciding by comparing the benefit and cost of *one more* unit rather than of the whole activity |
+| **Marginal benefit** | the extra benefit from one more unit — **not** the average benefit per unit and **not** total benefit |
+| **Marginal cost** | the extra cost of one more unit — **not** the average cost per unit |
+| **Net benefit** | benefit minus cost; it is maximised where marginal benefit equals marginal cost |
+| **First-order condition** | the calculus condition for an optimum — the derivative of the objective set to zero |
+| **Diamond–water paradox** | water is essential yet nearly free while diamonds are frivolous yet dear, because price tracks **marginal** value while usefulness is about **total** value |
+| **Total value** | the worth of all units consumed — the integral; distinct from marginal value, the worth of the next one |
+| **Sunk cost** | money already spent and unrecoverable; it is the same whatever you now choose, so it is irrelevant to the decision |
+| **Sunk-cost fallacy** | continuing something because of what has already been spent rather than because the *next* dollar earns its keep |
+
+</details>
+
 Here is where your calculus makes you faster than most beginners. Real decisions are almost never
 "all or nothing." They're **"a little bit more, or a little bit less?"** — and the right way to decide is to
 compare the **marginal benefit** (the benefit of *one more* unit) against the **marginal cost** (the cost of
@@ -157,8 +272,8 @@ Two famous traps this rule resolves:
   water that the value of *one more* litre is near zero; diamonds are scarce, so the value of *one more* is
   high. Total value (water) and marginal value (price) are different objects. **Markets price the margin.**
 - **The sunk-cost fallacy.** A cost already paid and unrecoverable (a **sunk cost**) should *not* enter a
-  forward-looking decision — only future marginal costs and benefits should. "We've already spent $10M, we
-  can't stop now" is exactly backwards: the $10M is gone either way; the only question is whether the *next*
+  forward-looking decision — only future marginal costs and benefits should. "We've already spent USD 10M, we
+  can't stop now" is exactly backwards: the USD 10M is gone either way; the only question is whether the *next*
   dollar earns its keep. (You make this call when you decide whether to keep optimizing a failing service
   vs. rewrite it.)
 
@@ -171,6 +286,34 @@ Two famous traps this rule resolves:
 ---
 
 ## 5. The consequence: everything is a trade-off
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **PPF** | production possibilities frontier | the boundary of what can be produced with the resources and technology available |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Trade-off** | having to give up some of one good thing to get more of another, because resources are scarce |
+| **Production possibilities frontier** | the curve of all maximum output combinations achievable with fixed resources; points inside are wasteful, points outside are infeasible |
+| **Efficient** *(here: productive efficiency)* | on the frontier — no resource is idle, so more of one good can only come from less of another |
+| **Guns vs butter** | the standard two-good illustration of the frontier: military output against consumer output |
+| **Slope of the frontier** | how much of one good must be given up per extra unit of the other — the opportunity cost at that point |
+| **Increasing opportunity cost** | each extra unit of a good costs more of the other than the last, because resources are not equally suited to both; it is what bows the frontier outward |
+| **Diminishing returns** | each additional unit of an input adds less extra output than the one before |
+| **Economic growth** | an outward shift of the whole frontier, from more resources or better technology — escaping a trade-off rather than choosing a point on it |
+| **Feasible set** | every combination that can actually be produced; the frontier is its outer boundary |
+| **Pareto frontier** | the set of outcomes where no one dimension can be improved without worsening another — the frontier, stated in optimisation language |
+| **Dominated** | inside the frontier: some other point is better on every dimension at once |
+| **Marginal rate of transformation** | the rate at which the economy can convert one good into the other at the current point — the frontier's local slope |
+
+</details>
 
 Put scarcity + opportunity cost + the margin together and you get the economist's worldview: **there are no
 solutions, only trade-offs.** You can't get more of one good thing without giving up some of another; the
@@ -222,12 +365,30 @@ Read it like a feasibility boundary (because that's what it is):
 
 ## 6. A crucial distinction for reading the news: positive vs normative
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms used below (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Positive statement** | a claim about what *is* or what *will happen* — descriptive, and settleable by evidence |
+| **Normative statement** | a claim about what *ought* to be — a value judgement, not settleable by evidence |
+| **Positive economics** | the part of the field that models and predicts; **normative economics** is the part that recommends |
+| **Falsifiable** | capable of being shown wrong by evidence; positive claims are, normative ones are not |
+| **Value judgement** | a ranking of outcomes based on what one thinks is desirable, not on what is true |
+| **Minimum wage** | a legal floor on the hourly wage an employer may pay — the section's running example of a claim with both a positive and a normative side |
+| **Objective function** | the quantity an optimisation is set up to maximise; choosing *which* one to maximise is a normative act |
+| **Trade-off weighting** | how heavily one values each side of a trade-off — where two economists can agree on the analysis and still disagree on the policy |
+
+</details>
+
 Economists sharply separate two kinds of statements, and conflating them is the #1 way commentary misleads:
 
 | | **Positive** ("what *is*") | **Normative** ("what *ought* to be") |
 |---|---|---|
 | Claim type | Descriptive, falsifiable | Value judgement, not falsifiable |
-| Example | "A $15 minimum wage will reduce teen employment by X%." | "We *should* raise the minimum wage." |
+| Example | "A USD 15 minimum wage will reduce teen employment by X%." | "We *should* raise the minimum wage." |
 | Settled by | Evidence, data, models | Values, ethics, politics |
 
 The trap: a normative conclusion ("we should do X") is often smuggled in dressed as a positive claim. When
@@ -244,6 +405,30 @@ is which is half of reading the news critically.
 ---
 
 ## 7. Health warning: the "rational agent" is a model, not a fact
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms used below (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Rational agent** | the modelling assumption that people maximise their own objective consistently, with stable preferences and adequate information |
+| **Rational maximizer** | the same assumption stated as behaviour: always picking the option that best serves one's own goals |
+| **Preferences** | a person's ranking of outcomes; assumed stable and consistent in the baseline model |
+| **Bounded rationality** | the realistic version: people have limited time, information and computing power, so they cannot fully optimise |
+| **Satisfice** | to stop at the first "good enough" option instead of searching for the best one |
+| **Behavioural biases** | systematic, repeatable departures from the rational model |
+| **Loss aversion** | losses hurt more than equivalent gains please, so people take odd risks to avoid booking a loss |
+| **Anchoring** | letting an arbitrary starting number pull one's estimate toward it |
+| **Present bias** | over-weighting immediate payoffs relative to later ones, beyond ordinary discounting |
+| **Herding** | copying what others are doing instead of acting on one's own information |
+| **Imperfect information** | not being able to see the relevant costs and benefits clearly enough to optimise over them |
+| **Behavioural economics** | the field that studies these departures and builds models that include them |
+| **Sunk-cost fallacy** | letting unrecoverable past spending drive a forward-looking decision — itself a violation of the rational model |
+| **Regime of validity** | the range of conditions over which an idealised model gives good answers |
+
+</details>
 
 Everything above leans on a simplifying assumption: people are **rational maximizers** with stable
 preferences and good information. This is a *model* — a deliberately idealized one, exactly like the
@@ -316,9 +501,9 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    where someone with unlimited money still faces scarcity.
 2. A friend says "I got the concert ticket free from a radio contest, so going costs me nothing." Use
    opportunity cost to correct them in two sentences.
-3. A factory has spent $4M of a planned $6M on a new line that now looks unprofitable. Walk through how a
-   *marginal* thinker decides whether to spend the last $2M — and name the fallacy the "we've already spent
-   $4M!" argument commits.
+3. A factory has spent USD 4M of a planned USD 6M on a new line that now looks unprofitable. Walk through how a
+   *marginal* thinker decides whether to spend the last USD 2M — and name the fallacy the "we've already spent
+   USD 4M!" argument commits.
 4. Singapore prices car ownership (COE) and road use (ERP) rather than banning or rationing cars by lottery.
    In incentive terms, what's the argument *for* pricing over a ban? What might the argument *against* be?
    (You're allowed a normative opinion here — just label it as one.)
@@ -340,10 +525,10 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    alternative use of those hours, plus whatever the ticket would fetch if you sold or gave it away — and
    none of that depends on how you acquired it (§2). Zero dollars paid is the *accounting* cost; the
    economic question is always **"compared to what?"**
-3. **Spend the last \$2M if and only if the expected future value of finishing exceeds \$2M** — nothing else
-   enters. The \$4M is a **sunk cost**: gone whether you continue or stop, a constant in the objective, so it
+3. **Spend the last \USD 2M if and only if the expected future value of finishing exceeds \USD 2M** — nothing else
+   enters. The \USD 4M is a **sunk cost**: gone whether you continue or stop, a constant in the objective, so it
    drops out of the derivative and cannot move the optimum (§4). The marginal thinker compares only the
-   *forward* marginal benefit of completion against its \$2M marginal cost. The "we've already spent \$4M!"
+   *forward* marginal benefit of completion against its \USD 2M marginal cost. The "we've already spent \USD 4M!"
    argument is the **sunk-cost fallacy** — and note it is a documented *violation* of the rational-agent
    model, one of the behavioural deviations §7 warns about.
 4. **For pricing:** a ban or a lottery rations by fiat or luck, while a price rations by **marginal benefit**

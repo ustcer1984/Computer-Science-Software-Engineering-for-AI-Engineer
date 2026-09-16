@@ -65,6 +65,40 @@ One framing to carry the whole way through:
 
 ## 1. Interest: the price of time
 
+<details>
+<summary><b>Vocabulary for this section</b> — the four reasons a rate is positive, and the symbols used (click to expand)</summary>
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $r$ | "r" | the interest rate per period, written as a fraction (0.05 = 5%). ⚠ A different $r$ from §1's reserve *ratio* — here it is a price, not a proportion held back |
+| $t$ | "t" | time, in periods (usually years) |
+| $e^{-rt}$ | "e to the minus r t" | the continuous-compounding discount factor — what one unit of future money is worth today; mathematically identical to exponential decay with decay constant $r$ |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Interest** | the extra paid to a lender for waiting — the price of using money over time |
+| **Interest rate** | that extra expressed as a fraction per period; 5% a year turns 1000 lent today into 1050 next year |
+| **Borrower / lender** | the party using the money versus the party giving up its use |
+| **Time preference (impatience)** | the plain preference for consumption now over the same consumption later, which has to be compensated |
+| **Productivity of capital** | the fact that money put to work in a business or machine grows, so lending it forgoes that growth |
+| **Opportunity cost** | the value of the best alternative given up — here, what the money could have earned elsewhere |
+| **Default** | failure to repay; the risk that adds a **credit spread** to the rate |
+| **Credit spread** | the extra yield a riskier borrower must pay over a safe one |
+| **Expected inflation** | the price rise the lender anticipates over the loan, which must be covered just to break even in purchasing power |
+| **Purchasing power** | how much real stuff a sum of money buys — what a *real* rate measures |
+| **Nominal versus real** | in money terms versus in purchasing-power terms; the distinction §3 formalises |
+| **Policy rate** | the short-term rate the central bank sets, its deliberate push on this price |
+| **Intertemporal** | spanning time — "across periods" rather than "across goods" |
+| **Present value** | what a future payment is worth today, the subject of §2 |
+| **Discount rate** | the rate used to convert a future amount into today's money |
+| **Continuous compounding** | the limit of compounding infinitely often, which gives the exponential form above |
+
+</details>
+
 Offer someone 1000 dollars now or 1000 dollars in a year, and everyone takes it now. So to persuade you to
 *wait*, a borrower must pay you extra — that extra is **interest**, and the **interest rate** is the extra
 expressed as a fraction per period. A 5% annual rate means 1000 dollars lent today is repaid as 1050 a year
@@ -100,6 +134,67 @@ changing this price to speed up or slow down the whole intertemporal economy.
 ---
 
 ## 2. The time value of money — the one formula you actually need
+
+<details>
+<summary><b>Vocabulary for this section</b> — every symbol in the time-value formulas, plus the valuation building blocks (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TVM** | time value of money | the principle that money now is worth more than the same money later, and the formula that converts between them |
+| **PV** | present value | what a future amount is worth today |
+| **FV** | future value | what an amount today grows to by some later date |
+| **NPV** | net present value | the discounted value of a project's cash flows minus its upfront cost |
+| **IRR** | internal rate of return | the discount rate at which net present value is exactly zero — a project's own break-even yield |
+| **AI** | artificial intelligence | as in the AI-lab pricing example carried over from E01 |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $PV$ | "P-V", present value | an amount valued as of today |
+| $FV$ | "F-V", future value | an amount valued as of a future date |
+| $r$ | "r" | the interest or discount rate per period, as a fraction (0.05 = 5%) |
+| $n$ | "n" | the number of periods |
+| $t$ | "t" | a running index over periods, counting 1, 2, 3, … |
+| $(1+r)^{n}$ | "one plus r, to the n" | the **compounding factor** — multiply by it to move money forwards in time |
+| $\frac{1}{(1+r)^{n}}$ | "one over one plus r to the n" | the **discount factor** — the price today of one unit delivered $n$ periods out; divide by the compounding factor to move money backwards |
+| $R$ | "R" | in the Rule of 72 only, the interest rate written as a **percent** (6, not 0.06); dividing 72 by it gives the doubling time in years |
+| $\ln 2$ | "natural log of two" | the exact constant behind the Rule of 72, about 0.693 — hence the doubling rule's true numerator of roughly 69 |
+| $C$ | "C" | a cash flow; in a perpetuity, the fixed payment received every period |
+| $C_{0}$ | "C-nought" | the cash flow at time zero — the upfront cost of a project. Subscript 0 means "now" |
+| $C_{1}, C_{2}, \ldots, C_{n}$ | "C-one, C-two, … C-n" | the cash flows received in periods 1 through $n$ |
+| $C_{t}$ | "C-sub-t" | the cash flow in a general period $t$ |
+| $g$ | "g" | the constant growth rate of a growing perpetuity's payments |
+| $r - g$ | "r minus g" | the growing-perpetuity denominator; as it shrinks toward zero the value explodes |
+| $r > g$ | "r greater than g" | the condition under which the growing-perpetuity formula is valid at all |
+| $g \to r$ | "g tends to r" | growth approaching the discount rate — the blow-up case |
+| $\sum_{t=1}^{n}$ | "sum from t equals one to n" | add up the expression that follows for every period from 1 to $n$ |
+| $NPV$ | "N-P-V" | net present value; the decision rule is to invest when it is above zero |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Time value of money** | the principle that a unit of money now is worth more than the same unit later |
+| **Compounding** | earning interest on previously earned interest, which makes growth geometric rather than linear |
+| **Future value** | what a present sum grows into after $n$ periods at rate $r$ |
+| **Rule of 72** | the mental shortcut that money doubles in about 72 divided by the percentage rate, in years — 12 years at 6%, 8 years at 9% |
+| **Discounting** | the reverse of compounding — converting a future amount into today's money |
+| **Present value** | the result of that conversion |
+| **Discount rate** | the rate used to discount; the single most consequential and most argued-over number in any valuation |
+| **Discount factor** | the multiplier that does the conversion — the price today of one unit delivered later |
+| **Perpetuity** | a fixed payment received forever; its present value is the payment divided by the rate |
+| **Growing perpetuity** | a payment growing at a constant rate forever; its present value is the payment divided by the gap between rate and growth |
+| **Gordon growth model** | that growing-perpetuity formula applied to a share's dividends — the backbone of dividend-based valuation |
+| **Cash flow** | money actually received or paid in a period |
+| **Net present value** | the discounted future cash flows minus the upfront cost; invest when it is positive |
+| **Cost of capital** | the return available elsewhere at similar risk — the discount rate you should compare a project against |
+| **Internal rate of return** | the rate that makes net present value zero |
+| **Static versus dynamic decision** | judging one period in isolation versus discounting the whole future stream — the difference between "shut down now" and "keep investing" |
+
+</details>
 
 If money now is worth more than money later, we need a way to convert between the two. That converter is the
 **time value of money (TVM)**, and it is one formula run in two directions.
@@ -173,6 +268,49 @@ payoff later" logic you built for the AI labs in E01 §4 §9 — *static single-
 
 ## 3. Real vs nominal — the Fisher equation
 
+<details>
+<summary><b>Vocabulary for this section</b> — the Fisher relation, every symbol in it, and the inflation-linked bonds (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TIPS** | Treasury Inflation-Protected Securities | US government bonds whose payments rise with the price index, so their quoted yield is a *real* yield |
+| **UK linkers** | UK index-linked gilts | the British equivalent of TIPS |
+| **US / UK** | United States / United Kingdom | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $i$ | "i" | the **nominal** interest rate — the rate a bank quotes, in money terms |
+| $r$ | "r" | the **real** interest rate — growth in purchasing power, after inflation |
+| $\pi$ | "pi" | the inflation rate. Nothing to do with the circle constant; in macroeconomics $\pi$ always means inflation |
+| $\pi^{e}$ | "pi-e", "expected pi" | *expected* inflation — the superscript $e$ marks a forecast rather than a realised figure |
+| $(1 + i) = (1 + r)(1 + \pi)$ | | the exact Fisher equation: compounding the real return and inflation together gives the nominal return |
+| $r \approx i - \pi$ | "r is approximately i minus pi" | the everyday approximation — real is roughly nominal minus inflation; accurate when the numbers are small |
+| $\approx$ | "is approximately equal to" | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Nominal rate** | the quoted rate, in units of currency per unit of currency |
+| **Real rate** | the rate in purchasing-power terms — what your money grows by after inflation |
+| **Fisher equation** | the relation, after Irving Fisher, tying nominal, real and inflation together |
+| **Negative real return** | earning less than inflation: the balance rises while buying power falls |
+| **Ex-ante** | "before the fact" — the real rate you *expect*, computed with expected inflation, which is all a lender can know when lending |
+| **Ex-post** | "after the fact" — the real rate you *actually got*, known only once realised inflation is in |
+| **Realised inflation** | the inflation that actually happened, as opposed to what was expected |
+| **Unexpected inflation** | the gap between the two; it transfers wealth from lenders to borrowers, who repay in cheaper money |
+| **Inflation-protected bond** | a bond whose principal and coupons are indexed to the price level |
+| **Breakeven inflation rate** | the ordinary government bond yield minus the matching inflation-protected yield — the market's live forecast of average inflation over that horizon |
+| **Price index** | the measured basket price that the indexation is tied to |
+| **Treasury** | a bond issued by the US federal government; the reference safe asset |
+| **Yield** | the return a bond gives at its current price, quoted as an annual rate |
+
+</details>
+
 The interest rate a bank quotes you is a **nominal** rate — dollars next year per dollar now. But dollars
 next year buy less if there is inflation (E02 §2). What you actually care about is the **real** rate: the
 growth in *purchasing power*, not in dollar count.
@@ -207,6 +345,47 @@ Two refinements that matter for reading the news:
 
 ## 4. There is no single "interest rate" — the anatomy of a yield
 
+<details>
+<summary><b>Vocabulary for this section</b> — the premia that stack into any quoted yield, and each symbol (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **T-bill** | Treasury bill | a short-dated US government security; the closest thing to a nominal risk-free asset |
+| **IG** | investment grade | the credit-rating tier of solid borrowers who pay only a little over Treasuries |
+| **HY** | high yield ("junk") | the tier of shaky borrowers who pay a lot more |
+| **M2** | broad money | the aggregate from §1, cited here as the same "one number, two meanings" lesson |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $i$ | "i" | the quoted **nominal** yield — the number you see on screen, which the rest of the terms decompose |
+| $r^{\ast}$ | "r-star" | the **real risk-free rate**: what a perfectly safe loan earns in purchasing-power terms. The star marks a benchmark or equilibrium value, not an observed one; also called the **neutral rate** |
+| $\pi^{e}$ | "pi-e", "expected pi" | expected inflation; the superscript $e$ marks an expectation |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Yield** | the annualised return a lender earns on a security at its current price |
+| **Premium** *(in a yield)* | an add-on compensating the lender for one specific thing they risk or give up |
+| **Real risk-free rate** | the economy's baseline price of time, with no default risk and no inflation compensation |
+| **Neutral rate (r-star)** | the real rate that neither stimulates nor restrains the economy; tied to expected growth and demographics, and the anchor the central bank aims around |
+| **Nominal risk-free rate** | the real risk-free rate plus expected inflation; roughly a short Treasury bill yield |
+| **Treasury bill** | a short government security; safe because a government issuing its own fiat currency can always repay in it |
+| **Term premium** | the extra yield for lending *longer* — locking money up and bearing interest-rate risk along the way |
+| **Interest-rate risk** | the risk that a rise in yields cuts the market value of what you hold (quantified as duration in §6) |
+| **Credit (default) spread** | the extra yield for the chance the borrower does not pay; widening spreads are a clear market stress signal |
+| **Investment grade** | the rating band for reliable borrowers |
+| **High yield ("junk")** | the band for risky ones |
+| **Liquidity premium** | the extra yield for holding something hard to sell quickly without moving its price |
+| **Thinly traded** | having few buyers and sellers, hence a large liquidity premium |
+| **"Which premium is doing the work?"** | the section's habit: a 9% yield that is mostly credit spread means a risky borrower, while a 9% yield that is mostly expected inflation means a decaying currency — same number, opposite meaning |
+
+</details>
+
 News anchors say "*the* interest rate" as if there were one. There are thousands, and they differ in
 understandable ways. Any given rate is built up as a **base plus a stack of premia**, each one compensating
 the lender for a specific thing they give up or risk:
@@ -239,6 +418,40 @@ exact "same number, opposite meaning" reflex you used on M2 in §1.
 ---
 
 ## 5. The yield curve — the market's forecast, drawn as a line
+
+<details>
+<summary><b>Vocabulary for this section</b> — the term structure, its shapes and the inversion debate (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **QE** | quantitative easing | central-bank bond buying, which compresses the term premium and can distort the curve's message |
+| **Fed** | the Federal Reserve | the US central bank, whose hiking cycle drove the 2022–24 inversion |
+| **COVID** | the COVID-19 pandemic | the shock behind the inflation the Fed was hiking against |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Maturity** | how long until a bond repays its principal — 3 months, 2 years, 10 years, 30 years |
+| **Yield curve (term structure of interest rates)** | one issuer's yield plotted against maturity; using the government strips out credit risk and shows only the price of time at each horizon |
+| **Short end / long end** | the short-maturity and long-maturity ends of that curve |
+| **Expectations hypothesis** | the idea that a long rate is roughly the average of the short rates expected over the bond's life, so long yields encode a forecast |
+| **Rolling over** | repeatedly reinvesting in short loans, the alternative to locking in a long one |
+| **Term premium** | the extra yield demanded for going long, which tilts the curve upward even with no expected rate change |
+| **Normal (upward-sloping) curve** | the resting state: some expected tightening plus a positive term premium |
+| **Flat curve** | the market expecting little change |
+| **Inverted curve** | short yields *above* long yields — the market betting that rates will be cut, which happens in a slowdown |
+| **Inversion** | the event of the curve turning negative, usually measured as the 10-year yield minus the 2-year |
+| **Tightening / cutting** | the central bank raising versus lowering its policy rate |
+| **Leading indicator** | a series that turns *before* the economy does; the 10-year-minus-2-year spread has preceded essentially every US recession since the 1970s, typically by 6–18 months |
+| **False positive** | a signal that fires without the predicted event — hence "it predicted nine of the last five recessions" |
+| **Variable lag** | the fact that the gap between signal and recession is long and not fixed, so inversion is not a trading instruction |
+| **Soft landing** | inflation brought down without a recession — the outcome that makes the 2022–24 inversion a live test case |
+
+</details>
 
 Take one issuer with no default risk — the government — and plot its yield against **maturity** (3 months,
 2 years, 10 years, 30 years). That line is the **yield curve** (or **term structure of interest rates**),
@@ -287,6 +500,60 @@ Three cautions that keep you from over-reading it — the honest-indicator disci
 ---
 
 ## 6. Bonds: price and yield move inversely
+
+<details>
+<summary><b>Vocabulary for this section</b> — bond pricing, every symbol in the price and duration formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TVM** | time value of money | §2's machinery, which this section simply applies to a bond |
+| **YTM** | yield to maturity | the single discount rate that makes a bond's discounted cash flows equal its market price |
+| **SVB** | Silicon Valley Bank | the 2023 failure this section closes with |
+| **Fed** | the Federal Reserve | the US central bank whose 2022 hikes drove the yields in that story |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ | "P" | the bond's price today — the present value of everything it will pay |
+| $C$ | "C" | the **coupon**: the fixed payment the bond makes each period |
+| $F$ | "F" | the **face (par) value**: the principal returned at maturity |
+| $y$ | "y" | the market **yield to maturity**, the rate used to discount. ⚠ A market-determined price, not the policy rate the central bank sets |
+| $n$ | "n" | the number of periods to maturity |
+| $t$ | "t" | the running period index in the sum, 1 through $n$ |
+| $\sum_{t=1}^{n}$ | "sum from t equals one to n" | add the discounted coupon for each period |
+| $(1+y)^{t}$ | "one plus y to the t" | the compounding factor used to discount the payment arriving in period $t$ |
+| $D$ | "D" | **(modified) duration**, in years — the sensitivity of price to yield. A duration of 15 means roughly a 15% price fall per one-point rise in yield |
+| $\Delta y$ | "delta y" | a change in yield, expressed as a fraction (0.01 = one percentage point) |
+| $\Delta P$ | "delta P" | the resulting change in price |
+| $\frac{\Delta P}{P}$ | "delta P over P" | the *fractional* change in price — the percentage move |
+| $-D \times \Delta y$ | "minus D times delta y" | the approximation itself; the minus sign is the inverse relationship between price and yield |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Bond** | a tradable loan: fixed payments on a fixed schedule from a borrower to whoever holds the paper |
+| **Fixed income** | the asset class named for exactly that — the cash flows do not change, only the price does |
+| **Coupon** | the periodic interest payment, set when the bond is issued |
+| **Coupon rate** | the coupon as a fraction of face value |
+| **Face (par) value** | the principal repaid at maturity |
+| **Maturity** | the date the principal is repaid |
+| **Yield to maturity** | the single rate that equates the discounted cash flows to the price; the standard way to quote a bond's return |
+| **Price–yield inverse relationship** | if the yield rises, every discounted term shrinks, so the price falls — arithmetic, not sentiment |
+| **At par** | trading at face value, which happens when the coupon rate equals the yield |
+| **At a discount** | trading below face, because the yield exceeds the coupon |
+| **At a premium** | trading above face, because the yield is below the coupon |
+| **Duration** | how sensitive a bond's price is to a yield change; long-dated bonds have high duration because their value sits far in the future |
+| **Convexity** | the curvature of the price-yield line — why the relationship is a curve, not a straight line |
+| **Interest-rate risk** | the risk duration measures, and exactly what the §4 term premium pays you to bear |
+| **Market value versus held to maturity** | a bond's price today versus the face value it still pays if you never sell — the gap that made SVB solvent on paper and fatal in practice |
+| **Realising a loss** | being forced to sell at the depressed price, converting a paper loss into a real one |
+| **Maturity transformation** | funding long assets with on-demand deposits (§1) — the other half of the SVB story |
+
+</details>
 
 The last piece connects TVM (§2) to the instrument where you will meet it most — the **bond** — and explains
 a fact that trips up everyone at first: **when interest rates rise, bond prices fall.** This is not a market

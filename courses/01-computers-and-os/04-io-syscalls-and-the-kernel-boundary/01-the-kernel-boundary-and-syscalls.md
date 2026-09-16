@@ -61,6 +61,57 @@ it costs, and how good systems are shaped by that cost.
 
 ## 1. Two worlds: user mode and kernel mode
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — the two privilege modes and the wall between them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPU** | central processing unit | the processor core that executes your instruction stream |
+| **OS** | operating system | the software that owns the machine; its core is the kernel |
+| **CR3** | control register 3 | the x86 register holding the address of the current page table — loading it is a privileged instruction |
+| **PID** | process identifier | the number the kernel uses to name a process; the kernel itself has none |
+| **KPTI** | kernel page-table isolation | the Meltdown fix that stops mapping kernel pages into user space (see §3) |
+| **LSTAR** | long-mode syscall target address register | the register holding the kernel's single syscall entry address, set at boot |
+| **NIC** | network interface card | the hardware that sends and receives network packets |
+| **RAM** | random-access memory | physical main memory, a shared resource the kernel arbitrates |
+| **SSD** | solid-state drive | flash storage with no moving parts |
+| **NVMe** | non-volatile memory express | the modern interface fast SSDs speak to the machine |
+| **NFS** | Network File System | a filesystem whose storage lives on another machine, reached over the network |
+| **IOCP** | I/O completion ports | Windows' completion-style I/O interface, contrasted with Linux `epoll` in §9a |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Privilege level (ring)** | the hardware-enforced permission level the CPU is executing at right now; x86 offers rings 0–3 and mainstream systems use two |
+| **Kernel mode (ring 0)** | the privileged level, where every instruction is allowed — device access, page-table loads, interrupt masking |
+| **User mode (ring 3)** | the unprivileged level your process runs in; privileged instructions simply fault |
+| **Supervisor** | another name for kernel mode |
+| **Kernel** | the privileged core of the OS — not a process, but privileged code mapped into every address space and run on your own CPU thread |
+| **System call (syscall)** | the one guarded instruction that raises privilege and enters the kernel — the only door out of your process |
+| **Trap** | a controlled transfer into the kernel at a fixed entry point; a syscall is a deliberate one |
+| **General-protection fault** | the CPU fault raised when ring-3 code attempts something only ring 0 may do |
+| **Signal** | the kernel's asynchronous notification to a process, e.g. `SIGSEGV` (bad memory access) or `SIGILL` (illegal instruction) |
+| **Virtual address space** | the private map of addresses a process sees; it cannot name another process's or the kernel's memory (Ch2 §1) |
+| **Page table** | the kernel-owned structure translating virtual addresses to physical ones |
+| **Mode switch** | a change of CPU privilege level only — same thread, same registers; cheap-ish |
+| **Context switch** | a change of *which* thread or process is running — the scheduler swaps register state, and for a new process reloads `CR3`; expensive (§3) |
+| **Interrupt masking** | temporarily telling the CPU to ignore device interrupts — privileged, kernel-only |
+| **Device controller** | the hardware block a driver talks to in order to drive a disk, NIC or timer |
+| **Meltdown** | the 2018 hardware flaw that let ring-3 speculation read kernel-only pages; the fix was KPTI |
+| **Speculation** | the CPU running instructions ahead of knowing whether they are needed — the mechanism Meltdown abused |
+| **`sys_call_table`** | the Linux array of syscall implementations, indexed by syscall number (§2) |
+| **`strace`** | the Linux tool that prints every syscall a process makes (§5) |
+| **`epoll`** | the Linux syscall family for waiting on many file descriptors at once (§2 of this chapter) |
+| **`/proc/cpuinfo`** | the Linux pseudo-file listing CPU features, e.g. the `pti` flag showing KPTI is active |
+| **Arbitration** | the kernel's job of deciding who gets a shared resource and in what order |
+| **Stable contract / deep module** | one narrow, durable interface (`open`/`read`/`write`/`close`) hiding wildly different implementations — Unix's "everything is a file" |
+| **ABI (application binary interface)** | the machine-level agreement on registers, sizes and calling conventions between two pieces of compiled code — on Linux the syscall ABI is the public, stable API; on Windows it is private |
+
+</details>
+
 A modern CPU can execute in (at least) two **privilege levels**. On x86 they're called *rings*; the hardware offers four (ring 0–3) but
 mainstream operating systems use exactly two of them:
 
@@ -130,6 +181,50 @@ control. — Illustration, generated locally (ComfyUI + Z-Image Turbo).*
 
 ## 2. What a system call actually *is* — a deliberate, guarded trap
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — the syscall round trip, register by register (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ABI** | application binary interface | the fixed machine-level agreement on which register holds which argument, so user and kernel need no negotiation |
+| **DMA** | direct memory access | hardware moving data to or from memory without the CPU copying it byte by byte |
+| **NIC** | network interface card | the hardware that sends and receives network packets |
+| **MSR** | model-specific register | a special CPU register such as `MSR_LSTAR`, which holds the kernel's syscall entry address |
+| **LSTAR** | long-mode syscall target address register | that entry-address register, written by the kernel at boot and unwritable from user mode |
+| **fd** | file descriptor | a small integer naming an open kernel object for your process |
+| **libc** | the C library | the standard user-space library whose wrapper functions actually execute the `syscall` instruction (§4) |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **System call (syscall)** | a synchronous, intentional trap that raises privilege *and* jumps to a fixed kernel entry — not a function call |
+| **Trap** | a hardware-controlled transfer into the kernel at an address the kernel chose |
+| **Marshal** | to lay arguments out where the other side expects them — here, in specific registers |
+| **Register** | a named storage slot inside the CPU; `rax`, `rdi`, `rsi`, `rdx`, `r10`, `r8`, `r9` carry the syscall number and its arguments on x86-64 |
+| **x86-64** | the 64-bit Intel/AMD instruction set this walkthrough uses |
+| **Calling convention** | the rule for which register carries which argument and where the result comes back |
+| **Syscall number** | the integer in `rax` selecting which kernel service you want — `0` is `read`, `1` is `write`, `257` is `openat` |
+| **Syscall entry handler** | the kernel's single entry point for every syscall; one location, kernel-controlled — the core security property |
+| **System-call table (`sys_call_table`)** | the kernel array of function pointers indexed by syscall number |
+| **Function pointer** | a variable holding the address of a function, so it can be called indirectly |
+| **Bounds check** | verifying the syscall number is inside the table before indexing it |
+| **Argument validation** | the kernel checking every user-supplied value — is this fd really open, does this pointer point into *your* address space |
+| **Kernel-exploit primitive** | a reusable building block an attacker chains into a full compromise; a skipped argument check is a classic one |
+| **File descriptor** | the small integer handle you pass back to the kernel to name an open file, socket or pipe |
+| **Buffer** | a block of memory bytes are copied into or out of |
+| **Page cache** | the kernel's in-RAM copy of file contents; a `read` usually copies from here, not from the device |
+| **Blocking call** | a syscall that, if it cannot finish now, puts your thread to sleep inside the kernel until it can |
+| **`sysret`** | the instruction that drops back to ring 3 and resumes the instruction after `syscall` |
+| **`errno`** | the thread-local error code convention: the raw syscall returns a negative code, libc stores the positive value here and returns `-1` |
+| **`ENOENT`** | the error code for "no such file or directory" — returned raw as `-2` |
+| **Software interrupt `int 0x80`** | the older, slower way to enter the kernel, replaced by the dedicated `syscall`/`sysret` pair |
+| **Ring 0 / ring 3** | kernel mode and user mode — see §1 |
+
+</details>
+
 Here is the part most explanations skip. A syscall is **not** "calling a kernel function." You cannot `call` a kernel address — those
 pages are ring-0-only, and a `call` doesn't change privilege anyway. Instead a syscall is a **synchronous, intentional trap**: you execute
 one special instruction that *simultaneously* raises the privilege level **and** jumps to a single fixed kernel entry point that you do not
@@ -192,6 +287,52 @@ interrupt `int 0x80`; modern CPUs added the dedicated `syscall`/`sysret` pair be
 
 ## 3. A syscall is not free — the cost ladder, and why it moved
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every unit in the cost ladder (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ns** | nanosecond | one billionth of a second — the scale of a function call or a RAM read |
+| **µs** | microsecond | one millionth of a second, i.e. 1000 ns — the scale of a syscall and a context switch |
+| **ms** | millisecond | one thousandth of a second, i.e. 1000 µs — the scale of a disk seek or a long network trip |
+| **MB** | megabyte | one million bytes |
+| **TLB** | translation lookaside buffer | the CPU's cache of virtual-to-physical page translations; flushing it forces slow page-table walks |
+| **KPTI** | kernel page-table isolation | the Meltdown fix that unmaps kernel pages from user space, so every syscall switches page tables twice |
+| **CR3** | control register 3 | the register naming the current page table; reloading it on a process switch is what flushes the TLB |
+| **CPU** | central processing unit | the processor core |
+| **RAM** | random-access memory | physical main memory |
+| **SSD** | solid-state drive | flash storage; a random read is around 100 µs in the figure |
+| **HDD** | hard disk drive | spinning magnetic storage; a seek is around 10 ms in the figure |
+| **I/O** | input/output | any transfer to or from a device — disk, network, terminal |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Function call** | a jump within your own process at your own privilege — a few ns, no boundary crossed |
+| **System call round trip** | privilege up, kernel entry and validation, privilege down — roughly 0.1–1 µs in the table |
+| **Context switch** | the scheduler swapping which thread or process runs — roughly 1–5 µs, more across processes |
+| **Register file** | the full set of CPU registers whose contents must be saved and restored on a switch |
+| **Kernel stack** | the per-thread stack the kernel uses while executing on that thread's behalf |
+| **Cache** | the CPU's fast local copies of recently used memory; a switch leaves the new thread with misses |
+| **TLB flush** | discarding cached address translations, so the next accesses must walk the page tables |
+| **Boundary crossing** | one trip across the user/kernel line; the thing you want to do rarely and in bulk |
+| **Buffered I/O** | reading and writing in large chunks into a user-space buffer so one syscall serves many small reads — Python's `BufferedReader`, C's `FILE*` |
+| **Rule 1 — batch your crossings** | move data in big chunks, not a byte per syscall |
+| **Rule 2 — park, don't spin** | when waiting on a device, give up the CPU rather than burning it (or a whole thread) |
+| **Spin** | to loop burning CPU while waiting instead of sleeping |
+| **Park** | to suspend a task or thread at zero CPU cost until its data is ready |
+| **Round trip** | one there-and-back exchange with a device or remote machine; the intercontinental one is around 150 ms |
+| **Log scale** | a chart axis where each gridline is a fixed multiple (here 100×) rather than a fixed increment |
+| **Null syscall** | a syscall that does almost nothing, e.g. `getpid`, used to measure pure boundary overhead |
+| **Speculative execution** | the CPU running ahead on a guessed path; Meltdown turned it into a side channel |
+| **Side channel** | leaking information through a system's physical behaviour (timing, cache state) rather than its interface |
+| **Meltdown** | the 2018 attack that read kernel memory from user mode via speculation, forcing KPTI |
+
+</details>
+
 Three kinds of "transfer control" show up constantly, and they differ in cost by orders of magnitude. Keeping them straight is what lets
 you reason about performance instead of guessing:
 
@@ -232,6 +373,38 @@ boundary crossing in computing, and rippled up into how much syscall-batching ma
 
 ## 4. You never write `syscall` by hand — libc wrappers, and the vDSO trick
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — wrappers, and the crossing the kernel deleted (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **vDSO** | virtual dynamic shared object | a small read-only page of kernel data and code mapped into every process, so some "syscalls" need no ring transition at all |
+| **ABI** | application binary interface | the fixed register convention the wrapper marshals arguments into |
+| **libc** | the C library | the user-space library providing one thin wrapper function per syscall |
+| **ns** | nanosecond | one billionth of a second |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Wrapper function** | a few instructions that move arguments into the ABI registers, execute `syscall`, and translate the result |
+| **`errno`** | the thread-local error variable the wrapper sets when the raw syscall returns a negative code |
+| **Ring transition** | the privilege change a real syscall performs — precisely what the vDSO avoids |
+| **`clock_gettime` / `gettimeofday` / `getcpu`** | read-only, extremely frequent calls served from the vDSO page |
+| **`ldd`** | the tool that lists a binary's shared libraries; `linux-vdso.so.1` appears with no path because it has no file on disk |
+| **CPython** | the standard Python implementation, whose C code calls libc on your behalf |
+| **`printf`** | formats into a user-space buffer and calls the `write` syscall only when that buffer flushes — not itself a syscall |
+| **`malloc`** | hands out memory from a user-space pool and calls `mmap`/`brk` only when the pool must grow — not itself a syscall |
+| **`mmap`** | the syscall that maps a file or fresh memory into your address space |
+| **`brk`** | the older syscall that grows the heap by moving its end address |
+| **Overcommit** | the kernel promising more virtual memory than it has physical RAM, backing it only when touched (Ch2 §3) |
+| **Buffer flush** | writing a user-space buffer's accumulated bytes out in one syscall |
+| **Boundary crossing** | one user-to-kernel trip; the cheapest one is the one you never make |
+
+</details>
+
 Two layers sit between your code and that instruction, and both are worth knowing because they explain things you'll actually see.
 
 **The libc wrapper.** You don't emit the `syscall` instruction or load `rax` yourself. The C library provides a thin **wrapper function**
@@ -254,6 +427,41 @@ kernel injected it.)
 ---
 
 ## 5. Seeing them for real: `strace`
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — reading a real `strace` line by line (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **fd** | file descriptor | the small integer handle a process uses to name an open kernel object |
+| **EOF** | end of file | no more data; a `read` returning `0` is the kernel signalling it |
+| **B** | byte | eight bits; the trace's `= 18` means eighteen bytes were read |
+| **I/O** | input/output | transfers to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`strace`** | the tool that intercepts and prints every syscall a process makes |
+| **`ptrace`** | the syscall `strace` uses to attach to and stop another process at each syscall |
+| **File descriptor** | an index into the kernel's per-process open-file table — you get the handle, never the object itself |
+| **Open-file table** | the kernel's per-process array mapping descriptors to open files, sockets and pipes |
+| **stdin / stdout / stderr** | the always-present descriptors `0`, `1` and `2` — standard input, output and error |
+| **`openat`** | the syscall that opens a file relative to a directory descriptor and returns a new fd |
+| **`AT_FDCWD`** | the special value meaning "resolve this path relative to the current working directory" |
+| **`O_RDONLY`** | open flag: read-only |
+| **`O_CLOEXEC`** | open flag: close this descriptor automatically if the process execs another program |
+| **`io.DEFAULT_BUFFER_SIZE`** | Python's default read-block size, 8192 bytes, used when the file size is not known ahead |
+| **`strace -c`** | the summary mode: a table of which syscalls ran, how often, and how much time they took |
+| **Wall-clock time** | elapsed real time, as opposed to CPU time consumed |
+| **Blocked process** | one asleep inside a syscall — in a trace, a call line with no return value yet |
+| **`epoll_wait`** | the multiplexing syscall an event loop sleeps in (Ch3 §2, and §2 of this chapter) |
+| **I/O-bound** | limited by waiting on devices rather than by CPU work |
+| **Rule 1 (batching)** | one `read` of the whole file instead of one per byte — visible directly in the trace |
+
+</details>
 
 None of this is abstract — you can watch the boundary crossings of any program. `strace` uses the `ptrace` syscall to intercept and print
 every syscall a process makes. Here is a real trace (captured on this machine) of a tiny Python program that reads a file and prints it —
@@ -295,6 +503,40 @@ Two more `strace` habits worth having (both real output shapes you'll recognize)
 
 ## 6. Why this is the frame for the rest of the chapter
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — the chapter's later material as corollaries of the boundary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **fd** | file descriptor | the small integer handle naming an open kernel object |
+| **C10k** | ten thousand concurrent connections | the classic problem of serving 10,000 clients from one machine (§2) |
+| **GB** | gigabyte | a billion bytes — the scale of a model weights file |
+| **RAM** | random-access memory | physical main memory, which the page cache lives in |
+| **I/O** | input/output | transfers to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Blocking `read`** | a syscall that sleeps your thread in the kernel — off the run queue, zero CPU — until data arrives |
+| **Non-blocking I/O** | the same syscall told never to sleep: if nothing is ready it returns `EAGAIN` at once |
+| **`EAGAIN`** | the error code meaning "nothing available right now, try again" |
+| **Run queue** | the scheduler's list of threads that are ready to run; a sleeping thread is not on it |
+| **I/O multiplexing** | one syscall that waits on many descriptors at once and wakes when any is ready — `select`, `poll`, `epoll` |
+| **`selector.select()`** | Python's portable wrapper over that call; on Linux it is `epoll_wait` |
+| **`mmap`** | mapping a file's bytes directly into your address space, so touching memory replaces issuing `read` syscalls |
+| **Demand paging** | bringing a page into RAM only when it is first touched (Ch2 §3) |
+| **Page fault** | the trap that demand paging rides on — the kernel fetching the missing page, not an error |
+| **Page cache** | the kernel's shared in-RAM copy of file contents; several processes mapping the same file share one physical copy |
+| **`llama.cpp`** | a local model-serving program that `mmap`s multi-gigabyte weight files rather than reading them |
+| **Latency budget** | the time allowance a request is designed to fit into, apportioned across its steps (§3) |
+| **Pipelining** | sending the next request before the previous reply arrives, so round trips overlap |
+| **Device round trip** | one full there-and-back to disk or network — what §3 shows dominates total latency |
+
+</details>
+
 Everything in Ch4 is now a special case of "crossing the boundary":
 
 - **§2 — Blocking vs non-blocking I/O.** A **blocking** `read` is a syscall that, if the data isn't ready, asks the kernel to *put your
@@ -320,6 +562,36 @@ Everything in Ch4 is now a special case of "crossing the boundary":
 ---
 
 ## 7. A note on the other doors (so the picture is complete)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — the three doors from user mode into the kernel (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **NIC** | network interface card | the hardware that raises an interrupt when a packet arrives |
+| **CPU** | central processing unit | the processor core that takes the trap |
+| **I/O** | input/output | transfers to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Synchronous** | happening at a definite point in your own instruction stream |
+| **Asynchronous** | arriving from outside, at a moment your code did not choose |
+| **System call** | the synchronous, *intentional* trap — the door you open on purpose |
+| **Interrupt** | an asynchronous, external signal from a device that makes the CPU jump into kernel code immediately |
+| **Interrupt handler** | the kernel routine that services a device interrupt and returns |
+| **Timer** | the device whose periodic interrupt lets the kernel take back control and reschedule |
+| **Exception / fault** | a synchronous trap you did *not* request — the CPU stopping mid-instruction because something needs handling |
+| **Page fault** | a fault raised when a touched page is not currently mapped; usually benign, and the basis of demand paging and `mmap` (Ch2 §3) |
+| **Divide-by-zero** | an arithmetic fault the CPU raises and the kernel turns into a signal |
+| **Illegal instruction** | a fault raised when the CPU is asked to execute something it will not run at this privilege level |
+| **Ring 3 to ring 0** | the user-to-kernel transition all three doors share |
+| **Wake a thread** | the kernel marking a sleeping thread runnable once its data has arrived |
+
+</details>
 
 A **syscall is a *synchronous, intentional* trap** — you asked for it. The CPU has two sibling mechanisms that use the *same* user→kernel
 transition machinery but aren't syscalls, and naming them keeps the model clean:

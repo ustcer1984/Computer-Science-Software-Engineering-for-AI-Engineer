@@ -16,6 +16,57 @@
 
 ## 1. Concurrency in async/await and threading (JetBrains / PyCharm Blog, Jun 2025)
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | Global Interpreter Lock | a lock inside CPython that lets only one thread run Python bytecode at a time |
+| **I/O** | input/output | work done outside the CPU — network, disk, database — where the program mostly waits |
+| **CPU** | central processing unit | the general-purpose processor that runs your code |
+| **GPU** | graphics processing unit | a massively parallel accelerator, used here as the escape hatch for compute-bound work |
+| **OS** | operating system | the software that schedules threads and owns the hardware |
+| **DB** | database | a system that stores and serves structured data; a classic source of I/O waits |
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol web and API calls run over |
+| **ms** | milliseconds | one thousandth of a second — the unit on the timing diagram |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Concurrency** | structuring a program so several tasks are *in progress* at once, even on one core |
+| **Parallelism** | genuinely running work at the same instant on several cores or devices |
+| **Coroutine** | a function that can pause itself mid-execution and hand control back, then resume later |
+| **`async`/`await`** | Python's syntax for writing coroutines; `await` is the point where a coroutine may yield control |
+| **Event loop** | the single-threaded scheduler that runs ready coroutines and resumes them when their I/O completes |
+| **Cooperative multitasking** | the running task decides when to yield — nothing is interrupted against its will |
+| **Preemptive multitasking** | the OS interrupts a running thread whenever it likes and gives another one the core |
+| **Thread** | an independently scheduled line of execution inside one process, sharing that process's memory |
+| **Green thread** | a lightweight task scheduled by the language runtime rather than the OS; a coroutine is the Python flavour |
+| **Process** | an isolated program instance with its own memory — the unit that genuinely escapes the GIL |
+| **Multiprocessing** | running work in several processes to get real CPU parallelism |
+| **I/O-bound** | work whose runtime is dominated by waiting for something external |
+| **CPU-bound** | work whose runtime is dominated by actual computation |
+| **Free-threaded build** | the experimental CPython build (3.13) compiled without the GIL, so threads can use several cores |
+| **`asyncio`** | Python's standard library for async I/O: the event loop, tasks, and coordination primitives |
+| **`asyncio.gather`** | runs several awaitables concurrently and waits for all of them to finish |
+| **`asyncio.create_task`** | schedules a coroutine to start running now, without waiting for it here |
+| **`asyncio.TaskGroup`** | Python 3.11+ structured-concurrency wrapper: if one child task fails, the rest are cancelled |
+| **Structured concurrency** | the discipline that tasks started inside a block must all finish (or be cancelled) before it exits |
+| **`return_exceptions=True`** | a `gather` option that collects failures as results instead of aborting the wait |
+| **Fan out** | launching several independent calls at once rather than one after another |
+| **Data-dependent** | a call that needs an earlier call's result, and therefore cannot overlap with it |
+| **Lock (`threading.Lock`)** | a mutual-exclusion object that lets only one thread touch shared state at a time |
+| **Race condition** | a bug where the result depends on which thread happens to get there first |
+| **Rate limit** | a cap the remote service imposes on how many requests or tokens you may send per interval |
+| **Bottleneck** | the one stage that sets the overall speed; speeding anything else up changes nothing |
+| **Latency** | how long one operation takes end to end |
+| **Footgun** | an interface that makes it easy to shoot yourself in the foot — here, unbounded concurrency |
+
+</details>
+
 🔗 https://blog.jetbrains.com/pycharm/2025/06/concurrency-in-async-await-and-threading/
 
 **What it covers.** A clean, picture-driven comparison of Python's two concurrency models and when
@@ -91,6 +142,46 @@ when you want all results regardless of individual failures. Reference: [Python 
 ---
 
 ## 2. Effective context engineering for AI agents (Anthropic, Engineering Blog)
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | here, large language models and the agents built on them |
+| **LLM** | large language model | the text model an agent is built around |
+| **RAG** | retrieval-augmented generation | fetching relevant documents and pasting them into the prompt before the model answers |
+| **ID** | identifier | a short handle (a path, a key, a query) that stands in for a heavy piece of data |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Prompt engineering** | crafting the wording of one instruction to get a better answer |
+| **Context engineering** | curating *everything* the model sees at inference — system prompt, tools, examples, history, retrieved data, memory |
+| **Context window** | the maximum number of tokens the model can attend to in a single call |
+| **Token** | the sub-word unit a model actually reads and generates; the currency of the context budget |
+| **Inference** | running the trained model to produce output (as opposed to training it) |
+| **Context rot** | the gradual degradation of recall and reliability as the context window fills up |
+| **Transformer** | the model architecture behind current LLMs, in which every token attends to every other token |
+| **Attention budget** | the informal idea that attention is a fixed resource every extra token dilutes |
+| **System prompt** | the standing instructions that define an agent's role, rules and defaults |
+| **Right altitude** | a system prompt specific enough to steer behaviour but not so rigid it becomes a brittle rule tree |
+| **Tool** | a function the model may call to act on the world — search, read a file, hit an API |
+| **Canonical example** | a small set of representative demonstrations, chosen for coverage rather than exhaustiveness |
+| **History** | the accumulated turns and tool outputs carried forward in the conversation |
+| **Long-horizon task** | work that runs far past a single window and so must survive context being reset |
+| **Compaction** | summarising old history — keeping decisions and open threads, dropping redundant tool output |
+| **Structured note-taking / memory** | persisting state to files outside the context window so it survives a reset |
+| **Just-in-time retrieval** | storing light identifiers and loading the heavy data only at the moment it is needed |
+| **Sub-agent architecture** | delegating focused work to specialist agents that return condensed summaries to an orchestrator |
+| **Orchestrator** | the top-level agent that plans and delegates, staying deliberately high-level |
+| **Agent** | an LLM that runs in a loop, calling tools and deciding its own next step |
+| **High-signal token** | a token that meaningfully changes the model's output — the thing you are trying to maximise per unit of window |
+
+</details>
 
 🔗 https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
 

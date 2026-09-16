@@ -33,6 +33,32 @@ thread at the end.
 
 ## 1. The temporal problem: why video is not "image × frames"
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $t$ | "t" | a frame index along the video's time axis (note: in §4 the same letter means the diffusion/flow step — watch which one is meant) |
+| $t+1$ | "t plus one" | the immediately following frame |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Frame** | one still image in the video sequence |
+| **Temporal coherence** | the requirement that the frame sequence describes a physically possible trajectory, not merely a set of individually plausible images |
+| **Flickering** | visible frame-to-frame inconsistency in texture, colour, pose or lighting |
+| **Short-range coherence** | consistency between neighbouring frames |
+| **Long-range coherence** | consistency between frames far apart in the clip — identity, lighting and camera path holding over time |
+| **Energy landscape / basin** | from §1: the learned density surface and one of its high-probability regions; independent seeds land in different basins |
+| **Attractor** | the region of the landscape a given prompt's samples fall into |
+| **Temporal attention** | attention applied across the time axis, coupling the same spatial location in different frames |
+| **World state** | a persistent internal representation of the scene that the model would need to carry across many frames |
+
+</details>
+
 The naive approach is obvious — generate each frame independently with the §1 diffusion pipeline,
 concatenate, and call it a video. This fails in a way you can predict without running it.
 
@@ -61,6 +87,41 @@ is exactly what makes video generation fundamentally different from image genera
 ---
 
 ## 2. Generation one: inflating the U-Net to 3D
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **U-Net** | (not an initialism — named for its U shape) | a convolutional encoder–decoder with skip connections between matching resolutions |
+| **LoRA** | low-rank adaptation | fine-tuning by adding small low-rank weight deltas instead of retraining the model |
+| **ControlNet** | — | an adapter branch that conditions a frozen diffusion model on an extra control signal |
+| **SD** | Stable Diffusion | the pretrained image diffusion model AnimateDiff freezes and builds on |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $T$ | "capital T" | the number of frames in the clip |
+| $O(T^{2})$ | "big-O of T squared" | cost growing with the square of the frame count — full temporal attention over $T$ frames |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **3D convolution** | a convolution whose kernel spans height, width and time |
+| **Pseudo-3D (factorised) convolution** | a 2D spatial convolution followed by a 1D temporal one — much cheaper than a full 3D kernel |
+| **Temporal attention block** | an attention layer inserted after each spatial block, attending across frames at a fixed spatial position |
+| **Motion module** | AnimateDiff's trainable temporal block, inserted between frozen spatial layers |
+| **Frozen weights** | parameters held fixed during training so a pretrained capability is preserved exactly |
+| **Adapter** | a small trainable module added to a frozen backbone to inject a new capability |
+| **Cascaded diffusion** | a base low-resolution model followed by successive super-resolution stages |
+| **Super-resolution** | a model that upsamples, spatially or temporally, adding plausible detail |
+| **Compounding error** | the degradation that accumulates as each cascade stage builds on the previous stage's mistakes |
+
+</details>
 
 The first-generation solution was direct: extend the 2D image diffusion U-Net to handle the temporal
 dimension.
@@ -110,6 +171,52 @@ consistency at low resolution, which is easier — at the cost of compounding er
 ---
 
 ## 3. DiT takes over — and Sora's spacetime patches
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DiT** | diffusion transformer | a transformer denoiser operating on patch tokens |
+| **ViT** | vision transformer | the image model that patchifies then runs a plain transformer |
+| **VAE** | variational autoencoder | the encoder–decoder that compresses the signal into latents before the DiT sees it |
+| **U-Net** | (named for its U shape) | the convolutional backbone being displaced |
+| **FM** | flow matching | the training objective used by these models (§4) |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $T$ | "capital T" | the number of frames (the time extent of the latent tensor) |
+| $H$ | "capital H" | the latent's height in grid cells |
+| $W$ | "capital W" | the latent's width in grid cells |
+| $C$ | "capital C" | the number of channels per latent cell |
+| $p_t$ | "p-sub-t" | the patch size along the time axis; the subscript names the axis, not a step index |
+| $p_h$ | "p-sub-h" | the patch size along height |
+| $p_w$ | "p-sub-w" | the patch size along width |
+| $L$ | "capital L" | the resulting token-sequence length fed to the transformer |
+| $O(L^{2})$ | "big-O of L squared" | full self-attention cost, growing with the square of the sequence length |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Spacetime patch** | a 3D block cut across time, height and width, linearly projected into a single token |
+| **Patchify / tokenize** | cut the latent tensor into patches and flatten them into a token sequence |
+| **Positional embedding (3D)** | the vector encoding a patch's time index, row and column |
+| **Inductive bias** | architectural assumptions that constrain what information can flow where |
+| **Skip connection** | the U-Net's direct encoder-to-decoder path at matching resolution |
+| **Bidirectional transformer** | one where every token attends to every other, with no causal mask |
+| **Video VAE** | the autoencoder that compresses video both spatially and temporally into latents |
+| **Latent** | the compressed representation the diffusion process actually operates on |
+| **Temporal compression** | how many real frames each latent frame summarises |
+| **Power-law scaling** | quality improving predictably with model size and training compute |
+| **Visual patches** | Sora's term for its spacetime tokens |
+| **Variable-length sequence** | the property that duration, resolution and framerate change only the token count, not the architecture |
+
+</details>
 
 The second-generation transition mirrors what happened in image generation: the **U-Net backbone
 was replaced by a transformer** (the Diffusion Transformer, DiT, Peebles & Xie, 2023). For video,
@@ -208,6 +315,76 @@ CogVideoX (Zhipu, 2024) uses a $4\times$ temporal / $8\times$ spatial compressio
 ---
 
 ## 4. Flow matching: straighter trajectories, fewer steps
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DDPM** | denoising diffusion probabilistic models | the stochastic many-step sampler |
+| **DDIM** | denoising diffusion implicit models | the deterministic ODE sampler |
+| **ODE** | ordinary differential equation | a deterministic differential equation |
+| **FM** | flow matching | training a velocity field along a prescribed (here straight) probability path |
+| **OT** | optimal transport | the coupling of noise to data that minimises total transport cost; its paths are the straight ones |
+| **SGD** | stochastic gradient descent | the baseline optimizer in the analogy |
+| **DPM-Solver / Heun** | — | higher-order ODE solvers used to take larger sampling steps |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| **bold letters** | e.g. $\mathbf{x}$ | bold marks a vector (the whole latent tensor), plain italic a scalar |
+| $\mathbf{x}$ | "bold x" | a clean data sample |
+| $\mathbf{x}_t$ | "bold x-sub-t" | the DDPM sample at diffusion step $t$ |
+| $\mathbf{x}_{t-1}$ | "bold x-sub-t-minus-one" | the slightly denoised sample one reverse step later |
+| $\mathbf{z}$ | "bold z" | a standard Gaussian draw injected by the stochastic sampler |
+| $\mathbf{z}_t$ | "bold z-sub-t" | the flow-matching interpolant between noise and data at time $t$ |
+| $\boldsymbol{\epsilon}$ | "bold epsilon" | a standard Gaussian noise sample — the starting point of the trajectory |
+| $\boldsymbol{\epsilon}_\theta$ | "epsilon-theta" | the trained noise-prediction network; the $\theta$ subscript marks learned parameters |
+| $\alpha_t$ | "alpha-sub-t" | the per-step signal-retention factor of the noise schedule |
+| $\bar{\alpha}_t$ | "alpha-bar-sub-t" | its cumulative product up to step $t$; the bar means "accumulated" |
+| $\sigma_t$ | "sigma-sub-t" | the standard deviation of the noise re-injected at reverse step $t$ |
+| $\mathcal{N}(0,I)$ | "normal zero, identity" | the standard isotropic Gaussian |
+| $t$ | "t" | here the position along the noise-to-data path, running over the unit interval for flow matching |
+| $f(\mathbf{x}_t, t)$ | "f of bold x-t and t" | the drift term of the forward SDE |
+| $g(t)$ | "g of t" | the SDE's diffusion coefficient |
+| $\nabla_{\mathbf{x}} \log p_t(\mathbf{x}_t)$ | "grad-x of log p-t" | the score at noise level $t$ |
+| $v^\ast$ | "v-star" | the *target* (conditional) velocity; the star marks the ideal quantity being regressed onto |
+| $v_\theta$ | "v-theta" | the learned velocity field |
+| $p_\text{data}$ | "p-data" | the real data distribution |
+| $\mathcal{L}_\text{FM}$ | "script-L, F-M" | the flow-matching training loss |
+| $\mathbb{E}$ | "expectation over" | average over the variables in the subscript |
+| $\lVert \cdot \rVert^2$ | "squared norm" | sum of squared components |
+| $h$ | "h" | the sampler's step size |
+| $\eta$ | "eta" | the optimizer's learning rate |
+| $\theta$ | "theta" | model parameters |
+| $\nabla L$ | "grad L" | the gradient of the training loss with respect to $\theta$ |
+| $\ddot{\mathbf{z}}$ | "z-double-dot" | the second derivative along the path — the double dot denotes curvature/acceleration |
+| $\kappa$ | "kappa" | the condition number of the loss landscape — how elongated its valleys are |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Interpolant** | the prescribed path between a noise sample and a data sample, here a straight line |
+| **Conditional velocity** | the velocity along one specific noise–data pair's path; constant for a straight interpolant |
+| **Marginal velocity** | the average velocity over all pairs passing through the same point — what the network actually learns |
+| **Rectification** | re-coupling noise to data using the trained model and retraining, to straighten the learned paths |
+| **Probability-flow ODE** | the deterministic ODE with the same marginals as the diffusion SDE |
+| **Euler step** | the simplest first-order integration step: move along the current velocity |
+| **Truncation error** | the error of a finite step along a curved path, growing with the square of the step size |
+| **Condition number** | the ratio of largest to smallest curvature of a loss surface; large means slow, zigzagging descent |
+| **Preconditioning** | reshaping the problem's geometry so a simple solver works well |
+| **Natural gradient** | descent along the geometry of the model's distribution rather than raw parameter space |
+| **Geodesic** | the shortest path under a given geometry — the straight-line path in the OT sense |
+| **Momentum / Newton's method** | optimizer refinements that use history or curvature to take larger steps |
+| **Distillation** | training a student to match a teacher's output in far fewer steps |
+| **Consistency model** | the limit case: a single step from anywhere on the trajectory maps to clean data |
+| **Off the manifold** | landing in a region the data never occupies, which is how oversized steps degrade quality |
+
+</details>
 
 This is where the §1 correction ("multi-step = integrating a curved trajectory") pays off directly.
 
@@ -318,6 +495,37 @@ competitive.
 
 ## 5. The unified-model question: Transfusion
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AR** | autoregressive | next-token prediction with a causal mask |
+| **LLM** | large language model | the text transformer whose objective is being mixed in |
+| **T5** | text-to-text transfer transformer | a standard text encoder used to embed prompts |
+| **CLIP** | contrastive language–image pre-training | the dual-encoder whose text tower also serves as a prompt encoder |
+| **LLaVA** | large language and vision assistant | the projector-into-LLM recipe used as the comparison baseline |
+| **FM** | flow matching | the diffusion-side objective from §4 |
+| **7B** | seven billion parameters | the scale at which the Transfusion result was demonstrated |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Decoupled design** | separate, independently trained text encoder and generation model, joined by an embedding |
+| **Unified model** | one transformer carrying both the text and the image/video objective in the same weights |
+| **Text encoder** | the model turning a prompt into conditioning embeddings |
+| **Cross-entropy loss** | the standard next-token classification loss on text |
+| **Diffusion loss** | the denoising/velocity regression loss applied to image or video patches |
+| **Attention mask** | the rule for which tokens may attend to which — causal for text, bidirectional for image patches here |
+| **Interleaved sequence** | a single training sample mixing text spans and image/video patches in order |
+| **Cold start** | having to train from scratch because you cannot initialise from a pretrained image model |
+| **Embedding bottleneck** | the loss of information when everything the text model knows must be squeezed into a fixed conditioning vector |
+
+</details>
+
 So far, each video system consists of at least two separate models:
 1. A **text encoder** (T5, CLIP) that turns a text prompt into embeddings.
 2. A **video diffusion model** that generates frames conditioned on those embeddings.
@@ -370,6 +578,38 @@ dominant at deployed scale today.
 ---
 
 ## 6. From video generator to world model
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **RL** | reinforcement learning | the agent-training paradigm that produced GameNGen's gameplay data |
+| **fps** | frames per second | the playback/generation rate |
+| **3D** | three-dimensional | here, scene geometry that stays consistent under camera motion |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **World model** | a model that represents how an environment evolves, ideally with a persistent state, rather than only how it looks |
+| **World simulator** | the stronger claim that generation amounts to simulating the environment's dynamics |
+| **Emergent behaviour** | a capability that appears from training without being explicitly supervised |
+| **Object permanence** | objects surviving occlusion and reappearing consistently |
+| **Occluder** | something that temporarily hides an object from view |
+| **3D consistency** | geometry holding up correctly as the viewpoint changes |
+| **Context window** | the span of frames the model can condition on; beyond it, state is lost |
+| **Latent action model** | a module that infers an unlabelled, learned "action" from the change between consecutive frames |
+| **Dynamics model** | the module predicting the next frame from the current frame and an action |
+| **Video tokenizer** | the encoder compressing frames into discrete or latent tokens |
+| **Action-conditioned generation** | generating the next frame given an explicit action input, enabling interactive control |
+| **Autoregressive (here)** | generating frame by frame, each conditioned on the previous, rather than the whole clip at once |
+| **Rollout** | a generated trajectory of future states, used for planning or policy training |
+| **Genie / GameNGen / UniSim** | reference systems for latent-action world models, neural game simulation, and video-diffusion simulation for robotics |
+
+</details>
 
 This is where the territory changes in a way the §1 diffusion framing doesn't fully capture.
 
@@ -455,6 +695,34 @@ video diffusion for robotics planning (UniSim, 2023).
 ---
 
 ## 7. The current landscape (mid-2025)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DiT** | diffusion transformer | the transformer denoiser backbone |
+| **FM** | flow matching | the straight-path training objective from §4 |
+| **VAE** | variational autoencoder | the spatial/temporal compressor in front of the DiT |
+| **U-Net** | (named for its U shape) | the older convolutional backbone |
+| **SD** | Stable Diffusion | the image latent-diffusion model several video models build on |
+| **VRAM** | video random-access memory | the on-card memory that decides whether a model runs on consumer hardware |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Latent video diffusion** | diffusion run on compressed video latents rather than pixels |
+| **Dual-stream DiT** | a transformer carrying separate text and video token streams that exchange information through attention |
+| **Cascaded 3D U-Net** | a base video model followed by spatial and temporal super-resolution stages |
+| **Motion module** | AnimateDiff's trainable temporal block over a frozen image model |
+| **Open-weight** | model weights published for download, so the model can be self-hosted (distinct from open *training data*) |
+| **Max clip at release** | the longest single generation the model supported when announced |
+| **Joint image-video training** | training on stills and clips together so image quality is not sacrificed for motion |
+
+</details>
 
 <!-- FIGURE -->
 ![Video generation model timeline 2022–2025: key models and their maximum clip duration at release](diagrams/02-video-and-world-models-fig2.svg)

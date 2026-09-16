@@ -53,6 +53,48 @@ shape as §1.
 
 ## 1. Two families of answer: counting vs. tracing
 
+<details>
+<summary><b>Vocabulary for this section</b> — the two GC families and the trade-off table's vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection / garbage collector | automatically reclaiming heap memory the program can no longer reach |
+| **GIL** | Global Interpreter Lock | **a CPython construct, not an OS one** — one lock a thread must hold to touch any Python object; the kernel knows nothing about it |
+| **CPython** | — | the standard C implementation of Python, the one from python.org |
+| **PyPy** | — | an alternative Python implementation with a JIT compiler and a pure tracing GC |
+| **V8** | — | Google's JavaScript engine, used in Chrome and Node.js |
+| **GB** | gigabyte | one thousand megabytes |
+| **`INCREF` / `DECREF`** | increment / decrement reference | the two operations that raise and lower an object's reference count |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Heap** | the memory region where every Python object lives (§1) |
+| **Reference** | a pointer to an object; a name, a list slot, an attribute or a function argument each is one |
+| **Reference counting** | giving every object a count of how many references point at it, and freeing it the moment the count reaches zero |
+| **Reference count (refcount)** | that integer stored inside the object |
+| **Synchronously** | right now, as part of the operation that caused it, rather than later |
+| **Scope exit** | leaving the function or block whose frame held the names, which drops those references |
+| **Tracing garbage collection** | periodically walking the object graph from the roots and freeing everything not reached |
+| **Object graph** | objects as nodes and their references as edges |
+| **Roots** | the starting points of a trace: globals, names on the stack, CPU registers — the places the program itself can reach directly |
+| **Reachable** | findable by following references from a root; the property that defines "still alive" |
+| **Mark-and-sweep** | the classic tracing algorithm: mark everything reachable, then sweep away everything unmarked |
+| **Stop-the-world pause** | halting the whole program so the collector can see a consistent heap |
+| **Deterministic destruction** | an object being freed at a predictable moment — in CPython, at the last `DECREF` to zero |
+| **Reference cycle** | a group of objects referring to each other, so their counts never reach zero even when nothing outside can reach them |
+| **Atomics** | hardware instructions that perform a read-modify-write indivisibly, so two threads cannot interleave inside it |
+| **Shared mutable state** | data more than one thread can change, which is what makes a lock necessary |
+| **Steady-state overhead** | the ongoing cost paid by every operation, as opposed to occasional batched cost |
+| **Portability trap** | code that works on CPython because of its timing and breaks on another implementation |
+| **File handle** | the OS-level resource behind an open file; leaked if nothing closes it |
+| **`with`** | Python's context-manager statement, which releases a resource on block exit no matter what the refcounts do |
+
+</details>
+
 Across all garbage-collected languages there are really only two strategies, and CPython is unusual in using
 **both at once**. Get the two archetypes straight first; everything else is detail.
 
@@ -118,6 +160,41 @@ DECREF to 0":
 
 ## 2. Reference counting, concretely — watch the count move
 
+<details>
+<summary><b>Vocabulary for this section</b> — the refcount machinery, the `getrefcount` gotcha and the free cascade (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection | automatic reclaiming of unreachable heap memory |
+| **CPython** | — | the standard C implementation of Python |
+| **`INCREF` / `DECREF`** | increment / decrement reference | raise or lower an object's reference count by one |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reference count (refcount)** | how many references currently point at an object |
+| **`ob_refcnt`** | the actual field at the start of every CPython object's C struct that holds that count |
+| **C struct** | a record type in C: several fields laid out together in memory — the form every Python object really takes |
+| **Macro** | a C construct expanded by the compiler's preprocessor into inline code, so it costs no function call |
+| **`Py_INCREF` / `Py_DECREF`** | those macros: add one, or subtract one and deallocate if the result is zero |
+| **Deallocate** | release the object's memory back to the allocator |
+| **Reference** | anything that points at an object: a name, a list or dict slot, an attribute, a parameter, a closure capture |
+| **Name tag** | §1's image for a Python name — a label pointing at a heap object, not a box holding it |
+| **`del`** | removes a *name*, which is one `DECREF`; it frees the object only if that was the last reference |
+| **Closure** | a nested function that captures variables from the enclosing scope, holding references to them |
+| **Attribute** | a value stored on an object, as in `self.x = obj` — another reference |
+| **`sys.getrefcount()`** | reports an object's refcount, always one higher than expected because the call itself binds a temporary reference |
+| **Immortal object** | since Python 3.12, an object such as `None` or a small int whose refcount is pinned so it is never freed and never needs updating |
+| **Cascade** | freeing an object `DECREF`s everything it referenced, which may free those too, recursively |
+| **Trashcan mechanism** | CPython's guard that spreads a very deep free cascade over several passes so it cannot overflow the C stack |
+| **C stack** | the real machine stack the interpreter runs on, the bounded region of §1 |
+| **Smeared cost** | refcounting's overhead spread thinly across every operation instead of concentrated in pauses |
+
+</details>
+
 The mechanism is almost embarrassingly simple. In CPython every object's C struct starts with a field
 `ob_refcnt`. Two macros mutate it: `Py_INCREF` (count++) and `Py_DECREF` (count--; if it hit 0, deallocate). That's
 it. The art is knowing *which Python operations* trigger them.
@@ -158,6 +235,40 @@ reclamation is precise, immediate, and proportional to what actually died.
 ---
 
 ## 3. The flaw refcounting can't fix: reference cycles
+
+<details>
+<summary><b>Vocabulary for this section</b> — cycles, and every ordinary structure that builds one (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection | automatic reclaiming of unreachable heap memory |
+| **`gc`** | the `gc` module | Python's standard-library interface to the cycle collector |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reference count (refcount)** | how many references point at an object right now |
+| **Reference cycle** | objects that refer to each other in a closed loop, so each keeps the other's count above zero |
+| **Unreachable** | not findable by following references from anything the program itself holds — the definition of garbage |
+| **Roots** | the program's own entry points into the heap: names on the stack, globals, registers |
+| **Garbage** | objects the program can no longer reach and which should therefore be freed |
+| **Leak** | memory never reclaimed, so it accumulates for the life of the process |
+| **`del`** | removes one name, that is one `DECREF`; it does not by itself free anything |
+| **Local count** | what refcounting sees — the number on one object, with no view of the shape of the graph around it |
+| **Back-reference** | a child pointing at its parent, closing the loop the parent opened |
+| **Doubly-linked list** | a chain where each node points both to the next node and back to the previous one — inherently cyclic |
+| **Observer registry** | a list of objects to be notified of events; if they also hold the registry, that is a cycle |
+| **Closure** | a nested function holding on to variables from its enclosing scope |
+| **Traceback** | the object recording where an exception was raised; it holds the frames, which hold their locals |
+| **Frame** | one function call's block of locals and bookkeeping (§1) |
+| **`except ... as e`** | the exception-catching clause; Python deletes `e` at the end of the block precisely to break the traceback cycle |
+| **Cycle collector** | the second CPython mechanism whose only job is finding and breaking unreachable cycles — what people mean by "Python's garbage collector" |
+| **Container object** | an object that can hold references to others (list, dict, set, instance) — the only kind that can be in a cycle |
+
+</details>
 
 Reference counting has one fatal blind spot, and it's a logical one, not an implementation bug. Consider two
 objects that point at **each other**:
@@ -220,6 +331,45 @@ collector — the thing people actually mean when they say "Python's garbage col
 
 ## 4. The cycle collector: a generational tracing GC bolted on
 
+<details>
+<summary><b>Vocabulary for this section</b> — the generational collector, its algorithm and its tuning knobs (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection / garbage collector | automatic reclaiming of unreachable memory; here specifically CPython's cycle collector |
+| **`gc`** | the `gc` module | the standard-library interface to that collector |
+| **gen 0 / gen 1 / gen 2** | generation zero, one, two | the collector's three age buckets, scanned from most to least often |
+| **CPU** | central processing unit | the processor whose time the scans consume |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Cycle collector** | CPython's tracing collector, which exists only to reclaim the reference cycles refcounting cannot |
+| **Tracing collector** | one that finds live objects by walking references rather than by counting them |
+| **Tracked object** | a container the collector keeps in its lists; plain `int`, `str` and `float` are untracked because they cannot form cycles |
+| **Container object** | an object able to hold references to other objects — list, dict, set, class instance, a tuple containing containers |
+| **Reference count (refcount)** | the per-object count maintained by `INCREF` and `DECREF` |
+| **Scratch copy** | the collector's private duplicate of each refcount, which it may decrement freely without touching the real one |
+| **Internal reference** | a reference from one tracked object to another; subtracted from the scratch copy |
+| **External reference** | a reference from outside the tracked set — a name on your stack, a global — which proves the object is alive |
+| **Candidate for collection** | an object whose scratch count fell to zero, meaning nothing outside the set reaches it |
+| **Mark-and-sweep** | the tracing family this algorithm belongs to: identify what is reachable, free the rest |
+| **Finalize** | run an object's cleanup (`__del__`, weakref callbacks) before its memory is released |
+| **Generational collection** | scanning young objects often and old ones rarely, since survivors tend to keep surviving |
+| **Weak generational hypothesis** | the empirical observation that most objects die very young |
+| **Promotion** | moving an object to an older generation because it survived a collection |
+| **Allocation pressure** | the running count of allocations minus deallocations — what triggers a collection, rather than elapsed time |
+| **Threshold** | the trigger values, `(700, 10, 10)` by default: 700 net allocations trigger gen 0, 10 gen-0 passes trigger gen 1, 10 of those trigger gen 2 |
+| **`gc.get_count()` / `gc.get_threshold()` / `gc.set_threshold()`** | read the current counters, read the thresholds, change the thresholds |
+| **`gc.collect()`** | force a collection pass immediately |
+| **`gc.disable()`** | switch off the cycle collector; refcounting keeps running and cannot be switched off |
+| **Batch job** | a long-running one-shot workload, the case where disabling the collector can pay off |
+
+</details>
+
 The `gc` module is a **tracing collector**, but a specialized one: it doesn't manage all memory (refcounting already
 does that). It runs only to **catch the cycles refcounting misses**, and it only tracks *container* objects — things
 that can hold references to other objects (lists, dicts, sets, instances, tuples-containing-containers). Objects that
@@ -278,6 +428,37 @@ gen-0 collections; gen 2 after 10 of those. You can watch and tune this with `gc
 
 ## 5. The combined picture — and a callback to your graph pipeline
 
+<details>
+<summary><b>Vocabulary for this section</b> — how the two mechanisms combine, plus the DAG argument about your own designs (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection / garbage collector | automatic reclaiming of unreachable memory |
+| **DAG** | directed acyclic graph | a graph whose edges all point one way and which therefore contains no cycle |
+| **`INCREF` / `DECREF`** | increment / decrement reference | the two refcount operations |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reference counting** | freeing an object the instant its count of references reaches zero |
+| **Cycle collector** | the periodic tracing pass that reclaims unreachable cycles refcounting cannot see |
+| **Correction term** | the borrowed physics phrase for the cycle collector: the small fix applied where the cheap approximation is wrong |
+| **Cascade** | the chain of frees triggered when a freed object drops its own references |
+| **Reference cycle** | a closed loop of references that props its own members up |
+| **Immutable** | with no in-place modification, so an existing object can never be made to point at a newer one |
+| **Append-only** | only ever adding entries, never rewriting existing ones |
+| **Functional update** | producing a new value rather than mutating the old one — the `state -> new state` flow |
+| **Frozen** | not reassignable after construction, as with `@dataclass(frozen=True)` |
+| **Node** | one step of the graph pipeline, taking a state and returning a new one |
+| **Acyclic** | containing no loop; new nodes may point at old ones, but never the reverse |
+| **Bidirectional structure** | links that point both ways (parent and child, observer and subject, previous and next) — the usual source of cycles |
+| **Aliasing** | §1's bug class: two names on one object, so a mutation through one is seen through the other |
+
+</details>
+
 Put the two together and you have CPython's actual memory manager:
 
 <!-- DIAGRAM:START -->
@@ -318,6 +499,53 @@ that made your state honest also made it GC-cheap. Worth holding onto for M14/M0
 ---
 
 ## 6. The keystone: why this *is* the GIL — and what free-threading changes
+
+<details>
+<summary><b>Vocabulary for this section</b> — the race the GIL prevents, and every technique PEP 703 uses to avoid needing it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | Global Interpreter Lock | **a CPython-level lock, not an OS or kernel facility** — a thread must hold it to touch any Python object; CPython itself releases it around blocking calls via `Py_BEGIN_ALLOW_THREADS` |
+| **PEP** | Python Enhancement Proposal | the numbered design documents of the Python project |
+| **PEP 703** | — | the proposal that makes the GIL optional: free-threaded CPython |
+| **PEP 683** | — | the proposal that introduced immortal objects |
+| **GC** | garbage collection / garbage collector | automatic reclaiming of unreachable memory |
+| **CPython** | — | the standard C implementation of Python |
+| **`INCREF` / `DECREF`** | increment / decrement reference | raise or lower an object's reference count |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Thread** | one independent stream of execution inside a process, sharing the process's memory with the others |
+| **Reference count (refcount)** | the per-object integer that reference counting maintains |
+| **`ob_refcnt`** | the field in the object's C struct that holds it |
+| **Read-modify-write** | load a value, change it, store it back — three steps, and therefore interruptible |
+| **Atomic** | indivisible: no other thread can observe or interleave with a half-finished operation |
+| **Race (data race)** | two threads touching the same data at once with at least one writing, so the result depends on timing |
+| **Lost update** | the classic race outcome: two increments happen but only one is recorded |
+| **Interleaving** | two threads' steps being mixed together by the scheduler |
+| **Serialize** | force operations to happen one at a time, in some order |
+| **Lock** | a thing exactly one thread can hold at a time, used to serialize access |
+| **Interned string** | a string CPython keeps a single shared copy of, so every thread references the same object |
+| **Singleton** | an object existing exactly once — `None`, `True`, `False` — and therefore referenced by every thread |
+| **Use-after-free** | touching memory that has already been released; here the crash a lost `INCREF` eventually causes |
+| **Hot path** | the code executed most often, where any added cost is multiplied enormously |
+| **Free-threaded CPython** | the build with no GIL — experimental in 3.13, supported from 3.14 |
+| **Immortal object** | one whose refcount is pinned at a sentinel maximum, making `INCREF` and `DECREF` on it no-ops needing no synchronization |
+| **No-op** | an operation that does nothing |
+| **Sentinel value** | a reserved value used as a marker rather than as a real count |
+| **Biased reference counting** | giving each object an owning thread that updates a cheap local count, while other threads use a separate atomic shared count, reconciled when needed |
+| **Owning thread** | the thread that created an object and, in the common case, is the only one to touch it |
+| **Contended** | being fought over by several threads, which is what makes an atomic operation expensive |
+| **Deferred reference counting** | skipping refcount updates on some references and resolving them later at a collection point |
+| **mimalloc** | a thread-safe allocator adopted by the free-threaded build so allocation needs no global lock |
+| **Reconciliation protocol** | the rules for merging an object's local and shared counts into one true value |
+| **Stop-the-world pause** | halting all threads so the collector sees a consistent heap — what the no-GIL cycle collector needs, since it can no longer rely on the GIL for quiet |
+
+</details>
 
 This is the section to push on, because it's where reference counting stops being a Python-trivia topic and becomes
 **the** explanation for the single most-discussed fact about CPython. You already know *what* the GIL does. Here's
@@ -381,8 +609,8 @@ The conceptual payoff is the part to keep: **free-threading is fundamentally a *
 problem, not a "remove a lock" problem.** The lock was a *symptom*; the disease is "refcounting needs a consistent
 counter and threads make consistency expensive." Every trick in PEP 703 is a way to make the count consistent
 without a global lock. That's the layer most discussions miss, and it's exactly the kind of thing your hardware/
-systems instinct will enjoy interrogating (e.g. *what does biased refcounting cost when an object's access pattern
-*changes* owner? what's the reconciliation protocol? — good questions for our chat).
+systems instinct will enjoy interrogating (e.g. what does biased refcounting cost when an object's access pattern
+*changes* owner? what is the reconciliation protocol? — good questions for our chat).
 
 **The practical knock-on:** in a free-threaded build the cycle collector also has to change (it can't rely on the
 GIL to give it a quiet, consistent snapshot of the heap), which is why the no-GIL GC uses a stop-the-world pause
@@ -391,6 +619,54 @@ instead. The reference doc covers both builds side by side.
 ---
 
 ## 7. Where this bites *you* — the practitioner's takeaways
+
+<details>
+<summary><b>Vocabulary for this section</b> — the practitioner vocabulary: `del`, `with`, arenas, RSS, weak references (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GC** | garbage collection / garbage collector | automatic reclaiming of unreachable memory |
+| **OS** | operating system | the kernel and its services; the layer CPython asks for and returns memory to |
+| **RSS** | resident set size | how much of a process's memory is actually in physical RAM right now — the number `top` shows |
+| **DB** | database | as in a database connection, a resource needing explicit release |
+| **GB** | gigabyte | one thousand megabytes |
+| **PEP 442** | Python Enhancement Proposal 442 | the change that made objects with `__del__` collectable inside cycles |
+| **PyPy** | — | the alternative Python implementation with a pure tracing GC and therefore no deterministic destruction |
+| **CPython** | — | the standard C implementation of Python |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`del`** | removes a name, that is one `DECREF`; the object dies only if that was the last reference |
+| **Reference count (refcount)** | how many references point at an object |
+| **Closure** | a nested function holding references to variables from its enclosing scope — a common accidental retainer |
+| **Context manager** | an object usable with `with`, which releases its resource on block exit whatever the refcounts do |
+| **`with`** | the statement that drives a context manager; the correct tool for resource cleanup |
+| **Resource** | something scarce held outside Python's heap — a file handle, a socket, a DB connection, a lock |
+| **Finalizer (`__del__`)** | a method called when an object is destroyed; unreliable for cleanup because its timing is not guaranteed |
+| **Resurrect** | a finalizer storing `self` somewhere, making a supposedly dead object live again |
+| **Portability trap** | relying on CPython's refcount timing, which other implementations do not provide |
+| **pymalloc** | CPython's own small-object allocator, layered over the system `malloc` |
+| **Pool / arena** | the blocks pymalloc obtains from the OS once and then carves objects out of; freed objects usually stay in them rather than going back to the kernel |
+| **Kernel** | the core of the operating system, which actually owns the physical memory |
+| **Resident memory** | the part of a process's memory currently held in RAM — what RSS measures |
+| **Leak** | in Python's sense, live objects that keep accumulating, as opposed to merely high RSS |
+| **`tracemalloc`** | the standard-library tool that records where objects were allocated, so a real leak can be located |
+| **Tensor** | a multi-dimensional numeric array, the large intermediate value in an ML pipeline |
+| **Accidental retention** | keeping a big object alive by a reference you forgot about — an earlier state object, a log call, a module-level cache |
+| **Module-level cache** | a dict or similar living for the whole process, so anything inside it never dies |
+| **Strong reference** | an ordinary reference, which counts and therefore keeps its object alive |
+| **Weak reference** | a reference that does **not** raise the refcount, so its target can still die; the entry then disappears |
+| **`weakref` / `WeakValueDictionary`** | the module and the dict type that hold their values weakly |
+| **Memoization** | caching a function's results by its arguments |
+| **Back-edge** | the reference pointing from child back to parent; making it weak keeps the structure acyclic |
+| **Acyclic** | containing no reference loop, so refcounting alone can reclaim it immediately |
+| **Determinism** | freeing happening at a known moment, which cycles destroy because they wait for a collector pass |
+
+</details>
 
 Not trivia. Concrete consequences for the pipelines you ship:
 

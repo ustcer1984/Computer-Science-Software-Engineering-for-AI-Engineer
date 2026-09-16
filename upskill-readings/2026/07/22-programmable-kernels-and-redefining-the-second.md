@@ -12,6 +12,59 @@
 
 ## 1. 🐝 The kernel you can reprogram without breaking it: eBPF
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **eBPF** | extended Berkeley Packet Filter | the name is historical; today it means the kernel's sandboxed in-kernel virtual machine |
+| **BPF** | Berkeley Packet Filter | the original packet-filtering mechanism eBPF grew out of; also the name of its bytecode and maps |
+| **JIT** | just-in-time (compilation) | translating bytecode into native machine code at load time, so it runs at full speed |
+| **XDP** | eXpress Data Path | the eBPF hook that runs in the network driver, before the kernel builds a packet buffer |
+| **DDoS** | distributed denial of service | a flood of traffic from many sources meant to overwhelm a service |
+| **CPU** | central processing unit | |
+| **GPU** | graphics processing unit | the accelerator an AI training job runs on; upcoming schedulers aim to be aware of it |
+| **AI** | artificial intelligence | |
+| **VM** | virtual machine | used here in two senses: eBPF's in-kernel execution engine, and a guest machine a cloud scheduler packs onto a host |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **User space** | where ordinary programs run, walled off from privileged hardware access |
+| **Kernel** | the privileged core of the operating system that owns the CPU, memory, disk and network |
+| **Kernel module** | native code loaded directly into the kernel with no safety net — the old way to extend it |
+| **Kernel panic** | the whole-system crash a bad kernel module causes; there is no exception to catch |
+| **Bytecode** | a compact, portable instruction format the kernel accepts instead of native machine code |
+| **Verifier** | the kernel component that statically proves a submitted program terminates, stays in bounds, and fits within complexity limits — or refuses to load it |
+| **Hook point** | the place in the kernel an eBPF program is attached to and fires from |
+| **kprobe** | a hook on entry to or exit from an arbitrary kernel function |
+| **Tracepoint** | a stable, kernel-declared instrumentation point, safer to attach to than a raw kprobe |
+| **System call** | the boundary crossing where a user-space program asks the kernel to do something |
+| **BPF map** | a shared key/value table through which the in-kernel program and a user-space tool exchange data live |
+| **Socket buffer** | the kernel's per-packet data structure; XDP acts before it is even allocated |
+| **`iptables`** | the older rule-chain mechanism for filtering and steering packets |
+| **Katran** | Meta's eBPF-based network load balancer |
+| **Cilium** | the eBPF-based networking, security and observability layer widely used under Kubernetes |
+| **Kubernetes** | the dominant system for scheduling containers across a cluster of machines |
+| **Observability** | being able to tell what a running system is doing from the outside |
+| **Off-CPU time** | how long a thread spent waiting rather than running — a metric that is hard to get any other way |
+| **Sidecar agent** | a helper process deployed alongside an application to collect telemetry; eBPF removes the need for one |
+| **Zero-instrumentation telemetry** | measuring an application without editing, rebuilding or restarting it |
+| **`bpftrace`** | a scripting front end for writing ad-hoc eBPF tracing one-liners |
+| **Pixie / Hubble / Strobelight** | eBPF-based observability tools — respectively a Kubernetes debugger, Cilium's network visibility layer, and Meta's fleet profiler |
+| **Falco / Tetragon** | eBPF-based runtime security tools that watch kernel events for intrusions |
+| **Container** | an isolated process bundle sharing the host kernel — the unit these security tools police |
+| **CPU scheduler** | the kernel code that decides, thousands of times a second, which thread runs on which core |
+| **`sched_ext`** | the extensible scheduler class merged in Linux 6.12, which lets a whole CPU scheduler be written as an eBPF program |
+| **Hot-swap** | replacing a component on a running system with no reboot |
+| **Automatic fallback** | `sched_ext` ejecting a misbehaving custom scheduler and reverting to the built-in one, so the machine cannot be bricked |
+| **Energy-aware scheduling** | placing work with power draw, not just speed, as an objective |
+
+</details>
+
 🔗 **Start here (both are accessible):** [What is eBPF? — the official primer](https://ebpf.io/what-is-ebpf/) · [eBPF — Brendan Gregg's overview](https://www.brendangregg.com/ebpf.html)
 🔗 **The "why now":** [Extensible Scheduler Class (sched_ext) — Linux kernel docs](https://docs.kernel.org/scheduler/sched-ext.html) · [sched_ext's plans for GPU-awareness and energy-aware scheduling — Phoronix](https://www.phoronix.com/news/sched-ext-future-plans-2026)
 🔗 **Go deeper:** [Cilium — eBPF-based networking, security, observability](https://cilium.io/) · [bcc / bpftrace tracing tools](https://github.com/iovisor/bcc)
@@ -75,6 +128,69 @@ flowchart TB
 ---
 
 ## 2. ⏱️ Rebuilding the second out of light
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **BIPM** | Bureau International des Poids et Mesures (International Bureau of Weights and Measures) | the body that maintains the international system of units |
+| **CGPM** | General Conference on Weights and Measures | the diplomatic conference that would formally ratify a new definition of the second |
+| **NIST** | National Institute of Standards and Technology | the US metrology lab whose aluminium-ion clock set the 2025 record |
+| **JILA** | a joint NIST–University of Colorado physics institute | the group that measured the gravitational redshift across a millimetre of atoms |
+| **UTC** | Coordinated Universal Time | the civil time scale that leap seconds are inserted into |
+| **GHz** | gigahertz | a billion cycles per second — the caesium transition sits near 9 of them |
+| **THz** | terahertz | a trillion cycles per second — the band optical transitions sit in |
+| **km / m / cm / mm** | kilometre / metre / centimetre / millimetre | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $f$ | "f" | the clock's frequency — how many times its oscillator ticks per second |
+| $\Delta f$ | "delta f" | the small change in that frequency caused by moving the clock |
+| $\Delta f / f$ | "delta f over f" | the *fractional* frequency shift — the dimensionless way clock performance is always quoted |
+| $g$ | "g" | local gravitational acceleration |
+| $h$ | "h" | the height difference between the two clocks being compared |
+| $c$ | "c" | the speed of light |
+| $\Delta f / f = g h / c^{2}$ | "delta f over f equals g h over c squared" | the gravitational-redshift rate shift, about one part in ten-to-the-sixteenth per metre of height |
+| $\text{Al}^{+}$ | "aluminium plus" | a singly ionised aluminium atom — the trapped ion that is the record clock's oscillator |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Oscillator** | the part of any clock that repeats at a steady rate; everything else just counts it |
+| **Counter** | the part that tallies the oscillations and turns them into elapsed time |
+| **Quartz crystal** | the oscillator in an ordinary watch, flexing about 32,768 times a second |
+| **Atomic transition** | an electron moving between two energy levels, absorbing or emitting radiation at a frequency fixed by physics |
+| **Caesium-133** | the atom whose 9,192,631,770 microwave oscillations have defined the second since 1967 |
+| **Caesium fountain** | the best microwave caesium clock design; it tops out around a few parts in ten-to-the-sixteenth |
+| **Microwave band** | the radio frequencies, around gigahertz, where the caesium transition sits |
+| **Optical transition** | a transition whose frequency is in visible or ultraviolet light — about 100,000 times faster than caesium's |
+| **Optical clock** | a clock built on such a transition, giving roughly five orders of magnitude finer resolution |
+| **Optical lattice clock** | a design that traps many neutral atoms in a standing wave of light and interrogates them together |
+| **Optical frequency comb** | the 2005 Nobel-winning device that divides an optical frequency down to a countable radio frequency — the gearbox that made optical clocks usable |
+| **Fractional frequency uncertainty** | how far a clock's rate might be off, as a fraction of its own frequency; the single figure of merit |
+| **Accuracy vs stability** | accuracy is how close the rate is to true; stability is how little it wanders — clocks are quoted on both |
+| **Ion trap** | an electromagnetic cage that holds a single charged atom nearly motionless in vacuum |
+| **Quantum logic spectroscopy** | using a companion ion to cool the clock ion and read out its state, when the clock ion cannot be probed directly |
+| **Magnesium ion** | that companion ion in the NIST aluminium clock |
+| **Cryogenic silicon cavity** | an ultra-cold optical resonator whose extreme stability is transferred to the probe laser |
+| **Fibre link** | an optical fibre used to carry a reference frequency between labs — here 3.6 km |
+| **Metrology** | the science of measurement and of maintaining standards |
+| **General relativity** | Einstein's theory of gravity, in which time runs faster higher up in a gravitational field |
+| **Gravitational redshift** | that rate difference between two clocks at different heights — now directly measurable |
+| **Relativistic altimeter** | using clock rate as a height and gravity sensor, e.g. to detect magma movement |
+| **Drifting fundamental constants** | the hypothesis that physical constants change slowly over time; clock comparisons are one of the sharpest tests |
+| **Dark matter** | unseen mass whose passage might perturb atomic frequencies, another thing clock networks can hunt |
+| **Leap second** | an extra second inserted into UTC since 1972 to track Earth's irregular rotation — and a repeated cause of software outages |
+| **Mandatory criteria** | the checklist of independent agreement and proven comparison links that must be met before the second can be redefined |
+| **Geometric mean of transitions** | a proposal to base the new second on several optical transitions combined, rather than betting on one |
+
+</details>
 
 🔗 **Start here:** [FAQ — the redefinition of the second (BIPM)](https://www.bipm.org/en/faq-redefinition-second) · [NIST ion clock sets a new record for the most accurate clock in the world (July 2025)](https://www.nist.gov/news-events/news/2025/07/nist-ion-clock-sets-new-record-most-accurate-clock-world)
 🔗 **The "why now":** [Roadmap toward the redefinition of the second — *Metrologia* (open access)](https://iopscience.iop.org/article/10.1088/1681-7575/ad17d2) · [The leap second's time is up: world votes to stop pausing clocks — *Scientific American*](https://www.scientificamerican.com/article/the-leap-seconds-time-is-up-world-votes-to-stop-pausing-clocks/)

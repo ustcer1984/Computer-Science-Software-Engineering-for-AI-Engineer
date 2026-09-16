@@ -59,6 +59,44 @@ split, but because a lock says only one may touch the interpreter at a time. Hol
 
 ## 1. Two different questions wearing one word
 
+<details>
+<summary><b>Vocabulary for this section</b> — the two axes, and every model and library named in the 2×2 (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | a lock inside CPython (the interpreter, **not** the OS) that lets only one thread execute Python bytecode at a time |
+| **CPU** | central processing unit | the general-purpose processor; a **core** is one independent execution unit inside it |
+| **SIMD** | single instruction, multiple data | one CPU instruction applied to several data values at once — parallelism inside a single instruction stream |
+| **BLAS** | basic linear algebra subprograms | the standard low-level matrix/vector library that NumPy calls underneath; its implementations split one operation across cores |
+| **OS** | operating system | the software that owns the hardware and schedules what runs on the CPU |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Concurrency** | a property of your *program's structure*: the work is broken into tasks that can make progress in overlapping time windows without blocking each other |
+| **Parallelism** | a property of the *execution*: two or more pieces are literally executing in the same clock cycle on different hardware units |
+| **Composition (of tasks)** | writing the program as independently-executing pieces that the runtime interleaves — the structural side of concurrency |
+| **Task** | one independently-progressing unit of work; here a generic word, not specifically `asyncio.Task` |
+| **Execution unit / core** | one piece of hardware that can run an instruction stream; N cores is the hard ceiling on true parallelism |
+| **Clock cycle** | one tick of the CPU's clock — the unit in which "at the same instant" is measured |
+| **Thread** | one instruction stream inside a process, scheduled by the OS kernel |
+| **Process** | a running program with its own private address space; separate processes share no memory by default |
+| **Python bytecode** | the low-level instructions CPython compiles your source into and then executes — the resource the GIL gates |
+| **`asyncio`** | Python's single-threaded cooperative concurrency library: one thread, one event loop, many parked coroutines |
+| **Coroutine** | a function that can suspend itself at an `await` and be resumed later; parked state lives on the heap, not on a native stack |
+| **`multiprocessing` pool** | a set of worker *processes*, each with its own interpreter and its own GIL, so Python code really does run on many cores |
+| **Data parallelism** | the same operation applied to many data elements at once — what a library finds *inside* one of your tasks (`np.matmul`, SIMD) |
+| **`np.matmul`** | NumPy's matrix multiply; it drops into BLAS/C and can use many cores without you writing any concurrency |
+| **WebSocket** | a long-lived two-way network connection — the arena's per-user channel, mostly idle and therefore I/O-bound |
+| **Synchronous script** | ordinary top-to-bottom code with no task composition: neither concurrent nor parallel |
+| **Lambda (AWS)** | a serverless function invocation; each invocation is its own single process |
+| **`rayon`** | a Rust library that runs data-parallel work across cores |
+
+</details>
+
 Rob Pike's one-liner is the cleanest definition in the field, and it's worth memorising verbatim:
 
 > **Concurrency is about *dealing with* many things at once. Parallelism is about *doing* many things at once.**
@@ -97,6 +135,50 @@ Two cells deserve a beat, because they're the ones that break the "it's all one 
 ---
 
 ## 2. The three models — and what each one actually costs
+
+<details>
+<summary><b>Vocabulary for this section</b> — the cost-model vocabulary behind the three-column table (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | CPython's one-thread-at-a-time lock on executing Python bytecode; a CPython construct, not a kernel one |
+| **IPC** | inter-process communication | any mechanism (pipe, socket, shared memory, queue) by which isolated processes exchange data |
+| **TLB** | translation lookaside buffer | the CPU's cache of virtual→physical address translations; switching address spaces can flush it, which is part of why process switches cost more |
+| **OS** | operating system | the software layer that owns the CPU and decides which thread runs next |
+| **CPU** | central processing unit | the processor; "CPU-bound" work is work limited by compute rather than waiting |
+| **I/O** | input/output | reading or writing something outside the CPU — network, disk, database; "I/O-bound" work is limited by waiting |
+| **MB** | megabyte | ~10⁶ bytes; the rough per-thread stack cost quoted in the table |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Process** | a running program with its own address space, its own heap, and (in CPython) its own interpreter and its own GIL |
+| **Thread** | one instruction stream inside a process; all threads of a process share one address space and one heap |
+| **Address space** | the set of memory addresses a process can see; isolation between processes is exactly the fact that these do not overlap |
+| **Heap** | the region where objects live; shared between threads of one process, never shared between processes by default |
+| **Coroutine** | a suspendable function whose paused state is an object on the heap, resumed by the event loop — the unit of async |
+| **Event loop** | the scheduler that lives *inside your own process* and decides which coroutine to resume next; it is not the kernel |
+| **Kernel** | the core of the operating system — it schedules processes and threads, and knows nothing about the GIL or your event loop |
+| **Preemptive scheduling** | the scheduler can interrupt a running unit at any instruction and switch to another |
+| **Cooperative scheduling** | a running unit keeps the CPU until it *voluntarily* yields — in `asyncio`, only at an `await` |
+| **Preemption** | being interrupted involuntarily; threads and processes are preempted, coroutines are not |
+| **Context switch** | saving one execution unit's registers and state and loading another's — the direct cost of a switch |
+| **Switch cost** | the total price of changing what is running, including the context switch plus cache and TLB effects |
+| **`fork`** | creating a new process by cloning the current one (the child starts as a copy of the parent) |
+| **spawn** | creating a new process by starting a fresh interpreter from scratch and re-importing — slower than `fork`, but safer with threads |
+| **Pickle** | Python's object-serialization format; how objects are turned into bytes to cross a process boundary, and why some objects (sockets, lambdas) simply cannot cross |
+| **Stack** | the per-thread memory holding call frames; roughly a megabyte each, which is why threads do not scale to hundreds of thousands |
+| **Data race** | two flows touching the same memory concurrently with at least one writing, without coordination — the hazard the shared heap creates |
+| **Blast radius** | how much of the system a single failure takes down |
+| **Segfault** | a memory-access violation that kills the whole process — hence one bad thread can take every other thread with it |
+| **CPU-bound** | work whose time is spent computing; it never waits, so more cores help and waiting-based concurrency does not |
+| **I/O-bound** | work whose time is spent waiting on the network, disk or a database; overlapping the waits is the whole win |
+| **Fan-out** | the number of operations you have in flight at the same time |
+
+</details>
 
 "Run things concurrently" has three implementations in the Python world, and they differ along axes that matter operationally: what the
 *unit* of execution is, who *schedules* it, how much it *costs* to create and switch, how *isolated* the units are, and — the punchline —
@@ -169,6 +251,47 @@ Three things to read off this table, because they're the load-bearing facts:
 
 ## 3. The GIL — the lock in the middle, finally pinned down
 
+<details>
+<summary><b>Vocabulary for this section</b> — refcounting, the lock, and what releases it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | the mutex a CPython thread must hold to execute Python bytecode — one per *interpreter*, enforced by CPython itself; the kernel has no knowledge of it |
+| **CPU** | central processing unit | the processor; "CPU work" here means computing rather than waiting |
+| **I/O** | input/output | network, disk or database traffic — anything where the kernel makes the thread wait |
+| **DB** | database | a data store reached over a connection, so a DB call is I/O |
+| **ms** | millisecond | one thousandth of a second; the default GIL switch interval is about 5 ms |
+| **MESI** | modified / exclusive / shared / invalid | the four states of a cache line in the standard cache-coherence protocol — Ch1 §3's hardware version of "contention kills parallelism" |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reference count (refcount)** | the per-object counter of how many references point at it; CPython frees the object when it hits zero |
+| **`ob_refcnt`** | the actual C struct field holding that count on every Python object |
+| **Read-modify-write** | an operation that loads a value, changes it, and stores it back — three machine steps, interruptible between them |
+| **Lost update** | the classic race where two flows read the same old value and both write back, so one increment silently vanishes |
+| **Use-after-free** | using memory that has already been freed — what an under-counted refcount causes, and among the worst classes of memory bug |
+| **Atomic operation** | one that completes indivisibly from every other flow's point of view — no other flow can observe a half-done state |
+| **Mutex** | mutual-exclusion lock: at most one holder at a time; the GIL is one |
+| **Interpreter** | the CPython machinery that executes bytecode; the GIL is per-interpreter, so separate processes (and sub-interpreters) each have their own |
+| **Python bytecode** | the instruction stream CPython actually executes — the exact resource the GIL serializes |
+| **Switch interval** | the time (default ~5 ms, readable via `sys.getswitchinterval()`) after which a bytecode-running thread is forced to hand the GIL to a waiting thread |
+| **GIL hand-off** | the forced release-and-reacquire at the end of a switch interval, giving another thread its turn |
+| **Releasing the GIL** | CPython letting go of the lock around work that touches no Python objects — before blocking I/O, and inside good C extensions |
+| **`Py_BEGIN_ALLOW_THREADS`** | the C macro an extension uses to release the GIL around number-crunching, paired with `Py_END_ALLOW_THREADS` to take it back; **the extension does this, not the OS** |
+| **C extension** | a module whose hot code is compiled C/Fortran (NumPy, SciPy, `hashlib`, `zlib`, `lxml`, PyTorch) rather than Python bytecode |
+| **`ThreadPoolExecutor`** | the standard-library pool of worker threads; it gives real multicore speedup only for the time spent with the GIL released |
+| **Blocking I/O** | a call that parks the thread until the kernel has the data; CPython drops the GIL before parking and reacquires it on return |
+| **Serialization point** | a place where concurrent flows must go one at a time — a hard ceiling on how well anything scales |
+| **Contention** | many flows competing for the same lock or cache line, so time goes into waiting rather than working |
+| **Cache coherence** | the hardware protocol keeping per-core caches consistent; its cost is the hardware analogue of GIL contention |
+| **GIL battle (pre-3.2)** | the old thrashing behaviour where a CPU-bound and an I/O-bound thread on different cores repeatedly stole the lock from each other, dropping throughput below single-threaded; largely fixed by the modern GIL |
+
+</details>
+
 You already know the headline (Ch2 §2): **the GIL exists because CPython's reference counting is not thread-safe.** This is where we make
 that exact and trace every consequence from it.
 
@@ -237,6 +360,48 @@ interpreter lock.
 
 ## 4. The decision that falls out: CPU-bound vs. I/O-bound
 
+<details>
+<summary><b>Vocabulary for this section</b> — the decision tree, the hybrid, and the two async footguns (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | CPython's lock on bytecode execution — the reason threads do not parallelize pure-Python compute |
+| **CPU** | central processing unit | the processor; CPU-bound work is limited by it |
+| **I/O** | input/output | network, disk or database traffic — work that consists of waiting |
+| **DB** | database | a data store reached over a connection; a synchronous DB driver blocks the calling thread |
+| **API** | application programming interface | here, a remote service you call over the network, such as an LLM endpoint |
+| **LLM** | large language model | the remote model your calls wait on — from the program's view, pure I/O |
+| **HTTP** | hypertext transfer protocol | the request/response protocol most of those calls use |
+| **GPU** | graphics processing unit | the massively parallel accelerator that runs model inference — a different parallelism story from the GIL |
+| **p99 latency** | 99th-percentile latency | the response time that 99% of requests beat — the metric a stalled event loop wrecks first |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **CPU-bound** | the work spends its time computing; only more cores (hence more processes, or GIL-releasing C) make it faster |
+| **I/O-bound** | the work spends its time waiting; overlapping the waits is the whole win, and the GIL is free during them |
+| **`ProcessPoolExecutor`** | a pool of worker *processes* — N interpreters, N GILs, N cores; the answer for pure-Python CPU work |
+| **Pickle tax** | the serialization and copying cost of moving arguments and results across a process boundary |
+| **Fork cost** | the price of creating a worker process in the first place |
+| **`run_in_executor`** | the `asyncio` call that hands a blocking or CPU-heavy function to a thread or process pool so it does not run on the event loop |
+| **Event loop** | the in-process scheduler that resumes coroutines; if something on it does not yield, nothing else in the program runs |
+| **Cooperative scheduling** | the loop switches only when the running coroutine yields — there is no preemption to rescue you |
+| **`await`** | the point at which a coroutine may suspend and let the loop run something else; the *only* switch point |
+| **`asyncio.gather`** | runs several awaitables concurrently and waits for all of them — the way to actually overlap work |
+| **`create_task`** | schedules a coroutine to run on the loop immediately, without waiting for it here |
+| **Blocking call** | a call that returns only when the work is done and never yields to the loop — e.g. `time.sleep`, a sync DB driver, `boto3`, a tight Python loop |
+| **Fan-out** | how many operations are in flight simultaneously; high fan-out is what pushes you from threads to `asyncio` |
+| **Async-native library** | one written to be awaited (`aiohttp`, `httpx`) rather than to block, so it cooperates with the loop |
+| **`boto3`** | the standard synchronous AWS SDK for Python — blocking, so it must not sit directly on an event loop |
+| **Re-rank** | a scoring pass that reorders candidate results; here an example of a synchronous CPU-heavy step inside an async service |
+| **Hybrid pattern** | `asyncio` owns the waiting while a process pool owns the CPU-bound step, joined by `run_in_executor` |
+| **Context switch** | the cost of swapping which thread the OS runs; at thousands of threads it, plus stack memory, is what makes threads lose to coroutines |
+
+</details>
+
 Here's the payoff. The agonising "processes or threads or async?" question is *mostly answered by one prior question* — **where does the
 work spend its time?** — because §3 told you exactly what the GIL does in each case.
 
@@ -296,6 +461,38 @@ mechanism under it.
 
 ## 5. Free-threading: the GIL keystone, finally paid off (PEP 703)
 
+<details>
+<summary><b>Vocabulary for this section</b> — PEP 703/683 machinery and the honest caveats (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | the CPython lock this section is about removing; a CPython construct, never an OS one |
+| **PEP** | Python enhancement proposal | the numbered design documents — PEP 703 is free-threading, PEP 683 is immortal objects |
+| **CPU** | central processing unit | the processor; the point of free-threading is letting CPU-bound Python threads use several cores |
+| **GC** | garbage collection | automatic reclamation of unreachable memory — refcounting plus the cycle collector in CPython |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Free-threaded build** | a build of CPython (available from 3.13) compiled without the GIL, so Python threads can run bytecode on several cores |
+| **Reference counting** | CPython's primary GC scheme: each object counts its references and is freed at zero — the thing the GIL was protecting |
+| **Immortal object** | an object marked with a sentinel refcount that is never incremented or decremented — `None`, `True`, `False`, small ints, interned strings, type objects |
+| **Interned string** | a string kept in a single shared instance so equal literals are the same object |
+| **Biased reference counting** | splitting a refcount into a cheap non-atomic *local* count owned by the creating thread and an atomic *shared* count for everyone else |
+| **Atomic operation** | one that no other thread can observe half-done; correct without a lock, but measurably more expensive than a plain add |
+| **Per-object lock** | a fine-grained lock guarding one container's internals, replacing one global lock with many small ones |
+| **`mimalloc`** | the thread-safe memory allocator the free-threaded build uses |
+| **Specialization** | the adaptive interpreter's trick of rewriting hot bytecode into type-specific fast paths; some of it is lost without the GIL, costing single-thread speed |
+| **C extension** | a compiled module; each one must be rebuilt and audited for thread-safety before it is safe without the GIL |
+| **Thread-safety** | the property that concurrent use from several threads cannot corrupt state |
+| **Data race** | two threads touching the same memory with at least one writing and no coordination — previously masked by the GIL's coarse serialization, now genuinely exposed |
+| **Use-after-free** | using freed memory; what a naïvely un-protected refcount race produces |
+
+</details>
+
 Everything above assumes the GIL. As of **Python 3.13**, that assumption is becoming optional — and the story is a direct continuation of
 the PEP 703/683 thread you met in Ch2 §2, so it closes a loop rather than opening a new topic.
 
@@ -332,6 +529,44 @@ What it changes, and the honest caveats (the 3.14 free-threading HOWTO is candid
 ---
 
 ## 6. Where this bites *you* — the practitioner's playbook
+
+<details>
+<summary><b>Vocabulary for this section</b> — every tool and failure mode named in the playbook (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | global interpreter lock | CPython's lock on bytecode execution; it makes each single bytecode atomic but not your multi-step sequences |
+| **CPU** | central processing unit | the processor; CPU-bound work is limited by compute |
+| **I/O** | input/output | network, disk or database traffic — work that consists of waiting |
+| **DB** | database | a data store reached over a connection; a synchronous driver blocks whatever calls it |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **CPU-bound** | time goes into computing — threads will not help in CPython, processes or GIL-releasing C will |
+| **I/O-bound** | time goes into waiting — threads or `asyncio` help, processes just add a pickle tax |
+| **`threading`** | the standard-library module for OS threads sharing one address space |
+| **`multiprocessing`** | the module for worker processes with separate address spaces and separate GILs |
+| **`asyncio.gather`** | the call that actually overlaps several awaitables; sequential `await`s do not overlap anything |
+| **Event loop** | the in-process cooperative scheduler; a blocking call sitting on it freezes every connection, not just one |
+| **Blocking call** | a call that never yields to the loop — a sync DB driver, `boto3`, `time.sleep`, or a tight Python loop |
+| **Cold start** | the extra latency of a first request that has to initialize a fresh process or instance |
+| **Memory-bandwidth-bound** | limited by how fast data moves between RAM and the CPU rather than by arithmetic — adding cores does not help |
+| **Atomicity** | the property of completing indivisibly; `counter += 1` compiles to several bytecodes, so it is *not* atomic even under the GIL |
+| **Read-modify-write** | load, change, store — the interruptible three-step shape behind that bug |
+| **`queue.Queue`** | a thread-safe queue: the standard way to hand work between threads without sharing mutable state |
+| **Lock** | a mutual-exclusion primitive making a critical section one-at-a-time |
+| **Immutable message** | a value that cannot be changed after creation, so passing it between flows needs no coordination |
+| **`ProcessPoolExecutor`** | pool of worker processes — buys both multicore throughput and failure/leak isolation |
+| **`maxtasksperchild`** | the setting that retires a worker process after N tasks, so a leak inside it is discarded rather than accumulated |
+| **Serverless** | a platform that runs your function per request and scales by starting more instances rather than more threads |
+| **Invocation** | one execution of a serverless function; it is a single process, so in-process model choice still applies inside it |
+| **Instance** | one live copy of the function environment the platform keeps around to serve invocations |
+
+</details>
 
 Ranked, concrete, mapped to the sections above.
 

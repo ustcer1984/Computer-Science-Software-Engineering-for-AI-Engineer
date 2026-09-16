@@ -54,6 +54,45 @@ inevitable.
 
 ## 1. Any single I/O has two phases — and that's the whole taxonomy
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — the two phases of an I/O and the five models (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **I/O** | input/output | any transfer to or from a device — here mostly a network socket |
+| **fd** | file descriptor | the small integer handle naming an open kernel object (§1) |
+| **AIO** | asynchronous I/O | the POSIX interface where the kernel performs the whole operation and tells you when it is done |
+| **POSIX** | Portable Operating System Interface | the standard that defines the Unix-family system interfaces |
+| **IOCP** | I/O completion ports | Windows' native completion-model I/O interface |
+| **µs** | microsecond | one millionth of a second |
+| **ms** | millisecond | one thousandth of a second |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Phase 1 — wait for data to be ready** | the long wait: the bytes have not arrived from the network yet |
+| **Phase 2 — copy the data** | the short part: moving bytes from the kernel's socket buffer across the boundary into your buffer |
+| **Socket buffer** | the kernel-side memory where arriving network bytes accumulate until you read them |
+| **Blocking** | your thread sleeps in the kernel for both phases — one thread captive per in-flight I/O |
+| **Non-blocking (`O_NONBLOCK`)** | the descriptor mode where a call with nothing to give returns immediately instead of sleeping |
+| **`EAGAIN`** | the error code returned by a non-blocking call meaning "nothing right now, ask again" |
+| **Polling** | repeatedly asking "ready yet?" — wasteful when it is your own loop doing the asking |
+| **I/O multiplexing** | one call that blocks on many descriptors at once and wakes on the first ready one |
+| **`select` / `poll` / `epoll`** | the three multiplexing syscalls, in order of scalability (§4) |
+| **Signal-driven I/O (`SIGIO`)** | the kernel sending a signal when a descriptor becomes ready; rare, awkward to compose |
+| **Signal** | an asynchronous notification delivered to a process, interrupting whatever it was doing |
+| **`io_uring`** | Linux's shared-ring completion interface (§5) |
+| **Synchronous model** | any model where *you* still perform the read and your thread is involved in the copy |
+| **Asynchronous / completion model** | the kernel performs both phases and notifies you once the bytes are already in your buffer |
+| **Readiness model (reactor)** | "I will tell you *when to* read" — `epoll` |
+| **Completion model (proactor)** | "I will tell you *that I read*" — `io_uring`, IOCP |
+| **Stevens, *UNIX Network Programming*** | the reference book this five-model taxonomy comes from |
+
+</details>
+
 Before the models, one distinction they're all built on. A `read` on a socket does **two** things, and they can block independently:
 
 1. **Wait for data to be ready** — the bytes haven't arrived from the network yet. This is the long wait (the §1 figure's right-hand side:
@@ -81,6 +120,47 @@ completion ("I'll tell you *that I read*"). Keep that filed — it's the last se
 ---
 
 ## 2. Two architectures you can build, and the one that scales
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — thread-per-connection versus the event loop (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **fd** | file descriptor | the small integer handle naming an open connection |
+| **GIL** | Global Interpreter Lock | CPython's lock that lets only one thread run Python bytecode at a time; it is released around blocking I/O |
+| **TLB** | translation lookaside buffer | the CPU's cache of address translations, partly lost on each context switch |
+| **MB** | megabyte | one million bytes — a thread's default stack is 8 MB of *virtual* address space |
+| **OS** | operating system | here specifically its thread scheduler |
+| **I/O** | input/output | transfers to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Thread-per-connection** | one thread per client doing simple blocking reads and writes; linear code, costly at scale |
+| **Event loop** | one thread that asks the kernel which of its many connections are ready and services only those |
+| **`epoll` instance** | the kernel object that remembers your set of watched descriptors; itself named by an fd |
+| **`epoll_wait`** | the single blocking call an event loop makes per tick |
+| **Thread stack** | the per-thread memory for local variables and call frames; reserved as virtual address space, backed only where touched |
+| **Overcommit** | the kernel handing out more virtual memory than it has physical RAM (Ch2 §3) |
+| **Demand paging** | backing a page with physical memory only when it is first touched |
+| **Resident** | actually present in physical RAM, as opposed to merely mapped |
+| **Task struct** | the kernel's per-thread bookkeeping record — real memory, unlike untouched stack pages |
+| **Kernel stack** | the small stack the kernel uses when executing on a thread's behalf; one per thread, always real |
+| **Scheduler** | the kernel component deciding which runnable thread gets a core next |
+| **Time-slice** | the slot of CPU time a thread gets before the scheduler may preempt it |
+| **Context switch** | swapping which thread runs — roughly microseconds, plus cache and TLB churn (§1's ladder) |
+| **Stampede** | many blocked threads waking at once and flooding the scheduler |
+| **Concurrency** | many things in progress at once; distinct from **parallelism**, many things executing at the same instant |
+| **`prefork` / `worker`** | Apache's classic process- and thread-per-connection modes |
+| **nginx / Redis / Node.js / `asyncio`** | production event-loop systems; Node.js reaches the OS through **libuv** |
+| **libuv** | the C library giving Node.js one event-loop interface over `epoll`, `kqueue` and IOCP |
+| **Callbacks / `async`-`await`** | the two ways event-loop code expresses "continue here when this is ready" |
+| **Blocking the loop** | one long non-yielding computation stalling every other connection on that thread (Ch3 §2) |
+
+</details>
 
 Those models give you two fundamentally different ways to structure a server or client that handles many connections.
 
@@ -137,6 +217,42 @@ whole reason `async` exists as a programming model.
 
 ## 3. The C10k problem — why this became urgent
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the cost notation used in the argument (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **C10k** | ten thousand concurrent connections | Dan Kegel's 1999 challenge: one server, 10,000 clients at once |
+| **C10M** | ten million concurrent connections | today's version of the same argument |
+| **fd** | file descriptor | the small integer handle naming an open connection |
+| **BSD** | Berkeley Software Distribution | the Unix family whose scalable readiness primitive is `kqueue` |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n$ |  | the number of file descriptors registered for watching |
+| $O(n)$ | "big-O of n" | the cost grows in proportion to the number watched — double the connections, double the work per call |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **C10k problem** | the software (not hardware) barrier to 10,000 concurrent connections: thread costs plus per-call readiness scanning |
+| **Readiness-checking syscall** | a call that answers "which of my descriptors can I act on now?" — `select`, `poll`, `epoll` |
+| **Readiness primitive** | the kernel facility that answers that question; scalable versions are per-OS |
+| **`epoll`** | Linux's scalable readiness primitive, 2002 |
+| **`kqueue`** | the BSD and macOS equivalent of `epoll` |
+| **Kernel bypass** | driving the network card from user space to skip the kernel's path entirely — a C10M-era technique |
+| **Event loop** | one thread servicing many connections, the architecture the C10k answer demanded (§2) |
+| **Thread-per-connection** | the model C10k broke: too much memory and too much scheduler load |
+| **Scheduler** | the kernel component choosing which thread runs next |
+
+</details>
+
 In 1999 Dan Kegel named the **C10k problem**: how do you get a single server to handle **10,000 concurrent connections**? Hardware of the day
 could easily *push the bytes* for 10k clients — the bottleneck was software, specifically the two things above: thread-per-connection ran out
 of memory and drowned the scheduler, and the readiness-checking syscalls of the era (`select`/`poll`) cost $O(n)$ *per call* (§5), so just
@@ -148,6 +264,59 @@ the shape of the argument is identical: *don't do O(n) work to find the ready on
 ---
 
 ## 4. `select` → `poll` → `epoll`: the scaling story (the mechanism)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the cost notation for `select`, `poll` and `epoll` (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **fd** | file descriptor | the small integer handle naming an open connection |
+| **`FD_SETSIZE`** | file-descriptor set size | the fixed 1024-entry limit on `select`'s bitmask — a hard wall you cannot pass without recompiling |
+| **LT** | level-triggered | `epoll` keeps reporting a descriptor while unread data remains; the forgiving default |
+| **ET** | edge-triggered (`EPOLLET`) | `epoll` reports only the transition to ready, so you must drain until `EAGAIN` |
+| **POSIX** | Portable Operating System Interface | the standard that makes `select` and `poll` available everywhere |
+| **BSD** | Berkeley Software Distribution | the Unix family providing `kqueue` |
+| **IOCP** | I/O completion ports | the Windows equivalent, a completion rather than readiness interface (§5) |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n$ |  | the number of file descriptors registered for watching |
+| $O(n)$ | "big-O of n" | work proportional to every watched descriptor, ready or not — the kernel rescans them all |
+| $O(\text{ready})$ | "big-O of ready" | work proportional only to the descriptors that actually fired, written $O(\text{number ready})$ in the text |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`select` (1983)** | pass three bitmask sets each call; the kernel scans every descriptor up to the highest number |
+| **Bitmask / fd set** | a fixed-size array of bits, one per descriptor number, marking which you care about |
+| **Modified in place** | `select` overwrites your sets with the results, so you must rebuild all three before every call |
+| **`poll` (1986)** | pass an array of `struct pollfd` instead; no 1024 limit, but the kernel still scans all of them |
+| **`struct pollfd`** | one array entry holding `fd`, `events` (what you asked for) and `revents` (what happened) |
+| **`epoll` (Linux 2.6, 2002)** | a *stateful* interface: register interest once, and let the kernel maintain a ready list |
+| **`epoll_create1()`** | creates an epoll instance, itself named by a file descriptor |
+| **`epoll_ctl(ADD/MOD/DEL, fd)`** | registers, changes or removes interest in one descriptor — done once, not per call |
+| **`epoll_wait()`** | returns the descriptors from the ready list; cost scales with how many are ready, not how many are watched |
+| **Red-black tree** | the balanced search structure the kernel keeps your registered descriptors in |
+| **Callback** | the per-descriptor hook the kernel attaches so that becoming ready moves it onto the ready list |
+| **Ready list** | the kernel-maintained list of descriptors that have fired since you last asked — why no scan is needed |
+| **Level-triggered (LT)** | ready is reported as long as data remains unread; `asyncio`'s default and the sane one |
+| **Edge-triggered (ET, `EPOLLET`)** | ready is reported only at the moment data arrives; fewer wake-ups, far easier to hang a connection |
+| **Drain loop** | reading in a non-blocking loop until `EAGAIN`, which edge-triggered mode requires |
+| **`EAGAIN`** | "nothing available right now" — the signal that a drain loop is finished |
+| **Asymptotic cost** | how work grows as the number of connections grows, ignoring constant factors |
+| **Portability** | `select`/`poll` are POSIX and everywhere; the scalable primitive is per-OS |
+| **`kqueue`** | the BSD and macOS scalable readiness primitive |
+| **libuv** | Node.js's abstraction layer choosing the right primitive per OS |
+| **`selectors` module** | Python's equivalent: it picks the best backend available rather than calling `epoll` directly |
+| **Log-log plot** | a chart where both axes are logarithmic, so a straight diagonal means proportional growth |
+
+</details>
 
 All three answer the same question — *"of my N registered fds, which are ready right now?"* — and the difference is entirely in **how much
 work that costs** and **who remembers the fd list.**
@@ -205,6 +374,48 @@ suspect.)
 
 ## 5. The completion model: `io_uring` (and the tie back to Windows IOCP)
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the cost notation for the completion model (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SQ** | submission queue | the shared ring you write I/O requests into |
+| **CQ** | completion queue | the shared ring the kernel writes finished results into |
+| **`SQPOLL`** | submission-queue polling | the `io_uring` mode where a kernel thread watches the ring, so submitting needs no syscall at all |
+| **IOCP** | I/O completion ports | Windows' native completion interface, the model `io_uring` converges on |
+| **fd** | file descriptor | the small integer handle naming an open connection |
+| **C10M** | ten million concurrent connections | the scale at which per-event syscall overhead itself becomes the wall |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $O(n)$ | "big-O of n" | work proportional to every watched descriptor — the scan `epoll` removed |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Readiness model** | the kernel tells you *when you may* act, and you still issue the read yourself — `epoll` |
+| **Completion model** | the kernel performs the operation and tells you it is *done*, bytes already in your buffer |
+| **Syscall tax** | the fixed per-crossing cost of §1, paid at least twice per served event under readiness |
+| **`io_uring` (Linux 5.1, 2019)** | the shared-ring interface that submits and reaps many operations with one syscall, or none |
+| **Ring buffer** | a fixed-size circular queue, here mapped into memory shared by your process and the kernel |
+| **`mmap`'d memory** | memory mapped into your address space, so writing the ring is a plain memory write with no boundary crossing |
+| **`io_uring_enter`** | the one syscall that tells the kernel to process what you queued |
+| **Kernel thread** | a thread belonging to the kernel itself; under `SQPOLL` one watches the submission ring for you |
+| **Reap** | to read finished results out of the completion queue |
+| **Reactor / proactor** | the design-pattern names for readiness and completion respectively |
+| **`ProactorEventLoop`** | the `asyncio` loop used on Windows, built on IOCP |
+| **`SelectorEventLoop`** | the `asyncio` loop used on Linux, built on `epoll` |
+| **Storage I/O** | disk reads and writes, where `epoll` does not help and completion does |
+| **Zero-syscall operation** | submitting and reaping purely through shared memory, with no crossing at all |
+
+</details>
+
 `epoll` fixed *finding* the ready fds, but it's still the **readiness** model, and it still pays §1's syscall tax: for every batch of ready
 connections you make an `epoll_wait` syscall **and then** a `read` syscall for each — two crossings per served event, minimum. At C10M and for
 storage I/O, that syscall overhead itself becomes the wall.
@@ -257,6 +468,43 @@ that convergence legible.
 
 ## 6. Where your world actually sits
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and abbreviations — mapping the models onto systems you actually run (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GIL** | Global Interpreter Lock | CPython's lock serializing bytecode execution; released while a thread blocks in an I/O syscall |
+| **DB** | database | the store behind a query; a synchronous driver for one is the classic reason to use threads |
+| **SDK** | software development kit | a vendor's client library, sometimes blocking with no async version |
+| **LLM** | large language model | the model being served behind the event loop |
+| **GPU** | graphics processing unit | the accelerator doing the model's compute — CPU-bound work you keep off the loop |
+| **HTTP** | HyperText Transfer Protocol | the request/response protocol the streaming connections speak |
+| **fd** | file descriptor | the small integer handle naming a socket |
+| **I/O** | input/output | transfers to or from a device |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **`SelectorEventLoop`** | the `asyncio` event loop on Linux — one `epoll` instance, level-triggered |
+| **`epoll` instance** | the kernel object remembering which descriptors this loop watches |
+| **Level-triggered** | ready is re-reported while data remains unread; the forgiving default (§4) |
+| **`epoll_ctl`** | the call registering a socket's descriptor with the loop's epoll instance |
+| **`epoll_wait`** | the loop's single blocking call per tick |
+| **Coroutine** | a function that can suspend at `await` and be resumed later by the loop |
+| **Parked coroutine** | one suspended on I/O at zero CPU cost until its descriptor fires |
+| **`uvloop`** | a faster drop-in `asyncio` loop implementation built on libuv |
+| **uvicorn / FastAPI** | the Python server and framework running that loop in an LLM-serving front end |
+| **`run_in_executor`** | the `asyncio` call that hands blocking or CPU-bound work to a thread or process pool so the loop keeps running |
+| **Thread pool** | a fixed set of worker threads reused for blocking calls |
+| **CPU-bound** | limited by computation rather than waiting — the part that must stay off the event loop |
+| **Streaming connection** | a long-lived HTTP response delivered in pieces, e.g. tokens as they are generated |
+| **Multiplexing** | one thread waiting on many connections at once, done by the kernel on its behalf |
+
+</details>
+
 Assembling it against systems you run:
 
 - **`asyncio` (your eval pipeline).** One thread, one `SelectorEventLoop` = one `epoll` instance, level-triggered. Every `await` on a socket
@@ -274,6 +522,45 @@ Assembling it against systems you run:
 
 ## 7. Loose ends, so the picture is complete
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the cost notation in the section keeper (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **fd** | file descriptor | the small integer handle naming an open kernel object |
+| **SSD** | solid-state drive | flash storage; a read still takes real time even though the file is "always ready" |
+| **IOCP** | I/O completion ports | Windows' completion-model I/O interface |
+| **I/O** | input/output | transfers to or from a device |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $O(n)$ | "big-O of n" | work proportional to every watched descriptor — what `select` and `poll` cost per call |
+| $O(\text{ready})$ | "big-O of ready" | work proportional only to the descriptors that fired — what `epoll` costs |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **I/O concurrency** | many waits in flight at once; what multiplexing buys — *not* extra CPU throughput |
+| **CPU parallelism** | actual simultaneous execution of computation, which needs threads or processes (Ch3 §1) |
+| **`run_in_executor`** | the `asyncio` escape hatch sending CPU-bound work to a thread or process pool |
+| **`O_NONBLOCK`** | the descriptor flag turning "sleep until ready" into "return `EAGAIN` now" |
+| **`EAGAIN`** | "nothing available right now, try again" |
+| **Busy-wait** | looping on a non-blocking call, burning CPU to discover nothing has changed |
+| **Edge-triggered** | `epoll` mode reporting only the transition to ready; requires non-blocking descriptors and a drain loop |
+| **Readiness primitive** | a facility that says *when you may act*, not one that acts for you |
+| **Pollable fd** | a descriptor `epoll` can meaningfully watch — sockets, pipes, timers — as opposed to a regular disk file |
+| **Regular file** | an ordinary file on disk, which reports "always ready" yet still blocks on the device |
+| **`io_uring`** | the Linux completion interface, which does give real asynchronous *disk* I/O |
+| **Batch your crossings** | §1's first rule: few large boundary crossings, not many small ones |
+| **Park your waiters** | §1's second rule: a waiting task should hold neither a CPU nor a thread |
+
+</details>
+
 - **This is about I/O concurrency, not CPU parallelism.** Multiplexing lets one thread *wait* for many things; it does nothing for
   CPU-bound work (Ch3 §1). An event loop pegged on computation still needs `run_in_executor` → threads/processes. Don't reach for `epoll` to
   speed up a hot loop.
@@ -286,8 +573,8 @@ Assembling it against systems you run:
 
 > **The keeper for the whole section.** The question was never "how do I make one I/O fast" — it's "**how does one thread wait for thousands
 > of I/Os without spinning or spawning?**" The answer evolved along one axis, *the cost to find (and finish) the ready ones*:
-> blocking (a thread each) → non-blocking (spin) → `select`/`poll` (ask the kernel, $O(n)$) → `epoll` (kernel remembers and notifies,
-> $O(\text{ready})$) → `io_uring`/IOCP (kernel does the I/O too). Every step is §1's two rules — *batch your crossings, park your waiters* —
+> blocking (a thread each) → non-blocking (spin) → `select`/`poll` (ask the kernel, `O(n)`) → `epoll` (kernel remembers and notifies,
+> `O(ready)`) → `io_uring`/IOCP (kernel does the I/O too). Every step is §1's two rules — *batch your crossings, park your waiters* —
 > pushed one scale further.
 
 ---

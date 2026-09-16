@@ -68,6 +68,45 @@ and Singapore's unusual exchange-rate model (§4) are all *operations on the thi
 
 ## 1. What money is — three jobs, and the problem it solves
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms and every symbol used below (click to expand)</summary>
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $n$ | "n" | the number of distinct goods in the economy |
+| $\frac{n(n-1)}{2}$ | "n times n minus one, over two" | how many pairwise relative prices a barter economy needs — it grows roughly with the square of the number of goods |
+| $O(n^{2})$ | "big-O of n squared" | computer-science shorthand for "the work grows like the square of $n$" — here, barter's matching problem |
+| $O(n)$ | "big-O of n" | "the work grows in proportion to $n$" — money's version: one money price per good |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Money** *(functional definition)* | not a substance but whatever performs the three jobs below; economists define it by what it does, not what it is made of |
+| **Medium of exchange** | the job of being accepted in trade, so goods need not be swapped directly |
+| **Unit of account** | the job of being the ruler prices are quoted in — the common scale that makes a coffee and a car comparable |
+| **Store of value** | the job of holding purchasing power between selling today and buying later |
+| **Barter** | direct goods-for-goods exchange with no money in between |
+| **Double coincidence of wants** | barter's blocking condition — I must have what you want *and* you must have what I want, at the same moment |
+| **Relative price** | the exchange rate between two goods (loaves per pair of shoes), as opposed to a money price |
+| **Money price** | a good's price expressed in units of money — one number per good instead of one per pair |
+| **Counterparty** | the other side of a trade |
+| **Purchasing power** | how much real stuff a unit of money buys |
+| **Price level** | the average money price of a basket of goods — "how many units of account per basket" |
+| **Inflation** | a sustained rise in the price level, which erodes the store-of-value job |
+| **Coordination technology** | something valuable because everyone uses it, whose payoff comes from the agreement rather than the thing |
+| **Durable · portable · divisible · uniform (fungible) · recognizable** | the physical property list a good medium of exchange has to score well on |
+| **Fungible** | one unit is interchangeable with any other unit of the same kind |
+| **Limited in supply** | the subtle property on that list: if anyone could make the token freely it could not store value |
+| **Commodity** | a raw, uniform tradable good (gold, salt, grain) |
+| **Credit theory of money** | the rival account (Innes, later Graeber) in which money began as recorded debt — "you owe me three bushels" — rather than emerging from barter |
+| **Ledger** | the record of who owes whom; the framing that treats every form of money as an entry in someone's accounts |
+| **IOU** | "I owe you" — a promise to pay, which is what every money instrument here turns out to be |
+
+</details>
+
 Economists don't define money by what it's made of. They define it **functionally**: money is *whatever
 does these three jobs* in an economy.
 
@@ -120,6 +159,42 @@ on all six for millennia, which is *why* it kept getting chosen — not magic, j
 
 ## 2. The forms money has taken — and why a worthless token has value
 
+<details>
+<summary><b>Vocabulary for this section</b> — the vocabulary of money regimes and of why a token has value (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **POW** | prisoner of war | as in the POW-camp cigarette economy, a real case of commodity money emerging spontaneously |
+| **US** | United States | |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Commodity money** | money whose token *is* a valuable commodity — gold and silver coins, cattle, salt, cowrie shells, cigarettes |
+| **Representative money** | a paper claim redeemable for a fixed quantity of a commodity; the paper circulates, the metal backs it |
+| **Redeemable** | exchangeable, on demand, for the thing that backs it |
+| **Fiat money** | a token that is money by decree (*fiat* = "let it be") and is redeemable for nothing; every major currency today |
+| **Intrinsic value** | value the token would have as a physical thing, independent of its monetary role — fiat money has none |
+| **Gold standard** | the classical regime in which currencies were fixed to, and convertible into, gold |
+| **Bretton Woods** | the 1944–71 system in which the US dollar was gold-backed and other currencies pegged to the dollar |
+| **Gold window** | the US commitment to convert official dollar holdings into gold, closed in 1971 (the "Nixon shock") — the move to pure fiat |
+| **Chartalism** | the view that a currency's value rests on the state accepting it, and only it, for taxes |
+| **Modern Monetary Theory** | the contemporary school built on that chartalist starting point |
+| **Legal tender** | a legal declaration that a currency is valid for settling debts |
+| **Network effect** | the property that a thing gets more useful the more people use it — why you accept money the next person will accept |
+| **Coordination equilibrium** | an outcome held in place only by everyone expecting everyone else to do the same; stable in practice, but it can flip |
+| **Hyperinflation** | an inflation so fast that the money stops doing its jobs — the equilibrium flipping |
+| **Managed scarcity** | deliberately limiting issuance so the token keeps its value; the central bank's job in a fiat system |
+| **Central bank** | the institution that issues the currency and sets monetary policy |
+| **Central bank independence** | insulation of that institution from day-to-day political direction, which is what makes managed scarcity credible |
+| **Inflation target** | the publicly announced rate of inflation the central bank aims at, conventionally about 2% |
+| **Hierarchy of promises** | the ranking of IOUs by how final they are as settlement; fiat money's value comes from sitting at the top of it |
+
+</details>
+
 Money has moved through three broad regimes, each a step further from "intrinsic value" and further into
 "pure ledger." Reading the progression is the fastest way to understand *why* today's money works.
 
@@ -159,6 +234,46 @@ worth anything at all?** Three reinforcing answers, in rough order of importance
 ---
 
 ## 3. Measuring money — the monetary aggregates
+
+<details>
+<summary><b>Vocabulary for this section</b> — the monetary aggregates, their abbreviations and the one ratio (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **M0** | monetary base (also "M zero") | currency in circulation plus banks' reserves at the central bank — the money the state itself creates |
+| **M1** | narrow money | currency held by the public plus deposits spendable today |
+| **M2** | broad money | M1 plus less-liquid money-like balances; the usual meaning of "the money supply" |
+| **QE** | quantitative easing | large-scale central-bank asset purchases that create reserves, expanding M0 |
+| **MMF** | money-market fund | a fund holding very short-term safe assets; retail ones count inside M2 |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $M2 / M0$ | "M-two over M-zero" | broad money divided by the base — the ratio once called the money multiplier, and which §4 shows is a result, not a lever |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Monetary aggregate** | an official measure of how much money exists, differing by where the line between "money" and "money-like" is drawn |
+| **Monetary base ("high-powered money")** | M0: physical currency plus commercial banks' reserve balances at the central bank |
+| **Reserves** | electronic central-bank money held by banks — **not** the same as deposits (a bank's IOU to you) or currency (notes in your pocket) |
+| **Currency in circulation** | notes and coins held outside the central bank; a small slice of total money |
+| **Deposit** | the balance in your bank account — a commercial bank's promise to pay you, and the bulk of the money supply |
+| **Chequing / current account** | a deposit you can spend immediately |
+| **Savings account** | an interest-bearing deposit; folded into M1 in the US by a 2020 redefinition |
+| **Time deposit** | a deposit locked up for a fixed term; small ones sit in M2 but not M1 |
+| **Liquidity** *(here)* | how readily a balance can be spent without loss — the axis the aggregates are nested along |
+| **Money supply** | the total stock of money, usually meaning M2 |
+| **Commercial bank** | a private deposit-taking, lending bank — the issuer of most of the money supply |
+| **Money multiplier** | the name given to the ratio of broad money to the base, and to the discredited story that the base drives it |
+| **Balance sheet (central bank's)** | the central bank's assets and liabilities; "expanding the balance sheet" means creating reserves |
+| **Year-on-year** | compared with the same month a year earlier — how money-growth figures are quoted |
+
+</details>
 
 If money is "whatever does the three jobs," then *how much* money is there? The answer depends on where you
 draw the line between "money" and "merely money-like," so central banks publish several **monetary
@@ -200,6 +315,59 @@ stable — it collapsed after 2008 — which is the first clue the story is wron
 ---
 
 ## 4. Where money comes from — the money multiplier, and why it's backwards
+
+<details>
+<summary><b>Vocabulary for this section</b> — every symbol in the multiplier algebra, plus the balance-sheet vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **M0** | monetary base | currency plus banks' reserves at the central bank |
+| **M2** | broad money | M1 plus other money-like balances — the usual "money supply" |
+| **QE** | quantitative easing | large-scale central-bank asset purchases that flood the system with reserves |
+| **BoE** | Bank of England | the central bank whose 2014 bulletin *Money creation in the modern economy* stated the modern account |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $r$ | "r" | **the reserve ratio** — the fraction of deposits a bank keeps as reserves (0.10 = 10%). ⚠ **A different $r$ from the interest rate $r$ used everywhere else in this module** (§2 onward); here it is a ratio, not a price |
+| $\frac{1}{r}$ | "one over r" | the textbook deposit multiplier — with a 10% reserve ratio, 10 |
+| $\Delta R$ | "delta R" | the change in reserves injected by the central bank; $\Delta$ means "change in" |
+| $\Delta D$ | "delta D" | the resulting change in total deposits, per the textbook story |
+| $(0.9)^{2}$, $(0.9)^{3}$ | "nought point nine squared, cubed" | successive rounds of the lending cascade, each 90% of the last — the terms of the geometric series |
+| $\frac{1}{1 - 0.9}$ | "one over one minus nought point nine" | the sum of that infinite geometric series, equal to 10 |
+| $M2 / M0$ | "M-two over M-zero" | broad money divided by the base — an accounting ratio computed after the fact, not a mechanism |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fractional-reserve banking** | the arrangement in which a bank holds only a fraction of its deposits as reserves |
+| **Reserve ratio** | that fraction, historically set by regulation |
+| **Reserves** | electronic central-bank money banks hold for settlement — **an asset of the bank**, distinct from deposits (its liability) and from currency |
+| **Deposit** | a commercial bank's IOU to a customer; the thing lending creates |
+| **Money multiplier (deposit multiplier)** | the claim that one unit of base supports $\frac{1}{r}$ units of deposits — correct arithmetic, backwards causation |
+| **Geometric series** | a sum whose terms shrink by a constant factor each round; the same maths as E02's spending multiplier |
+| **Endogenous money** | the modern view that the quantity of money is determined inside the economy by lending demand, not set by the central bank |
+| **"Loans create deposits"** | the one-line statement of that view: the bank writes the loan and the deposit into existence simultaneously |
+| **Double-entry bookkeeping** | the accounting rule that every entry has a matching entry — here, a new asset (the loan) and a new liability (the deposit) |
+| **Asset** | something the bank owns or is owed — reserves, loans |
+| **Liability** | something the bank owes — deposits |
+| **Balance sheet** | the two-sided statement of assets and liabilities; a loan expands both sides at once |
+| **Interbank market** | where banks lend reserves to each other, typically overnight |
+| **Reserve requirement** | a regulatory minimum ratio of reserves to deposits; zero in the US since 2020 and absent in several countries |
+| **Settlement** | the transfer of reserves that finalises a payment between two banks |
+| **Policy rate** | the interest rate the central bank sets — the *price* at which it supplies reserves, as opposed to rationing their quantity |
+| **Creditworthy borrower** | one the bank judges likely to repay; the real constraint on lending |
+| **Accounting identity** | a relation true by definition of the terms, which therefore explains no causation on its own |
+| **Money destruction** | the cancelling of a deposit when a loan is repaid — both sides of the balance sheet shrink and the money ceases to exist |
+| **Stock** *(vs flow)* | a quantity existing at a point in time; the money supply is a stock, topped up by new lending and drained by repayment |
+| **Credit boom** | money being created by new lending faster than repayment destroys it |
+| **Credit crunch / deleveraging** | the reverse — loans repaid and not renewed, so the money supply contracts |
+
+</details>
 
 Here is the heart of the section. We'll tell the story the way the old textbooks do — the **money
 multiplier** — because it's the story most people carry and you need to recognize it. Then we'll show why
@@ -299,6 +467,33 @@ in E02.
 
 ## 5. If not reserves, what *does* limit money creation?
 
+<details>
+<summary><b>Vocabulary for this section</b> — what actually constrains a bank, and the reserves-versus-capital distinction (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Reserve requirement** | a regulatory minimum ratio of reserves to deposits — conspicuously *not* the binding constraint; zero in the US since March 2020 and absent in Canada, the UK and the euro area |
+| **Loan demand** | how much creditworthy borrowers actually want to borrow at the going rate — the real throttle on money creation |
+| **Creditworthy borrower** | one whose expected repayment makes the loan profitable after expected losses |
+| **Cost of funding** | what the bank must pay for the money it lends — deposits, wholesale borrowing, reserves — which the policy rate sets |
+| **Default loss** | the expected cost of borrowers who fail to repay |
+| **Policy rate** | the interest rate set by the central bank, which moves the cost of funding and so the number of loans that clear the profitability bar |
+| **Capital requirement** | the rule that a bank must fund a minimum fraction of its assets with its own equity rather than borrowed money |
+| **Bank capital (equity)** | the owners' stake — a buffer that absorbs losses. ⚠ Not the same as **reserves**: reserves are an *asset* held for settlement, capital is how the bank is *funded* |
+| **Risk-weighted assets** | assets scaled by how risky they are, the denominator of the capital ratio; each new loan consumes scarce capital |
+| **Basel rules** | the international bank-capital standards that set those minimum ratios |
+| **Liquidity** | the ability to meet outflows on demand |
+| **Settlement** | the transfer of reserves when a borrower spends a new deposit into another bank — why an aggressive lender haemorrhages reserves |
+| **Interbank borrowing** | topping up reserves from other banks, at a price anchored to the policy rate |
+| **Solvency** | having assets worth more than liabilities; bad loans destroy capital and threaten it |
+| **Prudential regulation** | supervision aimed at keeping individual banks safe and sound |
+| **Bank run** | depositors withdrawing en masse, the failure mode §6 takes apart |
+| **Price versus quantity lever** | the section's punchline — the central bank steers lending by setting the *price* of reserves, not by rationing their *quantity* |
+
+</details>
+
 If a bank can create a deposit with a keystroke, why doesn't it create infinite money? Because it faces four
 real, binding constraints — and understanding them is understanding what monetary policy (§3) actually
 operates on. Reserve requirements are conspicuously **not** the main one (many countries — Canada, the UK,
@@ -334,6 +529,49 @@ didn't create infinite money).
 ---
 
 ## 6. The two-tier system, trust, and fragility
+
+<details>
+<summary><b>Vocabulary for this section</b> — the two-tier architecture, the run vocabulary and the frontier proposals (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **M0** | monetary base | tier-1 money: currency plus reserves |
+| **FDIC** | Federal Deposit Insurance Corporation | the US deposit insurer, which guarantees deposits up to a cap |
+| **SDIC** | Singapore Deposit Insurance Corporation | Singapore's equivalent |
+| **SVB** | Silicon Valley Bank | the 2023 failure this section uses as its live case |
+| **ATM** | automated teller machine | the everyday device that turns a tier-2 deposit into tier-1 cash |
+| **CBDC** | central bank digital currency | digital tier-1 money issued directly to the public |
+| **e-CNY** | electronic Chinese yuan (onshore renminbi) | China's CBDC, the largest live experiment |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Two-tier system** | the architecture in which the central bank issues tier-1 money and commercial banks issue most of the money people actually use |
+| **Central-bank money (tier 1)** | physical cash plus **reserves**; the ultimate settlement asset, nominally riskless because the issuer can always create more |
+| **Reserves** | electronic central-bank money only banks may hold — distinct from **deposits** (a private bank's IOU to you) and from **currency** (notes anyone can hold) |
+| **Commercial-bank money (tier 2)** | your deposit: a private company's promise to pay you central-bank money on demand |
+| **Hierarchy of promises** | the ranking of IOUs by finality, with central-bank money at the top |
+| **Settlement asset** | the thing a payment is finally settled in — reserves, between banks |
+| **Convertibility (1-for-1)** | the promise that a deposit can always be turned into cash or reserves at par, which is what lets private IOUs circulate as money |
+| **Maturity transformation** | funding long-term illiquid assets with short-term on-demand liabilities — useful, and the source of the fragility |
+| **Maturity mismatch** | the resulting gap between when assets pay off and when liabilities can be called |
+| **Illiquid** | unable to raise cash quickly — **distinct from insolvent**, which means assets are genuinely worth less than liabilities; SVB was arguably the former, not the latter |
+| **Bank run** | depositors demanding cash simultaneously, which can fell even a solvent bank |
+| **Coordination failure** | the self-fulfilling logic of a run: if you fear others will run, running first is rational |
+| **Deposit insurance** | a government guarantee of deposits up to a cap, which removes small depositors' reason to run |
+| **Uninsured deposit** | a balance above that cap — the depositors who did run at SVB |
+| **Lender of last resort** | the central bank lending freely to a solvent-but-illiquid bank against good collateral |
+| **Bagehot's rule** | the classic prescription for that role: lend freely, against good collateral, at a penalty rate |
+| **Penalty rate** | a deliberately unattractive rate, so the facility is used only in genuine need |
+| **Collateral** | assets pledged to secure a loan |
+| **Held-to-maturity versus market value** | a bond can be worth its full face value if held to the end yet much less if sold today — the gap that sank SVB when rates rose |
+| **Stablecoin** | a privately issued token promising 1-for-1 redemption in dollars — in effect a new tier-2 issuer competing with banks |
+| **Narrow (full-reserve) banking** | the proposal to end private money creation by requiring 100% reserves against deposits |
+
+</details>
 
 Pulling §§2–5 together gives the actual architecture of a modern monetary system: **two tiers of money,
 issued by two kinds of institution, sitting in a hierarchy of promises.**

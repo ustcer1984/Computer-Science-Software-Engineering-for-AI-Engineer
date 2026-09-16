@@ -47,6 +47,45 @@ does. We'll build to it.
 
 ## 1. Demand: the buyers' response function
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MB** | marginal benefit | the extra benefit a buyer gets from one more unit |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ |  | the price of one unit of the good |
+| $Q_d$ | "Q-sub-d" | quantity demanded — the subscript $d$ means *demand* side |
+| $Q_d(P)$ | "Q-d of P" | the whole demand relationship: quantity demanded as a function of price |
+| $MB$ | "M-B" | marginal benefit — the worth of one more unit to the buyer |
+| $I$ |  | electric current, used only in the physics analogy |
+| $V$ |  | voltage, used only in the physics analogy |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Demand** | the **whole relationship** between price and quantity buyers will buy — the entire curve, not one number |
+| **Quantity demanded** | the amount bought **at one specific price** — a single point on that curve; confusing this with *demand* is the commonest error in economic commentary |
+| **Demand curve** | the plot of that relationship; it slopes downward because marginal benefit falls as you consume more |
+| **Movement along the curve** | what a change in the good's **own price** causes — a change in *quantity demanded* |
+| **Shift of the curve** | what a change in **anything else** causes (income, tastes, price of a substitute, expectations, population) — a change in *demand* |
+| **Diminishing marginal benefit** | each extra unit is worth less to you than the one before |
+| **Substitute** | a good that can replace this one; if its price rises, buyers switch toward this one |
+| **Substitution effect** | the part of the quantity response caused by switching to or from other goods when relative prices change |
+| **Income effect** | the part caused by a price change altering how much your income can buy overall |
+| **Real purchasing power** | what your income can actually buy, after allowing for prices |
+| **In aggregate** | summed across all buyers in the market, not one person |
+| **Response function** | a relationship giving an output as a function of a control variable, with everything else held fixed |
+
+</details>
+
 **Demand** describes how much of a good buyers, *in aggregate*, are willing and able to buy at each possible
 price, holding everything else fixed. Plot quantity against price and you get the **demand curve**, and it
 (almost always) **slopes downward**: the higher the price, the less people buy.
@@ -80,13 +119,55 @@ demanded* fell; *demand* may not have moved at all). Keep "movement along" vs "s
 > of a control parameter (price), *all other parameters held fixed*. "Quantity demanded" is the function
 > *evaluated at a point*; "demand" is the function *as an object*. A change in own-price moves you **along**
 > the response curve; a change in a held-fixed parameter is a change in the *function itself* — the curve
-> shifts. It's exactly the difference between moving along an $I$–$V$ curve and changing the temperature that
-> *defines* a new $I$–$V$ curve. The economists' confusion is just sloppiness about "evaluate the function" vs
+> shifts. It's exactly the difference between moving along an I–V curve and changing the temperature that
+> *defines* a new I–V curve. The economists' confusion is just sloppiness about "evaluate the function" vs
 > "re-parameterize the function."
 
 ---
 
 ## 2. Supply: the sellers' response function
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MC** | marginal cost | the extra cost of producing one more unit |
+| **MB** | marginal benefit | the extra benefit from one more unit |
+| **PPF** | production possibility frontier | the boundary of what can be produced with fixed resources |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ |  | the price of one unit |
+| $Q_s$ | "Q-sub-s" | quantity supplied — the subscript $s$ means *supply* side |
+| $Q_s(P)$ | "Q-s of P" | the whole supply relationship: quantity supplied as a function of price |
+| $Q_d$ | "Q-sub-d" | quantity demanded |
+| $Q(P)$ | "Q of P" | quantity as a function of price, the natural way round to plot it |
+| $MC$ | "M-C" | marginal cost |
+| $MB = MC$ | "M-B equals M-C" | the marginal optimality rule from the previous section |
+| $dQ_d/dP$ | "d-Q-d by d-P" | the slope of demand — how much quantity demanded changes per unit change in price; it is negative |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Supply** | the **whole relationship** between price and the quantity sellers will produce — the entire curve |
+| **Quantity supplied** | the amount offered **at one specific price** — a single point on that curve |
+| **Supply curve** | the plot of that relationship; it slopes upward because marginal cost rises with output |
+| **Movement along supply** | caused by a change in the good's **own price** — a change in *quantity supplied* |
+| **Shift of supply** | caused by a change in **input costs, technology, number of sellers, taxes or expectations** — a change in *supply* |
+| **Increasing marginal cost** | each extra unit costs more to make than the last, as the firm reaches for less-suited resources, overtime and congestion |
+| **Profit-maximizing firm** | one that produces while price at least covers the cost of the next unit, and stops where price equals marginal cost |
+| **Input costs** | what the firm pays for labour, materials and energy; a rise shifts supply left |
+| **Price–quantity plane** | the pair of axes both curves are drawn on; economists put price on the *vertical* axis even though they treat it as the independent variable |
+| **Convexity** | the curvature that makes cost rise faster than proportionally with output — the same property that bows the production possibility frontier outward |
+| **Equilibrium** | the price at which the two response functions agree, developed in the next section |
+
+</details>
 
 **Supply** is the mirror image: how much sellers, in aggregate, are willing to produce and sell at each
 price. The **supply curve** (almost always) **slopes upward** — higher price, more produced.
@@ -121,6 +202,45 @@ The same movement-vs-shift distinction applies:
 ---
 
 ## 3. Equilibrium: the fixed point where the two responses agree
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and every symbol in the formulas (click to expand)</summary>
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ |  | the price |
+| $P^\ast$ | "P-star" | the equilibrium price — the star marks the value that clears the market |
+| $Q^\ast$ | "Q-star" | the equilibrium quantity traded at $P^\ast$ |
+| $Q_d(P)$ | "Q-d of P" | quantity demanded at price $P$ |
+| $Q_s(P)$ | "Q-s of P" | quantity supplied at price $P$ |
+| $Z(P)$ | "Z of P" | excess demand — quantity demanded minus quantity supplied at price $P$ |
+| $Z'(P)$ | "Z-prime of P" | the slope of excess demand with respect to price; negative here, which is what makes the equilibrium stable |
+| $dP/dt$ | "d-P by d-t" | the rate at which the price changes over time |
+| $\propto$ | "is proportional to" | varies in step with, up to a constant factor |
+| $\approx$ | "is approximately equal to" | equal to a good enough approximation near that point |
+| $\lvert\text{slope}_S\rvert / \lvert\text{slope}_D\rvert$ | "mod slope-S over mod slope-D" | the ratio of the steepness of supply to the steepness of demand, ignoring signs — what decides whether the cobweb converges |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Market equilibrium** | the price and quantity at which the amount buyers want to buy equals the amount sellers want to sell |
+| **Market-clearing price** | another name for the equilibrium price: at it there are no unmet buyers and no unsold goods |
+| **Excess demand** | quantity demanded minus quantity supplied; positive is a shortage, negative is a surplus |
+| **Shortage** | quantity demanded exceeds quantity supplied at the going price; buyers bid the price up |
+| **Surplus** *(here: excess supply)* | unsold goods piling up because quantity supplied exceeds quantity demanded — **not** the welfare measure "consumer/producer surplus" met in the next file |
+| **Fixed point** | a value the system maps to itself, so once there it stays — what an equilibrium is |
+| **Stable** | small departures are pushed back; the forces around the equilibrium point toward it |
+| **Negative feedback** | a response that opposes the disturbance causing it, which is why the price self-corrects |
+| **Self-correcting** | returning to equilibrium on its own, without anyone steering it |
+| **Tâtonnement** | Walras's picture of the market "groping" toward equilibrium by trial price adjustments |
+| **Cobweb model** | a version with a production lag, where today's output responds to yesterday's price; the price can converge, cycle, or diverge |
+| **Limit cycle** | a self-sustaining oscillation that neither settles down nor blows up |
+| **Production lag** | the delay between deciding how much to produce and the output arriving on the market |
+
+</details>
 
 Put both curves on one graph. They cross at one point. That crossing is the **market equilibrium**:
 
@@ -184,6 +304,45 @@ points down, below it the force points up. The equilibrium is **stable**.
 
 ## 4. Comparative statics: reading shifts (this is most of the news)
 
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GPU** | graphics processing unit | the chip used to train and run AI models — the section's example of a demand surge |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P^\ast$ | "P-star" | the equilibrium price |
+| $Q^\ast$ | "Q-star" | the equilibrium quantity |
+| $\alpha$ | "alpha" | a parameter being changed — a tax rate, an input cost, any shifter |
+| $Z$ | "Z" | excess demand, quantity demanded minus quantity supplied |
+| $Z(P^\ast; \alpha) = 0$ | "Z of P-star given alpha equals zero" | the equilibrium condition: excess demand vanishes at the equilibrium price, for the current value of the parameter |
+| $dP^\ast/d\alpha$ | "d-P-star by d-alpha" | how much the equilibrium price moves per unit change in the parameter |
+| $\partial Z/\partial \alpha$ | "partial Z by partial alpha" | how much excess demand shifts when the parameter changes, holding price fixed |
+| $\partial Z/\partial P$ | "partial Z by partial P" | how much excess demand changes when price changes; the same negative slope that made the equilibrium stable |
+| $Z'(P^\ast)$ | "Z-prime of P-star" | that slope evaluated at the equilibrium |
+| $\lvert Z'\rvert$ | "mod Z-prime" | the size of that slope ignoring sign; small means steep curves and big price swings |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Comparative statics** | shifting one curve, finding the new intersection, and comparing it with the old one — the standard way to read a piece of economic news |
+| **Shift** | a move of the whole curve, caused by anything other than the good's own price; contrast **movement along**, caused by the own price |
+| **Demand shock** | an event that moves the demand curve; price and quantity then move in the **same** direction |
+| **Supply shock** | an event that moves the supply curve; price and quantity then move in **opposite** directions |
+| **Elasticity** | how responsive quantity is to price, in percentage terms; it sets the *size* of the moves this section only signs |
+| **Slope** | the steepness of a curve in its own units — related to elasticity but not the same thing |
+| **Implicit function theorem** | the calculus result that lets you differentiate an equilibrium condition to get how the solution responds to a parameter |
+| **Linear response / perturbation** | approximating the effect of a small change by its first derivative around the current equilibrium |
+
+</details>
+
 You almost never care about the *level* of $P^\ast$; you care about **how $P^\ast$ and $Q^\ast$ move when something
 changes** — a tax, a shortage, a new technology, a demand shock. That's **comparative statics**: shift a
 curve, find the new intersection, compare. Four base cases, and they're worth memorizing as a reflex because
@@ -215,6 +374,53 @@ just get the *directions* solid.
 ---
 
 ## 5. The big idea: price as a coordination signal (the invisible hand, precisely)
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MB** | marginal benefit | the value of one more unit to a buyer |
+| **MC** | marginal cost | the cost of one more unit to a seller |
+| **ADMM** | alternating direction method of multipliers | a distributed optimisation algorithm, used here only as an analogy for how the market iterates |
+| **GPU** | graphics processing unit | the AI chip, used as an example of a demand change |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ |  | the price |
+| $P^\ast$ | "P-star" | the equilibrium price |
+| $MB$ | "M-B" | a buyer's marginal benefit |
+| $MC$ | "M-C" | a seller's marginal cost |
+| $MB = P^\ast = MC$ | "M-B equals P-star equals M-C" | at equilibrium every buyer's and every seller's margin has been driven to the same number |
+| $Z$ | "Z" | excess demand — the amount by which the market fails to clear |
+| $\eta$ | "eta" | the step size by which the price is adjusted in response to excess demand |
+| $P \leftarrow P + \eta Z$ | "P is updated to P plus eta times Z" | the price-adjustment step: raise the price when there is excess demand, lower it when there is excess supply |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Invisible hand** | Adam Smith's phrase for self-interested agents producing a coordinated outcome nobody planned |
+| **First welfare theorem** | the result that a competitive equilibrium is Pareto-efficient, given price-taking, no externalities and adequate information |
+| **Pareto-efficient** | no one can be made better off without making someone worse off |
+| **Total surplus** | the total gains from trade the market creates — the quantity the equilibrium turns out to maximise |
+| **Price-taker** | an agent too small to move the market price, so it takes the price as given |
+| **Sufficient statistic** | a single number that carries all the information the decision-maker needs; Hayek's claim about the price |
+| **Dispersed information** | knowledge held in scattered pieces by many people and never assembled anywhere |
+| **Central planner** | a hypothetical single decision-maker solving the whole allocation problem at once |
+| **Shadow price / dual variable** | the value attached to relaxing a constraint by one unit; the market price plays exactly this role for scarcity |
+| **Lagrange multiplier** | the formal name for that dual variable |
+| **Dual ascent / dual decomposition** | solving a big constrained problem by broadcasting a price, letting each part optimise alone, then nudging the price by how badly the constraint is violated |
+| **Tâtonnement** | the market's version of that iteration — adjust price, observe excess demand, adjust again |
+| **Endogenous** | determined inside the system rather than given from outside; the price each agent optimises against is produced by everyone's choices |
+| **Externality** | a cost or benefit that lands on a non-party and so is missing from the price; its presence breaks the theorem |
+| **Competitive equilibrium** | the equilibrium of a market in which every participant is a price-taker |
+
+</details>
 
 Now the payoff. Step back and ask what the price *is* doing for the system as a whole.
 
@@ -282,6 +488,39 @@ flowchart TB
 ---
 
 ## 6. The payoff in practice: what happens when you fight the price
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms and every symbol used below (click to expand)</summary>
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P^\ast$ | "P-star" | the market-clearing price — the one a price control forbids |
+| $Q_d$ | "Q-sub-d" | quantity demanded |
+| $Q_s$ | "Q-sub-s" | quantity supplied |
+| $Q_d = Q_s$ | "Q-d equals Q-s" | the market-clearing condition a binding control prevents |
+| $Z \neq 0$ | "Z is not equal to zero" | excess demand does not vanish, so a shortage or surplus persists |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Price control** | a law setting a maximum or minimum price, overriding the market-clearing one |
+| **Price ceiling** | a legal **maximum** price; it bites only when set **below** the equilibrium, and then causes a persistent shortage |
+| **Price floor** | a legal **minimum** price; it bites only when set **above** the equilibrium, and then causes a persistent surplus |
+| **Binding** | set on the side of the equilibrium where it actually constrains; a non-binding control changes nothing |
+| **Rent control** | a ceiling on residential rents — the standard ceiling example |
+| **Minimum wage** | a floor under the hourly wage — the standard floor example; in a labour market the surplus takes the form of unemployment |
+| **Shortage** | quantity demanded exceeds quantity supplied: empty shelves, queues, waiting lists |
+| **Surplus** *(excess supply)* | quantity supplied exceeds quantity demanded: unsold stock, or unemployed workers |
+| **Rationing mechanism** | whatever decides who gets the good; a control does not remove the need for one, it replaces price with queues, connections, quality cuts or black markets |
+| **Black market** | trade at illegal prices that appears once the legal price cannot clear the market |
+| **Unemployment** | workers willing to work at the going wage who cannot find a job — the labour-market form of a surplus |
+| **Positive vs normative** | whether a control causes a shortage is a positive question settled by evidence; whether it is worth it is a normative one settled by values |
+| **Perfectly competitive** | the idealised market of many price-taking buyers and sellers; real labour markets are not, which is why the minimum-wage evidence is genuinely contested |
+
+</details>
 
 If $P^\ast$ is the price that clears the market, what happens when a government *forbids* it? This is the most
 common policy collision in the news, and the model predicts it cleanly. (It's also §1's "incentives" and

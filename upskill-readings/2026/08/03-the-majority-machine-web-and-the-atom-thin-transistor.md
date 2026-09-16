@@ -12,6 +12,72 @@
 
 ## 1. 🤖 The majority-machine web
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term and abbreviation used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AI** | artificial intelligence | |
+| **LLM** | large language model | |
+| **API** | application programming interface | a machine-facing endpoint, as opposed to an HTML page |
+| **HTML** | hypertext markup language | the page format the "majority bot" share is measured in |
+| **HTTP** | hypertext transfer protocol | the request protocol where all four new layers are being built |
+| **RSS** | Really Simple Syndication | the feed format behind ordinary, boring feed-fetching bots |
+| **URL** | uniform resource locator | a web address |
+| **DOM** | Document Object Model | the browser's in-memory tree for a page; pure overhead to a model that only wants the text |
+| **IETF** | Internet Engineering Task Force | the internet standards body |
+| **RFC** | Request for Comments | an IETF standards document; RFC 9421 defines HTTP Message Signatures |
+| **MCP** | Model Context Protocol | the protocol by which an agent discovers and calls external tools |
+| **A2A** | Agent-to-Agent | one of the agent interoperability protocols surveyed |
+| **ACP** | Agent Communication Protocol | another |
+| **ANP** | Agent Network Protocol | another |
+| **ERC-8004** | an Ethereum request-for-comment standard | the fifth protocol in that survey |
+| **x402** | the HTTP-native payment protocol built around status code 402 | Cloudflare and Coinbase's settlement layer |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Bot** | any automated client; the umbrella term that hides the distinction the story is about |
+| **Crawler** | a bot that fetches pages in bulk, historically to build an index, now often to build a training set |
+| **Agent** | a browser driven by a model, fetching a page because a specific human asked something seconds ago |
+| **Agentic traffic** | requests of that kind — the fastest-growing category, and the one that did not exist in 2024 |
+| **Verified bot** | a bot whose identity has been confirmed rather than merely claimed in a header |
+| **Index** | a search engine's stored map of the web, built to send clicks back |
+| **Referral** | a visit sent to a site by the operator that crawled it — the payment in the old bargain |
+| **Crawl-to-refer ratio** | pages crawled divided by referrals returned; the exchange rate of that bargain |
+| **Answer in place** | a product that resolves the user's question without sending them anywhere, so it structurally cannot refer |
+| **`robots.txt`** | the file where a site states which bots may crawl what; advisory only, with no identity and no enforcement behind it |
+| **Content Signals** | an extension that separates permission for search, for AI input, and for AI training — still advisory |
+| **AI input vs AI training** | using a page to answer one live question, versus absorbing it permanently into model weights |
+| **`User-Agent`** | the free-text header a client uses to name itself; anyone can type anything |
+| **Web Bot Auth** | the proposal that bots cryptographically sign each request instead, so identity can be verified |
+| **Ed25519** | the elliptic-curve signature scheme used for those keys |
+| **HTTP Message Signatures** | RFC 9421, the underlying mechanism for signing a request's headers |
+| **Well-known URL** | a standardised path on a domain where machines look for metadata, here the bot's public keys |
+| **Proposed Standard** | an IETF maturity level: published and stable, but not yet an internet standard |
+| **Individual submission** | a draft not yet adopted by an IETF working group — a weaker status than it looks |
+| **402 Payment Required** | the HTTP status code reserved in 1997 and unused for 29 years, now the hook for per-request pricing |
+| **Pay per crawl** | charging a crawler for each page it fetches, negotiated through `crawler-price` and related headers |
+| **Monetization Gateway** | Cloudflare's July 2026 generalisation of that to any resource, including MCP tools |
+| **Merchant of record** | the party that takes the payment and distributes it, so individual sites need no billing relationship |
+| **Stablecoin rails** | payment infrastructure using tokens pegged to a currency, chosen here for fast small settlements |
+| **Settlement** | the actual transfer of money, as distinct from agreeing a price |
+| **Difference-in-differences** | the statistical method comparing before-and-after for a treated group against an untreated one |
+| **Traffic panel** | a third-party measurement sample (SimilarWeb, Semrush, Comscore) used to estimate site traffic |
+| **Governance dimensions** | the six checks in the protocol survey: membership, deliberation, voting, dissent preservation, human escalation, audit and replay |
+| **Dissent preservation** | recording that a participant objected, rather than only recording the outcome |
+| **Human escalation** | a defined path for a person to overrule an automated decision |
+| **Audit and replay** | being able to reconstruct after the fact what an agent did and why |
+| **Content negotiation** | a client and server agreeing on a response format; serving Markdown instead of HTML can cut an agent's token cost sharply |
+| **Agent Readiness score** | Cloudflare's measure of how well a site serves machine clients |
+| **MCP Server Card** | a published description of the tools a site exposes to agents; found on fewer than 15 of 200,000 domains surveyed |
+| **Ad-supported page** | a page monetised by advertising, and so the place where blocking-by-default was aimed |
+
+</details>
+
 🔗 **Start here:** [The crawl-to-click gap: Cloudflare data on AI bots, training, and referrals](https://blog.cloudflare.com/crawlers-click-ai-bots-training/) · [Bot traffic passes humans online — Cloudflare says agentic AI drove the 57.5% share](https://www.techtimes.com/articles/317877/20260605/bot-traffic-passes-humans-online-cloudflare-says-agentic-ai-drove-575-share.htm)
 🔗 **The "why now":** [Cloudflare's new policy pushes AI companies to pay for publishers' content — TechCrunch (1 July 2026)](https://techcrunch.com/2026/07/01/cloudflares-new-policy-pushes-ai-companies-to-pay-for-publishers-content/) · [Announcing the Monetization Gateway: charge for any resource behind Cloudflare via x402 (1 July 2026)](https://blog.cloudflare.com/monetization-gateway/) · [Introducing the Agent Readiness score](https://blog.cloudflare.com/agent-readiness/)
 🔗 **Go deeper:** [Introducing pay per crawl — the HTTP 402 mechanism in detail](https://blog.cloudflare.com/introducing-pay-per-crawl/) · [RFC 9421 — HTTP Message Signatures](https://datatracker.ietf.org/doc/html/rfc9421) · [Web Bot Auth (IETF draft)](https://datatracker.ietf.org/doc/draft-meunier-webbotauth-httpsig-protocol/) · [*Strategic Response of News Publishers to Generative AI* — Zhao & Berman](https://arxiv.org/abs/2512.24968)
@@ -27,7 +93,7 @@
 
 </details>
 
-**First, what actually flipped — and what didn't.** "Bots are the majority" needs a unit before it means anything. Cloudflare's figure is a share of **HTML page requests** seen across its network, not of bytes, not of API calls, not of "the internet." Bots have out-numbered humans in *many* traffic measurements for years, and a large slice of the automated share is boring old furniture: search indexers, uptime monitors, RSS (resident set size) fetchers, security scanners. What changed in 2026 is **which** machines. Cloudflare puts **AI crawlers at roughly 20.3% of verified bot traffic** in May 2026, with AI-search bots adding about **6.5%** — and the fastest-growing category is not the crawler at all, it is the **agent**: a browser driven by a model, fetching a page *because a specific human asked a question thirty seconds ago*. HUMAN Security measured agentic traffic growing **7,851% year over year**. That category did not meaningfully exist in 2024, which is precisely why Prince's own forecast was eighteen months wrong.
+**First, what actually flipped — and what didn't.** "Bots are the majority" needs a unit before it means anything. Cloudflare's figure is a share of **HTML page requests** seen across its network, not of bytes, not of API calls, not of "the internet." Bots have out-numbered humans in *many* traffic measurements for years, and a large slice of the automated share is boring old furniture: search indexers, uptime monitors, RSS (Really Simple Syndication) fetchers, security scanners. What changed in 2026 is **which** machines. Cloudflare puts **AI crawlers at roughly 20.3% of verified bot traffic** in May 2026, with AI-search bots adding about **6.5%** — and the fastest-growing category is not the crawler at all, it is the **agent**: a browser driven by a model, fetching a page *because a specific human asked a question thirty seconds ago*. HUMAN Security measured agentic traffic growing **7,851% year over year**. That category did not meaningfully exist in 2024, which is precisely why Prince's own forecast was eighteen months wrong.
 
 **The bargain that broke, in one chart.** The web's economics were never written down, but they were real: a crawler took your page and paid you in attention. Cloudflare's **crawl-to-refer ratio** — pages crawled divided by referrals sent back — is the cleanest available measure of that exchange rate, and it shows the exchange rate has collapsed by five orders of magnitude *for some operators and not others*:
 
@@ -91,6 +157,116 @@ flowchart TB
 ---
 
 ## 2. ⚛️ Six atoms thick
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and symbol used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **2D** | two-dimensional (material) | a crystal one or a few atomic layers thick |
+| **TMD** | transition-metal dichalcogenide | the family of layered 2D semiconductors used here |
+| **MoS₂ / WSe₂ / WS₂** | molybdenum disulfide / tungsten diselenide / tungsten disulfide | the specific TMDs used for the n-channel and p-channel devices |
+| **imec** | Interuniversity Microelectronics Centre | the Belgian research institute leading the 2026 result |
+| **ASML** | the Dutch lithography-tool maker | supplier of the EUV exposure tools |
+| **TSMC** | Taiwan Semiconductor Manufacturing Company | the contract manufacturer whose presence makes this a roadmap item |
+| **CPP** | contacted poly pitch | gate-to-gate spacing including contacts — the honest density metric |
+| **FET** | field-effect transistor | the basic switch |
+| **nFET / pFET** | n-channel / p-channel FET | the electron-conducting and hole-conducting halves of a logic pair |
+| **CMOS** | complementary metal-oxide-semiconductor | logic built from both polarities together |
+| **CFET** | complementary FET | the future architecture stacking the n-channel and p-channel devices vertically instead of side by side |
+| **TFT** | thin-film transistor | the process flow family the "reverse TFT" route borrows from |
+| **ALD** | atomic layer deposition | growing a film one atomic layer at a time; it needs reactive surface sites |
+| **CVD / MOCVD** | chemical vapour deposition / metal-organic CVD | the growth routes for the 2D film; MOCVD is the industrial-scale one |
+| **EUV** | extreme ultraviolet (lithography) | the 13.5 nm-wavelength patterning technology; High-NA is its higher-resolution successor |
+| **PDK** | process design kit | the models and rules third parties need in order to design chips for a process |
+| **RISC-V** | an open instruction-set architecture | what the 2D microprocessor implements |
+| **FPGA** | field-programmable gate array | a reconfigurable logic chip |
+| **VLSI** | very-large-scale integration | the conference series where the result was presented |
+| **LDO** | low-dropout regulator | a simple power-management circuit — a loose-requirement first target for 2D devices |
+| **nm / mm** | nanometre / millimetre | |
+| **cm²/V/s** | square centimetres per volt-second | the unit of carrier mobility |
+| **A7 / A3** | ångström-named process generations | imec roadmap nodes for the early 2030s and 2038 |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\lambda$ | "lambda" | the device's natural length — the distance over which the drain's influence leaks into the channel |
+| $\varepsilon_{s}$ | "epsilon-s" | the permittivity of the semiconductor body |
+| $\varepsilon_{\text{ox}}$ | "epsilon-ox" | the permittivity of the gate oxide |
+| $t_{\text{ox}}$ | "t-ox" | the gate-oxide thickness |
+| $t_{\text{body}}$ | "t-body" | the channel body thickness — the only knob left once the oxide can get no thinner |
+| $L_{g}$ | "L-g" | the gate length; the rule of thumb is $t_{\text{body}} \approx L_{g}/3$ |
+| $\mu$ | "mu" | effective carrier mobility — how freely carriers move in the channel |
+| $\mu \propto t_{\text{body}}^{6}$ | "mu is proportional to t-body to the sixth" | the punishing ultrathin-body scaling law: halve the thickness and mobility falls by 64 |
+| $p$ | "p" | the probability that one transistor works |
+| $N$ | "N" | the number of transistors on a die |
+| $p^{N}$ | "p to the N" | the probability the whole chip works, if failures are independent |
+| $\ln 2$ | "natural log of two" | appears because "works half the time" is the coin-flip yield target being solved for |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Channel** | the conducting path between source and drain that the gate switches on and off |
+| **Gate / source / drain** | the control terminal, and the two terminals current flows between |
+| **Short-channel effects** | the loss of gate control as the gate shortens and the drain starts competing for the same carriers |
+| **Natural length** | the characteristic depth of that drain influence; the gate must be several of them long |
+| **Gate oxide** | the insulator between gate and channel; thinning it is the other way to keep control, and it has run out |
+| **Effective mobility** | how well carriers actually move in a real device, after all scattering |
+| **Surface-roughness scattering** | carriers deflected by an uneven interface — the mechanism that kills ultrathin silicon |
+| **Thickness fluctuation** | variation in body thickness; at 3 nm a single atomic step is a 10% variation |
+| **Monolayer** | one complete atomic layer of a layered crystal — 0.65 nm for MoS₂ |
+| **Layered crystal** | a material with strong bonds inside each layer and weak ones between layers |
+| **Van der Waals bonding** | that weak inter-layer attraction, which is why a monolayer can exist as a complete object |
+| **Dangling bonds** | unsatisfied bonds at a cut surface; a TMD monolayer has none, which is both its virtue and its curse |
+| **Self-terminated** | a surface that is chemically complete as grown, needing no passivation |
+| **Complementary pair** | having both an electron-conducting and a hole-conducting device, which is what makes logic possible |
+| **Threshold voltage** | the gate voltage at which the device turns on; the two polarities must be matched |
+| **On/off current ratio** | how much more current flows when on than off; above 100,000 here |
+| **Pitch** | the repeat distance of a structure; CPP is the one that governs real density |
+| **Channel length** | the source-to-drain distance — 28 nm in this work |
+| **300 mm wafer** | the production wafer diameter, as opposed to a small research "coupon" |
+| **Single-patterning** | forming a layer in one exposure rather than splitting it across several, which is cheaper and simpler |
+| **Bottom contacts** | putting the metal contacts down first and laying the 2D film over them, rather than depositing metal onto the fragile film |
+| **Transfer** | moving a grown 2D film onto its target wafer — the step that introduces wrinkles and polymer residue |
+| **Yield** | the fraction of manufactured devices or chips that work |
+| **Die** | one chip cut from the wafer |
+| **Contact resistance** | resistance where metal meets semiconductor, quoted in ohm-micrometres because it scales with contact width |
+| **Fermi level** | the energy level that sets which electronic states are occupied |
+| **Metal-induced gap states** | electronic states a metal creates in the semiconductor's band gap at the interface |
+| **Fermi-level pinning** | those states locking the barrier height regardless of which metal you chose |
+| **Schottky barrier** | the energy barrier at a metal–semiconductor contact that impedes current injection |
+| **Ohmic contact** | a contact with no such barrier, which is what you want |
+| **Semimetal** | a material with almost no electronic states at the Fermi level — so there is nothing to pin against; bismuth and antimony |
+| **Density of states** | how many electronic states exist at a given energy |
+| **Doping** | adding impurities to set a semiconductor's carrier type and concentration |
+| **Ion implantation** | firing dopant ions into the crystal — the silicon standard, and destructive to a monolayer |
+| **Substitutional doping** | a dopant atom taking a lattice site; there is no recipe for this in a TMD monolayer |
+| **Silicide** | the metal-silicon compound that forms good contacts in silicon technology, with no TMD equivalent |
+| **Electrostatic / remote doping** | inducing carriers from an adjacent layer or dielectric instead of putting atoms in the crystal |
+| **Gate stack** | the gate electrode plus its dielectric, considered as one engineered sandwich |
+| **Nucleation** | film growth starting at reactive sites; without them the oxide beads up instead of covering |
+| **Seed / buffer layer** | a thin sacrificial film added so the dielectric will grow — at the cost of some of the electrostatic advantage |
+| **Sulfur vacancy** | a missing sulfur atom in MoS₂; in a monolayer a single one is a device-level event |
+| **Grain boundary** | where two crystal domains meet, left over from growth |
+| **Adsorbate** | a molecule stuck to the surface, which in a monolayer changes the electrical behaviour |
+| **Metrology** | measuring what you made, precisely enough to control it |
+| **Peripheral circuits** | supporting circuits around the logic core, with looser requirements — the proposed first home for 2D devices |
+| **Heterogeneous integration** | building a system from several differently-made pieces rather than one monolithic process |
+| **Cell size** | the area of a standard logic cell; imec's proposed density metric now that the transistor has stopped shrinking |
+| **Standard-cell library** | the pre-designed logic building blocks a chip designer composes from |
+| **Flip-flop** | the basic one-bit storage cell in synchronous logic |
+| **Tape-out** | releasing a finished design for manufacture |
+| **Single-crystal film** | a film with one continuous crystal orientation, so no grain boundaries |
+| **Domain** | a single-orientation region within an otherwise polycrystalline film |
+| **Precursor** | the chemical fed into a growth reactor that decomposes to leave the desired material |
+| **Sapphire substrate** | the crystalline support wafer used to grow the MoS₂ in the FPGA work |
+| **Carrier mobility** | the same quantity as effective mobility, quoted here in cm²/V/s |
+
+</details>
 
 🔗 **Start here:** [ASML, TSMC and imec bring industry-ready 2D-material transistors closer with breakthrough 300 mm integration (15 June 2026)](https://www.imec-int.com/en/press/asml-tsmc-and-imec-bring-industry-ready-2d-material-transistors-closer-breakthrough-300mm) · [Post-silicon era gets closer as industry giants crack the 2D transistor scaling bottleneck — Tom's Hardware](https://www.tomshardware.com/tech-industry/semiconductors/imec-asml-and-tsmc-build-complementary-2d-material-transistors-at-50nm-pitch-on-a-300mm-wafer)
 🔗 **The "why now":** [ASML, TSMC and imec present 300 mm integration route for industry-ready 2D-material transistors — Semiconductor Today](https://www.semiconductor-today.com/news_items/2026/jun/imec-asml-tsmc-220626.shtml) · [China startup Yuanjiwei claims world's first 2D-semiconductor pilot line (16 July 2026)](https://www.electronicsweekly.com/news/business/china-startup-clains-worlds-first-2d-semiconductor-pilot-line-2026-07/) · [*Kinetic acceleration of MoS₂ growth by oxy-metalorganic chemical vapor deposition* — Science (30 Jan 2026)](https://www.science.org/doi/10.1126/science.aec7259)
@@ -254,7 +430,7 @@ The **barter** form is the part that does not clear, and it is worth doing the a
 <details>
 <summary>Plot source (matplotlib)</summary>
 
-See [`images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.py`](images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.py). Supply side: rewarded-video eCPM of $15–40 in tier-1 markets, 30 s per completed view. Demand side: published list prices blended 85% input / 15% output, the shape of consumer assistant traffic. Both sides are list-rate estimates, not any provider's real unit economics — the finding is the order of magnitude, not the third digit.
+See [`images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.py`](images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.py). Supply side: rewarded-video eCPM of USD 15–40 in tier-1 markets, 30 s per completed view. Demand side: published list prices blended 85% input / 15% output, the shape of consumer assistant traffic. Both sides are list-rate estimates, not any provider's real unit economics — the finding is the order of magnitude, not the third digit.
 
 </details>
 <!-- PLOT:END -->

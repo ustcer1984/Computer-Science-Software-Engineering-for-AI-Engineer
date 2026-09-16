@@ -32,6 +32,34 @@ of your performance surprises live in that translation layer, not in the equatio
 
 ## 1. The core problem: text can't *do* anything
 
+<details>
+<summary><b>Vocabulary for this section</b> — the two translation strategies and the words around them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPU** | central processing unit | the chip that actually executes instructions |
+| **JIT** | just-in-time (compilation) | compiling parts of a program to machine code while it is already running — see §6 |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Source code** | the human-readable program text you type into a `.py` or `.c` file |
+| **Byte** | one unit of storage, eight bits; a source file on disk is just a sequence of bytes |
+| **Machine code** | numbers the CPU decodes directly as operations — the only language hardware understands |
+| **Instruction** | one primitive machine-code operation, e.g. add two numbers or jump somewhere else |
+| **Translation** | turning source text into machine code; the whole subject of this section |
+| **Compilation** | translating the **entire** program into machine code **before** running it |
+| **Compiler** | the program that does that translation |
+| **Interpretation** | translating and executing the program **one piece at a time, as it runs** |
+| **Interpreter** | the program that does that — it stays running while your code runs |
+| **Ahead of time** | before execution starts; the opposite of "while running" |
+| **Runtime** | the period while the program is executing (also used loosely for the machinery that supports it) |
+
+</details>
+
 Your source file is just bytes — characters in a file. A CPU has no idea what `def`, `for`, or
 `response = llm(prompt)` mean. A CPU understands exactly one language: **machine code** — numbers that
 encode primitive operations. So *something* must translate your human-readable text into those numbers.
@@ -48,6 +76,42 @@ consequence of where a language sits between these two poles.
 ---
 
 ## 2. What the machine actually understands (just enough CPU)
+
+<details>
+<summary><b>Vocabulary for this section</b> — CPU vocabulary, instruction sets and the portability terms (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPU** | central processing unit | the chip that executes instructions |
+| **ISA** | instruction set architecture | the published contract of which instructions exist and how they are encoded, e.g. x86-64 or ARM64 |
+| **AMD** | Advanced Micro Devices | the other major maker of x86-64 chips alongside Intel |
+| **ARM** | Advanced RISC Machines | the instruction-set family used by Apple Silicon and AWS Graviton |
+| **AWS** | Amazon Web Services | Amazon's cloud platform |
+| **OS** | operating system | the software that owns the hardware and runs your programs on it |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Fetch–decode–execute cycle** | the one loop a CPU repeats forever: read the next instruction, work out what it means, do it |
+| **Instruction** | one primitive operation: add, copy a value, compare, jump |
+| **Register** | one of a handful of ultra-fast storage slots **inside** the CPU where arithmetic actually happens |
+| **Memory** | the much larger, much slower store outside the CPU that instructions and data are read from |
+| **Jump** | an instruction that changes which instruction runs next, instead of simply continuing |
+| **Machine code** | the binary encoding of instructions — what the CPU literally reads |
+| **Assembly** | a human-readable, one-to-one text alias for machine code, e.g. `addq %rax, %rbx` |
+| **x86-64** | the 64-bit Intel/AMD instruction set; also written amd64 |
+| **ARM64** | the 64-bit ARM instruction set; also written aarch64 |
+| **Apple Silicon** | Apple's own ARM64 laptop and desktop chips (M1, M2, …) |
+| **AWS Graviton** | Amazon's own ARM64 server chips, used by ARM Lambdas and EC2 instances |
+| **Docker image** | a packaged filesystem plus metadata that a container runs from; built for one ISA |
+| **`linux/amd64`** | a platform tag naming an OS plus an ISA that an image was built for |
+| **Emulation** | software that pretends to be another ISA so foreign machine code can run — correct, but slow |
+| **Lambda** | AWS's serverless function service — you supply code, AWS supplies the machine |
+
+</details>
 
 You can't reason about compilation vs interpretation without knowing what they're translating *to*.
 Here's the minimum mental model of a CPU — we'll go deeper in §4 (memory) and Ch1 §4 (I/O).
@@ -89,6 +153,44 @@ that gap, and *when*, is the difference between a compiler and an interpreter.
 ---
 
 ## 3. The two strategies
+
+<details>
+<summary><b>Vocabulary for this section</b> — compiler, interpreter and the trade-offs between them (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AOT** | ahead-of-time (compilation) | translating the whole program to machine code before it runs — the strategy in §3a |
+| **CPU** | central processing unit | the chip that executes instructions |
+| **ISA** | instruction set architecture | which instructions exist on a given chip family, e.g. x86-64 or ARM64 |
+| **OS** | operating system | the software that runs your program on the hardware |
+| **GCC** | GNU Compiler Collection | the standard open-source C compiler, invoked as `gcc` |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Compiler** | a program that reads your whole source and writes out machine code before anything runs |
+| **Object file (`.o`)** | the machine-code output of compiling one source file, not yet a runnable program |
+| **`-O2`** | a compiler flag asking for a standard level of optimization |
+| **Optimization** | the compiler rearranging, merging or deleting your code so it does the same thing faster |
+| **Inlining** | pasting a small function's body into its caller so there is no call at all |
+| **Whole-program optimization** | optimizing with the whole source in view, which an interpreter can never do |
+| **Compile time** | when the compiler runs — errors caught here never reach production |
+| **Runtime** | when the program actually executes |
+| **Edit→run loop** | how long it takes to go from changing a line to seeing the result |
+| **Portable** | runs unchanged on different machines; compiled output is **not**, because it is tied to one ISA plus one OS |
+| **Target** | the ISA plus OS a compiler is producing code for |
+| **Interpreter** | a program that reads your source and performs it statement by statement, with your code as its input data |
+| **Dispatch** | the interpreter's per-operation cost of deciding which action a given piece of code calls for |
+| **Runtime error** | a failure that only appears when the offending line is actually reached |
+| **Intermediate representation** | a middle language, lower-level than source and higher-level than machine code |
+| **Bytecode** | the usual such middle language — instructions for an abstract machine rather than a real CPU |
+| **Implementation** | a specific program that runs a language (CPython, PyPy, GCC) — "compiled vs interpreted" is a property of *this*, not of the language |
+| **`Dict[str, Any]`** | a Python type annotation; used here only as an example of a mistake an interpreter finds late |
+
+</details>
 
 ### 3a. Compilation (ahead-of-time)
 
@@ -146,6 +248,47 @@ that real-world languages compile to an **intermediate representation (bytecode)
 ---
 
 ## 4. What Python *actually* does (CPython)
+
+<details>
+<summary><b>Vocabulary for this section</b> — the CPython pipeline, bytecode and the `.pyc` cache (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CPython** | the C implementation of Python | the standard `python` binary almost everyone runs |
+| **VM** | virtual machine | a software "CPU" that executes bytecode instead of machine code |
+| **REPL** | read-eval-print loop | the interactive `>>>` Python prompt |
+| **CPU** | central processing unit | the real chip underneath |
+| **AWS** | Amazon Web Services | Amazon's cloud platform |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Bytecode** | a compact instruction set for an abstract Python machine — compiled from your source, but **not** your CPU's machine code |
+| **Virtual machine (CPython VM)** | the big loop, written in C, that reads bytecode instructions and performs them |
+| **Compile step** | Python turning your source text into bytecode; it happens every time you import, unless a cache hits |
+| **`dis`** | the standard-library module that prints a function's bytecode |
+| **Disassembly** | showing machine or byte code in readable instruction form |
+| **`LOAD_FAST`** | a bytecode instruction: push a local variable onto the interpreter's value stack |
+| **`BINARY_OP`** | a bytecode instruction: pop the top two values, apply an operator such as `+`, push the result |
+| **`RETURN_VALUE`** | a bytecode instruction: return the top value to the caller |
+| **`RESUME`** | a bookkeeping bytecode CPython emits at the start of a function body |
+| **Local variable** | a name that lives only inside one function call |
+| **`.pyc` file** | a file holding cached bytecode for one module |
+| **`__pycache__/`** | the directory Python writes those `.pyc` files into, next to the source |
+| **`cpython-313`** | the version tag in the cache filename — bytecode is not guaranteed compatible across Python versions |
+| **Module** | one importable `.py` file (or package) of Python code |
+| **`import`** | the statement that loads a module: compile it (or load its `.pyc`) **and run its top-level code** |
+| **Top-level code** | statements at column zero in a module, which execute once at import time |
+| **Cold start** | an invocation where AWS must create a fresh execution environment before your handler runs |
+| **Warm invocation** | a later invocation reusing an environment that is already initialized |
+| **Handler** | the function AWS Lambda calls for each request |
+| **Lazy import** | moving an `import` inside a function so its cost is paid only if that code path is taken |
+| **`boto3`** | the AWS SDK for Python — a large, slow-to-import library |
+
+</details>
 
 When people say "Python is interpreted," they're hiding two steps. Here's the real pipeline for
 **CPython** (the standard implementation — the `python` binary you almost certainly use):
@@ -219,6 +362,45 @@ not guaranteed stable across versions.
 
 ## 5. Why this makes Python "slow" — and why your ML code isn't
 
+<details>
+<summary><b>Vocabulary for this section</b> — interpreter overhead and the native-library escape hatch (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **VM** | virtual machine | here, the CPython bytecode interpreter loop |
+| **CPU** | central processing unit | the chip doing the arithmetic |
+| **ML** | machine learning | the numerical workloads in the heading |
+| **LLM** | large language model | a transformer-based text model, e.g. the one behind a chat API |
+| **CUDA** | Compute Unified Device Architecture | NVIDIA's platform for writing code that runs on its GPUs |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Dispatch** | the VM deciding, for each bytecode instruction, which chunk of C code to run — implemented as a big `switch` |
+| **`switch`** | a C construct that jumps to one of many branches based on a value |
+| **Operand** | one of the values an operation works on |
+| **Dynamically typed** | types belong to values at runtime, not to variables, so `a + b` must be re-examined on **every** execution |
+| **Boxing / unboxing** | wrapping a raw number in a full heap object (and later unwrapping it) so it can carry type and bookkeeping |
+| **Heap** | the memory region where objects that outlive a single call are allocated |
+| **Object header** | the bookkeeping bytes every Python object carries in front of its actual value |
+| **Reference count** | CPython's per-object tally of how many names point at it; maintained on nearly every operation |
+| **Per-operation overhead** | fixed cost paid once per Python-level operation — the reason a tight Python loop is 10–100x slower than C |
+| **Precompiled** | already translated to machine code before your program started |
+| **Native code** | machine code running directly on the CPU, with no interpreter in between |
+| **Fortran** | an old numerical language; much classic linear-algebra library code is still written in it |
+| **Pointer** | a memory address handed to native code so it can work on the data in place |
+| **Contiguous array** | a block of raw numbers laid out back-to-back, which native code can scan at full speed |
+| **`numpy` / `torch`** | Python libraries whose heavy work runs in precompiled C, Fortran or CUDA |
+| **Fine-grained work** | many tiny operations — where Python's per-operation tax dominates |
+| **Coarse-grained work** | few large operations — where the tax is amortized to nothing |
+| **Vectorize** | rewrite an element-by-element Python loop as one whole-array library call |
+| **Glue code** | code whose job is to orchestrate other components rather than do the heavy computation itself |
+
+</details>
+
 Now the payoff. Why is a Python loop ~10–100× slower than the same loop in C?
 
 Because for *every single operation*, the CPython VM does a lot of work that compiled C does once, ahead
@@ -244,6 +426,36 @@ speed and hands one result back. Python is the *conductor*; the *orchestra* is c
 ---
 
 ## 6. The third option: JIT compilation
+
+<details>
+<summary><b>Vocabulary for this section</b> — just-in-time compilation and the engines that use it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **JIT** | just-in-time (compilation) | compile hot code to machine code **while** the program runs |
+| **JS** | JavaScript | the browser's language |
+| **GIL** | global interpreter lock | the CPython lock that lets only one thread execute Python bytecode at a time |
+| **CPython** | the C implementation of Python | the standard `python` binary |
+| **CPU** | central processing unit | the chip that runs the compiled result |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Hot path** | code that executes many times, and so is worth the cost of compiling properly |
+| **Profiling** | the engine watching which code actually runs a lot, to decide what to compile |
+| **Warm-up** | the early period where a JIT is still interpreting and profiling, so the program is slow |
+| **Steady state** | the later period where the hot paths are compiled and the program runs at full speed |
+| **V8** | Google's JavaScript engine, used by Chrome and Node.js — a JIT |
+| **Node** | Node.js, JavaScript running outside the browser on V8 |
+| **PyPy** | an alternative Python implementation built around a JIT; often 5–10x faster than CPython on pure-Python loops |
+| **Free-threaded build** | an experimental CPython build compiled without the GIL, so threads can run Python code in parallel |
+| **Experimental** | shipped but not yet default or guaranteed stable — it may change or be removed |
+| **Cold vs warm** | the same warm-up/steady-state pattern seen in AWS Lambda cold and warm invocations |
+
+</details>
 
 If interpretation is flexible-but-slow and compilation is fast-but-rigid, can we get both? Yes — **JIT
 (Just-In-Time) compilation**: start by interpreting, watch which code runs *a lot* ("hot" paths), and
@@ -427,13 +639,13 @@ Split "create a Lambda" into two things:
 ### 10d. Cold-start mitigations (full plan in `temp/arena-cold-start-latency-plan.md`)
 
 - **Cache / precompute** the cacheable (e.g. leaderboard → scheduled job → S3/CloudFront): ms latency,
-  ~$0, no cold start. Best for read-heavy, staleness-tolerant endpoints.
+  near-zero cost, no cold start. Best for read-heavy, staleness-tolerant endpoints.
 - **Trim init** (lazy imports, smaller package) — free; attacks INIT directly.
 - **SnapStart** (supports Python): snapshot the initialized runtime → big cold-start cut, low cost,
   keeps Python. Re-init unique state (DB conns/RNG — random number generator) in a restore hook.
-- **Provisioned Concurrency**: keep N envs pre-warmed → cold start *eliminated*, but **ongoing $$**
-  (~$9–11/mo for PC=2 @ 512 MB 24/7, x86; ~20% less on ARM; schedule it to cut cost). Use only where
-  SnapStart isn't enough.
+- **Provisioned Concurrency**: keep N envs pre-warmed → cold start *eliminated*, but an **ongoing bill**
+  (roughly USD 9–11 a month for PC=2 @ 512 MB 24/7, x86; ~20% less on ARM; schedule it to cut cost).
+  Use only where SnapStart isn't enough.
 - **Frontend perceived performance** (loading skeletons + stale-while-revalidate via React Query/SWR) —
   so a slow response never *feels* like a freeze.
 - **Architecture takeaway:** scale-to-zero serverless trades cold-start latency for cost; the answer is

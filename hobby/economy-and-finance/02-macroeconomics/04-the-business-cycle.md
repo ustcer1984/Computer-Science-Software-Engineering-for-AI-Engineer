@@ -63,6 +63,40 @@ unemployment and falling inflation*, the obvious question is **what does policy 
 
 ## 1. What a business cycle actually is — the shape, not a "cycle"
 
+<details>
+<summary><b>Vocabulary for this section</b> — the phase names and who dates a recession (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | the market value of all final goods and services produced inside a country in a period |
+| **NBER** | National Bureau of Economic Research | the private US body whose Business Cycle Dating Committee makes the official recession call |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Business cycle** | the fluctuation of output around its rising long-run trend — a description of *shape*, not of timing |
+| **Potential output** | the level of output the economy can sustain given its population, capital and productivity |
+| **Trend** | the long-run rising path; the cycle is the wobble around it, not the path itself |
+| **Expansion** | output rising and unemployment falling; usually the longest phase |
+| **Peak** | the turning point where expansion tips into contraction |
+| **Contraction** | output falling, or growth well below potential, with unemployment rising |
+| **Recession** | a broad-based, sustained decline in activity — the contraction phase. (A **depression** is the rare, far deeper and longer version; there is no fixed numerical threshold separating them) |
+| **Trough** | the bottom, where contraction tips into recovery |
+| **Recovery** | output climbing back toward potential after the trough |
+| **Growth below potential** | losing ground relative to where the economy could be, which counts as a downturn even if output never actually falls |
+| **"Two consecutive quarters" rule** | the popular shorthand for a recession; a handy heuristic, but not the official definition |
+| **Depth** | how far activity fell — one of the NBER's three criteria |
+| **Diffusion** | how widely the weakness is spread across sectors — the second criterion |
+| **Duration** | how long the decline lasted — the third criterion |
+| **Dating lag** | the delay before a recession is officially declared, because the committee waits for revised, broad data |
+| **Overheating** | output pushed above potential, with demand outstripping capacity |
+| **Slack** | unused capacity, with output below potential |
+
+</details>
+
 Strip an economy's real GDP (Gross Domestic Product) down and you see two things at once: a **rising long-run trend** (potential
 output — population, capital, and productivity growing, §1) and **fluctuations around that trend**. The
 business cycle is the *fluctuation*, and it has a standard vocabulary:
@@ -101,6 +135,49 @@ Two things the picture makes concrete, and both matter for reading the news:
 
 ## 2. The output gap — the cycle's one state variable
 
+<details>
+<summary><b>Vocabulary for this section</b> — the output gap and every symbol used with it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | total output produced inside the country in a period |
+| **NAIRU** | non-accelerating-inflation rate of unemployment | the unemployment rate at which inflation is stable; the natural rate under another name |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $Y$ | "Y" | actual real GDP — output as it turned out |
+| $Y^{\ast}$ | "Y-star" | **potential** output; a star superscript always marks the benchmark or equilibrium value of a variable, never a multiplication |
+| $Y > Y^{\ast}$ | "Y greater than Y-star" | actual output above potential — a positive gap, overheating |
+| $Y < Y^{\ast}$ | "Y less than Y-star" | actual output below potential — a negative gap, slack |
+| $u$ | "u" | the unemployment rate |
+| $\Delta u$ | "delta-u" | the **change** in the unemployment rate; $\Delta$ (capital delta) means "change in" |
+| $g$ | "g" | actual real GDP growth |
+| $g^{\ast}$ | "g-star" | potential (trend) growth — the growth rate at which unemployment stays flat |
+| $\approx$ | "approximately equals" | an empirical relationship rather than an exact identity |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Output gap** | how far actual output sits above or below potential, expressed as a percent of potential |
+| **State variable** | one number that summarises where a system currently is, from which the other read-outs follow |
+| **Potential output** | the sustainable level of output — full employment, stable inflation |
+| **Inflationary gap** | a positive output gap: overheating, labour scarce, inflation pressure rising |
+| **Recessionary gap** | a negative output gap: slack, unemployment above the NAIRU, inflation pressure falling |
+| **Full employment** | the zero-gap state, where cyclical unemployment is about zero — **not** a zero unemployment rate |
+| **Disinflation** | inflation still positive but slowing, which is what a negative output gap produces |
+| **Okun's law** | the empirical link converting a growth shortfall against potential into a rise in unemployment |
+| **Phillips curve** | the short-run link between unemployment and inflation |
+| **Coupling** | the fact that output, jobs and prices are three read-outs of one underlying state, which is why one policy lever can address all three |
+| **Unobservable variable** | a quantity that must be estimated from a model rather than measured; potential output is one |
+| **Model output** | a number produced by an estimation procedure, carrying a confidence band, rather than a direct measurement |
+
+</details>
+
 The shaded area in Fig 1 has a name and it is the single most useful number for locating yourself in a
 cycle. The **output gap** is how far actual output sits above or below potential:
 
@@ -128,6 +205,54 @@ today's gap by a percent or more, which is exactly why real-time policy is hard.
 ---
 
 ## 3. What starts a cycle — demand shocks vs supply shocks
+
+<details>
+<summary><b>Vocabulary for this section</b> — AD–AS, the two shock types, and the identity's letters (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **AD** | aggregate demand | total demand for output across the whole economy, at each price level |
+| **AS** | aggregate supply | total output firms are willing to produce, at each price level |
+| **AD–AS** | aggregate demand – aggregate supply | the whole-economy version of the supply-and-demand diagram |
+| **SRAS** | short-run aggregate supply | the upward-sloping supply curve that holds while wages and prices are still sticky |
+| **NX** | net exports | exports minus imports |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $C$ | "C" | consumption — household spending |
+| $I$ | "I" | investment in the economic sense — spending on new real capital, not on financial assets |
+| $G$ | "G" | government purchases of goods and services |
+| $NX$ | "N-X" | net exports, exports minus imports |
+| $C + I + G + NX$ | "C plus I plus G plus N-X" | the expenditure identity from §1, here read as the aggregate demand curve |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Shock** | an unexpected disturbance that knocks the economy off its path |
+| **Demand shock** | a shock moving one of the spending components; output and prices move the **same** direction, so one policy lever fixes both |
+| **Supply shock** | a shock raising the cost of producing everything; output and prices move in **opposite** directions, so no single lever fixes both |
+| **Price level** | the overall level of prices, on the vertical axis of the diagram |
+| **Real output** | quantity produced, adjusted for prices, on the horizontal axis |
+| **Equilibrium** | the point where the two curves cross — the output and price level that actually result |
+| **Sticky prices and wages** | prices and wages adjusting slowly, which is why short-run aggregate supply slopes up rather than standing vertical |
+| **Confidence** | households' and firms' expectations about the future, which drive spending and investment decisions |
+| **Credit crunch** | a sharp contraction in the availability of borrowing, which cuts investment and consumption |
+| **Fiscal tightening** | government cutting spending or raising taxes, reducing aggregate demand |
+| **Wealth effect** | a fall in asset or house prices making people feel poorer, so they spend less |
+| **Oil-price spike** | a sudden rise in energy costs, the classic economy-wide supply shock |
+| **Tariff shock** | import taxes raising input costs across many industries at once |
+| **Stagflation** | high inflation together with weak output and high unemployment — the supply-shock signature |
+| **Policy trap** | a situation where the available lever helps one objective only by harming the other |
+| **Inflation anchor** | the public's settled belief that inflation will return to target; modern doctrine protects it even at the cost of a deeper recession |
+| **Reaction function** | the rule describing how a central bank responds to inflation and unemployment |
+| **Co-movement** | two series moving together, as output and inflation do under demand shocks — the pattern that makes Okun's law and the Phillips curve look like laws |
+
+</details>
 
 If the economy tends back toward potential, *something* has to knock it off. That something is a **shock**,
 and the single most important distinction in this whole section is **which side of the market it hits** —
@@ -167,6 +292,61 @@ function has to *choose*, and modern doctrine chooses to protect the inflation a
 ---
 
 ## 4. Why one knock echoes — the propagation mechanisms
+
+<details>
+<summary><b>Vocabulary for this section</b> — the amplification loops and every symbol in the multiplier (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **MPC** | marginal propensity to consume | the fraction of an extra dollar of income that gets spent rather than saved |
+| **GFC** | global financial crisis | the 2008–09 housing and credit bust |
+| **COVID** | coronavirus disease 2019 | the 2020 pandemic shock |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $c$ | "c" | the marginal propensity to consume — the fraction of an extra dollar that is spent |
+| $\Delta Y$ | "delta-Y" | the **change** in total output; $\Delta$ (capital delta) means "change in" |
+| $\Delta(\text{spending})$ | "delta spending" | the size of the initial spending shock, before any echo |
+| $\frac{\Delta(\text{spending})}{1 - c}$ | "delta spending over one minus c" | the total effect on output once the echoes have played out |
+| $\frac{1}{1 - c}$ | "one over one minus c" | the **multiplier** itself — the factor by which an initial shock is amplified |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Propagation** | the way a single shock reverberates into a drawn-out wave rather than a one-off blip |
+| **Feedback loop** | an effect that feeds back into its own cause, amplifying or prolonging the original disturbance |
+| **Multiplier** | one agent's spending being another's income, so an initial change in demand moves output by more than itself |
+| **Marginal propensity to consume** | the share of an extra dollar of income that is spent; the higher it is, the larger the multiplier |
+| **Geometric series** | a sum whose terms shrink by a constant ratio each round — the arithmetic behind the multiplier |
+| **Paradox of thrift** | everyone saving more at once shrinks the income they were trying to save out of, so aggregate saving need not rise |
+| **Accelerator** | investment depending on the *change* in demand rather than its level, so investment can fall sharply the moment demand growth merely slows |
+| **Capacity** | how much a firm's existing plant can produce; running near it is what triggers expansion investment |
+| **Multiplier–accelerator model** | Samuelson's coupling of the two loops, which can oscillate on its own |
+| **Second-order feedback loop** | a system whose response depends on both a level and its rate of change, which is what allows oscillation rather than simple decay |
+| **Animal spirits** | Keynes's term for the non-rational confidence swings that drive spending and investment |
+| **Coordination failure** | everyone acting cautiously because they expect everyone else to, producing the bad outcome they feared |
+| **Self-fulfilling expectation** | a belief that causes the very outcome it predicts |
+| **Forward guidance** | a central bank steering expectations by telling markets what it intends to do |
+| **Financial amplification** | credit and balance sheets turning a moderate shock into a deep, slow cycle |
+| **Balance sheet** | the stock of assets against liabilities held by a firm or household; its health determines how much they can borrow and spend |
+| **Financial instability hypothesis** | Minsky's argument that a long calm period itself breeds the leverage that causes the next bust |
+| **Deleveraging** | cutting debt across the economy at once, which suppresses spending |
+| **Fire-sale** | forced selling at depressed prices, which pushes prices down further for everyone holding the same asset |
+| **Debt deflation** | falling asset prices and prices generally raising the real burden of fixed nominal debt (Irving Fisher's mechanism) |
+| **Inventories** | unsold stock held by firms; adjusting it as well as sales is what amplifies a wobble up the supply chain |
+| **Bullwhip effect** | a small change in final demand producing progressively larger swings further up the supply chain |
+| **Damped oscillator** | a system that, when disturbed, swings back and forth with shrinking amplitude — the physics analogue of an economy returning to trend |
+| **Impulse response** | how a system behaves over time after a single kick; cycles are the impulse response of a repeatedly-shocked damped system |
+| **Frisch–Slutsky "rocking horse"** | Frisch's 1933 model: a stable damped system plus a stream of random shocks produces persistent but irregular cycles with no fixed period |
+| **Damping** | how fast the oscillation dies away; weaker damping (fragile balance sheets) means worse, longer cycles |
+| **Natural frequency** | the rate at which a system oscillates on its own once disturbed |
+
+</details>
 
 A single shock doesn't produce a one-off blip; it *reverberates*. The reason the business cycle is a
 drawn-out wave rather than a spike is a set of **feedback loops** that amplify and prolong the initial
@@ -246,6 +426,49 @@ dominant **propagation channel**:
 
 ## 5. The Phillips curve — the inflation–unemployment trade-off (the §3 payoff)
 
+<details>
+<summary><b>Vocabulary for this section</b> — the Phillips curve and every symbol in it (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **NAIRU** | non-accelerating-inflation rate of unemployment | the unemployment rate at which inflation neither accelerates nor eases; the natural rate |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $\pi$ | "pi" | the actual inflation rate; in macroeconomics $\pi$ never means the circle constant |
+| $\pi^{e}$ | "pi-e" | **expected** inflation — the superscript $e$ marks an expectation, what people believe inflation will be |
+| $u$ | "u" | the actual unemployment rate |
+| $u^{\ast}$ | "u-star" | the **natural rate** of unemployment (the NAIRU); the star superscript marks the equilibrium value of a variable, never a multiplication |
+| $u - u^{\ast}$ | "u minus u-star" | the unemployment gap: negative when the labour market is hot, positive when it is slack |
+| $\beta$ | "beta" | how strongly the unemployment gap feeds into inflation; positive, so a hot labour market raises inflation |
+| $\pi^{e} = \pi$ | "pi-e equals pi" | the long-run condition in which expectations have caught up with reality |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Phillips curve** | the short-run relationship in which lower unemployment comes with higher inflation |
+| **Short-run Phillips curve** | one downward-sloping line, drawn for a **given** level of expected inflation |
+| **Long-run Phillips curve** | the vertical line at the natural rate — no permanent trade-off exists |
+| **Trade-off** | being able to get more of one thing only by accepting less of another |
+| **Natural rate of unemployment** | the frictional-plus-structural floor, set by real labour-market features rather than by inflation policy |
+| **Inflation expectations** | what workers and firms believe inflation will be, which they build into wage demands and price setting |
+| **Expectations-augmented Phillips curve** | the corrected version that makes expected inflation an explicit term, and so predicts the curve shifting |
+| **Anchored expectations** | expectations that stay at target regardless of recent readings, which keeps the short-run curve from drifting |
+| **Un-anchoring** | expectations breaking loose from target, so the whole curve shifts up and the bank must crush demand to reset it |
+| **Friedman–Phelps critique** | the argument that any attempt to hold unemployment permanently below the natural rate merely ratchets inflation up |
+| **Ratchet** | each round of the attempt leaving inflation permanently higher with no lasting gain in employment |
+| **Stagflation** | high inflation and high unemployment together — what the 1970s produced once the naive trade-off broke |
+| **Pass-through** | firms passing higher wage costs into their prices |
+| **Inflation anchor** | the credibility that keeps expectations at target; protecting it is why a central bank chooses inflation over employment when the two conflict |
+| **Volcker episode** | the deliberate deep US recession of the early 1980s, undertaken to re-anchor expectations |
+
+</details>
+
 Now the cliffhanger §3 left open. §2 and §3 together implied a link — a **hot labour market bids wages up,
 feeding prices** — and that link, plotted, is the **Phillips curve**: a short-run **trade-off** between
 unemployment and inflation. It is the mechanism that couples the two ends of the central bank's lever, and
@@ -291,6 +514,46 @@ structural), not by how much inflation you're willing to tolerate.
 ---
 
 ## 6. Reading the cycle in real time — leading, coincident & lagging indicators
+
+<details>
+<summary><b>Vocabulary for this section</b> — the indicator taxonomy and the yield-curve vocabulary (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **GDP** | gross domestic product | total output produced inside the country in a period; the archetypal coincident indicator |
+| **NBER** | National Bureau of Economic Research | the body that dates US recessions, long after they begin |
+| **PMI** | purchasing-managers' index | a monthly survey of purchasing managers; a widely-watched leading indicator |
+| **LEI** | Leading Economic Index | the Conference Board's bundle of ten leading indicators |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Leading indicator** | a series that turns **before** the economy does — decisions about the future, or the cost of finance; noisy, but the only early warning |
+| **Coincident indicator** | a series that turns **with** the economy, telling you where you are now |
+| **Lagging indicator** | a series that turns **after** the economy, useful for confirmation and useless for warning |
+| **Building permits** | approvals to start construction; a commitment made well ahead of the activity, hence leading |
+| **New orders for capital goods** | firms' forward orders for machinery and equipment, another forward commitment |
+| **Confidence index** | a survey of how optimistic households or businesses feel about the near future |
+| **Industrial production** | the physical output of factories, mines and utilities |
+| **Payrolls** | the count of people on employers' books, published monthly |
+| **Real income** | household income adjusted for inflation |
+| **Retail sales** | consumer spending at shops, a fast coincident read |
+| **Unit labour cost** | labour cost per unit of output; it turns late in the cycle |
+| **Duration of unemployment** | how long spells last; it keeps worsening after the trough |
+| **Labour hoarding** | firms holding onto workers through a slump and hiring back late, which is why the unemployment rate lags |
+| **Yield curve** | the plot of interest rates against the time to maturity of a government bond |
+| **Inverted yield curve** | short-term rates above long-term rates; the most-watched recession signal, because it means markets expect rate cuts, and cuts come with downturns |
+| **Term structure** | the systematic relationship between maturity and yield that the yield curve draws |
+| **Treasury yield** | the interest rate on US government debt of a given maturity — the 10-year, 2-year and 3-month are the commonly compared points |
+| **Maturity** | how long until a bond is repaid |
+| **Sahm rule** | a jobs-based recession trigger that fires when the unemployment rate's three-month average rises far enough above its recent low, turning a lagging series into a real-time signal |
+| **Moving average** | an average over a rolling window, used to smooth a noisy monthly series |
+| **False positive** | a signal that fires without the event following — the standing criticism of leading indicators |
+
+</details>
 
 The cruel thing about §§1–3's headline numbers is that they tell you where the economy *was*, not where it's
 *going* — and the NBER only dates a recession long after it started (§1). So the news leans on a taxonomy of
