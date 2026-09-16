@@ -16,8 +16,10 @@
 > not pay you to bear; **share classes and the control fight** (dual-class structures, and the VIE arrangement
 > where you own a contract rather than a company); and **S-REITs**, Singapore's distinctive and genuinely
 > world-class equity class *(local lens)*.
-> **Status:** 🔵 **PREPARED 2026-09-11** — body drafted, awaiting the live session. **§10 Applied** gets added on
-> finalize.
+> **Status:** ✅ **FINALIZED 2026-09-17.** §10 Applied added — **your own portfolio, and the denominators nobody
+> names**: what a Singapore tax resident actually pays (and where the invisible tax is levied), why dividend
+> capture cannot work *because* Singapore removed the tax wedge, the price-return-versus-total-return gap that
+> made the STI look flat while it nearly doubled, what "sticky" is sticky *in*, and how to read a bare multiple.
 > Math in LaTeX, quantitative relationships drawn as real curves, key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -818,6 +820,358 @@ Reason first; check against a source where noted.
 
 ---
 
+## 10. Applied — your own portfolio, and the denominators nobody names
+
+The body drew no questions about what a share *is*. You went somewhere better: straight to the actual position —
+*"I am only a Singapore tax resident, and I only invest through local banks, mainly ETFs"* — and ran five
+questions outward from there, ending at how you read the financial press. **That is a shape none of the previous
+sessions had: you brought the portfolio rather than a framework**, and the questions were never "explain this"
+but "does this claim hold for *me*, in practice?"
+
+The session also has a signature, and it is worth naming before the content, because it is the transferable part.
+**Three of the five questions are the same question: *name the denominator.*** Two of them asked it literally —
+*"If ratio, what is the denominator? As price is fluctuating"* and *"at x times, what ratio are they talking
+about?"* — and the first was its jurisdictional form: which country's rules apply to a gain, which is a
+denominator you do **not** choose by deciding where to buy. The remaining two are the sibling question about an
+**invariant**: *"if the price is stable…"* and *"does the curve purely reflect price?"*
+
+In four of the five, the missing denominator did not turn out to be a detail. It changed the sign or the
+magnitude of the answer.
+
+### 10a — You are right about Singapore, and that is not the same as "no tax"
+
+Two claims have to be separated, because you made one and they are not the same.
+
+**On the Singapore side you are correct.** Singapore levies no capital gains tax, so a gain on an ETF sale is not
+taxed. Distributions are covered twice over: Singapore-resident company dividends are exempt under the
+**one-tier corporate tax system** (tax is paid by the company and not again by you — the same fact §3 leaned on),
+and **foreign-sourced income received in Singapore by a resident individual is exempt** unless received through a
+partnership. There is also no estate duty, abolished for deaths from February 2008.
+
+One caveat worth holding: the capital gains position is not a blanket exemption but a **characterisation**. If
+IRAS judges the activity to be a *trade* rather than investment, the profit becomes taxable **income**. The test
+is the **badges of trade** — frequency of transactions, holding period, method of financing, reason for sale,
+whether it is your main income source. Buy-and-hold ETFs through a bank is nowhere near that line. The line still
+exists.
+
+**But "Singapore does not tax it" and "nothing is taken from me" are different statements**, and the gap is where
+the money is.
+
+**Withholding tax is deducted at source** — before the cash ever reaches your account. Your statement shows the
+net, so the deduction is invisible unless you go looking for it. Singapore has **no income tax treaty with the
+United States**, which sets the rate:
+
+| Fund domicile | US withholding on US dividends | US estate tax exposure |
+|---|---|---|
+| **US-domiciled** (the SPDR S&P 500 trust, including its SGX cross-listing) | **30%** | **US-situs** — exemption only **USD 60,000** |
+| **Irish-domiciled UCITS** (CSPX, VUAA, VWRA) | **15%** (US–Ireland treaty) | **not US-situs** — outside it entirely |
+
+On an S&P 500 dividend yield near 1.25%, those fifteen points cost roughly **0.19% per year** — comparable to the
+entire expense ratio of the fund, paid for nothing, and compounding. The estate-tax row is the one most Singapore
+investors never learn: as a non-resident alien your exemption against US-situs assets is **USD 60,000**, against
+rates up to 40%, where a US citizen gets roughly **USD 14 million**.
+
+**And here is the trap, which is §1 §7's lesson wearing different clothes.** Buying through a Singapore bank, on
+SGX, in a Singapore account, does not make the fund Singaporean. **Domicile is a property of the fund, not of
+your broker, your account, or the exchange.** The SPDR S&P 500 that trades on SGX as **S27** is the US trust — it
+carries the 30% and sits inside the US estate-tax net, bought locally or not. **Venue, domicile and residence are
+three independent facts, and it is the middle one that decides who taxes you.** Read a fund's domicile off its
+ISIN prefix: `IE…` Ireland, `US…` United States, `SG…` Singapore.
+
+> **This refines a claim the body made.** §3 observed that Singapore's one-tier system plus no capital gains tax
+> makes Miller–Modigliani's **tax friction nearly vanish**. That is true — *of Singapore*. But MM's frictions are
+> taxes **wherever levied**, and for a Singaporean holding global equities the binding one is levied in
+> Washington, not Singapore. The friction did not disappear; it **moved to the source country**, where it is
+> invisible because it never appears on a statement. Frictions do not announce themselves.
+
+### 10b — Dividend capture: Singapore's tax neutrality is exactly what kills it
+
+You then proposed the trade: buy just before the payout, collect it, sell immediately. The proposal came with its
+premise stated out loud — *"if the price is stable"* — and that is precisely where it fails. Stating it is what
+made it checkable, which is the good kind of error.
+
+**The price drop is not a prediction. It is arithmetic.** On the **ex-dividend date** the stock opens lower by
+approximately the dividend, because the company is literally worth less: cash has left its balance sheet. A firm
+worth SGD 45 per share that ships SGD 0.60 per share out the door is a firm worth SGD 44.40 per share, plus
+SGD 0.60 in your pocket. Nothing was created — value moved from **inside the firm** to **your account**. This is
+§3's **Miller–Modigliani** in its most concrete possible form.
+
+Two mechanics matter. The date that governs entitlement is the **ex-date**, not the payment date, so "just before
+the payout" is already too late. And the whole calendar is published months in advance — which should be the
+first warning, because a strategy requiring no forecast and no information would be the most crowded trade on
+earth.
+
+**Now the part that connects back to 10a, and inverts it.** The classic result
+([Elton & Gruber, 1970](https://pages.stern.nyu.edu/~eelton/papers/70-feb.pdf)) is that the price drop relative
+to the dividend is
+
+$$\frac{\Delta P}{D} = \frac{1 - t_{\text{div}}}{1 - t_{\text{cg}}}$$
+
+where $t_{\text{div}}$ is the tax rate on dividends and $t_{\text{cg}}$ the rate on capital gains. Wherever a
+**tax wedge** exists — dividends taxed more heavily than gains, as in many countries — the drop is *less* than
+the dividend and a real sliver opens up. That sliver is what genuine dividend-stripping arbitrage targets, and it
+is why many jurisdictions carry explicit anti-avoidance rules against it.
+
+In Singapore both rates are zero. The ratio is $1$. **There is no wedge.** The very fact that was unambiguously
+good news in 10a is the fact that removes the thing you were trying to harvest. **A friction is not good or bad
+in itself — it is something you can stand on, or cannot.**
+
+Even granting a perfect setup, the round trip:
+
+| Item | On SGD 10,000, stock at SGD 45, dividend SGD 0.60 |
+|---|---|
+| Dividend captured | **+1.33%** |
+| Price drop on the ex-date | **−1.33%** |
+| Brokerage, buy and sell (local bank, ~0.28% or min SGD 25) | **−0.5%** |
+| Bid-ask spread, round trip | **−0.05%** |
+| **Expected result** | **≈ −0.55%** |
+
+And the variance dwarfs all of it: a typical SGX large-cap runs daily volatility near 0.7–1%, so you would be
+putting SGD 10,000 at risk of a one-percent swing to collect an expected prize of exactly zero. The noise is
+larger than the entire prize, per day.
+
+For your own holdings it is simpler still. An ETF's **NAV** falls by the distribution for the same reason. And an
+**accumulating** UCITS share class — the one 10a pointed you toward — never distributes at all: dividends are
+reinvested inside the fund and the NAV simply keeps rising. There is nothing to capture and nothing to trade
+around.
+
+> **The general form.** A **known** cash payment on a **known** date cannot be a source of return. Prices adjust
+> ahead of scheduled, certain events; returns come from bearing risk or from knowing something, and a dividend
+> calendar is neither. What a dividend genuinely carries is **information about the company** — which is §3's
+> signalling channel, and 10d below is about why that channel works at all.
+
+### 10c — The index curve is a price curve, and the STI is the proof
+
+*"I think it is underestimated due to ignore of dividend, right?"* — **Yes. And by considerably more than you
+supposed.**
+
+**Almost every index quoted in public is a price return index.** S&P 500, STI, Nikkei, Hang Seng, FTSE 100 — the
+curve tracks constituent prices only, and every dividend those companies paid simply vanishes from the series.
+Index providers publish a parallel **total return** version assuming immediate reinvestment. Nobody quotes it.
+
+**The Straits Times Index is the clearest demonstration in the world, and it is the market you live in.** The STI
+peaked at **3,906 in October 2007** and regained that level in **February 2025** — seventeen years later, at
+3,921.
+
+| Measure, Oct 2007 → Feb 2025 | Result |
+|---|---|
+| Price return (the two-point ratio off the chart) | **+0.4%** |
+| **Total return, dividends reinvested** | **+95%** |
+
+**Effectively one hundred percent of the return was dividends, and the price curve reported none of it.** Your
+method would not have been slightly off — it would have returned the *opposite* of the truth.
+
+**And §3 explains exactly why this index, specifically.** The STI is banks, telcos and REITs, yielding around
+3.5–4%: high-payout companies that return cash rather than retain it. §3 argued that **most lifetime return comes
+from retained earnings reinvested**. For the STI that channel is small by construction, so the return *has* to
+arrive through the dividend channel — which is the one the price index deletes. **The composition of an index
+determines how much of the truth its price curve is capable of telling you.** A high-payout index is precisely
+where the price chart lies most.
+
+The S&P 500 is less dramatic and still enormous: from 1926 to 2006, **41% of total return came from dividends**,
+about **4.4 percentage points per year**. USD 10,000 invested in 1926 became **USD 1.01 million** on the price
+index and **USD 24.1 million** with dividends reinvested — a factor of **24** between two answers about the same
+index over the same eighty years.
+
+That factor is just compounding applied to a gap. If price grows at $g$ and reinvested dividends add $d$, the
+ratio between the two answers after $n$ years is
+
+$$\frac{(1+g+d)^n}{(1+g)^n} \approx \left(1 + \frac{d}{1+g}\right)^n$$
+
+A two-point gap over 30 years is about 1.8 times; a 4.4-point gap over 80 years produces the 24 above. **The
+error compounds rather than adding**, so it is worst over exactly the long horizons the "invest for x years"
+claim is about.
+
+**How to tell which curve you are reading.** Look for **TR**, **Total Return** or **Net Return** in the name; its
+absence means price return. Tickers make it explicit: `^GSPC` is price, `^SP500TR` is total return. Two things
+to know beyond that:
+
+- **The DAX is a total return index.** Germany's headline number *does* include dividends, so any chart comparing
+  the DAX against the S&P 500 price index is comparing two different measurements. A common cross-country trap.
+- **MSCI publishes three versions:** price, **gross** total return (dividends reinvested in full), and **net**
+  total return (reinvested *after* deducting notional withholding tax). **Net is the honest benchmark for you** —
+  it is 10a's withholding drag written into an index definition.
+
+**One consequence for your own funds.** An **accumulating** ETF's NAV *is* a total-return curve, because the
+dividends never leave. Charting it against a price index will make your fund look as though it beats the index
+every single year. It does not — you are comparing two different measurements. Benchmark it against the **net
+total return** index, where the remaining gap should be roughly the expense ratio.
+
+**And the errors running the other way**, since you are auditing the arithmetic: dividends make the naive estimate
+too **low**, but **inflation** makes it too high (the S&P's ~10% nominal is about 7% real — 30 years turns 17 times into
+7.6 times, the same compounding leverage pointed the other way), as do **costs** (expense ratio plus the unrecoverable
+withholding), and **two-point selection** is itself a choice, as the STI shows. You also invest monthly rather
+than in a lump, so your realised return is a dollar-weighted average of many entry points, not the curve's
+endpoint ratio at all. **The honest calculation is the net total return index, deflated by CPI, minus your
+expense ratio** — and those two corrections do not cancel.
+
+### 10d — "Sticky" in what units?
+
+This is the audit reflex aimed at my own vocabulary rather than at an argument. §3 called dividends **sticky, and
+therefore a signal**, and never said sticky *in what*. Your question is the right one, and your reason for asking
+is the right reason: **if it is a ratio, the denominator moves.**
+
+**What is sticky is the absolute dividend per share, in currency.** Not the yield, not the payout ratio. Both
+ratios fail, for different reasons:
+
+| Candidate | Why it cannot be the sticky quantity |
+|---|---|
+| **Yield**, $D/P$ | The price is in the denominator and moves every second — no board could target it. Worse, the causation runs backwards: **yield is the *output* of a sticky dividend meeting a moving price**, not an input. Hold the dollar dividend while the price halves and the yield doubles. That is the mechanism operating, not a policy being followed |
+| **Payout ratio**, $D/E$ | Earnings are extremely volatile and can go negative. If this were sticky, dividends would be as volatile as earnings — and **the entire empirical observation is that they are not.** A firm whose earnings fall 40% in a recession usually does not cut at all |
+
+The model behind the word is [Lintner (1956)](https://www.jstor.org/stable/1910664), built from interviews with
+managers and still standing:
+
+$$D_t - D_{t-1} = \alpha + c(rE_t - D_{t-1}) + \varepsilon_t$$
+
+- $D_t$ — dividend per share this period
+- $E_t$ — earnings per share this period
+- $r$ — the **target long-run payout ratio**
+- $c$ — the **speed of adjustment**, empirically around **0.3**
+
+Read what it says. There *is* a ratio in the model, $r$ — but it is a slow-moving **target**, not the sticky
+thing. The quantity $rE_t$ is where the dividend "should" be, and each period the firm closes only a fraction $c$
+of the gap. At $c \approx 0.3$, a firm whose earnings permanently double takes roughly **five years** to walk its
+dividend to the appropriate level. And the errors are **asymmetric**: increases are routine, decreases close to
+taboo.
+
+**So the precise statement is: dividend per share is rigid downward and ratchets upward slowly, drifting toward a
+target payout ratio of what management believes is *permanent* earnings.**
+
+How rigid, concretely:
+
+- The **Dividend Aristocrats** are S&P 500 companies with **25 or more consecutive years of dividend increases** —
+  through 2000, 2008 and 2020.
+- **General Electric cut its dividend in 2009** — its first cut since **1938**. It was front-page news, and it
+  happened only when the alternative was insolvency.
+- [Brav, Graham, Harvey & Michaely (2005)](https://www.nber.org/papers/w9657) surveyed 384 CFOs and treasurers:
+  they rank maintaining the dividend level alongside investment decisions, and say they would **pass up
+  positive-NPV projects or raise external finance before cutting.** That is economically irrational on its face,
+  which is the measure of how binding the constraint is.
+- Your local case: on 29 July 2020 **MAS formally called on DBS, OCBC and UOB to cap FY2020 dividends at 60% of
+  FY2019's**, as the Fed, Bank of England and ECB did with their own banks. The restraint had to be **imposed
+  from outside**, in a pandemic, because the banks would not cut voluntarily. **And note the unit the regulator
+  chose: the cap was written on total *dividends per share*, not on the payout ratio and not on the yield** — a
+  supervisor drafting a binding constraint reached for exactly the quantity this section says is the sticky one,
+  because it is the only one both parties can pin down in advance.
+
+**Three consequences, and the second and third both upgrade claims the body made.**
+
+**1. A cut is informative precisely because it is costly.** Signalling only works when the signal is expensive to
+send. Since managers will do nearly anything else first, an actual cut says *management believes this shortfall
+is permanent* — which is why a cut announcement typically takes 5–10% off the price on the day, far more than the
+cash involved. This is the missing half of §3's "sticky, and therefore a signal": it is a signal **because** it is
+sticky, not alongside it.
+
+**2. Yield becomes an inverted price signal, and §4's rearrangement does the work.** §4 gave you
+
+$$r = \frac{D_1}{P_0} + g$$
+
+If $D_1$ is pinned by stickiness, then **every revision the market makes to $r$ or to $g$ has to come out in the
+yield** — the yield is doing the accounting for changes in risk and growth. So a stock screening at a 9% yield is
+usually not a bargain; it is a market pricing in a cut that has not been announced. That is the **yield trap**,
+and it is a direct corollary of stickiness rather than a separate phenomenon.
+
+**3. Buybacks are the flexible valve — which is *why* firms use them.** §3 presented the buyback as "a
+denominator change." True, but incomplete. Precisely **because** dividends are sticky, firms route the *variable*
+part of payout through buybacks, which carry no commitment and can be suspended quietly with no stigma. Buybacks
+collapsed in 2020 while dividends barely moved. Much of the long US shift toward buybacks since the 1980s is
+managers buying **optionality**, not just a share count.
+
+**And the local exception closes a loop §7 opened.** **S-REITs are far less sticky by construction.** To hold
+tax-transparent treatment a REIT must distribute at least **90% of taxable income**, so DPU tracks actual rental
+income, and it fell for retail and hospitality S-REITs in 2020. §7 defined a REIT as **equity with the payout
+decision removed** — and stickiness *is a payout policy*. A trust with no discretion over the payout has no
+policy to be sticky with. **Do not read a REIT's DPU cut with the alarm you would read a bank's dividend cut:
+one is a management judgement about permanent decline, the other is arithmetic.** The same asymmetry applies to
+your ETFs, which distribute what they receive net of expenses, make no commitment, and are therefore lumpier than
+any single holding — one more reason accumulating classes are simply less to interpret.
+
+### 10e — "x times" what?
+
+The last question moved from your portfolio to how you read the press: when a podcast says a stock is high or low
+"at x times," what ratio is that?
+
+**Default assumption: forward P/E** — price over *next*-twelve-months consensus earnings. That is the unmarked
+case. But the default flips by sector and by speaker, and on a technology or venture podcast it flips often:
+
+| Context | "x times" usually means | Why that denominator |
+|---|---|---|
+| Mature profitable company | **Forward P/E** | Earnings exist and are meaningful |
+| High-growth software, venture talk | **EV/Revenue** ("x times ARR", "x times sales") | There are no earnings — deliberately, since growth is funded through the income statement |
+| Private equity, M&A, leveraged buyouts | **EV/EBITDA** | Capital-structure-neutral; the buyer will re-lever it anyway |
+| **Banks** | **P/B** (price-to-book) | Assets are marked financial instruments, so book value means something; earnings swing with provisions |
+| **REITs** | **P/NAV** and **P/FFO** | Depreciation is a large non-cash charge that makes accounting earnings near-meaningless for property |
+| Whole-market commentary | **CAPE** (Shiller P/E) | Ten-year inflation-adjusted average earnings, to strip the cycle |
+
+You will hear both registers in one episode — "20 times forward earnings" for a listed megacap, then "they raised
+at 40 times ARR" for a private company. The second is not a P/E and is not comparable to the first in any way.
+
+**The split that actually matters** is which *numerator* the multiple uses:
+
+$$\text{P/E} = \frac{\text{Market capitalisation}}{\text{Net income}} \qquad\qquad \text{EV/EBITDA} = \frac{\text{EV}}{\text{EBITDA}}$$
+
+$$\text{EV} = \text{Market capitalisation} + \text{Total debt} - \text{Cash}$$
+
+This is §2's enterprise-value point returning as a practical reading rule. **P** is the equity claim and **E** is
+what remains *after* interest and tax, so P/E measures the residual after debt-holders are paid. **EV** values the
+whole business regardless of who financed it, so it pairs only with pre-interest measures. The consequence:
+**P/E is distorted by leverage and EV multiples are not.** A heavily indebted firm can post a flattering P/E
+purely because its debt is cheap, while its EV/EBITDA shows it is expensive. That is why buyout firms quote
+EBITDA multiples — they are pricing the asset, not the current owner's financing choice.
+
+Two further ambiguities inside "P/E" alone carry real weight:
+
+- **Trailing versus forward.** Trailing uses the last four reported quarters, which is a fact; forward uses
+  consensus for the next four, which is a forecast. For a fast-growing company these differ enormously — 45 times
+  trailing can be 28 times forward. Speakers quote whichever serves the point and rarely say which.
+- **GAAP versus adjusted.** "Adjusted" earnings typically add back **stock-based compensation**, which for large
+  technology firms can run 10–20% of revenue. §2 already gave you the honest version of that argument — SBC is
+  cash-free for the company and paid in *your* ownership — and here it resurfaces as a valuation dispute. When two
+  commentators disagree about whether a stock is expensive, this is frequently the entire disagreement.
+
+**Anchors, so a number means something.** As of September 2026:
+
+| Measure | Now | Long-run |
+|---|---|---|
+| S&P 500 forward P/E | ~21.5 times | 10-year average ~18.8 times |
+| **Shiller CAPE** | **~40.5 times** | median **~16 times**, long-run average ~17 times |
+
+That CAPE reading sits at roughly the **98.8th percentile of all months since 1881** — only about twenty months
+in 145 years have been higher, and they were 1999–2000 and 2026 itself. Worth carrying as context. Worth pairing
+with the honest caveat that CAPE has been a poor *timing* tool: it has read "expensive" for most of the last
+decade.
+
+**And the thing to resist is the one §4 already armed you against.** Recall the identity:
+
+$$\frac{P_0}{E_1} = \frac{\text{payout ratio}}{r - g}$$
+
+**A multiple is a compressed statement about growth and risk, not a price tag.** Thirty times is cheap for
+something compounding at 25% and outrageous for a utility. So "it trades at 30 times, that's expensive" has
+asserted nothing yet — the claim becomes real only when the speaker says **what growth rate the market is
+implying and why it is wrong.** That second half is where the analysis lives and it is the half most often
+skipped. Practical read-off, when you hear a bare multiple: **of what · forward or trailing · versus what
+comparable.** If all three cannot be answered, the number was rhetoric.
+
+### The lesson worth keeping
+
+Five questions, one habit. In each case a number was being quoted without its denominator, and asking for it was
+not pedantry — it changed the answer:
+
+| The claim | What the missing denominator did to it |
+|---|---|
+| "I pay no tax on the gain" | True of **Singapore**, false of the **portfolio** — the rate is set by fund *domicile*, not by where you bought |
+| "Buy just before the payout" | The price is not the invariant; the **ex-date** drop is arithmetic, not opinion |
+| "The index returned x% over y years" | Off by a factor of **2 on the STI** and **24 on the S&P** — price return versus total return |
+| "Dividends are sticky" | **Dollars per share**, not a ratio — and the whole signalling story depends on which |
+| "It trades at 30 times" | Times **what**, forward or trailing, versus **which** comparable |
+
+**Whenever a financial claim is a ratio or a change, say out loud what sits in the denominator and over what
+measure.** Most bad financial reasoning is not a wrong calculation. It is a correct calculation of the wrong
+ratio — and the ratio is usually wrong in a direction that flatters whoever is quoting it.
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 Reading equity research and company news across both scripts. Most differences are **simplified vs
@@ -897,19 +1251,48 @@ other topic so far, because the two markets developed their jargon independently
 - **The Singapore lens:** [REITAS](https://www.reitas.sg/singapore-reits/overview-of-the-s-reit-industry/) for
   S-REIT industry statistics and structure, and [SGX's REIT resources](https://www.sgx.com/securities/sreits-property-trusts)
   for the live list and yields.
+- **Dividend stickiness, in the original:** John Lintner,
+  ["Distribution of Incomes of Corporations Among Dividends, Retained Earnings and Taxes"](https://www.jstor.org/stable/1910664)
+  (*American Economic Review*, 1956) — the partial-adjustment model of §10d, built from interviews with managers;
+  and [Brav, Graham, Harvey & Michaely, "Payout Policy in the 21st Century"](https://www.nber.org/papers/w9657)
+  (NBER w9657 / *Journal of Financial Economics*, 2005) — the modern survey of 384 CFOs and treasurers that
+  confirms it, including their willingness to skip positive-NPV projects rather than cut.
+- **Why dividend capture cannot work:** Elton & Gruber,
+  ["Marginal Stockholder Tax Rates and the Clientele Effect"](https://pages.stern.nyu.edu/~eelton/papers/70-feb.pdf)
+  (*Review of Economics and Statistics*, 1970) — the ex-dividend price-drop ratio of §10b, free from the authors'
+  own page. And the regulator's own words on stickiness: [MAS, *MAS Calls on Local Banks to Moderate FY2020
+  Dividends*](https://www.mas.gov.sg/news/media-releases/2020/mas-calls-on-local-banks-to-moderate-fy2020-dividends)
+  (29 July 2020), which caps **dividends per share**, not the payout ratio.
+- **The tax position, from the source:** [IRAS on what is and is not taxable for
+  individuals](https://www.iras.gov.sg/taxes/individual-income-tax/basics-of-individual-income-tax/what-is-taxable-what-is-not)
+  for the Singapore side of §10a; and [Endowus, *Dividend withholding and estate taxes on US-listed
+  ETFs*](https://endowus.com/insights/an-inconvenient-truth-tax-on-us-listed-etfs-04c7532c5d) plus State Street's
+  [US-domiciled versus Irish UCITS comparison](https://www.ssga.com/us/en/institutional/insights/considerations-for-non-us-investors-us-etfs-vs-irish-ucits)
+  for the part Singapore does not control — the 30%/15% withholding split and the USD 60,000 US estate-tax
+  threshold.
+- **Price return versus total return, with the raw data:** Robert Shiller's own
+  [US stock price, earnings, dividend and CAPE series](https://shillerdata.com/) (the primary source behind every
+  long-run chart in §10c and §10e), the [Shiller PE tracker at multpl](https://www.multpl.com/shiller-pe) for the
+  current reading, and [Of Dollars And Data's S&P 500 calculator](https://ofdollarsanddata.com/sp500-calculator/)
+  to run any start-and-end pair yourself with and without dividends, nominal and real.
 - **Live data:** [SGX market statistics](https://www.sgx.com/research-education/market-statistics), and any
   company's own investor-relations page for the diluted share count the exercise in §9 asks for.
 
 ---
 
 ### What's next
-🔵 **PREPARED 2026-09-11.** You now hold the residual claim end to end: **what a share legally is** (a bundle of
+✅ **FINALIZED 2026-09-17.** You now hold the residual claim end to end: **what a share legally is** (a bundle of
 rights, built on limited liability and the separation of ownership from control), **why the denominator moves**
 and what dilution really costs, the **three payment channels** and Miller–Modigliani's redirection of the
 question toward frictions, **how to value a remainder** (Gordon, the growth hypersensitivity, equity duration,
 and the multiple as a compressed discounted cash flow), **which risks are paid for** and why diversification is
 the only free lunch, **share classes and control** from dual-class structures to the VIE, and **S-REITs** as the
-local case where equity has had its discretion removed. Next, **E06 §3 — Bonds & fixed income** takes the other
-end of the same spectrum: lending rather than owning, the inverse relationship between price and yield, and the
-credit and duration risks that make a "safe" instrument anything but. **§10 Applied** will be added on finalize,
-from the live session.
+local case where equity has had its discretion removed. **§10 Applied** turned all of it on your own account:
+the Singapore tax position (right about Singapore, and not the same as "no tax" — the binding rate is set by a
+fund's **domicile**, which is independent of where you buy), why **dividend capture** fails precisely because
+Singapore's one-tier system removed the wedge it would need, the **price-versus-total-return** gap that made the
+STI read +0.4% over seventeen years when the honest number was +95%, what **"sticky"** is sticky *in* (dollars
+per share, via Lintner — and why the signal, the yield trap and the buyback all follow from that), and how to
+read a bare **multiple** in the wild. Next, **E06 §3 — Bonds & fixed income** takes the other end of the same
+spectrum: lending rather than owning, the inverse relationship between price and yield, and the credit and
+duration risks that make a "safe" instrument anything but.
