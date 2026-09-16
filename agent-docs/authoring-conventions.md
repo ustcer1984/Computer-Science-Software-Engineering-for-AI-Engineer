@@ -504,3 +504,90 @@ for f in $(grep -rl "Check your understanding" courses hobby upskill-readings --
   grep -q "<summary>Answers" "$f" || echo "MISSING ANSWERS: $f"
 done
 ```
+
+---
+
+## 10. Every content section carries a collapsed vocabulary block
+
+*(Established 2026-09-16 from his instruction while reading hobby econ E06 §1: "I have difficulty reading this
+material, mainly due to many terms with no clear definition. I want a vocabulary for each section — hidden by
+default, with option to expand them. Include all key terms, abbreviation, and the symbols used in formulas.
+Include all even if they were explained in previous materials." Clarified immediately after: **per content
+section**, not per file — "the current material has 7 sections before the one page mental model. Don't need
+vocabulary for one page mental model and the following sections.")*
+
+**The material is dense by design, and density is only readable if the vocabulary is local.** He reads alone
+and asynchronously; a term he half-remembers from three sections ago is a stall, and scrolling to a glossary at
+the end of the file — or worse, to a different file — breaks the thread of the argument. A vocabulary attached
+to the section that uses the terms turns a stall into a two-second expand.
+
+- **Scope: one block per *content* section** (`## 1.` … `## 7.`, or however many the section has). **Not** for
+  the one-page mental model, "Check your understanding", "Applied", the bilingual key-terms table, or
+  references — he ruled those out explicitly, and by then the reader has the vocabulary anyway.
+- **Placed immediately after the section heading**, before the body — so it is visible as a reader enters the
+  section and can be expanded before they need it.
+- **Collapsed by default**, in the same `<details>` form as rule 9. Note again the **blank line after
+  `<summary>` and before `</details>`**, without which GitHub renders the body as literal text.
+
+  ```markdown
+  ## 3. The instrument map — debt, equity, and everything derived from them
+
+  <details>
+  <summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+  **Abbreviations**
+
+  | Short | Stands for | Meaning |
+  |---|---|---|
+
+  **Symbols used in the formulas**
+
+  | Symbol | Reads as | Meaning |
+  |---|---|---|
+
+  **Terms**
+
+  | Term | Definition |
+  |---|---|
+
+  </details>
+  ```
+
+- **Three groups, in this order: Abbreviations, Symbols, Terms.** Omit a group that is genuinely empty (a
+  section with no formula has no Symbols table); never omit one merely because it repeats an earlier section.
+- **Repetition across sections is the point, not a defect.** "Include all even if they were explained in
+  previous materials" was explicit. If §5 uses `$r$`, §5's block defines `$r$` — even though §3 did. The block
+  is a *lookup table for this section*, not a record of what is new.
+- **Symbols need three things: the glyph, how to say it out loud, and what it means.** "$D_1$ · 'D-one' ·
+  next year's dividend — the subscript 1 means one period from now." Subscript conventions (0 = now, 1 = next
+  period, $f$ = risk-free, $i$ = this particular asset) are exactly what a reader cannot guess, and they are
+  the single highest-value rows in the table.
+- **Cover every abbreviation the section uses, including proper-noun institutions** (MAS, BIS, SEC, SGX, GIC)
+  and unit shorthands (bn, tn). Rule 8 still applies in the body — the vocabulary block is a second net, not a
+  replacement for expanding on first use.
+- **One line per definition, in the reader's language.** These are lookups, not mini-essays. Where a term is
+  routinely confused with another, say so in the same line ("**Investment** *(economic sense)*: building real
+  productive capacity — **not** 'buying shares'").
+- **Flag collisions with terms used differently elsewhere in the course** — e.g. the microstructure "liquidity
+  trap" of a thin market versus E03's monetary liquidity trap, or `CA` as *current account* versus any other
+  reading. A silent collision is worse than no entry.
+- **This is distinct from the rule-5 bilingual glossary**, which stays where it is at the end of the file. That
+  one answers "what is this called in 中文"; this one answers "what does this word mean". Do not merge them.
+- **Rules 4 and 8 apply inside the blocks.** They are material. In particular the symbol tables are dense with
+  `$...$`, which makes them a prime site for the opening-delimiter traps — **run the rule-4 greps after writing
+  one.** The very first application of this rule shipped `year-$t$` (an opening delimiter glued to a hyphen,
+  the exact trap documented on 2026-07-09 and re-shipped on 2026-08-14) and it was caught only because the
+  detector was run before committing.
+
+**Applied so far:** hobby econ E06 §1 and §2 (7 content sections each, 14 blocks). **The rest of the corpus is
+not yet backfilled** — the same situation rule 9 was in before its bulk pass. Treat this as a *maintenance*
+rule for new sections, and see rule 9's "lessons from that bulk pass" before attempting a corpus-wide backfill.
+
+**Detector** (lists every material file whose content sections have no vocabulary block):
+
+```sh
+for f in $(find courses hobby upskill-readings -name "*.md" -not -name "plan.md"); do
+  grep -q "^## 1\." "$f" || continue
+  grep -q "Vocabulary for this section" "$f" || echo "NO VOCABULARY: $f"
+done
+```

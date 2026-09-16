@@ -55,6 +55,35 @@ and why two companies with identical profits can trade at wildly different price
 
 ## 1. What a share legally is
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term used below, including ones defined earlier (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Share (stock)** | a unit of ownership in a company — legally, a bundle of rights, not a slice of its property |
+| **Shareholder** | the holder of those rights |
+| **Equity** | the collective name for shares; also, in accounting, what is left of a company after its debts |
+| **Legal person** | an entity that can own property, sign contracts and be sued in its own name; a company is one, which is why *it* owns its assets and you do not |
+| **Residual claim** | a claim on whatever is left after everyone with a contract has been paid |
+| **Residual assets** | the leftovers in a liquidation, distributed to shareholders — usually nothing |
+| **Liquidation** | selling everything a failed company owns and paying claimants in order of seniority |
+| **Creditor** | anyone the company owes money to; paid before shareholders |
+| **Seniority** | position in the queue to be paid |
+| **Limited liability** | the rule that the most a shareholder can lose is what they paid; company creditors cannot pursue their personal assets |
+| **Perpetual existence** | a company has no expiry date, so its cash flows are modelled as running forever — the structural difference from a bond |
+| **Transferability** | the right to sell your shares to someone else without the company's permission |
+| **Separation of ownership from control** | shareholders own the company; directors and managers run it |
+| **Agency problem** | the conflict that arises when the people running something are not the people whose money it is |
+| **Board of directors** | the body elected by shareholders to supervise management |
+| **Disclosure** | the audited accounts and continuous announcements a listed company must publish |
+| **Voting right** | the right to vote on directors and major decisions, normally one vote per share |
+| **Dividend** | a cash distribution from the company to shareholders |
+| **Corporate governance** | the whole system of accountability between owners, boards and managers |
+
+</details>
+
 A company is a **separate legal person**. It owns its own assets, signs its own contracts, and can be sued in
 its own name. A shareholder does not own the company's assets; a shareholder owns a **share of the company** —
 and what that share confers is a **bundle of rights**, not a slice of property:
@@ -91,6 +120,45 @@ Four structural features make this work, and each is a genuine social invention 
 ---
 
 ## 2. A share is a fraction — and the denominator moves
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and the symbols in the two formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **EPS** | earnings per share | profit divided by the number of shares — the per-share view of profit |
+| **SBC** | stock-based compensation | paying employees in shares rather than cash |
+| **USD** | US dollar | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P$ | | the price of one share |
+| $N$ | | the number of shares outstanding |
+| $P \times N$ | "P times N" | the two multiplied — the market value of the whole company's equity |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Market capitalisation** | price per share multiplied by the number of shares — the market value of the equity |
+| **Enterprise value** | market capitalisation **plus net debt** — the value of the whole business regardless of how it is financed |
+| **Net debt** | total borrowings minus cash on hand |
+| **Shares outstanding** | the number of shares currently in existence and held by investors |
+| **Diluted shares** | shares outstanding **plus** everything that could become a share — options, restricted stock, convertibles. The honest denominator |
+| **Dilution** | an increase in the share count, which shrinks each existing holder's fraction |
+| **Follow-on offering** | a sale of new shares by an already-listed company; raises cash for the company and dilutes existing holders |
+| **Stock-based compensation** | employee pay issued as shares; cash-free for the company, paid out of your ownership |
+| **Convertible bond** | a bond that can be exchanged for shares, usually when the share price has risen |
+| **Buyback (share repurchase)** | the company buying and cancelling its own shares, raising every remaining holder's fraction |
+| **Stock split** | dividing each share into several; the count rises and the price falls proportionally, changing nothing real |
+| **Bonus issue (scrip issue)** | free additional shares issued pro rata; like a split, economically neutral |
+| **Per-share figure** | any measure expressed per share — the only kind that is unaffected by changes in the share count |
+
+</details>
 
 The price of one share tells you nothing on its own. A share is a *fraction* of a company, so what matters is
 price **times** the number of shares:
@@ -137,6 +205,39 @@ handsomely and still deliver nothing to you if it grows its share count just as 
 ---
 
 ## 3. How a shareholder actually gets paid
+
+<details>
+<summary><b>Vocabulary for this section</b> — the payout vocabulary and the return identity (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **TSR** | total shareholder return | dividends plus price change — the full return to an owner |
+| **MM** | Miller and Modigliani | the two economists behind the irrelevance theorem in this section |
+| **CGT** | capital gains tax | tax on the profit from selling an asset; **Singapore has none** |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Dividend** | a cash payment from the company to shareholders |
+| **Dividend yield** | the annual dividend divided by the share price, expressed as a percentage |
+| **Payout ratio** | the share of earnings paid out as dividends rather than retained |
+| **Sticky dividends** | the observed reluctance of managers to cut a dividend, which turns the dividend into a signal |
+| **Signalling** | taking a costly action to communicate private information credibly — paying cash rather than making a claim |
+| **Retained earnings** | profits the company keeps instead of distributing |
+| **Reinvestment** | deploying those retained profits into the business |
+| **Return on retained capital** | what the company actually earns on the money it keeps — the question that decides whether retention is good for you |
+| **Free cash flow** | cash generated after the spending needed to maintain and grow the business |
+| **Agency cost** | value lost because managers' interests diverge from owners' — for example, spending surplus cash badly |
+| **Clientele effect** | the tendency of a company's payout policy to attract a particular type of shareholder |
+| **Irrelevance theorem** | Miller and Modigliani's result that, without taxes or other frictions, how a company splits its payout does not change its value |
+| **Friction** | any real-world feature the frictionless model assumes away — taxes, information gaps, transaction costs |
+| **One-tier tax system** | Singapore's arrangement in which company profits are taxed once, at the company, so dividends reach shareholders tax-exempt |
+| **Capital appreciation** | the rise in the share price itself, as distinct from cash received |
+
+</details>
 
 There are exactly three channels, and mixing them up causes endless confusion.
 
@@ -187,6 +288,52 @@ the theorem assumed away:
 ---
 
 ## 4. Valuing a residual claim
+
+<details>
+<summary><b>Vocabulary for this section</b> — valuation terms and **every symbol** used in the models (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **DCF** | discounted cash flow | valuing something by adding up its future cash flows, each converted to today's money |
+| **DDM** | dividend discount model | a DCF where the cash flows are dividends |
+| **P/E** | price-to-earnings ratio | share price divided by earnings per share |
+| **P/B** | price-to-book ratio | share price divided by book value per share |
+| **P/S** | price-to-sales ratio | share price divided by revenue per share |
+| **EV** | enterprise value | market capitalisation plus net debt |
+| **EBITDA** | earnings before interest, tax, depreciation and amortisation | a rough proxy for operating cash generation |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P_0$ | "P-nought" | the price today |
+| $D_1$ | "D-one" | **next** year's dividend — the subscript 1 means one period from now |
+| $E_1$ | "E-one" | next year's earnings |
+| $r$ | | the discount rate — the annual return required for a claim of this riskiness |
+| $g$ | | the assumed perpetual growth rate of the cash flows |
+| $r - g$ | "r minus g" | the gap between the two; the model's denominator, and the reason the value explodes when it approaches zero |
+| $t$ | | a time period, counting 1, 2, 3, … years into the future |
+| $(1 + r)^t$ | | the compounding factor; dividing by it converts an amount received in year $t$ into today's money |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Discount rate** | the return you require to hold a risky claim; the number the model divides by |
+| **Dividend discount model** | valuing a share as the sum of all its future dividends, discounted |
+| **Gordon growth model** | the closed-form version assuming dividends grow forever at a constant rate |
+| **Terminal value** | the value attributed to everything beyond the explicitly forecast years |
+| **Equity duration** | how far into the future a share's value sits; long-duration claims are the most sensitive to a change in $r$ |
+| **Multiple** | a valuation shortcut — a price divided by some fundamental like earnings or book value |
+| **Book value** | the accounting value of a company's equity: assets minus liabilities as recorded in the books |
+| **Intangibles** | assets without physical form — brands, software, patents — which book value often understates |
+| **Earnings** | accounting profit, which involves judgement and is therefore not the same as cash |
+| **Capital structure** *(here)* | the debt-and-equity mix, which is why EV-based multiples compare companies more fairly than P/E |
+| **Growth stock / value stock** | shorthand for a company priced on expected future expansion versus one priced cheaply against current fundamentals |
+
+</details>
 
 §1 gave the universal equation: price is the sum of discounted future cash flows. For a share, the cash flows to
 the owner are the distributions, and the sum runs forever. Assume for a moment that they grow at a constant rate
@@ -265,6 +412,44 @@ wrong. A stock on 6 times earnings is not cheap — it encodes an expectation of
 
 ## 5. Risk, return, and what the market pays you for
 
+<details>
+<summary><b>Vocabulary for this section</b> — risk vocabulary and every symbol in the CAPM equation (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CAPM** | capital asset pricing model | the standard model linking expected return to market risk alone |
+| **ERP** | equity risk premium | the extra long-run return of shares over government bonds |
+
+**Symbols used in the formula**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $E(R_i)$ | "the expected return on asset i" | what you should expect to earn, on average, from holding security $i$ |
+| $E(R_m)$ | "the expected return on the market" | the same for the market as a whole |
+| $r_f$ | "r-sub-f" | the risk-free rate — what a safe government borrower pays |
+| $\beta_i$ | "beta-sub-i" | how much security $i$ moves when the market moves: 1.5 amplifies market moves, 0.5 damps them |
+| $E(R_m) - r_f$ | | the market risk premium — the reward for holding the market rather than cash |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Equity risk premium** | the extra return shares have historically delivered over government bonds, as compensation for risk |
+| **Volatility** | how much a price fluctuates, usually measured as the annualised standard deviation of returns |
+| **Standard deviation** | a statistical measure of spread around the average |
+| **Idiosyncratic (specific) risk** | risk unique to one company — a fire, a fraud, a failed product |
+| **Systematic (market) risk** | risk affecting everything at once — recessions, rate shocks, wars |
+| **Diversification** | holding many different assets so specific risks cancel out |
+| **Correlation** | the degree to which two assets move together; diversification works because it is less than one |
+| **Beta** | the sensitivity of a security's returns to the market's |
+| **Risk-free rate** | the return available with no default risk, the baseline for every other return |
+| **Factor** | a characteristic — size, cheapness, momentum, quality — historically associated with higher returns than beta alone predicts |
+| **Cross-section of returns** | the pattern of returns *across* different stocks at a point in time, which is what CAPM tries and largely fails to explain |
+
+</details>
+
 Over long periods equities have returned meaningfully more than government bonds — the **equity risk premium**,
 historically somewhere in the region of 3 to 5 percentage points a year depending on market and period. That
 premium is not a gift. It is compensation for the two things you accepted in §1: you are **last in line**, and
@@ -307,6 +492,38 @@ written as an equation.
 
 ## 6. Share classes, control, and the governance fight
 
+<details>
+<summary><b>Vocabulary for this section</b> — share classes, control mechanisms and the structures (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ADR** | American depositary receipt | a certificate representing foreign shares, allowing them to trade in the US |
+| **VIE** | variable interest entity | a contractual structure giving foreign investors a claim on a Chinese business they cannot legally own |
+| **SEC** | Securities and Exchange Commission | the US securities regulator |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Share class** | a category of share with its own rights; a company may have several |
+| **Dual-class structure** | one class carrying many votes per share (usually founders') and another carrying one or none (usually the public's) |
+| **Economic interest vs voting control** | the share of the profits you own versus the share of the votes you hold; dual-class structures separate the two |
+| **Index inclusion** | whether an index provider admits a company; with passive funds as the marginal owner, this now functions as a governance rule |
+| **Preferred share** | a hybrid paying a fixed dividend ahead of ordinary shares, usually without a vote — economically closer to a bond |
+| **Ordinary (common) share** | the standard residual claim of §1 |
+| **Depositary receipt** | a certificate issued by a bank representing foreign shares it holds on your behalf |
+| **Tracking stock** | equity whose return references one division's performance while the parent retains legal ownership |
+| **Holding company** | a company whose purpose is to own stakes in other companies |
+| **Shell company** | a holding company with no operations of its own |
+| **Variable interest entity** | the structure in which the listed shell owns *contracts* entitling it to a business's profits rather than the business itself |
+| **Takeover** | an acquisition of control of a company |
+| **Minority shareholder** | a holder without control, and therefore dependent on legal protections |
+| **Enforceability** | whether a contractual right can actually be upheld by a court in the relevant jurisdiction |
+
+</details>
+
 "One share, one vote" is a default, not a law — and the exceptions are where equity gets genuinely contested.
 
 **Dual-class structures** give founders shares carrying ten or more votes each while the public buys shares
@@ -342,6 +559,39 @@ Other variations on the residual claim worth knowing:
 ---
 
 ## 7. S-REITs — Singapore's distinctive equity class *(local lens)*
+
+<details>
+<summary><b>Vocabulary for this section</b> — the REIT structure and its Singapore-specific terms (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **REIT** | real estate investment trust | a listed trust owning income-producing property |
+| **S-REIT** | Singapore REIT | one listed on SGX |
+| **DPU** | distribution per unit | the per-unit payout — a REIT's equivalent of earnings per share, and the metric that matters |
+| **MAS** | Monetary Authority of Singapore | sets the leverage limit referred to here |
+| **SGX / SGD** | Singapore Exchange / Singapore dollar | |
+| **AUM** | assets under management | the total value a manager runs; often the basis of its fee |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Trust** | a legal structure in which assets are held by a trustee for the benefit of unitholders |
+| **Unit / unitholder** | a REIT's equivalent of a share and a shareholder |
+| **REIT manager** | the company paid to run the trust, usually a subsidiary of the sponsor |
+| **Sponsor** | the property group that established the REIT and typically sells assets into it |
+| **Tax transparency** | treatment in which the trust itself is not taxed, provided it distributes most of its income |
+| **Distribution** | a REIT's payout to unitholders — economically a dividend |
+| **Aggregate leverage** | a REIT's total borrowings as a share of its assets, capped by MAS regulation |
+| **Yield** | the annual distribution divided by the unit price |
+| **Rate-sensitive** | an asset whose price moves sharply when interest rates change |
+| **Accretive acquisition** | a purchase funded so that DPU rises afterwards — the test of whether issuing new units helped or hurt you |
+| **Income-producing property** | buildings held to collect rent, as opposed to for development or resale |
+| **Cost of capital** | the blended return a REIT must offer its debt and equity providers; buying assets yielding more than this creates value |
+
+</details>
 
 Singapore's equity market has one genuinely world-class segment, and it happens to be an excellent teaching
 device: **roughly 40 listed REITs and property trusts with a combined market value of about SGD 100 billion, around a

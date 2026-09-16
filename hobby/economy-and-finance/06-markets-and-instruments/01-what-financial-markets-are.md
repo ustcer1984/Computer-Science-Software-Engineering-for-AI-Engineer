@@ -57,6 +57,32 @@ both things be true at once? The answer requires nearly everything in this secti
 
 ## 1. What a market is *for* — the five jobs
 
+<details>
+<summary><b>Vocabulary for this section</b> — every term used below, including ones defined earlier (click to expand)</summary>
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Financial system** | the whole set of institutions and markets that moves money from people who have spare money to people who need it |
+| **Surplus unit** | anyone who currently saves more than they spend — typically households |
+| **Deficit unit** | anyone who currently spends more than they earn and must therefore borrow — typically firms and governments |
+| **Investment** *(economic sense)* | building real productive capacity — a factory, a data centre — **not** "buying shares". Buying shares is *saving* |
+| **Price discovery** | the process by which many people's opinions and trades combine into one visible price for a claim |
+| **Liquidity** | how quickly and cheaply you can turn something into cash at a fair price |
+| **Liquidity transformation** | an institution promising savers instant access while funding assets that pay off over decades |
+| **Maturity transformation** | the same idea stated in terms of time: borrowing short, lending long |
+| **Rollover risk** | the danger that short-term funding cannot be renewed when it falls due, even though you are solvent |
+| **Risk pooling** | combining many independent risks so the average outcome is far more predictable than any single one |
+| **Risk transfer** | moving a risk from someone who cannot bear it to someone willing to, for a price |
+| **Monitoring / discipline** | the pressure a visible share price or borrowing cost puts on management to perform |
+| **Governance** | the mechanisms — board, votes, disclosure — that hold company managers accountable to owners |
+| **Capital allocation** | deciding which projects and companies get funded; the economy-wide job markets are supposed to do |
+| **Financial deepening** | the growth of a country's financial sector relative to its economy |
+| **Bubble** | a price far above any defensible estimate of underlying value, sustained by expectations of further rises |
+
+</details>
+
 Start from the real economy, not the ticker. Households save; firms and governments need to spend more than they
 currently have. In E05 §2 you wrote that gap as an identity for a whole country. Inside a country the same gap
 exists between *units*: **surplus units** (savers) and **deficit units** (borrowers). A financial system is
@@ -94,6 +120,37 @@ private.
 ---
 
 ## 2. Primary vs secondary — the distinction that clears up everything
+
+<details>
+<summary><b>Vocabulary for this section</b> — every term, abbreviation and figure used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **IPO** | initial public offering | the first sale of a company's shares to the public, creating a listing |
+| **USD** | United States dollar | the currency all amounts here are quoted in |
+| **bn / tn** | billion / trillion | thousand million / million million |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Primary market** | a transaction in which a **new** security is created and sold by its issuer, so the money reaches the company or government |
+| **Secondary market** | a transaction in which an investor sells an **existing** security to another investor; the issuer is not involved and receives nothing |
+| **Issuer** | the company or government whose obligation the security represents |
+| **Security** | a tradeable financial claim — a share, a bond, and so on |
+| **Follow-on offering** | a sale of additional new shares by a company that is already listed |
+| **Bond auction** | the mechanism by which a government sells new debt directly to investors — a primary transaction |
+| **Listing** | having a security admitted to trade on an exchange |
+| **Liquidity premium** | the extra price investors will pay for a claim they can easily sell — equivalently, the extra cost an issuer pays if they cannot |
+| **Cost of capital** | the return an issuer must offer investors to raise money; a higher price paid for its securities means a lower cost of capital |
+| **Buyback (share repurchase)** | a company buying its own shares back from investors, returning capital and reducing the share count |
+| **Dividend** | a cash payment from a company to its shareholders |
+| **Wealth effect** | the tendency of people to spend more when the assets they own rise in value |
+| **Collateral value** | the worth of an asset when pledged as security for a loan; rising asset prices let borrowers borrow more |
+
+</details>
 
 This is the single highest-leverage idea in the section.
 
@@ -145,6 +202,56 @@ Two refinements worth carrying:
 ---
 
 ## 3. The instrument map — debt, equity, and everything derived from them
+
+<details>
+<summary><b>Vocabulary for this section</b> — terms, abbreviations and every symbol in the formulas (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **OTC** | over-the-counter | traded privately between two parties rather than on an exchange |
+| **BIS** | Bank for International Settlements | the central banks' own institution; the source of the derivatives statistics used here |
+| **USD / tn** | US dollar / trillion | |
+
+**Symbols used in the formulas**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P_0$ | "P-nought" | the price **today** — subscript 0 always means "now" |
+| $C_t$ | "C-sub-t" | the cash flow received at time $t$ |
+| $t$ | | a time period, normally one year; it counts 1, 2, 3, … |
+| $T$ | | the final period included in the sum |
+| $\sum_{t=1}^{T}$ | "sum from t equals 1 to T" | add up the expression that follows, once for every period from 1 to $T$ |
+| $r$ | | the **discount rate** — the annual return an investor requires for a claim of this riskiness |
+| $r_f$ | "r-sub-f" | the **risk-free rate** — what a government with no default risk pays to borrow |
+| $(1 + r)^t$ | | the compounding factor; **dividing** by it converts a future amount into today's money |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Debt** | a fixed promise to repay interest and principal; senior, capped upside |
+| **Equity** | a residual claim on whatever remains after everyone else is paid; junior, unlimited upside |
+| **Derivative** | a contract whose value is *derived* from something else (a price, a rate, an index) |
+| **Residual claim** | a claim on the leftovers, not on any specific asset |
+| **Senior / junior** | earlier / later in the queue to be paid if the issuer fails |
+| **Capital structure** | the mix of debt and equity financing a company, and the order in which each is paid |
+| **Ladder of claims** | the same ordering seen as a ranking — creditors first, shareholders last |
+| **Limited liability** | the rule that a shareholder can lose what they invested and no more |
+| **Bankruptcy** | the legal process for settling claims when a borrower cannot pay |
+| **Market capitalisation** | the total market value of a company's shares |
+| **Fixed income** | the bond market, named for the fixed payments bonds make |
+| **Notional** | the reference amount used to *calculate* a derivative's payments — the size of the bet, not money owed |
+| **Gross market value** | what would actually change hands if every derivative contract were settled today |
+| **Counterparty risk** | the risk that the other side of a contract fails before paying you |
+| **Leverage** | using borrowed money (or a derivative) to control a position larger than your own capital |
+| **Discounting** | converting a future amount into its value today by dividing out the return you could have earned meanwhile |
+| **Discounted cash flow (DCF)** | valuing anything by adding up its future cash flows, each discounted back to today |
+| **Risk premium** | the extra return above the risk-free rate demanded for bearing risk |
+| **Duration** *(here, informally)* | how far in the future a claim's value sits; long-dated claims move most when $r$ changes |
+
+</details>
 
 Almost every financial instrument is one of three things, or a package of them.
 
@@ -203,6 +310,45 @@ bonds, infrastructure — fall the most. That single sentence explains a remarka
 ---
 
 ## 4. Who is actually in the market
+
+<details>
+<summary><b>Vocabulary for this section</b> — every participant type and term used below (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **ETF** | exchange-traded fund | a pooled fund whose units trade on an exchange like a share |
+| **CCP** | central counterparty | the clearing house that steps between buyer and seller |
+| **MAS** | Monetary Authority of Singapore | Singapore's central bank **and** financial regulator in one body |
+| **GIC** | (a proper name today) | one of Singapore's two big state-owned long-horizon investors, alongside **Temasek** |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Retail investor** | an individual investing their own money |
+| **Institutional investor** | an organisation investing on behalf of others — a pension fund, insurer or asset manager |
+| **Pension fund** | an institution holding assets to pay future retirement obligations; a natural buyer of very long-dated claims |
+| **Insurer** | similar, holding assets against future claims |
+| **Mutual fund** | a pooled investment vehicle sold to the public, priced once a day |
+| **Sovereign wealth fund** | a state-owned investment fund |
+| **Hedge fund** | a lightly constrained fund that may borrow and sell short; often sets the marginal price |
+| **Broker** | an agent who executes **your** order for a commission; does not take the other side |
+| **Dealer / market maker** | a firm that quotes both a buying and a selling price and trades **against** you from its own inventory |
+| **Exchange** | the venue that matches orders and sets listing rules |
+| **Clearing house** | see CCP — it removes the risk that your trading partner fails |
+| **Custodian** | the institution that actually holds your securities, which is why your broker's failure need not lose them |
+| **Regulator** | the authority setting disclosure and conduct rules |
+| **Intermediated finance** | savings reaching borrowers **through a bank**, which holds the risk itself |
+| **Market-based finance** | savings reaching borrowers **through securities**, with investors holding the risk directly |
+| **Credit squeeze** | a sharp, general tightening of bank lending |
+| **Spare tyre** *(metaphor)* | the idea that bond markets let firms keep funding when banks stop lending |
+| **Passive investing** | holding an index rather than selecting securities |
+| **Index fund** | a fund that mechanically holds the constituents of an index |
+| **Marginal owner** | the investor whose buying or selling sets the price at the margin |
+
+</details>
 
 The cast, sorted by what they are *for*:
 
@@ -272,6 +418,50 @@ only lever is the vote.
 
 ## 5. How a trade actually happens
 
+<details>
+<summary><b>Vocabulary for this section</b> — the microstructure terms and the spread formula (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **CCP** | central counterparty | the clearing house interposed between buyer and seller |
+| **T+1 / T+2** | trade date plus one / two business days | when cash and securities actually change hands |
+
+**Symbols**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P_{\text{ask}}$ | "P-ask" | the lowest price at which someone is currently willing to sell |
+| $P_{\text{bid}}$ | "P-bid" | the highest price at which someone is currently willing to buy |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Continuous double auction** | a market where buyers and sellers post competing prices continuously, and trades happen whenever two cross |
+| **Limit order book** | the live list of all resting buy and sell orders at each price |
+| **Limit order** | an instruction to trade only at a stated price or better; it rests in the book and **supplies** liquidity |
+| **Market order** | an instruction to trade immediately at the best available price; it **consumes** liquidity |
+| **Bid** | the best (highest) price currently offered by a buyer |
+| **Ask (offer)** | the best (lowest) price currently offered by a seller |
+| **Bid-ask spread** | the gap between them — what you pay for the privilege of trading immediately |
+| **Crossing the spread** | choosing to trade now and therefore paying that gap |
+| **Depth** | how many shares are resting near the best price; it determines what a **large** order costs |
+| **Walking the book** | a large order consuming successively worse prices as it exhausts each level |
+| **Market impact** | the price movement your own order causes — usually a bigger cost than commission for large investors |
+| **Inventory risk** | the market maker's risk of being left holding an asset whose price is falling |
+| **Execution** | the moment two orders match |
+| **Clearing** | working out who owes what after the match, and guaranteeing it |
+| **Novation** | the legal step where the CCP replaces one contract between two traders with two contracts, each facing the CCP |
+| **Netting** | offsetting mutual obligations so only the difference is settled |
+| **Settlement** | the actual delivery of securities against cash |
+| **Custody** | safekeeping of the securities in your name afterwards |
+| **Collateral / margin** | assets pledged to cover potential losses while a trade or position is outstanding |
+| **Flash crash** | a very brief, severe price dislocation caused by liquidity withdrawal rather than news |
+
+</details>
+
 Under the abstraction is a very concrete mechanism. Nearly all modern exchange trading is a **continuous
 double auction** run on a **limit order book**.
 
@@ -318,6 +508,43 @@ and quick replenishment after a trade.*
 
 ## 6. Price discovery and efficiency — what the claim actually is
 
+<details>
+<summary><b>Vocabulary for this section</b> — the efficiency vocabulary and the random-walk symbols (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **EMH** | efficient market hypothesis | the claim that prices already reflect available information |
+
+**Symbols**
+
+| Symbol | Reads as | Meaning |
+|---|---|---|
+| $P_t$ | "P-sub-t" | the price at time $t$ — that is, now |
+| $P_{t+1}$ | "P-sub-t-plus-one" | the price one period later |
+| $\varepsilon_{t+1}$ | "epsilon" | an unpredictable random shock, as likely to be positive as negative, averaging zero |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Weak-form efficiency** | prices already reflect all information contained in **past prices** |
+| **Semi-strong-form efficiency** | prices already reflect all **publicly available** information |
+| **Strong-form efficiency** | prices reflect **all** information, including private — empirically false |
+| **Random walk** | a price series whose changes are unpredictable, because anything predictable would already have been traded away |
+| **Anomaly** | a documented, persistent pattern in returns that an efficiency model cannot explain |
+| **Arbitrage** | exploiting a price discrepancy for a profit that requires no net risk |
+| **Limits to arbitrage** | the real-world frictions — borrowing costs, capital limits, the risk of being right too early — that stop mispricings being corrected |
+| **Short selling** | selling a borrowed security in the hope of buying it back cheaper; the mechanism by which negative opinions reach the price |
+| **Fundamental value** | what a claim is worth on its underlying cash flows, as distinct from what it currently trades at |
+| **Insider trading** | trading on material non-public information — profitable, and illegal |
+| **Grossman–Stiglitz paradox** | if prices already reflected everything, nobody would pay to do research, so prices would reflect nothing; efficiency exists **because** people try to beat it |
+| **Sell-side analyst** | a researcher at a broker who publishes company forecasts and recommendations |
+| **Small-cap** | a company with a small market value, typically thinly traded and lightly researched |
+
+</details>
+
 Job 2 in §1 was price discovery. The formal version is the **EMH (efficient market hypothesis)**, usually stated
 in three strengths:
 
@@ -361,6 +588,41 @@ right — and it holds much more weakly in illiquid corners where few analysts l
 ---
 
 ## 7. Singapore — a giant financial centre with a shrinking stock market *(local lens)*
+
+<details>
+<summary><b>Vocabulary for this section</b> — the Singapore-specific names and the listing-market terms (click to expand)</summary>
+
+**Abbreviations**
+
+| Short | Stands for | Meaning |
+|---|---|---|
+| **SGX** | Singapore Exchange | the company that operates Singapore's securities and derivatives markets |
+| **MAS** | Monetary Authority of Singapore | central bank and financial regulator |
+| **EQDP** | Equity Market Development Programme | the MAS programme placing money with fund managers to invest in Singapore-listed shares |
+| **FX** | foreign exchange | currency trading, one of Singapore's largest financial businesses |
+| **REIT** | real estate investment trust | a listed vehicle owning income-producing property |
+| **SGD** | Singapore dollar | |
+| **GIC / Temasek** | (proper names) | Singapore's two large state-owned long-horizon investment institutions |
+
+**Terms**
+
+| Term | Definition |
+|---|---|
+| **Financial centre (hub)** | a place where financial *activities* are conducted — trading, managing money, arranging deals |
+| **Listing venue** | an exchange where companies' shares are actually quoted; a different business from being a hub |
+| **Delisting** | a company's shares ceasing to trade on the exchange |
+| **Privatisation (take-private)** | a buyer acquiring all public shares so the company is no longer listed |
+| **Turnover** | the value of shares traded over a period — the standard measure of how active a market is |
+| **Free float** | the portion of a company's shares actually available to trade, excluding locked-in holders |
+| **Small-cap / mid-cap** | smaller and medium-sized listed companies, where thin trading bites hardest |
+| **Investor pool** | the set of buyers realistically available for a given kind of company in a given market |
+| **Fund domiciliation** | choosing the jurisdiction in which an investment fund is legally established |
+| **Analyst coverage** | how many research analysts publish on a company; near-zero coverage is a symptom of a neglected market |
+| **Liquidity trap** *(microstructure sense)* | thin trading causing wide spreads, which deters investors, which thins trading further — a loop that does not self-correct. Not the same as the monetary "liquidity trap" of E03 |
+| **Tax incentive** | a tax reduction used to encourage a behaviour — here, new listings |
+| **Mandate** | the instructions a fund manager must follow about what they may invest in |
+
+</details>
 
 Now the puzzle from the opening. Singapore is, by most measures, a top-tier global financial hub: one of the
 largest **FX (foreign exchange)** trading centres in the world, a dominant Asian base for asset and wealth
