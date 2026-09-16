@@ -269,7 +269,7 @@ branch (§5).
 
 ### Stage 2 — the vocoder (mel → waveform)
 
-This is the phase-reconstruction problem from §1.6, solved with a learned model. Its history is a
+This is the phase-reconstruction problem from §1, solved with a learned model. Its history is a
 sprint from "high quality but unusably slow" to "high quality and real-time":
 
 - **WaveNet** (van den Oord et al., 2016) models the waveform **autoregressively, one sample at a
@@ -723,7 +723,7 @@ produce audio tokens directly, with a text stream alongside for reasoning rather
 
 **Full-duplex is the genuinely new capability** — every prior system, cascade or not, assumed strict
 turns. Modelling the conversation as two concurrent token streams is the audio analogue of the shift
-from request/response to a persistent bidirectional channel (Ch3 §2's async world, if you want the
+from request/response to a persistent bidirectional channel (M01 Ch3 §2's async world, if you want the
 systems parallel), and it's where the field is heading.
 
 ---

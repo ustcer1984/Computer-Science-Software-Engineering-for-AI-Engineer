@@ -18,7 +18,7 @@
 > **Prerequisites:** M02 Ch2 §1 (safe/idempotent/**cacheable**, status codes incl. `304`/`409`, the headers
 > map). Useful: M02 Ch1 §1 (the latency budget — DNS, TCP, TLS (Transport Layer Security)
 > and transfer — that a cache hit erases) and
-> Ch1 §7 (CDNs / edge).
+> Ch1 §1 §7 (CDNs / edge).
 
 **Estimated study time:** 2.5–3 hours including the `curl` hands-on.
 
@@ -363,7 +363,7 @@ A response doesn't hit one cache; it passes through a **chain**, and the split b
 ```mermaid
 flowchart LR
     U(["user"]) --> B["browser cache<br/>PRIVATE — one user<br/>memory + disk<br/>· keeps private + max-age"]
-    B --> S["CDN / edge cache<br/>SHARED — all users<br/>(Ch1 §7 edge PoP)<br/>· obeys s-maxage / public<br/>· MUST refuse private + no-store"]
+    B --> S["CDN / edge cache<br/>SHARED — all users<br/>(Ch1 §1 §7 edge PoP)<br/>· obeys s-maxage / public<br/>· MUST refuse private + no-store"]
     S --> P["forward / gateway proxy<br/>SHARED — org or gateway<br/>· same shared-cache rules"]
     P --> O[("origin<br/>server")]
 ```
@@ -374,7 +374,7 @@ flowchart LR
 - **Private cache = the browser's own store**, serving exactly one user. It's allowed to keep `private`
   responses (that user's data) because there's no one to leak them to. It's also what a page reload,
   back-button, and `immutable` assets hit first.
-- **Shared cache = a CDN edge (Ch1 §7), a reverse proxy in front of your origin, or a corporate forward
+- **Shared cache = a CDN edge (Ch1 §1 §7), a reverse proxy in front of your origin, or a corporate forward
   proxy** — one cache serving *many* users. *(What a **reverse proxy** actually is — and why your ALB (Application Load
   Balancer), CloudFront, and API Gateway are all reverse proxies — is §11.)* This is where the leverage is (one origin fetch serves
   thousands) **and** where the danger is: a shared cache must **never** store a `private` or `no-store`
@@ -807,7 +807,7 @@ identical. Give one box the public address and let it handle:
   `Cache-Control`/`ETag`-governed copies so the origin never sees the repeat request.
 - **Routing / virtual hosting** — read the `Host` header or path (L7, Ch1 §1) and send `/api/*`, `/static/*`,
   or different hostnames to different backends — all behind **one public IP and one certificate** (the
-  direct answer to Ch1 §11's IPv4 scarcity: one address fronts thousands of sites).
+  direct answer to Ch1 §1 §11's IPv4 scarcity: one address fronts thousands of sites).
 - **Security & resilience** — hide the origin's real IP, absorb/deflect DDoS (distributed denial-of-service)
   attacks, run a WAF (Web Application Firewall), enforce rate
   limits, offload auth-token checks at the edge, add retries and circuit-breaking.
@@ -820,7 +820,7 @@ The payoff that makes it click — these AWS pieces are **the same idea speciali
 |---|---|
 | **AWS API Gateway** (front of Lambda) | API concerns: routing, auth, rate limiting, request validation. His `curl` hits the gateway; *it* invokes the function. |
 | **Application Load Balancer (ALB)** | spreading traffic across backend targets (L7 — reads path/host) |
-| **CloudFront** | **caching, geographically distributed** — a CDN *is* a reverse proxy at edge PoPs worldwide (Ch1 §7 + §4's shared cache) |
+| **CloudFront** | **caching, geographically distributed** — a CDN *is* a reverse proxy at edge PoPs worldwide (Ch1 §1 §7 + §4's shared cache) |
 | **nginx / HAProxy / Envoy / Caddy** | the general-purpose ones you run yourself; a k8s **ingress controller** is this inside a cluster |
 
 So **"load balancer," "API gateway," and "CDN" are not alternatives to a reverse proxy — they *are* reverse
@@ -847,7 +847,7 @@ routes; an ALB (Application Load Balancer) balances *and* terminates TLS).
 | Conditional request | 条件请求 | 條件請求 | script only |
 | Stale | 陈旧 / 过期 | 陳舊 / 過期 | past its freshness lifetime |
 | Shared / private cache | 共享 / 私有缓存 | 共享 / 私有快取 | the hierarchy split (§4) |
-| Content delivery network (CDN) | 内容分发网络 | 內容傳遞網路 | ⚠ 分发网络 ↔ 傳遞網路 (from Ch1 §7) |
+| Content delivery network (CDN) | 内容分发网络 | 內容傳遞網路 | ⚠ 分发网络 ↔ 傳遞網路 (from Ch1 §1 §7) |
 | Optimistic concurrency control | 乐观并发控制 | 樂觀並行控制 | ⚠ 并发 ↔ 並行; the `If-Match`/`412` fix (§5) |
 | Lost update | 丢失更新 / 更新丢失 | 遺失更新 | the write-clobber §5 prevents |
 | Invalidation | 失效 / 缓存失效 | 失效 / 快取失效 | the hard problem (§7) |
@@ -878,8 +878,8 @@ routes; an ALB (Application Load Balancer) balances *and* terminates TLS).
 Continuing Ch2 (HTTP deeply):
 - **§3 — Content negotiation & the HTTP versions:** the `Accept*` negotiation that `Vary` here keys off,
   compression, and how HTTP/1.1 → HTTP/2 (multiplexing) → HTTP/3 (QUIC — Quick UDP Internet
-  Connections — from Ch1 §7) change the *delivery*
+  Connections — from Ch1 §1 §7) change the *delivery*
   of everything in §1–§2 without changing the semantics. Closes the chapter.
 
-Or rotate: **Ch3 (TLS)** deepens Ch1 §5, **Ch4 (real-time)** is closest to your WebSocket work, or
+Or rotate: **Ch3 (TLS)** deepens Ch1 §1 §5, **Ch4 (real-time)** is closest to your WebSocket work, or
 **M04 Ch3 (design patterns)** / **M01 Ch5 (OS landscape)**.

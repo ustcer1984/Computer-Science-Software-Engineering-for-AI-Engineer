@@ -295,7 +295,7 @@ points down, below it the force points up. The equilibrium is **stable**.
 >    with a production lag — farmers set this year's acreage off last year's price — you get the **cobweb
 >    model**: the price spirals *in* (converges), orbits (limit cycle), or spirals *out* (diverges) purely
 >    from the ratio of the slopes $|\text{slope}_S| / |\text{slope}_D|$. This is a genuine discrete dynamical
->    system, and it's your first taste of the thing you flagged in §11 — **learning/adjustment dynamics need
+>    system, and it's your first taste of the thing you flagged in §1 §11 — **learning/adjustment dynamics need
 >    not converge to the fixed point even when the fixed point exists.** Same family as GAN training
 >    oscillating around its equilibrium. (We keep the dynamics light here; the strategic version lives in the
 >    Game Theory subject.)
@@ -480,7 +480,7 @@ flowchart TB
 > dual ascent; the equilibrium price is the optimal multiplier.** You have implemented this pattern; the
 > economy runs it as physics.
 >
-> And the §11a caveat still bites: the surface is **endogenous** — the price each agent optimizes against is
+> And the §1 §11a caveat still bites: the surface is **endogenous** — the price each agent optimizes against is
 > *produced by* everyone's choices, so this is a coupled fixed-point problem, not descent on a fixed
 > landscape. The first welfare theorem is the *clean* case (price-takers, no externalities, full
 > information); §3 is where the coupling breaks the theorem.
@@ -613,7 +613,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    demand *slopes* could make that adjustment fail to settle (oscillate or diverge).
 5. *(For your wheelhouse.)* I claimed the equilibrium price is "the Lagrange multiplier on the scarcity
    constraint" and that tâtonnement "is dual ascent." Pressure-test that: where does the analogy to
-   dual decomposition hold tightly, and where does the **endogenous-surface / coupling** worry from §11a make
+   dual decomposition hold tightly, and where does the **endogenous-surface / coupling** worry from §1 §11a make
    it leakier than a textbook convex dual problem?
 
 <details>
@@ -658,7 +658,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    convexity** — convex preferences, rising $MC$, price-takers; with increasing returns, network effects or
    market power the surplus problem is non-convex, a duality gap opens, and the equilibrium can be
    non-unique or inefficient (§10a's market-failure frontier). (b) **A dual-decomposition solver holds the
-   problem fixed while it iterates; the market does not** — the §11a **endogenous-surface** point: each
+   problem fixed while it iterates; the market does not** — the §1 §11a **endogenous-surface** point: each
    agent's landscape is *produced by* everyone else's choices, so this is a coupled fixed-point problem, and
    with reflexivity (the Lucas critique) publishing a model of it moves it. (c) **Trade actually happens at
    disequilibrium prices** ("false trading"), which reallocates the endowments that defined the problem — an

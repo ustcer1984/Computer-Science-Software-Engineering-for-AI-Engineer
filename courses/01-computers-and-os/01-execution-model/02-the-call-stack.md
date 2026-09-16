@@ -580,7 +580,7 @@ short-lived, LIFO, automatically freed on return, and dirt-cheap (bump the stack
 holds objects that must outlive the call that made them, or whose size isn't known up front — allocated
 explicitly, freed later (in Python, by the garbage collector). In CPython, a local variable lives in
 the frame (stack-ish), but the *object* it points to (your dict, your list, even an int) lives on the
-**heap**. That split — *names on the stack, objects on the heap* — is the entire subject of Ch1 §2
+**heap**. That split — *names on the stack, objects on the heap* — is the entire subject of Ch2 §1
 (Memory). For now: **stack = the bookkeeping of "where am I"; heap = "the stuff I'm working on."**
 
 ---

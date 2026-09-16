@@ -114,7 +114,7 @@ consequence of where a language sits between these two poles.
 </details>
 
 You can't reason about compilation vs interpretation without knowing what they're translating *to*.
-Here's the minimum mental model of a CPU — we'll go deeper in §4 (memory) and Ch1 §4 (I/O).
+Here's the minimum mental model of a CPU — we'll go deeper in Ch2 (memory) and Ch4 (I/O).
 
 A CPU repeats one loop, billions of times a second — the **fetch–decode–execute cycle**:
 

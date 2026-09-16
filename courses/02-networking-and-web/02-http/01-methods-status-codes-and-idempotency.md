@@ -512,7 +512,7 @@ The categories worth having a map of:
 | **Idempotency / tracing** | `Idempotency-Key`, `X-Request-Id`, `traceparent` | dedupe (§3); correlate a request across services (your Langfuse/observability world) |
 
 Two things to internalize: `Host` is the header that lets thousands of sites share one IP (the L7 load
-balancer reads it to route — and it's why IPv4 scarcity from Ch1 §11 didn't force one-IP-per-site); and
+balancer reads it to route — and it's why IPv4 scarcity from Ch1 §1 §11 didn't force one-IP-per-site); and
 `Authorization`/`Cookie` are how a *stateless* protocol still "knows who you are" — the state rides in the
 message, every time, by design.
 
@@ -776,8 +776,8 @@ Continuing Ch2 (HTTP deeply):
   revalidation and the `304` round-trip saver, and the browser/CDN/proxy cache hierarchy — the mechanics
   behind the "cacheable" column here and the biggest latency lever after Ch1's connection reuse.
 - **§3 — Content negotiation & the HTTP versions:** `Accept*` negotiation, compression, and how HTTP/1.1
-  → HTTP/2 (multiplexing) → HTTP/3 (QUIC — Quick UDP Internet Connections — from Ch1 §7) change the *delivery* without changing these
+  → HTTP/2 (multiplexing) → HTTP/3 (QUIC — Quick UDP Internet Connections — from Ch1 §1 §7) change the *delivery* without changing these
   semantics.
 
-Or rotate: **Ch3 (TLS)** deepens Ch1 §5, **Ch4 (real-time)** is closest to your WebSocket work, or
+Or rotate: **Ch3 (TLS)** deepens Ch1 §1 §5, **Ch4 (real-time)** is closest to your WebSocket work, or
 **M04 Ch3 (design patterns)** / **M01 Ch5 (OS landscape)**.

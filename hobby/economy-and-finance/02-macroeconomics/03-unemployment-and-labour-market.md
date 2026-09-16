@@ -213,7 +213,7 @@ unemployment rate can mean two completely different things:
 That's why the news watches the **long-term unemployment share** (jobless 27+ weeks) and the **median
 duration** of unemployment, not just the rate. Long-duration unemployment is the dangerous kind: skills atrophy,
 networks decay, and employers screen out the long-jobless, so it can become **self-perpetuating** — the
-**hysteresis** mechanism from §2 (a cyclical shock leaving a permanent scar). A flow view also explains why a
+**hysteresis** mechanism from E02 §2 (a cyclical shock leaving a permanent scar). A flow view also explains why a
 healthy economy *always* has positive unemployment: even with plenty of jobs, people are perpetually *between*
 them.
 
@@ -449,11 +449,11 @@ to where the wage equals the worker's marginal revenue product, the E01 §4 logi
 - **Real vs nominal wages (the §2 lens).** What a worker cares about is the **real** wage — nominal pay
   deflated by prices. "Pay rose 3% but inflation was 5%" is a **real pay cut.** Much of labour-market news is
   really about *real* wages even when it quotes nominal ones.
-- **Downward nominal wage rigidity (the §2 figure, now explained).** Wages **don't fall freely** when labour
-  is in surplus — the spike-at-zero histogram from §2. Firms freeze nominal pay rather than cut it (morale,
+- **Downward nominal wage rigidity (the E02 §2 figure, now explained).** Wages **don't fall freely** when labour
+  is in surplus — the spike-at-zero histogram from E02 §2. Firms freeze nominal pay rather than cut it (morale,
   contracts, norms), so when demand collapses the adjustment comes through **quantities — layoffs — instead of
   prices — wage cuts.** That stickiness is a chief reason recessions produce *unemployment* rather than just
-  *lower wages*, and it's why a little inflation "greases the wheels" (§6 of §2).
+  *lower wages*, and it's why a little inflation "greases the wheels" (E02 §2 §6).
 - **Bargaining power and monopsony.** The simple supply-and-demand picture assumes both sides are
   price-takers. Often they're not: a dominant local employer is a **monopsonist** (the mirror of the E01 §3
   monopoly — wage-*setting* power on the buyer side), which can push wages and employment *below* the

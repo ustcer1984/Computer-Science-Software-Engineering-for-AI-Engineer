@@ -232,7 +232,7 @@ Mechanism worth owning:
   root→TLD (Top-Level Domain)→authoritative walk happens only on a cold cache; the common case is a single \~1–20 ms hop
   to a nearby resolver, or a hit in local cache (≈ 0). *This is why a first request to a new host is
   slower — the cold DNS walk is a real, one-time round-trip tax*, exactly the cold-start shape from
-  M01 Ch4 §9.
+  M01 Ch4 §3 §9.
 - **Record types you'll actually meet:** `A` (name → IPv4), `AAAA` (→ IPv6), `CNAME` (alias → another
   name — costs an extra resolution), `NS` (which servers are authoritative), `MX` (mail), `TXT`
   (SPF — Sender Policy Framework — and other verification records). A CNAME chain to your

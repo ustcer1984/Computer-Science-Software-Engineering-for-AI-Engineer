@@ -619,3 +619,57 @@ for f in $(find courses hobby upskill-readings -name "*.md" -not -name "plan.md"
   grep -q "Vocabulary for this section" "$f" || echo "NO VOCABULARY: $f"
 done
 ```
+
+---
+
+## 11. Cross-references: one syntax, three levels, always unambiguous
+
+*(Established 2026-09-16 from his instruction "fix the cross-reference convention", after the rule-10
+backfill surfaced dangling and mis-pointed `§N` references across all three tracks.)*
+
+**The convention was never written down, so it drifted — and `§N` ended up meaning two different things.**
+A "section" is a *file* (`02-http/02-caching-…md` = Ch2 §2); a numbered heading *inside* that file is also
+written `§N`. When an author wrote `Ch1 §5` they sometimes meant "chapter 1, section file 5" and sometimes
+"chapter 1's only file, heading 5". Both readings were in the corpus simultaneously.
+
+**The rule, in one line: name every level that differs from where you are standing, in the order
+module → chapter → section → heading.**
+
+| You mean | Write | Notes |
+|---|---|---|
+| a heading in **this** file | `§4` | bare — the only bare form allowed |
+| a sub-part of a heading in this file | `§10a` | matches `### 10a.` |
+| another **section file**, same chapter | `Ch2 §1` | course track |
+| another section file, same econ module | `§2` … in econ prose the module is usually explicit: `E05 §2` | |
+| a **heading inside** another section file | `Ch1 §1 §5` · `E05 §2 §3` | **two `§` = section then heading** |
+| another chapter's section, other module | `M01 Ch4 §3` | |
+| a heading there | `M01 Ch4 §3 §9` | |
+| an **external standard** | `RFC 9110 §13` | never a repo reference; the checker skips these |
+
+- **Bare `§N` is reserved for the current file.** If you are pointing anywhere else, it needs a qualifier.
+  This is the single rule that would have prevented every defect found in the audit.
+- **Two `§` in a row always read "section, then heading"** — the form already used 80+ times before this
+  rule was written, now made official.
+- **Never elide the module** when crossing modules. An M12 file saying `Ch3 §2` looked local but meant
+  **M01** Ch3 §2.
+- **Forward references to planned-but-unwritten material are legitimate** (`E09 §1`, `M04 Ch1 §2`,
+  `Ch4 §4 — *(if we add it)*`). Keep writing them; the checker lists them separately from broken ones. If
+  you add such a reference to a *new* target, add it to `FORWARD` in the checker.
+- **Renumbering a heading means re-pointing every reference to it.** Rule 9 learned this the hard way; the
+  checker now makes it cheap to verify.
+
+**What the audit found and fixed (2026-09-16):** 13 dangling bare references (several pointing into a
+*different file's* Applied section — `§11a` in E01 §2 actually lived in E01 §1), 16 references that resolved
+but named the wrong target (a `§4 (memory)` that pointed at "What Python actually does"; five `§2`s in the
+content-negotiation section that all meant Ch2 §2; a `§1.6` where §1 has no sub-parts; `Ch1 §2` for memory,
+which is Ch2), and 27 ambiguous chapter references disambiguated to the section-then-heading form.
+
+**Detector — run before committing material:**
+
+```sh
+python3 scripts/check-xrefs.py     # non-zero exit if anything is broken
+```
+
+It validates bare references against the headings of their own file, and qualified references against the
+actual directory layout, so a typo or a renumber is caught mechanically rather than by a reader hitting a
+dead pointer.

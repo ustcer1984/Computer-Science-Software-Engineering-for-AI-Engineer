@@ -5,7 +5,7 @@
 > **Section:** Opens Ch3 by paying off a debt the last two chapters kept running up. HTTPS is HTTP over
 > **TLS** (Transport Layer Security), and TLS buys you exactly **three** things — **confidentiality**, **integrity**, and
 > **authentication** — plus a fourth that people wrongly assume. This section works the **TLS (Transport Layer Security) 1.3
-> handshake** step by step (the 1-RTT — one-round-trip — line-item from Ch1 §5, and the place Ch2 §3's
+> handshake** step by step (the 1-RTT — one-round-trip — line-item from Ch1 §1 §5, and the place Ch2 §3's
 > **ALPN** (Application-Layer Protocol Negotiation) version negotiation actually rides), the **certificate chain of trust** that makes authentication possible and is
 > also its weakest link, and **where TLS terminates** — the first job of the reverse proxy from Ch2 §2 §11.
 > **Status:** ✅ finalized 2026-09-05 (body prepared 2026-09-02). No questions on the body — it landed. The
@@ -29,7 +29,7 @@
 
 Three separate promises across this module all land here:
 
-- **Ch1 §5** treated the TLS handshake as *one round-trip on the latency budget* and deferred the contents.
+- **Ch1 §1 §5** treated the TLS handshake as *one round-trip on the latency budget* and deferred the contents.
 - **Ch2 §2 §11** said a reverse proxy's first job is **TLS termination** — without saying what is being
   terminated.
 - **Ch2 §3 §11a** found that HTTP version negotiation (**ALPN**) happens *inside the TLS handshake*, which
@@ -218,7 +218,7 @@ The **E** (ephemeral) matters enormously, and §5 explains why.
 
 </details>
 
-TLS 1.3 (RFC 8446, 2018) reduced the handshake to **one round-trip** — the Ch1 §5 line-item — largely by
+TLS 1.3 (RFC 8446, 2018) reduced the handshake to **one round-trip** — the Ch1 §1 §5 line-item — largely by
 making the client *guess* the key-exchange parameters up front instead of asking first.
 
 <!-- DIAGRAM:START -->

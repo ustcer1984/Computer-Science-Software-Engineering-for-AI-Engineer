@@ -4,7 +4,7 @@
 1. **AI / systems — from first principles** — *Making Deep Learning Go Brrrr From First Principles* (Horace He) *(directly extends yesterday's M01 Ch1 §3 GPU work, and is the conceptual bridge into M01 Ch2 — Memory)*
 2. **Software engineering / career** — *The Next Two Years of Software Engineering* (Addy Osmani, Jan 2026) *(keeps you current; speaks straight to your "full-stack dev **and architect**" goal and your vibe-coding reality)*
 
-> Why these: in §3 you pushed the whole session into **GPU memory hierarchy, latency-hiding, FlashAttention, and why LLM (large language model) inference is memory-bound**. Reading #1 is the canonical first-principles framework that *names* what you were circling — every kernel is **compute-bound, memory-bandwidth-bound, or overhead-bound** — and gives you the back-of-envelope test to tell which. It's the perfect on-ramp to M01 Ch2 (Memory) and to M12. Reading #2 deliberately switches scope: it's the clearest recent map of how the *engineer's role* shifts as agents do more of the typing — i.e. the job you're actually skilling up for.
+> Why these: in M01 Ch1 §3 you pushed the whole session into **GPU memory hierarchy, latency-hiding, FlashAttention, and why LLM (large language model) inference is memory-bound**. Reading #1 is the canonical first-principles framework that *names* what you were circling — every kernel is **compute-bound, memory-bandwidth-bound, or overhead-bound** — and gives you the back-of-envelope test to tell which. It's the perfect on-ramp to M01 Ch2 (Memory) and to M12. Reading #2 deliberately switches scope: it's the clearest recent map of how the *engineer's role* shifts as agents do more of the typing — i.e. the job you're actually skilling up for.
 
 > **Finalized note:** the two **"What we worked out"** sections at the bottom are the durable takeaways from our Q&A — read those first on review; the source summaries above are the supporting detail. The big one (#1) is the **energy/power/heat reframing you drove** — the article is all about *time*, you asked what happens when the axis is *joules*.
 
@@ -75,10 +75,10 @@
 **The one idea.** Any deep-learning workload spends its time in exactly one of **three regimes**, and the optimization that helps depends *entirely* on which one you're in:
 
 - **Compute-bound** — time goes to actual FLOPs. The good place: you're using the expensive silicon. More FLOPs/s (better GPU, lower precision) is the only lever.
-- **Memory-bandwidth-bound** — time goes to *moving tensors* between global memory (HBM) and the compute units, not computing on them. Adding FLOPs does nothing; you must move **fewer bytes**. ← *this is the LLM-inference-decode regime you reconstructed in §3.*
+- **Memory-bandwidth-bound** — time goes to *moving tensors* between global memory (HBM) and the compute units, not computing on them. Adding FLOPs does nothing; you must move **fewer bytes**. ← *this is the LLM-inference-decode regime you reconstructed in M01 Ch1 §3.*
 - **Overhead-bound** — time goes to *everything else*: Python, the framework, kernel-launch costs. Dominates with **tiny tensors / eager mode**.
 
-**The diagnostic (the back-of-envelope you wanted in §3).** Compare your op's **arithmetic intensity** (FLOPs done per byte moved) against the hardware's ratio of `peak FLOPs ÷ memory bandwidth`. He uses an A100: **~19.5 TFLOP/s (trillions of floating-point operations per second)** of compute vs **~1.5 TB/s** of bandwidth. If your op does few FLOPs per byte (elementwise ops, activations, the decode step reading weights + KV cache), you're **memory-bound** — the compute units sit idle waiting for data.
+**The diagnostic (the back-of-envelope you wanted in M01 Ch1 §3).** Compare your op's **arithmetic intensity** (FLOPs done per byte moved) against the hardware's ratio of `peak FLOPs ÷ memory bandwidth`. He uses an A100: **~19.5 TFLOP/s (trillions of floating-point operations per second)** of compute vs **~1.5 TB/s** of bandwidth. If your op does few FLOPs per byte (elementwise ops, activations, the decode step reading weights + KV cache), you're **memory-bound** — the compute units sit idle waiting for data.
 
 <!-- DIAGRAM:START -->
 ![Diagram 1](diagrams/10-gpu-performance-and-the-ai-era-engineer-1.svg)
@@ -103,9 +103,9 @@ flowchart TD
 
 **The overhead point that should stick.** GPUs are so much faster than the CPU driving them that "in the time Python performs a *single* FLOP (floating-point operation), an A100 could have done ~9.75 million." The only reason eager-mode PyTorch isn't crippled: execution is **asynchronous** — Python races ahead queuing kernels while the GPU chews through earlier ones, *hiding* the overhead — but only while kernels stay big enough to hide behind. Tiny kernels expose it.
 
-**Connect it to your §3 + the next course chapter.**
+**Connect it to your M01 Ch1 §3 + the next course chapter.**
 - This *is* the formal version of "GPU inference is memory-bound" you arrived at. **Decode** = read all the weights + KV (key-value) cache to produce one token → tiny arithmetic intensity → bandwidth-bound. That's why batching and KV-cache tricks (not faster math) speed up serving.
-- **FlashAttention** is literally "memory-bound regime + operator fusion" applied to attention: tile the computation so the N×N attention matrix is *never written to HBM (high-bandwidth memory)* — it lives in on-chip SRAM (static random-access memory). The §3 callback you made (Shared Memory as a software-managed scratchpad) is exactly the mechanism. Paper: [FlashAttention — Dao et al., 2022](https://arxiv.org/abs/2205.14135).
+- **FlashAttention** is literally "memory-bound regime + operator fusion" applied to attention: tile the computation so the N×N attention matrix is *never written to HBM (high-bandwidth memory)* — it lives in on-chip SRAM (static random-access memory). The M01 Ch1 §3 callback you made (Shared Memory as a software-managed scratchpad) is exactly the mechanism. Paper: [FlashAttention — Dao et al., 2022](https://arxiv.org/abs/2205.14135).
 - **Bridge to M01 Ch2 (Memory):** "moving bytes is the bottleneck, not computing on them" is the *same* lesson the CPU cache hierarchy teaches (cache locality, why a cache miss costs ~100× an L1 hit). GPU HBM↔SRAM is the same story one level up. Hold this thought going into Ch2.
 
 **Questions to pressure-test while you read (your usual style):**
@@ -197,7 +197,7 @@ Operator fusion was the new piece for you; you understood the rest, then flipped
 
 **Three levers energy adds that the time article doesn't foreground:**
 1. **Static/leakage power** → "overhead-bound" is worse in joules than seconds (paying to keep idle silicon hot). Motivates batching/high utilization, and **"race to idle"** (finish fast, power-gate — the `P_static·time` term shrinks with time even though the dynamic work-energy doesn't).
-2. **The cubic wall:** `P ∝ C·V²·f`, and higher `f` needs higher `V` ⇒ power scales ~`f³`. So **slow-and-wide beats fast-and-narrow** — the deep reason a GPU (thousands of slow lanes) crushes a CPU (few 5 GHz cores) on perf/watt. Ties straight back to §3 latency-hiding-via-parallelism.
+2. **The cubic wall:** `P ∝ C·V²·f`, and higher `f` needs higher `V` ⇒ power scales ~`f³`. So **slow-and-wide beats fast-and-narrow** — the deep reason a GPU (thousands of slow lanes) crushes a CPU (few 5 GHz cores) on perf/watt. Ties straight back to M01 Ch1 §3 latency-hiding-via-parallelism.
 3. **Precision is a double win:** multiplier energy ~ (mantissa bits)², movement ~ bits (linear). FP16/FP8/INT8 cut compute energy quadratically *and* move fewer bytes ⇒ pushes the memory-bound decode regime back toward efficiency.
 
 **Heat = the same joules, plus a feedback loop.** ~100% of the electrical energy becomes heat, so power ≈ heat. Two things your old world already knows: (a) it's **spatial** — data-movement-heavy work lights up the **memory controllers / HBM stacks / interconnect**, not just the compute core → hotspots in exactly the structures the FLOPs-spec ignores (electromigration, thermal cycling). (b) **Thermal feedback couples energy back to performance** — leakage rises with temperature, and chips **thermally throttle** (`f`↓) when hot, sliding you back along the time roofline. So energy → heat → throttle → speed: the two axes aren't independent; they close a loop.

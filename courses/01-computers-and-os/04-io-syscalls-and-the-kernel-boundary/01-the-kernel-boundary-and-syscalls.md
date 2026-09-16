@@ -243,7 +243,7 @@ choose. Walk the round trip on x86-64 (the calling convention is real and worth 
    into *your* address space and not the kernel's? (Skipping that check is a classic kernel-exploit primitive.)
 4. **The kernel does the privileged work** — copies bytes from the page cache into your buffer, queues a DMA (direct memory access) request to the NIC, reads the
    clock, whatever the call is. If the work can't complete immediately (the data isn't here yet), this is where a **blocking** call puts
-   your thread to sleep — more in §5 and in §2.
+   your thread to sleep — more in §5 and in Ch4 §2.
 5. **The kernel returns the result and drops back to user mode.** The return value (bytes read, or a negative error code) goes in `rax`;
    the kernel executes `sysret`, which restores ring 3 and your saved return address. You resume at the instruction after `syscall`.
 6. **The C library turns a negative return into `errno`.** By convention the raw syscall returns `-errno` on failure (e.g. `-2` for
@@ -599,7 +599,7 @@ transition machinery but aren't syscalls, and naming them keeps the model clean:
 - **Interrupts — asynchronous, external.** A device (NIC, disk, timer) raises an electrical signal; the CPU stops what it's doing, jumps
   into a kernel **interrupt handler**, services the device, and returns. This is *how the data you were waiting for actually arrives*: your
   blocking `read` sleeps, the disk finishes and fires an interrupt, the handler marks your data ready and wakes your thread. Interrupts are
-  the kernel's side of the "park until ready" story in §5.
+  the kernel's side of the "park until ready" story in §2.
 - **Exceptions / faults — synchronous, but *not* requested.** A **page fault** (Ch2 §3), a divide-by-zero, an illegal instruction: the CPU
   traps into the kernel mid-instruction because something needs handling. A page fault is often *benign* — it's how demand paging and
   `mmap` bring pages in — which is why "fault" here means "trap to the kernel," not "error."
@@ -775,7 +775,7 @@ exception is **native extensions** (numpy, anything with C) — those *are* mach
 *(Meta-note for both threads: these were open exploratory questions, not hypotheses to re-rank — consistent with how you work in
 conceptual/systems domains. The value added was **structure and naming** (hardware-vs-contract; ISA-as-mother-tongue; the three emulation
 failure modes) and wiring the answers back to material you already own — Ch3 §3 memory ordering, Ch1 §1 bytecode, your Graviton/Docker
-practice. This whole session is really a **Ch1 §3 / Ch1 §5 trailer**; when we reach M01 Ch5 the OS-landscape comparison gets the full
+practice. This whole session is really a **Ch1 §3 / M01 Ch5 trailer**; when we reach M01 Ch5 the OS-landscape comparison gets the full
 treatment, and the x86/ARM memory-model hazard is worth reopening then.)*
 
 ---

@@ -652,7 +652,7 @@ market can unravel.
   drives insurance death-spirals (the sick are keenest to insure) and is why **signalling** (warranties,
   credentials, audited financials) and **screening** exist.
 - **Moral hazard** (hidden *action*, after the deal): insured people take more risk; a borrower spending
-  someone else's money is less careful; a manager whose downside is capped (cf. §11-style incentive
+  someone else's money is less careful; a manager whose downside is capped (cf. §1 §3-style incentive
   problems) over-gambles. It's why insurance has deductibles and why **principal–agent** problems are
   central to corporate governance — a thread you'll pull hard in the financial-statements and
   company-analysis modules (E07–E08), where management knows more about the business than you, the outside

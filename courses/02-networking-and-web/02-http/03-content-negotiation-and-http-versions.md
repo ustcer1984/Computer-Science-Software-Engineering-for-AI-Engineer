@@ -4,7 +4,7 @@
 > **Chapter:** HTTP deeply
 > **Section:** The two remaining pieces that close the chapter. First, **content negotiation** — how a
 > client says *what representation it wants* (`Accept`, `Accept-Language`, `Accept-Encoding`) and the server
-> picks one, with **compression** as the highest-value case and the `Vary` header (from §2) as the piece
+> picks one, with **compression** as the highest-value case and the `Vary` header (from Ch2 §2) as the piece
 > that keeps caching correct. Second, **the HTTP versions** — how HTTP/1.1 → HTTP/2 → HTTP/3 change the
 > *delivery* of everything in §1–§2 (the wire encoding, and how many requests share a connection) **without
 > changing a single method, status code, or caching rule.** The load-bearing idea: **semantics are constant;
@@ -183,7 +183,7 @@ q-value**, subject to what it can actually produce. Two subtleties that bite:
 - **`Accept-Encoding` has an implicit `identity`** (no compression) that's always acceptable unless you
   send `identity;q=0` — which is how a client says "you *must* compress or fail."
 
-The reason q-values matter to you: they're the input to the `Vary` correctness problem from §2. The moment
+The reason q-values matter to you: they're the input to the `Vary` correctness problem from Ch2 §2. The moment
 your response depends on `Accept-Language`, you **must** emit `Vary: Accept-Language`, or a shared cache
 serves French to an English reader. Negotiation and caching are the same problem viewed from two ends.
 
@@ -228,7 +228,7 @@ serves French to an English reader. Negotiation and caching are the same problem
 
 `Accept-Encoding` / `Content-Encoding` is content negotiation's highest-leverage case, so it's worth its
 own treatment. Text compresses dramatically — HTML, CSS, JavaScript and JSON routinely shrink **70–90%** — and that
-shrinkage comes straight off transfer time, the blue bar in §2's latency figure.
+shrinkage comes straight off transfer time, the blue bar in Ch2 §2's latency figure.
 
 - **The codecs, in order of modern preference:** **Brotli (`br`)** — best ratio for text, now near-universal
   over HTTPS; **gzip** — the universal fallback, supported everywhere; **zstd** — newer, fast, gaining
@@ -236,7 +236,7 @@ shrinkage comes straight off transfer time, the blue bar in §2's latency figure
 - **Don't compress the already-compressed.** JPEG/PNG/WebP, MP4, and `.zip`/`.gz` payloads are already
   entropy-coded; running gzip over them burns CPU for \~0% gain (occasionally *negative*). Compress text;
   pass binary media through.
-- **The `Vary: Accept-Encoding` obligation (from §2).** A cache that stores a `br` body and serves it to a
+- **The `Vary: Accept-Encoding` obligation (from Ch2 §2).** A cache that stores a `br` body and serves it to a
   client that only sent `Accept-Encoding: gzip` hands over undecodable bytes. Compression **requires** the
   `Vary` — this is the single most common real caching-plus-negotiation bug.
 - **`Content-Encoding` vs `Transfer-Encoding`.** `Content-Encoding: br` is an **end-to-end** property of
@@ -246,7 +246,7 @@ shrinkage comes straight off transfer time, the blue bar in §2's latency figure
   (transfer)*.
 
 > Keeper: **compression is just content negotiation on the `Accept-Encoding` axis** — and the instant you
-> negotiate *any* axis, you owe the matching `Vary`, or the shared cache from §2 serves the wrong variant.
+> negotiate *any* axis, you owe the matching `Vary`, or the shared cache from Ch2 §2 serves the wrong variant.
 
 ---
 
@@ -344,7 +344,7 @@ and does it ever reach your desk as an application developer? Both are worked in
   handshake budget for *every* file on a page. Catastrophic once pages had dozens of assets.
 - **HTTP/1.1** made connections **persistent by default** (`Connection: keep-alive`): reuse one warm
   connection for many sequential requests, amortizing the handshake — the "connection reuse" win Ch1 §1
-  called the biggest lever. It also added `Host` (name-based virtual hosting — Ch1 §11's IPv4 answer),
+  called the biggest lever. It also added `Host` (name-based virtual hosting — Ch1 §1 §11's IPv4 answer),
   chunked transfer, and the caching machinery of §2.
 - **But requests on a 1.1 connection are still strictly serial** — request, wait for full response, next.
   **Pipelining** (send the next request before the first response arrives) was specified but is effectively
@@ -376,7 +376,7 @@ flowchart TB
         B3["stream 3"]:::s --- BT
         BTx["✅ no HTTP-layer HOL<br/>❌ still TCP-layer HOL:<br/>1 lost packet stalls ALL streams"]
     end
-    subgraph H3["HTTP/3 — QUIC over UDP (Ch1 §7), independent streams"]
+    subgraph H3["HTTP/3 — QUIC over UDP (Ch1 §1 §7), independent streams"]
         direction LR
         C1["stream 1"]:::s --- CT["ONE QUIC connection<br/>TLS 1.3 built in · 0-RTT<br/>connection migration"]
         C2["stream 2"]:::s --- CT
@@ -492,12 +492,12 @@ layer down to the **TCP** layer — which is where HTTP/3 goes to kill it.
 </details>
 
 HTTP/3 (2022) keeps HTTP/2's semantics and multiplexing but **replaces the transport underneath**: instead
-of TCP+TLS (Transport Layer Security) it runs on **QUIC** (your Ch1 §7 acquaintance), a transport built on **UDP**.
+of TCP+TLS (Transport Layer Security) it runs on **QUIC** (your Ch1 §1 §7 acquaintance), a transport built on **UDP**.
 
 - **Streams are independent at the transport layer.** QUIC understands streams *itself*, so a lost packet
   stalls **only the stream it belonged to** — the others keep flowing. **TCP head-of-line blocking is gone.**
   This is the whole point of HTTP/3, and why it shines on lossy/mobile links.
-- **TLS 1.3 is built in.** QUIC integrates the Ch1 §5 handshake into the transport handshake, so connection
+- **TLS 1.3 is built in.** QUIC integrates the Ch1 §1 §5 handshake into the transport handshake, so connection
   setup is **\~1 RTT** (and **0-RTT** resumption for repeat visits) — fewer round-trips than TCP-then-TLS.
 - **Connection migration.** A QUIC connection is identified by a connection ID, not the 4-tuple of IPs and
   ports, so it **survives a network change** — walk from Wi-Fi to cellular and the connection (and your
@@ -684,7 +684,7 @@ Force the offer down and the server obligingly agrees — same URL, different ve
 * ALPN: server accepted http/1.1
 ```
 
-The elegant part: **ALPN rides inside the TLS handshake you are already paying for** (Ch1 §5), so version
+The elegant part: **ALPN rides inside the TLS handshake you are already paying for** (Ch1 §1 §5), so version
 negotiation costs **zero extra round-trips**.
 
 **3 — The `Alt-Svc` response header, for discovering HTTP/3.** HTTP/3 *cannot* be ALPN-negotiated on a
@@ -812,7 +812,7 @@ a migration. You will genuinely never branch on "if HTTP/2."
 
 This **closes Ch2 (HTTP deeply)** — §1 semantics, §2 caching, §3 negotiation + versions. The natural next
 steps:
-- **Ch3 — TLS & secure transport:** deepens Ch1 §5 (what HTTPS actually guarantees, certificates, the
+- **Ch3 — TLS & secure transport:** deepens Ch1 §1 §5 (what HTTPS actually guarantees, certificates, the
   handshake conceptually) — and it's the "TLS termination" job your §2/§11 reverse proxy performs.
 - **Ch4 — Real-time:** REST vs WebSockets vs SSE vs long-polling — **closest to your arena/WebSocket work**,
   and it builds directly on the connection model (§5–§7 here) and Ch1's NAT (Network Address Translation) idle-timeout note.

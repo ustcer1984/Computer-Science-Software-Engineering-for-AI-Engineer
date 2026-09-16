@@ -281,7 +281,7 @@ register the CPU bumps. Nothing magic — it's PC arithmetic plus a memory conve
 | **Contiguous** | laid out back-to-back in memory, so one fetched line contains the next values you need |
 | **Pointer chasing** | following addresses to scattered objects, producing a cache miss at nearly every step |
 | **Boxed `int`** | a Python integer as a full heap object with a header, reached through a pointer — the reason a list walk is cache-hostile |
-| **Heap** | the memory region those scattered objects live in (Ch1 §2) |
+| **Heap** | the memory region those scattered objects live in (Ch2 §1) |
 | **Big-O** | the asymptotic count of operations an algorithm performs — which ignores that not all operations cost the same |
 | **B-tree index** | the standard database index structure; M03 revisits it with this same hierarchy in mind |
 | **Sequential scan** | reading a table straight through, which the hierarchy rewards far more than the operation count suggests |
@@ -335,7 +335,7 @@ data — *whether the next thing you need is already in the line you just pulled
 This is the secret behind a fact you've lived but maybe not explained:
 
 > **Why `numpy` crushes a Python loop, part 1 of 2.** A Python list of a million numbers is a million
-> *pointers* scattered across the heap (each pointing to a boxed `int` object — Ch1 §2's "names on the
+> *pointers* scattered across the heap (each pointing to a boxed `int` object — Ch2 §1's "names on the
 > stack, objects on the heap"). Walking it is a cache-miss minefield. A `numpy` array is **one
 > contiguous block** of raw numbers — so each 64-byte line the CPU fetches brings in the *next several
 > values you need*. Same algorithm, but one is cache-friendly and one is cache-hostile. (Part 2 is SIMD,

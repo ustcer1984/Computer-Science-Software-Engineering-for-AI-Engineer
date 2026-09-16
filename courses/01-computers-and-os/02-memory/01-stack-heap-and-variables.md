@@ -181,7 +181,7 @@ why it's *automatic* — deallocation is not a decision anyone makes, it's a con
 This buys three properties and one hard limit:
 
 - **Speed** — bump a pointer; done. And because frames are reused constantly, the top of the stack is almost
-  always hot in L1 cache (Ch1 §4) — a double win.
+  always hot in L1 cache (Ch1 §3 §4) — a double win.
 - **Automatic lifetime** — a local variable lives exactly as long as its frame. You cannot leak stack memory.
 - **LIFO discipline** — you can only free the top. Which is the catch:
 - **It's bounded.** The stack is a *fixed, smallish* region (commonly ~1–8 MB per thread). Nest function
@@ -265,7 +265,7 @@ returned. Compared to the stack's "subtract from a register," this is genuinely 
   cheese — enough *total* free memory, but no single *contiguous* hole big enough for your next request. The
   stack, freeing only from the top, never fragments.
 - **It's cache-cold.** Heap objects are scattered by address, so walking them is the *pointer-chasing*
-  cache-miss minefield from Ch1 §4. **This is the other half of "why numpy beats a Python list"**: the list's
+  cache-miss minefield from Ch1 §3 §4. **This is the other half of "why numpy beats a Python list"**: the list's
   elements are heap objects all over the address space; numpy's are one contiguous heap block. Same fact you
   met in §3, now you can see the heap underneath it.
 
@@ -636,7 +636,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
 3. Why is `def f(items=[]):` a bug-in-waiting? Where and when does that `[]` get created, and what's the
    standard fix?
 4. You're told `numpy` beats a Python list partly because of "memory layout." Connect that to *this* section's
-   heap picture (not just Ch1 §4's cache line) — what's different about *where the actual numbers live* in the
+   heap picture (not just Ch1 §3 §4's cache line) — what's different about *where the actual numbers live* in the
    two cases?
 5. Typed as **separate REPL lines**, `a = 256; b = 256` gives `a is b → True` but `257` gives `False`. Explain
    both — and the twist: why does putting `a = 257; b = 257; a is b` on *one line* flip it back to `True`?
@@ -667,7 +667,7 @@ Jot a one-line answer to each before our Q&A — we'll dig into whichever are fu
    objects scattered anywhere on the heap** (§4: everything is an object, integers included). Walking it is
    pointer-chasing across the address space. A numpy array holds **one contiguous heap block of raw machine
    numbers**, no per-element object header and no indirection. That's §3's "cache-cold, scattered" bullet stated
-   in terms of *where the bytes live*; Ch1 §4's cache-line argument is the consequence, not the cause.
+   in terms of *where the bytes live*; Ch1 §3 §4's cache-line argument is the consequence, not the cause.
 5. **Two different sharing mechanisms, both CPython implementation details.** `256` is `True` because CPython
    **pre-creates and caches the small ints −5..256** as shared singletons, so both names get the one object;
    `257` is outside that range, so each separate REPL line makes a fresh object. On **one line** you get `True`
