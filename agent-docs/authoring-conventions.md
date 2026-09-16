@@ -20,6 +20,9 @@
 > **Corpus-wide sweep completed 2026-09-05** at his request ("do a full survey of all materials including other tracks"):
 > all 57 material files across the course, reading and hobby tracks were audited and fixed (\~510 expansions), so the
 > baseline is clean — from here this rule is a *maintenance* rule, applied per new section.
+> Extended 2026-09-16 (**rule 9: every self-check carries hidden answers**) from his instruction while reading
+> M02 Ch3 §2: *"Provide answers to 'Check your understanding' questions. This is a rule you should applied to all
+> courses (all tracks) in future. Hide the answers by default, but I can expand them when necessary."*
 
 ## 1. Use analogies (incl. the "physics lens") sparingly — only where they earn their place
 
@@ -421,4 +424,57 @@ for a, off in sorted(seen.items(), key=lambda kv: kv[1]):
     if not ok:
         print(f"  UNEXPANDED? {a:<8} …{ctx[110:210]}…")
 PY
+```
+
+---
+
+## 9. Every "Check your understanding" section carries answers, collapsed by default
+
+*(Established 2026-09-16 from his instruction while reading M02 Ch3 §2: "Provide answers to 'Check your
+understanding' questions. This is a rule you should applied to all courses (all tracks) in future. Hide the
+answers by default, but I can expand them when necessary." A survey at the time found **44 material files with
+a self-check and only 8 carrying answers** — the convention existed but had never been applied consistently.)*
+
+**A self-check without answers is not a self-check.** He studies alone and asynchronously; there is nobody to
+mark his attempt. Without an answer he cannot tell a *correct* answer phrased differently from a *wrong* one,
+which is exactly the case where feedback matters most. Unanswered questions also quietly become a to-do list
+he has to bring back to a session.
+
+- **Applies to all three tracks** — course, hobby, and any reading-track section that has a self-check.
+- **Collapsed by default.** The answers must not be visible while reading the questions, or the exercise is
+  worthless. Use a `<details>` block (verified against GitHub's own GFM renderer — nested markdown, lists,
+  tables and inline code all render correctly inside it, including when the block is indented inside a
+  numbered list item):
+
+  ```markdown
+  <details>
+  <summary>Answers</summary>
+
+  1. **The key idea first**, then the reasoning...
+
+  </details>
+  ```
+
+  Note the **blank line after `<summary>`** and **before `</details>`** — without them GitHub renders the
+  body as literal text instead of markdown.
+- **One block per section, placed immediately after the question list**, before the `---` and the hands-on
+  section. (Per-question `<details>` blocks also render, but the single block matches the existing files and
+  keeps the source readable; revisit only if he asks for per-question reveal.)
+- **Answer numbering must match the question numbering exactly**, so a collapsed answer is findable.
+- **Write the answer, not a hint.** Lead with the actual answer in the first clause, then the reasoning.
+  These are recall-and-apply checks, not riddles.
+- **Cross-reference back into the material** (`§4`, `Ch2 §1`, `M01 Ch4 §3`) — the answer is also the place a
+  reader lands when they got it wrong and need to re-read the right paragraph.
+- **Where a question asks for judgment rather than fact** ("what would you say to a colleague who…"), give
+  the *defensible position* plus the conditions under which it changes — matching how the material itself
+  teaches decisions.
+- **Rules 4 and 8 apply inside the answers too.** They are material: run the render-trap greps, and expand
+  any abbreviation whose first use in the section lands in the answer block.
+
+**Detector** (lists every self-check that has no answers block):
+
+```sh
+for f in $(grep -rl "Check your understanding" courses hobby upskill-readings --include="*.md"); do
+  grep -q "<summary>Answers" "$f" || echo "MISSING ANSWERS: $f"
+done
 ```

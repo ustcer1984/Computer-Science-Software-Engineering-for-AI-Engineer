@@ -447,6 +447,84 @@ $ curl -vI https://example.com
 10. An edge certificate is auto-renewed and healthy, but the origin certificate expired last week and no
     alarm fired. Give one configuration that would make this fail loudly and one that would hide it.
 
+<details>
+<summary>Answers</summary>
+
+1. **Security:** a compromised private key can be neither reliably **detected** (§1 §11b) nor reliably
+   **revoked** (CRLs — Certificate Revocation Lists — are huge, and OCSP is soft-failed), so the only remaining control is **how long a stolen
+   key stays useful** — and that is exactly the certificate's lifetime. **Operational:** at 47 days manual
+   renewal is not merely tedious, it is **impossible** — roughly eight renewals a year per hostname.
+   That is arguably the intended effect: shortening lifetimes is how the ecosystem **forces automation**,
+   and automation then also eliminates the expiry outages that manual processes cause. The security
+   argument justifies it; the forced automation is the larger practical win.
+2. Two distinct failures: **(a)** the job renewed the certificate but never **reloaded** the server, so the
+   old certificate stayed in memory; **(b)** the job "succeeded" while the *renewal itself* failed — a CA
+   rate limit, a failed challenge, or a write to the wrong path — because the exit code reflects the script
+   running, not the certificate being valid. The single change that catches both: **stop monitoring the
+   process and monitor the property** — connect to the **live endpoint** and alert on **days-to-expiry**
+   (at 21 and 7 days). That check is blind to how the certificate got there, which is precisely why it
+   catches every way the loop can break.
+3. A wildcard covers **arbitrary, unbounded subdomain names**. `http-01` and `tls-alpn-01` prove control of
+   **one specific host** by answering on it — and you cannot answer on *every* name matching
+   `*.example.com`, because the set is infinite and unknown. `dns-01` instead proves control of the
+   **zone** by publishing a `TXT` record at `_acme-challenge.example.com`, and zone control is exactly the
+   authority a wildcard represents. The privilege required: **write access to your DNS zone**, handed to
+   the ACME client — a significant credential. Scope the API token to the `_acme-challenge` records if
+   the provider supports it.
+4. **Say: take it back out unless we are making a deliberate, permanent decision.** `preload` is a
+   **one-way door** — entry takes weeks, removal takes **months**, because it has to ship in a browser
+   release and reach users, and old browser builds keep enforcing it regardless. What must be true first:
+   a valid certificate; **all** HTTP redirected to HTTPS; the header served on the **apex** with
+   `includeSubDomains` and `max-age` of at least one year; and **every subdomain HTTPS-capable, forever** —
+   including internal and legacy ones nobody has audited. The failure mode is that a plaintext
+   `legacy.example.com` becomes unreachable in every browser, and you cannot quickly undo it.
+5. **Precise correction:** TLS 1.3 session resumption is **still a 1-RTT handshake** — the client sends a
+   PSK (Pre-Shared Key) identity in the ClientHello and waits for the server's response before sending
+   application data. It removes **no round-trip**. What it *does* save is the **asymmetric work**: no
+   certificate is transmitted, and no signature is generated or verified — which is the expensive part on a
+   busy server — plus a meaningful number of bytes. So it is a **CPU and bandwidth** optimization, not a
+   latency one. The mechanisms that genuinely remove trips are **0-RTT**, **QUIC**, and **keeping the
+   connection open**.
+6. Safe **only when the request is idempotent** — `GET`, `HEAD`, or anything else whose repetition is
+   harmless — because early data carries no liveness guarantee and can be **captured and replayed**, and
+   the server cannot distinguish the replay from the original. The taxonomy that answers it is **Ch2 §1's
+   safe / idempotent / cacheable** classification: this is a case where a piece of HTTP *semantics* decides
+   whether a *transport* feature may be turned on, which is why enabling 0-RTT is an application decision
+   rather than a server-config toggle.
+7. The container has **no root store at all** — slim images (`alpine`, `distroless`, `scratch`) ship
+   without `ca-certificates`. With no trusted roots, chain-building terminates at a certificate that
+   nothing vouches for, and OpenSSL reports that as *self-signed certificate in chain*; the error blames
+   the server for a condition the **client** is in. The §1 concept: **the root store shipped with the
+   client is the trust anchor** — trust does not come from the network, so a client with an empty anchor
+   set can verify nothing. Fix by installing `ca-certificates` in the image.
+8. The internal API can be **Modern** — **TLS 1.3 only** — at **zero cost**, because you control every
+   client and can upgrade them; you get the shortest, safest configuration with the fewest negotiable
+   options (§1's *TLS 1.3 got safer by removing choices*). The marketing site cannot: its client
+   population is **the public**, including old Android devices, corporate middleboxes and embedded
+   browsers, so it needs **Intermediate** (TLS 1.2 + 1.3, forward-secret suites only). The difference is
+   not technical taste — it is **which client population you are obliged to serve**, which is a product
+   decision. Two endpoints on the same domain can legitimately hold different profiles.
+9. **Good for services** because you can actually provision and rotate credentials for something you
+   deploy: service A proves *"I am the checkout service"* cryptographically, and B rejects everything else
+   — strictly better than a shared API key, which is a bearer token that works from anywhere it leaks,
+   never expires, and shows up in logs. It is the one structural answer to Ch2 §1 §10c's *never trust the
+   client*: you cannot authenticate the public, but you can authenticate your own code. **Poor for end
+   users** because certificate enrolment, device changes and recovery are a support burden, and browser UX
+   for choosing a client certificate is genuinely bad — sessions/tokens/OAuth (M10 Ch3) are the answer
+   there. **The hard part is rotation**, not the handshake: every service now carries §1's full lifecycle
+   at short lifetimes, times hundreds of services — which is exactly what service meshes (Istio, Linkerd)
+   and SPIFFE/SPIRE exist to automate.
+10. **Fails loudly:** configure the edge to **verify the origin certificate** (full/strict origin TLS, or
+    re-encryption with verification enabled) — the origin's expiry then breaks the edge→origin hop
+    immediately and visibly; add a **separate expiry monitor per termination point**, targeting the origin
+    hostname directly rather than the public one. **Hides it:** any mode where the edge does **not**
+    verify the origin — Cloudflare "Flexible" (edge→origin in **plaintext**) or "Full" without validation,
+    or an ALB target group with verification off. The padlock keeps showing, users see nothing, and the
+    hop has quietly stopped being authenticated — the §1 §7 footgun, with the added twist that the
+    *failure of a security property produced no failure of the service*, so nothing pages you.
+
+</details>
+
 ---
 
 ## 11. Optional: get your hands dirty (40–50 min)
