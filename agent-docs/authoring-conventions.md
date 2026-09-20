@@ -673,3 +673,48 @@ python3 scripts/check-xrefs.py     # non-zero exit if anything is broken
 It validates bare references against the headings of their own file, and qualified references against the
 actual directory layout, so a typo or a renumber is caught mechanically rather than by a reader hitting a
 dead pointer.
+
+---
+
+## 12. Every figure and body table carries a visible, numbered caption
+
+*(Established 2026-09-20 from his instruction while reading hobby econ E06 §3: "When you say figure 1,
+figure 2, it is difficult for me to find them. You need to put the label beside the actual figure or in the
+figure caption." Followed immediately by: **"same thing for table."**)*
+
+**A cross-reference is only useful if the thing it points at is labelled.** The corpus had \~140 prose
+references of the form "fig 3" across 36 files and **not one visible caption** — the number lived only in the
+SVG *filename* and sometimes in the **alt text**, neither of which a reader on GitHub can see. Three files
+had even written `Figure 1 — …` *inside the alt attribute*, which renders only when the image fails to load.
+So every "as fig 3 shows" sent him scrolling and counting images.
+
+- **Figures: the caption goes immediately BELOW the image**, separated by a blank line, in the form
+  `**Figure N** — what it shows.` One sentence, sentence case after the dash, ending in a full stop.
+- **Tables: the label goes immediately ABOVE the table**, in the same form — `**Table N** — what it shows.`
+  A table is read top-down, so a title above it works the way a caption below a figure does.
+- **Number per file, in document order, starting at 1.** Figures and tables are numbered in **separate**
+  sequences (Figure 1…N, Table 1…N).
+- **Prose refers to the exact label, capitalised** — write `Figure 3`, not `fig 3` / `figure 3` / `fig. 3`.
+  The point is that the string in the prose is the string on the page, so a reader can search for it.
+- **Alt text stays what it is: a description for screen readers and for a failed image load.** It is *not*
+  the caption and must not be treated as one. Do not put `Figure N` in the alt text.
+
+**Scope — what gets a label and what does not.** Label anything the argument points at; leave lookup
+furniture alone:
+
+| Gets a number | Does not |
+|---|---|
+| matplotlib/plotted data figures | the rule-10 **vocabulary** `<details>` tables |
+| committed real/canonical figures | the rule-9 **Answers** `<details>` tables |
+| generated ComfyUI illustrations *(caption also keeps its rule-7 provenance line)* | the rule-5 **bilingual key-terms** tables |
+| **body tables** that carry an argument | tables inside fenced code blocks |
+| Mermaid diagrams **only if** prose references them by number | a Mermaid one-pager whose own heading already names it |
+
+Numbering a glossary would be noise — those tables are never cross-referenced, and rule 10 already scoped
+them out of the conventions. The split is \~239 body tables against \~816 inside `<details>`.
+
+**Detector** (flags a numbered prose reference with no matching visible label, and any unlabelled body figure):
+
+```sh
+python3 scripts/check-captions.py     # non-zero exit if anything is unlabelled or dangling
+```

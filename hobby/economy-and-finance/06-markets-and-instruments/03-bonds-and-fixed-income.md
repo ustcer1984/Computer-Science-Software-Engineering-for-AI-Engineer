@@ -135,9 +135,11 @@ you get paid is in the contract rather than in the schedule.
 
 A plain vanilla bond promises a **coupon** $C$ at fixed intervals and the **face value** $F$ at **maturity**.
 Per 100 of face, a 10-year bond with a 4% annual coupon pays 4 a year for ten years and 104 in the tenth.
-That is the left panel of figure 1:
+That is the left panel of Figure 1:
 
 ![A bond's nominal cash flows next to their present values. Left panel: ten annual coupons of 4 dollars per 100 of face value, then a final payment of 104 in year 10 — seventy-four percent of all the money owed arrives on the last day. Right panel: the present value of each of those payments discounted at a 5 percent yield, falling from 3.8 in year one to 2.6 in year nine, with 63.8 in year ten; the total is the price, 92.28. A dashed line and a triangular fulcrum at 8.36 years mark the Macaulay duration as the balance point of the present-value bars.](diagrams/03-bonds-and-fixed-income-fig1.svg)
+
+**Figure 1** — a bond's cash flows and their present values: maturity tells you when it ends, duration tells you where the value lives.
 
 Two things in that picture are worth more than they look.
 
@@ -156,6 +158,8 @@ price will move. Hold that thought.
 
 The legally operative document is the **indenture** (a **trust deed** in Singapore and the United Kingdom).
 It runs to hundreds of pages and it contains the things a cash-flow diagram cannot show:
+
+**Table 1** — the indenture terms that decide whether the payment schedule actually happens.
 
 | Contract term | What it does | Why it decides your outcome |
 |---|---|---|
@@ -181,6 +185,8 @@ out when a payment is missed, by which time the value has usually gone.
 
 If you remember one structural fact, remember the ladder. In an insolvency, claims are paid **strictly in
 order**, and a junior class gets nothing until the class above it is paid in full:
+
+**Table 2** — the repayment queue in insolvency, and what each rung typically recovers.
 
 | Rank | Claim | Typical recovery |
 |---|---|---|
@@ -324,6 +330,8 @@ Three consequences follow immediately, and they are the whole of "bond arithmeti
 This is where careless reading does real damage, because a fund factsheet and a broker screen will each quote
 a different one without saying which.
 
+**Table 3** — the four numbers called "yield," and what each one leaves out.
+
 | Name | Formula | What it ignores | Honest use |
 |---|---|---|---|
 | **Coupon rate** | $c$, fixed at issue | the price you paid | none, except to compute the coupon |
@@ -416,7 +424,7 @@ duration. This section makes that precise, because the precision is what you use
 
 ### 3.1 Duration is a centre of mass, not a maturity
 
-Look again at the right panel of figure 1. Each payment contributes a bar whose height is its present value.
+Look again at the right panel of Figure 1. Each payment contributes a bar whose height is its present value.
 **Macaulay duration** is the weighted-average time of those bars:
 
 $$D_{\text{mac}} = \sum_{t=1}^{n} w_{t} \cdot \frac{t}{m}, \qquad w_{t} = \frac{C / (1+y/m)^{t}}{P}$$
@@ -464,13 +472,15 @@ yield. For small moves that is fine. For large ones it is wrong in a systematic 
 
 ![Two panels on convexity. Left: the true price-yield curve of a 30-year 4 percent bond against its straight-line duration approximation with modified duration 17.3, both passing through par at a 4 percent yield; the true curve lies above the tangent everywhere, so a 2-point rise in yields costs 27.5 rather than the 34.6 the tangent predicts, and a 2-point fall gains 44.8 rather than 34.6. Right: a callable bond against an otherwise identical straight bond. As yields fall the callable bond's price is squeezed toward the call price of 102 and flattens out, while the straight bond keeps rising toward 144 — negative convexity, where the holder keeps the downside but not the upside.](diagrams/03-bonds-and-fixed-income-fig2.svg)
 
+**Figure 2** — convexity: duration is only the tangent, the price is the curve — and an embedded call can bend it the wrong way.
+
 The full second-order approximation adds the curvature term:
 
 $$\frac{\Delta P}{P} \approx -D_{\text{mod}} \thinspace \Delta y + \tfrac{1}{2} C (\Delta y)^{2}$$
 
 where $C$ is **convexity**. Note the square: **the convexity term is positive whichever way yields move.** For
 an ordinary bond this makes convexity an unambiguous good — you lose less than duration predicts when yields
-rise, and gain more when they fall. The left panel of figure 2 puts numbers on it for a 30-year 4% bond: a
+rise, and gain more when they fall. The left panel of Figure 2 puts numbers on it for a 30-year 4% bond: a
 two-point rise costs 27.5 rather than the predicted 34.6, and a two-point fall gains 44.8 rather than 34.6.
 
 Which raises the right question: **if convexity is free money, why does everyone not own the most convex bond
@@ -482,7 +492,7 @@ The trade-off is explicit and it is quoted.
 
 > **Where convexity turns against you.** Positive convexity assumes the cash flows are *fixed*. When the cash
 > flows themselves change as yields move — a bond the issuer can call, a mortgage a homeowner can refinance —
-> the curve can bend the wrong way. That is the right panel of figure 2, and §6 is where it lives.
+> the curve can bend the wrong way. That is the right panel of Figure 2, and §6 is where it lives.
 
 ### 3.4 What duration does *not* tell you
 
@@ -502,7 +512,7 @@ Three limits, all of which have cost people money:
 > opposite directions (§2.3), there is a horizon at which they cancel: **set your portfolio's duration equal
 > to your investment horizon and a parallel yield shift leaves your terminal wealth unchanged.** That is
 > immunisation, it is the theoretical basis of the LDI (liability-driven investment) strategies in §7, and it
-> is the reason figure 5 in §7 has a crossover at 8.4 years for a bond with duration 8.3.
+> is the reason Figure 5 in §7 has a crossover at 8.4 years for a bond with duration 8.3.
 
 ---
 
@@ -574,6 +584,8 @@ $$p \approx \frac{s}{1 - R}$$
 
 ![The breakeven annual default rate implied by a credit spread, plotted for three recovery rates: 20 percent, 40 percent and 60 percent. Vertical markers show the US investment grade spread of 0.80 percent and the high yield spread of 2.76 percent on 15 September 2026, alongside their December 2008 records of 6.56 percent and 21.82 percent. At a 40 percent recovery rate, today's 2.76 percent high-yield spread corresponds to a 4.6 percent annual default rate, roughly the long-run average — meaning the spread pays for the average loss and no more.](diagrams/03-bonds-and-fixed-income-fig3.svg)
 
+**Figure 3** — what a credit spread has to cover: the breakeven annual default rate it implies, with today's real spreads marked.
+
 Run the current market through it. On 15 September 2026 the ICE BofA (Intercontinental Exchange / Bank of America) US high-yield option-adjusted spread was
 **2.76 percentage points** and the investment-grade index was **0.80**. At the long-run 40% recovery rate,
 that high-yield spread just covers a **4.6% annual default rate** — which is close to the long-run average
@@ -598,6 +610,8 @@ Two refinements to keep the model honest:
   think it means.
 
 ### 4.2 The rating scale, and what it is and is not
+
+**Table 4** — the rating scale, and where the investment-grade line falls.
 
 | Moody's | S&P / Fitch | Band | Rough meaning |
 |---|---|---|---|
@@ -680,7 +694,7 @@ Two things this buys the system and one it costs:
 | Short | Stands for | Meaning |
 |---|---|---|
 | **YTM** | yield to maturity | the single rate that prices the whole bond; here shown to be a blend |
-| **CMT** | constant maturity Treasury | the US Treasury's published par-yield series, the raw input to figure 4 |
+| **CMT** | constant maturity Treasury | the US Treasury's published par-yield series, the raw input to Figure 4 |
 | **QE / QT** | quantitative easing / tightening | central-bank bond buying and its reversal, which move the term premium |
 | **STRIPS** | separate trading of registered interest and principal securities | the programme that lets a Treasury be split into individually tradable zero-coupon pieces |
 | **bp** | basis point | one hundredth of a percentage point |
@@ -725,6 +739,8 @@ representations that answer three different questions.
 ### 5.1 One curve, three readings
 
 ![The US Treasury curve on 15 September 2026, shown three ways. The par curve, the quoted constant-maturity yields, rises from 4.11 percent at three months through 4.67 at two years to 5.00 at ten years, peaks at 5.40 at twenty years and eases to 5.36 at thirty. The bootstrapped spot curve tracks it closely at the short end and rises above it wherever the curve slopes up, reaching about 5.57 percent near twenty years. The one-year implied forward curve sits above both, starting near 5.0 percent, rising to a hump of about 5.8 percent around nineteen years, then falling back toward 5.1 percent at the long end.](diagrams/03-bonds-and-fixed-income-fig4.svg)
+
+**Figure 4** — the US Treasury curve of 15 September 2026, read three ways: par, spot and 1-year implied forwards.
 
 - **The par curve** is what the market quotes: for each maturity, the coupon a *new* bond would need to price
   at exactly 100. It is what you see on a screen and in the newspaper.
@@ -903,7 +919,7 @@ will eventually be gamed; one derived from actual transactions is much harder to
 
 A **callable bond** gives the *issuer* the right to redeem early at a set price. The issuer will exercise
 exactly when it suits them — when rates have fallen and they can refinance cheaper — which is exactly when
-your bond would otherwise have been worth most. That is the right panel of figure 2: as yields fall, the
+your bond would otherwise have been worth most. That is the right panel of Figure 2: as yields fall, the
 callable bond's price is squeezed toward the call price instead of rising, and the curve bends the wrong way.
 
 This has three concrete consequences:
@@ -1026,6 +1042,8 @@ write-down.
 
 Who owns a bond tells you more about how it will behave in a crisis than any rating does.
 
+**Table 5** — who owns bonds, why they hold them, and how each behaves under stress.
+
 | Holder | Why they hold bonds | How they behave under stress |
 |---|---|---|
 | **Pension funds and life insurers** | they have long, fixed, bond-shaped **liabilities**; the bond is the matching asset | natural buyers of duration; but if leveraged (§7.3) they become forced *sellers* |
@@ -1052,6 +1070,8 @@ out, it buys new ones. There is no date on which your money comes back at par. T
 that a fund is strictly worse after a rate rise, and that conclusion is wrong.
 
 ![Two panels comparing a single bond and a bond fund after yields jump permanently from 4 percent to 6 percent on day one. Left: a single 10-year bond held to maturity drops immediately from 100 to 85.3, then climbs as coupons reinvest at the higher rate, crossing the no-shock path at about the 8.3-year duration mark and ending at 153 against 148. Right: a constant-maturity 10-year bond fund takes the same immediate mark-down and never pulls to par, but compounds at the new 6 percent yield and crosses the no-shock path at 8.4 years, ending above it. Both panels shade the early shortfall in red and the later surplus in green.](diagrams/03-bonds-and-fixed-income-fig5.svg)
+
+**Figure 5** — a single bond versus a bond fund after a rate shock: both catch up at about the duration horizon.
 
 Figure 5 runs the experiment. Yields jump permanently from 4% to 6% on day one:
 
@@ -1157,6 +1177,8 @@ Singapore runs large surpluses with a substantial net asset position. So the **S
 priced against, to give banks HQLA, and to give savers an instrument.
 
 ### 8.1 The four government instruments, and what each is for
+
+**Table 6** — Singapore's four government instruments, and what each one is for.
 
 | Instrument | Tenor | Who can buy | The point of it |
 |---|---|---|---|
@@ -1371,7 +1393,7 @@ because at that horizon, price risk and reinvestment risk cancel.
 Do this once and the section stops being abstract.
 
 1. **Pull a live curve.** Download the US Treasury's daily par yield curve (link in the references) for the
-   most recent business day. You now have the same input figure 4 used.
+   most recent business day. You now have the same input Figure 4 used.
 2. **Price a bond by hand.** Take a 5-year 4% annual-coupon bond. Discount each cash flow at the *par* yield
    for its own maturity from the curve you downloaded — not at a single YTM — and sum. Then find the single
    $y$ that reproduces that same price. That number is the bond's YTM, and you have just seen with your own
@@ -1379,7 +1401,7 @@ Do this once and the section stops being abstract.
 3. **Compute its duration and DV01.** Use §3.1 and §3.2. Then reprice at $y + 0.0001$ and check that the
    actual price change matches your DV01 to within a rounding error.
 4. **Break the approximation deliberately.** Reprice at $y + 0.02$ and compare with the duration prediction.
-   The gap is convexity (§3.3); confirm it has the sign figure 2 says it should.
+   The gap is convexity (§3.3); confirm it has the sign Figure 2 says it should.
 5. **Invert a real spread.** Look up the current ICE BofA high-yield OAS on FRED (Federal Reserve Economic Data), and using $p = s/(1-R)$ at
    $R = 0.4$, write down the annual default rate the market is currently paying you to bear. Then look up the
    long-run average high-yield default rate and decide whether you are being paid enough.
@@ -1471,10 +1493,10 @@ a script difference; ⚠⚠ marks a genuinely different word.**
   — the reference practitioners actually own; the duration and convexity chapters are the source material for §3.
 - **The curve, free and authoritative:** the US Treasury's
   [daily par yield curve rates](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve)
-  — the exact series figure 4 is built from, downloadable as CSV, and the input for the §11 exercise.
+  — the exact series Figure 4 is built from, downloadable as CSV, and the input for the §11 exercise.
 - **Live credit spreads:** the [ICE BofA US High Yield Index option-adjusted spread](https://fred.stlouisfed.org/series/BAMLH0A0HYM2)
   and the [US Corporate index](https://fred.stlouisfed.org/series/BAMLC0A0CM) on FRED — the two series marked in
-  figure 3, updated daily and free.
+  Figure 3, updated daily and free.
 - **Duration, in the original:** Frederick Macaulay,
   [*Some Theoretical Problems Suggested by the Movements of Interest Rates, Bond Yields and Stock Prices*](https://www.nber.org/books-and-chapters/some-theoretical-problems-suggested-movements-interest-rates-bond-yields-and-stock-prices-united-states-1856)
   (NBER, 1938) — where the centre-of-mass idea of §3.1 was introduced, and still readable.
