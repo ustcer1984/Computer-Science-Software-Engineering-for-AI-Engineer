@@ -106,6 +106,8 @@ flowchart TB
 </details>
 <!-- DIAGRAM:END -->
 
+**Figure 1** — autoregressive generation against diffusion — N model runs for N tokens, or whole blocks refined at once.
+
 **Why it's fast — and why that matters to anyone who *serves* models.** Because the denoising steps are roughly *constant* (a handful) regardless of how long the answer is, and because each step updates many tokens at once, a diffusion LLM (large language model) decouples latency from length. The numbers are the headline: Inception's **Mercury** runs at **over 1,000 tokens/second on a single NVIDIA H100** and bills itself as **5–10× faster** than comparable autoregressive models (and up to \~20× versus frontier models that plod under 50 tok/s). Google's **Gemini Diffusion** clocks **1,479 tokens/second** in DeepMind's own figures. For latency-sensitive work — code completion, autocomplete, agent loops that make dozens of sequential model calls — that is not a tweak, it's a different category. Mercury's first target was exactly this: **Mercury Coder Mini** landed **tied for 2nd on Copilot Arena**, beating speed-tuned models like GPT-4o Mini while being several times faster.
 
 **The subtler superpower: it can take a word back.** Autoregressive generation is strictly causal — token $t$ only sees tokens before it. Diffusion generation is **not causal**: every refinement step sees the *whole* draft, so the model can **correct earlier tokens in light of later ones**. DeepMind lists this explicitly — Gemini Diffusion *"corrects errors during generation for more consistent outputs."* That unlocks things autoregressive models are structurally bad at: filling a hole in the *middle* of a document (infilling), keeping a strict output format (JSON, code with balanced brackets), and self-repair mid-draft. It's the difference between a typist who can never hit backspace and a sculptor revising the whole block.
@@ -214,6 +216,8 @@ See [`images/10-diffusion-llms-and-the-fusion-power-race-2-plot.py`](images/10-d
 
 </details>
 <!-- PLOT:END -->
+
+**Figure 2** — fusion power density against magnetic field: the fourth-power law that let the machine shrink.
 
 **The machine going in right now.** On a site in **Devens, Massachusetts**, CFS is assembling **SPARC**, a compact tokamak (major radius just **1.85 m**) built around **18 toroidal-field magnets** of that HTS (high-temperature superconductor) tape. Each magnet weighs **\~24 tonnes** and is cooled to about **−253 °C** so it can carry over **30,000 amps**. As of early 2026 the first magnet is installed and construction is roughly **75% complete**, with the magnets arriving about every two weeks. The design goal: **\~140 MW of fusion power in 10-second bursts** at a fusion gain of **$Q \approx 11$** — meaning it puts out \~11× the energy needed to heat the plasma. SPARC is targeting **first plasma in 2026** and **net energy gain ($Q > 1$) in 2027** — which would be the first time a magnetic-confinement machine produces more fusion energy than it consumes. (Slips happen: first plasma was once penciled for 2025.) In a very 2026 touch, CFS runs a **digital twin** of the whole machine on NVIDIA Omniverse and Siemens software, so engineers can test changes in simulation before touching 20-tesla hardware.
 

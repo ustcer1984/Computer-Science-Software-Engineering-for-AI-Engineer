@@ -88,6 +88,8 @@ This one line gives you: a real constructor, a readable `repr` (`PipeState(promp
 
 **The four knobs that matter for you (this is the keeper):**
 
+**Table 1** — the four dataclass knobs that matter, and why each one matters to your design.
+
 | Knob | What it does | Why it matters to *your* design |
 |---|---|---|
 | `frozen=True` | Assigning to a field after construction **raises** `FrozenInstanceError`. The object is read-only. | This is the mechanism behind yesterday's keeper. A frozen `State` **cannot be mutated in place** — the aliasing/temporal-coupling bugs you were trying to avoid become *structurally impossible*, not just discouraged. "Define errors out of existence." |
@@ -252,6 +254,8 @@ You pressure-tested every flag combination with sharp yes/no hypotheses — your
 **The article's "a slots class may not have default values" is true only for *manual* `__slots__`.** That limitation is a name collision: a dataclass default lives as a **class variable** (`x = 5`), and `__slots__` wants to put a **member descriptor** at the same name — Python forbids the overlap. `@dataclass(slots=True)` (3.10+) sidesteps it by *building a new class* that lifts the defaults out of the body; it exists precisely to kill that footgun. So my skeleton's `slots=True` + defaults is fine; the article just predates the parameter.
 
 **`frozen` and `slots` are orthogonal — semantics vs storage layout.** This was the through-line you arrived at by the end:
+
+**Table 2** — `frozen` against `slots` — semantics against storage layout, and the mechanism behind each.
 
 | | reassign a declared field | add a new attribute/method | mechanism |
 |---|---|---|---|

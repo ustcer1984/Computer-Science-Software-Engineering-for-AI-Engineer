@@ -109,6 +109,8 @@ See [`images/03-the-majority-machine-web-and-the-atom-thin-transistor-2-plot.py`
 </details>
 <!-- PLOT:END -->
 
+**Figure 1** — crawl-to-refer ratios by operator — the web's old exchange rate, collapsed by five orders of magnitude for some and not others.
+
 **The finding is the spread, not the villain.** Look at what separates the top of that chart from the bottom: it is not politeness, and it is not respect for `robots.txt`. It is **whether the operator runs a product that shows the user a link they click.** Google and DuckDuckGo sit near parity because a crawl exists to populate a result someone clicks through. Perplexity, which cites inline, sits two orders of magnitude better than the training crawlers. An operator whose product **answers in place** structurally cannot return traffic — there is no click to send. This is why "just make the AI companies behave" misdiagnoses the problem. The referral wasn't a courtesy that lapsed; it was a **by-product of a specific product shape**, and that product shape is being replaced. The same Cloudflare data shows the purpose mix shifting hard: in July 2025, **about 79% of AI crawling was for training** and only \~17% for search; by May 2026 the reported split was \~52% training, \~36% mixed, \~9% search-only. A read-once-and-answer-forever machine is a fundamentally different customer than an index.
 
 **And here is the trap that makes this genuinely hard, not merely unfair.** The obvious defence is to block the crawlers in `robots.txt`. Hangcheng Zhao (Rutgers) and Ron Berman (Wharton) measured what actually happens when publishers do that, difference-in-differences across three independent traffic panels. Publishers who blocked LLM (large language model) crawlers **lost about 7% of weekly traffic within six weeks** — **−7.4%** in SimilarWeb, **−6.9%** in Semrush, **−6.5%** in Comscore's *human* panel. The loss was concentrated in the **largest** publishers (top 50 by rank; the effect washes out below that) and it faded after roughly twenty weeks. Read that carefully, because it is not the result the intuition predicts: **blocking the machine readers cost you the human ones.** Once a meaningful share of people arrive by asking a model instead of typing a query, being absent from the model's reachable web is a distribution decision, not a licensing one. `robots.txt` turns out to be a lever that moves the wrong thing — you cannot use it to *charge*, only to *disappear*.
@@ -141,6 +143,8 @@ flowchart TB
 
 </details>
 <!-- DIAGRAM:END -->
+
+**Figure 2** — four questions a machine request raises, and the four separate layers that answer them.
 
 **Layer 1 — identity, and why it had to come first.** For thirty years a bot announced itself with a `User-Agent` string, which is free text: anyone can claim to be Googlebot, and plenty do. **Web Bot Auth** replaces the honour system with cryptography — the client signs each outbound request with an **Ed25519** key pair and publishes the public key at a well-known URL (`/.well-known/http-message-signatures-directory`), riding on **RFC 9421 HTTP Message Signatures**, which has been a Proposed Standard since February 2024 and was sitting there waiting for a use case. This is the unglamorous prerequisite for everything else: **you cannot attach a policy, a price, or a liability to an identity you cannot verify.** Note the IETF (Internet Engineering Task Force) status honestly — the architecture draft has already expired once and been superseded, and this is still an individual submission, not a working-group product. The mechanism is real; the standard is not finished.
 
@@ -305,9 +309,13 @@ See [`images/03-the-majority-machine-web-and-the-atom-thin-transistor-4-plot.py`
 </details>
 <!-- PLOT:END -->
 
+**Figure 3** — carrier mobility against channel body thickness: below about 4 nm, silicon falls off a sixth-power cliff.
+
 **The escape is structural, not clever — which is exactly why it is credible.** A transition-metal dichalcogenide such as MoS₂ or WSe₂ is a **layered** crystal: within a layer the bonds are strong and covalent, between layers they are weak van der Waals. So a monolayer is not a thin slice cut from a thick crystal — it is a **complete, self-terminated object**, about **0.65 nm** thick, atomically flat by construction, with no dangling bonds and no thickness left to fluctuate. It does not have a roughness problem because it does not have a *surface* in the silicon sense. Mobility is then set by the material and its environment, not by how thin you dared to make it. That is the same class of argument as the strongest case in the last reading: **a substrate match rather than a trick.**
 
 **What the June 2026 result actually is, and why the number to look at is 50 nm and not 0.65 nm.** Making a good 2D transistor in a lab is fifteen years old. Making one at a **pitch** is new. **Contacted poly pitch (CPP)** is the distance from one gate to the next including its source/drain contacts, and it is the honest density metric, because it is where 2D devices have always cheated: you can demonstrate a beautiful 20 nm channel and then hide a huge contact next to it to keep the resistance survivable, which buys you nothing at the chip level. The imec/ASML/TSMC work reports:
+
+**Table 1** — the June 2026 2D-transistor result in numbers, and why 50 nm is the figure that matters.
 
 | What | Number | Why it matters |
 |---|---|---|
@@ -361,6 +369,8 @@ flowchart TB
 </details>
 <!-- DIAGRAM:END -->
 
+**Figure 4** — the thin-body wall, the candidate fixes, and which one is actually rate-limiting.
+
 **Where this sits on the roadmap — and note the shape of the insertion.** imec is not proposing to replace the silicon channel in a CPU next decade. Its plan puts planar 2D devices **first into peripheral circuits** — low-dropout regulators, power switches — around the **A7** generation in the early 2030s, widening later under the "CMOS (complementary metal-oxide-semiconductor) 2.0" heterogeneous-integration framing, with 2D channels displacing silicon in the CFET (complementary FET — field-effect transistor) architecture only in the **late 2030s** (its 2026 roadmap runs to A3 in 2038). That is a very familiar migration pattern: **the new material enters through the door where the requirements are loosest, and earns its way toward the hot path.** Worth also noticing that imec has begun redefining the density metric away from transistor dimensions toward **cell size** — when the channel stops shrinking, density has to come from somewhere else.
 
 **Meanwhile, the field is moving faster than the roadmap in the places where "good enough" is allowed.** Three items from the last eighteen months, and the pattern across them is that 2D electronics is escaping the single-device paper:
@@ -405,6 +415,8 @@ flowchart TB
 </details>
 <!-- DIAGRAM:END -->
 
+**Figure 5** — three eras of the web's presentation layer, and how the DOM became a tax on agents.
+
 **A2. The one real correction, and it is a *decoupling*: "detection fails" is not "blocking fails."** Your argument bundled three claims that come apart:
 
 - **(a) Behavioural detection of a determined agent will fail — TRUE**, and the robot-at-the-keyboard is the correct reductio. This is the **client-side trust problem**: you cannot verify anything about a client you do not control. It is the same reason game anti-cheat, DRM (digital rights management) and CAPTCHA (Completely Automated Public Turing test to tell Computers and Humans Apart) all lost — models now solve CAPTCHAs better than people do.
@@ -434,6 +446,8 @@ See [`images/03-the-majority-machine-web-and-the-atom-thin-transistor-5-plot.py`
 
 </details>
 <!-- PLOT:END -->
+
+**Figure 6** — the arithmetic on ads-for-tokens: what five minutes of rewarded video actually buys.
 
 **Why the barter never needed to clear — and this is the part worth keeping:** **ad value tracks intent, and the highest-intent moment is inside the answer, not before it.** Rewarded video is worth cents because generic attention is cheap; a recommendation slot in a commercial-intent answer monetizes like search, in dollars per click. So the money arrived in the pipeline exactly where you predicted, but it attached itself to **the recommendation, not the compute**. Today's implementation is still an honest labelled unit below the answer; the structural pressure runs toward paying to *be the cited source*, which recreates SEO (search engine optimization) as GEO with a much worse property — the ad sits inside the artifact the user has already delegated their decision to. **Perplexity is the datum on that ceiling:** it tested sponsored answers through 2024–25, stopped taking new advertisers in October 2025, and **exited advertising entirely in February 2026**, explicitly on trust grounds — *"the challenge with ads is that a user would just start doubting everything."* Someone ran your experiment and concluded the trust cost exceeded the revenue.
 
@@ -486,6 +500,8 @@ flowchart LR
 
 </details>
 <!-- DIAGRAM:END -->
+
+**Figure 7** — the magnetic-recording trilemma — the same three-way squeeze, in the problem next door.
 
 > **Where we landed.** Story 1 is the half of this reading that actually touches what you build: the web is being re-plumbed to charge for machine reads, and the load-bearing question is not whether sites can tell a bot from a human — they can't, and increasingly they aren't trying — but **at what price the machine path becomes cheaper to pay for than to evade.** Story 2 is the half that touches where you came from, and the transfer is sharper than the one I originally reached for: **your discipline was never "semiconductors," it was thin films whose device statistics are set by grain microstructure — which is exactly the variable that will decide when 2D transistors ship.** The unifying line across both halves is the one the pair was chosen for and the session confirmed twice: **the invention is finished in both stories; the migration is the entire problem.** In story 1 the migration is priced in months by economics, in story 2 in a decade by physics — and in both, the thing that decides the schedule is not the headline result but the least glamorous constraint in the stack.
 

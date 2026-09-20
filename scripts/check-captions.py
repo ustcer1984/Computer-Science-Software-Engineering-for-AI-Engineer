@@ -29,8 +29,9 @@ REF = re.compile(r'(?<![-\w/])\b(figure|fig|table)\.? ?(\d+)\b', re.I)
 
 
 def blank(m):
-    """Replace a span with the same number of newlines, preserving line numbers."""
-    return "\n" * m.group(0).count("\n")
+    """Blank a span but keep its LENGTH and its newlines, so offsets into the
+    masked text and the raw text stay interchangeable (and line numbers hold)."""
+    return "".join("\n" if c == "\n" else " " for c in m.group(0))
 
 
 def masked(text):
@@ -58,12 +59,21 @@ def check(path):
         src = m.group(2)
         if "/diagrams/" not in src and not src.startswith(("diagrams/", "images/")):
             continue
-        after = body[m.end():m.end() + 400]
-        if re.match(r'\s*\n\s*\*\*Figure \d+\*\* — ', after):
+        # Look for the caption in the RAW text: a figure wrapped in
+        # <!-- DIAGRAM/PLOT:START --> carries its collapsed source block first,
+        # and its caption must sit AFTER the END marker (render-diagrams.mjs
+        # rewrites everything between the DIAGRAM markers and would eat it).
+        tail = raw[m.end():][:3000]
+        tail = re.split(r'\n#{1,6} |\n!\[', tail)[0]
+        tail = re.sub(r'<details>.*?</details>', '', tail, flags=re.S)
+        tail = re.sub(r'<!--\s*(DIAGRAM|PLOT):END\s*-->', '', tail)
+        first = next((ln for ln in tail.split('\n') if ln.strip()), '')
+        if re.match(r'\*\*Figure \d+\*\* — ', first):
             continue
+        after = first + '\n'
         # an illustration already carrying an italic provenance caption (rule 7)
         # is not a numbered figure — it takes a number only if prose cites one
-        if re.match(r'\s*\n\s*[*_][^*_]', after):
+        if re.match(r'[*_][^*_]', first):
             continue
         # a Mermaid diagram is exempt unless the file numbers it with a marker
         if re.search(r'!\[Diagram \d+\]', m.group(0)):

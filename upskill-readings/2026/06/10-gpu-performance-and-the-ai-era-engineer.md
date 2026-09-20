@@ -210,6 +210,8 @@ Operator fusion was the new piece for you; you understood the rest, then flipped
 
 You checked whether your **course track** is following the article's advice. Verdict: **yes, almost point-for-point** —
 
+**Table 1** — Osmani's takeaways for aspiring architects, checked point by point against your own plan.
+
 | Osmani's "practical takeaways for aspiring architects" | Your plan |
 |---|---|
 | Learn complementary skills: system design, cloud, DevOps, security | M07 · M08 · M09 · M10 — *literally his list* |

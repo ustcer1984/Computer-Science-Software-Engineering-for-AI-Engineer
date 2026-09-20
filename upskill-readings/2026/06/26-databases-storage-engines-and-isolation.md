@@ -235,6 +235,8 @@ flowchart TB
 
 **The one idea.** "ACID isolation" sounds binary — your transactions are isolated or they aren't. It is actually a **ladder of levels**, each preventing more *anomalies* (concurrency bugs) at more cost, and **the default on most databases is several rungs below the top.** The ladder, from the ANSI standard plus the anomalies the standard forgot:
 
+**Table 1** — the isolation ladder: which anomaly each level prevents, and what it typically costs.
+
 | Isolation level | Dirty read | Non-repeatable read | Phantom | Write skew / lost update | Typical engine |
 |---|---|---|---|---|---|
 | Read Uncommitted | ✅ possible | ✅ | ✅ | ✅ | (rarely used) |

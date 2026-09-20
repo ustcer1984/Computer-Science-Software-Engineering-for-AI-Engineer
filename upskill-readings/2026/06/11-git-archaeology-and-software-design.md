@@ -72,6 +72,8 @@
 
 **The ladder (this is the keeper).** Each rung answers a deeper question:
 
+**Table 1** — the archaeology ladder: each tool and the deeper question it answers.
+
 | Tool | The question it answers |
 |---|---|
 | `git blame <file>` | "Who/what last changed this line?" (the shallow default) |
@@ -235,6 +237,8 @@ You moved past the article fast and landed on the real question: *can I just han
 **That one sentence is four questions on different epistemic ground — and git history only covers the first two.**
 
 > **Git history records the *past*. "When / why was this added" is a past question — history is ground truth and the agent reads it well. "Is it still needed / safe to remove" is a question about the *present dependency graph* and *future runtime* — git is silent on it.** The agent silently crosses that line and answers all four in the *same confident voice*. The skill is hearing the switch.
+
+**Table 2** — which sub-questions an agent can be trusted with, by domain, and how each one fails.
 
 | Sub-question | Domain | Agent reliability | Failure mode |
 |---|---|---|---|

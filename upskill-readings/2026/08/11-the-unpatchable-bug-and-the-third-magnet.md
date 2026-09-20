@@ -125,6 +125,8 @@ flowchart TB
 </details>
 <!-- DIAGRAM:END -->
 
+**Figure 1** — SQL injection solved structurally, and why a transformer prompt has no equivalent fix available.
+
 **Now watch what that costs once the model stops answering and starts acting.** A chatbot that can be talked into saying something rude is an embarrassment. An **agent** holds three things at once — your data, somebody else's text, and a way to reach the outside world — and Willison's name for that combination, coined **16 June 2025**, has become the field's standard vocabulary: the **lethal trifecta**. *Private data access. Exposure to untrusted content. The ability to communicate outward.* Any two are safe. All three, and a paragraph hidden in an email — white text, an HTML comment, a code comment, alt text — can read your files and mail them somewhere. Meta's version of the same insight is a design rule rather than a threat model: the **Agents Rule of Two** says an autonomous agent may hold at most two of the three, and holding all three requires a human in the loop.
 
 **This stopped being theoretical some time in mid-2025.** The canonical case is **EchoLeak** (**CVE-2025-32711**, CVSS [Common Vulnerability Scoring System] 9.3), disclosed by Aim Security in June 2025: a **zero-click** exfiltration from Microsoft 365 Copilot. The attacker sends one ordinary-looking email containing a hidden payload. Nobody clicks it, nobody reads it. Later the user asks Copilot something unrelated, the retrieval layer pulls that email into the context window *because it is relevant*, and the hidden text executes as instructions. **The user's only action was to use the product as designed.** Microsoft patched it server-side with no customer action required and no evidence of exploitation in the wild — but notice what "patched" means here: they broke one exfiltration path in one product. The class is untouched.
@@ -144,6 +146,8 @@ See [`images/11-the-unpatchable-bug-and-the-third-magnet-2-plot.py`](images/11-t
 
 </details>
 <!-- PLOT:END -->
+
+**Figure 2** — prompt-injection detection rates on InjecAgent — what a fine-tuned detector catches, and what gets through.
 
 **Read the direction of those bars, not their height.** A defence that catches 72% of attacks and a defence that catches 0% of attacks are not 72 points apart in the field — they are the *same defence*, measured before and after the adversary bothers to look at it. The paper's headline is blunt: eight defences evaluated, **all eight bypassed, attack success rate consistently above 50%**. Perplexity filtering is included exactly as published, catching essentially nothing in either column; it is the honest control that shows the benchmark was not rigged in the attacker's favour. This is a very old lesson in security wearing new clothes — *never evaluate a defence against an attacker who does not know it exists* — and it is being relearned in public because the machine-learning field's benchmark culture is built on static test sets.
 
@@ -175,6 +179,8 @@ flowchart TB
 
 </details>
 <!-- DIAGRAM:END -->
+
+**Figure 3** — four families of answer to a vulnerability with no patch, and how each one fails.
 
 **Family 3 is the one you can apply this afternoon, and it is a scoping decision, not a security feature.** If an agent reads untrusted web pages and holds your credentials, it must not be able to send anything outward — no arbitrary URLs, no images with attacker-chosen query strings, no email tool. If it must send outward and holds your credentials, it must not read untrusted content. The uncomfortable part is that these are the same three properties that make an agent *worth building*, so every honest deployment is an explicit trade rather than a mitigation you can bolt on afterwards.
 
@@ -327,6 +333,8 @@ flowchart TB
 </details>
 <!-- DIAGRAM:END -->
 
+**Figure 4** — the magnetic taxonomy turns on one question: which symmetry operation connects the two sublattices.
+
 **Why an engineer should care, in the exact terms of the storage trade-off.** A ferromagnetic bit broadcasts. Its magnetisation produces a dipolar field outside itself, and that field is how you read it — and also how it talks to its neighbours. Push bits closer together and the crosstalk grows; the industry's answer has been ever-harder magnetic materials, which is what makes them ever-harder to write, which is the coupling that drove two decades of recording physics. An antiferromagnet has no external field at all: nothing to read, but also **nothing to disturb and nothing to disturb it**, which is why antiferromagnetic memory has been an attractive idea since the 1990s and a commercial non-event ever since. The altermagnet's proposition is to break that trade rather than to trade along it: **zero stray field, and a spin-polarised current large enough to read.** In **CrSb** the splitting reaches about **1 eV** near the Fermi level with a Néel temperature above **700 K** — the splitting is not a cryogenic curiosity, it is larger than the room-temperature energy scale by a factor of forty. In bulk α-MnTe it is around **0.5 eV**. Calculations of altermagnetic tunnel junctions predict tunnelling magnetoresistance ratios in the hundreds to thousands of percent, which is the number that decides whether a memory cell is readable at all.
 
 **And the speed is not a marketing number — it falls straight out of the two-sublattice dynamics.** For a ferromagnet the uniform precession frequency is set by the anisotropy field alone, $f = (\gamma/2\pi)\thinspace\mu_{0}H_{A}$, which for realistic anisotropies lands in the low gigahertz. In a two-sublattice compensated magnet the two sublattices are locked together by the **exchange** field, and the standard Kittel/Keffer–Kittel result geometrically averages the two:
@@ -347,6 +355,8 @@ See [`images/11-the-unpatchable-bug-and-the-third-magnet-5-plot.py`](images/11-t
 </details>
 <!-- PLOT:END -->
 
+**Figure 5** — resonance frequency against anisotropy field — exchange enhancement as a geometric mean.
+
 **That factor of a thousand has already been demonstrated as a write operation, not just a resonance.** In 2018 Olejník and colleagues wrote reversible bits into a **CuMnAs** antiferromagnetic memory cell with **picosecond** electrical pulses — writing speeds three orders of magnitude beyond conventional memory — and the same cell behaved as a multi-level memristor, which is why this literature keeps drifting toward neuromorphic hardware. The altermagnet's contribution is not the speed; the antiferromagnet already had the speed. It is that the altermagnet **also lets you read the result electrically**, which is the reason none of that 2018 work turned into a product.
 
 **Now the part that makes this a real story rather than a prize announcement.** The material that carried altermagnetism into the spotlight was **ruthenium dioxide**, RuO₂ — a rutile oxide already used industrially, easy to grow epitaxially, and the subject of dozens of transport experiments reporting anomalous Hall effects, spin-orbit torque switching, and tunnelling anisotropic magnetoresistance up to 60%. There is a difficulty. **RuO₂ may not be magnetically ordered at all.**
@@ -362,6 +372,8 @@ See [`images/11-the-unpatchable-bug-and-the-third-magnet-4-plot.py`](images/11-t
 
 </details>
 <!-- PLOT:END -->
+
+**Figure 6** — ordered magnetic moment per atom, with iron for scale — and the RuO₂ problem.
 
 **Look at the size of that disagreement, because it tells you what kind of disagreement it is.** Polarised neutron diffraction on bulk crystals (Berlijn and colleagues, 2017) reported an ordered moment of about $0.05\thinspace\mu_{B}$ per Ru — small, but real, and enough to anchor everything that followed. Muon spin rotation, which is exquisitely sensitive to tiny static internal fields and does not need a model of the structure factor to interpret, found **no clear magnetic ordering**, with an effective moment of $4.8\times10^{-4}\thinspace\mu_{B}$ in bulk and about $7.5\times10^{-4}$ in a 12 nm film. Those numbers do not overlap within anybody's error bars; they are **two orders of magnitude apart**, which is the signature of a *category* disagreement — one technique is seeing an ordered phase and the other is seeing none — rather than a precision dispute. Meanwhile a 2024 photoemission reanalysis argued that the observed splitting in RuO₂ films **does not break the mirror symmetry** an altermagnet must break, and is better read as **Rashba-like** splitting from inversion asymmetry; and terahertz measurements of the laser-induced charge dynamics found the response fully explained by the ordinary inverse spin Hall effect with no altermagnetic term required.
 

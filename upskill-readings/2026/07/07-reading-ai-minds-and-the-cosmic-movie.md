@@ -119,6 +119,8 @@ flowchart LR
 </details>
 <!-- DIAGRAM:END -->
 
+**Figure 1** — how a sparse autoencoder re-expresses polysemantic neurons as readable, single-meaning features.
+
 **The party trick that made it real: Golden Gate Claude.** A feature isn't just a label you read — it's a **dial you can turn**. In 2024 Anthropic clamped the "Golden Gate Bridge" feature to maximum and released the result to the public for a weekend. The model became *obsessed*: ask it for a cookie recipe and it would find a way to route the ingredients across the bridge; ask what it looked like and it would answer that it *was* the Golden Gate Bridge. Funny — but the serious point underneath is enormous: if a behaviour lives in an identifiable feature, you can potentially **turn deception, or bias, or a jailbreak-vulnerability up or down like a knob**, instead of endlessly retraining and hoping.
 
 **From snapshots to circuits — catching the model *in the act*.** The 2025 work went from "what concepts exist" to "what is it *doing*, step by step," by tracing the **circuits** that connect features into an **attribution graph** — the computational path from prompt to output. Three findings are worth the price of admission:
@@ -232,6 +234,8 @@ flowchart LR
 
 </details>
 <!-- DIAGRAM:END -->
+
+**Figure 2** — the Rubin Observatory pipeline, from the 8.4-metre mirror to a nightly stream of alerts.
 
 **What ten hours already bought.** During commissioning, Rubin pointed at the sky for a little over **ten hours** and, in that sliver of test time, discovered **2,104 previously unknown asteroids** — including **seven near-Earth asteroids** — plus millions of galaxies and stars, in a region other surveys had already combed for years. Over the full survey it's expected to catalogue on the order of **20 billion galaxies**, **17 billion stars**, **millions of supernovae**, and **more than 5 million asteroids** (including roughly **100,000 near-Earth objects**) — a projected *tenfold* jump in the number of known solar-system bodies. It is less a telescope than a **discovery engine**: point it at the sky and inventory the universe.
 

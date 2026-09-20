@@ -117,6 +117,8 @@ flowchart TB
 </details>
 <!-- DIAGRAM:END -->
 
+**Figure 1** — the old ways to change kernel behaviour against eBPF — patch and reboot, or load a verified program live.
+
 **Why this quietly ate the infrastructure world.** Once you can run safe, fast, custom code at any kernel event without shipping a kernel, three huge domains fall to it:
 
 - **Networking.** Instead of the old `iptables` chains, you process packets *at the earliest possible instant* — some eBPF programs (via **XDP**, eXpress Data Path) run on the network card's driver path *before the kernel even builds a socket buffer*, dropping a DDoS (distributed denial-of-service) flood or load-balancing at millions of packets per second. Meta's **Katran** load balancer and the **Cilium** project (the leading Kubernetes networking layer, running on clusters of tens of thousands of nodes) are built this way.
@@ -222,6 +224,8 @@ See [`images/22-programmable-kernels-and-redefining-the-second-2-plot.py`](image
 
 </details>
 <!-- PLOT:END -->
+
+**Figure 2** — atomic-clock fractional frequency uncertainty by year — optical clocks have outrun the 1967 definition.
 
 **The machine that just set the record.** In **July 2025**, a NIST team announced the most accurate clock ever built: a single **aluminum ion** ($\text{Al}^{+}$), held motionless in an electromagnetic trap and interrogated by *quantum logic spectroscopy* (the aluminum ion is a beautifully stable timekeeper but hard to probe directly, so a companion magnesium ion is used to cool it and read out its state — a trick that shared in the 2012 Nobel Prize). The result: a fractional frequency uncertainty of about $5.5 \times 10^{-19}$ — **19 decimal places**, roughly 41% better than the previous record, and 2.6 times more stable than any other ion clock. Put in human terms: at that rate the clock would not gain or lose a full second in **around 40 billion years** — several times the current age of the universe. Getting there took making the probe laser absurdly steady: its stability was borrowed from a **cryogenic silicon cavity** and piped in over a **3.6-kilometer fiber link**, letting them ask the ion a single question for a full second at a time.
 

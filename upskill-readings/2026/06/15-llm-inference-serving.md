@@ -112,6 +112,8 @@ flowchart TB
 - Together: PagedAttention raises the batch-size ceiling, continuous batching keeps you pinned against it. **vLLM's 23× is both mechanisms multiplying** — neither alone gets there. (The 06-12-style keeper: *memory layout and scheduling are orthogonal axes of the same win.*)
 
 **The numbers worth holding** (Anyscale's production benchmark, vs naïve HF Transformers):
+**Table 1** — serving systems against naive HF Transformers: throughput gain, and what each one adds.
+
 | System | Throughput vs HF | What it adds |
 |---|---|---|
 | HF Transformers (static) | 1× | request-level batching |

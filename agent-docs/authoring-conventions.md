@@ -690,6 +690,13 @@ So every "as fig 3 shows" sent him scrolling and counting images.
 
 - **Figures: the caption goes immediately BELOW the image**, separated by a blank line, in the form
   `**Figure N** — what it shows.` One sentence, sentence case after the dash, ending in a full stop.
+  - **⚠ For a figure inside `<!-- DIAGRAM:START/END -->`, the caption must go AFTER the END marker.**
+    `scripts/render-diagrams.mjs` matches `WRAP_RE = /<!-- DIAGRAM:START -->[\s\S]*?<!-- DIAGRAM:END -->/g`
+    and **replaces the whole span**, so a caption written inside it survives until the next
+    `npm run diagrams` and then vanishes. Put it after the END marker (and, for consistency, after
+    `<!-- PLOT:END -->` too, so the caption always follows the collapsed source block rather than
+    splitting the figure from it). Verified idempotent: a full re-render of all 133 diagrams leaves
+    every caption in place.
 - **Tables: the label goes immediately ABOVE the table**, in the same form — `**Table N** — what it shows.`
   A table is read top-down, so a title above it works the way a caption below a figure does.
 - **Number per file, in document order, starting at 1.** Figures and tables are numbered in **separate**
@@ -706,7 +713,7 @@ furniture alone:
 |---|---|
 | matplotlib/plotted data figures | the rule-10 **vocabulary** `<details>` tables |
 | committed real/canonical figures | the rule-9 **Answers** `<details>` tables |
-| generated ComfyUI illustrations *(caption also keeps its rule-7 provenance line)* | the rule-5 **bilingual key-terms** tables |
+| Mermaid/plot figures the reading track numbers with `<!-- figN -->` | generated ComfyUI illustrations that already carry a rule-7 **provenance** caption — they take a number only if prose cites one |
 | **body tables** that carry an argument | tables inside fenced code blocks |
 | Mermaid diagrams **only if** prose references them by number | a Mermaid one-pager whose own heading already names it |
 

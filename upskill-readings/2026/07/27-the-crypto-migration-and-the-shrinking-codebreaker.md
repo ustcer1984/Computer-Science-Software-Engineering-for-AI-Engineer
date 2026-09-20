@@ -140,6 +140,8 @@ See [`images/27-the-crypto-migration-and-the-shrinking-codebreaker-2-plot.py`](i
 </details>
 <!-- PLOT:END -->
 
+**Figure 1** — the share of Cloudflare HTTPS traffic using post-quantum key agreement — one of the fastest protocol transitions the web has seen.
+
 **The half that isn't: signatures — and the reason is size, not maths.** Here the numbers get brutal. A typical TLS handshake today ships **five signatures and two public keys, totalling roughly 640 bytes**. Swap in ML-DSA-44 — signature 2,420 bytes, public key 1,312 bytes — and the certificate chain grows by about **15 kilobytes**. For context, the median certificate chain today is 3.2 kB and already accounts for roughly 40% of all bytes transferred in half of non-resumed connections. Push a handshake past about 10 kB and you are no longer doing cryptography, you are doing **network archaeology**: you overflow TCP's initial congestion window, you trip middleboxes and firewalls that were written when nobody imagined a 14 kB ClientHello, and roughly **5% of real-world connections simply break**. The alternatives are worse in different ways — FN-DSA-512 is smaller but needs floating-point arithmetic in a side-channel-sensitive code path, and newer schemes like SNOVA and MAYO have not been beaten on for long enough to trust.
 
 **But here is the subtlety worth carrying — the two clocks run in opposite directions.** A signature cannot be harvested and forged later. To impersonate your bank, the attacker needs a working quantum computer **at the moment of the handshake**, not in 2040. So *confidentiality* is urgent and *authentication* is not. Yet confidentiality was also the **easy** migration — one key exchange, two endpoints, ship it — while authentication is the **hard** one, because it drags in certificate authorities, certificate transparency logs, root programmes, embedded devices, and every TLS library on earth. **The urgent problem was easy and the relaxed problem is hard.** That inversion is why the industry did key agreement first and is only now, in mid-2026, arriving at a credible answer for signatures.
@@ -177,6 +179,8 @@ flowchart LR
 
 </details>
 <!-- DIAGRAM:END -->
+
+**Figure 2** — the two halves of the migration: key agreement is nearly done, signatures have barely started.
 
 **Why now, in dates.** **NIST IR 8547** deprecates RSA-2048 and ECC (elliptic-curve cryptography) P-256 in **2030** and disallows all quantum-vulnerable public-key algorithms by **2035**. **Executive Order 14412** (22 June 2026) hard-codes federal deadlines: a PQC (post-quantum cryptography) pilot within 180 days, a **cryptographic bill of materials** within 270 days, post-quantum key establishment for high-value systems by **31 December 2030**, post-quantum authentication by **31 December 2031**, and federal contractors on post-quantum FIPS by end-2030. NSA (National Security Agency)'s CNSA 2.0 wants new national-security systems there by 2027. And in April 2026 Cloudflare moved its own "fully post-quantum" target to **2029** — a year ahead of the government's — citing the research in story 2.
 
@@ -281,6 +285,8 @@ flowchart LR
 
 **The number that will not stop falling.** Breaking RSA-2048 with Shor's algorithm needs a few thousand *perfect* qubits. We have no perfect qubits, so the real question is always: how many **noisy physical** qubits do you need to build enough error-corrected logical ones? That number has collapsed:
 
+**Table 1** — the falling estimate of what it takes to break RSA-2048, and what changed each time.
+
 | Year | Estimate for RSA-2048 | Runtime | What changed |
 |---|---|---|---|
 | 2012 | order of $10^{9}$ physical qubits | — | first serious surface-code costing |
@@ -312,6 +318,8 @@ See [`images/27-the-crypto-migration-and-the-shrinking-codebreaker-4-plot.py`](i
 
 </details>
 <!-- PLOT:END -->
+
+**Figure 3** — estimated physical qubits needed to break RSA-2048, 2012–2026 — the scissors close from both sides.
 
 **Now the honest part, ranked.** The chart above is the most misleading true picture in quantum computing, and the discipline is in knowing exactly why.
 
@@ -345,6 +353,8 @@ flowchart TB
 
 </details>
 <!-- DIAGRAM:END -->
+
+**Figure 4** — from noisy physical qubits to logical ones, and what each error-correcting code costs to get there.
 
 **The bet.** On 31 March 2026, **Oratomic** launched out of Pasadena with **300 million dollars** in Series A funding — co-led by ARCH, Spark Capital and Khosla, one of the largest early-stage deep-tech raises of the year — to build a fault-tolerant neutral-atom machine of about 20,000 qubits by the end of the decade. Its founding CEO, **Dolev Bluvstein**, is the Harvard physicist behind the field's landmark logical-qubit demonstrations, and the 10,000-qubit paper carries **John Preskill's** name — the man who coined the term "quantum supremacy" and who has spent twenty years being the field's most reliable brake on hype. Oxford Quantum Circuits' Maria Violaris gives the fair verdict: the estimates rest on pieces "demonstrated to work individually" plus "more speculative assumptions that need future innovation."
 
@@ -384,6 +394,8 @@ flowchart TB
 
 </details>
 <!-- DIAGRAM:END -->
+
+**Figure 5** — what a quantum computer is actually for, ranked by strength of evidence rather than by marketing spend.
 
 The load-bearing detail in each tier: **Tier 1** is the only one where the advantage is a *substrate match* rather than an algorithmic trick — $N$ spin-orbitals span a $2^{N}$-dimensional Hilbert space, and the **fermion sign problem** is why quantum Monte Carlo cannot rescue you. The canonical target is the FeMo cofactor of nitrogenase: Haber–Bosch fixes nitrogen at roughly 450 °C and 200 atm and consumes on the order of 1–2% of world energy, while a soil bacterium does it at ambient temperature with an enzyme we still cannot model, because it is multireference and DFT (density functional theory) simply picks a spin state and lies. **Tier 2** dies on arithmetic: a logical gate costs many error-correction cycles, so logical clock rates land in the kHz-to-MHz range against classical GHz across billions of cores — you begin roughly twelve orders of magnitude behind, and a $\sqrt{N}$ speedup never repays that. **Tier 3** dies on I/O before it begins.
 
