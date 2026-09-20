@@ -238,7 +238,7 @@ Its composition is what matters here:
 | Short | Stands for | Meaning |
 |---|---|---|
 | **YTM** | yield to maturity | the single discount rate that makes the discounted cash flows equal the price |
-| **YTC** | yield to call | the same calculation run to the first call date and the call price |
+| **YTC** | yield to call | the same calculation run to the first date the *issuer* may redeem the bond early, and the price they would pay |
 | **YTW** | yield to worst | the lowest of YTM and every yield-to-call — the conservative quote |
 | **bp / bps** | basis point(s) | one hundredth of a percentage point; 0.25 percentage points = 25 bps |
 | **ACT** | actual (days) | a day-count convention counting real calendar days |
@@ -282,7 +282,9 @@ Its composition is what matters here:
 | **Yield to maturity** | the single rate that equates all discounted cash flows to the dirty price; the bond's IRR |
 | **Reinvestment assumption** | the hidden condition in YTM: every coupon is reinvested at the YTM until maturity |
 | **Reinvestment risk** | the risk that coupons cannot in fact be reinvested at that rate |
-| **Yield to call / yield to worst** | the same maths to an early redemption date, and the lowest such number |
+| **Call (call provision)** | a right written into the indenture (§1) letting the **issuer** buy the bond back early, on set dates and at a set **call price** — the holder cannot refuse. Full treatment in §6.3 |
+| **Call date / call price** | when that right may be exercised, and what the issuer pays if it is |
+| **Yield to call / yield to worst** | the same maths run to a call date instead of maturity, and the lowest such number |
 | **Total return** | price change plus income plus reinvestment — the only number that describes your actual outcome |
 | **Pull to par** | the drift of a bond's price toward 100 as maturity approaches, regardless of what yields did |
 | **Base (benchmark) rate** | the yield on a default-free bond **of the same maturity** — not the overnight policy rate |
@@ -347,7 +349,7 @@ a different one without saying which.
 | **Coupon rate** | $c$, fixed at issue | the price you paid | none, except to compute the coupon |
 | **Current (running) yield** | annual coupon divided by price | the capital gain or loss to maturity, and all timing | a crude income check; badly misleading on premium or discount bonds |
 | **Yield to maturity (YTM)** | the $y$ solving the price equation above | nothing, *if* its assumptions hold | the standard comparison number |
-| **Yield to worst (YTW)** | the lowest of YTM and every yield-to-call | nothing further | the right quote for any callable bond (§6) |
+| **Yield to worst (YTW)** | the lowest of YTM and every yield-to-call | nothing further | the right quote for any bond the issuer may redeem early (§6.3) |
 
 **Yield to maturity is the bond's internal rate of return**, and it carries two assumptions that are almost
 never stated out loud:
