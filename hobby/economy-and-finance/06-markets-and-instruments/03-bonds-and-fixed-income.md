@@ -327,6 +327,34 @@ using the bond's **day-count convention**. The convention is not cosmetic: US Tr
 corporate and municipal bonds conventionally use 30/360, money-market instruments use ACT/360, and the same
 bond priced under two conventions gives two different invoices.
 
+A convention answers two separate questions: **how do you count the days that have elapsed**, and **what do
+you divide by**. "ACT" means count the real calendar days; "30" means pretend every month has exactly 30.
+
+**Table 3** — the four day-count conventions you will actually meet, and what each one is really doing.
+
+| Convention | Days elapsed | Divided by | Who uses it | The catch |
+|---|---|---|---|---|
+| **ACT/ACT** | real calendar days | the real length of *this* coupon period | US Treasuries, most government bonds | none — it is the honest one. Accrual reaches exactly one full coupon on the payment date |
+| **30/360** | every month counted as 30 | 360 (every period exactly 180) | US corporate and municipal bonds, most swaps | a distortion of a few days, in whichever direction the calendar happens to fall |
+| **ACT/360** | real calendar days | **360** — a year that does not exist | money markets: commercial paper, most floating-rate notes, US bank loans | ⚠ a real year is 365 days, so you collect $\tfrac{365}{360}$ of the quoted rate. **5% ACT/360 pays 5.0694%** |
+| **ACT/365F** | real calendar days | 365, fixed, leap year or not | sterling and Singapore dollar money markets | mild: a leap year pays $\tfrac{366}{365}$ |
+
+**The same bond, two conventions.** Take a 4% semiannual bond (so each coupon is 2.00 per 100), last paid
+15 January 2026, settling 15 March 2026:
+
+- **ACT/ACT** — 59 real days elapsed out of the 181 real days in the 15 Jan → 15 Jul period:
+  $A = 2.00 \times \tfrac{59}{181} = 0.6519$
+- **30/360** — two whole months, so 60 days out of 180: $A = 2.00 \times \tfrac{60}{180} = 0.6667$
+
+A difference of **0.0147 per 100** — trivial on a retail ticket, **\$1,473 on 10 million of face**, and the
+sort of thing that shows up as an unexplained break between two systems settling the same trade.
+
+**Why do the fake calendars exist at all?** 30/360 predates computers: it makes every period identical, so a
+clerk could price a bond with mental arithmetic and no almanac. ACT/360 comes from commercial banking, where
+a 360-day year divided neatly into twelve 30-day months — and, not coincidentally, quietly pays the *lender*
+an extra 1.4%. Neither survives on merit; they survive because changing a convention means repapering every
+outstanding contract that references it.
+
 **Why split the price at all?** Because if the quote included accrued interest it would climb steadily
 through the coupon period and drop by the full coupon on the payment date — a sawtooth that has nothing to do
 with the market's view of the bond. Stripping it out leaves a clean number you can compare across time and
@@ -355,7 +383,7 @@ Three consequences follow immediately, and they are the whole of "bond arithmeti
 This is where careless reading does real damage, because a fund factsheet and a broker screen will each quote
 a different one without saying which.
 
-**Table 3** — the four numbers called "yield," and what each one leaves out.
+**Table 4** — the four numbers called "yield," and what each one leaves out.
 
 | Name | Formula | What it ignores | Honest use |
 |---|---|---|---|
@@ -396,7 +424,7 @@ DV01, the dollar value of a basis point — one hundredth of a percentage point 
 guess is that it is built up: a base rate, plus something for the risk of this particular bond. **That guess
 has the right shape, and two things wrong with it — and both of them matter.**
 
-**Table 4** — the two halves of any yield: what each is, what sets it, and which one does the moving.
+**Table 5** — the two halves of any yield: what each is, what sets it, and which one does the moving.
 
 | | **The base** | **The spread** |
 |---|---|---|
@@ -411,7 +439,7 @@ has the right shape, and two things wrong with it — and both of them matter.**
 A central bank sets an **overnight** rate. A ten-year bond is not an overnight loan, so the overnight rate is
 not its base. Both of these were true on the same day, 15 September 2026:
 
-**Table 5** — the policy rate and the 10-year on one day: 137 basis points apart, with no credit risk in between.
+**Table 6** — the policy rate and the 10-year on one day: 137 basis points apart, with no credit risk in between.
 
 | | Rate |
 |---|---|
@@ -703,7 +731,7 @@ Two refinements to keep the model honest:
 
 ### 4.2 The rating scale, and what it is and is not
 
-**Table 6** — the rating scale, and where the investment-grade line falls.
+**Table 7** — the rating scale, and where the investment-grade line falls.
 
 | Moody's | S&P / Fitch | Band | Rough meaning |
 |---|---|---|---|
@@ -1136,7 +1164,7 @@ write-down.
 
 Who owns a bond tells you more about how it will behave in a crisis than any rating does.
 
-**Table 7** — who owns bonds, why they hold them, and how each behaves under stress.
+**Table 8** — who owns bonds, why they hold them, and how each behaves under stress.
 
 | Holder | Why they hold bonds | How they behave under stress |
 |---|---|---|
@@ -1272,7 +1300,7 @@ priced against, to give banks HQLA, and to give savers an instrument.
 
 ### 8.1 The four government instruments, and what each is for
 
-**Table 8** — Singapore's four government instruments, and what each one is for.
+**Table 9** — Singapore's four government instruments, and what each one is for.
 
 | Instrument | Tenor | Who can buy | The point of it |
 |---|---|---|---|
