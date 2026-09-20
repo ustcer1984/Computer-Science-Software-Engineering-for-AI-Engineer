@@ -303,6 +303,19 @@ Bonds are quoted as a **price per 100 of face value**, so "98.40" means you pay 
 principal you are owed. US Treasuries add a wrinkle: they are quoted in **32nds**, so "99-16" is 99.5 and
 "99-16+" is 99.515625. This is a survival from open-outcry trading and it catches everybody once.
 
+Read the quote in three pieces:
+
+- **Before the dash — the handle**, in whole points. The 99 in "99-16".
+- **After the dash — 32nds**, called **ticks**. The 16 means 16/32, so "99-16" is 99.5. ⚠ It is *not* 99.16.
+- **A third character — fractions of a tick.** A **`+`** is the common one and means **half a tick**, $\tfrac{1}{64}$.
+  So "99-16+" is $99 + \tfrac{16.5}{32} = 99.515625$. On most screens a digit there counts *eighths* of a
+  tick, so "99-162" is $99+\tfrac{16.25}{32}$ and "99-166" is $99+\tfrac{16.75}{32}$.
+
+The fractions are small but the notional is not, which is the whole reason the market bothers. Per
+\$100,000 of face value, one point is \$1,000, one tick is **\$31.25**, and a plus is **\$15.625** — and a
+Treasury desk trades in billions, so half a 32nd is real money. This is also why the bond market never
+decimalised when equities did in 2001: the tick *is* the unit traders quote, argue and hedge in.
+
 The quoted number is the **clean price**. What you actually wire is the **dirty price**, which adds
 **accrued interest** — the portion of the next coupon that the *seller* earned by holding the bond since the
 last payment date:
