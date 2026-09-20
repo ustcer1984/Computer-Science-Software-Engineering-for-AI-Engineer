@@ -244,6 +244,9 @@ Its composition is what matters here:
 | **ACT** | actual (days) | a day-count convention counting real calendar days |
 | **IRR** | internal rate of return | the discount rate that makes a cash-flow stream's present value zero; YTM is a bond's IRR |
 | **UST** | United States Treasury security | quoted in 32nds of a point by convention |
+| **EFFR** | effective federal funds rate | the overnight rate the Fed actually steers — the policy lever, and *not* the base for a long bond |
+| **Fed** | the Federal Reserve | the US central bank |
+| **SEC** | Securities and Exchange Commission | the US securities regulator, after which the standardised "SEC yield" is named |
 
 **Symbols used in the formulas**
 
@@ -282,6 +285,13 @@ Its composition is what matters here:
 | **Yield to call / yield to worst** | the same maths to an early redemption date, and the lowest such number |
 | **Total return** | price change plus income plus reinvestment — the only number that describes your actual outcome |
 | **Pull to par** | the drift of a bond's price toward 100 as maturity approaches, regardless of what yields did |
+| **Base (benchmark) rate** | the yield on a default-free bond **of the same maturity** — not the overnight policy rate |
+| **Policy rate** | the overnight rate a central bank sets. ⚠ A *lever*, not a market price, and not the base for anything longer than overnight |
+| **Term premium** | the extra yield for lending long rather than rolling short; part of the base, not of the spread |
+| **Spread** | the yield over the maturity-matched base. ⚠ **Defined by subtraction from two observed prices** — never computed from fundamentals |
+| **Marginal buyer** | the last buyer needed to clear the market, whose indifference sets the price — not the average holder |
+| **Bid / ask** | the prices a dealer will buy at and sell at; a trade prints between them |
+| **"Read off a price"** | the section's habit: the yield is a *restatement of an observed price*, so the base-plus-spread split is an accounting of it after the fact, not a recipe for it |
 
 </details>
 
@@ -353,7 +363,7 @@ and §3 will show that they cancel exactly at one particular horizon, which turn
 
 > **The habit worth forming: ask "yield of what kind, to what date, net of what?"** A "5.8% yield" on a fund
 > factsheet might be the **distribution yield** (what it paid out last year, which can include return of
-> capital), the **SEC yield** — a standardised 30-day computation named for the US Securities and Exchange Commission —, or the portfolio's **yield to maturity**
+> capital), the **SEC yield** (a standardised 30-day computation named for the US Securities and Exchange Commission), or the portfolio's **yield to maturity**
 > before fees. These can differ by more than a percentage point on the same portfolio. This is the same
 > discipline you applied to "sticky" and to a bare multiple in E06 §2 §10d and §2 §10e: *name the
 > denominator, name the units.*
@@ -364,6 +374,72 @@ One **basis point** is 0.01 percentage points. Bond people quote everything in t
 matter are small and the leverage on them is large: a 25 bp policy move, a 10 bp widening, a 2 bp bid-ask
 spread. In a market where a 30-year bond loses roughly 0.17% of its value per basis point — that is §3's
 DV01, the dollar value of a basis point — one hundredth of a percentage point is not a rounding error — it is the trade.
+
+### 2.5 Where the yield comes from — it is read off a price, not assembled
+
+§2.2 used $y$ to turn a schedule of payments into a price. So where does $y$ itself come from? The natural
+guess is that it is built up: a base rate, plus something for the risk of this particular bond. **That guess
+has the right shape, and two things wrong with it — and both of them matter.**
+
+**Table 4** — the two halves of any yield: what each is, what sets it, and which one does the moving.
+
+| | **The base** | **The spread** |
+|---|---|---|
+| What it is | the yield on a *default-free* bond **of the same maturity** | everything the market charges on top for this particular bond |
+| What sets it | expectations of the future path of short rates, plus a **term premium** (E03 §2 §5) | credit risk, liquidity, any embedded option, tax treatment (§4) |
+| Where you get it | read it off the government curve (§5) | **by subtraction** — you do not compute it |
+| What moves it | macro data, inflation, the policy path, issuance and central-bank demand | issuer news, the credit cycle, fund flows, dealer balance-sheet capacity |
+| Whose variance dominates | **investment grade** — mostly a rates instrument | **high yield** — mostly a credit instrument, which is why it behaves partly like equity |
+
+#### The first correction: the base is maturity-matched, not the policy rate
+
+A central bank sets an **overnight** rate. A ten-year bond is not an overnight loan, so the overnight rate is
+not its base. Both of these were true on the same day, 15 September 2026:
+
+**Table 5** — the policy rate and the 10-year on one day: 137 basis points apart, with no credit risk in between.
+
+| | Rate |
+|---|---|
+| Effective federal funds rate — the Fed's actual lever | **3.63%** |
+| 10-year Treasury — the base for a 10-year corporate bond | **5.00%** |
+
+That 137 basis point gap is not a risk premium on anything. It is the **same risk-free issuer at a different
+horizon** — expected future short rates plus a term premium, exactly as E03 §2 §5 described. The base for a
+10-year corporate bond is the 10-year Treasury; for a 2-year bond it is the 2-year. This is why §5 insists
+that the *curve*, not a rate, is the object that does the pricing.
+
+The consequence is the part that catches people out: **the policy rate and the long yield can move in
+opposite directions, by a lot.** The Federal Reserve began cutting on 18 September 2024 and had taken the
+effective federal funds rate from **5.33% to 4.33%** by mid-January 2025 — a full point of easing. Over the
+same stretch the 10-year Treasury went from **3.65% to 4.78%**, a rise of 113 basis points. The Fed cut a
+point; the ten-year rose more than a point. Nothing was broken: cuts that markets read as tolerant of
+inflation, or that arrive alongside heavier issuance, raise the expected path and the term premium that the
+long yield is made of. **If you hold long bonds and the central bank cuts, you have not automatically been
+paid.**
+
+#### The second correction: the causality runs the other way
+
+Nobody assembles $y$ from components and derives the price from it. **The price is set by trading, and $y$ is
+that price restated in a different unit.** A dealer quotes a bid and an ask; buyers and sellers meet; the
+market clears where the **marginal buyer** — not the average holder, and not anyone's model — is indifferent
+between this bond and the next-best use of the money. A trade prints at a price, and $y$ is defined as
+whatever single rate makes the discounted cash flows equal that price.
+
+So the base-plus-spread decomposition is an **accounting of a price after the fact, not a recipe for
+producing one.** In particular the spread is *defined by subtraction*: you observe the government curve, you
+observe where the corporate bond trades, you convert that price to a yield, and the difference **is** the
+spread. It is measured, never modelled.
+
+That is not pedantry — it is precisely what makes §4.1's move possible. If spreads were computed from default
+fundamentals, inverting one to ask "what default rate does this imply?" would be circular. Because the spread
+is an observed price, the inversion is a genuine test: **the market hands you a number, and you get to decide
+whether you believe the loss rate it is paying you to bear.**
+
+> **Back to Figure 1.** The 5% used there to discount a 4% coupon bond is not derived from anything in the
+> figure. It is the return the market currently demands from *that issuer, at that maturity, with that
+> liquidity* — observed from where the bond trades. The arithmetic then forces the price to 92.28. You may
+> decompose it afterwards into, say, a 4.3% ten-year risk-free rate plus 70 basis points of spread — but you
+> got that split from two observed prices, not from a model of the company.
 
 ---
 
@@ -573,7 +649,8 @@ Three limits, all of which have cost people money:
 ### 4.1 The spread is a breakeven, and you can invert it
 
 A corporate bond yields more than a government bond of the same maturity. That extra is the **credit spread**
-$s$, and in first approximation it is paid for by expected default losses:
+$s$ — measured by subtraction from two observed prices, never computed from fundamentals (§2.5) — and in
+first approximation it is paid for by expected default losses:
 
 $$s \approx p \times (1 - R)$$
 
@@ -611,7 +688,7 @@ Two refinements to keep the model honest:
 
 ### 4.2 The rating scale, and what it is and is not
 
-**Table 4** — the rating scale, and where the investment-grade line falls.
+**Table 6** — the rating scale, and where the investment-grade line falls.
 
 | Moody's | S&P / Fitch | Band | Rough meaning |
 |---|---|---|---|
@@ -734,7 +811,9 @@ Two things this buys the system and one it costs:
 E03 §2 §5 introduced the yield curve as **a forecast drawn as a line** — the expectations hypothesis plus a
 term premium, with inversion as the recession signal. That reading is about what the curve *means*. This
 section is about what the curve *does*: it is the machine that prices every bond, and it has three equivalent
-representations that answer three different questions.
+representations that answer three different questions. §2.5 already gave the headline — a bond's base is the
+default-free yield **at its own maturity**, not the overnight policy rate — and this is where that base
+actually gets built.
 
 ### 5.1 One curve, three readings
 
@@ -1042,7 +1121,7 @@ write-down.
 
 Who owns a bond tells you more about how it will behave in a crisis than any rating does.
 
-**Table 5** — who owns bonds, why they hold them, and how each behaves under stress.
+**Table 7** — who owns bonds, why they hold them, and how each behaves under stress.
 
 | Holder | Why they hold bonds | How they behave under stress |
 |---|---|---|
@@ -1178,7 +1257,7 @@ priced against, to give banks HQLA, and to give savers an instrument.
 
 ### 8.1 The four government instruments, and what each is for
 
-**Table 6** — Singapore's four government instruments, and what each one is for.
+**Table 8** — Singapore's four government instruments, and what each one is for.
 
 | Instrument | Tenor | Who can buy | The point of it |
 |---|---|---|---|
@@ -1323,6 +1402,11 @@ because at that horizon, price risk and reinvestment risk cancel.
    was the market telling a buyer in 2016, and what would you have had to believe to buy anyway?
 10. A Singapore Savings Bond and a 10-year SGS bond are both backed by the same AAA government. Why does the
     SSB yield less, and in what circumstance is the SGS bond clearly the better instrument?
+11. The central bank cuts its policy rate by a full percentage point. You hold a 10-year corporate bond.
+    Have you made money? Answer in one sentence, then name the two separate things that would each have to
+    go your way for the answer to be yes.
+12. Your colleague says "this bond's spread is 250 basis points, so the market thinks it will default about
+    4% a year." Is that a fair reading of how the spread was arrived at? What would you add?
 
 <details>
 <summary>Answers</summary>
@@ -1383,6 +1467,24 @@ because at that horizon, price risk and reinvestment risk cancel.
     higher yield for longer**, particularly if you expect rates to fall — in which case the SGS bond's price
     rises and the SSB's "price" cannot, since it is fixed at par by construction. The SSB's protection against
     loss is also protection against gain.
+11. **Not necessarily, and the policy cut on its own tells you almost nothing** (§2.5). Your bond is priced
+    off the **10-year** point of the curve, not the overnight rate, and the two can move in opposite
+    directions — the Fed cut 100 basis points between September 2024 and January 2025 while the 10-year
+    Treasury *rose* 113. For you to have made money, **two separate things** must go your way: (a) the
+    maturity-matched **base** — the 10-year yield — must actually fall, which needs the market to revise
+    down its expected path of future short rates or its term premium, not merely to watch one cut happen;
+    and (b) your bond's **spread** must not widen by more than the base fell. A cut delivered *because* the
+    economy is deteriorating often does (a) and undoes it with (b), because deterioration is exactly what
+    widens credit spreads (§4).
+12. **The arithmetic is fine; the direction of reasoning is backwards** (§2.5). At a 40% recovery the
+    inversion $p \approx s/(1-R)$ does give about 4.2% a year, so the number is right. But the spread was
+    **not produced by the market forecasting a default rate** — it is a *subtraction*: the bond's observed
+    price converted to a yield, minus the maturity-matched risk-free yield. What you would add is that the
+    spread also pays for **liquidity**, for any embedded **option** (so quote the OAS, §6.3), for tax
+    treatment, and for the *uncertainty* of the default rate rather than its mean — which is why
+    investment-grade spreads have historically exceeded realised default losses by a wide margin. So 4.2% is
+    a **breakeven you are being paid to bear, not a forecast the market is making** — and reading it as the
+    latter would have you conclude the market is wildly pessimistic when it is merely charging for risk.
 
 </details>
 
@@ -1445,6 +1547,10 @@ a script difference; ⚠⚠ marks a genuinely different word.**
 | At par / discount / premium | 平价／折价／溢价 | 平價／折價／溢價 | ⚠ script |
 | Basis point | 基点 | **基點／bp** | ⚠ script; both markets also just say "bp" |
 | Spread | 利差／信用利差 | 利差／信用利差 | same |
+| Benchmark / base rate | 基准利率 | **基準利率** | ⚠ **准 ↔ 準**; the maturity-matched reference, §2.5 |
+| Policy rate | 政策利率 | 政策利率 | same — ⚠ **not** the base for a long bond |
+| Term premium | 期限溢价 | **期限貼水／期限溢酬** | ⚠⚠ **溢价 ↔ 貼水／溢酬** — TW uses 貼水 for a premium of this kind |
+| Risk premium | 风险溢价 | **風險溢酬** | ⚠⚠ **溢价 ↔ 溢酬** |
 
 **Risk**
 
@@ -1531,7 +1637,8 @@ a script difference; ⚠⚠ marks a genuinely different word.**
 ### What's next
 🔵 **PREPARED 2026-09-17.** You now hold the contractual claim end to end: **what a bond is as a contract**
 (the indenture, the covenants, and a queue position worth more than the coupon), **how to read a quote**
-(clean versus dirty, and the four things called yield), **interest-rate risk properly** (duration as a centre
+(clean versus dirty, the four things called yield, and the fact that a yield is a *restatement of a traded
+price* — so base-plus-spread is an accounting of it, not a recipe), **interest-rate risk properly** (duration as a centre
 of mass, DV01, and convexity as the curvature the tangent misses), **credit risk as an invertible breakeven**
 (and today's spreads paying the average loss with no cushion), **the curve as the pricing machine** (par →
 spot → forwards, and why a single YTM is a blend), **the rest of the family** as one assumption relaxed at a
