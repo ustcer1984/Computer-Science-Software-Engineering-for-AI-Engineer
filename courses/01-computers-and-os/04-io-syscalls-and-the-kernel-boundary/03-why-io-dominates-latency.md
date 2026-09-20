@@ -85,6 +85,8 @@ or do them where the user can't see the wait.
 §1 gave the numbers; here's what they *mean* on a human scale. Take the classic trick (Brendan Gregg's): scale so that one CPU cycle
 (≈ 1 ns of L1 access) becomes **1 second**. Then the rest of the hierarchy stretches to times you can feel:
 
+**Table 1** — real operation latencies, and the same distances rescaled so one nanosecond is one second.
+
 | Operation | Real latency | If 1 ns = 1 second… |
 |---|---|---|
 | L1 cache reference | ~1 ns | **1 second** |
@@ -324,6 +326,8 @@ never happens. This is the highest-leverage lever because it attacks the *count*
 <!-- FIGURE -->
 ![Two stacked timelines of the same five I/O requests (90, 110, 100, 130, 95 ms). Top ('Serial — one after another'): the bars are laid end to end into a staircase, total = the sum = 525 ms. Bottom ('Concurrent — overlapped, one thread, epoll'): all five bars start at time zero and run in parallel, total = the max = 130 ms. Dashed lines mark each total. The figure shows that overlapping independent waits collapses wall-clock from the sum of latencies to the single largest latency.](diagrams/03-why-io-dominates-latency-fig2.svg)
 
+**Figure 2** — the same five requests run serially and concurrently — the lever that actually moves wall-clock time.
+
 Five 100-ish-ms calls take 525 ms serially and 130 ms concurrently — and note the concurrent total is exactly the **slowest single call**
 (130 ms). That's the hinge into §5: once you overlap, your latency *becomes* the tail. (This is `asyncio.gather` / your fan-out; Little's Law
 says the overlap is also what gives you throughput.)
@@ -410,6 +414,8 @@ $1 - 0.99^{N}$:
 
 <!-- FIGURE -->
 ![A semilog plot of P(a request waits on at least one slow backend) = 1 minus p to the N, against fan-out N from 1 to 1000, for three per-backend 'fast' probabilities: p99 (1% slow, red), p99.9 (0.1% slow, orange), p99.99 (0.01% slow, green). The red p99 curve rises steeply, passing a marked point at N=100 where 63% of requests hit at least one slow backend, and approaches 100% by N≈500. Each tenfold improvement in the per-backend tail shifts the curve right by about a decade of fan-out. A dashed line marks the 50%-of-requests-slow level.](diagrams/03-why-io-dominates-latency-fig1.svg)
+
+**Figure 1** — the probability of hitting at least one slow backend, against fan-out — why tail latency compounds.
 
 At $N = 100$, $1 - 0.99^{100} \approx 0.63$: **63% of requests wait on at least one slow backend.** The per-server tail (a rare 1%) has become
 the *typical* experience of the fanned-out request, because you took the **max of 100 samples** and the max of many samples lives in the tail.
@@ -546,7 +552,7 @@ Bring your answers to our chat — especially where you have to *rank* the domin
 3. **The tail, quantified.** A batch fans out to 200 backends, each with a 0.5% chance of being slow, and waits for all. Estimate the
    probability the batch hits at least one slow backend. Then: your teammate says "our backends are at p99.9 now, we're fine" — at what
    fan-out does that reassurance break (say, >50% of requests slow)?
-4. **Sum vs max.** Explain, using fig 2, why overlapping five 100 ms calls gives ~130 ms and not ~100 ms or ~500 ms — and why the answer means
+4. **Sum vs max.** Explain, using Figure 2, why overlapping five 100 ms calls gives ~130 ms and not ~100 ms or ~500 ms — and why the answer means
    "once you parallelize, optimize the *straggler*." Tie the 130 to §5.
 5. **Latency- or bandwidth-bound?** Classify each and give its correct lever: (a) a health-check ping to 50 microservices; (b) copying a 5 GB
    model checkpoint between two nodes in one datacentre; (c) LLM token decode on a single GPU. Why would "add more bandwidth" help exactly one
@@ -610,6 +616,8 @@ one-time setup**, exactly the §1 claim:
 <!-- FIGURE -->
 ![Horizontal stacked bar titled 'Anatomy of a cold serverless request (~3.6 s): the compute is a sliver, the I/O and setup are everything.' Five segments laid end to end along a wall-clock-time axis in milliseconds: container init / imports & page-in (1400 ms), init_db bootstrap / schema-seed check (1000 ms), first DB connect / TCP+TLS (Transport Layer Security)+auth (750 ms), Firebase cert fetch / one network round-trip (360 ms), and finally a tiny green DB-query segment (42 ms). An arrow points to the thin green sliver with the caption 'DB query — the actual work — is 42 ms: ~1% of the wait. Everything else is a round-trip or a one-time setup cost.' The figure makes visceral that the only compute slice is ~1% of the request; the rest is setup and network I/O.](diagrams/03-why-io-dominates-latency-fig3.svg)
 
+**Figure 3** — anatomy of a cold serverless request: the compute is a sliver, the I/O and setup are everything.
+
 Read it against §7's keeper: the compute is a rounding error, and the latency *is* the setup + round-trips. A junior instinct ("the DB is slow,
 scale it up") would have optimized the 1% and left the 99% untouched — the same critical-path mistake as caching the 1 ms permission lookup in
 §3. Finding *where the time goes first* is the entire discipline.
@@ -618,7 +626,7 @@ scale it up") would have optimized the 1% and left the 99% untouched — the sam
 
 Here's the conceptual twist the case surfaced. Your usual queuing worry is **too much** arrival rate — $\lambda$ so high the system saturates and
 $W$ blows up. A serverless cold start is the *opposite* failure: $\lambda$ so **low** that the platform reclaims idle containers, so the *next*
-arrival pays the full setup cost of fig 9.1. The standard fix — a "warmer" that pings the functions on a timer — is best understood through
+arrival pays the full setup cost of Figure 3. The standard fix — a "warmer" that pings the functions on a timer — is best understood through
 Little's Law as **injecting synthetic arrivals** (a made-up $\lambda$): fake traffic that keeps a container (and its warm connection + cert
 cache) alive so real requests never find it cold.
 
@@ -633,7 +641,7 @@ and $W$ from logs and let the law tell you the number, rather than warming "one 
 Every fix in the investigation was one of the four levers — a clean checklist in the wild:
 
 - **Lever 1 (fewer trips)** — the persistent-connection change: instead of a fresh `connect()` (TCP + TLS + auth handshake) *per query*, reuse
-  one connection across all warm invocations. That's the ~750 ms slice in fig 9.1 paid **once** and amortized, not per request. Module-caching
+  one connection across all warm invocations. That's the ~750 ms slice in Figure 3 paid **once** and amortized, not per request. Module-caching
   the auth certs is the same move applied to the ~360 ms cert fetch.
 - **Lever 3 (move closer)** — the biggest win, and the cleanest: data that changes at most once a day (a leaderboard) was moved to a **static
   file in object storage**, so the read path touches *no Lambda and no DB at all*. This is "move closer" taken to its limit — the round-trip you

@@ -268,6 +268,8 @@ about. There is almost always a small set of entry points; once you have one, th
 
 **Common entry point patterns:**
 
+**Table 1** — where the entry point hides, by project type.
+
 | Project type | What to look for |
 |---|---|
 | Python CLI / script | `if __name__ == "__main__":` block; `[tool.poetry.scripts]` in pyproject.toml |

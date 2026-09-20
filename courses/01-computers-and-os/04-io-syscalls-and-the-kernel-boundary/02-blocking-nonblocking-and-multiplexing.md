@@ -103,6 +103,8 @@ Before the models, one distinction they're all built on. A `read` on a socket do
 The five classic I/O models (the taxonomy from Stevens' *UNIX Network Programming*) are just the five ways to divide responsibility for
 those two phases between you and the kernel:
 
+**Table 1** — the I/O models, phase by phase: who waits for readiness and who copies the data.
+
 | Model | Phase 1 (wait for ready) | Phase 2 (copy to user) | In one line |
 |---|---|---|---|
 | **Blocking** | thread sleeps in the kernel | thread sleeps in the kernel | the default; one thread is captive per in-flight I/O |
@@ -346,9 +348,13 @@ while `select`/`poll` climb. The figure makes the gap concrete:
 <!-- FIGURE -->
 ![Log-log plot of work per readiness-check call vs number of monitored connections. select and poll rise as a straight O(n) diagonal (the kernel rescans every registered fd on every call), while epoll is a flat O(ready) line (the kernel returns only the fds that fired). A vertical marker at 1024 shows select's FD (file descriptor)_SETSIZE wall; a marker at 10,000 shows the C10k point, where select/poll do ~10,000 units of work per call while epoll does ~50. The caption stresses the fix isn't faster hardware — it's not rescanning idle connections.](diagrams/02-blocking-nonblocking-and-multiplexing-fig1.svg)
 
+**Figure 1** — work per readiness check against the number of monitored connections — where select and poll break and epoll does not.
+
 At 10k mostly-idle connections (the common case — most clients are between requests), `select`/`poll` do ~10,000 units of bookkeeping *per
 loop iteration* to discover that maybe 50 are ready; `epoll` does ~50. The win isn't a faster CPU — it's **refusing to look at the idle
 connections at all.** A compact comparison:
+
+**Table 2** — select against poll against epoll and kqueue, on interface and on scaling.
 
 | | `select` | `poll` | `epoll` (Linux) / `kqueue` (BSD, macOS) |
 |---|---|---|---|

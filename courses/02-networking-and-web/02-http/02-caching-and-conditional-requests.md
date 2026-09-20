@@ -135,6 +135,8 @@ intercontinental round-trip:
 
 <!-- FIGURE:START -->
 ![Figure 1 — latency of the same fetch in three cache states: cold vs 304-revalidated vs fresh-hit](diagrams/02-caching-fig1.svg)
+
+**Figure 1** — the same fetch in three cache states — cold, 304-revalidated, and a fresh hit.
 <!-- FIGURE:END -->
 
 *The middle bar is the `304` win — the round-trip you still pay, minus the payload you don't. The right bar
@@ -187,6 +189,8 @@ reuse: the two combine, and both attack the round-trip, which is the part you ca
 `Cache-Control` is the header that governs everything. It appears on **responses** (the server's caching
 instructions) and sometimes on **requests** (the client overriding). The directives that carry their
 weight:
+
+**Table 1** — the `Cache-Control` directives, what each means, and when to reach for it.
 
 | Directive | Meaning | When you reach for it |
 |---|---|---|
@@ -462,6 +466,8 @@ spelling of a `compare-and-swap`, and it scales far better than pessimistic lock
 occasionally-conflicting workloads the web is full of.
 
 The full family of preconditions (all reusing validators):
+
+**Table 2** — the conditional-request headers, what each one asks, and its primary use.
 
 | Header | Asks | Primary use |
 |---|---|---|
@@ -815,6 +821,8 @@ identical. Give one box the public address and let it handle:
 ### He already runs four of them
 
 The payoff that makes it click — these AWS pieces are **the same idea specialized for one job each**:
+
+**Table 3** — the reverse proxies he already runs, and the job each one specialises in.
 
 | What he runs | The reverse-proxy job it specializes in |
 |---|---|

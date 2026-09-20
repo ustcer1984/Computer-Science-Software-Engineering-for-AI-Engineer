@@ -205,6 +205,8 @@ Let's make it concrete. The stack lives in your process's memory; the CPU keeps 
 
 A single frame typically holds:
 
+**Table 1** — what a stack frame holds, and what each part is for.
+
 | In the frame | What it's for |
 |---|---|
 | **Return address** | The instruction to jump back to when this function returns — the answer to §1's question. |

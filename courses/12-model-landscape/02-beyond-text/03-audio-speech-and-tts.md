@@ -127,6 +127,8 @@ network can actually model, while throwing away as little perceptually relevant 
 
 ![Units a model must handle for 10 s of audio, across representations (log scale): raw waveform is ~300× longer than a neural-codec token stream](diagrams/03-audio-speech-and-tts-fig2.svg)
 
+**Figure 2** — units a model must handle for ten seconds of audio, on a log scale: raw waveform is about 300x a codec token stream.
+
 The figure previews the whole section's cast of representations, ranked by how many units the model
 must process. Keep it in mind — each representation below is one bar.
 
@@ -164,6 +166,8 @@ is the single most important classical representation in speech** — it is the 
 pre-2022 speech model and still ubiquitous today.
 
 ![One utterance in three representations: waveform, linear spectrogram, and mel-spectrogram — the mel axis compresses high frequencies to match perception](diagrams/03-audio-speech-and-tts-fig1.svg)
+
+**Figure 1** — one utterance in three representations — waveform, linear spectrogram, and mel-spectrogram.
 
 Panel (a) is the raw waveform — three "syllables" and, at ~0.47 s, a broadband **fricative** burst
 (an "s"-like sound). Panel (b) is the linear spectrogram: the horizontal bands are **harmonics** of
@@ -762,6 +766,8 @@ systems parallel), and it's where the field is heading.
 
 </details>
 
+**Table 1** — the mid-2025 audio landscape: representation and purpose, model by model.
+
 | Model | Org | Type | Representation | What it's for |
 |---|---|---|---|---|
 | HiFi-GAN | Kakao | GAN vocoder | mel → waveform | fast, high-quality vocoding (still a default) |
@@ -870,6 +876,8 @@ decides it. It's written for the application side, not the internals.
 Model selection is almost always a projection onto **one dominant axis**. Name yours first, then the
 table picks itself.
 
+**Table 2** — the six axes that decide an audio model choice, and who tends to win on each.
+
 | Axis | The question | Who tends to win |
 |---|---|---|
 | **Quality** | Human/studio-grade output? | hosted (ElevenLabs, Suno) still edge open |
@@ -918,6 +926,8 @@ flowchart TD
 **Default hosted:** ElevenLabs v3 (quality). **Default open:** Kokoro-82M (tiny/fast/permissive);
 VibeVoice for long-form multi-speaker.
 
+**Table 3** — text-to-speech for narration, audiobooks and UI voice.
+
 | Model | Type | Consumer GPU? | When to reach for it |
 |---|---|---|---|
 | **[ElevenLabs v3](https://elevenlabs.io/v3)** | hosted | — | Most expressive hosted TTS (inline emotion "audio tags"), 70+ langs; GA ~Feb 2026 (⚡ supersedes Multilingual v2). *Not* the realtime model — use Flash for that |
@@ -932,6 +942,8 @@ VibeVoice for long-form multi-speaker.
 | **[XTTS-v2](https://github.com/idiap/coqui-ai-TTS)** | open (⚠ non-commercial) | ✅ | Legacy 17-lang cloning (Coqui defunct; `idiap` community fork). Superseded for new work by Kokoro/Chatterbox/F5 |
 
 ### 9.3 Zero-shot voice cloning (mimic a voice from seconds of reference)
+
+**Table 4** — zero-shot voice cloning from seconds of reference audio.
 
 | Model | Type | When to reach for it |
 |---|---|---|
@@ -951,6 +963,8 @@ VibeVoice for long-form multi-speaker.
 Metric is **TTFA/TTFB** (time-to-first-audio), not total render time. Voice-agent budget ≈ 800 ms
 end-to-end (STT + LLM + TTS); TTS should eat ≤ ~200 ms.
 
+**Table 5** — real-time and streaming TTS for voice agents, with time-to-first-byte.
+
 | Model | Type | TTFB *(vendor / bench)* | When to reach for it |
 |---|---|---|---|
 | **[Cartesia Sonic-3.5](https://www.cartesia.ai/sonic)** | hosted | ~40 ms Turbo / ~90 ms *(vendor)* | Latency leader (SSM [state-space model] architecture); default for interruptible agents (⚡ supersedes Sonic-3) |
@@ -964,6 +978,8 @@ end-to-end (STT + LLM + TTS); TTS should eat ≤ ~200 ms.
 
 > **"There is no catch-all model"** — the [Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard)'s own conclusion. Pick by *accuracy vs speed vs languages*.
 
+**Table 6** — ASR and transcription, batch and streaming, multilingual.
+
 | Model | Type | Consumer GPU? | When to reach for it |
 |---|---|---|---|
 | **[Whisper large-v3-turbo](https://huggingface.co/openai/whisper-large-v3-turbo)** | open (MIT) | ✅ (8 GB) | **Multilingual default** — 99 langs, ~6× faster than large-v3; the safe general pick (no successor as of 2026-07) |
@@ -976,6 +992,8 @@ end-to-end (STT + LLM + TTS); TTS should eat ≤ ~200 ms.
 
 ### 9.6 Speaker diarization ("who spoke when")
 
+**Table 7** — speaker diarization — "who spoke when".
+
 | Model | Type | When to reach for it |
 |---|---|---|
 | **[pyannote community-1](https://huggingface.co/pyannote/speaker-diarization-community-1)** | open (gated) | The open default (⚡ released Jul 2026 w/ pyannote.audio 4.0; beats 3.1 across metrics); free HF token |
@@ -987,6 +1005,8 @@ end-to-end (STT + LLM + TTS); TTS should eat ≤ ~200 ms.
 
 Two architectures: **cascade** (STT → LLM → TTS) vs **native speech-to-speech** (one model, audio
 in/out — lower latency, keeps tone/emotion). See §7.
+
+**Table 8** — conversational, speech-to-speech and full-duplex models.
 
 | Model | Type | Notes (2026-07) | When to reach for it |
 |---|---|---|---|
@@ -1003,6 +1023,8 @@ in/out — lower latency, keeps tone/emotion). See §7.
 
 ### 9.8 Speech translation (S2T and S2S, many languages)
 
+**Table 9** — speech translation, both speech-to-text and speech-to-speech.
+
 | Model | Type | When to reach for it |
 |---|---|---|
 | **[Meta SeamlessM4T v2](https://huggingface.co/facebook/seamless-m4t-v2-large)** | open (⚠ CC-BY-NC) | Unified ASR + S2TT + S2ST, ~100 langs in / ~36 out; **Streaming** & **Expressive** variants. Still Meta's latest (no v3) — but **non-commercial** |
@@ -1012,6 +1034,8 @@ in/out — lower latency, keeps tone/emotion). See §7.
 | **[Whisper](https://huggingface.co/openai/whisper-large-v3-turbo)** (translate mode) | open (MIT) | Quick any-language → **English-only** transcription-translation (S2TT, no S2ST) |
 
 ### 9.9 Audio understanding / audio LLMs (captioning, Q&A, classification, reasoning over sound)
+
+**Table 10** — audio understanding and audio LLMs — captioning and question answering.
 
 | Model | Type | Consumer GPU? | When to reach for it |
 |---|---|---|---|
@@ -1026,6 +1050,8 @@ in/out — lower latency, keeps tone/emotion). See §7.
 > Post-lawsuit landscape: many teams self-host for **commercial rights + pipeline control**. Licenses
 > bite hardest here — check carefully.
 
+**Table 11** — text-to-music.
+
 | Model | Type | Consumer GPU? | When to reach for it |
 |---|---|---|---|
 | **[Suno v5.5](https://suno.com/blog/v5-5)** | hosted | — | Best overall vocals + song structure; "sing in your own voice" (⚠ commercial by tier; label litigation ongoing) |
@@ -1039,6 +1065,8 @@ in/out — lower latency, keeps tone/emotion). See §7.
 
 ### 9.11 Text-to-sound-effects / general audio generation (foley, SFX, ambience)
 
+**Table 12** — text-to-sound-effects and general audio generation — foley, SFX and ambience.
+
 | Model | Type | When to reach for it |
 |---|---|---|
 | **[ElevenLabs Sound Effects v2](https://elevenlabs.io/docs/overview/capabilities/sound-effects)** | hosted | Quick 48 kHz SFX from a prompt, seamless looping, video-to-SFX; commercial on paid tiers |
@@ -1050,6 +1078,8 @@ in/out — lower latency, keeps tone/emotion). See §7.
 
 Input is *audio*, not text (dubbing, singing, live voice-changing).
 
+**Table 13** — voice conversion: change the identity, keep the words and prosody.
+
 | Model | Type | When to reach for it |
 |---|---|---|
 | **[Seed-VC](https://github.com/Plachtaa/seed-vc)** | open | **Zero-shot** VC + singing, real-time (~300 ms) from a short reference; no per-voice training |
@@ -1057,6 +1087,8 @@ Input is *audio*, not text (dubbing, singing, live voice-changing).
 | **[so-vits-svc](https://github.com/svc-develop-team/so-vits-svc)** | open | Long-standing **singing** voice conversion; per-voice training |
 
 ### 9.13 Speech enhancement / denoising / source separation
+
+**Table 14** — speech enhancement, denoising and source separation.
 
 | Task | Model | Type | When to reach for it |
 |---|---|---|---|

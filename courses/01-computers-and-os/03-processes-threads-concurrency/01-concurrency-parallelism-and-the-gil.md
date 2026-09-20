@@ -114,6 +114,8 @@ The trap is treating them as more-vs-less of the same quantity. They are **indep
 The 2×2 below makes the independence concrete — read the **rows** as *"did you structure concurrency?"* and the **columns** as *"is the
 hardware running pieces at the same instant?"* Every cell is a real system you've touched:
 
+**Table 1** — concurrency against parallelism — two different questions wearing one word.
+
 |  | **Not parallel** — one execution unit at a time | **Parallel** — many units firing at once |
 |---|---|---|
 | **Not concurrent** — one task, no composition | **Neither** — a plain synchronous script (your simplest Lambda handler). | **Parallel, not concurrent** *(top-right)* — one task the *runtime* splits across cores: a `np.matmul`/BLAS call, SIMD (Single Instruction, Multiple Data). You wrote one conceptual task; the library found the parallelism. |
@@ -183,6 +185,8 @@ Two cells deserve a beat, because they're the ones that break the "it's all one 
 "Run things concurrently" has three implementations in the Python world, and they differ along axes that matter operationally: what the
 *unit* of execution is, who *schedules* it, how much it *costs* to create and switch, how *isolated* the units are, and — the punchline —
 **whether it can use more than one core**. Here is the whole comparison on one page; the rest of the section is just the consequences.
+
+**Table 2** — processes, threads and async compared on cost, isolation and what they actually buy.
 
 | | **Processes** (`multiprocessing`) | **Threads** (`threading`) | **Async** (`asyncio`) |
 |---|---|---|---|
@@ -739,6 +743,8 @@ dominant mechanism**, corrected cleanly each time.
 
 You accepted "it's concurrent" fast; the value was untangling that **"batch" is three different mechanisms wearing one word**, at three
 layers:
+
+**Table 3** — what the industry calls "batch", and where the concurrency really lives in each case.
 
 | What gets called "batch" | Where the concurrency lives | What it is |
 |---|---|---|

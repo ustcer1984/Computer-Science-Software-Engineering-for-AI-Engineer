@@ -257,6 +257,8 @@ a mechanical step-by-step recipe. You do not need to memorise the catalog; you n
 roughly which move attacks which §1 symptom. Here are the ones that carry 90% of real work, grouped by
 the problem they solve.
 
+**Table 1** — the catalogue of refactoring moves, mapped to the problem each one fixes.
+
 | Move | What you do | Which §1 problem it fixes |
 |---|---|---|
 | **Extract Function** | pull a cohesive chunk of a long function into its own named function | change amplification, low cohesion; the workhorse move |
@@ -764,6 +766,8 @@ user's changes," minimal diffs. Operational, not methodological.)
 
 **The mental model that resolves it — three layers, and the harness is only one.** When an agent
 refactors well or badly, the behaviour comes from one of three places:
+
+**Table 2** — the three layers an agent's refactoring behaviour can come from, and which actually carries the strategy.
 
 | Layer | What it is | Carries the refactoring strategy? |
 |---|---|---|

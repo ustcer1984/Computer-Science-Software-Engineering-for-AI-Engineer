@@ -162,6 +162,8 @@ are no "strings" or "functions" down here, only the abstractions we build.)
 
 Two ISA (instruction set architecture) philosophies, worth knowing because it's your AWS bill:
 
+**Table 1** — CISC against RISC — the two instruction-set philosophies.
+
 | | **CISC** (x86-64: Intel/AMD) | **RISC** (ARM64: Apple Silicon, AWS Graviton) |
 |---|---|---|
 | Instructions | Many, some complex/variable-length | Fewer, simple, fixed-length |
@@ -311,6 +313,8 @@ flowchart TD
 <!-- DIAGRAM:END -->
 
 Read those cycle counts again. If a register access is "reach into your hand" (1 second), then:
+
+**Table 2** — the memory hierarchy in cycles, and the same distances at human scale.
 
 | Level | ~cycles | Human-scale analogy (1 cycle ≈ 1 sec) |
 |---|---|---|

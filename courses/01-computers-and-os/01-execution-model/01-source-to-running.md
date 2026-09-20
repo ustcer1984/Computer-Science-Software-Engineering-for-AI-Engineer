@@ -211,6 +211,8 @@ The `add.o` is now native machine code for your CPU's ISA (instruction set archi
 
 **Consequences (the trade-offs that matter):**
 
+**Table 1** — what compilation buys you, and why.
+
 | Property | Why |
 |---|---|
 | ⚡ **Fast at runtime** | No translation overhead during execution — the CPU runs raw instructions. |
@@ -226,6 +228,8 @@ statement. There's no separate machine-code file — the interpreter *is* the ru
 is its *input data*.
 
 **Consequences — almost the mirror image:**
+
+**Table 2** — what interpretation buys you, and why.
 
 | Property | Why |
 |---|---|

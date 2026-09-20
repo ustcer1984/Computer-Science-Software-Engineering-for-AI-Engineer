@@ -336,6 +336,8 @@ interrupt `int 0x80`; modern CPUs added the dedicated `syscall`/`sysret` pair be
 Three kinds of "transfer control" show up constantly, and they differ in cost by orders of magnitude. Keeping them straight is what lets
 you reason about performance instead of guessing:
 
+**Table 1** — the cost ladder of a transfer, and what actually happens at each rung.
+
 | Transfer | Roughly | What actually happens |
 |---|---|---|
 | **Function call** (same process) | a few **ns** | push a frame, jump, return. No privilege change. The CPU stays hot — same registers, same cache, same TLB. |
@@ -346,6 +348,8 @@ The figure makes the two gaps that matter concrete (log scale — every gridline
 
 <!-- FIGURE -->
 ![The latency landscape: a log-scale bar chart. Function call ≈2 ns and RAM read ≈100 ns sit on the CPU with no boundary; a system-call round trip ≈600 ns and a thread context switch ≈3 µs cross the kernel boundary; SSD random read ≈100 µs, same-datacentre round trip ≈500 µs, HDD (hard disk drive) seek ≈10 ms and an intercontinental internet round trip ≈150 ms are real devices past the boundary. Two annotations mark the gaps: a syscall is ≈300× a function call, so batch syscalls; device I/O is 150× to 250,000× a syscall, so park the waiting task rather than spin.](diagrams/01-the-kernel-boundary-and-syscalls-fig1.svg)
+
+**Figure 1** — the latency landscape on a log scale — where the kernel boundary sits against everything else.
 
 Read the whole chapter's engineering off this one picture:
 
@@ -729,6 +733,8 @@ Then you pushed below the OS entirely, to the CPU. The keeper here is that **que
 
 **What actually differs (not just the CISC/RISC — Complex vs Reduced Instruction Set Computer — slogan).** They're different **ISAs** — the CPU's binary language — so the same `add` is
 different *bytes* on each. The differences that carry weight:
+
+**Table 2** — x86-64 against ARM — why a binary for one will not run on the other.
 
 | | x86-64 (Intel/AMD) | ARM (AArch64) |
 |---|---|---|

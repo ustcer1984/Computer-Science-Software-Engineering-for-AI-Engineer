@@ -88,6 +88,8 @@ that actually decide it (dimension, context, multilingual, license, self-host on
 
 Look back at what each prior section actually did, stripped to one line:
 
+**Table 1** — each modality from this chapter, and the representation it settled on.
+
 | Section | Modality | The representation it chose |
 |---|---|---|
 | §1 | Image | pixels → a **latent** (VAE — variational autoencoder) the diffusion model denoises |
@@ -311,6 +313,8 @@ punishes near-misses harder.
 
 ![CLIP's training objective: for a batch of N image/text pairs, build the N×N cosine-similarity matrix and push the N diagonal (matched) pairs up while pushing the N²−N off-diagonal (mismatched) pairs down](diagrams/04-multimodal-and-representation-fig1.svg)
 
+**Figure 1** — CLIP's training objective: push the matched diagonal of the similarity matrix up and everything else down.
+
 The crucial features of this setup:
 
 - **The negatives are free.** Every other caption in the batch is a negative for a given image, so
@@ -419,6 +423,8 @@ what separates "I've heard of CLIP" from being able to judge a system that uses 
   intuitions calibrated on same-modality scores; calibrate per modality pair.
 
 ![The modality gap: after CLIP training, matched image and text vectors are nearest neighbours, but the image embeddings and text embeddings still occupy two separate cones offset by a near-constant gap vector](diagrams/04-multimodal-and-representation-fig2.svg)
+
+**Figure 2** — the modality gap — matched pairs are nearest neighbours, yet image and text embeddings still occupy separate cones.
 
 - **Bag-of-words / weak compositionality.** CLIP is famously poor at *word order and relations*.
   "A photo of a horse riding an astronaut" and "an astronaut riding a horse" embed almost
@@ -639,6 +645,8 @@ KV-cache experience): the image is just more tokens in the sequence.
 
 ![Why a VLM's input resolution is a compute knob: an image becomes a grid of patch tokens, so token count grows with resolution² (left), and self-attention over the combined text+visual sequence grows with token count² (right)](diagrams/04-multimodal-and-representation-fig3.svg)
 
+**Figure 3** — resolution as a compute knob: token count grows with the square of resolution, and attention with its square again.
+
 ---
 
 ## 7. The idea generalises: any modality, one space
@@ -756,6 +764,8 @@ the application side — dominant axis first, hosted **and** best-open, license 
 
 ### 8.1 How to choose — the axes that actually decide it
 
+**Table 2** — the axes that actually decide an embedding-model choice, and what each changes.
+
 | Axis | The question | What it changes |
 |---|---|---|
 | **Quality / task** | Retrieval? clustering? classification? reranking? | pick by the right MTEB *task* column, not the overall average |
@@ -775,6 +785,8 @@ mediocre at *your* task. Filter the leaderboard to the **task and the language**
 `voyage-3` (frequently tops retrieval). **Default open/self-host:** BGE-M3 (multilingual,
 multi-granularity) or a Qwen3-Embedding size that fits your GPU.
 
+**Table 3** — text embedding models for retrieval and RAG — the common case.
+
 | Model | Type | Dim (native) | Notes |
 |---|---|---|---|
 | **[OpenAI text-embedding-3-large/small](https://platform.openai.com/docs/guides/embeddings)** | hosted | 3072 / 1536 (Matryoshka) | The convenient default; truncate dims to trade a little accuracy for cheaper indexes |
@@ -788,6 +800,8 @@ multi-granularity) or a Qwen3-Embedding size that fits your GPU.
 | **[Jina embeddings v3](https://huggingface.co/jinaai/jina-embeddings-v3)** | open (CC-BY-NC) | 1024 (Matryoshka) | Strong long-context (8k) multilingual — but ⚠ non-commercial weights |
 
 ### 8.3 Multimodal embeddings (search across image + text; document RAG)
+
+**Table 4** — multimodal embedding models for search across image and text.
 
 | Model | Type | Notes |
 |---|---|---|
@@ -804,6 +818,8 @@ Bi-encoder embeddings retrieve *fast* (compare cached vectors) but *coarsely*. A
 reranker** reads the query and each candidate *together* (full attention) and rescores the top-k —
 much more accurate, too slow for the whole corpus but perfect for re-ordering the top ~50. The
 standard two-stage pattern: **embed-and-retrieve top-100 → rerank to top-5 → feed the LLM.**
+
+**Table 5** — rerankers — the cheap accuracy boost worth adding.
 
 | Model | Type | Notes |
 |---|---|---|

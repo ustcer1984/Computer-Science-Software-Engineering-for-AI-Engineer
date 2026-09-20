@@ -99,6 +99,8 @@ The industry uses two maps. The **OSI (Open Systems Interconnection) 7-layer mod
 balancer," "a layer-4 proxy"); the **TCP/IP 4-layer model** is what the internet actually implements.
 You need OSI only as *shared jargon*; reason with the TCP/IP four:
 
+**Table 1** — the TCP/IP layers: the job, the unit, and the kind of address each one uses.
+
 | TCP/IP layer | Job | Unit | Examples | "Address" it uses |
 |---|---|---|---|---|
 | **Application** | what the two programs say to each other | message | HTTP, gRPC, WebSocket, DNS | URL / path |
@@ -677,6 +679,8 @@ concrete.
 
 <!-- FIGURE:fig1 -->
 ![Grouped horizontal stacked bars of 'time to first byte,' broken into four phases — DNS, TCP handshake, TLS 1.3 handshake, and HTTP request-to-first-byte. Bar 1 'Same-region, cold' totals about 12 ms (all phases tiny). Bar 2 'Cross-ocean, cold' totals about 520 ms, made of four roughly-equal ~150 ms segments (a small DNS piece plus TCP, TLS, and HTTP each ~160 ms) — three of the four segments are setup. Bar 3 'Cross-ocean, warm (keep-alive + DNS cached)' totals about 160 ms: DNS, TCP, and TLS collapse to zero and only the single HTTP round-trip remains. The figure shows that on a long path the handshakes dominate a first request and that connection reuse removes three of the four round-trips.](diagrams/01-how-a-request-travels-fig1.svg)
+
+**Figure 1** — time to first byte broken into its four phases — DNS, TCP, TLS and the request itself.
 
 Read off the levers (all four from M01 Ch4 §3, now concrete):
 

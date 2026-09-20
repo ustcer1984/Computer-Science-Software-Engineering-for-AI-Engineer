@@ -439,6 +439,8 @@ flowchart TB
 in both `threading` (preemptive, thread-safe, may block the thread) and `asyncio` (cooperative, single-loop, `await`-able) flavours with the
 **same name and almost the same API** — the difference is always *blocks the thread* vs *suspends the coroutine*.
 
+**Table 1** — the synchronisation toolkit: what each primitive coordinates and when to reach for it.
+
 | Primitive | What it coordinates | Mental model | Reach for it when |
 |---|---|---|---|
 | **`Lock` / `Mutex`** | mutual exclusion, 1 holder | a single baton | protect a read-modify-write critical section |

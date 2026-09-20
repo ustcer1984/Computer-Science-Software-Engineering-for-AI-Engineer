@@ -124,6 +124,8 @@ flowchart LR
 </details>
 <!-- DIAGRAM:END -->
 
+**Table 1** — autoregressive against diffusion generation, side by side.
+
 | | Autoregressive | Diffusion |
 |---|---|---|
 | Unit | discrete tokens | continuous values (pixels / latents) |

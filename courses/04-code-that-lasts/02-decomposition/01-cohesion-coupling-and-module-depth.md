@@ -120,6 +120,8 @@ Ousterhout's framing is the sharpest definition: **complexity is anything about 
 system that makes it hard to understand or modify.** It shows up as three concrete symptoms — learn to
 name them, because "this feels messy" is not actionable and these are:
 
+**Table 1** — the symptoms of complexity, and a real-world shape of each.
+
 | Symptom | What it is | A real-world shape of it |
 |---|---|---|
 | **Change amplification** | a simple change touches many places | **Y2K**: storing years as two digits was one decision, repeated across millions of lines — changing it cost an estimated 300 billion dollars or more globally |
@@ -176,6 +178,8 @@ module has one clear job and everything in it serves that job. Low cohesion = it
 
 There's a classic ladder from worst to best. You don't need to memorise the names, but you should be
 able to *smell* where a module sits:
+
+**Table 2** — the cohesion ladder, worst to best, and the smell that gives each level away.
 
 | Cohesion (worst → best) | The members are grouped because… | Smell |
 |---|---|---|
@@ -236,6 +240,8 @@ change module B? Low coupling is the goal — modules you can understand, change
 
 Again a worst→best ladder. The axis that matters: **how much does B need to know about A's
 internals?**
+
+**Table 3** — the coupling ladder, worst to best, with an example of each.
 
 | Coupling (worst → best) | B depends on A's… | Example |
 |---|---|---|
@@ -655,6 +661,8 @@ toward the valley. The dissatisfaction is the right instinct (§1): file count w
 
 **The real diagnosis: two axes were conflated.** File placement was answering two unrelated questions at
 once:
+
+**Table 4** — the axes of a pipeline, and where each one belongs.
 
 | Axis | What it is | Where it belongs |
 |---|---|---|

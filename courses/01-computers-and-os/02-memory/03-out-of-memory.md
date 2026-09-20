@@ -1039,6 +1039,8 @@ Your hypothesis: a single contiguous KV-cache is bad because it's "too huge to a
 contiguous VRAM chunk." That names **external fragmentation** (§6/§7's "free but not contiguous") — real, but the
 **smallest** of three wastes, and mis-ranked. The correction:
 
+**Table 1** — the sources of waste in a contiguous KV-cache, and which your hypothesis had.
+
 | Waste in a contiguous-per-sequence KV-cache | Magnitude | In your hypothesis? |
 |---|---|---|
 | **Internal fragmentation** — reserve `max_seq_len` up front, use a fraction | **dominant (≈60–80%)** | missed |

@@ -90,6 +90,8 @@ generate key pair → prove control of the name → receive signed certificate
 Every incident is a break in that loop, and they are worth naming separately because they have different
 fixes:
 
+**Table 1** — the certificate types, and what each one actually validates.
+
 | Break | What it looks like | The fix |
 |---|---|---|
 | Nobody renewed | Site down, browser interstitial, and it is **always** a weekend | Automation with monitoring on top |
@@ -164,6 +166,8 @@ name**.
 
 The proof is a **challenge**. The CA says *"if you really control `example.com`, make this specific thing
 appear where only its controller could put it."* Three challenge types matter:
+
+**Table 2** — the ACME challenge types, what each requires of you, and when to use it.
 
 | Challenge | What you must do | Use it when |
 |---|---|---|
@@ -423,6 +427,8 @@ remove choices too.
 
 **Protocol versions:**
 
+**Table 3** — the TLS versions, their status, and what to do about each.
+
 | Version | Status | What to do |
 |---|---|---|
 | SSL 2.0 / 3.0 | Broken (POODLE) | Disabled; has been for years |
@@ -501,6 +507,8 @@ Ch1 §1 that is real money. Three mechanisms are sold as the fix, and **they are
 
 <!-- FIGURE:START -->
 ![Figure 1 — time before the first byte of application data, across six connection-setup arrangements](diagrams/02-tls-in-operation-fig1.svg)
+
+**Figure 1** — time to the first byte of application data across six connection-setup arrangements.
 
 <details>
 <summary>Figure source (matplotlib)</summary>
@@ -744,6 +752,8 @@ $ curl -vI https://example.com
 
 </details>
 
+**Table 4** — the operational failure modes: why each happens and what to do.
+
 | # | Failure | Why it happens | What to do |
 |---|---|---|---|
 | 1 | **Expiry outage** | Manual renewal, or automation that broke silently | Automate with ACME; **alert on days-to-expiry from the live endpoint**, at 21 and 7 days |
@@ -912,6 +922,8 @@ itself rather than only in a form. The enforcement lives entirely in the **list 
 binary** (§4).
 
 So for a user whose browser predates your list entry:
+
+**Table 5** — what the `preload` token does and does not change in a lagging browser.
 
 | | In that user's browser |
 |---|---|

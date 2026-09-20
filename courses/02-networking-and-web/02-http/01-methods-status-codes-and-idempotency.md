@@ -171,6 +171,8 @@ is about.
 Every method is defined by three yes/no properties. These are not trivia — each one licenses a *different*
 piece of infrastructure to do something on your behalf.
 
+**Table 1** — the HTTP methods, and which are safe, idempotent and cacheable.
+
 | Method | Safe (read-only) | Idempotent (repeat = same effect) | Cacheable | Typical use |
 |---|---|---|---|---|
 | `GET` | ✅ | ✅ | ✅ | read a resource |
@@ -501,6 +503,8 @@ The distinctions that actually bite in API work:
 If methods and status codes are the fixed vocabulary, **headers are the open-ended one** — key/value
 metadata that carries everything the message *is not* (the body) but the infrastructure needs to *know*.
 The categories worth having a map of:
+
+**Table 2** — the header categories, with examples of what each one controls.
 
 | Category | Examples | What it controls |
 |---|---|---|

@@ -105,6 +105,8 @@ The mechanism is **server-driven (proactive) negotiation**: the client sends its
 request headers, the server picks the best representation it can produce, sends it, and — critically —
 echoes **which dimension it varied on** in the `Vary` response header (§2), so caches key correctly.
 
+**Table 1** — the negotiation headers: what the client asks for, and how the server answers.
+
 | Request header | Client is asking for… | Server answers with |
 |---|---|---|
 | `Accept` | a **media type** — `application/json`, `text/html`, `text/csv`, `image/webp` | `Content-Type` |

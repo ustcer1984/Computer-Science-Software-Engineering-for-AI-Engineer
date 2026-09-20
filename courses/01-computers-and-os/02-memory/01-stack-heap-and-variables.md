@@ -463,6 +463,8 @@ feel dangerous: same memory model, opposite mutability.
 
 This is the rule that resolves every "did it copy or share?" question:
 
+**Table 1** — the same operation on a mutable against an immutable object — where the surprise lives.
+
 | You did… | On a **mutable** object (list, dict, set, your custom class) | On an **immutable** object (int, str, tuple) |
 |---|---|---|
 | `b = a` | both names → same object; mutating via either is seen by both (**aliasing**) | both names → same object, but neither can mutate it, so it's harmless |

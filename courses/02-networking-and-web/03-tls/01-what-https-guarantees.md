@@ -85,6 +85,8 @@ direct continuation of Ch2 §1 §10c's *never trust the client; the boundary is 
 
 When a browser shows `https://` and a padlock, TLS is asserting exactly three properties about the channel:
 
+**Table 1** — the three guarantees, in plain English, and what breaks without each.
+
 | Guarantee | Plain-English claim | Broken without it |
 |---|---|---|
 | **Confidentiality** | nobody on the path can *read* the traffic | the café Wi-Fi, your ISP (Internet Service Provider), or a transit provider reads your session cookie |
@@ -786,6 +788,8 @@ append-only logs that anyone can search. Copying a certificate gets an attacker 
 What proves identity is the **private key**, which never leaves the server. §3's handshake splits the job in
 two, and the split is the whole answer:
 
+**Table 2** — the handshake messages, and the role each one plays.
+
 | Message | Role |
 |---|---|
 | `Certificate` | The CA's signed **claim**: "the holder of this public key controls `www.example.com`." |
@@ -795,6 +799,8 @@ An attacker holding the certificate but not the key gets stuck at the second mes
 statement is: **whoever holds the private key can be `www.example.com`.**
 
 **The three failures that "compromised" actually names:**
+
+**Table 3** — what an attacker gains from each break, and whether you would detect it.
 
 | What breaks | What the attacker gets | Detectable? |
 |---|---|---|
@@ -835,6 +841,8 @@ the server; the file is still there afterwards. This is the asymmetry that makes
 stealing a secret does not remove it. Everything below follows from accepting that.
 
 **The detection channels that exist — all of them indirect:**
+
+**Table 4** — the server-side detection channels, what each catches, and its limit.
 
 | Channel | What it actually catches | Limit |
 |---|---|---|

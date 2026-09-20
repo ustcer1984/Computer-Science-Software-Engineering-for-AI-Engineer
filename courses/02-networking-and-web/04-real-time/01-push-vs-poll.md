@@ -180,6 +180,8 @@ This is the shape of the whole technique, so it is worth looking at rather than 
 
 ![Figure 1 — the polling trade-off, as actual curves](diagrams/01-push-vs-poll-fig1.svg)
 
+**Figure 1** — the polling trade-off drawn as actual curves — request rate against staleness.
+
 *Left: with 10,000 clients, the one knob you control — the poll period — sets two costs that move opposite ways. Right:
 the same data plotted against itself — every short-polling design is a point on one hyperbola. Push is not
 a better point on that curve; it leaves the curve, and the cost reappears somewhere else (open connections).
@@ -759,6 +761,8 @@ flowchart TB
 <!-- DIAGRAM:END -->
 
 The comparison behind the flowchart:
+
+**Table 1** — short polling, long polling, SSE and WebSocket compared across the dimensions that decide the choice.
 
 | | Short polling | Long polling | SSE | WebSocket |
 |---|---|---|---|---|

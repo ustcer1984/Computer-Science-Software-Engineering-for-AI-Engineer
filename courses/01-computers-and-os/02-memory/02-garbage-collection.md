@@ -139,6 +139,8 @@ flowchart TB
 
 The trade-off is sharp and worth memorizing, because it explains a lot of Python's behavior:
 
+**Table 1** — reference counting against tracing collection, trade-off by trade-off.
+
 | | **Reference counting** (CPython) | **Tracing GC** (Java/Go/V8/PyPy) |
 |---|---|---|
 | **When is memory freed?** | Immediately, at the last `DECREF` to 0 — **deterministic** | Eventually, at the next collection — **non-deterministic timing** |
@@ -870,6 +872,8 @@ The reframe you pulled out of that — the sentence to keep:
 > **Closing is a *resource* operation; freeing is a *memory* operation — and the GC only ever does the second.**
 
 Two orthogonal lifetimes, which the single name `f` made it tempting to conflate:
+
+**Table 2** — what governs each kind of resource, and when it is actually released.
 
 | | governed by | ends when |
 |---|---|---|

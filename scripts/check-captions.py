@@ -37,7 +37,7 @@ def masked(text):
     """Body only: drop <details> blocks, fenced code, and the key-terms section."""
     t = re.sub(r'<details>.*?</details>', blank, text, flags=re.S)
     t = re.sub(r'```.*?```', blank, t, flags=re.S)
-    t = re.sub(r'^## Key terms.*?(?=^## |\Z)', blank, t, flags=re.S | re.M)
+    t = re.sub(r'^#{2,3} .{0,12}Key terms.*?(?=^#{1,3} |\Z)', blank, t, flags=re.S | re.M)
     return t
 
 

@@ -75,6 +75,8 @@ qualitatively different from getting the scene right in each frame.
 
 Two axes of this constraint:
 
+**Table 1** — what video demands beyond images, axis by axis, and why each is hard.
+
 | Axis | What it requires | Why it's hard |
 |---|---|---|
 | **Short-range coherence** | frame $t$ and frame $t+1$ are consistent | noise injection is per-step; without explicit coupling, samples are independent |
@@ -441,6 +443,8 @@ steps. For video at 720p/24fps, this is the difference between practical and imp
 <!-- FIGURE -->
 ![Flow matching trajectories vs DDPM: straighter paths mean fewer sampling steps](diagrams/02-video-and-world-models-fig1.svg)
 
+**Figure 1** — flow matching against DDPM trajectories — straighter paths mean fewer sampling steps.
+
 The plot above shows sampling trajectories for the same set of (noise, data) pairs. DDPM adds
 stochastic perturbations at each step; the path curves and requires many small corrections. Flow
 matching targets the straight interpolant; the learned velocity is nearly constant along the path,
@@ -462,6 +466,8 @@ number $\kappa$ large = long, narrow, curved valleys) needs $\sim\kappa$ steps t
 
 **What's wrong — they pull different levers.** There are two distinct ways to cut the step count of
 any follow-a-path process, and these two improvements are *different ones*:
+
+**Table 2** — which lever each change pulls, and what it holds fixed.
 
 | Lever | What changes | What stays fixed | Diffusion | Optimization |
 |---|---|---|---|---|
@@ -727,7 +733,11 @@ video diffusion for robotics planning (UniSim, 2023).
 <!-- FIGURE -->
 ![Video generation model timeline 2022–2025: key models and their maximum clip duration at release](diagrams/02-video-and-world-models-fig2.svg)
 
+**Figure 2** — video generation models 2022–2025, and the maximum clip length each could produce at release.
+
 A brief annotated map of where things stand:
+
+**Table 3** — the mid-2025 video landscape: architecture and maximum clip length at release.
 
 | Model | Organisation | Architecture key | Max clip at release |
 |---|---|---|---|

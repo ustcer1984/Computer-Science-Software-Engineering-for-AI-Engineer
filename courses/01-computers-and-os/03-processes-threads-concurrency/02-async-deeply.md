@@ -215,6 +215,8 @@ Four facts to read off this, because they answer real questions you've hit:
 You used these words interchangeably in 9b and mostly got away with it. They are three distinct objects, and the distinction is the
 difference between *code that does nothing* and *code that's actually running*.
 
+**Table 1** — coroutine against future against task — the three objects people conflate.
+
 | | **Coroutine** | **Future** | **Task** |
 |---|---|---|---|
 | **What it is** | the object returned by calling an `async def` fn | a low-level "result box" with a state + done-callbacks | a `Future` subclass that **wraps and drives** a coroutine |
@@ -318,6 +320,8 @@ x, y = await asyncio.gather(fetch(url_a), fetch(url_b))
 Once you accept "concurrency needs more than one task," the question is *how you spawn and collect them*, and asyncio gives you several
 tools that look interchangeable but differ on the axes that bite in production: **ordering, error policy, and what happens to siblings
 when one fails.**
+
+**Table 2** — the spawning primitives: what each returns, its ordering, and its error behaviour.
 
 | Primitive | Returns | Result order | On a child error | Siblings on error | Use it when |
 |---|---|---|---|---|---|
