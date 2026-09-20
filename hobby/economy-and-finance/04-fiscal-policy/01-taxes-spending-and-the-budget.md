@@ -86,6 +86,8 @@ the economy. Its instrument is the **government budget**; its operator is the **
 US Treasury, the UK Treasury, Singapore's Ministry of Finance) under the elected government — *not* the central
 bank. That institutional split is the whole point:
 
+**Table 1** — monetary against fiscal policy — two levers, and what separates them.
+
 | | **Monetary policy (E03)** | **Fiscal policy (E04)** |
 |---|---|---|
 | **Who** | the central bank (Fed, MAS [Monetary Authority of Singapore], PBoC) | the elected government / treasury |
@@ -161,6 +163,8 @@ plus some non-tax sources.
 - **Trade taxes** — tariffs on imports (small for most rich economies; E05's territory).
 
 ![A grouped bar chart comparing the composition of government revenue across three systems, as a share of total revenue. For the USA (federal), personal income tax is about 49 percent and payroll/social contributions about 35 percent, dwarfing corporate income (about 9 percent), other taxes (about 5 percent) and non-tax revenue (about 2 percent), with essentially no federal consumption tax. For a high-tax European system, the load is spread across payroll/social contributions (about 33 percent), personal income (about 23 percent) and a large consumption/VAT slice (about 25 percent). For Singapore, the mix is unusual: corporate income (about 22 percent), GST (about 20 percent), other taxes such as stamp and property (about 20 percent), personal income (about 15 percent), and a large non-tax slice of about 23 percent from investment income (the NIRC). Annotations note that the US leans on income plus payroll with no federal VAT (value-added tax), Europe leans on VAT plus social contributions, and Singapore leans on corporate tax, GST (Goods and Services Tax), and a large investment-income contribution.](diagrams/01-taxes-spending-and-the-budget-fig1.svg)
+
+**Figure 1** — where government revenue comes from, across three very different systems.
 
 The figure makes the headline point: **there is no single "normal" tax system.** The US federal government runs
 on **income + payroll** (no federal VAT at all); high-tax European states lean heavily on **VAT + social
@@ -250,6 +254,8 @@ Spending splits two ways that both matter.
 
 ![A bar chart of US federal outlays by category as a share of total spending, sorted from largest to smallest and coloured by type. Health programmes (Medicare and Medicaid) are about 24 percent, Social Security about 21 percent, and other mandatory spending about 17 percent — all coloured as mandatory. Non-defense discretionary is about 14 percent and defense discretionary about 13 percent — coloured as discretionary. Net interest on the debt is about 11 percent, coloured separately. A caption notes that mandatory plus interest together are roughly 73 percent, so only about 27 percent is the discretionary budget the legislature actually votes on each year.](diagrams/01-taxes-spending-and-the-budget-fig2.svg)
 
+**Figure 2** — US federal outlays by category — how little of the budget is actually discretionary.
+
 The figure carries a fact that dominates rich-world fiscal politics: **the budget is mostly on autopilot.**
 Mandatory entitlements plus interest are ~73% of US federal outlays, so the annual budget fight is over the
 remaining ~27%. And the mandatory share **grows structurally** as populations age (more pensioners, more
@@ -325,7 +331,9 @@ deficit is the *flow*, the debt is the *stock*.
 
 ![A time-series chart of the US federal surplus or deficit as a share of GDP from 1960 to 2024. The line is positive (surplus) only briefly around 1998 to 2001 (the Clinton-era surpluses, shaded green), and negative (deficit, shaded red) in almost every other year. Deficits spike downward in each recession: to about minus 6 percent in the early 1980s, to about minus 9.8 percent in the 2009 global financial crisis, and to about minus 14.7 percent in the 2020 COVID shock, before partly recovering to around minus 6 percent by 2024. A caption notes that deficits widen automatically in every recession — the automatic stabilizers.](diagrams/01-taxes-spending-and-the-budget-fig3.svg)
 
-The history (fig 3) shows two things at once: a **structural drift** toward persistent deficits (the US has run a
+**Figure 3** — the US federal balance as a share of GDP, 1960–2024: surplus is the exception.
+
+The history (Figure 3) shows two things at once: a **structural drift** toward persistent deficits (the US has run a
 surplus in only a handful of years since 1960 — the **deficit bias** of §6), and sharp **cyclical spikes** in every
 recession (the stabilizers firing, biggest in 2009 and 2020). Both patterns are the subject matter of §2 and §6.
 
@@ -399,6 +407,8 @@ person's income; and so on — a geometric series summing to $1/(1-c)$. Two refi
 
 ![A grouped bar chart of illustrative fiscal-multiplier ranges for four instruments, each shown for two states of the economy. In a slump with economic slack, public investment has a multiplier of about 1.6, general government spending about 1.4, transfers to liquidity-constrained households about 1.2, and a broad tax cut about 0.8. Near full employment, the same instruments have much smaller multipliers — about 0.8, 0.7, 0.5 and 0.4 respectively. A dashed line marks a multiplier of 1. Annotations note that tax cuts are partly saved so they deliver a smaller bang than direct spending, and that spending beats tax cuts while slack makes every multiplier bigger.](diagrams/01-taxes-spending-and-the-budget-fig4.svg)
 
+**Figure 4** — fiscal multipliers by instrument, and how much the state of the economy changes them.
+
 The figure (illustrative ranges from the IMF/CBO literature) makes both refinements visible: within each pair,
 **spending-type tools beat tax cuts**, and for every tool the **slump bar towers over the full-employment bar**.
 This is why the *same* stimulus can be great policy in 2009 and wasteful in a boom — and why "does fiscal stimulus
@@ -459,7 +469,7 @@ If spending boosts the economy and taxes are unpopular, why not spend freely? Be
   which carries **interest** that crowds out other spending and, past some point, spooks bond markets (→ §2). You
   can borrow, but every dollar borrowed is a claim on future taxes.
 - **Deficit bias — the political-economy tilt.** Spending is concentrated and popular (visible benefits *now*);
-  taxes are painful and deferred-benefit. So democracies have a **structural tendency to deficit** (fig 3's
+  taxes are painful and deferred-benefit. So democracies have a **structural tendency to deficit** (Figure 3's
   downward drift) — the reason many countries adopt **fiscal rules** to tie their own hands.
 - **Fiscal rules.** Self-imposed limits: the EU's **Stability & Growth Pact** (deficit < 3% of GDP, debt < 60%),
   statutory **debt ceilings** (the US, a recurring crisis), balanced-budget amendments, and independent **fiscal
@@ -479,7 +489,7 @@ If spending boosts the economy and taxes are unpopular, why not spend freely? Be
 >   develops the debt market — **not** the operating budget. Deficits-financed-by-debt, the default everywhere
 >   else, is constitutionally off the table for day-to-day spending.
 > - **The NIRC** (E03 §4 §10b) — up to ~50% of the *expected long-run returns* on the national reserves is a
->   standing, non-tax revenue line (fig 1's big "non-tax" slice). Past surpluses fund present spending *through their
+>   standing, non-tax revenue line (Figure 1's big "non-tax" slice). Past surpluses fund present spending *through their
 >   returns*, not by drawing down principal.
 > - **The "second key"** — past reserves are constitutionally protected; drawing on them needs the President's
 >   assent (used in the 2020 COVID budget).
@@ -606,7 +616,7 @@ Reason first; check against a source where noted.
    (cyclically-adjusted) deficit**, which strips the cycle out and shows the deliberate policy choice —
    judging by the headline number is like judging a thermostat by the room temperature.
 6. **(a) public investment in a deep recession > (c) unemployment benefits in a slump > (d) spending in a
-   very open economy > (b) a broad tax cut at full employment** (fig 4's ordering: roughly 1.6, 1.2, and
+   very open economy > (b) a broad tax cut at full employment** (Figure 4's ordering: roughly 1.6, 1.2, and
    well under 1 for the last two). The **two effects doing the ranking** are (i) **slack and the central
    bank's response** — a dollar spent into idle resources creates output, while at full employment it just
    bids up prices and crowds out private activity, and at the **zero lower bound (ZLB)** the central bank
@@ -623,7 +633,7 @@ Reason first; check against a source where noted.
    liquidity constraints, myopia and finite lives are what break it in practice.
 8. **Through the NIRC — the Net Investment Returns Contribution** (E03 §4 §10b): up to about 50% of the
    *expected long-run returns* on the national reserves is booked as a standing **non-tax revenue** line,
-   the roughly 23% non-tax slice in fig 1. Past surpluses fund present spending **through their returns**,
+   the roughly 23% non-tax slice in Figure 1. Past surpluses fund present spending **through their returns**,
    not by drawing down principal — which is why Singapore can keep personal income tax small and still
    balance the budget over each term without borrowing to spend (§6). What it relies on that most countries
    don't have is **a very large stock of accumulated past reserves**, built by decades of surpluses and
@@ -642,9 +652,9 @@ Reason first; check against a source where noted.
   *pensions/health* on spending.
 - **Singapore's Budget.** The **MOF (Ministry of Finance) Budget** (mof.gov.sg / singaporebudget.gov.sg) publishes revenue and
   expenditure tables — find the **NIRC** line and the **GST** line, and note how *small* personal income tax is
-  relative to corporate + GST + NIRC. This is fig 1 made concrete.
+  relative to corporate + GST + NIRC. This is Figure 1 made concrete.
 - **The US deficit history, live.** On **FRED (Federal Reserve Economic Data)**, plot `FYFSGDA188S` (federal surplus/deficit as % of GDP) — it's
-  fig 3. Note the Clinton surpluses and the 2009 and 2020 troughs.
+  Figure 3. Note the Clinton surpluses and the 2009 and 2020 troughs.
 - **Find the cyclical vs. structural split.** The **IMF (International Monetary Fund) Fiscal Monitor** or **CBO (Congressional Budget Office)** publishes
   *cyclically-adjusted* balances — compare the headline and structural deficit for a recession year and see how
   much was "just the thermostat."
@@ -683,7 +693,7 @@ $$G = \underbrace{T}_{\text{tax now}} + \underbrace{\Delta \text{Debt}}_{\text{b
 **Your "cheating" instinct is also a named theory — fiscal illusion (Buchanan).** 财政幻觉 (財政幻覺). James
 Buchanan (Nobel, with Wagner, *Democracy in Deficit*) argued exactly your point: taxes are painful and visible,
 so they *brake* spending; debt removes the brake by deferring the pain onto people who can't yet vote — which
-unleashes the structural **deficit bias** (§6, fig 3's drift).
+unleashes the structural **deficit bias** (§6, Figure 3's drift).
 
 **The one correction — it's not *pure* cheating; it's intertemporal tax-shifting, which is often right.** Three
 legitimate reasons to borrow rather than tax now: **(1) tax-smoothing (Barro)** — the deadweight loss of a tax
@@ -752,6 +762,8 @@ essential-only. This is a sharper, better position, and it has a name.
 **You swapped the axis — from *size* to *state capacity*** 国家能力 (國家能力). The usual debate is a
 one-dimensional dial (small ↔ big); you added the second dimension that actually predicts outcomes (Fukuyama's
 argument that the *quality/capacity* of the state matters more than its *scope*). As a 2×2:
+
+**Table 2** — scope against size: the two-by-two your position actually occupies.
 
 | | **Small scope** | **Big scope** |
 |---|---|---|

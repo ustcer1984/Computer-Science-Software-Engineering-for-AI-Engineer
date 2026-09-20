@@ -88,6 +88,8 @@ currently have. In E05 §2 you wrote that gap as an identity for a whole country
 exists between *units*: **surplus units** (savers) and **deficit units** (borrowers). A financial system is
 whatever moves resources from the first to the second. It does five distinguishable jobs.
 
+**Table 1** — the five jobs a financial market does, and what breaks without each.
+
 | # | The job | What it means concretely | What breaks without it |
 |---|---|---|---|
 | 1 | **Channel savings into investment** | a retiree's savings end up financing a semiconductor fab | savings sit idle; only the already-rich can build anything |
@@ -165,6 +167,8 @@ investor. The company's involvement ended at the moment it originally issued tho
 
 <!-- FIGURE 1 -->
 ![Primary vs secondary markets, on a log scale](diagrams/01-what-financial-markets-are-fig1.svg)
+
+**Figure 1** — primary versus secondary markets on a log scale — the secondary market dwarfs the one that actually raises money.
 
 The scale gap is not a detail — it *is* the picture. In 2025 the United States saw roughly 200 traditional
 initial public offerings raising on the order of **USD 44 billion**, and perhaps **USD 175 billion** across all
@@ -255,6 +259,8 @@ Two refinements worth carrying:
 
 Almost every financial instrument is one of three things, or a package of them.
 
+**Table 2** — the instrument map: debt, equity and derivatives compared on what each claim actually is.
+
 | | **Debt** | **Equity** | **Derivative** |
 |---|---|---|---|
 | **The claim** | a **fixed** promise: interest plus principal | a **residual** claim: whatever is left after everyone else is paid | a claim whose value is **derived** from something else |
@@ -271,6 +277,8 @@ whole distinction, and E07's balance sheet is literally a picture of it.
 
 <!-- FIGURE 2 -->
 ![The size of the pools: global equities, global bonds, and derivatives notional versus gross market value](diagrams/01-what-financial-markets-are-fig2.svg)
+
+**Figure 2** — the size of the pools: global equities and bonds against derivatives notional versus gross market value.
 
 Two things to take from the scale picture.
 
@@ -354,6 +362,8 @@ The cast, sorted by what they are *for*:
 
 **The principals — people whose money it is**
 
+**Table 3** — the suppliers of capital, and what each wants.
+
 | Participant | What they want |
 |---|---|
 | **Households / retail investors** | save for retirement, buy a home, get a return above inflation |
@@ -361,6 +371,8 @@ The cast, sorted by what they are *for*:
 | **Governments** | fund deficits (E04), manage debt maturity |
 
 **The institutions — people who manage other people's money**
+
+**Table 4** — the intermediaries, and what each one actually is.
 
 | Participant | What they are |
 |---|---|
@@ -371,6 +383,8 @@ The cast, sorted by what they are *for*:
 | **Banks** | both intermediary and participant — see below |
 
 **The plumbing — people who make trading possible**
+
+**Table 5** — the infrastructure, and the function each piece performs.
 
 | Participant | Function |
 |---|---|
@@ -394,6 +408,8 @@ borrower's securities directly, and hold the risk themselves. Economies differ e
 
 <!-- FIGURE 3 -->
 ![Bank-based versus market-based corporate funding across major economies](diagrams/01-what-financial-markets-are-fig4.svg)
+
+**Figure 4** — bank-based versus market-based corporate funding across the major economies.
 
 This is not a curiosity — it changes how the whole economy behaves:
 
@@ -477,6 +493,8 @@ $$\text{spread} = P_{\text{ask}} - P_{\text{bid}}$$
 <!-- FIGURE 4 -->
 ![A limit order book: bids, asks, the spread, and depth](diagrams/01-what-financial-markets-are-fig3.svg)
 
+**Figure 3** — a limit order book — bids, asks, the spread, and depth.
+
 **The spread is the price of immediacy.** If you insist on trading *now*, you cross the spread and pay it. If
 you are willing to wait, you post a limit order and may *earn* it. That is the entire business model of a market
 maker: quote both sides, capture the spread thousands of times a day, and manage the inventory risk of being
@@ -547,6 +565,8 @@ and quick replenishment after a trade.*
 
 Job 2 in §1 was price discovery. The formal version is the **EMH (efficient market hypothesis)**, usually stated
 in three strengths:
+
+**Table 6** — the three forms of the efficient-market hypothesis, and how well each holds up.
 
 | Form | Claim | Roughly true? |
 |---|---|---|
@@ -857,6 +877,8 @@ including the part where you were right and I revised.
 "Why keep the exchange?" contains a hidden assumption: that the exchange is failing. It isn't. SGX's FY2025 net
 revenue was a record **SGD 1.30 billion, up 11.7%**, with record profit — and the segment mix is the reason:
 
+**Table 7** — SGX net revenue by segment, FY2025 — where the exchange's money really comes from.
+
 | Segment | Share of SGX net revenue, FY2025 |
 |---|---|
 | Cash equities | 30.3% |
@@ -869,6 +891,8 @@ franchise (China A50, Japan, iron ore) and its FX business serve the region, not
 commercial entity is healthy; what is shrinking is one segment of it. **The real question is narrower and
 harder: why fight for the *domestic listing board* specifically?** Five answers, deliberately ranked — which is
 what made them auditable:
+
+**Table 8** — why Singapore keeps an equity market despite the listings problem, weighted by force.
 
 | # | The reason | Weight |
 |---|---|---|

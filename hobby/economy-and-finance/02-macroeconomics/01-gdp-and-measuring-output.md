@@ -100,6 +100,8 @@ hiding in one of these words.
 <!-- FIGURE -->
 ![A bread supply chain: each stage adds value, and the sum of value added equals the final retail price](diagrams/01-gdp-and-measuring-output-fig1.svg)
 
+**Figure 1** — a bread supply chain: each stage adds value, and the sum of value added equals the final retail price.
+
   Wheat (\$0.60) → flour (\$1.10) → loaf to the shop (\$2.00) → loaf on the shelf (\$2.50). If you naïvely
   summed every sale you'd get \$6.20 for one loaf. The right answer is either **the final price (\$2.50)**
   *or, equivalently,* **the sum of value added at each stage** (\$0.60 + \$0.50 + \$0.90 + \$0.50 = \$2.50). That
@@ -248,6 +250,8 @@ view; "corporate profits and wages rose" is the *income* view; "manufacturing ou
 This is the decomposition you'll see most, because each piece is a different *engine* of the economy and
 moves for different reasons. Learn what's in each bucket — and, just as important, what is **not**.
 
+**Table 1** — the four expenditure terms, what each covers, and the classic confusions to avoid.
+
 | Term | Name | What it is | Classic confusions to avoid |
 |---|---|---|---|
 | $C$ | **Consumption** | Household spending: food, rent, cars, haircuts, streaming. Usually the **largest** share. | New **housing** is *not* here — it's in $I$. |
@@ -271,6 +275,8 @@ at:
 
 <!-- FIGURE -->
 ![Stacked bars of C, I, G, NX (net exports) as a share of GDP for the US, China, and Singapore, each totalling 100%](diagrams/01-gdp-and-measuring-output-fig2.svg)
+
+**Figure 2** — the composition of GDP — C, I, G and net exports as a share of output for the US, China and Singapore.
 
 - **United States** — **consumption-driven** ($C$ ≈ 68%): the archetypal consumer economy, with a
   small **trade deficit** ($NX < 0$). Notice $C + I + G$ slightly *exceeds* 100% — that overshoot is exactly
@@ -345,6 +351,8 @@ growth. To strip it out we split GDP two ways:
 
 <!-- FIGURE -->
 ![Left: nominal GDP rising faster than real GDP, the gap being inflation. Right: nominal growth equals real growth plus inflation each year](diagrams/01-gdp-and-measuring-output-fig3.svg)
+
+**Figure 3** — nominal against real GDP, and why nominal growth equals real growth plus inflation.
 
 The left panel shows nominal pulling away from real over time — **the entire gap is price change.** The
 right panel is the relationship to memorize:
@@ -465,6 +473,8 @@ diagnostic:
 
 <!-- FIGURE -->
 ![GNI as a percentage of GDP for Ireland, Singapore, the US, and the Philippines — below 100 means income flows out, above means it flows in](diagrams/01-gdp-and-measuring-output-fig4.svg)
+
+**Figure 4** — GNI as a percentage of GDP: below 100 means income flows out of the country, above means it flows in.
 
 - **Ireland** — GNI far *below* GDP: multinationals book huge profits there for tax reasons, inflating *GDP*
   while much of that income flows *out* to foreign owners. Irish economists watch a modified **GNI\*** instead
@@ -709,6 +719,8 @@ numbers):
 - **External proxies catch liars:** economists cross-check GDP against **satellite nighttime lights**,
   electricity, freight, tax receipts. Martínez (2022) found **authoritarian regimes overstate GDP growth by
   ~35%** versus what their night-lights imply. Lights are hard to fake from orbit.
+
+**Table 2** — the instinct that GDP is easily manipulated, against the calibration worth carrying.
 
 | The instinct | The calibration to carry |
 |---|---|

@@ -227,35 +227,56 @@ def fig3():
 #   multiplier and for endogenous money (§4b).
 # ---------------------------------------------------------------------------
 def fig4():
-    years = np.array([1985, 1990, 1995, 2000, 2005, 2007, 2008, 2009, 2010,
-                      2012, 2014, 2016, 2018, 2019, 2020, 2021, 2022, 2024])
-    # Approximate M2/base ratio (illustrative, matches the published shape).
-    ratio = np.array([9.5, 10.2, 11.0, 11.6, 9.8, 9.2, 5.2, 4.1, 3.7,
-                      3.4, 3.1, 3.3, 3.6, 3.9, 2.9, 2.8, 3.2, 3.7])
+    """M2 / monetary base, from the REAL monthly FRED series committed beside this file.
 
-    fig, ax = plt.subplots(figsize=(10.2, 5.2))
-    ax.plot(years, ratio, color=C_DEP, lw=2.6, marker="o", ms=4)
+    Was hand-typed "approximate, illustrative" values presented as history; replaced
+    2026-09-20 with the actual data (FRED M2SL and BOGMBASE, monthly, 1995-2026)
+    while embedding the figure, which had been rendered but never referenced.
+    """
+    import csv, datetime
 
-    # Mark the 2008 QE collapse.
-    ax.axvspan(2008, 2009, color=C_BASE, alpha=0.12)
-    ax.annotate("2008 QE:\nbase balloons,\nM2 doesn't follow\n→ ratio COLLAPSES",
-                xy=(2008.5, 5.0), xytext=(2010.5, 8.5), fontsize=9,
-                color=C_BASE, fontweight="bold",
-                arrowprops=dict(arrowstyle="->", color=C_BASE, lw=1.6))
-    ax.axvspan(2020, 2021, color=C_BASE, alpha=0.12)
-    ax.annotate("2020 QE", xy=(2020.5, 2.9), xytext=(2016.5, 1.8), fontsize=8.6,
-                color=C_BASE, arrowprops=dict(arrowstyle="->", color=C_BASE, lw=1.2))
+    def load(name):
+        out = {}
+        with open(os.path.join(OUT, name + ".csv"), encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                v = row[name]
+                if v not in ("", "."):
+                    d = datetime.date.fromisoformat(row["observation_date"])
+                    out[d] = float(v)
+        return out
 
-    ax.text(1993, 12.0, "If the multiplier were a real, stable\nmechanism, this line would be FLAT.",
-            fontsize=9, color=GREY, style="italic")
+    m2, base = load("M2SL"), load("BOGMBASE")
+    dates = sorted(set(m2) & set(base))
+    x = np.array([d.year + (d.month - 1) / 12 for d in dates])
+    ratio = np.array([m2[d] / base[d] for d in dates])
+
+    fig, ax = plt.subplots(figsize=(10.4, 5.4))
+    ax.plot(x, ratio, color=C_DEP, lw=2.4)
+
+    ax.axvspan(2008.75, 2010.0, color=C_BASE, alpha=0.14)
+    ax.axvspan(2020.15, 2021.2, color=C_BASE, alpha=0.14)
+    pk = int(np.argmax(ratio))
+    ax.plot([x[pk]], [ratio[pk]], marker="o", ms=7, color=C_DEP)
+    ax.annotate(f"peak {ratio[pk]:.1f}x\n({dates[pk]:%b %Y})", xy=(x[pk], ratio[pk]),
+                xytext=(x[pk] - 7.5, ratio[pk] - 0.6), fontsize=10.2, color=GREY,
+                arrowprops=dict(arrowstyle="->", color=GREY))
+    ax.annotate("2008 QE: the base balloons,\nM2 does NOT follow\n-> the 'multiplier' COLLAPSES",
+                xy=(2009.4, float(np.interp(2009.4, x, ratio))),
+                xytext=(2010.6, 7.4), fontsize=10.4, color="#c0392b", fontweight="bold",
+                arrowprops=dict(arrowstyle="->", color="#c0392b", lw=1.4))
+    ax.annotate("2020 QE: again", xy=(2020.7, float(np.interp(2020.7, x, ratio))),
+                xytext=(2021.6, 1.6), fontsize=10.0, color="#c0392b",
+                arrowprops=dict(arrowstyle="->", color="#c0392b"))
+    ax.text(1996.0, 2.2, "If the multiplier were a real, stable mechanism,\nthis line would be FLAT.",
+            fontsize=10.6, color=GREY, style="italic")
 
     ax.set_xlabel("Year")
-    ax.set_ylabel("Money multiplier ratio  (M2 / monetary base)")
+    ax.set_ylabel("M2 / monetary base")
     ax.set_title("The 'money multiplier' is not a constant — it collapsed after 2008")
-    ax.set_ylim(0, 13)
-    ax.set_xlim(1984, 2025)
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.grid(axis="y", alpha=0.25)
+    ax.set_ylim(0, 13); ax.set_xlim(1995, 2027)
+    ax.grid(alpha=0.25); ax.spines[["top", "right"]].set_visible(False)
+    ax.text(0.995, -0.145, "Source: FRED M2SL and BOGMBASE, monthly.", transform=ax.transAxes,
+            ha="right", fontsize=8.8, color=GREY)
     save(fig, 4)
 
 

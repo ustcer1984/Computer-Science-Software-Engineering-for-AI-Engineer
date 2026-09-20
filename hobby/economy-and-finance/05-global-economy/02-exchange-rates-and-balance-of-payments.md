@@ -181,6 +181,8 @@ purchasing power is equalized. PPP (purchasing power parity) is a **real anchor*
 
 ![A line chart of the US real effective exchange rate as an index from 1980 to 2024, swinging widely around a dashed long-run average near 108. It rises to about 143 at the 1985 Plaza peak, falls to about 90 by the mid-1990s, climbs to about 129 by 2002, drops back near 96 around 2008 to 2011, and rises again toward 128 by 2022. Regions above the average are shaded to show the currency dear, and regions below to show it cheap. An annotation notes that deviations of about 30 percent can last a decade, so purchasing-power parity anchors the long run, not the short run.](diagrams/02-exchange-rates-and-balance-of-payments-fig1.svg)
 
+**Figure 1** — the US real effective exchange rate, 1980–2024, swinging around its long-run average.
+
 Fig 1 shows why PPP is a *decade* anchor, not a *month* one: the US real exchange rate swings **±30% for years**
 around its long-run average. Two forces make PPP leak: **non-tradables** (haircuts, rent — they don't arbitrage
 across borders) and **Balassa–Samuelson** (richer, higher-productivity countries have systematically *higher*
@@ -273,6 +275,8 @@ The identity is the whole point:
 $$CA + KA = 0.$$
 
 ![A horizontal bar chart of four economies showing the current account and the capital and financial account as a share of GDP (Gross Domestic Product), as mirror-image bars. The USA has a current-account deficit of about minus 3 percent matched by a capital-account surplus of plus 3 percent; the United Kingdom is minus 3.5 and plus 3.5; China is a current-account surplus of plus 2.2 matched by a capital-account deficit of minus 2.2; Germany is plus 6.5 and minus 6.5. A caption notes that the current and capital accounts are equal and opposite for every country, so deficit countries import capital and surplus countries export it.](diagrams/02-exchange-rates-and-balance-of-payments-fig2.svg)
+
+**Figure 2** — the current and financial accounts for four economies — they sum to zero by construction.
 
 Fig 2 is the identity made visible: for **every** country the two accounts are **equal and opposite.** A
 **current-account deficit is *exactly* financed by a capital-account surplus** — the US imports more goods than it
@@ -401,6 +405,8 @@ works **slowly, and with a nasty first act.**
 
 ![A line chart of the trade balance over time after a currency depreciates at time zero. The balance first falls below zero, reaching a trough around minus 0.7 within the first two quarters, then rises steadily and crosses back above zero by about quarter two and continues up toward plus 0.9. The early dip is labelled phase one, worsens, because import prices jump immediately while trade volumes are still stuck under existing contracts and habits; the later rise is labelled phase two, improves, as exports become cheaper and imports dearer and volumes finally adjust. A note adds that the improvement lasts only if the depreciation shifts saving minus investment.](diagrams/02-exchange-rates-and-balance-of-payments-fig3.svg)
 
+**Figure 3** — the trade balance against the exchange rate: the J-curve, and why it gets worse first.
+
 Fig 3 is the **J-curve.** Right after a depreciation, **prices** move but **volumes** don't (contracts are signed,
 supply chains and habits are sticky). So you immediately pay *more* for the same imports while still selling the
 same exports → the trade balance **worsens first** (the dip). Only later, as buyers switch, do volumes adjust and
@@ -454,6 +460,8 @@ Now the theorem the whole course was walking toward: put the **policy mix** (E04
 mobile capital**, and the exchange-rate regime decides **which lever works.**
 
 ![A two-by-two grid titled Mundell-Fleming under mobile capital. The rows are floating rate and fixed rate; the columns are monetary policy and fiscal policy. Under a floating rate, monetary policy is powerful because a rate cut sends capital out, depreciates the currency and lifts net exports, reinforcing the stimulus, while fiscal policy is weak because higher spending raises rates, draws capital in, appreciates the currency and cuts net exports, crowding it out through the exchange rate. Under a fixed rate the pattern reverses: monetary policy is impotent because rates are pinned to defend the peg, while fiscal policy is powerful because the central bank must print to hold the peg, so there is no crowding-out. A note says the floating row is the engine behind the earlier US example, where fiscal expansion produced a strong dollar and a wider trade deficit.](diagrams/02-exchange-rates-and-balance-of-payments-fig4.svg)
+
+**Figure 4** — Mundell–Fleming: what monetary and fiscal policy can do under fixed and floating rates.
 
 Fig 4 is the result. Under **mobile capital**:
 
@@ -573,7 +581,7 @@ Reason first; check against a source where noted.
    equalizes the price of a common basket. **They can point in opposite directions** because a sharp rate rise
    often accompanies *high inflation*, and high relative inflation means PPP calls for long-run **depreciation**
    while the rate differential is pulling the spot rate **up**; and because real rates can deviate about 30% from
-   the PPP average for a decade (fig 1). A **risk premium** can flip even the short-run answer — that is the E04
+   the PPP average for a decade (Figure 1). A **risk premium** can flip even the short-run answer — that is the E04
    §3 §10 dollar paradox.
 4. **Its capital and financial account (KA) must be a surplus of exactly +4% of GDP**, because the balance of
    payments sums to zero: CA + KA = 0 (§3). **In plain words: foreigners are buying 4% of GDP worth of the
@@ -594,7 +602,7 @@ Reason first; check against a source where noted.
    **imports US rates** whatever its own economy needs. China escapes that only by putting a wall between its
    domestic money market and the world: **capital controls** are literally the price it pays for keeping both a
    managed rate and its own policy rate.
-7. **Because prices adjust immediately while volumes are sticky — the J-curve** (§5, fig 3). Contracts are already
+7. **Because prices adjust immediately while volumes are sticky — the J-curve** (§5, Figure 3). Contracts are already
    signed and supply chains and habits do not switch overnight, so on day one you pay *more* in local currency for
    the same import quantity while still selling the same exports: the balance **worsens first**, and improves only
    as buyers switch. **Whether it improves at all is decided by the Marshall–Lerner condition** — the export and
@@ -602,7 +610,7 @@ Reason first; check against a source where noted.
    changes**: if the depreciation merely feeds through into domestic inflation, the *real* exchange rate reverts
    and the trade balance with it. **The currency is the mechanism; the S − I gap is the cause.**
 8. **Because the fiscal expansion raises domestic interest rates, which pulls capital *in*, which appreciates the
-   currency, which cuts net exports — the stimulus leaks out through the trade account** (§6, fig 4's
+   currency, which cuts net exports — the stimulus leaks out through the trade account** (§6, Figure 4's
    floating/fiscal cell). Under **Mundell–Fleming** with mobile capital this is a theorem, not bad luck: floating
    makes monetary policy powerful and fiscal policy weak, and fixed reverses it. **The current US is exactly this
    cell** — a (dirty-)floating economy with open capital running a loose fiscal stance got a **strong dollar and a
@@ -614,7 +622,7 @@ Reason first; check against a source where noted.
 > **Optional — watch the two clocks in real data (15–20 min).** On **FRED (Federal Reserve Economic Data)**, pull (a) a currency pair's spot rate
 > and (b) the *interest-rate differential* between the two countries over the last 3 years — see how the fast clock
 > (rates) tracks the currency short-term. Then pull a **real effective exchange rate** index over 30 years and eyeball
-> how far and how *long* it wanders from its average (the slow PPP clock, fig 1). Bring one chart where the two
+> how far and how *long* it wanders from its average (the slow PPP clock, Figure 1). Bring one chart where the two
 > clocks disagreed — that gap is where the risk premium lives.
 
 ## 10. Applied — the monetary-sovereignty spectrum: where this theory stops applying
@@ -630,6 +638,8 @@ developed.)
 
 The clean way to analyze every edge case at once: monetary sovereignty decomposes into **four things you can lose
 independently.**
+
+**Table 1** — sovereignty as four separable attributes, and what giving up each one costs.
 
 | Attribute | Lose it and you lose… |
 |---|---|
@@ -649,7 +659,7 @@ Placing the cases on it:
 - **The case worth adding: "original sin"** — a country with its own *floating* currency whose **debt is in USD**.
   It loses only **(b)** — and that is the most common emerging-market situation.
 
-**The theory doesn't break; it re-parameterizes.** A Eurozone member is simply **the fixed-rate row of fig 4 taken
+**The theory doesn't break; it re-parameterizes.** A Eurozone member is simply **the fixed-rate row of Figure 4 taken
 to its limit**: monetary policy fully impotent, fiscal policy powerful *in principle* (no exchange-rate
 crowding-out) but constrained *in practice*. The trilemma still holds — the euro is "irrevocably fixed + free
 capital → zero monetary autonomy."
@@ -787,7 +797,7 @@ Reading FX (foreign exchange) and balance-of-payments news across both scripts. 
   §2's slow clock; any FX-market primer on **interest-rate parity and the carry trade** for the fast one.
 - **The identity, made concrete:** the **IMF (International Monetary Fund) Balance of Payments Manual (BPM6)** and a country's central-bank BoP
   release (e.g. **MAS** for Singapore) — see CA + KA = 0 and the CA = S − I decomposition in real published data
-  (fig 2).
+  (Figure 2).
 - **Mundell–Fleming & the trilemma:** Robert Mundell's Nobel work; Maurice Obstfeld & Alan Taylor on the
   **trilemma** across history — the empirical backbone for §4 and §6, and the bridge to §3's crises.
 - **Live data:** **FRED** (exchange rates, real effective rates, interest differentials), the **BIS** (the daily FX

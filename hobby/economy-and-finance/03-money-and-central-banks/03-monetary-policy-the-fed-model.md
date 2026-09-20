@@ -204,6 +204,8 @@ it works in two completely different regimes.
 
 ![Two-panel diagram of the market for reserves. Panel (a), scarce reserves before 2008: a downward-sloping reserve-demand curve running from a ceiling (the discount rate, about 5 percent) down toward a near-zero floor, with a vertical reserve-supply line crossing it on the sloped middle, setting the target rate where they meet; a second dotted supply line shows that when the Fed shifts supply via open-market operations, the rate moves along the slope. Panel (b), ample reserves after 2008: the same demand curve but the vertical supply line now sits far out to the right on the flat portion, where demand has bottomed out at an administered floor equal to the interest-on-reserves rate (IORB), so the overnight rate is pinned at that floor and a large shift in supply — QE or QT — barely moves it.](diagrams/03-monetary-policy-the-fed-model-fig1.svg)
 
+**Figure 1** — the market for reserves, before and after 2008 — scarce-reserve against ample-reserve operating regimes.
+
 ### 2a. The old way — scarce reserves (pre-2008)
 
 Reserves used to be **scarce**, and banks needed them (to meet reserve requirements and settle payments).
@@ -322,6 +324,8 @@ law this is equivalently an unemployment-gap term). When inflation is on target 
 both gaps are zero and the rule prescribes the neutral rate $r^{\ast} + \pi^{\ast}$.
 
 ![A conceptual plot of the Taylor rule: the prescribed policy rate on the vertical axis against the inflation rate on the horizontal axis. The prescription is a straight line with slope 1.5 — steeper than a dashed 45-degree reference line — passing through a marked neutral point where 2 percent inflation gives a 2.5 percent rate. Where the rule would prescribe a rate below zero (at low or negative inflation) it is clipped flat along the zero lower bound, a shaded region annotated as the place where the Fed must switch to QE and forward guidance. An annotation highlights that the slope greater than one is the Taylor principle: raising the nominal rate more than one-for-one with inflation means the real rate rises, which is what actually tightens.](diagrams/03-monetary-policy-the-fed-model-fig2.svg)
+
+**Figure 2** — the Taylor rule, and the Taylor principle: the prescription must rise more than one-for-one with inflation.
 
 The single most important property is the **Taylor principle**: the coefficient on inflation is **greater
 than one** (the rule raises the *nominal* rate by *more* than the rise in inflation). Why it matters is pure
@@ -452,6 +456,8 @@ hits real activity in roughly **half a year to a year and a half**, and inflatio
 
 ![A stylised impulse-response plot showing the effect of a one-off rate hike at time zero. Two curves dip below the baseline and recover: the output-gap (real-activity) response falls first and troughs at about 4 to 6 quarters, while the inflation response falls later and more gently, troughing at about 8 to 12 quarters. The message is that a rate change acts on the economy of a year or more from now, not today.](diagrams/03-monetary-policy-the-fed-model-fig4.svg)
 
+**Figure 4** — the impulse response to a one-off hike: output turns first, inflation much later.
+
 The lag is *why* central banking is hard: the Fed must set today's rate for the economy of **12–18 months
 from now**, based on a **forecast** — so it is perpetually at risk of doing too much or too little and only
 finding out later. It's the "active damper with a destabilizing lag" you identified in E02 §4 §10a: steer a
@@ -498,12 +504,12 @@ single fact drives most policy mistakes and most of the "is the Fed behind the c
 | **Yield curve control** | targeting a long *yield* rather than a *quantity* of purchases — the most aggressive form of "price, not quantity" |
 | **Quantitative tightening** | shrinking the balance sheet and draining reserves |
 | **Floor system** | the reason QT and rate cuts are compatible: with the rate administered, the balance sheet is a separate tool (§2b) |
-| **Balance sheet** | the central bank's holdings, the "unconventional tool" plotted against the funds rate in fig 3 |
+| **Balance sheet** | the central bank's holdings, the "unconventional tool" plotted against the funds rate in Figure 3 |
 | **Effective federal funds rate** | the actual traded overnight rate, as opposed to the announced target |
 
 </details>
 
-The Taylor rule sometimes prescribes a *negative* rate (fig 2's shaded region): in a deep slump with
+The Taylor rule sometimes prescribes a *negative* rate (Figure 2's shaded region): in a deep slump with
 inflation below target, the rule wants the policy rate below zero. But you can't cut nominal rates much
 below zero — depositors would just hold physical cash at 0% instead (the **zero lower bound / effective
 lower bound**). When the conventional lever is jammed at zero, the economy can fall into a **liquidity trap**
@@ -512,6 +518,8 @@ after 2008 central banks built an **unconventional toolkit**.
 
 ![A twin-axis time series from 2007 to 2026. On one axis, the effective federal funds rate (the conventional tool) shows the 2007 level near 5 percent, a collapse to near zero from 2008 through 2015, liftoff to about 2.2 percent by 2019, a drop back to zero in 2020, then the sharp 2022 to 2023 hiking cycle to just above 5 percent and a partial descent to about 3.6 percent by 2026. On the other axis, the Fed's balance sheet (the unconventional tool) climbs from under 1 trillion dollars in 2007 to about 4.5 trillion by 2014 through successive rounds of QE, dips slightly with quantitative tightening in 2018 to 2019, explodes to nearly 9 trillion in 2020 to 2021, and shrinks under QT from 2022. The two tools are used together: when the rate is stuck at zero, the balance sheet does the work.](diagrams/03-monetary-policy-the-fed-model-fig3.svg)
 
+**Figure 3** — the conventional and unconventional tools side by side, 2007–2026 — the policy rate against the balance sheet.
+
 - **Quantitative easing (QE).** The central bank creates reserves and buys **long-dated** assets (Treasuries,
   mortgage bonds). The point is *not* "printing money to spend" — it's to push down **long-term** yields
   when the short rate is already at zero, by two routes: (i) **portfolio-balance / term-premium
@@ -519,7 +527,7 @@ after 2008 central banks built an **unconventional toolkit**.
   (the same lever the Treasury's issuance mix pulls, from §2 §10b); and (ii) **signaling** — a commitment to
   hold rates low. **And here is the §1 punchline, now fully paid off:** QE ballooned the monetary base but
   did **not** cause runaway M2 or inflation, because banks don't lend out reserves (§1 §4b) — QE works on
-  *yields and expectations*, not by mechanically multiplying money. The 2010s proved it; fig 3 shows the
+  *yields and expectations*, not by mechanically multiplying money. The 2010s proved it; Figure 3 shows the
   balance sheet exploding while the funds rate — and inflation — stayed floored.
 - **Forward guidance.** As in §3c, but load-bearing at the ZLB (zero lower bound): when you can't cut, you *promise* to stay low
   for longer, dragging down the long rates that actually matter (§2).
@@ -533,7 +541,7 @@ after 2008 central banks built an **unconventional toolkit**.
   applied to the long end.
 - **Quantitative tightening (QT).** The reverse of QE — letting the balance sheet **shrink** (bonds mature
   and aren't replaced), draining reserves. Because of the **floor system** (§2b), the Fed can run QT
-  *while cutting rates* — the balance sheet and the policy rate are separate tools (fig 3, 2024–26).
+  *while cutting rates* — the balance sheet and the policy rate are separate tools (Figure 3, 2024–26).
 
 > **The reframe that organizes the toolkit.** Conventional policy sets the **price** of *short-term* money
 > (the policy rate). The unconventional tools reach for the **rest of the curve** — long yields, term
@@ -609,7 +617,7 @@ being fooled by it.
 > **The live record (2021–2026), read with this toolkit.** The recent cycle is the whole section in one
 > episode. Post-COVID, the Fed judged the 2021 inflation surge **"transitory"** and held rates at zero too
 > long (a forecast error, §4's lag risk; the "look-through" call from E02 §3 §11b). When inflation hit ~9%,
-> it executed the **fastest hiking cycle in 40 years** (fig 3), lifting the funds rate from ~0 to over 5%
+> it executed the **fastest hiking cycle in 40 years** (Figure 3), lifting the funds rate from ~0 to over 5%
 > in 18 months while running **QT** — testing every channel of §4 at once, and detonating the duration risk
 > that killed **SVB** (§2 §6). By 2026, with inflation still sticky above target, the **Warsh** Fed
 > (E02 §3 §11d) held at 3.50–3.75% with a *hawkish* tilt — the independence stress-test you were tracking
@@ -686,7 +694,7 @@ Reason first; check against a source where noted.
 3. **Which channel?** For each, name the transmission channel doing the work: (a) a rate cut lifts the stock
    market; (b) a rate hike strengthens the currency and cheapens imports; (c) a credible 2% target keeps
    union wage demands moderate; (d) higher rates make banks approve fewer mortgages.
-4. **The QE puzzle, finished.** After 2008 the Fed's balance sheet grew several-fold (fig 3) yet inflation
+4. **The QE puzzle, finished.** After 2008 the Fed's balance sheet grew several-fold (Figure 3) yet inflation
    stayed *below* target for a decade. Explain why, connecting §1 §4b (loans create deposits) to what QE
    actually operates on. Then explain why 2021 was different (hint: where did the money reach *that* time?).
 5. **Long and variable lags.** Why does the "12–18 month lag" make it structurally likely that a central
@@ -707,7 +715,7 @@ Reason first; check against a source where noted.
 
 1. **Because in the floor system the quantity of reserves and the policy rate are decoupled — the rate is
    *administered*, not squeezed out of a scarce quantity.** With reserves ample, the system sits far out on
-   the flat part of the reserve-demand curve (fig 1, panel b), where draining reserves through quantitative
+   the flat part of the reserve-demand curve (Figure 1, panel b), where draining reserves through quantitative
    tightening moves the overnight rate by essentially nothing; the rate is wherever the Fed announces the
    floor to be. The single 2008 innovation is **interest on reserve balances (IORB)** — paying interest on
    reserves, which floors the overnight market by arbitrage since no bank lends below what it earns risk-free
@@ -764,7 +772,7 @@ Reason first; check against a source where noted.
 ## 9. Optional: watch monetary policy on live data (15–20 min)
 
 - **The two tools, live.** On FRED (Federal Reserve Economic Data), plot the **target range** (`DFEDTARU` / `DFEDTARL`) and the **balance
-  sheet** (`WALCL`) — this is fig 3 with the real numbers, updated. Are they moving together or in opposite
+  sheet** (`WALCL`) — this is Figure 3 with the real numbers, updated. Are they moving together or in opposite
   directions right now?
 - **The floor system.** Plot the **effective fed funds rate** (`EFFR`) against the **IORB** rate (`IORB`)
   and the **ON RRP (reverse repurchase agreement)** rate (`RRPONTSYAWARD`). See the market rate sit *between* the floors — the §2 plumbing

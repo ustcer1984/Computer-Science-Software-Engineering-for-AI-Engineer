@@ -174,6 +174,8 @@ input (usually capital) is fixed." Hold that — it's the hinge of §§2 and 4 b
 Divide each cost by output to get **per-unit (average)** costs, and take the slope of total cost to get
 **marginal** cost:
 
+**Table 1** — the cost curves: each definition, its shape, and why it has that shape.
+
 | Curve | Definition | Shape & why |
 |---|---|---|
 | **AFC** — average fixed cost | $FC / q$ | Always falling — "spreading the fixed cost" over more units (a hyperbola). |
@@ -183,6 +185,8 @@ Divide each cost by output to get **per-unit (average)** costs, and take the slo
 
 <!-- FIGURE -->
 ![The family of cost curves: MC cuts AVC and ATC (average total cost) at their minimum points](diagrams/04-firms-costs-and-competition-fig1.svg)
+
+**Figure 1** — the family of cost curves — MC cuts AVC and ATC at their minimum points.
 
 The non-obvious, completely general fact in that picture: **MC passes through the minimum of both AVC and
 ATC.** This isn't a quirk of the dummy numbers — it's a law about marginals and averages, and it's worth
@@ -285,6 +289,8 @@ left panel below is profit, the right is loss:
 <!-- FIGURE -->
 ![Profit when P exceeds ATC; loss but keep operating when AVC is below P below ATC; shut down below AVC](diagrams/04-firms-costs-and-competition-fig2.svg)
 
+**Figure 2** — profit, loss-but-keep-operating, and shutdown — the three regions the price can land in.
+
 - **$P > ATC$** → economic **profit** (green rectangle, left).
 - **$P = ATC$** → exactly **break even** (zero economic profit — the minimum-ATC price from §1).
 - **$P < ATC$** → a **loss**. But — and this is the subtle, genuinely useful part — a loss does *not*
@@ -312,6 +318,8 @@ This is not a textbook curiosity — it's why:
   staff, even though they're not covering the rent.
 
 The distinction between the two horizons:
+
+**Table 2** — shutdown against exit — how the horizon changes which fixed costs count.
 
 | Horizon | Fixed cost is… | Decision | Threshold |
 |---|---|---|---|
@@ -383,6 +391,8 @@ real-world signature:
 
 <!-- FIGURE -->
 ![The long-run average cost curve as the envelope of plant-size choices, with economies, MES (minimum efficient scale), and diseconomies](diagrams/04-firms-costs-and-competition-fig4.svg)
+
+**Figure 4** — the long-run average cost curve as the envelope of plant-size choices, with MES and diseconomies marked.
 
 - **Economies of scale** (LRAC falling): bigger is cheaper per unit. Sources — spreading huge fixed costs
   (a chip fab, a drug's R&D, a software codebase) over more output; bulk buying; specialization; learning
@@ -472,6 +482,8 @@ structure**, and this single ratio predicts a lot:
 differentiated the product**, and — the deepest axis — **how much pricing power** each firm has, which
 comes down to **barriers to entry**.
 
+**Table 3** — the spectrum of competition, from perfect competition to monopoly.
+
 | Structure | # firms | Product | Pricing power | Long-run economic profit | Barriers to entry | Real examples |
 |---|---|---|---|---|---|---|
 | **Perfect competition** | very many | identical | none (price-*taker*) | **zero** | none | wheat, FX (foreign exchange) spot, basic commodities |
@@ -510,6 +522,8 @@ With **free entry** (no barriers — the defining assumption), that profit is a 
 
 <!-- FIGURE -->
 ![Perfect competition: short-run profit attracts entry, which competes price down to minimum ATC and zero economic profit](diagrams/04-firms-costs-and-competition-fig3.svg)
+
+**Figure 3** — perfect competition in the long run: entry competes price down to minimum ATC and zero economic profit.
 
 > **The mechanism.** Economic profit attracts **entry** → more firms → market supply shifts right (§2) →
 > the price **falls**. Entry continues as long as there's profit to be had, so it stops only when economic
@@ -606,6 +620,8 @@ to its ATC curve — **zero economic profit**, but at a price **above** marginal
 
 <!-- FIGURE -->
 ![Monopolistic competition long run: demand tangent to ATC gives zero profit, but P exceeds MC and output sits left of minimum ATC — excess capacity](diagrams/04-firms-costs-and-competition-fig5.svg)
+
+**Figure 5** — monopolistic competition in the long run: zero profit, but price above MC and excess capacity.
 
 Two takeaways:
 - **Zero economic profit, like perfect competition** (low barriers → entry competes it away), so again no
@@ -907,6 +923,8 @@ load-bearing assumptions, each able to fail:
    serving cost balloons — a Jevons effect), "costs will fall" is not the slam-dunk it sounds.
 
 ### The synthesis to carry
+
+**Table 4** — the static course tools against the generalisation the labs actually use.
 
 | Course tool (static) | The generalization the labs are using |
 |---|---|

@@ -114,7 +114,9 @@ absolute debt still rises — because the *denominator* grew faster (this is §3
 
 ![A line chart of gross government debt as a share of GDP for the UK, USA and Japan across the last century. The UK line rises to about 180 percent by the 1930s and peaks near 250 percent after World War Two, then melts down to about 30 percent by 1990 before climbing back toward 100 percent after 2008 and COVID. The US line peaks near 106 percent after World War Two, melts to about 33 percent by the mid-1970s, and climbs to about 130 percent by 2020. The Japan line starts low around 1970 and climbs relentlessly from about 60 percent in 1990 to roughly 250 percent by the 2020s. Annotations mark the World War Two peaks, the postwar melt driven by growth exceeding the interest rate plus financial repression, Japan's relentless climb, and the post-2008 and COVID increases.](diagrams/02-deficits-debt-and-sustainability-fig1.svg)
 
-The century of data (fig 1) kills the naïve intuition immediately: **debt/GDP is not a one-way street.** It
+**Figure 1** — a century of gross debt to GDP for the UK, US and Japan — the levels that were survived.
+
+The century of data (Figure 1) kills the naïve intuition immediately: **debt/GDP is not a one-way street.** It
 spikes in wars and crises (the UK hit ~250% after WWII, the US ~106%) and then **melts** over decades — the UK's
 fell from 250% to 30% without ever being "repaid" in the household sense. *How* it melted is §3. And Japan's climb
 to ~250% without a crisis is the puzzle that §5 resolves.
@@ -243,7 +245,7 @@ Read it in two pieces:
 **The one insight to carry forever: the sign of $(r - g)$ decides the game.**
 
 - **If $g > r$ (the favorable regime):** the ratio **melts** on its own — you can even run modest primary deficits
-  forever and still see debt/GDP fall. This is *exactly* how the UK and US shrank their WWII debt (fig 1): fast
+  forever and still see debt/GDP fall. This is *exactly* how the UK and US shrank their WWII debt (Figure 1): fast
   postwar growth plus **financial repression** (holding interest rates artificially below inflation → a deeply
   negative real $r$) made $r - g$ very negative, and the mountain melted **without repayment**.
 - **If $r > g$ (the dangerous regime):** the ratio **snowballs** — interest compounds faster than the economy
@@ -253,14 +255,18 @@ Read it in two pieces:
 
 ![A chart of four simulated debt-to-GDP paths over thirty years, all starting at 100 percent, illustrating the debt-dynamics equation. With the interest-growth gap at plus 2 percent and a balanced primary budget, debt snowballs upward to about 180 percent. With the gap at minus 2 percent and a balanced primary budget, debt melts down to about 55 percent. A flat dashed line shows the gap at zero holding debt constant. A fourth path, with the gap at plus 2 percent but a primary surplus of 2.5 percent of GDP, is roughly tamed and drifts down. A boxed caption shows the master equation, change in b equals the quantity r minus g times b, minus p.](diagrams/02-deficits-debt-and-sustainability-fig2.svg)
 
-The simulation (fig 2) is the equation made visible: the **same starting debt** (100%) goes to 180% or down to
+**Figure 2** — four debt paths from the same starting point: the r-minus-g differential decides all of them.
+
+The simulation (Figure 2) is the equation made visible: the **same starting debt** (100%) goes to 180% or down to
 55% over thirty years depending only on $(r - g)$ and $p$. Notice the snowball can be **tamed by a primary
 surplus** (the orange path) — but it takes sustained effort, and that effort is exactly what fails when growth
 disappoints or rates rise.
 
 ![A bar chart of the interest-rate-minus-growth differential for the US, averaged by decade from the 1950s to the 2020s. The differential is negative and favorable in the 1950s, 1960s, 1970s, 2000s and 2010s (roughly minus 1 to minus 2.6 percentage points), meaning debt melts even while running deficits. It is positive and dangerous in the 1980s (about plus 2.6) and 1990s (about plus 1.1), and turns positive again in the partial 2020s (about plus 0.6). Annotations explain that r below g melts debt while r above g makes it snowball.](diagrams/02-deficits-debt-and-sustainability-fig3.svg)
 
-And $(r - g)$ is not a constant — fig 3 shows it flipping sign across US decades. It was **negative for most of
+**Figure 3** — the US interest-rate-minus-growth differential by decade — negative for most of the post-war period.
+
+And $(r - g)$ is not a constant — Figure 3 shows it flipping sign across US decades. It was **negative for most of
 the postwar era** (debt melted), turned sharply **positive under Volcker's high real rates** in the 1980s, went
 negative again in the 2010s zero-rate era (when Olivier Blanchard argued debt might carry "no fiscal cost"), and
 has been **turning positive again in the 2020s** as rates rose — which is precisely why debt sustainability is
@@ -383,6 +389,8 @@ into a default crisis is not the ratio — it's the *currency the debt is issued
   currency.
 
 ![A horizontal bar chart of gross debt as a share of GDP for seven economies, coloured by whether the debt is in the country's own currency or a foreign/euro currency, with default or crisis episodes marked. Japan tops the chart at about 255 percent in its own currency with no default. The USA at about 122 percent and the UK at about 100 percent are also own-currency and crisis-free. Greece in 2011 at about 180 percent, Italy at about 135 percent, Sri Lanka in 2022 at about 100 percent, and Argentina in 2001 at about 62 percent are foreign-currency or euro debt; Greece, Sri Lanka and Argentina are marked as default or crisis. An annotation notes that the UK and Sri Lanka sit at the same ratio near 100 percent with opposite fates, the difference being the currency, not the number.](diagrams/02-deficits-debt-and-sustainability-fig4.svg)
+
+**Figure 4** — gross debt by economy, coloured by whether it is owed in the country's own currency.
 
 Fig 4 is the whole argument in one picture. **Japan is fine at 255%** (own currency, the BoJ backstops it, yields
 near zero); **Argentina defaulted at 62%** and **Sri Lanka at ~100%** (foreign-currency debt they couldn't
@@ -581,7 +589,7 @@ Reason first; check against a source where noted.
    surplus of 3% of GDP**: $p^{\ast} = (r-g)b = 0.025 \times 1.2 = 0.03$ — every year, forever, just to hold
    the ratio still.
 4. **It never repaid the debt — it grew and inflated the ratio away**, with the denominator doing the work
-   (§3, fig 1). The **two forces** are (i) fast postwar **real growth**, which fattened nominal GDP, and
+   (§3, Figure 1). The **two forces** are (i) fast postwar **real growth**, which fattened nominal GDP, and
    (ii) **interest rates held artificially below inflation**, which made the *real* rate the government paid
    deeply negative. Together they drove $r - g$ strongly negative, so the snowball term ran in reverse and
    the ratio melted from 250% to 30%. The term for the policy that pinned rates down is **financial
@@ -603,7 +611,7 @@ Reason first; check against a source where noted.
    without giving them a shared treasury or a backstop, converting their debt into de-facto foreign-currency
    debt; the crisis only calmed when the ECB's 2012 "whatever it takes" supplied the missing backstop and
    moved Greece and Italy from the bad equilibrium of §4 to the good one.
-7. **Grow** — the postwar UK and USA (fig 1); drawback: real growth cannot be summoned on demand.
+7. **Grow** — the postwar UK and USA (Figure 1); drawback: real growth cannot be summoned on demand.
    **Austerity** — Greece and the Eurozone periphery 2010–15; drawback: politically brutal and
    self-defeating in a slump. **Inflate it away** — the postwar melt, combined with financial repression;
    drawback: it is a **stealth default** on bondholders, and it works only on long-maturity, own-currency
@@ -627,7 +635,7 @@ Reason first; check against a source where noted.
 ## 9. Optional: read the debt like a bond investor (15–20 min)
 
 - **The long-run picture.** On **FRED (Federal Reserve Economic Data)** or the **IMF (International Monetary Fund) Global Debt Database**, pull debt/GDP for the US, Japan, and
-  an emerging market on one chart — see the war spikes, the postwar melt, and the divergence. (This is fig 1.)
+  an emerging market on one chart — see the war spikes, the postwar melt, and the divergence. (This is Figure 1.)
 - **The variable that matters.** Find your country's **10-year government bond yield** (the market's $r$) and its
   **nominal GDP growth** (a proxy for $r$ vs $g$ at the nominal level). Is the gap positive or negative right now?
   That single comparison tells you which regime (§3) you're in.
@@ -659,7 +667,7 @@ it back; China is **watching** it erode as growth slows. Same equation, read thr
 The thread started with a real puzzle: *why does a President lean on the Fed to cut rates?* Reading it off the
 equation dissolves the mystery. The play targets the **ratio** $b$, not the dollar debt $D$ (which keeps growing —
 deficits continue). Push $r$ down, keep nominal $g$ high, drive $(r - g)$ negative, and the ratio **melts on its
-own** — precisely the postwar-US mechanism from fig 1, run deliberately. Three things decide whether it works:
+own** — precisely the postwar-US mechanism from Figure 1, run deliberately. Three things decide whether it works:
 
 - **The Fed doesn't set the rate the Treasury pays.** The Fed sets the overnight rate; the maturities that matter
   (the 10Y, 30Y) are priced by the **bond market** on inflation expectations. Cut while inflation still lives and
@@ -740,6 +748,8 @@ slow **Japanification** — the very tools that block a sharp reset let a slow d
 ### The through-line
 
 Read off the same equation, the three regimes line up on one curve:
+
+**Table 1** — three sovereigns read off the master equation, and what actually binds each.
 
 | | Regime move | Own-currency? | The binding constraint |
 |---|---|---|---|

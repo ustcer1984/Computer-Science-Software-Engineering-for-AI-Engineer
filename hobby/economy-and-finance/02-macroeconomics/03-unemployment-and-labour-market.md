@@ -91,6 +91,8 @@ The whole **working-age population** (usually 15+ or 16+) partitions cleanly:
 <!-- FIGURE -->
 ![A horizontal bar splitting the working-age population into Employed (~62%), Unemployed (~3%), and Not in the labour force (~35%); the labour force is bracketed as employed + unemployed (~65%), with the unemployment and participation rate formulas annotated](diagrams/03-unemployment-and-labour-market-fig1.svg)
 
+**Figure 1** — the labour-force accounting: employed, unemployed, and not in the labour force at all.
+
 $$\text{labour force} = \text{employed} + \text{unemployed} \qquad (\text{the job-seeking population}).$$
 
 Everyone else of working age — students, retirees, full-time carers, the long-term sick, and **discouraged
@@ -153,6 +155,8 @@ labour-force denominator entirely and so can't be flattered by discouragement.
 
 <!-- FIGURE -->
 ![Twin-axis chart 2005-2024: red bars showing the unemployment rate spiking in the 2008-09 GFC (global financial crisis) and the 2020 COVID shock against a ~4.5% natural-rate line, and a blue line showing the participation rate drifting down from ~66% to ~63% as boomers retire and discouraged workers exit](diagrams/03-unemployment-and-labour-market-fig2.svg)
+
+**Figure 2** — the unemployment rate against the participation rate, 2005–2024 — why one ratio is never enough.
 
 Two readings the chart makes concrete:
 
@@ -322,6 +326,8 @@ them back:
 <!-- FIGURE -->
 ![Two lines 2005-2024: the official U-3 rate and the much higher U-6 broad rate, with the shaded gap between them — the hidden slack — widening sharply in the 2008-09 and 2020 downturns](diagrams/03-unemployment-and-labour-market-fig3.svg)
 
+**Figure 3** — U-3 against the broad U-6 measure: the shaded gap is the slack the headline hides.
+
 The shaded **gap is hidden slack**, and notice it **widens in downturns**: in a slump, far more people slip
 into involuntary part-time and discouragement than the headline U-3 admits. Two further blind spots no single
 rate captures:
@@ -389,6 +395,8 @@ growth *above* potential pulls unemployment **down ~0.5 pp**.
 
 <!-- FIGURE -->
 ![Scatter of annual real GDP growth (x) against the change in the unemployment rate (y), points lying along a downward-sloping red line through potential growth ~2%: above 2% growth unemployment falls, in recession it rises](diagrams/03-unemployment-and-labour-market-fig4.svg)
+
+**Figure 4** — Okun's law — real GDP growth against the change in unemployment.
 
 This is exactly why §1 could insist "+3% can be a crisis for China." If potential growth $g^{\ast}$ is ~5%,
 then $g = 3$% gives $\Delta u \approx -0.5(3 - 5) = +1$ — unemployment *rising* a point a year, despite

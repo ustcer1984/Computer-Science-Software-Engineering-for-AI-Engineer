@@ -102,6 +102,8 @@ Two reasons it slopes down — and the first is just §1 again:
 
 **The vocabulary trap that confuses every beginner — get it now and you're ahead:**
 
+**Table 1** — the demand relationship: what each element means, and where it sits on the graph.
+
 | | What it means | On the graph |
 |---|---|---|
 | **Quantity demanded** | the amount bought *at one specific price* | a single **point** on the curve |
@@ -347,6 +349,8 @@ You almost never care about the *level* of $P^\ast$; you care about **how $P^\as
 changes** — a tax, a shortage, a new technology, a demand shock. That's **comparative statics**: shift a
 curve, find the new intersection, compare. Four base cases, and they're worth memorizing as a reflex because
 half of business news is one of them:
+
+**Table 2** — comparative statics — what each shift does to the equilibrium price and quantity, with a real example.
 
 | What moves | $P^\ast$ | $Q^\ast$ | Real example |
 |---|---|---|---|
@@ -748,6 +752,8 @@ point's existence untouched. Three levels, increasingly in your favour:
 ### The synthesis to carry
 
 Both objections are real but mis-ranked as "assumptions that falsify the model." Properly ranked:
+
+**Table 3** — each objection you raised in the session, what it actually is, and the verdict.
 
 | Your objection | What it actually is | Verdict |
 |---|---|---|

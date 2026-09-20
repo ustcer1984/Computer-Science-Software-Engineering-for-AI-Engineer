@@ -104,6 +104,8 @@ business cycle is the *fluctuation*, and it has a standard vocabulary:
 <!-- FIGURE -->
 ![Real GDP (blue) wobbling around a rising dashed potential-output trend line; the gap between them shaded warm where actual is above trend (overheating) and cool where below (slack); a peak and the following trough marked, the peak-to-trough stretch shaded as a recession, and the phases expansion / contraction / recovery labelled along the bottom](diagrams/04-the-business-cycle-fig1.svg)
 
+**Figure 1** — real GDP wobbling around potential output — the output gap is the shaded difference.
+
 - **Expansion** — output rising, unemployment falling, usually the longest phase.
 - **Peak** — the turning point where expansion tips into contraction.
 - **Contraction / recession** — output falling (or growth well below potential), unemployment rising.
@@ -186,6 +188,8 @@ $$\text{output gap} = \frac{Y - Y^{\ast}}{Y^{\ast}} \times 100 \quad \text{(perc
 where $Y$ is actual real GDP and $Y^{\ast}$ is potential output (§1). It comes in two signs, and each one
 lights up the *other two* headlines in a predictable way — this is the payoff of doing §1–§3 first:
 
+**Table 1** — what each sign of the output gap implies for unemployment and inflation pressure.
+
 | Output gap | The economy is… | Unemployment (§3) | Inflation pressure (§2, §5) |
 |---|---|---|---|
 | **Positive** ($Y > Y^{\ast}$) | above potential — **overheating**, an "inflationary gap" | **below** the NAIRU (labour scarce) | **rising** — demand outstrips capacity |
@@ -266,6 +270,8 @@ produce more when prices rise relative to costs.
 
 <!-- FIGURE -->
 ![Two AD–AS panels. Left, a demand shock: aggregate demand shifts left along an upward-sloping short-run supply curve, so the equilibrium moves to lower output and a lower price level — P and Y fall together. Right, a supply shock: the short-run supply curve shifts up/left along a fixed demand curve, so the equilibrium moves to lower output but a higher price level — P rises while Y falls, i.e. stagflation](diagrams/04-the-business-cycle-fig2.svg)
+
+**Figure 2** — demand shocks against supply shocks in the AD–AS frame, and why only one presents a policy dilemma.
 
 **Demand shock (left panel) — the "normal" cycle.** Something moves one of the $C + I + G + NX$ components:
 a collapse in consumer or business **confidence** (spending and investment drop), a **credit crunch**, a
@@ -390,6 +396,8 @@ already built resurface.
 Two real episodes make the taxonomy concrete — note how each combines a **shock type** (§3) with a
 dominant **propagation channel**:
 
+**Table 2** — four real episodes: the trigger, the dominant propagation mechanism, and the character of each.
+
 | Episode | Trigger (shock) | Dominant propagation | Character |
 |---|---|---|---|
 | **2008–09 Global Financial Crisis** | housing/credit bust (demand + financial) | **balance-sheet / debt-deflation** | deep, slow recovery |
@@ -477,6 +485,8 @@ its history is a cautionary tale about mistaking a *temporary* relationship for 
 <!-- FIGURE -->
 ![The expectations-augmented Phillips curve: three downward-sloping short-run curves, one each for expected inflation of about 2, 5, and 8 percent, stacked upward; a vertical long-run curve at the natural rate u-star; an arrow showing that moving along one curve trades lower unemployment for higher inflation, and an arrow showing that when expectations un-anchor the whole curve shifts up — the 1970s stagflation](diagrams/04-the-business-cycle-fig3.svg)
 
+**Figure 3** — the expectations-augmented Phillips curve: one short-run curve per level of expected inflation.
+
 **The short-run curve (each downward line).** In the short run, when a boom pushes unemployment **below**
 the NAIRU $u^{\ast}$ (§3), labour is scarce, wages accelerate, and firms pass the cost through as **higher
 inflation**. Push unemployment **above** $u^{\ast}$ and the reverse — slack cools wage and price growth.
@@ -561,6 +571,8 @@ indicators sorted by **when they turn relative to the cycle**:
 
 <!-- FIGURE -->
 ![Three stylized series around a shaded recession band: a leading indicator (blue) peaks well before the cycle peak; GDP (coincident, black) peaks at the start of the recession; and unemployment (lagging, red, right axis) keeps rising through the recession and peaks only after the trough — with vertical markers on "leading peaks first", "GDP peaks (recession starts)", and "unemployment peaks last"](diagrams/04-the-business-cycle-fig4.svg)
+
+**Figure 4** — leading, coincident and lagging indicators around a recession band.
 
 - **Leading indicators — turn *before* the economy.** These reflect *decisions about the future* or the
   *cost of finance*: the **yield curve** (see below), **new building permits**, **new orders for capital

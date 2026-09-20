@@ -25,7 +25,7 @@ TBL_CAP = re.compile(r'^\*\*Table (\d+)\*\* — ', re.M)
 IMG = re.compile(r'^!\[([^\]]*)\]\(([^)]+)\)\s*$', re.M)
 TBL_HEAD = re.compile(r'^\|[^\n]*\|\n\|[\s:|-]+\|$', re.M)
 # a prose reference: "Figure 3", "fig 3", "fig3", "table 2" — but not a file path
-REF = re.compile(r'(?<![-\w/])\b(figure|fig|table)\.?\s?(\d+)\b', re.I)
+REF = re.compile(r'(?<![-\w/])\b(figure|fig|table)\.? ?(\d+)\b', re.I)
 
 
 def blank(m):
@@ -59,12 +59,19 @@ def check(path):
         if "/diagrams/" not in src and not src.startswith(("diagrams/", "images/")):
             continue
         after = body[m.end():m.end() + 400]
-        if not re.match(r'\s*\n\s*\*\*Figure \d+\*\* — ', after):
-            # a Mermaid diagram whose heading already names it is exempt
-            if re.search(r'!\[Diagram \d+\]', m.group(0)):
+        if re.match(r'\s*\n\s*\*\*Figure \d+\*\* — ', after):
+            continue
+        # an illustration already carrying an italic provenance caption (rule 7)
+        # is not a numbered figure — it takes a number only if prose cites one
+        if re.match(r'\s*\n\s*[*_][^*_]', after):
+            continue
+        # a Mermaid diagram is exempt unless the file numbers it with a marker
+        if re.search(r'!\[Diagram \d+\]', m.group(0)):
+            before = body[max(0, m.start() - 120):m.start()]
+            if not re.search(r'<!--\s*fig(?:ure)?\s?\d+\s*-->', before, re.I):
                 continue
-            problems.append((line_of(body, m.start()), "UNCAPTIONED FIGURE",
-                             src.split("/")[-1]))
+        problems.append((line_of(body, m.start()), "UNCAPTIONED FIGURE",
+                         src.split("/")[-1]))
 
     # --- 2. body tables without a label above -------------------------------
     for m in TBL_HEAD.finditer(body):
@@ -90,7 +97,7 @@ def main():
         f for f in glob.glob("courses/**/*.md", recursive=True)
         + glob.glob("hobby/**/*.md", recursive=True)
         + glob.glob("upskill-readings/**/*.md", recursive=True)
-        if not f.endswith("plan.md")
+        if not f.endswith(("plan.md", "README.md"))   # indexes are not material
     )
     counts = {"UNCAPTIONED FIGURE": 0, "UNLABELLED TABLE": 0, "DANGLING REF": 0}
     dirty = 0

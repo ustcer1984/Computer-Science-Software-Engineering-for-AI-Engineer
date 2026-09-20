@@ -216,6 +216,8 @@ convenient stand-in for $100 \times \ln 2 \approx 69.3$, nudged up because it fa
 
 ![Compounding curves: 1000 dollars growing at 3, 6, and 9 percent over 40 years, with the doublings of the 9 percent line marked at 8-year intervals per the Rule of 72. The 9 percent line reaches about 31,000 dollars, the 6 percent about 10,000, the 3 percent about 3,000 — the gap between them widens dramatically in the later years, showing the exponential character of compounding.](diagrams/02-interest-rates-and-time-value-fig2.svg)
 
+**Figure 2** — compounding: 1,000 dollars growing at 3, 6 and 9 percent over forty years.
+
 ### 2b. Present value: discounting backwards
 
 Now run it the other way — the direction finance actually cares about. What is a payment of $FV$, arriving
@@ -228,6 +230,8 @@ $\dfrac{1}{(1+r)^{n}}$ is the **discount factor** — the price *today* of one d
 The higher the discount rate and the further away the payment, the less it is worth now.
 
 ![Discounting curves: the present value of a future 1000 dollars as a function of how many years away it is, at discount rates of 2, 5, and 10 percent. All three start at 1000 dollars at year zero and decay; at 30 years the 2 percent curve is still worth about 552 dollars, the 5 percent about 231, and the 10 percent only about 57 — a future sum a generation away, discounted at a high rate, is worth almost nothing today.](diagrams/02-interest-rates-and-time-value-fig1.svg)
+
+**Figure 1** — discounting: what a future 1,000 dollars is worth today at 2, 5 and 10 percent.
 
 Read that figure slowly, because it is the whole of valuation in one picture: **a dollar far in the future,
 discounted at a high rate, is worth almost nothing today.** A 1000-dollar payment 30 years out is worth 552
@@ -394,6 +398,8 @@ $$\underbrace{i}_{\text{quoted nominal yield}} = \underbrace{r^{\ast}}_{\text{re
 
 ![A stacked column building one bond's yield from its components: a real risk-free rate of 1.0 percent, plus 2.2 for inflation compensation, plus 0.8 term premium, plus 2.5 credit or default spread, plus 0.6 liquidity premium. Dashed milestone lines mark meaningful stopping points: 3.2 percent is a nominal risk-free T-bill, 4.0 percent a long-dated Treasury, 6.5 percent an investment-grade corporate bond, and 7.1 percent a risky high-yield bond.](diagrams/02-interest-rates-and-time-value-fig3.svg)
 
+**Figure 3** — one bond's yield built from its components — the stack of premia.
+
 - **The real risk-free rate $r^{\ast}$.** What a perfectly safe loan earns in purchasing-power terms — the
   economy's baseline "price of time." Its long-run level is tied to expected growth and demographics; when
   economists talk about the **neutral rate** (**r-star**), this is close to what they mean, and it is the
@@ -460,6 +466,8 @@ the price of time at each horizon.
 
 ![Three stylised yield curves plotting yield against maturity from three months to thirty years on a log maturity axis. A normal upward-sloping curve rises from about 2 percent at the short end to about 4.3 percent at the long end; a flat curve sits near 3.7 percent across all maturities; an inverted curve falls from about 5.1 percent at the short end down to about 3.9 percent at the long end, with an annotation noting that inversion means the market expects rate cuts and a slowdown ahead.](diagrams/02-interest-rates-and-time-value-fig4.svg)
 
+**Figure 4** — three stylised yield curves: normal, flat and inverted.
+
 **Why it usually slopes up.** Two forces, and telling them apart is the whole game:
 
 - **Expectations.** A long rate is, roughly, the average of the short rates the market expects over the
@@ -483,6 +491,8 @@ explain. The spread between the 10-year and 2-year Treasury yield going *negativ
 every US recession since the 1970s, typically by 6–18 months.
 
 ![The 10-year minus 2-year US Treasury yield spread plotted from 1977 to 2024, with recession periods shaded. The spread spends most of the time positive (shaded blue above zero) but dips below zero — inverts, shaded red — before each recession: ahead of the early-1980s, 1990, 2001, and 2008 downturns, and briefly in 2019 before the 2020 recession. The deepest inversion since the early 1980s appears in 2022 to 2024.](diagrams/02-interest-rates-and-time-value-fig5.svg)
+
+**Figure 5** — the 10-year minus 2-year Treasury spread, 1977–2024, with recessions shaded.
 
 Three cautions that keep you from over-reading it — the honest-indicator discipline from E02 §4 §6:
 
@@ -572,6 +582,8 @@ rate equals the yield, the bond trades **at par** (price equals face); a higher 
 trades at a **discount**, a lower yield at a **premium**.
 
 ![Bond price as a function of yield to maturity for two bonds, a 2-year and a 30-year, both with a 5 percent coupon and 1000 dollar face value. Both curves slope downward and are convex: price falls as yield rises. They cross at par — a price of 1000 dollars when the yield equals the 5 percent coupon. The 30-year curve is far steeper: when the yield rises from 5 to 7 percent the short bond loses about 36 dollars but the long bond loses about 248 dollars, illustrating that long-maturity bonds are much more sensitive to yield changes — this is duration.](diagrams/02-interest-rates-and-time-value-fig6.svg)
+
+**Figure 6** — bond price against yield for a 2-year and a 30-year bond — the long bond moves far more.
 
 The figure adds the crucial second fact: **long bonds move much more than short bonds** for the same yield
 change. Raise the yield from 5% to 7% and a 2-year bond barely flinches (down ~36 on a 1000 face) while a
@@ -689,7 +701,7 @@ Reason first; check against a source where noted.
    the factor is $1/(1+r)^{n}$.
    At 30 years a 10% rate gives a factor of about 0.057 (1,000 dollars becomes 57) while a 2% rate gives
    about 0.552 (1,000 becomes 552) — an order of magnitude apart from the same cash flow, which is the steep
-   right-hand tail of fig 1 (§2b). The climate link: Stern discounted far-future damages at about 1.4% and
+   right-hand tail of Figure 1 (§2b). The climate link: Stern discounted far-future damages at about 1.4% and
    Nordhaus at about 4.5%, so the **same** projected damages came out "act now" catastrophic for one and
    "manageable" for the other — the argument was never about the damages, it was about $r$ (E02 §2 §9a).
 3. **About 1% real** — by the Fisher approximation $r \approx i - \pi = 4.5 - 3.5$ (§3). If inflation jumps to

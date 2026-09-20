@@ -91,6 +91,8 @@ energy, its water, its raw materials, and most of what it consumes, and re-expor
 
 ![A bar chart of trade openness — exports plus imports as a share of GDP — across economies. Hong Kong is about 350 percent and Singapore about 320 percent, towering over the others; the Netherlands is about 155 percent, Germany and South Korea about 90 percent, and China, Japan, and the USA cluster low at roughly 37, 37, and 25 percent. A dashed line marks 100 percent of GDP. Annotations note that Singapore trades about three times its GDP so import prices drive its inflation, whereas the US is large and relatively closed so its interest rate is the natural lever.](diagrams/04-the-mas-model-fig3.svg)
 
+**Figure 3** — trade openness across economies: why the exchange rate, not the interest rate, is Singapore's lever.
+
 Now connect that to inflation (E02 §2). In the US, most of what people buy is made domestically, so US
 inflation is driven mainly by **domestic** demand and wages — which is exactly what an **interest rate**
 acts on (§3's transmission). But in Singapore, most of what people buy is **imported**, so the single
@@ -160,6 +162,8 @@ macro.** This is the **impossible trinity** (or **trilemma**, from the Mundell�
 most useful frameworks in all of international economics.
 
 ![A triangle whose three corners are labelled independent monetary policy, free capital mobility, and exchange-rate stability. The claim is that a country can pick at most two — each side of the triangle joins the two corners it keeps and sacrifices the opposite corner. The left side (independent policy plus free capital) is a floating exchange rate, as in the USA and Eurozone, giving up exchange-rate stability. The right side (independent policy plus a fixed exchange rate) requires capital controls, as in China historically, giving up free capital. The bottom side (free capital plus a managed exchange rate) is Singapore and Hong Kong, which give up an independent interest rate. The bottom side is highlighted.](diagrams/04-the-mas-model-fig1.svg)
+
+**Figure 1** — the impossible trinity, and the corner Singapore gives up.
 
 The trilemma says a country can have **at most two** of these three things:
 
@@ -248,6 +252,8 @@ MAS doesn't fix the dollar (a hard peg like Hong Kong's) and doesn't let it floa
   appreciation), reflecting Singapore's need to offset persistent imported-inflation pressure.
 
 ![A time-series diagram of the SGD NEER managed inside a sloping policy band. A shaded band rises gently from left to right; a dashed line marks its mid-point; a solid line shows the actual SGD NEER wiggling within the band. Three levers are annotated. The SLOPE is the gentle upward appreciation crawl, which MAS steepens to tighten policy (a faster-rising Singapore dollar makes imports cheaper). The WIDTH is the plus-or-minus range around the mid-point, which absorbs short-term volatility. The LEVEL is set by a discrete re-centring — shifting the whole band up or down at a policy meeting. The figure shows a re-centring up combined with a steeper slope midway through.](diagrams/04-the-mas-model-fig2.svg)
+
+**Figure 2** — the SGD nominal effective exchange rate managed inside a sloping policy band — the BBC mechanism.
 
 That gives MAS **three policy levers** — the exact analogue of the Fed's single interest-rate lever, but for
 a band instead of a rate:
@@ -387,6 +393,8 @@ exchange rate acts on the *importable* part of the basket.)
 **The comparison that makes both click.** Here is the whole point of the section — the Fed and MAS doing the
 *same job* (price stability) with opposite choices at every fork:
 
+**Table 1** — the Fed's model against the MAS model — the same job done through a different price.
+
 | | **The Fed (standard model, §3)** | **The MAS (this section)** |
 |---|---|---|
 | **Targets** | a domestic **interest rate** (price of *time*) | the **exchange rate** / SGD NEER (price of *foreign money*) |
@@ -405,6 +413,8 @@ which features of the Fed model are *universal* (some central bank must anchor t
 lever).
 
 ![A twin-axis time series from 2020 to 2024 showing the Fed and the MAS fighting the same post-COVID inflation surge with different levers. On the left axis, the US federal funds rate stays near zero through 2021, then climbs steeply through 2022 to above 5 percent. On the right axis, the Singapore-dollar nominal effective exchange rate is roughly flat in 2020 to 2021, then appreciates steadily through 2022 to 2023 as the MAS tightens (five tightenings, two of them off-cycle). The shared shaded region marks the inflation surge both were responding to; the caption is same job, different levers.](diagrams/04-the-mas-model-fig4.svg)
+
+**Figure 4** — the Fed and MAS fighting the same post-COVID inflation with different levers, 2020–2024.
 
 The **2021–2023** episode is this table brought to life. Facing the same global inflation surge, the **Fed
 raised its policy rate** from near zero to over 5%, while the **MAS tightened five times** — steepening the
@@ -476,7 +486,7 @@ worked. That parallel is the single clearest demonstration that §3 and §4 are 
   financial stability" principle from E02 §4 §10a and the Singapore-policy instincts you showed in E01 §3.
   Monetary policy (the SGD NEER) fights *imported goods* inflation; other tools fight *asset* inflation.
 
-**The live record.** Beyond the 2021–23 tightening (fig 4), the pattern repeats each cycle: MAS eased as
+**The live record.** Beyond the 2021–23 tightening (Figure 4), the pattern repeats each cycle: MAS eased as
 global inflation cooled into 2024, keeping the slope positive but flatter. Reading an MPS is now within
 reach — "MAS will *raise slightly the slope of the band*" is a tightening; "*no change to width or level*"
 tells you it's a slope-only move; "core inflation projected at 2%" is the target being hit.
@@ -715,6 +725,8 @@ Two precise questions that tighten §4's loose "GIC, Temasek, MAS reserves" lump
 
 **(i) What counts as "foreign reserves"? Does my personal USD deposit count?** No — and the clean line runs
 through *three* different pools I had lumped together:
+
+**Table 2** — the pools of Singapore money, and which of them count as official foreign reserves.
 
 | Pool | What it is | "Official foreign reserves"? |
 |---|---|---|

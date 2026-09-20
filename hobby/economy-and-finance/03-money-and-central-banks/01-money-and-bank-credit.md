@@ -291,6 +291,8 @@ aggregates**, nested from narrowest to broadest:
 <!-- FIGURE -->
 ![A nested/stacked bar chart of the US money aggregates (approximate 2024 values). A tall bar for M2 (about 21 trillion dollars) with M1 nested inside it (about 18 trillion) and the monetary base M0 (about 5.6 trillion) shown separately and much shorter; within M0, a slice for physical currency (about 2.3 trillion) and a larger slice for bank reserves (about 3.3 trillion). An annotation highlights that only the small M0 bar is created by the central bank, while the gap between M0 and M2 — the great majority of all money — is commercial-bank deposits created by private lending](diagrams/01-money-and-bank-credit-fig1.svg)
 
+**Figure 1** — the US monetary aggregates, nested — M0 inside M1 inside M2.
+
 Two facts from that picture do a lot of work:
 
 - **The base is small; broad money is large.** Central-bank money (M0) is a *minority* of the money supply.
@@ -393,6 +395,8 @@ $$\Delta D = 1000 \times (1 + 0.9 + 0.9^{2} + 0.9^{3} + \cdots) = 1000 \times \f
 <!-- FIGURE -->
 ![A bar chart of the money-multiplier cascade. Successive lending rounds are plotted as shrinking bars — 1000 initial deposit, then loans of 900, 810, 729, 656 and so on decaying geometrically toward zero — with a cumulative line rising and flattening at a total of 10,000 dollars. The reserve ratio is 10 percent, so the multiplier is 1 over 0.10 equals 10. A caption notes this is the same geometric-series maths as the spending multiplier in E02 section 4](diagrams/01-money-and-bank-credit-fig2.svg)
 
+**Figure 2** — the money-multiplier cascade: successive lending rounds shrinking geometrically.
+
 In general the **deposit (money) multiplier** is
 
 $$\Delta D = \frac{\Delta R}{r}, \qquad \text{multiplier} = \frac{1}{r}.$$
@@ -410,11 +414,15 @@ receive your deposit and then shovel your cash to a borrower. When it approves a
 
 **Bank's balance sheet — before the loan**
 
+**Table 1** — the bank's balance sheet before it lends.
+
 | Assets | Liabilities |
 |---|---|
 | Reserves 100 | Deposits 100 |
 
 **Bank's balance sheet — after making a 500 loan**
+
+**Table 2** — the same balance sheet after the loan — both sides grow at once.
 
 | Assets | Liabilities |
 |---|---|
@@ -428,6 +436,8 @@ which your E02 §2 §9b intuition was exactly right: money is *credit*, conjured
 
 <!-- FIGURE -->
 ![A before-and-after balance-sheet diagram of a single bank. On the left, "before": a short pair of stacked bars, assets (reserves) equal to liabilities (deposits). On the right, "after making a loan": both the asset side and the liability side have grown by the loan amount simultaneously — a new "loan" block added to assets and a new "deposit" block added to liabilities — with an arrow and caption emphasizing that both sides expand together, so new money (the deposit) is created at the moment the loan is recorded, not transferred from anywhere](diagrams/01-money-and-bank-credit-fig3.svg)
+
+**Figure 3** — a single bank's balance sheet before and after lending — the loan creates the deposit.
 
 So which is right — the multiplier or "loans create deposits"? **The multiplier gets the causation
 backwards.** The real sequence, confirmed by the **Bank of England** in its landmark 2014 bulletin *"Money
@@ -449,8 +459,12 @@ it "the multiplier" invites you to read a mechanism into an accounting identity.
 > **quantitative easing** — the monetary base (M0) exploded severalfold. If the multiplier story were true,
 > broad money should have exploded too and inflation with it. It didn't: M2 grew only modestly and inflation
 > stayed *below* target for a decade. The mechanical link between base and broad money **simply wasn't
-> there** — because banks were never "lending out reserves" in the first place. §5's Fig 4 shows the
+> there** — because banks were never "lending out reserves" in the first place. Figure 4 shows the
 > multiplier ratio collapsing exactly then.
+
+![The ratio of M2 to the monetary base, monthly from 1995 to 2026. The line is almost flat at about 8 for thirteen years, peaking at 9.3 in April 2008, then falls off a cliff during the 2008 quantitative-easing period to about 5 and drifts down to roughly 3 by 2015, recovering only to about 4 by 2026. A second shaded band marks the 2020 round of quantitative easing, where the ratio dips again. An annotation notes that if the multiplier were a real, stable mechanism this line would be flat.](diagrams/01-money-and-bank-credit-fig4.svg)
+
+**Figure 4** — the "money multiplier" is not a constant: it sat flat near 8 for thirteen years, then collapsed when the base ballooned and M2 did not follow.
 
 ### 4c. Money is destroyed, too
 

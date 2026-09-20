@@ -90,6 +90,8 @@ A company is a **separate legal person**. It owns its own assets, signs its own 
 its own name. A shareholder does not own the company's assets; a shareholder owns a **share of the company** —
 and what that share confers is a **bundle of rights**, not a slice of property:
 
+**Table 1** — the four rights a share actually confers, and where each one bites.
+
 | Right | What it means | Where it bites |
 |---|---|---|
 | **Residual cash flow** | a claim on distributions the board chooses to make — dividends and buybacks | §3 |
@@ -181,6 +183,8 @@ financed. Confusing them is the most common valuation error made by beginners.
 
 **The part people miss is that $N$ is not constant.** Companies change it every single year:
 
+**Table 2** — what changes the share count, and what each action does to your stake.
+
 | Action | Effect on $N$ | What it does to you |
 |---|---|---|
 | **Follow-on offering** | up | your % falls; the company gets cash (a §1 *primary* transaction) |
@@ -191,6 +195,8 @@ financed. Confusing them is the most common valuation error made by beginners.
 
 <!-- FIGURE 1 -->
 ![The share count is not constant: dilution and concentration](diagrams/02-stocks-equity-fig1.svg)
+
+**Figure 1** — the share count is not constant: net issuance dilutes a passive holder, buybacks concentrate them.
 
 Two companies, identical starting share counts, a passive holder who never trades: after six years the same
 holder owns **0.86%** of one and **1.24%** of the other. Nothing was bought or sold. **This is why per-share
@@ -248,7 +254,7 @@ There are exactly three channels, and mixing them up causes endless confusion.
    real distress, because a cut is read as a confession. That stickiness (documented by Lintner in the 1950s and
    never really overturned) makes the dividend a **signal** as much as a payment.
 2. **Buybacks** — the company buys its own shares and cancels them. You receive nothing directly; your *fraction
-   of the company rises* (fig 1, right panel). Economically it is a distribution; mechanically it is a change in
+   of the company rises* (Figure 1, right panel). Economically it is a distribution; mechanically it is a change in
    the denominator. It is more tax-efficient where dividends are taxed, more flexible (no implied promise), and
    more easily abused — a buyback executed at an inflated price destroys value just as surely as an overpriced
    acquisition.
@@ -354,6 +360,8 @@ equity investing, and the thing to reach for whenever someone quotes you an expe
 <!-- FIGURE 2 -->
 ![The Gordon growth model explodes as growth approaches the discount rate](diagrams/02-stocks-equity-fig2.svg)
 
+**Figure 2** — the Gordon growth model explodes as growth approaches the discount rate.
+
 Look at what the formula does. At 2% growth the business is worth about 17 times next year's dividend. At 5%,
 33 times. At 7% — one point more than 6% — the value **doubles**. As $g$ approaches $r$ the denominator goes to
 zero and the value goes to infinity.
@@ -373,6 +381,8 @@ The same model answers a question that explains most of 2022's market behaviour.
 
 <!-- FIGURE 3 -->
 ![Where a stock's value sits in time: equity duration](diagrams/02-stocks-equity-fig4.svg)
+
+**Figure 4** — where a stock's value sits in time — equity duration, and why growth stocks are long-duration assets.
 
 For a mature payer, a quarter of all present value arrives in the first five years. For a company paying little
 now and growing fast, only about a tenth does — **nearly three quarters of its value sits beyond year 10**, in
@@ -396,6 +406,8 @@ So a P/E ratio is not "how expensive" a stock is. It is a **compressed statement
 its earnings the company can pay out, how risky it is, and how fast it will grow. A stock on 40 times earnings
 is not by that fact overpriced — it encodes an expectation of high growth or low risk, which may be right or
 wrong. A stock on 6 times earnings is not cheap — it encodes an expectation of decline, which may also be right.
+
+**Table 3** — the common multiples: what each divides by, what it suits, and its main trap.
 
 | Multiple | What it divides by | Best for | Main trap |
 |---|---|---|---|
@@ -461,6 +473,8 @@ But not all risk is compensated, and the distinction is the most practically val
 
 <!-- FIGURE 4 -->
 ![Diversification: idiosyncratic risk disappears, systematic risk does not](diagrams/02-stocks-equity-fig3.svg)
+
+**Figure 3** — diversification: idiosyncratic risk disappears, systematic risk does not.
 
 - **Idiosyncratic risk** is company-specific: a failed drug trial, a fire, a fraud, a lost contract. Adding more
   names makes it **disappear** — the good and bad surprises cancel. Because it can be removed *for free*, the
@@ -542,6 +556,8 @@ a de facto governance regulator**, and one nobody elected.
 
 Other variations on the residual claim worth knowing:
 
+**Table 4** — instruments that look like shares but are not ordinary equity.
+
 | Instrument | What it actually is |
 |---|---|
 | **Preferred shares** | a hybrid — a fixed dividend ranking ahead of ordinary shares, usually no vote; economically much closer to a bond than to equity |
@@ -609,7 +625,7 @@ A **REIT (real estate investment trust)** is equity with the payout decision tak
 3. Leverage is **capped by regulation** — the MAS aggregate leverage limit — precisely because the forced payout
    leaves no internal cushion.
 4. Growth must therefore come from **acquisitions funded by new units or debt**, which is why REITs issue equity
-   so often (fig 1's dilution mechanics, running continuously).
+   so often (Figure 1's dilution mechanics, running continuously).
 
 **Why this is worth studying rather than just owning.** A REIT makes several of this section's abstractions
 visible:
@@ -617,7 +633,7 @@ visible:
 - **The payout ratio is fixed at nearly 1**, so the Gordon model's numerator is unusually knowable — which is
   precisely why REITs trade on yield and why their prices are so visibly **rate-sensitive**. With growth
   structurally low, $r - g$ is dominated by movements in $r$: a REIT is a short-duration, bond-like equity, and
-  fig 3's left-hand profile is roughly its picture.
+  Figure 3's left-hand profile is roughly its picture.
 - **Dilution is not a scandal but the business model.** A REIT that issues units to buy a building at a yield
   above its cost of capital has made you better off per unit. The metric that captures this — and the one to
   check — is **DPU (distribution per unit)**, not total distributions.
@@ -760,12 +776,12 @@ Reason first; check against a source where noted.
    change in the multiple), which is a bet on $r$ falling rather than on the business.
 6. **At 5% growth the value is 1/(0.08 − 0.05) = about 33 times next year's dividend; at 6.5% it is
    1/(0.08 − 0.065) = 1/0.015 = about 67 times — one and a half points of growth *doubles* the value** (§4,
-   fig 2). **The reason is the collapsing denominator** $r - g$, not investor psychology: because the
+   Figure 2). **The reason is the collapsing denominator** $r - g$, not investor psychology: because the
    claim is infinitely lived, growth compounds against the discount rate, so valuation is genuinely
    hypersensitive to $g$ — which is why a small revision to a growth forecast can move a share 30% in a day, and
    why any valuation with $g$ close to $r$ is, in the section's phrase, **an opinion wearing a lab coat**.
 7. **The pre-profit software company falls much further, because most of its present value sits in cash flows far
-   in the future** (§4, fig 3). Each cash flow is discounted by $(1+r)^t$, and the penalty from a higher $r$
+   in the future** (§4, Figure 3). Each cash flow is discounted by $(1+r)^t$, and the penalty from a higher $r$
    compounds with $t$ — so a claim with nearly three quarters of its value beyond year 10 is hit far harder than
    one where a quarter of the value arrives within five years. That is **equity duration**, and it is pure
    arithmetic: a high-payout utility is a **short-duration** claim, a low-payout fast-growing one is a
@@ -861,6 +877,8 @@ the money is.
 net, so the deduction is invisible unless you go looking for it. Singapore has **no income tax treaty with the
 United States**, which sets the rate:
 
+**Table 5** — fund domicile decides the tax: US withholding and US estate-tax exposure compared.
+
 | Fund domicile | US withholding on US dividends | US estate tax exposure |
 |---|---|---|
 | **US-domiciled** (the SPDR S&P 500 trust, including its SGX cross-listing) | **30%** | **US-situs** — exemption only **USD 60,000** |
@@ -918,6 +936,8 @@ in itself — it is something you can stand on, or cannot.**
 
 Even granting a perfect setup, the round trip:
 
+**Table 6** — dividend capture, worked through on a concrete SGD 10,000 position.
+
 | Item | On SGD 10,000, stock at SGD 45, dividend SGD 0.60 |
 |---|---|
 | Dividend captured | **+1.33%** |
@@ -952,6 +972,8 @@ Index providers publish a parallel **total return** version assuming immediate r
 **The Straits Times Index is the clearest demonstration in the world, and it is the market you live in.** The STI
 peaked at **3,906 in October 2007** and regained that level in **February 2025** — seventeen years later, at
 3,921.
+
+**Table 7** — the STI from October 2007 to February 2025 — price return against total return.
 
 | Measure, Oct 2007 → Feb 2025 | Result |
 |---|---|
@@ -1013,6 +1035,8 @@ is the right reason: **if it is a ratio, the denominator moves.**
 
 **What is sticky is the absolute dividend per share, in currency.** Not the yield, not the payout ratio. Both
 ratios fail, for different reasons:
+
+**Table 8** — candidate meanings of a "sticky" dividend, and why each fails except one.
 
 | Candidate | Why it cannot be the sticky quantity |
 |---|---|
@@ -1095,6 +1119,8 @@ The last question moved from your portfolio to how you read the press: when a po
 **Default assumption: forward P/E** — price over *next*-twelve-months consensus earnings. That is the unmarked
 case. But the default flips by sector and by speaker, and on a technology or venture podcast it flips often:
 
+**Table 9** — what "x times" means in each context, and why that denominator.
+
 | Context | "x times" usually means | Why that denominator |
 |---|---|---|
 | Mature profitable company | **Forward P/E** | Earnings exist and are meaningful |
@@ -1132,6 +1158,8 @@ Two further ambiguities inside "P/E" alone carry real weight:
 
 **Anchors, so a number means something.** As of September 2026:
 
+**Table 10** — the Shiller multiple now against its long-run level.
+
 | Measure | Now | Long-run |
 |---|---|---|
 | S&P 500 forward P/E | ~21.5 times | 10-year average ~18.8 times |
@@ -1157,6 +1185,8 @@ comparable.** If all three cannot be answered, the number was rhetoric.
 
 Five questions, one habit. In each case a number was being quoted without its denominator, and asking for it was
 not pedantry — it changed the answer:
+
+**Table 11** — each claim from the session, and what naming the missing denominator did to it.
 
 | The claim | What the missing denominator did to it |
 |---|---|
@@ -1238,7 +1268,7 @@ other topic so far, because the two markets developed their jargon independently
   Business*, 1961) — the irrelevance theorem of §3.
 - **Diversification, in the original:** Harry Markowitz,
   ["Portfolio Selection"](https://www.jstor.org/stable/2975974) (*Journal of Finance*, 1952) — the paper behind
-  fig 3 and, ultimately, the index fund.
+  Figure 3 and, ultimately, the index fund.
 - **Equity as an owner sees it:** Berkshire Hathaway's
   [shareholder letters](https://www.berkshirehathaway.com/letters/letters.html) — decades of plain-English
   writing on retained earnings, buybacks and what a share actually is; start with the "Owner's Manual" material.

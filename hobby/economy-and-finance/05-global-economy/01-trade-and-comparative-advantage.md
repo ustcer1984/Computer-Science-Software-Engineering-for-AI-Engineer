@@ -117,6 +117,8 @@ good — and *that*, not absolute productivity, is what determines who should sp
 
 Here's the worked example that makes it click. Suppose one worker's output per month:
 
+**Table 1** — the two-country, two-good example, and the opportunity cost of each unit.
+
 | | Software (units) | Textiles (units) | Opportunity cost of **1 software** | Opportunity cost of **1 textile** |
 |---|---|---|---|---|
 | **USA** | 10 | 20 | 2 textiles | 0.5 software |
@@ -137,6 +139,8 @@ world gets more of both. **Absolute advantage tells you who's more productive; c
 who should make what — and they are not the same thing.**
 
 ![A two-panel figure. The left panel is a grouped bar chart of opportunity costs for a symmetric two-country example: the opportunity cost of one computer is 0.5 wheat for Home but 2 wheat for Foreign, and the opportunity cost of one wheat is 2 computers for Home but 0.5 computers for Foreign — so Home is the cheaper computer maker and Foreign the cheaper wheat maker, and each specializes where its opportunity cost is lowest. The right panel is a grouped bar chart of total world output: with no trade the world makes 75 computers and 75 wheat, but when each country specializes and trades the world makes 100 of each — a 33 percent rise in both goods from the same labour.](diagrams/01-trade-and-comparative-advantage-fig1.svg)
+
+**Figure 1** — comparative advantage in opportunity-cost terms, and the gains both countries capture.
 
 Fig 1 shows the mechanism with a clean symmetric example. The left panel is the *driver* — each country is the
 lower-opportunity-cost producer of one good. The right panel is the *result* — when each specializes and they
@@ -185,6 +189,8 @@ imports are the *point* (they're what you get), exports are what you *give* to p
 There's an even sharper way to see the gain, and it settles the "worse at everything" case for good.
 
 ![A production-possibility-frontier chart for a country that is worse at everything. Its frontier is a straight line running from 50 computers and zero wheat to zero computers and 100 wheat. Without trade it produces and consumes on the frontier — for example 25 computers and 50 wheat. With trade it fully specializes in wheat, producing at zero computers and 100 wheat, then trades along a world-price line at one computer per one wheat, reaching a consumption point of 40 computers and 60 wheat — which lies outside and above its own production frontier. The wedge between the frontier and the trade line is shaded as the gains from trade.](diagrams/01-trade-and-comparative-advantage-fig2.svg)
+
+**Figure 2** — consuming beyond your own frontier — why a country worse at everything still gains.
 
 A country's **production-possibility frontier** (PPF) is everything it can *make on its own*. Fig 2 takes the
 country that's absolutely worse at everything: without trade, it's stuck consuming *on* its frontier (point A). But
@@ -255,6 +261,8 @@ wages (or jobs) for less-skilled manufacturing workers, who now compete with abu
 
 ![A dual-axis chart of the United States. A red line shows manufacturing employment in millions, roughly flat near 17 to 19 million from 1970 to 2000, then falling sharply to about 11.5 million by 2010 before partially recovering to about 12 million. A blue dashed line shows China's share of US goods imports rising from about 1 percent in 1970 to a peak near 21 percent by 2015. A vertical marker notes China joining the WTO (World Trade Organization) in 2001, and an annotation marks the China shock, in which roughly one to two million manufacturing jobs were lost, concentrated in specific towns, per Autor, Dorn and Hanson.](diagrams/01-trade-and-comparative-advantage-fig3.svg)
 
+**Figure 3** — US manufacturing employment against manufacturing output — the jobs left, the output did not.
+
 Fig 3 is this in real data — the **"China shock."** After China joined the WTO in 2001, its share of US imports
 surged and US manufacturing employment fell sharply. The aggregate US gains from that trade were real and large
 (cheaper goods for everyone, higher returns to the winning sectors) — but the **losses were concentrated**: the
@@ -307,7 +315,9 @@ A **tariff** (关税) is a tax on imports. Its analysis is a direct application 
 
 ![A supply-and-demand diagram of a tariff. Domestic demand slopes down and domestic supply slopes up. A horizontal dashed line marks the world price, and a higher horizontal dashed line marks the world price plus the tariff. Raising the price from the world level to the tariff level increases the quantity domestic producers supply and decreases the quantity consumers buy, shrinking imports. Four areas are shaded between the two price lines: area a, the producer-surplus gain; area c, the government's tariff revenue; and two triangles, b and d, which are the production and consumption deadweight losses. Consumers lose the whole of a plus b plus c plus d, which is more than producers and the government together gain.](diagrams/01-trade-and-comparative-advantage-fig4.svg)
 
-A tariff raises the domestic price from the world price to "world price + tariff" (fig 4). The effects:
+**Figure 4** — a tariff drawn out: the revenue, the protected producers, and the deadweight loss.
+
+A tariff raises the domestic price from the world price to "world price + tariff" (Figure 4). The effects:
 
 - **Domestic producers gain** (area **a**) — they can now sell more, at a higher price. This is *who lobbies for
   tariffs.*
@@ -492,9 +502,9 @@ Reason first; check against a source where noted.
    textile costs 0.25 software.** So the **USA has the comparative advantage in software** (2 < 4) and **Vietnam
    in textiles** (0.25 < 0.5), even though the USA out-produces Vietnam in both (§2). One sentence on why the USA
    gains: **importing textiles releases American workers into software, where America's productivity edge is
-   biggest**, so the same total labour yields more of both goods (fig 1's right panel: +33% of each).
+   biggest**, so the same total labour yields more of both goods (Figure 1's right panel: +33% of each).
 3. **It means consuming at a point *outside* the production-possibility frontier (PPF), which the country could
-   never produce on its own** — specialize at P, trade at the world price, consume at C (§3, fig 2). **No
+   never produce on its own** — specialize at P, trade at the world price, consume at C (§3, Figure 2). **No
    contradiction, because the PPF constrains what a country can *produce*, not what it can *consume*.** Trade
    breaks the link between the two: production is set by comparative advantage, consumption by the world price
    line. The wedge between the frontier and that line is the gains from trade, and it exists even for the country
@@ -514,7 +524,7 @@ Reason first; check against a source where noted.
    winners *could* compensate the losers (the **compensation principle**) — and when compensation does not happen,
    the efficient policy becomes politically unsustainable (§4, §10b).
 6. **a = the producer-surplus gain to domestic producers; c = the government's tariff revenue; b and d = deadweight
-   loss; consumers lose the whole trapezoid a + b + c + d** (§5, fig 4). **b and d are the losses** because they are
+   loss; consumers lose the whole trapezoid a + b + c + d** (§5, Figure 4). **b and d are the losses** because they are
    captured by *nobody*: **b** is the **production distortion** (resources dragged into higher-cost domestic output)
    and **d** the **consumption distortion** (buyers priced out of trades that were worth making). **Domestic
    consumers bear most of the tariff**, not the foreign exporter — by E01 §3's incidence rule the burden falls on

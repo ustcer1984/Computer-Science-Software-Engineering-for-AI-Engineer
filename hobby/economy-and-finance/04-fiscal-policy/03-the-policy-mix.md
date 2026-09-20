@@ -88,6 +88,8 @@ mix, name the mechanism, and name who was in charge.**
 
 Line the levers up side by side. They both move aggregate demand, but they are utterly different instruments:
 
+**Table 1** — the two levers compared on speed, precision, reversibility and who controls them.
+
 | | **Monetary** (E03) | **Fiscal** (E04) |
 |---|---|---|
 | **Who** | the central bank (Fed/ECB [European Central Bank]/MAS/BoJ) | the government (treasury + legislature) |
@@ -157,7 +159,9 @@ This one picture is the mental model for the whole section.
 
 ![A two-by-two matrix with the horizontal axis running from tight fiscal policy on the left to loose fiscal policy on the right, and the vertical axis from tight monetary policy at the bottom to loose monetary policy at the top. The top-right quadrant, loose fiscal plus loose monetary, is labelled maximum stimulus with the examples COVID 2020 to 2021 transfers plus quantitative easing, and the 1970s Great Inflation. The bottom-right quadrant, loose fiscal plus tight monetary, is labelled the levers fight, producing high real rates, a strong currency and crowding out, with the example Reagan tax cuts plus Volcker rate hikes in the early 1980s. The top-left quadrant, tight fiscal plus loose monetary, is labelled austerity with the central bank trying to offset it, often a weak recovery, with the example Eurozone and UK austerity plus quantitative easing from 2010 to 2015. The bottom-left quadrant, tight fiscal plus tight monetary, is labelled both levers pull demand down, a deep contraction and usually a mistake, with the example the 1937 Roosevelt recession.](diagrams/03-the-policy-mix-fig1.svg)
 
-Walk the quadrants (fig 1):
+**Figure 1** — the policy-mix matrix: the four quadrants of tight or loose money against tight or loose fiscal.
+
+Walk the quadrants (Figure 1):
 
 - **Loose + Loose (top-right) — maximum stimulus.** Both levers push demand the same way. The clean modern case is
   **COVID 2020–21**: huge fiscal transfers *plus* zero rates and QE (quantitative easing). Enormously effective at preventing a
@@ -168,7 +172,7 @@ Walk the quadrants (fig 1):
   aborted the recovery from the Great Depression (the "Roosevelt recession"). Also the shape of a deliberate,
   brutal **disinflation**.
 - **Loose fiscal + Tight monetary (bottom-right) — the levers fight.** The two offset each other *on demand*, but
-  leave a distinctive footprint. The archetype is **Reagan–Volcker** (fig 3 below): big deficits pushing demand
+  leave a distinctive footprint. The archetype is **Reagan–Volcker** (Figure 3 below): big deficits pushing demand
   up while Volcker's rates pushed it down → **very high real interest rates, a soaring dollar, a widening trade
   deficit ("twin deficits"), and private investment crowded out.** Demand can end up roughly neutral, but the
   *composition* is warped toward government and away from private capital and exports.
@@ -178,6 +182,8 @@ Walk the quadrants (fig 1):
   is that a central bank *already at the floor* can't fully offset, so the recovery came in **weak and slow**.
 
 ![A dual-axis chart of the United States from 1977 to 1992. Light blue bars show the federal budget deficit as a share of GDP (Gross Domestic Product), rising from about 2.5 percent in the late 1970s to a peak near 6 percent in 1983 and staying elevated through the 1980s, representing a loose fiscal stance. A red line shows the real federal funds rate, which is slightly negative in the late 1970s, then jumps to about 6 percent in 1981 during the Volcker shock and stays between 3 and 6 percent through the mid-1980s before falling back toward zero by 1992, representing a tight monetary stance. Annotations mark the Volcker shock driving real rates to about 6 percent to break inflation, and the Reagan deficits widening at the same time.](diagrams/03-the-policy-mix-fig3.svg)
+
+**Figure 3** — the United States 1977–1992: loose fiscal against tight money, and what it did to the dollar.
 
 Fig 3 is the "fighting mix" in real data: through the early 1980s the US ran a **loose fiscal** stance (Reagan tax
 cuts and defense spending → deficits widening toward 6% of GDP) straight into a **tight monetary** stance
@@ -249,6 +255,8 @@ changes completely:
 
 ![A chart showing the fiscal multiplier under three monetary regimes as vertical range bars. When the central bank actively offsets, tightening to hold inflation at target at full employment, the multiplier is a low band from about 0.0 to 0.5. When the central bank is neutral or accommodates, the multiplier is a middle band around 0.6 to 1.0, straddling the multiplier-equals-one reference line. At the zero lower bound, where rates are stuck at zero and the central bank cannot offset, the multiplier is a high band from about 1.4 to 2.1. An annotation labels the collapse in the first regime as monetary offset.](diagrams/03-the-policy-mix-fig2.svg)
 
+**Figure 2** — the fiscal multiplier under three monetary regimes — offset, neutral, and at the zero bound.
+
 Fig 2 is the punchline of the whole section in one chart. The **same** fiscal action has a multiplier near **zero**
 when the central bank offsets, around **one** when it stays neutral, and **well above one** at the zero lower bound
 where it *can't* offset. So the eternal question "does government spending stimulate the economy?" has no
@@ -294,7 +302,7 @@ At the **zero lower bound** (ZLB), monetary policy is constrained — you can't 
 diminishing returns ("pushing on a string," E03 §3 §6). This flips the assignment of §1. Now:
 
 1. **Fiscal policy becomes the primary demand tool** — because there is **no monetary offset** (the central bank
-   *wants* the demand and is trying to create it anyway), the multiplier is large (fig 2, right bar).
+   *wants* the demand and is trying to create it anyway), the multiplier is large (Figure 2, right bar).
 2. **Coordination pays.** A big fiscal expansion means a flood of new bond issuance, which — left alone — could
    push up long yields and choke the stimulus. So the central bank **buys the bonds (QE)**, holding long rates
    down so the government can finance cheaply. This is precisely what happened in **2008–09 and 2020**: the
@@ -360,16 +368,18 @@ This is the dangerous regime, and it's where §2's obsession with debt finally p
 practice** — it can no longer set rates for the economy's sake because doing so would blow up the government's
 budget.
 
-The mechanism is arithmetic (fig 4). The government's annual interest bill is roughly **the rate times the debt**,
+The mechanism is arithmetic (Figure 4). The government's annual interest bill is roughly **the rate times the debt**,
 so an extra point of interest rate costs about $\Delta r \times b$ of GDP per year, where $b$ is the debt ratio:
 
 $$\Delta(\text{interest bill}) \approx \Delta r \times b.$$
 
 ![A line chart showing the extra annual interest bill from a one-percentage-point rate rise, as a share of GDP, on the vertical axis, against government debt as a share of GDP on the horizontal axis. Because the extra interest is approximately the rate change times the debt, the line is a straight upward ray whose slope is the debt ratio. Dotted markers sit on the line at a low-debt emerging market near 35 percent, the USA and UK near 100 percent, Italy near 135 percent, and Japan near 255 percent. A shaded fiscal-dominance zone marks where a one-point hike costs more than about 1.5 percent of GDP a year, at which point raising rates to fight inflation starts to threaten solvency and the budget begins to constrain monetary policy.](diagrams/03-the-policy-mix-fig4.svg)
 
+**Figure 4** — the extra annual interest bill from a one-point rate rise, against the debt level.
+
 At 40% debt, a +1pp hike costs 0.4% of GDP a year — an annoyance. At 250% debt (Japan), the *same* hike costs
 2.5% of GDP a year — a fiscal earthquake. So as debt rises, the interest-rate move the budget can *tolerate*
-shrinks toward zero. Past some threshold (fig 4's shaded zone), the central bank faces a wretched choice: **raise
+shrinks toward zero. Past some threshold (Figure 4's shaded zone), the central bank faces a wretched choice: **raise
 rates to fight inflation and threaten the government's solvency, or hold rates down and let inflation run.** When
 the budget wins that argument, monetary policy has become **subordinate to fiscal needs** — the central bank is
 dominated.
@@ -576,8 +586,8 @@ Reason first; check against a source where noted.
    economies differ *despite the same demand outcome* (think real rates, currency, investment).
 2. **The offset.** A government passes a large stimulus at full employment, and an inflation-targeting central bank
    responds. What happens to the fiscal multiplier, and why? Now the *same* stimulus is passed when rates are
-   stuck at zero — what happens instead? (This is fig 2 in words.)
-3. **Read the quadrant.** For each of the four quadrants of fig 1, name a real episode and its characteristic
+   stuck at zero — what happens instead? (This is Figure 2 in words.)
+3. **Read the quadrant.** For each of the four quadrants of Figure 1, name a real episode and its characteristic
    side effect. Which quadrant is "usually a mistake," and why was 1937 the classic example?
 4. **Twin deficits.** Explain why "loose fiscal + tight monetary" (Reagan–Volcker) produced a strong dollar and a
    large *trade* deficit — not just a budget deficit. (Hint: high real rates attract foreign capital → bids up the
@@ -599,7 +609,7 @@ Reason first; check against a source where noted.
 <summary>Answers</summary>
 
 1. **Real interest rates, the exchange rate, and the composition of output** — the three side effects that
-   differ even when demand lands in the same place (§2, fig 3). In the fighting mix (loose fiscal, tight
+   differ even when demand lands in the same place (§2, Figure 3). In the fighting mix (loose fiscal, tight
    monetary) **real rates are far higher**, because the government is adding demand that the central bank
    must remove with the rate; **the currency is stronger**, because high real rates pull in foreign capital,
    which in turn widens the *trade* deficit (the "twin deficits"); and **private investment is crowded
@@ -608,7 +618,7 @@ Reason first; check against a source where noted.
 2. **The multiplier collapses toward zero** — this is the **monetary offset** (the Sumner critique, §3). At
    full employment the extra demand pushes inflation above target, so an inflation-targeting central bank
    raises rates by just enough to suppress the private spending the stimulus added; the central bank, not
-   the government, has the last word on demand, and fig 2 puts the multiplier in a 0.0–0.5 band. **At the
+   the government, has the last word on demand, and Figure 2 puts the multiplier in a 0.0–0.5 band. **At the
    zero lower bound (ZLB) the same stimulus is powerful** — the central bank cannot cut further and *wants*
    the extra demand, so there is no offset and the multiplier sits well above one (about 1.4–2.1). The
    eternal question "does stimulus work?" has no answer until you name the monetary regime it lands in.
@@ -622,7 +632,7 @@ Reason first; check against a source where noted.
    from the Great Depression, producing the "Roosevelt recession".
 4. **Because high real rates attract foreign capital, which bids up the dollar, and an overvalued dollar
    makes exports uncompetitive and imports cheap** — so the budget deficit shows up as a *trade* deficit too
-   (§2, fig 3). The accounting version, from §10c, is the identity $CA = S - I$: the current account equals
+   (§2, Figure 3). The accounting version, from §10c, is the identity $CA = S - I$: the current account equals
    national saving minus investment, and a fiscal deficit is **public dis-saving** that lowers $S$, so with
    investment unchanged the current account must fall. The two are the same story: a capital-account surplus
    (the inflow attracted by high rates) *is* a current-account deficit, by the balance-of-payments identity.
@@ -637,7 +647,7 @@ Reason first; check against a source where noted.
    monetization is exactly the line between *temporary-and-independent* and *permanent-and-captured*.
 6. **About 1.2% of GDP a year for the 40%-debt country and about 7.2% for the 240%-debt one** — using
    $\Delta(\text{interest bill}) \approx \Delta r \times b$, that's $0.03 \times 0.4$ versus
-   $0.03 \times 2.4$ (§5, fig 4). The second number is a fiscal earthquake, larger than most countries'
+   $0.03 \times 2.4$ (§5, Figure 4). The second number is a fiscal earthquake, larger than most countries'
    entire defense budget, so the hike that is an annoyance in one case threatens solvency in the other. That
    strips independence **de facto, with no law changing**: the central bank still legally sets the rate, but
    it now faces the choice "raise rates and detonate the budget, or hold rates down and let inflation run" —
@@ -681,7 +691,7 @@ see the dates.)
 The quadrant fits (§2), but the **stance** needs reading carefully. Fiscal is unambiguously **loose** — deficits
 ~6% of GDP *at full employment*, debt still climbing. Monetary is where "tight" misleads: the Fed's ~3.5–3.75%
 (mid-2026) is high versus the 2010s zero era, but with inflation ~4% the **real** policy rate is roughly **zero**.
-Compare Volcker (fig 3): nominal ~19%, *real* ~+6%. So this is "loose fiscal + *nominally*-tight, *really*-neutral"
+Compare Volcker (Figure 3): nominal ~19%, *real* ~+6%. So this is "loose fiscal + *nominally*-tight, *really*-neutral"
 monetary — and with the market pricing **cuts** plus political pressure on the Fed, the stance is **drifting up
 toward loose-loose**, not parked in the hard bottom-right corner. That single correction — the real rate is near
 zero, not high — is what dissolves the next puzzle.
@@ -715,7 +725,7 @@ saves**. Push the plan through it — more manufacturing **investment** (I ↑) 
 causality, because of a *second* identity: **the capital inflow *is* the trade deficit** (a capital-account
 surplus ≡ a current-account deficit — two sides of the balance of payments). To attract *net* foreign capital *is*
 to run a trade deficit; you cannot do both-and-shrink-it unless **national saving rises**. This is the 1980s
-**twin deficits** again (fig 3). And it exposes the mix's internal war: tight money to fight inflation props the
+**twin deficits** again (Figure 3). And it exposes the mix's internal war: tight money to fight inflation props the
 dollar **up**, which *hurts* the export/reindustrialize goal — which is exactly why the policy reaches for
 **tariffs** and **pressure for a weaker dollar/Fed cuts** to force by other means what a weak currency would do
 cleanly, while the tariffs *themselves* raise import prices → add to inflation → keep the Fed tight → prop the

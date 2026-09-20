@@ -116,6 +116,8 @@ The single most useful picture in this whole section makes the level-vs-rate poi
 <!-- FIGURE -->
 ![Left: the price level climbing almost monotonically over a decade. Right: the inflation rate as the slope of that level, bouncing around the 2% target with a near-zero year and a 2021-22 spike](diagrams/02-inflation-and-price-indices-fig2.svg)
 
+**Figure 2** — the price level against the inflation rate: the rate is the slope of the level.
+
 The **left** panel is the price *level* — it climbs almost every year and essentially never falls. The
 **right** panel is the inflation *rate*, which is just **the slope of the left panel**. Notice what this
 means for reading headlines:
@@ -188,6 +190,8 @@ proportion to how much of the budget that category eats:
 <!-- FIGURE -->
 ![Horizontal bar chart of CPI basket weights: housing ~34%, transport ~16%, food ~14%, then healthcare, recreation, education, clothing, and other, summing to 100%](diagrams/02-inflation-and-price-indices-fig1.svg)
 
+**Figure 1** — the CPI basket by weight — housing, transport and food dominate.
+
 - **Housing dominates** most developed-economy baskets (≈ a third). That's why **rents and mortgage-linked
   costs** move the headline so much, and why a spike in a small-weight category (say clothing at 4%) barely
   registers even if its *own* price doubles.
@@ -197,6 +201,8 @@ proportion to how much of the budget that category eats:
 
 **A worked example (do this once and the formula sticks).** A toy two-good basket: 10 loaves of bread and
 4 bus rides.
+
+**Table 1** — a two-good basket priced in both years — the CPI calculation worked end to end.
 
 | | Bread (×10) | Bus (×4) | Basket cost (\$) |
 |---|---|---|---|
@@ -267,6 +273,8 @@ The index, **15.4%**, is the weighted blend — exactly what Fig 1 is telling yo
 "Inflation" in the news is never just one number. Each index covers **different goods**, from **different
 buyers**, computed **slightly differently** — and they disagree, sometimes by a lot. Knowing which is which
 is most of reading inflation news correctly.
+
+**Table 2** — the family of price indices: what each covers and who relies on it.
 
 | Index | What it covers | Who uses it / why it matters |
 |---|---|---|
@@ -421,6 +429,8 @@ Four sources:
 <!-- FIGURE -->
 ![Two cost-of-living index lines from a common 2014=100 start: the fixed-basket Laspeyres line rising slightly faster every year than the chained line that lets buyers substitute, the shaded gap between them widening — labelled substitution bias](diagrams/02-inflation-and-price-indices-fig3.svg)
 
+**Figure 3** — substitution bias — the fixed-basket Laspeyres index drifts above the chained index every year.
+
   The red **fixed-basket** line and the blue **chained** line start together; letting buyers substitute makes
   the chained index rise a touch slower *each* year, and the shaded wedge widens — that wedge *is* the
   substitution bias, and over a decade it's the difference between very different cumulative inflation
@@ -540,6 +550,8 @@ inflation, *on purpose.* Why not **zero**? And why is **deflation** treated as a
 
 <!-- FIGURE -->
 ![Histogram of annual nominal wage changes: a tall spike right at 0% (firms freeze pay), an almost-missing tail of negative changes (cuts are rare), and a normal-looking spread of positive raises](diagrams/02-inflation-and-price-indices-fig4.svg)
+
+**Figure 4** — nominal wage changes bunch at zero and almost never go negative — the downward rigidity that argues for a positive target.
 
    The **spike at exactly 0%** (frozen pay) and the **missing left tail** (cuts almost never happen) are one
    of the most reliable patterns in labour economics. With **2% inflation**, a firm that needs to cut a

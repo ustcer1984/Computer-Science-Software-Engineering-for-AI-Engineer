@@ -87,6 +87,8 @@ Understanding *why* is the single best test of whether you've absorbed the last 
 "Capital inflows" is far too coarse a category. The single most useful analytical move is to sort them by
 **stickiness** — how fast they can leave:
 
+**Table 1** — the types of capital inflow, ranked by stickiness and by the risk each carries.
+
 | Type | What it is | Stickiness | Risk |
 |---|---|---|---|
 | **FDI** (foreign direct investment) | building a plant, buying a controlling stake | **Stickiest** — you can't wheel a factory onto a plane | Low; also carries technology & management (E05 §1) |
@@ -155,6 +157,8 @@ capital inflows.
 
 ![A bar chart of net private capital flows to the Asia-5 economies from 1990 to 2000 in billions of US dollars. Flows rise from about plus 25 billion in 1990 to a peak of plus 93 billion in 1996, then reverse sharply to minus 12 billion in 1997 and minus 45 billion in 1998 before partially recovering to about minus 20 billion by 2000. An annotation marks the sudden stop, noting that the swing from 1996 to 1997 exceeded 105 billion dollars, roughly a tenth of their combined GDP (Gross Domestic Product), in a single year. A second note explains that capital floods in during the boom and makes it bigger.](diagrams/03-capital-flows-and-crises-fig1.svg)
 
+**Figure 1** — net private capital flows to the Asia-5, 1990–2000 — the surge and the sudden stop.
+
 Fig 1 shows the 1996→1997 reversal for the Asia-5: a swing of **over 105 billion USD — about a tenth of their
 combined GDP — in a single year.**
 
@@ -217,6 +221,8 @@ Crisis theory developed in three waves, each written after a crisis the previous
 are not rivals so much as three *mechanisms*, and modern crises mix all three.
 
 ![A three-panel comparison of currency-crisis models. The first generation, from Krugman in 1979, is triggered by bad fundamentals: a fixed peg plus unsustainable deficits drains reserves predictably until speculators attack at the threshold, so the crisis is deserved, as in Latin America in the 1980s. The second generation, from Obstfeld, is triggered by expectations: the government chooses between defending with high rates that cause recession or exiting, and if markets expect an exit then defending costs more so exiting becomes optimal, making the crisis self-fulfilling with multiple equilibria and not necessarily deserved, as in the 1992 ERM (Exchange Rate Mechanism) crisis. The third generation, developed after 1997, is triggered by balance sheets: currency and maturity mismatches mean devaluation destroys balance sheets, producing contractionary devaluation and a twin banking crisis, so the exchange rate acts as an amplifier, as in Asia in 1997.](diagrams/03-capital-flows-and-crises-fig4.svg)
+
+**Figure 4** — the three generations of currency-crisis model, and what triggers each.
 
 - **First generation (Krugman, 1979) — the crisis you *deserve*.** A government pegs the currency while running
   unsustainable deficits financed by printing. Reserves drain predictably; speculators, seeing the arithmetic,
@@ -302,7 +308,9 @@ trade links.
 
 ![A line chart of Asian currencies against the US dollar, indexed to 100 in June 1997 and running quarterly to December 1998. The Indonesian rupiah collapses to about 15, a loss of roughly 85 percent; the Thai baht falls to about 52 and the Korean won to about 52 before partial recoveries; the Malaysian ringgit falls to about 62; while the Singapore dollar declines only to about 82, giving up roughly 15 percent. Annotations mark the rupiah collapse as balance sheets being destroyed by dollar debt against rupiah income, and highlight Singapore as the control case.](diagrams/03-capital-flows-and-crises-fig2.svg)
 
-**The mechanism was textbook third-generation.** As fig 2 shows, the depreciations were enormous — the rupiah lost
+**Figure 2** — Asian currencies against the dollar through 1997–98, indexed to the eve of the crisis.
+
+**The mechanism was textbook third-generation.** As Figure 2 shows, the depreciations were enormous — the rupiah lost
 roughly **85%** of its value. Because corporate and bank liabilities were in dollars while revenues were in local
 currency, each step of depreciation **multiplied the local-currency value of the debt** while doing nothing for
 income. Firms went bankrupt *because* the currency fell; the bankruptcies wrecked the banks; the banking collapse
@@ -319,9 +327,11 @@ outcome did more than any paper to make capital controls respectable again (see 
 
 ![A line chart of emerging-Asia foreign-exchange reserves in trillions of US dollars from 1995 to 2025, rising from about 0.25 trillion in 1995 and 0.5 trillion in 2000 to about 1.5 trillion by 2005, 3.2 trillion by 2010, 4.5 trillion by 2015 and around 5.8 trillion by 2025. A vertical marker denotes the 1997 crisis, and annotations describe the never-again reaction of self-insurance by hoarding reserves, noting it is costly because reserves are low-yielding and require sterilization, and that this accumulation is the counterpart of the US deficit.](diagrams/03-capital-flows-and-crises-fig3.svg)
 
+**Figure 3** — emerging-Asia reserves, 1995–2025: the self-insurance built after 1997.
+
 **The aftermath reshaped the world economy for two decades.** The lesson Asia drew was "**never again be at the
 mercy of the IMF or of foreign creditors**," and the response was **massive self-insurance**: reserve
-accumulation on a scale never seen (fig 3), a region-wide swing from current-account *deficits* to persistent
+accumulation on a scale never seen (Figure 3), a region-wide swing from current-account *deficits* to persistent
 *surpluses*, and regional arrangements (the Chiang Mai Initiative). This is costly insurance — reserves are
 low-yielding and sterilizing them has a real fiscal cost (E03 §5) — but it worked: Asia sailed through 2008 far
 better than 1997.
@@ -382,7 +392,7 @@ Ranked roughly by how much the profession now trusts them:
 2. **Macroprudential policy** — the post-2008 workhorse. Limits on banks' FX (foreign exchange) exposure and maturity mismatch,
    loan-to-value caps, countercyclical capital buffers. It targets the **mismatch**, not the flow, and is now
    mainstream everywhere.
-3. **Reserves as self-insurance** (fig 3). Effective and proven, but genuinely expensive — and if *everyone*
+3. **Reserves as self-insurance** (Figure 3). Effective and proven, but genuinely expensive — and if *everyone*
    self-insures you get a global savings glut.
 4. **Develop local-currency bond markets** — the structural cure for **original sin** (E05 §2 §10a). If you can
    borrow long, at home, in your own currency, the whole third-generation mechanism switches off. Asia has done a
@@ -458,7 +468,7 @@ it, and it is the strongest modern argument for items 2 and 6 above.
 Now the natural experiment that closes the module, and it is a genuine puzzle. Singapore is arguably **the most
 open economy on earth**: trade is roughly **three times GDP**, the capital account is **fully open**, and it is one
 of the world's largest FX trading and wealth-management centres. By this section's logic it should be maximally
-exposed to everything above. Yet in 1997 it took a recession and a ~15% currency decline (fig 2) and had **no
+exposed to everything above. Yet in 1997 it took a recession and a ~15% currency decline (Figure 2) and had **no
 banking crisis, no IMF program, no crisis at all.** Why?
 
 Because openness was paired with a **coherent system of buffers**, each of which is a concept from this course:
@@ -619,7 +629,7 @@ Reason first; check against a source where noted.
    policy, and — where a run must simply be stopped — **temporary capital controls**, which is what Malaysia did in
    September 1998 and recovered comparably well (§5, item 6).
 7. **Because Asia's lesson from 1997 was "never again be at the mercy of the IMF or foreign creditors," and the
-   answer was massive self-insurance** (§4, fig 3). Running a current-account **surplus** and hoarding
+   answer was massive self-insurance** (§4, Figure 3). Running a current-account **surplus** and hoarding
    **foreign-exchange reserves** is how a country stops needing foreign financing — so the region swung from
    deficits to persistent surpluses and accumulated reserves on an unprecedented scale. **The global link is the
    balance-of-payments identity applied worldwide: those surpluses had to be somebody's deficit, and the reserves
@@ -673,6 +683,8 @@ exporting capital — which is exactly why reserves aren't draining.
 
 That makes China's configuration **the opposite of a sudden stop**. A sudden stop happens to a country that
 *needs* foreign capital and stops receiving it. Scored against §2's vulnerability checklist:
+
+**Table 2** — the sudden-stop checklist run on China, criterion by criterion.
 
 | Criterion | China | Verdict |
 |---|---|---|
@@ -748,6 +760,8 @@ actually fallen. **My position: the mechanism is real, the causality is inverted
 small to carry the claim.**
 
 Work the arithmetic on a USD 100 finished good:
+
+**Table 3** — gross exports against the value China actually captures.
 
 | | China's gross export | China's captured value |
 |---|---|---|

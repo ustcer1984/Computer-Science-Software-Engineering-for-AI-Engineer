@@ -138,6 +138,8 @@ percentage change in price — so this *is* the "ratio of percentage changes," m
 Because demand slopes down, $\varepsilon_d$ is negative; by convention people usually quote its absolute
 value $|\varepsilon_d|$ and talk about "how elastic" a good is. Three regimes, and they're the whole game:
 
+**Table 1** — the elasticity bands, what each means, and everyday examples of them.
+
 | | $\lvert\varepsilon_d\rvert$ | Meaning | Examples |
 |---|---|---|---|
 | **Elastic** | $> 1$ | quantity responds *more* than proportionally | airline seats, branded soda, restaurant meals, most discretionary goods |
@@ -166,6 +168,8 @@ physics intuition mildly *misleads*. Elasticity is **not** the slope of the dema
 <!-- FIGURE -->
 ![Elasticity is not slope: it slides along a straight line, and the total-revenue test](diagrams/03-elasticity-surplus-and-market-failure-fig2.svg)
 
+**Figure 2** — elasticity is not slope — it slides along a straight line, and the total-revenue test tracks it.
+
 The picture above (left panel) is the one to burn in: *same line, every elasticity*. And the contrast
 with §2's "steep vs flat" intuition is reconciled this way — for two curves through the *same point*, the
 flatter one **is** more elastic (below), but you cannot read elasticity off steepness *alone* without
@@ -173,6 +177,8 @@ knowing where you are on the curve.
 
 <!-- FIGURE -->
 ![Same price rise, very different quantity response: elastic (flat) vs inelastic (steep) demand](diagrams/03-elasticity-surplus-and-market-failure-fig1.svg)
+
+**Figure 1** — the same price rise, very different quantity response: elastic (flat) against inelastic (steep) demand.
 
 ### What makes a good elastic or inelastic
 
@@ -299,6 +305,8 @@ marginal-cost curves read sideways.
 <!-- FIGURE -->
 ![Consumer and producer surplus as the areas between price and the demand/supply curves](diagrams/03-elasticity-surplus-and-market-failure-fig3.svg)
 
+**Figure 3** — consumer and producer surplus as the areas between price and the demand and supply curves.
+
 Now the result §2 promised. **The competitive equilibrium $Q^\ast$ maximizes total surplus.** Look at the
 figure: at $Q^\ast$ the two triangles fill the *entire* region between the curves — every trade where a
 buyer values the unit more than it costs to make ($MB \geq MC$) actually happens, and no trade where
@@ -384,6 +392,8 @@ falls to $Q_{tax} < Q^\ast$:
 
 <!-- FIGURE -->
 ![A per-unit tax: the wedge, tax revenue, and the deadweight-loss triangle](diagrams/03-elasticity-surplus-and-market-failure-fig4.svg)
+
+**Figure 4** — a per-unit tax: the wedge, the tax revenue, and the deadweight-loss triangle.
 
 Three regions tell the whole story:
 
@@ -547,6 +557,8 @@ the gap is the externality.
 <!-- FIGURE -->
 ![A negative externality: the market produces past the social optimum, opening a deadweight loss](diagrams/03-elasticity-surplus-and-market-failure-fig5.svg)
 
+**Figure 5** — a negative externality: the market produces past the social optimum, opening a deadweight loss.
+
 - **Positive externality** (vaccination, education, R&D, a well-kept garden): your private benefit
   understates the social benefit (your flu shot protects others too), so the market **under-produces**
   relative to the social optimum. This is the textbook justification for **subsidizing** vaccines,
@@ -578,6 +590,8 @@ the gap is the externality.
 Two properties classify every good. **Rivalry**: does my consuming it stop you (a sandwich is rival; a
 radio broadcast is not)? **Excludability**: can a seller stop non-payers from consuming it (a cinema can;
 the open ocean can't)? The familiar private good is *both*. Drop either and the price mechanism stumbles.
+
+**Table 2** — the rival/excludable grid: private goods, club goods, common resources and public goods.
 
 | | **Excludable** | **Non-excludable** |
 |---|---|---|
@@ -612,6 +626,8 @@ firm still maximizes profit at $MR = MC$ (§1's rule) — but that lands it at a
 
 <!-- FIGURE -->
 ![Monopoly: setting MR = MC restricts output below the competitive level and opens a deadweight loss](diagrams/03-elasticity-surplus-and-market-failure-fig6.svg)
+
+**Figure 6** — monopoly: setting MR = MC restricts output below the competitive level and opens a deadweight loss.
 
 The consequences read straight off the figure:
 - Output is **restricted** ($Q_m < Q_{comp}$) and price is **marked up** ($P_m > MC$).
@@ -911,6 +927,8 @@ customer their preferred point and captures surplus). Two cautions you accepted:
 **closing** — Nutri-Grade now covers freshly-made drinks too.
 
 ### The synthesis to carry
+
+**Table 3** — each move you proposed in the session, and the verdict on it.
 
 | Your move | Verdict |
 |---|---|

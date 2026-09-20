@@ -106,6 +106,8 @@ the completed triangle.
 
 ![A triangle whose three corners are labelled independent monetary policy, free capital mobility, and exchange-rate stability (managed). Each of the three sides keeps the two corners it joins and sacrifices the opposite corner. The left side joins independent policy and free capital — a floating exchange rate, as in the USA and Eurozone and the Fed of section 3, giving up exchange-rate stability. The bottom side joins free capital and a managed exchange rate — Singapore, Hong Kong and MAS of section 4, giving up an independent interest rate. The right side joins independent policy and a managed exchange rate — China and the PBoC, giving up free capital, which means capital controls. The right side is highlighted as the subject of this section. A caption notes that the Fed and MAS take two corners and China takes the third, completing the triangle.](diagrams/05-the-pboc-model-fig1.svg)
 
+**Figure 1** — the impossible trinity again — China sits at the third corner, buying partial independence with capital controls.
+
 China's economic strategy demanded **two** things at once:
 
 - **An independent interest rate.** China is a continent-sized economy with its own gigantic domestic credit
@@ -184,7 +186,9 @@ parity** and a **trading band** around it.
 
 ![A time series of the Chinese yuan against the US dollar from 1994 to 2025, plotted so that a lower line means a stronger yuan. From 1994 the rate is essentially flat as a hard peg at about 8.28 yuan per dollar, holding through the Asian financial crisis and until 2005. In July 2005 the peg is loosened and the yuan appreciates steadily, strengthening from about 8.28 to a strongest point near 6.05 by early 2014. In August 2015 a sharp discrete step weakens the yuan — the 8-11 reform devaluation. From 2015 to 2025 the yuan trades in a managed range roughly between 6.3 and 7.3 per dollar, weakening during the 2018-19 trade war and again in 2022-24. Annotations mark the 8.28 peg era, the 2005 managed-appreciation reform, the 2014 strongest point, and the August 2015 8-11 devaluation.](diagrams/05-the-pboc-model-fig2.svg)
 
-**The history in four acts** (fig 2):
+**Figure 2** — the yuan against the dollar, 1994–2025: hard peg, managed appreciation, then a wider float.
+
+**The history in four acts** (Figure 2):
 
 1. **The hard peg (1994–2005).** After unifying its dual exchange rates in **1994** (a reform we return to in
    §4 below), China pegged the yuan at roughly **8.28 per US dollar** and held it there — famously *not*
@@ -343,10 +347,14 @@ dollars to a designated state bank, which passed them up to the PBoC, in exchang
 
 ![A time series of China's official foreign-exchange reserves in trillions of US dollars from 1994 to 2025. Reserves are negligible in the 1990s, then climb explosively through the 2000s from under 0.2 trillion in 2000 to about 1.9 trillion in 2008, continuing up to a peak of nearly 4 trillion US dollars in mid-2014. From 2014 to early 2017 reserves fall sharply by about one trillion, to roughly 3 trillion, as the PBoC sells dollars to defend the yuan after the 2015 8-11 reform triggers capital flight. From 2017 to 2025 reserves plateau in a band around 3.0 to 3.3 trillion. Annotations mark the compulsory-surrender-driven climb, the nearly 4 trillion peak in 2014, and the roughly one-trillion drawdown of 2014 to 2016.](diagrams/05-the-pboc-model-fig3.svg)
 
+**Figure 3** — China's official foreign-exchange reserves, 1994–2025 — the accumulation and its plateau.
+
 ![A time series of China's reserve requirement ratio for large banks, in percent, from 2003 to 2025. It rises from about 7 percent in 2003 to a peak of 21.5 percent in 2011 as the PBoC locks up the flood of yuan created by buying surrendered export dollars — sterilization. From 2011 onward it is cut steadily and repeatedly, to about 17 percent by 2016, 13 percent by 2019, and around 9 percent by 2025, as inflows reverse and the PBoC shifts to easing. Annotations note the 21.5 percent peak as the high-water mark of sterilizing FX inflows, and the long decline as the machine runs in reverse.](diagrams/05-the-pboc-model-fig4.svg)
 
-The two charts above are the *same story* told twice. Reserves (fig 3) climbed to nearly USD 4 trillion because
-surrender funneled every export dollar to the PBoC; the RRR (fig 4) climbed to **21.5%** in 2011 because the
+**Figure 4** — the reserve requirement ratio for large banks, 2003–2025 — a quantity lever the Fed no longer uses.
+
+The two charts above are the *same story* told twice. Reserves (Figure 3) climbed to nearly USD 4 trillion because
+surrender funneled every export dollar to the PBoC; the RRR (Figure 4) climbed to **21.5%** in 2011 because the
 PBoC had to *lock up* the tidal wave of yuan it created buying those dollars. **Compulsory surrender is the
 engine; the RRR was the brake.**
 
@@ -367,7 +375,7 @@ engine; the RRR was the brake.**
 **Why it matters for reading China.** When you see "China's reserves rose/fell by USD X," you are reading the
 residue of this machine — now voluntary, but still steered. When you see "the PBoC cut the RRR," you are usually
 watching the machine run *in reverse*: inflows have slowed (or reversed), the sterilization is no longer needed,
-and freeing up locked reserves is now a way to *ease* (fig 4's long decline).
+and freeing up locked reserves is now a way to *ease* (Figure 4's long decline).
 
 ---
 
@@ -502,7 +510,7 @@ Two live episodes show the model under stress, and both are direct payoffs of §
 *unlimited* ammunition to hold a currency *down* but only *finite* reserves to hold it *up*. China lived the
 finite side. After the 8·11 reform (§2), the market wanted the yuan *weaker* and capital tried to flee. To stop
 a disorderly slide the PBoC did the depreciation-side intervention — **selling USD, buying yuan** — and burned
-through roughly **USD 1 trillion of reserves** between mid-2014 and early 2017 (fig 3's cliff). That is the
+through roughly **USD 1 trillion of reserves** between mid-2014 and early 2017 (Figure 3's cliff). That is the
 finite-ammunition problem you predicted, playing out at trillion-dollar scale. And notice China's *escape*: it
 did what MAS structurally cannot as easily — it **re-tightened the capital controls** (cracking down on outflows,
 tightening the USD 50,000 quota's enforcement), reasserting the very corner it had briefly tried to relax. When
@@ -571,6 +579,8 @@ expensive side of the asymmetry. The same model that once held the yuan down now
 Here is the whole module in one table: three central banks, doing the *same job* (anchor the economy), each
 occupying a *different corner* of the same triangle. This is §4's Fed-vs-MAS table with the third column that
 completes it.
+
+**Table 1** — the completed trilemma: the Fed, MAS and the PBoC compared on all three corners.
 
 | | **The Fed (§3)** | **MAS (§4)** | **The PBoC (§5)** |
 |---|---|---|---|
@@ -688,12 +698,12 @@ Reason first; check against a source where noted.
    blocks the arbitrage that would force them together (§2).
 2. **The engine: exporters earned dollars and were legally required to surrender them**, selling them to
    designated state banks that passed them up to the PBoC, so every trade surplus funnelled foreign currency
-   onto the central bank's balance sheet — reserves peaking near **USD 4 trillion in 2014** (fig 3). **The
+   onto the central bank's balance sheet — reserves peaking near **USD 4 trillion in 2014** (Figure 3). **The
    creation of yuan is the same act seen from the other side:** the PBoC had to *issue* yuan to pay for those
    dollars, so base money expanded automatically with the surplus (§4, and §1's base-money creation). Left
    alone that would have produced runaway credit and inflation, so the PBoC had to **sterilise** — issuing
    central-bank bills and, above all, ratcheting the **reserve requirement ratio (RRR)** up to **21.5% in
-   2011** to lock the yuan away instead of letting banks lend it (fig 4). **Fig 3 is the engine, fig 4 is the
+   2011** to lock the yuan away instead of letting banks lend it (Figure 4). **Fig 3 is the engine, Figure 4 is the
    brake.**
 3. **(i) The FX machine is running in reverse.** Inflows have slowed or reversed and reserves have plateaued
    around USD 3.0–3.3 trillion, so there is no longer a tide of newly created yuan needing to be locked up —
@@ -704,7 +714,7 @@ Reason first; check against a source where noted.
 4. **China was on the *depreciation* side — the finite-ammunition side of the asymmetry.** After the 8·11
    reform the market wanted the yuan weaker, so the PBoC had to **sell dollars and buy yuan**, which it can
    only do with the reserves it actually holds; it burned roughly **USD 1 trillion** between mid-2014 and
-   early 2017 (fig 3's cliff) — §4 §10a's logic at trillion-dollar scale. Its escape was the move Singapore
+   early 2017 (Figure 3's cliff) — §4 §10a's logic at trillion-dollar scale. Its escape was the move Singapore
    structurally cannot make: it **re-tightened capital controls**, cracking down on outflows and on
    enforcement of the personal quota. MAS cannot do that because free capital movement is non-negotiable for
    a financial hub (§4 §10c) — so when the trilemma bit, China paid the bill it had always chosen to pay
@@ -779,6 +789,8 @@ Council** (§5) — so "growth" and "employment" enter not as autonomous central
 national plan currently requires*. The effective top line is "serve the national economic policy, anchored on
 currency stability + growth."
 
+**Table 2** — the three mandates side by side — and how much wider the PBoC's is.
+
 | | **Fed** | **MAS** | **PBoC** |
 |---|---|---|---|
 | **Stated objective** | dual: **price stability + max employment** | **price stability** (basis for sustainable growth) | **currency stability — internal *and* external** → and thereby growth |
@@ -801,6 +813,8 @@ classification (§7). Most of the developed world clusters at the Fed corner; a 
 
 **Group 1 — Fed model** (float · independent rate · open capital · inflation targeting)
 
+**Table 3** — the inflation-targeting central banks, and how each differs from the Fed.
+
 | Body (economy) | Mandate | Main policy & toolkit | vs Fed — key difference |
 |---|---|---|---|
 | **Federal Reserve** (USA) | **Dual**: price stability + max employment | Policy rate (floor system), OMO, QE/QT [quantitative easing/tightening], forward guidance | — *the reference* |
@@ -811,12 +825,16 @@ classification (§7). Most of the developed world clusters at the Fed corner; a 
 
 *Edge cases — float, but not "pure" Fed:*
 
+**Table 4** — the hybrids, and what makes each one a hybrid.
+
 | Body | Mandate | Toolkit | Why it's a hybrid |
 |---|---|---|---|
 | **Swiss National Bank** | Price stability, w/ due account of the economy | Policy rate **+ heavy FX intervention** (EUR/CHF floor 2011–15; huge reserves) | Floats but **leans against safe-haven appreciation like MAS** — a Fed/MAS blend |
 | **Reserve Bank of India** | Flexible inflation targeting (4% ±2%) | Repo rate, **CRR/SLR**, OMO, **managed float + partial capital controls** | Sits **between Fed and PBoC**: own rate + inflation target, but a managed rupee and a half-open capital account |
 
 **Group 2 — MAS model** (open capital · managed FX · give up the independent rate)
+
+**Table 5** — the exchange-rate-oriented central banks, measured against MAS.
 
 | Body (economy) | Mandate | Main policy & toolkit | vs MAS — key difference |
 |---|---|---|---|
@@ -826,6 +844,8 @@ classification (§7). Most of the developed world clusters at the Fed corner; a 
 | **Danmarks Nationalbank** (Denmark) | Defend the **euro** peg (ERM II) | FX intervention + rate moves to hold the peg | Same corner, but pegged to the **euro** → gives up its rate to the **ECB**, not the Fed |
 
 **Group 3 — PBoC model** (independent rate · managed FX · capital controls)
+
+**Table 6** — the managed-float and capital-control regimes, measured against the PBoC.
 
 | Body (economy) | Mandate | Main policy & toolkit | vs PBoC — key difference |
 |---|---|---|---|
@@ -846,6 +866,8 @@ policy or issue a currency; they're lenders/forums/standard-setters.)
 #### Abbreviation key (the part you asked for)
 
 **Central banks & bodies** — mostly just "[place] central bank":
+
+**Table 7** — the central-bank abbreviations used above, and the economy each belongs to.
 
 | Abbrev. | Full name (economy) |
 |---|---|
@@ -871,6 +893,8 @@ policy or issue a currency; they're lenders/forums/standard-setters.)
 | **IMF / BIS** | International Monetary Fund / Bank for International Settlements (*not* central banks) |
 
 **Policy tools & terms:**
+
+**Table 8** — the policy-tool abbreviations used above.
 
 | Abbrev. | What it is |
 |---|---|

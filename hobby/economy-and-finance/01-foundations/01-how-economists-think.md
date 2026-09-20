@@ -385,6 +385,8 @@ Read it like a feasibility boundary (because that's what it is):
 
 Economists sharply separate two kinds of statements, and conflating them is the #1 way commentary misleads:
 
+**Table 1** — positive against normative claims — what is, versus what ought to be.
+
 | | **Positive** ("what *is*") | **Normative** ("what *ought* to be") |
 |---|---|---|
 | Claim type | Descriptive, falsifiable | Value judgement, not falsifiable |
