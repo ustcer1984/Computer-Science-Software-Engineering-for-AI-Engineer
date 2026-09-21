@@ -954,7 +954,7 @@ actually gets built.
 
 ### 5.1 One curve, three readings
 
-![The US Treasury curve on 15 September 2026, shown three ways. The par curve, the quoted constant-maturity yields, rises from 4.11 percent at three months through 4.67 at two years to 5.00 at ten years, peaks at 5.40 at twenty years and eases to 5.36 at thirty. The bootstrapped spot curve tracks it closely at the short end and rises above it wherever the curve slopes up, reaching about 5.57 percent near twenty years. The one-year implied forward curve sits above both, starting near 5.0 percent, rising to a hump of about 5.8 percent around nineteen years, then falling back toward 5.1 percent at the long end.](diagrams/03-bonds-and-fixed-income-fig4.svg)
+![The US Treasury curve on 15 September 2026, shown three ways. The par curve, the quoted constant-maturity yields, rises from 4.11 percent at three months through 4.67 at two years to 5.00 at ten years, peaks at 5.40 at twenty years and eases to 5.36 at thirty. The bootstrapped spot curve tracks it closely at the short end and rises above it wherever the curve slopes up, reaching about 5.57 percent near twenty years. The one-year implied forward curve sits above both, starting near 5.0 percent, dipping slightly to 4.99 at three years, then climbing steadily to a pronounced hump of 6.60 percent at year sixteen, falling steeply through 5.77 at nineteen years to 5.44 at twenty, and easing to about 5.1 percent at the long end.](diagrams/03-bonds-and-fixed-income-fig4.svg)
 
 **Figure 4** — the US Treasury curve of 15 September 2026, read three ways: par, spot and 1-year implied forwards.
 
@@ -991,6 +991,11 @@ Three readings of that figure:
    structural feature rather than a forecast: the 30-year point has concentrated demand from liability
    matchers (§7), and its greater convexity (§3.3) is worth a few basis points of yield give-up. **Not every
    kink in a curve is information.**
+4. **And watch what that sag does to the forwards.** Because forwards are *marginal* rates, a par curve that
+   rises to 20 years and then falls forces them to overshoot on the way up and undershoot afterwards: they
+   hump to **6.60% for year 16** — 160 basis points above the 10-year par yield — and then collapse to 5.44%
+   by year 20. Nobody is forecasting a 6.6% short rate in 2042. **It is the arithmetic of the sag**, and it
+   is the clearest warning in the figure against reading a forward curve as a prediction.
 
 ### 5.2 Why a single YTM is a summary, not a mechanism
 

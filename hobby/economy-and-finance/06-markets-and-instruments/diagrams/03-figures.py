@@ -309,26 +309,33 @@ def fig4():
 
     ax.annotate("3 months 4.11%", xy=(0.25, 4.11), xytext=(1.2, 3.72),
                 fontsize=10.0, color=GREY, arrowprops=dict(arrowstyle="->", color=GREY))
-    ax.annotate("10 years 5.00%", xy=(10, 5.00), xytext=(11.4, 4.52),
-                fontsize=10.0, color=GREY, arrowprops=dict(arrowstyle="->", color=GREY))
+    ax.annotate("10 years 5.00%", xy=(10, 5.00), xytext=(9.3, 4.34),
+                fontsize=10.0, color=GREY, ha="right",
+                arrowprops=dict(arrowstyle="->", color=GREY))
     ax.annotate("20y 5.40% sits ABOVE 30y 5.36%\n— the long end sags, a supply-and-\nconvexity effect, not a forecast",
-                xy=(20, 5.40), xytext=(30.6, 7.05), fontsize=10.0, color=GREY,
+                xy=(20, 5.40), xytext=(30.6, 7.72), fontsize=10.0, color=GREY,
                 ha="right", va="top", arrowprops=dict(arrowstyle="->", color=GREY))
+    ax.annotate("the forwards hump to 6.60% for year 16,\nthen fall away — the arithmetic consequence\nof the par curve's sag, not a rate forecast",
+                xy=(16, 6.60), xytext=(10.4, 6.42), fontsize=10.0, color=C3,
+                ha="right", va="center", arrowprops=dict(arrowstyle="->", color=C3))
 
-    ax.text(0.4, 6.55,
-            "One market, three curves. The PAR curve is what you are quoted.\n"
-            "The SPOT curve is what each single future dollar actually costs —\n"
-            "it sits ABOVE the par curve wherever the curve slopes up, because a\n"
-            "coupon bond's early payments are discounted at cheaper short rates.\n"
-            "The FORWARDS are the arithmetic consequence: the one-year rates that\n"
+    # The explanatory box lives in the empty lower right. It used to sit top
+    # left, where it covered the forward curve's entire hump (years 10-19) —
+    # which is the one thing this figure exists to show.
+    ax.text(30.7, 4.92,
+            "One market, three curves. The PAR curve is what you are quoted. The\n"
+            "SPOT curve is what each single future dollar actually costs — it sits\n"
+            "ABOVE the par curve wherever the curve slopes up, because a coupon\n"
+            "bond's early payments are discounted at cheaper short rates. The\n"
+            "FORWARDS are the arithmetic consequence: the one-year rates that\n"
             "would make lending long and rolling short break even.",
-            fontsize=10.4, color=GREY, va="top",
-            bbox=dict(boxstyle="round,pad=0.55", fc="#f2f2f2", ec=GREY, lw=1.1))
+            fontsize=10.0, color=GREY, va="top", ha="right",
+            bbox=dict(boxstyle="round,pad=0.5", fc="#f2f2f2", ec=GREY, lw=1.1))
 
     ax.set_xlabel("Maturity (years)"); ax.set_ylabel("Yield (% per year)")
     ax.set_title("The US Treasury curve on 15 September 2026, read three ways")
-    ax.set_xlim(0, 31); ax.set_ylim(3.2, 7.2)
-    ax.legend(fontsize=10.0, loc="lower right")
+    ax.set_xlim(0, 31); ax.set_ylim(2.9, 7.8)
+    ax.legend(fontsize=10.0, loc="upper left")
     ax.grid(alpha=0.25); ax.spines[["top", "right"]].set_visible(False)
     save(fig, 4)
 
