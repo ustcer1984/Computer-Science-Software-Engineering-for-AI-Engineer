@@ -533,7 +533,10 @@ whether you believe the loss rate it is paying you to bear.**
 | **Immunisation** | choosing a portfolio duration equal to your horizon so price risk and reinvestment risk cancel |
 | **Key-rate duration** | sensitivity to a move at one specific point on the curve rather than a parallel shift |
 | **Parallel shift** | the simplifying assumption that the whole curve moves by the same amount — the main limitation of a single duration number |
-| **Barbell / bullet** | a portfolio concentrated at two maturities versus one; the same duration with different convexity |
+| **Barbell / bullet** | a portfolio concentrated at two maturities versus one; the same duration with different convexity — and, as §3.5 shows, very different curve risk |
+| **Level, slope, curvature** | the three factors a principal-component analysis recovers from curve movements; duration captures only the first |
+| **Steepener / flattener / butterfly** | trades on the *shape* of the curve, usually built duration-neutral, so a single duration number reports them as riskless |
+| **Principal-component analysis (PCA)** | a statistical method that finds the few independent movements explaining most of the variance in many correlated series |
 | **Duration drift** | the fall in a bond's duration as it ages, which is why a fund must keep buying to hold duration constant |
 
 </details>
@@ -633,6 +636,97 @@ Three limits, all of which have cost people money:
 > immunisation, it is the theoretical basis of the LDI (liability-driven investment) strategies in §7, and it
 > is the reason Figure 5 in §7 has a crossover at 8.4 years for a bond with duration 8.3.
 
+### 3.5 The parallel shift, in detail — why it fails and what replaces it
+
+The parallel assumption is not a simplification someone bolted on afterwards. **It is built into the
+definition.** Duration is the derivative of price with respect to *one* variable, $y$ — a single number
+applied to every cash flow at once. The moment you write $\frac{dP}{dy}$, you have declared that there is
+only one thing that can move, and that all maturities move with it. A curve has as many degrees of freedom
+as it has points; duration collapses them to one.
+
+#### What curves actually do — three movements, not one
+
+Run a principal-component analysis on daily changes in a government curve and the same three factors come
+out, in every market and almost every period (the classic result is Litterman and Scheinkman, 1991):
+
+**Table 7** — the three movements a yield curve actually makes, and how much of its variance each explains.
+
+| Factor | What it looks like | Roughly how much of the variance |
+|---|---|---|
+| **Level** | the whole curve shifts up or down together — the parallel move | about 80–90% |
+| **Slope** | short and long ends move by different amounts, or opposite ways — **steepening** and **flattening** | about 5–10% |
+| **Curvature** | the belly moves relative to both ends — a **butterfly** | about 1–3% |
+
+**Table 7 is the honest verdict on duration.** Level dominates, which is why one number works most of the
+time and why duration earned its place. But the residual is not noise — it is *structured*, it is
+persistent, and it is precisely what a hedge built on duration alone leaves uncovered. Duration does not
+fail randomly. It fails on the days the curve reshapes, which are exactly the days that matter.
+
+#### The demonstration — two portfolios a single duration calls identical
+
+Take a flat 4% curve and build two portfolios from zero-coupon bonds, each with a duration of 10:
+
+- **The bullet** — everything in the 10-year.
+- **The barbell** — 71.4% in the 2-year, 28.6% in the 30-year. Value-weighted:
+  $0.714 \times 2 + 0.286 \times 30 = 10$.
+
+One duration number says these are the same risk. Their **key-rate durations** say otherwise:
+
+**Table 8** — the same duration, spread across the curve in two completely different ways.
+
+| Exposure at | Bullet | Barbell |
+|---|---|---|
+| 2-year | 0.0 | **1.4** |
+| 10-year | **10.0** | 0.0 |
+| 30-year | 0.0 | **8.6** |
+| **Total (= duration)** | **10.0** | **10.0** |
+
+Now reprice both under three moves of the same average size:
+
+**Table 9** — identical duration, three scenarios, a 3.1-point spread in outcomes.
+
+| Scenario | Bullet | Barbell | Barbell minus bullet |
+|---|---|---|---|
+| **Parallel** — every point +50 bp | −4.68% | −4.51% | **+0.17 pp** |
+| **Steepener** — 2y unchanged, 10y +25 bp, 30y +50 bp | −2.37% | −3.83% | **−1.46 pp** |
+| **Flattener** — 2y +50 bp, 10y +25 bp, 30y unchanged | −2.37% | −0.68% | **+1.69 pp** |
+
+Read the first row and duration looks fine: the two differ by 0.17 points, and that gap is convexity
+(§3.3), not a failure — the barbell is more convex, exactly as advertised. Read the next two and the
+difference is **ten times larger and it flips sign**. Two portfolios that a risk report describes with the
+same number are, across a plausible range of curve moves, **3.1 percentage points apart**.
+
+#### Why "silently nets off"
+
+Duration is a *sum*. The barbell's 1.4 at the 2-year and 8.6 at the 30-year add to 10, and the arithmetic
+cannot tell that apart from a single 10 at the 10-year point. **Adding exposures is only legitimate if the
+things being added always move together** — and factors 2 and 3 of Table 7 are precisely the
+statement that they do not. The netting is not wrong so much as it is an assumption, made invisibly, at the
+moment of addition.
+
+This is not a corner case. An entire family of trades — **steepeners, flatteners and butterflies** — is
+deliberately constructed to be *duration-neutral*. A single duration number reports them as having no
+interest-rate risk at all. They are pure curve-shape bets, and their whole risk lives in the part duration
+threw away.
+
+#### What replaces it
+
+A **key-rate duration** (Ho, 1992) is built by shocking **one point on the curve by one basis point, holding
+every other point fixed**, and repricing. Do that at each of a handful of maturities — 2, 5, 10, 20, 30 —
+and you get a *profile* instead of a scalar. The profile sums to approximately the total duration, so you
+lose nothing, and it answers the question duration cannot: *where* on the curve are you exposed?
+
+The practical consequences follow directly:
+
+- **Hedge bucket by bucket.** Matching total duration is not matching risk. Pension and insurance liability
+  hedging (§7) matches the *profile*, which is why LDI mandates are specified in key-rate or per-bucket terms.
+- **Read immunisation with its asterisk.** The result quoted just above — set duration equal to your horizon
+  and terminal wealth is protected — is true **for a parallel shift and no other**. Under a twist it leaks,
+  and it leaks by more the more barbelled the portfolio is.
+- **Treat a single duration as a summary, never as the hedge.** It is the right number for "roughly how much
+  rate risk is here?" and the wrong number for "am I covered?"
+
+
 ---
 
 ## 4. Credit risk — what the spread has to cover
@@ -731,7 +825,7 @@ Two refinements to keep the model honest:
 
 ### 4.2 The rating scale, and what it is and is not
 
-**Table 7** — the rating scale, and where the investment-grade line falls.
+**Table 10** — the rating scale, and where the investment-grade line falls.
 
 | Moody's | S&P / Fitch | Band | Rough meaning |
 |---|---|---|---|
@@ -1164,7 +1258,7 @@ write-down.
 
 Who owns a bond tells you more about how it will behave in a crisis than any rating does.
 
-**Table 8** — who owns bonds, why they hold them, and how each behaves under stress.
+**Table 11** — who owns bonds, why they hold them, and how each behaves under stress.
 
 | Holder | Why they hold bonds | How they behave under stress |
 |---|---|---|
@@ -1300,7 +1394,7 @@ priced against, to give banks HQLA, and to give savers an instrument.
 
 ### 8.1 The four government instruments, and what each is for
 
-**Table 9** — Singapore's four government instruments, and what each one is for.
+**Table 12** — Singapore's four government instruments, and what each one is for.
 
 | Instrument | Tenor | Who can buy | The point of it |
 |---|---|---|---|
@@ -1649,6 +1743,12 @@ a script difference; ⚠⚠ marks a genuinely different word.**
 - **Duration, in the original:** Frederick Macaulay,
   [*Some Theoretical Problems Suggested by the Movements of Interest Rates, Bond Yields and Stock Prices*](https://www.nber.org/books-and-chapters/some-theoretical-problems-suggested-movements-interest-rates-bond-yields-and-stock-prices-united-states-1856)
   (NBER, 1938) — where the centre-of-mass idea of §3.1 was introduced, and still readable.
+- **Why one duration number is not enough, in the two original papers:** Robert Litterman and José Scheinkman,
+  [*Common Factors Affecting Bond Returns*](https://www.pm-research.com/content/iijfixinc/1/1/54)
+  (Journal of Fixed Income, 1991) — the level/slope/curvature decomposition behind §3.5; and Thomas Ho,
+  [*Key Rate Durations: Measures of Interest Rate Risks*](https://www.pm-research.com/content/iijfixinc/2/2/29)
+  (Journal of Fixed Income, 1992) — the fix. Both are abstract-only unless your library has the journal, but
+  the abstracts alone tell you what each one established.
 - **Ratings and their limits:** the SEC's
   [annual report on nationally recognised statistical rating organisations](https://www.sec.gov/ocr/reportspubs/annual-reports/nrsroannrep.html)
   — market shares, conflicts, and the regulator's own account of the issuer-pays problem in §4.2.
