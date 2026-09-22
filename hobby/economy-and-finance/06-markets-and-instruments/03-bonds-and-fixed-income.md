@@ -18,8 +18,12 @@
 > bonds and why**, including the difference between a bond and a bond fund that almost everybody gets wrong;
 > and **Singapore fixed income** — SGS, T-bills, Savings Bonds and the retail perpetual that taught the
 > country what "subordinated" means *(local lens)*.
-> **Status:** 🔵 **PREPARED 2026-09-17** — body drafted, awaiting your read; **§12 Applied** will be added
-> once you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed curves (two of them from live market
+> **Status:** ✅ **FINALIZED 2026-09-22.** §12 Applied added — **six unresolved symbols, and the difference
+> between asserting and showing**: every question you raised was a token the material had used without
+> defining, and at your instruction the answers were folded into the body rather than quarantined, so §2.5
+> (where a yield comes from), the call-provision gloss in §2, the tick-quote rule and day-count Table 3 in
+> §2.1, §3.5 (the parallel shift, worked out) and the redrawn Figure 4 all exist because of that read.
+> Math in LaTeX, quantitative relationships drawn as real computed curves (two of them from live market
 > data), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -1655,6 +1659,121 @@ Do this once and the section stops being abstract.
 
 ---
 
+## 12. Applied — six unresolved symbols, and the difference between asserting and showing
+
+**You did not challenge a single conclusion.** Not the duration maths, not the credit inversion, not the
+Hyflux verdict. All six of your interventions were the same move: **you stopped at a token the material had
+used without resolving it, and you did not read past it.**
+
+That is a different signature from E06 §2, where the habit was *name the denominator* — and it is the same
+instinct one level earlier. There, a number was quoted and you asked what it was a fraction *of*. Here a
+term, a notation, a list, an assumption and a line on a chart were each **used before they were defined**,
+and you stopped at each one. **An unbound symbol halts the read.**
+
+This session also changed its own finalize. Part way through you said *"fold it into the body now"* — so
+unlike §2, where the session lives quarantined in a §10, the answers to these six are **not in this
+section**. They are in the body, at the places where the gaps were. What follows is the index and the
+lesson.
+
+### 12a — What you stopped at, and where the answer now lives
+
+**Table 13** — the six questions, what was unresolved in each, and where the material now answers it.
+
+| You asked | What was unresolved | Where it now lives | What the gap was costing |
+|---|---|---|---|
+| *"How is market yield determined? Is it based on base interest plus risk of this bond?"* | where the central variable **comes from** | **§2.5** | §2.2 used $y$ to price everything and never said what produces $y$. The answer — it is *read off a traded price*, not assembled — is exactly what makes §4.1's spread inversion non-circular |
+| *"What is the definition of 'call' here?"* | a noun hiding inside an **expanded abbreviation** | **§2** vocabulary | YTC was expanded to "yield to call" in §2 and *call* was not defined until §6.3, some 700 lines later |
+| *"Explain 99-16+"* | a notation taught **by example only** | **§2.1** | the text gave the answer (99.515625) and never the rule, so it decoded exactly one quote and no others |
+| *"Explain these conventions"* | three names in a **list** | **§2.1**, Table 3 | the text asserted the choice "is not cosmetic" and then showed nothing. It now shows \$1,473 on 10 million of face |
+| *"Explain in detail"* — the parallel shift | an **asserted limitation** | **§3.5** | "silently nets off risks that do not net", with no net ever shown. Now two duration-10 portfolios come 3.1 points apart |
+| *"Figure 4, I cannot see the green line in full"* | a figure **hiding its own subject** | **Figure 4** redrawn, **§5.1** point 4 | see §12c — this one was not a gap but a defect |
+
+### 12b — The pattern: asserting is not showing
+
+The six sort into three forms of one failure:
+
+- **Named without defining** — *call*, and the day-count conventions. The term appears and the reader is
+  assumed to already carry it.
+- **Answered without explaining** — "99-16+" is 99.515625; the yield is $y$. A *result* is stated and the
+  rule that generates it is not.
+- **Claimed without demonstrating** — the parallel shift, and Figure 4. A property is asserted and no
+  instance of it is put in front of you.
+
+All three are the same thing wearing different clothes: **the text moved faster than its own
+justification.** And here is the uncomfortable part — **none of the six statements was wrong.** Every one of
+them was true as written. That is precisely why they are easy to write and hard to catch: *a true sentence
+you cannot check reads exactly like a true sentence you can.*
+
+This matters more in finance than in most subjects, because the field interleaves two kinds of fact that
+look identical on the page:
+
+**Table 14** — the two kinds of fixed-income fact, and why telling them apart requires resolving the symbol.
+
+| | Example from this section | Resolves to |
+|---|---|---|
+| **Arbitrary convention** | 32nds, ACT/360, a call price of 102 | a history — open-outcry trading, a banker's 360-day year, a term someone negotiated |
+| **Necessary relationship** | price–yield inversion, duration as $-\frac{1}{P}\frac{dP}{dy}$ | an equation, which you could re-derive if you lost it |
+
+A reader who cannot tell these apart has to memorise both. Resolving the symbol is how you tell them apart —
+and it is why "what *is* a call?" is not a trivia question. It is the question that reveals the call price
+is a *negotiated number in a document*, not something the maths implies.
+
+### 12c — The one that found a defect
+
+Five of the six were gaps in exposition. The sixth was a bug, and it deserves separating out.
+
+You said you could not see the green line in Figure 4. You were right, and the cause was worse than a
+layout slip: the grey explanatory box sat over **years 10 to 19 — the entire hump of the forward curve**,
+which is the one feature the figure exists to show. What remained visible was the flat part.
+
+Two errors had already propagated from it:
+
+- **The image's alt text was wrong.** It described "a hump of about 5.8 percent around nineteen years". The
+  real peak is **6.60% at year 16**; 5.8% at year 19 is a point on the way back *down*. The description had
+  been written from the occluded picture rather than from the data behind it.
+- **§5.1 never read the hump at all.** Three numbered readings of that figure, and the largest feature in it
+  was not one of them.
+
+Both are fixed, and the repair left the section stronger than it was before the bug existed. The hump is now
+§5.1 point 4, and it is the sharpest evidence anywhere in this section that **forwards are not forecasts**:
+a par curve that climbs to 20 years and then sags *forces* the marginal rates to overshoot and then
+collapse — 6.60% for year 16, 5.44% by year 20. Nobody is forecasting a 6.6% short rate in 2042. It is the
+arithmetic of the sag. And the sag itself (point 3) is a structural artefact of liability-matching demand
+rather than information. **An artefact of an artefact — and the figure had been covering it up.**
+
+One transferable rule came out of this: **a figure that needs a paragraph of text inside it to be
+understood has usually been drawn wrong.** The box was there because the figure was not carrying its own
+argument. Then the box ate the argument.
+
+### The lesson worth keeping
+
+Six questions, one question:
+
+**Table 15** — what was on the page, and the question that resolves it.
+
+| What was on the page | The question that resolves it |
+|---|---|
+| An abbreviation expanded into another undefined term | *What is the thing the abbreviation names?* |
+| A worked answer with no rule attached | *What is the procedure that produced it?* |
+| A list of named conventions | *What does choosing a different one do to the number?* |
+| A variable that prices everything | *Where does this come from — is it observed, or computed?* |
+| An asserted limitation | *Show me a case where it bites, and how big the bite is.* |
+| A chart with an unreadable series | *Is the picture showing the thing it claims to show?* |
+
+**Do not read past a symbol you cannot resolve.** You would not in physics; there is no reason finance
+should get the exemption, and it needs the discipline more, because its vocabulary is built to sound like it
+already means something obvious. *Call. Yield. Convention.* Each is an ordinary English word standing in for
+a specific object, and the ordinariness is what lets a reader slide past without noticing they have not
+bound it to anything.
+
+One calibration note, since it is the most useful thing this session established: **you raised nothing about
+the concepts.** Not duration as a centre of mass, not the credit inversion, not negative convexity, not
+liability matching. The conceptual load went down without friction. Every single point of friction was
+**unexplained surface** — notation, conventions, undefined terms, an unreadable chart. That is a precise
+instruction for what the next section needs more of, and it is not more depth.
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 Fixed-income vocabulary is where the two Chinese markets diverge most sharply, because Taiwan's bond market
@@ -1783,7 +1902,7 @@ a script difference; ⚠⚠ marks a genuinely different word.**
 ---
 
 ### What's next
-🔵 **PREPARED 2026-09-17.** You now hold the contractual claim end to end: **what a bond is as a contract**
+✅ **FINALIZED 2026-09-22.** You now hold the contractual claim end to end: **what a bond is as a contract**
 (the indenture, the covenants, and a queue position worth more than the coupon), **how to read a quote**
 (clean versus dirty, the four things called yield, and the fact that a yield is a *restatement of a traded
 price* — so base-plus-spread is an accounting of it, not a recipe), **interest-rate risk properly** (duration as a centre
@@ -1791,8 +1910,16 @@ of mass, DV01, and convexity as the curvature the tangent misses), **credit risk
 (and today's spreads paying the average loss with no cushion), **the curve as the pricing machine** (par →
 spot → forwards, and why a single YTM is a blend), **the rest of the family** as one assumption relaxed at a
 time, **who owns bonds** and why a bond fund catches up at the duration horizon anyway, and **Singapore** from
-the SSB's engineered-away duration risk to Hyflux's rung-4 lesson. Read it and bring your questions —
-**§12 Applied** will be added from that session, exactly as §10 was in E06 §2.
+the SSB's engineered-away duration risk to Hyflux's rung-4 lesson.
+
+**§12 Applied** records a session with an unusual shape: **you challenged no
+conclusion and stopped at six unresolved symbols** — *call*, "99-16+", the day-count conventions, where the
+market yield comes from, the parallel-shift assumption, and a green line you could not see. At your
+instruction the answers went into the body rather than into §12, so a good deal of what you just read
+(§2.5, the call gloss, the tick rule, Table 3, §3.5, and Figure 4 as it now stands) exists because of that
+read. §12 is the index and the lesson: **asserting is not showing**, a true sentence you cannot check reads
+exactly like one you can, and the one intervention that found a real defect also found two errors that had
+propagated from it.
 
 Next, **E06 §4 — FX, commodities and derivatives** completes the instrument tour: the markets that are not
 claims on a company at all, what a derivative is actually *for* (and why notional is the wrong measure of
