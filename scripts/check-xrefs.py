@@ -88,7 +88,7 @@ for path in sorted(glob.glob('courses/**/*.md', recursive=True)+glob.glob(ECON+'
         if mm not in econ_mods: details.append((path, m.group(0), f"econ module {mm} not found")); bad['e']+=1; continue
         if s not in sections(os.path.join(ECON, econ_mods[mm])): details.append((path, m.group(0), f"no section {s} in E{mm:02d}")); bad['e']+=1
 
-FORWARD = ('E08', 'E09', 'E06 \u00a74', 'M04 Ch1 \u00a72', 'Ch1 \u00a73', 'Ch3 \u00a74', 'Ch4 \u00a74')
+FORWARD = ('E07', 'E08', 'E09', 'M04 Ch1 \u00a72', 'Ch1 \u00a73', 'Ch3 \u00a74', 'Ch4 \u00a74')
 broken = [d for d in details if not any(d[1].startswith(f) for f in FORWARD)]
 fwd    = [d for d in details if     any(d[1].startswith(f) for f in FORWARD)]
 for p, ref, why in broken:
