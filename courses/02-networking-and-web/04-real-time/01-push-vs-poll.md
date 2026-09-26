@@ -11,7 +11,15 @@
 > Communication — data channels, and **WebTransport**), what each actually costs, and a decision procedure
 > you can defend. §2 will take the one that is hard — running a stateful, long-lived connection fleet at
 > scale — and go at it properly.
-> **Status:** 🔵 PREPARED 2026-09-16 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-09-27 (body prepared 2026-09-16). The session was **one thread, and it went
+> straight at the strongest claim in the section** — §4's "reconnection-with-resume is built into the protocol."
+> He brought a real symptom from his own arena (**WebSocket token streaming; refresh the page mid-stream and the
+> turn's tokens are gone until the finished response is re-fetched**) and asked whether SSE would fix it. It would
+> not, and working out *why* sharpened the body: **`Last-Event-ID` resumes a dropped CONNECTION, not a reloaded
+> PAGE**, and underneath that, **no transport can replay what the server never stored.** §4 and §9 were corrected
+> accordingly — the original wording was true but over-promised — and **§12** works the whole thread, including
+> the second failure he had not seen (the orphaned turn writing to a dead `connectionId`) and the AWS constraint
+> that makes "just switch to SSE" a migration rather than a swap.
 > **Prerequisites:** Ch1 §1 (the round-trip budget — the numbers in §2 are spent against it); **Ch2 §1**
 > (safe/idempotent/cacheable, and statelessness as the thing that buys horizontal scale — §8 is where that
 > bill finally comes due); **Ch2 §3** (HTTP/1.1 vs HTTP/2 vs HTTP/3, connection limits and multiplexing —
@@ -356,7 +364,9 @@ roughly one request per client per message (plus one per timeout window). But yo
 | **`retry:`** | the server telling the client how many milliseconds to wait before reconnecting |
 | **Comment line** | a line starting with `:` — ignored by the parser, and the usual way to send a keep-alive heartbeat |
 | **Heartbeat / keep-alive** | traffic sent purely to stop an idle timeout closing a healthy connection |
-| **`Last-Event-ID`** | the request header the browser sends on reconnect, naming the last record it saw — **the resume mechanism SSE gives you free and WebSocket does not** |
+| **`Last-Event-ID`** | the request header the browser sends on reconnect, naming the last record it saw — SSE's built-in resume request. **It covers a dropped connection, not a page reload, and only works if the server buffered the missed records** |
+| **JavaScript context** | the page's live script environment; a reload destroys it, taking `EventSource`'s in-memory last-seen `id` with it |
+| **`sessionStorage`** | per-tab browser storage that survives a reload — where you must keep the cursor yourself if you want resume across a refresh |
 | **`EventSource`** | the built-in browser client for SSE; automatic reconnect and resume, but **it cannot set request headers** |
 | **`withCredentials`** | the `EventSource` option that makes it send cookies cross-origin |
 | **`Authorization: Bearer`** | the standard token header — the one `EventSource` cannot send |
@@ -398,9 +408,21 @@ Four field names, and each earns its place:
   register separate handlers.
 - **`id:`** — **the field that makes SSE more than a formatted stream.** The browser remembers the last `id`
   it saw, and when the connection drops it reconnects automatically and sends the header
-  **`Last-Event-ID: 1042`**. The server resumes from there. **Reconnection-with-resume is built into the
-  protocol** and costs you one header of server-side logic. Nothing else in this section gives you that for
+  **`Last-Event-ID: 1042`**. The server resumes from there. Nothing else in this section gives you that for
   free — with WebSocket you design, build and debug it yourself, every time.
+
+  **Be precise about what this buys, because the obvious reading is too generous** (this is the §12 thread, and
+  it is worth having before you make a transport decision on the strength of this bullet). Two limits:
+
+  - **It resumes a dropped *connection*, not a reloaded *page*.** The last-seen `id` lives in the
+    `EventSource` object's memory. A refresh destroys the JavaScript context, so the new `EventSource` starts
+    with no memory and sends no `Last-Event-ID`. To survive a reload you must persist the cursor yourself
+    (`sessionStorage`) and send it back — which is the same work you would do on a WebSocket.
+  - **Resume of any kind requires the server to still HAVE the missed records.** `Last-Event-ID` is a
+    *request* to replay; something must be able to answer it. If the server streamed each record straight to
+    a socket and kept nothing, the header arrives and there is nothing to send. **SSE standardizes the
+    protocol half of resume and says nothing about the storage half**, and the storage half is the part that
+    is actually hard.
 - **`retry:`** — the server tells the client how long to wait before reconnecting.
 
 **What you get.** It is HTTP all the way down, so **everything from Ch2 and Ch3 still applies**: your
@@ -772,7 +794,7 @@ The comparison behind the flowchart:
 | **Per-message overhead** | full headers | full headers | \~10 bytes | 2–14 bytes |
 | **Open connections** | none between polls | one per waiting client | one per client | one per client |
 | **Cacheable / CDN-able** | **yes** | no | no | no |
-| **Auto-reconnect + resume** | trivially (cursor) | you add a cursor | **built in** (`Last-Event-ID`) | **you build it** |
+| **Auto-reconnect + resume** | trivially (cursor) | you add a cursor | **built in** (`Last-Event-ID`) — for a dropped connection, and only if the server buffered | **you build it** |
 | **Binary payloads** | yes | yes | base64 only | yes, natively |
 | **Custom auth header from a browser** | yes | yes | no (use `fetch`) | no (subprotocol trick) |
 | **Proxy / firewall friendliness** | perfect | good | good (watch buffering) | occasionally blocked |
@@ -922,6 +944,8 @@ real-time is not "which transport" — it is what §2 of this chapter covers.
 | **Fallback ladder** | the ordered list of alternative transports to try when the preferred one is blocked |
 | **Backpressure policy** | your explicit decision about what to do with a client that cannot keep up |
 | **Connection migration** | QUIC's ability to keep a session across a client address change |
+| **Stale connection handle** | a producer still holding the identity of a connection the client has already replaced by reconnecting |
+| **`GoneException`** | the AWS API Gateway error returned when you post to a `connectionId` that no longer exists — the tell for a stale handle |
 | **Close code** | the numeric reason a WebSocket connection ended — one of the few signals available after the `101` |
 | **`101`** | `101 Switching Protocols` — after it there are no status codes left to alert on |
 
@@ -943,8 +967,16 @@ The things that actually take real-time features down, roughly in order of how o
   come up. Fix: exponential backoff **with jitter**, a cap, and ideally a server-issued `retry:` value so
   you can slow clients down from the server side during an incident.
 - **Messages lost across a reconnect.** The gap of §3 (2). If your design has no cursor or sequence number,
-  it loses messages exactly when the network is worst. Test it by killing the connection mid-stream, not by
+  it loses messages exactly when the network is worst. Two cases that look alike and are not: a **dropped
+  connection**, which SSE's `Last-Event-ID` handles for you *provided the server buffered the records*, and a
+  **page reload**, which no transport handles because the client's cursor died with the JavaScript context
+  (§4, §12). Test both by killing the connection mid-stream **and by hitting refresh mid-stream** — not by
   reading the code.
+- **A stale connection handle after a reconnect.** The subtler half of the same failure, and the one people
+  do not look for: when a client reconnects it gets a **new** connection identity, while the code producing
+  the stream still holds the old one. The producer keeps writing into a dead connection — on API Gateway
+  WebSockets it will be collecting `GoneException` — so the client is attached and still receives nothing for
+  the rest of that unit of work. The tell is *"reconnect works, but only the next message shows up."*
 - **Duplicate delivery on resume.** The other half of the same coin: replay-from-cursor means a client can
   see a message twice. The consumer must be idempotent — Ch2 §1's rule, arriving in a new place.
 - **The HTTP/1.1 six-connection limit.** Multiple tabs, one origin, one stream each, and the site stops
@@ -1106,6 +1138,121 @@ often *why* the vendor chose 30 seconds rather than 5.
 
 ---
 
+## 12. Applied — the question from the session
+
+You brought a live symptom from your own arena and a proposed fix:
+
+> *"My Arena is using WebSockets to stream the model responses, is SSE a better option? Currently if user
+> refresh the page during streaming, they lose the previous tokens in the current turn. They can only see the
+> full response when streaming is done and the response is re-fetched. Can SSE solve this issue?"*
+
+The answer is **no**, and the reason is worth more than the answer: the question bundles together two things
+this section had let look like one. **Choosing a transport** and **being able to resume** are independent, and
+§4's wording invited exactly this conflation — which is why the body above now carries the correction.
+
+### 12a. `Last-Event-ID` resumes a connection, not a page
+
+The first reading of §4 is that SSE ships the feature you are missing. It does not, because **a refresh is not
+a reconnect.**
+
+The last-seen `id` lives in the memory of the `EventSource` object. A page reload tears down the JavaScript
+context and builds a new one, so the replacement `EventSource` has no memory of anything and sends no
+`Last-Event-ID` header. What SSE automates is the case where *the page survives and the connection does not* —
+a Wi-Fi blip, a load-balancer idle timeout, a laptop waking up. That is a genuinely useful case and WebSocket
+makes you hand-build it. It is not your case.
+
+To resume across a reload, on any transport, you have to persist the cursor somewhere that outlives the
+context — `sessionStorage` — and send it back yourself. At that point SSE's free mechanism is not doing the
+work; your code is.
+
+### 12b. The real blocker: nothing can replay what was never stored
+
+This is the load-bearing finding, and it generalises well past your bug.
+
+`Last-Event-ID` is a **request to replay**. It presumes something on the server can answer it. If the
+generator wrote each token straight into a socket and kept nothing, then the header arrives, the server looks
+for records after 1042, finds no records at all, and the stream simply carries on from wherever generation has
+reached. **The protocol half of resume is standardized; the storage half is not, and the storage half is the
+entire difficulty.**
+
+The proof that transport is not the variable here is sitting in your browser: **ChatGPT and Claude both stream
+over SSE *and* survive a mid-stream refresh.** If SSE were sufficient, that would be evidence for it. But an
+SSE app with no server-side buffer loses tokens on reload exactly the way yours does — the survival comes from
+persisting the in-progress generation, which is a storage decision that would work identically over your
+existing WebSocket.
+
+**The general form, worth keeping:** *resumability is a property of what the server stores, not of how the
+bytes travel.* A transport can standardize how the client asks. Only your storage can make the answer exist.
+
+### 12c. The second failure, which you had not named: the orphaned turn
+
+Your own description contains a diagnosis you did not claim — *"they can only see the full response when
+streaming is done and the response is re-fetched."* So **the finished response is already persisted; the
+partial one is not.** The generation writes to a connection, and only to a connection. That is a smaller gap
+than "we have no persistence" and it means the fix is smaller than it sounds.
+
+But there is a second failure underneath it, and it is the one that makes the symptom worse than a simple gap.
+On refresh the WebSocket closes and the client reconnects **with a new `connectionId`**. Whatever is driving
+that turn still holds the old one. For the remainder of the turn it is posting to a dead connection and
+collecting `GoneException`, so the reconnected client would not receive the *remaining* tokens either — even
+though it is connected and healthy. **The turn is orphaned from the moment of reload, not merely gapped during
+it.** This is now §9's "stale connection handle" bullet, and it is why the user waits for the re-fetch rather
+than seeing the stream pick up.
+
+### 12d. The fix, on the transport you already have
+
+The shape is one sentence: **make the store the stream, and demote the connection to a notification channel.**
+
+1. **A stable `turnId`, and a monotonic `seq` on every chunk.**
+2. **Append each chunk to a shared store as it is generated** — Redis with a time-to-live, or DynamoDB, keyed
+   `turnId → [seq, text]`. You already persist the finished answer; this persists it incrementally instead of
+   once at the end. The rule is that the generator **never writes only to a socket.**
+3. **The client sends `{turnId, lastSeq}` on connect and on reconnect.** The server replays everything after
+   `lastSeq`, then attaches to live.
+4. **The client keeps `lastSeq` per turn in `sessionStorage`**, so a refresh resumes instead of restarting.
+
+The one real subtlety is the **replay/live race**: chunks produced between "finished replaying history" and
+"attached to live" fall in a hole. Two standard answers — subscribe first, buffer live chunks in memory,
+replay history, then flush the buffer de-duplicating on `seq`; or remove the race entirely by having the
+socket carry only *"turn X has data through seq N"* and letting the client read payloads from the store. The
+second costs more round-trips and is much harder to get wrong.
+
+Note what this buys beyond the bug: **a turn can now complete correctly with no client connected at all.**
+That is the property you actually want, and it is the §8 lesson arriving as a design rule — once the work is
+independent of the connection, the connection stops being a thing that can fail your business logic.
+
+**The 20-minute partial fix**, if you want the worst of the symptom gone before the real one lands: write the
+accumulated text to `sessionStorage` as it arrives and rehydrate on load. That restores **what the user had
+already seen**, which removes the blank-screen shock. It cannot fill the gap generated during the reload and
+it does nothing about 12c. Cosmetic, cheap, and it composes with the real fix.
+
+### 12e. So should the arena move to SSE anyway?
+
+A separate question, and the honest answer is *probably not on the strength of this bug*.
+
+**Table 2** — the arena's actual decision, with the bug removed from the argument.
+
+| Consideration | Which way it points |
+|---|---|
+| The token stream in isolation — one-way, text | **SSE**, on §7's direction test |
+| Other arena traffic — turn submission, presence, another participant's actions | **WebSocket**, if any of it is genuinely server-pushed and bidirectional |
+| The refresh bug | **Neither** — it is the §12d storage change, on either transport |
+| Migration cost on AWS | **WebSocket**, by a wide margin (below) |
+
+The migration cost deserves its own note, because it is the kind of constraint that is invisible until you
+have committed. **API Gateway buffers Lambda responses; it does not stream them** — on either the REST or the
+HTTP API. Lambda response streaming is a **Function URL** feature, using the `RESPONSE_STREAM` invoke mode. So
+"serve SSE instead" on your stack tends to mean moving that path onto a Function URL behind CloudFront, or
+onto Fargate behind an Application Load Balancer, each with its own authentication, CORS (Cross-Origin
+Resource Sharing) and observability story. That is an architectural change, not a transport swap. *(This is a
+fast-moving corner of AWS — confirm against current documentation before planning around it.)*
+
+**The order that follows:** build the persist-and-resume layer first, on the transport you already run. If
+that work reveals the WebSocket is carrying nothing but tokens, the SSE case becomes strong on its own merits
+— and you will by then already own the cursor that makes the switch cheap.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -1133,6 +1280,14 @@ often *why* the vendor chose 30 seconds rather than 5.
 | Head-of-line blocking | 队头阻塞 | 隊頭阻塞 | |
 | Cursor / offset | 游标 / 偏移量 | 游標 / 偏移量 | |
 | Stateless | 无状态 | 無狀態 | |
+| Resume / breakpoint resume | 断点续传 | 斷點續傳 | the term used for resuming an interrupted transfer on both sides |
+| Replay | 重放 / 回放 | 重播 / 回放 | |
+| Sequence number | 序列号 | 序號 | ⚠ 号 ↔ **號**, and 台灣 usually drops the 列 |
+| Persistence (to storage) | 持久化 | 持久化 | |
+| Race condition | 竞态条件 | 競爭條件 | ⚠ genuinely different wording, not just script |
+| Deduplication | 去重 | 去重複 | |
+| Refresh / reload (a page) | 刷新 | 重新整理 | ⚠ genuinely different words — a common cross-strait trip-up |
+| Time-to-live (TTL) | 生存时间 | 存活時間 | |
 
 ---
 
@@ -1160,6 +1315,15 @@ often *why* the vendor chose 30 seconds rather than 5.
   <https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering>
 - Anthropic — *Streaming Messages* (a production `text/event-stream` API; read the event types against
   §4's field list) — <https://docs.anthropic.com/en/docs/build-with-claude/streaming>
+- MDN — *`MessageEvent.lastEventId`* (the §12a limit, in the specification's own terms: the value lives on
+  the event, and the `EventSource` that remembers it dies with the page) —
+  <https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent/lastEventId>
+- AWS — *Configuring a Lambda function to stream responses* (the §12e constraint: response streaming is a
+  Function URL capability) —
+  <https://docs.aws.amazon.com/lambda/latest/dg/configuration-response-streaming.html>
+- AWS — *Use API Gateway to invoke a Lambda function* / WebSocket API quotas (§12c's `GoneException` and the
+  connection limits a real-time fleet runs into) —
+  <https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html>
 - W3C — *WebTransport* (the §6 successor, over HTTP/3) — <https://w3c.github.io/webtransport/>
 - Alex Russell — *Comet: Low Latency Data for the Browser* (2006), the post that named the technique —
   <https://infrequently.org/2006/03/comet-low-latency-data-for-the-browser/>
@@ -1167,7 +1331,9 @@ often *why* the vendor chose 30 seconds rather than 5.
 ### What's next
 
 **§2 — Running a real-time system: connection fleets, fan-out and delivery guarantees.** This section
-chose a transport; §2 takes the five consequences in §8 and works them properly: the backplane patterns
+chose a transport; §2 takes the five consequences in §8 and works them properly — and it now opens on §12's
+finding, because *resumability is a property of what the server stores* is the thesis that whole section
+needs: the backplane patterns
 (pub/sub, sharded registries, and what a managed service like API Gateway WebSockets actually does for you),
 presence and reconnect-resume design, delivery semantics (at-most-once vs at-least-once vs
 effectively-once — Ch2 §1's idempotency key, now at stream scale), backpressure strategies, and how you
