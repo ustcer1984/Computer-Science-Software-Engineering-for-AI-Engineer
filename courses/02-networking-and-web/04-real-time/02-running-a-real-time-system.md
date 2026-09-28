@@ -1,7 +1,7 @@
 # M02 · Ch4 · §2 — Running a real-time system: connection fleets, fan-out and delivery guarantees
 
 > **Module:** Networking & The Web
-> **Chapter:** Real-time — REST vs WebSockets vs SSE (Server-Sent Events) vs long-polling
+> **Chapter:** Real-time — REST (Representational State Transfer) vs WebSockets vs SSE (Server-Sent Events) vs long-polling
 > **Section:** Ch4 §1 chose a transport and ended on a bill: **a long-lived connection revokes HTTP's
 > statelessness, and five hard things follow** (Ch4 §1 §8). This section pays that bill. It opens on the
 > finding from Ch4 §1 §12 — **resumability is a property of what the server stores, not of how the bytes
@@ -9,7 +9,15 @@
 > (connections, routing, the log), how each one scales and fails, what delivery guarantees you can actually
 > offer, how presence works when disconnects are not reliably reported, what to do with a client that cannot
 > keep up, and how to deploy a fleet of stateful connections without knocking everyone off at once.
-> **Status:** 🔵 PREPARED 2026-09-27 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-09-28 (body prepared 2026-09-27) — **closes Ch4 and M02.** The body drew no questions
+> on any mechanism; the session instead ran the whole section against his own system. He asked **how many users the
+> arena can stream to at once**, and followed it through four more questions — would Redis in front of RDS (Amazon
+> Relational Database Service) help, would
+> his own redesign (short polling over a stored chunk log, no push at all) work, what would that alone support, and
+> what the database should be and cost. **§13** records all five with the numbers, and ends with an ordered revision
+> plan for the arena. Body changes the session earned: §1 now names the degenerate no-push case (the three planes
+> collapse to the log), §3's registry pattern flags the per-message lookup, and §10 gained a failure mode — **the
+> database on the token hot path**.
 > **Prerequisites:** **Ch4 §1** (the four transports; §8's five consequences are this section's table of
 > contents; §12's arena thread is its thesis); **Ch2 §1** (idempotency keys — §4 re-uses them at stream
 > scale); **M01 Ch4 §2** (event loops and non-blocking I/O — why one process can hold a million idle
@@ -127,6 +135,11 @@ will vanish, on every deploy, crash, network blip, mobile handover, and (on API 
 regardless. So nothing may live *only* there. The routing plane holds soft state that can be rebuilt (who is
 subscribed to what). The log holds the hard state. A reconnecting client never asks the connection plane
 "what did I miss?"; it asks the log.
+
+Take the thesis to its limit and you reach a legitimate design, not a thought experiment: **drop push entirely and
+have the client poll the log with its cursor** (short polling, Ch4 §1 §2). Then there is no connection plane and no
+routing plane at all — the three planes collapse to one — and resume is free. You pay in latency, about half the poll
+interval. §13c works through exactly this design for a real system and finds it the best fit there.
 
 That is exactly the structure you arrived at in Ch4 §1 §12d for the arena — *make the store the stream,
 demote the connection to a notification channel* — and it is not a special fix. It is what every system
@@ -319,7 +332,7 @@ standard ways to organize it.
 | **Broadcast bus** | every server subscribes to everything and discards what its clients do not need | every server receives *all* traffic: backplane load $\propto$ total message rate $\times M$ | the fleet grows — adding servers makes every server busier | a naive single Redis channel shared by all rooms |
 | **Topic-filtered pub/sub** | each server subscribes only to the topics its own clients are in | subscription churn as clients join and leave rooms | one hot topic still reaches every server that has one member | Socket.IO's Redis adapter; NATS subjects |
 | **Owner per room** (consistent hashing) | one process owns the room; it knows exactly which gateways hold members and sends each one copy | the owner's CPU for hot rooms | one room outgrows one owner process | Slack Channel Servers; Discord guild processes; Figma per-document processes |
-| **Registry + direct send** | a table maps room → connection ids; the producer posts to each id | one API call **per recipient** — $D$ calls, not $M$ | rooms get large; the producer becomes a loop of $k$ HTTPS calls | API Gateway WebSockets + DynamoDB |
+| **Registry + direct send** | a table maps room → connection ids; the producer posts to each id | one API call **per recipient** — $D$ calls, not $M$ | rooms get large; the producer becomes a loop of $k$ HTTPS calls — and if the registry is re-read for **every message**, its database joins the hot path at message rate (§13a) | API Gateway WebSockets + DynamoDB |
 
 Two real-world lessons sit behind that table.
 
@@ -904,6 +917,7 @@ else's system.
 | **Split sequence** | two writers assigning the same seq in one stream |
 | **Hard kill** | SIGKILL before a drain finishes — the draining you designed never ran |
 | **Hot room** | one room whose fan-out dominates the fleet |
+| **Hot path** | the code that runs at the system's highest rate — here once per token — where a cheap operation becomes an expensive one per second |
 
 </details>
 
@@ -935,6 +949,11 @@ These are the ones that appear once the system is a fleet:
   recovery time that simply equals $N / C$ and nobody had computed it.
 - **The drain never happened.** The orchestrator's termination grace period was shorter than the drain window,
   so every deploy was a hard kill (§8).
+- **The database is on the token hot path.** Something runs a query per message — typically re-reading the
+  connection registry so a reconnected client is found (§3) — and a model stream turns that into 50–150 queries per
+  second per stream on the smallest instance you own (§13a). The tell: database CPU tracks *tokens per second*, not
+  users. Fix: resolve once per unit of work and again only on a `GoneException` or a timer, or remove push altogether
+  (§13c).
 - **One room takes down its owner.** A hot room outgrowing one owner process (§3). Fix: batch fan-out per
   gateway, or split the room's delivery across relays.
 
@@ -1074,6 +1093,221 @@ before you look.
 clients), $W$ (average connection lifetime), the front door's $C$, and the largest room size $k$ with its
 message rate $r$. Compute $L = \lambda W$, the recovery floor $N / C$, and the worst-case fan-out $D = r
 \times k$. Most teams have never written these three numbers down, and one of them is usually a surprise.
+
+---
+
+## 13. Applied — how many users can the arena stream to at once?
+
+*(The session, 2026-09-28. He pointed at the arena code and asked one capacity question, then followed it through four
+more: whether Redis would help, a redesign of his own, what that redesign alone would support, and the database
+configuration and price. Framed as a question only — no arena code was changed. The code was read at commit
+`da79f0a`; the arena is actively developed, so re-check the specifics below before acting on them.)*
+
+The thread is worth keeping whole because it is this section run against a real system. The question *"how many
+users?"* has no single answer; it has **a list of ceilings, and the answer is the lowest one** — and every fix
+changes which ceiling is lowest.
+
+### 13a. Today: roughly 70–80 streams at the absolute most, probably tens
+
+**The path, traced through the code.** A turn is handed from the conversations Lambda to a **turn-worker** Lambda by
+an asynchronous invoke (a comment in its `lambda_config.yaml` still says SQS — Simple Queue Service — but no queue
+is wired; the config is stale). One worker instance lives for the whole turn — the latency report measured **24–148
+seconds**, typically about 50 — streaming both models concurrently and posting tokens to API Gateway WebSockets. In
+§1's terms, one stream costs one Lambda instance, one database connection, two model calls, and — the surprise —
+**database and API work per token**:
+
+- **Every token runs a SQL (Structured Query Language) query** — `list_connection_ids_for_user` — to find the
+  user's current connection ids. This is how the code avoids Ch4 §1 §12c's stale-handle problem: re-resolving the
+  connection each time means a reconnected page gets the rest of the turn. It works; it also puts the database on
+  the **hot path at token rate**, about 60–160 queries per second per stream.
+- **Every token builds a new `boto3` client**, so each post pays a fresh TLS (Transport Layer Security) handshake,
+  and calls `post_to_connection` **synchronously inside an `async` function** — blocking the event loop, so the two
+  sides take turns instead of streaming in parallel. That caps delivery at perhaps 10–20 tokens per second per
+  turn; a faster model's output queues inside the worker (§7's problem, on the producer side), and the longer
+  worker lifetime raises concurrency through Little's law.
+- **Each Lambda container holds one persistent Postgres connection** at module level, with no RDS (Relational
+  Database Service) Proxy — so the number of database connections equals the number of live containers, across
+  every function.
+
+**Table 6** — the arena's streaming ceilings as the code stood on 2026-09-28, lowest first.
+
+| Ceiling | Value | Streams it allows |
+|---|---|---|
+| **Postgres connections** — prod is `db.t3.micro`; `max_connections` = LEAST(memory ÷ 9,531,392, 5000) | about 80–110, shared with every other function, the warmer-held containers, the bastion and admin tools | **about 70–80** — then `psycopg.connect` fails and turns fail |
+| **Database CPU** from the per-token query, on a burstable instance with a low baseline | about 60–160 queries per second per stream | **tens, sustained** — CPU credits drain and every query slows |
+| **Model providers** (the SEA-LION — Southeast Asian Languages In One Network — API, OpenRouter) | not in the code — set per API key | unknown, possibly the lowest; each stream is two calls |
+| Lambda concurrency | default 1,000 per Region, shared by all functions | not binding |
+| API Gateway WebSocket | 500 new connections per second; no cap on open ones (§2) | not binding for streaming |
+
+With a typical turn of $W \approx 50$ seconds, 70 concurrent streams is $\lambda = L / W \approx 1.4$ turns started
+per second — about 80 per minute across all users.
+
+### 13b. Would Redis in front of RDS help? Less than it looks — the fix is to stop asking per token
+
+The instinct was right about *where* the pain is and wrong about *what kind* it is. RDS is not slow at storing
+things; the streaming path simply asks it a question on every token.
+
+**Table 7** — the three database problems, and whether a Redis buffer addresses each.
+
+| Problem | Does a Redis buffer fix it? |
+|---|---|
+| a connection-id `SELECT` per token | **partly** — a cache absorbs the reads, but must be invalidated on every reconnect, which is exactly why the lookup is per token; removing the lookup is simpler |
+| one persistent RDS connection per Lambda container | **no** — each container still opens it, and now a Redis connection too |
+| durable writes | **not needed** — a turn writes only a few rows, and a write-behind buffer would put them at risk |
+
+The recommendation, ranked by payoff per effort:
+
+1. **Take per-token work off the database (code only, the biggest win).** Resolve connection ids **once per turn**,
+   and again only after a `GoneException` or every 1–2 seconds — the stale-handle protection survives, and queries
+   fall from about 100 per second per stream to about 1. Create **one module-level `boto3` client** so the TLS
+   connection is reused. Wrap `post_to_connection` in `asyncio.to_thread` (or use an async client) so the sides
+   stream in parallel. **Batch tokens** into one message every 50–100 milliseconds — five to ten times fewer calls,
+   invisible to users, and cheaper, because API Gateway bills per message.
+2. **Fix the connection ceiling (mostly configuration).** Add **RDS Proxy**, which pools Lambda connections so
+   thousands of containers share a small set of real ones, and move off `t3.micro` (§13e).
+3. **Degrade instead of failing.** Reserved concurrency on the turn worker, set just below what the database and
+   providers can take, turns overload into queued asynchronous retries instead of database errors.
+4. **Find the provider limits** and cap concurrency per provider, so a 429 becomes a wait, not a broken turn.
+5. **Where Redis *does* belong: as the token log, not as a cache.** Redis Streams as the per-turn log (`XADD` per
+   token batch with a sequence number, a TTL — time to live — of minutes to hours; `XREAD` from `{turnId, lastSeq}`
+   on reconnect) is Ch4 §1 §12d's *make the store the stream*, and it fixes the refresh bug as well. Worth its cost
+   once resume is wanted, not merely to raise a capacity number.
+
+### 13c. His redesign: no push at all — short polling over a chunk log
+
+**His proposal:** no WebSocket or SSE (Server-Sent Events); the backend returns a turn id, streams the model output
+into a store, and the browser polls over ordinary HTTP about once a second for new tokens and renders them as if
+streaming.
+
+**Verdict: it works, and on this stack it is probably the best-fitting design.** It is §1's thesis taken to its
+limit. With no push there is **no connection plane and no routing plane at all** — the client reads the log
+directly — so the three planes collapse to one, and everything §2, §3, §6 and §8 had to manage simply does not
+exist: no registry, no stale `connectionId`, no two-hour cap, no reconnect storm. **Refresh-resume comes free**,
+because the cursor is just "the last seq I rendered" and a reloaded page polls again with it. It is also Ch4 §1 §2's
+honest case for polling, arriving on a real system: streaming is one-way, users wait for a finished answer anyway,
+and a second of lag is acceptable.
+
+**What it gains:** per-stream database load falls about a hundredfold (one read per second plus a few writes,
+instead of 60–160 queries); the Lambdas answering polls stay cheap (100 streams at about 50–100 milliseconds per poll
+keep only 5–10 instances busy); and the frontend already polls every 5 seconds as a fallback, so migration is small.
+
+**What it costs:** about **0.5 seconds of added latency on average** ($S = T/2$ with $T = 1$ second, Ch4 §1 §2), and
+tokens arriving in one-second clumps — hidden by a client-side "typewriter" that buffers and renders at a steady
+rate, so the user sees smooth text about a second behind the model.
+
+**Four conditions, or it breaks:**
+
+1. **Append chunks as rows** — `(turn_id, side, seq, text)`, written every 250–500 milliseconds and indexed on
+   `(turn_id, seq)`, polled with `WHERE turn_id = … AND seq > …`. Repeatedly `UPDATE`-ing one growing text column
+   rewrites the whole value on every write.
+2. **The REST API usage-plan throttle becomes a ceiling:** `rate_limit=500, burst_limit=1000` on the **one client API
+   key every user shares** — about 500 streaming users at one poll per second, minus all other traffic.
+3. **Poll only while a turn is running**, stop when both sides report done, and back off in hidden tabs; the cursor
+   makes a paused poller lossless.
+4. **The worker still holds a database connection for the whole turn** — polling fixes cost per stream, not the
+   connection ceiling (§13d).
+
+And one warning: **do not "upgrade" to long polling on Lambda** — a held request occupies a Lambda instance per
+waiting user, which reinstates the concurrency ceiling the design escaped.
+
+**Table 8** — the three designs compared for the arena.
+
+| | WebSocket (after §13b's fixes) | SSE (Function URL + CloudFront) | **Short polling + chunk log** |
+|---|---|---|---|
+| Latency | real-time | real-time | +0.5–1 second |
+| Refresh-resume | build it | build it | **free** |
+| New infrastructure | none | a migration (Ch4 §1 §12e) | **none** |
+| Main ceiling | database connections, per-token cost | database connections | usage-plan rate, database connections |
+
+### 13d. Polling alone, no other change: about 60–70 streams — the same ceiling, reached cleanly
+
+Polling removes the per-token queries but leaves **one connection per turn-worker instance**, so the connection limit
+still binds — minus a few extra connections for the poll-serving Lambdas. Database CPU drops to about 5–10 small
+queries per second per stream, around 300–700 per second at 70 streams: no longer binding, though `CPUCreditBalance`
+is worth watching. Two details make it worse than the headline:
+
+- **Idle containers keep their connections.** A worker instance survives several minutes after its turn, still
+  connected, so connections track **peak concurrency over roughly the last ten minutes**, not current load.
+- **At the limit, polling fails too.** If poll handlers need new instances when no connections are left, users
+  mid-stream stop receiving tokens even though their worker is still generating.
+
+In users rather than streams: 65 concurrent streams at $W \approx 50$ seconds is about 1.3 turns per second; if an
+active user sends a turn every two minutes or so, that is roughly **200–250 people actively using the arena at
+once** — the session length is an assumption to check against analytics. The one-line lesson: **polling fixes cost
+per stream; RDS Proxy fixes the number of streams.**
+
+### 13e. The database configuration, and what it costs
+
+**Recommendation: `db.t4g.small` Multi-AZ (a synchronous standby in a second Availability Zone) plus RDS Proxy
+— about USD 60 a month more**, from about USD 41 to about USD 101 for the instance and proxy. Prices are AWS
+on-demand list prices for ap-southeast-1 (Singapore), pulled from the AWS Price List API on 2026-09-28;
+monthly figures use 730 hours; Multi-AZ is kept, as prod requires.
+
+**Table 9** — database options for the arena, Singapore on-demand prices, Multi-AZ.
+
+| Option | Instance | RDS Proxy | Total per month | Change | `max_connections` (≈ memory ÷ 9,531,392) |
+|---|---|---|---|---|---|
+| Today | `db.t3.micro`, 1 GiB, USD 0.056/h | — | **USD 41** | — | about 80–110 |
+| Proxy only | `db.t3.micro` | USD 26 | USD 67 | +26 | about 80–110, behind the proxy |
+| **Recommended** | **`db.t4g.small`, 2 GiB, USD 0.102/h** | USD 26 | **USD 101** | **+60** | **about 225** |
+| More headroom | `db.t4g.medium`, 4 GiB, USD 0.203/h | USD 26 | USD 174 | +134 | about 450 |
+| No CPU credits | `db.m7g.large`, 8 GiB, USD 0.468/h | USD 26 | USD 368 | +327 | about 900 |
+
+RDS Proxy is **USD 0.018 per vCPU-hour** (virtual CPU) with a two-vCPU minimum; every option above has two vCPUs, so
+it is USD 26 throughout (billing on the primary only is an assumption — confirm on the first bill). Storage does not
+change: 20 GB of gp3 Multi-AZ at USD 0.276 per GB-month is about USD 5.50 in every row. Backups up to the database
+size, data transfer and CPU-credit surplus are excluded.
+
+**Why that pair.** The proxy fixes the ceiling that binds: containers connect to it, it multiplexes a small pool of
+real connections — at statement boundaries, since the code runs in autocommit — and idle warm containers stop
+costing anything. The `t4g.small` doubles memory and connections cheaply (Graviton is slightly cheaper per GiB than
+`t3`), and polling's few hundred small queries per second are burstable-class work. RDS runs T-class instances in
+**Unlimited** credit mode by default, so running above baseline is billed as surplus rather than throttled — **if
+`CPUCreditBalance` sits near zero and surplus charges appear, that is the signal for `m7g`**, not before.
+
+**Four checks when doing it:** (1) **proxy pinning** — psycopg 3 prepares server-side statements automatically after
+five executions (`prepare_threshold=5`), which can pin a proxied connection to one client; watch
+`DatabaseConnectionsCurrentlySessionPinned` and set `prepare_threshold=None` in `db.py` if it rises. (2) Changing the
+instance class causes a **brief failover** even on Multi-AZ — use the maintenance window. (3) The proxy needs the
+existing Secrets Manager secret and a security-group rule from `lambda_sg`; the Lambdas then point at the proxy
+endpoint — a small CDK (Cloud Development Kit) change. (4) Once the size is stable for a month or two, price
+**Reserved Instances**.
+
+**Table 10** — what each stage buys, in concurrent streams.
+
+| | Today | Polling only | Polling + `t4g.small` + RDS Proxy |
+|---|---|---|---|
+| Users streaming at once | about 20–70 (database CPU, then connections) | about 60–70 (connections) | **about 500** (usage-plan throttle) |
+| Next ceiling | database | database connections | API Gateway throttle, then Lambda and model providers |
+
+### 13f. The revision plan, in order
+
+For when the arena is revised — each step is independently useful, and each moves the binding ceiling:
+
+1. **Instrument first.** Run `SHOW max_connections;` on prod and `aws lambda get-account-settings` in the prod
+   account, find the provider keys' rate limits, and ramp a load test while watching `DatabaseConnections`,
+   `CPUCreditBalance` and `CPUUtilization`. Run it again after each step, so every change is measured.
+2. **Move streaming to polling over a chunk log** (§13c): chunk rows, a cursor, a typewriter renderer, polling only
+   while a turn runs. If WebSocket is kept instead, apply §13b step 1 — the arena's per-token hot path is the same
+   problem either way.
+3. **`db.t4g.small` + RDS Proxy** (§13e), with the pinning check.
+4. **Raise the usage-plan throttle** in `gateway_stack.py` deliberately, and consider a separate key or plan for
+   polling so one class of traffic cannot starve another.
+5. **Reserved concurrency on the turn worker and a per-provider cap** (§13b steps 3–4), so overload queues.
+6. **Only then**, if real-time latency or an event log is wanted, revisit Redis Streams (§13b step 5).
+
+### 13g. What the session teaches
+
+- **Capacity is a list of ceilings, and "how many users?" is always "which ceiling is lowest?"** Every answer above
+  was a table, not a number, and every recommendation was described by which ceiling it moves next.
+- **Look for work on the hot path at the highest rate in the system.** A cheap operation per token is an expensive
+  operation per second. The arena's per-token lookup was correct — it was the fix for a real bug — and still the
+  dominant cost. A new §10 failure mode records it.
+- **Separate cost per stream from number of streams.** Polling fixed the first and left the second untouched; RDS
+  Proxy does the reverse. A plan that names which of the two each change addresses cannot be surprised by the
+  result.
+- **The simplest transport can win when the log is right.** Once the store is the stream, the transport is a
+  detail — the same finding as Ch4 §1 §12, now pushed far enough that the push transport disappears entirely.
 
 ---
 
