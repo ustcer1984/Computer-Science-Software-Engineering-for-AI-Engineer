@@ -66,7 +66,8 @@ YL = {"wap": (-3, 8), "emp": (-6, 11), "gdp_wap": (-10, 14), "gdp_emp": (-10, 14
 
 for key, title in CHARTS:
     g = growth[key]
-    order = sorted(ORDER, key=lambda c: -cagr[key][c])
+    order = ORDER  # fixed panel positions across all charts
+    ranked = sorted(ORDER, key=lambda c: -cagr[key][c])
     fig, axes = plt.subplots(4, 4, figsize=(16, 13), sharex=True, sharey=True)
     lo, hi = YL[key]
     for ax, c in zip(axes.flat, order):
@@ -89,7 +90,7 @@ for key, title in CHARTS:
         ax.axis("off")
     # summary bar in the last empty slots
     sax = fig.add_axes([0.53, 0.06, 0.44, 0.19])
-    v = pd.Series({C[c]: cagr[key][c] for c in order})
+    v = pd.Series({C[c]: cagr[key][c] for c in ranked})
     sax.barh(v.index[::-1], v.values[::-1], color=["#2a6fbb" if a >= 0 else "#c8553d" for a in v.values[::-1]])
     sax.axvline(0, color="#555", lw=0.8)
     sax.set_title("2000–2025 年均复合增长率 (%)", fontsize=11, loc="left")
@@ -97,7 +98,7 @@ for key, title in CHARTS:
     sax.spines[["top", "right"]].set_visible(False)
     fig.suptitle(title + "，2000–2025（%）", fontsize=17, x=0.02, ha="left", y=0.995)
     fig.text(0.02, 0.965, "柱 = 当年增长率；橙色虚线 = 2000–2025 年均复合增长率；灰线 = 其他国家（对比用）；"
-             "超出坐标范围的值以红字标注。按年均增长率从高到低排列。", fontsize=10, color="#444")
+             "超出坐标范围的值以红字标注。各图中国家位置固定；右下角为年均增长率排名。", fontsize=10, color="#444")
     fig.text(0.02, 0.005, SRC, fontsize=8.5, color="#666")
     fig.tight_layout(rect=(0, 0.02, 1, 0.96))
     fig.savefig(FIG / f"chart_{key}.png", dpi=110)
