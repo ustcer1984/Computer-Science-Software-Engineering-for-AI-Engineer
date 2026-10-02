@@ -24,6 +24,9 @@ and up-to-date AI. It is not a software product. Three parallel tracks:
   **NOT a pre-teach of upcoming course chapters** — see the reading-track rule in
   [`authoring-conventions.md`](authoring-conventions.md) §6 for its "National Geographic / Discovery"
   function and the 1-career + 1-hobby balance rule.
+- **Ad-hoc projects** — one-off analyses / data reports the owner asks for (outside the three tracks) go in
+  `projects/{yymmdd}-{name}/`, each self-contained: `README.md` (the report), `data/raw/` + `data/processed/`,
+  `charts/`, and the scripts that reproduce them. (Set 2026-10-02.)
 
 ## Rules every agent must keep in context
 - **Always commit and push when work is finished — do not wait to be asked.** (Set 2026-09-16: *"always
