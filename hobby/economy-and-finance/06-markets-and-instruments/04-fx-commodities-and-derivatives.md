@@ -171,6 +171,8 @@ and published by MAS. Neither asks a banker what they think a rate would be. Sin
 | **Spot** | the standard-settlement trade. ⚠ **Not "immediately"** — for most pairs it settles **T+2** |
 | **Value date** | the day the currencies actually move. The thing "spot" and "forward" differ in |
 | **Outright forward** | a single agreed exchange of two currencies on a future date |
+| **Hedge (to hedge back)** | entering an offsetting trade so that a price you do not want to be exposed to no longer affects your result. "Hedging a foreign bond **back to SGD**" means selling the foreign currency you will receive, **forward**, for SGD |
+| **Fully hedged / hedge ratio** | **fully** means the forward covers the *entire* amount you will receive — principal **and** interest. Hedging only the principal leaves the interest exposed; the fraction covered is the **hedge ratio** |
 | **Forward points (swap points)** | the difference between the forward and the spot, quoted in pips. ⚠ Determined by the interest differential, **not** by a view |
 | **Forward premium / discount** | a currency worth *more* / *less* forward than spot. A premium means its interest rate is **lower** |
 | **FX swap** | a spot exchange plus a simultaneous reverse forward — a collateralised loan in two currencies |
@@ -296,6 +298,28 @@ USD/SGD means a *weaker dollar*, so the Singapore dollar trades at a **forward p
 in Figure 2 is the proof: if you took the SGD deposit and the spot rate simply *did not move*, you would end
 with **USD 1,008,500** against **USD 1,021,200** for staying in dollars — **USD 12,700 short**. The forward
 premium is exactly the size of that shortfall. It is compensation, not prediction.
+
+**What "hedging back" actually means, step by step.** The word *hedged* is used throughout this section as
+if the trade were obvious, so here it is in full. You hold Singapore dollars, you want the US Treasury
+yield, and you do not want the exchange rate to decide your outcome. Four steps, all of them priced today:
+
+1. **Convert at spot.** SGD 1,277,500 buys USD 1,000,000 at 1.2775.
+2. **Buy the bill.** Six months at 4.24% matures at **USD 1,021,200**.
+3. **Sell the dollars forward — now, not later.** At the same moment as step 1 you contract to sell
+   **USD 1,021,200** for SGD in six months at **1.2616**. The amount sold is the *maturity* value, not the
+   million you started with. **That is the whole job of the word "fully"**: hedge only the principal and
+   your USD 21,200 of interest is still riding on the spot rate.
+4. **Deliver.** The bill matures, you hand over the dollars, you receive **SGD 1,288,359**.
+
+You started with SGD 1,277,500 and ended with SGD 1,288,359 — **0.85% over six months, 1.70% annualised**.
+Which is the Singapore six-month rate, exactly. Put the same money in a local T-bill at 1.70% and you
+finish with SGD 1,288,359 as well, to the dollar. (That uses the unrounded forward 1.261613; at the quoted
+1.2616 you land about 13 dollars lower, which is the rounding and not an arbitrage.)
+
+**Nothing there was forecast and nothing was left to chance** — all four prices were fixed on day one, which
+is what *covered* means. In practice you would not place steps 1 and 3 as two separate trades: you would do
+a single **FX swap** (§2.4), which *is* spot-in and forward-out in one ticket, quoted as one number of
+forward points.
 
 > **The payoff for E03 §4 and E05 §2, which is why this belongs at the end of the module.** §3 §8 observed
 > that SGD rates sit *below* USD rates, and attributed it to Singapore's exchange-rate-based monetary regime
@@ -896,8 +920,9 @@ flowchart TD
 2. The 12-month USD/JPY forward is below the spot rate. A news article says this means "the market expects
    the yen to strengthen." What is wrong with that sentence, and what would you need to check to give the
    correct explanation?
-3. You have SGD and want to hold a 6-month US Treasury bill, fully hedged back to SGD. Using Figure 2's
-   numbers, roughly what return do you end up with in SGD, and why is that not a surprise?
+3. You have SGD and want to hold a 6-month US Treasury bill, with the currency risk removed by selling the
+   maturing dollars forward for SGD ("fully hedged back to SGD", §2.3). Using Figure 2's numbers, roughly
+   what return do you end up with in SGD, and why is that not a surprise?
 4. FX swaps are 42% of a market that trades USD 9.6 trillion a day, and spot is only 31%. What does that
    tell you about who is in the FX market and what they are doing there?
 5. An oil ETF has tracked its index perfectly, charges 0.75% a year, and has lost 22% over three years while
@@ -933,9 +958,12 @@ flowchart TD
    must give back the interest advantage of holding dollars. To explain it properly you check the two
    interest rates for that tenor, not anyone's forecast. (You would also check the cross-currency basis,
    §2.5, for the part CIP does not cover.)
-3. About **1.70%** annualised — the SGD rate. That is the point of Figure 2: hedging the currency risk hands
-   back exactly the interest differential, so a fully hedged foreign bond returns your *domestic* rate, plus
-   or minus the basis and the credit difference. **If it did not, there would be free money.**
+3. About **1.70%** annualised — the SGD rate. Walk it: SGD 1,277,500 to USD 1,000,000 at 1.2775, matures at
+   USD 1,021,200, sold forward at 1.2616 for **SGD 1,288,359** — 0.85% in six months. That is the point of
+   Figure 2: hedging the currency risk hands back exactly the interest differential, so a fully hedged
+   foreign bond returns your *domestic* rate, plus or minus the basis (§2.5) and the credit difference.
+   **If it did not, there would be free money.** The 4.24% was never yours to keep — it was rent on dollar
+   risk, and you declined the risk.
 4. Most participants are **not taking a view on currencies**. An FX swap is a collateralised loan in two
    currencies (§2.4), so the dominant use of the world's largest market is **short-term funding** — banks,
    insurers and corporates rolling liquidity. It tells you FX is best understood as funding infrastructure
