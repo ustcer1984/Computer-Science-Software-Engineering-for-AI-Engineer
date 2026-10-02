@@ -43,6 +43,16 @@ their real-market anchors noted.
          netting USD 3.0tn (0.4% of notional). Log scale, because the point is
          the two orders of magnitude. Source: BIS OTC derivatives statistics;
          netting and gross credit exposure per ISDA's summary of the same data.
+  fig7 — ADDED AT FINALIZE for §10 Applied (figure 6 is the Mermaid
+         one-pager in §7). Left: the UNHEDGED version of fig2's trade,
+         plotted against where USD/SGD actually ends in six months. The
+         hedged route is a flat line identical to the domestic T-bill, and
+         the unhedged line crosses it EXACTLY at the forward rate — the
+         forward is the breakeven, which is covered interest parity read
+         backwards. Right: the certain profit available on a mispriced
+         forward, zero at 1.261613 and linear in the error, i.e. what
+         "no arbitrage" is actually pinning down. Both panels assert their
+         own identities at the end of the function.
 """
 import os
 import matplotlib
@@ -384,6 +394,111 @@ def fig5():
           f"{(1 - GCE_TN / GMV_TN) * 100:.1f}% of GMV)")
 
 
+
+# ------------------------------------------------------------------- fig 7
+# Added at FINALIZE (2026-10-02) for §10 Applied. Figure 6 is the Mermaid
+# one-pager in §7, so the next matplotlib figure is 7.
+#
+# Same 18 September 2026 USD/SGD inputs as fig2. Left: what the UNHEDGED
+# version of the fig2 trade is worth as a function of where spot actually
+# ends — the question the learner asked, which §2.3 set up and never
+# answered. The breakeven is the FORWARD RATE, exactly, which is the whole
+# content of covered interest parity seen from the other side. Right: the
+# certain profit on a mispriced forward, zero at the fair rate and linear in
+# the mispricing — i.e. what "no arbitrage" is actually pinning.
+S_0 = S_SGD                       # 1.2775
+USD_MAT = 1_000_000 * (1 + R_USD * TENOR)        # 1,021,200
+SGD_0 = S_0 * 1_000_000                          # 1,277,500
+SGD_TBILL = SGD_0 * (1 + R_SGD * TENOR)          # 1,288,358.75
+F_FAIR = fwd(R_SGD)                              # 1.261613
+F_QUOTED = 1.2700                                # the §10c mispricing example
+
+
+def fig7():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13.4, 5.6),
+                                   gridspec_kw={"width_ratios": [1.12, 1]})
+
+    # ---- left: unhedged vs hedged, against the spot rate in six months
+    sp = np.linspace(1.20, 1.36, 400)
+    unhedged = USD_MAT * sp
+    ax1.plot(sp, unhedged / 1e6, color=C2, lw=2.4,
+             label="Unhedged US bill (sold back at whatever spot is)")
+    ax1.plot(sp, np.full_like(sp, SGD_TBILL / 1e6), color=C1, lw=4.0,
+             label="Hedged US bill (sold forward at 1.2616)")
+    ax1.plot(sp, np.full_like(sp, SGD_TBILL / 1e6), color=C3, lw=2.0, ls=(0, (6, 5)),
+             label="SGD T-bill at 1.70%  —  the SAME line")
+
+    ax1.axvline(F_FAIR, color=GREY, lw=1.2, ls=":")
+    ax1.axvline(S_0, color=GREY, lw=1.2, ls=":")
+    ax1.plot([F_FAIR], [SGD_TBILL / 1e6], "o", color=GREY, ms=8, zorder=5)
+    ax1.plot([S_0], [USD_MAT * S_0 / 1e6], "o", color=C2, ms=8, zorder=5)
+
+    ax1.annotate("breakeven = the forward, 1.2616\n(not a coincidence: that is\nwhat the forward IS)",
+                 xy=(F_FAIR, SGD_TBILL / 1e6), xytext=(1.2055, 1.3215),
+                 fontsize=10.4, color=GREY, va="top",
+                 arrowprops=dict(arrowstyle="->", color=GREY, lw=1.3))
+    ax1.annotate("spot unchanged at 1.2775:\nSGD 1,304,583  (+16,224)",
+                 xy=(S_0, USD_MAT * S_0 / 1e6), xytext=(1.2890, 1.2755),
+                 fontsize=10.4, color=C2, va="center",
+                 arrowprops=dict(arrowstyle="->", color=C2, lw=1.3))
+    # lower right is the only empty quadrant: the red line rises away from it
+    ax1.text(1.2655, 1.2420, "Let the SGD strengthen just 1.24%\nand the whole advantage is gone.\nThat is the 159 pips, restated.",
+             fontsize=10.2, color=GREY, ha="left", va="center")
+
+    ax1.set_xlim(1.20, 1.36)
+    ax1.set_ylim(1.218, 1.395)
+    ax1.set_xlabel("USD/SGD spot rate in six months")
+    ax1.set_ylabel("Ending wealth (SGD million)")
+    ax1.set_title("Starting from SGD 1,277,500: hedged is flat, unhedged is a bet",
+                  fontsize=12.4, fontweight="bold")
+    ax1.legend(fontsize=9.8, loc="upper left")
+    ax1.grid(alpha=0.25)
+    ax1.spines[["top", "right"]].set_visible(False)
+
+    # ---- right: risk-free profit on a mispriced forward
+    fq = np.linspace(1.2450, 1.2800, 400)
+    profit = USD_MAT * fq - SGD_TBILL
+    ax2.plot(fq, profit / 1000, color=C5, lw=2.6)
+    ax2.axhline(0, color="black", lw=1.0)
+    ax2.axvline(F_FAIR, color=GREY, lw=1.2, ls=":")
+    ax2.plot([F_FAIR], [0], "o", color=GREY, ms=8, zorder=5)
+    ax2.plot([F_QUOTED], [(USD_MAT * F_QUOTED - SGD_TBILL) / 1000], "o",
+             color=C5, ms=8, zorder=5)
+
+    ax2.text(1.2624, -2.9, "fair forward 1.261613 —\nprofit exactly zero",
+             fontsize=10.4, color=GREY, ha="left", va="center")
+    ax2.annotate("quoted at 1.2700:\nSGD 8,565 certain,\nper USD 1m",
+                 xy=(F_QUOTED, (USD_MAT * F_QUOTED - SGD_TBILL) / 1000),
+                 xytext=(1.2515, 12.0),
+                 fontsize=10.4, color=C5, va="center",
+                 arrowprops=dict(arrowstyle="->", color=C5, lw=1.3))
+    # above the line on the left, below it on the right: the two empty wedges
+    ax2.text(1.2458, 3.6, "the trade: borrow SGD, buy USD\nspot, invest, sell forward",
+             fontsize=9.8, color=GREY, va="center")
+    ax2.text(1.2624, -9.3, "below the fair rate the SAME\ntrade runs the other way round",
+             fontsize=9.8, color=GREY, va="center")
+
+    ax2.set_xlim(1.2450, 1.2800)
+    ax2.set_ylim(-14, 19)
+    ax2.set_xlabel("Forward rate quoted by the dealer")
+    ax2.set_ylabel("Riskless profit (SGD thousand, per USD 1m)")
+    ax2.set_title("What no-arbitrage is pinning: one price, nothing else works",
+                  fontsize=12.4, fontweight="bold")
+    ax2.grid(alpha=0.25)
+    ax2.spines[["top", "right"]].set_visible(False)
+
+    fig.tight_layout()
+    save(fig, 7)
+    # self-checks: the hedged route and the domestic bill must be identical,
+    # and the breakeven spot must BE the forward rate.
+    assert abs(USD_MAT * F_FAIR - SGD_TBILL) < 1e-6
+    assert abs(SGD_TBILL / USD_MAT - F_FAIR) < 1e-9
+    print(f"  (hedged {USD_MAT * F_FAIR:,.2f} == SGD T-bill {SGD_TBILL:,.2f}; "
+          f"breakeven spot {SGD_TBILL / USD_MAT:.6f} == forward {F_FAIR:.6f}; "
+          f"spot-unchanged gain SGD {USD_MAT * S_0 - SGD_TBILL:,.0f}; "
+          f"arb at 1.2700 SGD {USD_MAT * F_QUOTED - SGD_TBILL:,.0f})")
+
+
 if __name__ == "__main__":
-    fig1(); fig2(); fig3(); fig4(); fig5()
+    fig1(); fig2(); fig3(); fig4(); fig5(); fig7()
     print("done")

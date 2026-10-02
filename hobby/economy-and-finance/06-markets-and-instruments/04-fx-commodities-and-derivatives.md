@@ -16,8 +16,10 @@
 > headline number is the wrong number by two orders of magnitude, and the post-2008 clearing plumbing that
 > concentrated the risk in order to see it; and **Singapore** as the world's third-largest FX centre, with a
 > commodity franchise built on being useful rather than large *(local lens)*.
-> **Status:** 🔵 **PREPARED 2026-09-22** — body drafted, awaiting your read; **§11 Applied** will be added
-> once you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed
+> **Status:** ✅ **FINALIZED 2026-10-02** — prepared 2026-09-22, read 2026-10-02, and **§10 Applied** is
+> that session: the hedge taken off the §2.3 trade and run as a carry trade (Figure 7), where a persistent
+> profit actually comes from, *arbitrage* defined at last, close-out netting shown instead of asserted, and
+> AIG given the paragraphs §5.2 gave it a clause. Math in LaTeX, quantitative relationships drawn as real computed
 > curves (three of them from live market data), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -998,6 +1000,324 @@ flowchart TD
 
 ---
 
+## 10. Applied — the ledger question, and a word the section leaned on without defining
+
+Six questions, and for the first time in this module they did not all have the same shape.
+
+**Four were the E06 §3 pattern, continuing**: a term the material used without binding it — *fully hedged*,
+*arbitrage*, a bullet that asserted 86% without showing the mechanism, and a company named in a subordinate
+clause as if the story travelled with it. §3 §12 called this *asserting is not showing*, and the diagnosis
+held.
+
+**Two were new, and they are the more interesting half.** You took §2.3's hedged trade, **removed the
+hedge yourself**, and asked what the unhedged version earns — a counterfactual the section had set up
+carefully and then declined to run. Then, when the answer was "the interest differential, if spot
+cooperates," you asked the question that follows from it as night follows day: **"who was losing money
+then?"**
+
+That second question is a **conservation instinct**, and it is the right reflex carried over from physics.
+It is also the one place where finance will quietly fail to satisfy it, which is why it is worth a section.
+
+### 10a — What you stopped at, and what each one exposed
+
+**Table 8** — the six questions, the gap behind each, and where the answer now lives.
+
+| You asked | What was unresolved | Answer | Shape |
+|---|---|---|---|
+| *"What do you mean fully hedged back to SGD? Using USD/SGD forward?"* | a term used in a self-check question that §2.3 never defined | §10b | unbound surface |
+| *"What money do I earn if I buy USD spot, hold the bill, and sell back at spot?"* | the **unhedged** counterfactual — set up by §2.3 and never run | §10b, **Figure 7** | a gap you filled yourself |
+| *"They did earn money, but who was losing money then?"* | where a persistent profit **comes from** | §10c | the ledger question |
+| *"Explain what is arbitrage"* | the word the entire pricing argument rests on, used from §2.3 onward and never defined | §10d | unbound surface |
+| *"Explain"* — the gross-market-value-to-credit-exposure bullet | a factor of 7 and an 86% asserted, with no mechanism | §10e, **Table 11** | asserting is not showing |
+| *"What is AIG's credit default swaps?"* | a named example doing argumentative work in half a sentence | §10f | asserting is not showing |
+
+### 10b — "Fully hedged", and the trade §2.3 set up but did not run
+
+Yes — a **USD/SGD outright forward**, exactly as you guessed. The full trade, priced entirely on day one:
+
+1. **Convert at spot.** SGD 1,277,500 buys USD 1,000,000 at 1.2775.
+2. **Buy the bill.** Six months at 4.24% matures at **USD 1,021,200**.
+3. **Sell the dollars forward — now.** At the same moment as step 1, contract to sell **USD 1,021,200** for
+   SGD in six months at **1.2616**. The amount sold is the *maturity* value. **That is the whole job of the
+   word "fully"**: hedge only the principal and the USD 21,200 of interest is still riding on the spot rate.
+   The fraction covered is the **hedge ratio**, and "fully" means it equals one.
+4. **Deliver.** The bill matures, you hand over the dollars, you receive **SGD 1,288,359** — 0.85% over six
+   months, **1.70% annualised**, identical to the domestic T-bill to the dollar.
+
+In practice steps 1 and 3 are not two trades. They are one **FX swap** (§2.4), quoted as a single number of
+forward points, which is a large part of why FX swaps are 42% of the market.
+
+**Now remove the hedge, which is what you asked.** Skip step 3 and sell the dollars at whatever spot turns
+out to be. This is the **carry trade**, and §2.3 built every piece of it without ever saying so.
+
+![The unhedged version of the covered-interest-parity trade on real USD/SGD data of 18 September 2026. The left panel plots ending wealth in Singapore dollars against the spot rate in six months, starting from SGD 1,277,500. The hedged US Treasury bill is a flat line at SGD 1,288,359, and the Singapore T-bill at 1.70 percent is exactly the same line drawn over it. The unhedged position is a rising straight line that crosses the flat line precisely at 1.2616, the forward rate, so the forward is the breakeven; at an unchanged spot of 1.2775 the unhedged position is worth SGD 1,304,583, a gain of 16,224. The right panel plots the certain profit available when a dealer misquotes the forward: it is zero exactly at the fair rate of 1.261613 and rises linearly, reaching SGD 8,565 per million dollars at a quoted forward of 1.2700.](diagrams/04-fx-commodities-and-derivatives-fig7.svg)
+
+**Figure 7** — the same trade with the hedge removed, and the arbitrage that enforces the hedged price.
+
+**Table 9** — what the unhedged position is worth, against the SGD T-bill's SGD 1,288,359.
+
+| Spot in six months | You end with | Versus the SGD T-bill | Annualised |
+|---|---|---|---|
+| **1.2775** — unchanged | SGD 1,304,583 | **+16,224** | +4.24% |
+| **1.2616** — the forward | SGD 1,288,359 | **0** | +1.70% |
+| 1.2520 — SGD 2% stronger | SGD 1,278,542 | −9,816 | +0.16% |
+| 1.3050 — SGD 2% weaker | SGD 1,332,666 | +44,307 | +8.64% |
+
+With spot unchanged you keep the entire differential: SGD 16,224, which annualises to 2.54% — precisely
+4.24% − 1.70%. Your total return is the **US** rate, because in that scenario the currency did nothing.
+
+**But look at the second row, because it is the one that matters.** Your breakeven is **1.26161 — the
+forward rate.** That is not a coincidence; it is covered interest parity read backwards. The forward is
+*defined* as the rate at which the two routes pay the same, so it is necessarily the exact exchange rate
+that makes your unhedged position match the domestic deposit. Above it you beat SGD cash, below it you lose.
+
+In movement terms: **USD/SGD need fall only 1.24%** — the same 159 pips — and the entire six-month advantage
+is gone. Each 1% of spot movement is worth about SGD 13,000 against a prize of 16,224, on a currency that
+routinely moves several percent in six months.
+
+So the honest summary of the pair of trades: **USD 1,021,200 is yours either way.** The only open question
+in the unhedged version is what it is worth in SGD on the day — and the market's own answer to that question
+is 1.2616, the rate at which you would have been better off not bothering.
+
+### 10c — "Who was losing money then?" — the answer the reflex does not expect
+
+The yen carry trade is the largest instance of this in history: the Bank of Japan held the policy rate at or
+below zero from 1999, so borrowing yen and lending almost anything else earned a spread for the better part
+of twenty-five years. The trade made money. Your question is where the money came from.
+
+**The reflex is correct for one leg and wrong for the other, and separating them is the whole answer.**
+
+**The interest leg has no victim.** The trader borrows yen near zero and lends dollars at 5%. Who pays the
+5%? US Treasury and corporate borrowers, who wanted credit and priced it willingly. Who accepts the 0%?
+Japanese depositors. Neither is on the losing side of a trade with the carry trader; the gap exists because
+two central banks chose two different policies. **This is real income, not a transfer** — which is exactly
+why the question feels unanswerable at first.
+
+**The FX leg is zero-sum, and the loser is the same trade at a different date.** The structure is small
+steady gains for years, then years of gains returned in days.
+
+**Table 10** — the three canonical unwinds, and what they did to the yen.
+
+| Episode | USD/JPY | Trigger |
+|---|---|---|
+| **October 1998** | roughly 136 to 112 in about three days | LTCM and Russia; forced deleveraging |
+| **2008** | roughly 110 to 87 over the year; AUD/JPY roughly halved | global crisis, scramble for funding |
+| **5 August 2024** | roughly 162 in July to 142 within weeks | BoJ hiked; the Nikkei fell **12.4%** in one session, its worst since 1987 |
+
+Note the mechanism common to all three: **the yen rises because carry traders are closing.** Everyone short
+yen must buy yen at once, and their own exit is what moves the price against them. The crowding that made
+the trade profitable is what makes the unwind violent. Within that, there *is* a transfer between people —
+**the latecomers pay the early entrants** — but it is not a standing counterparty, it is a cohort.
+
+This is the same thing §4.5 says about hedging, inverted. **Carry is selling insurance.** You collect a
+premium continuously for bearing crash risk and periodically you pay the claim. Over a full cycle the profit
+is a **risk premium**, not someone else's loss. "They did earn money" is also partly survivorship: the funds
+liquidated in 1998 and 2008 are not among the ones being described.
+
+**And there is one genuine, non-zero-sum transfer — but it is not the one people name.** Japanese household
+financial assets run around ¥2,100 trillion, more than half in cash and deposits. Roughly ¥1,100 trillion
+earning nothing is, at a 2% rate, about ¥22 trillion a year of forgone interest. That is **financial
+repression**, and it is a policy choice rather than a market outcome.
+
+> **The correction that makes the claim honest, and it is the sort §3 §12 was about.** For most of the ZIRP
+> era Japan had **deflation or near-zero inflation**, so 0% nominal was a *positive real* return. Japanese
+> savers were not being expropriated in real terms for most of those decades. **The repression became real
+> only after 2022**, when Japanese inflation ran 3–4% while the policy rate stayed at zero — which is
+> precisely the period when the carry trade was most crowded and the yen reached 160. Those two facts are
+> one fact. E02 §2's real-versus-nominal distinction is doing all the work here, and skipping it turns a
+> correct observation into a wrong one.
+
+The one party that explicitly took the other side is the **Japanese Ministry of Finance**, which intervened
+to buy yen in 2022 and 2024 and for a time held losing positions against exactly these traders.
+
+**So: the interest leg was real income underwritten by a policy and paid for, in real terms, by Japanese
+savers only once inflation returned; the FX gains were borrowed from the traders' own future and repaid in
+1998, 2008 and August 2024.** Conservation holds — but across time and through a central bank's balance
+sheet, not between two names on a trade ticket.
+
+### 10d — Arbitrage, which this section used from §2.3 onward and never defined
+
+**A trade that cannot lose and costs nothing to put on.** Three conditions, all required:
+
+1. **No net investment** — the money for one leg comes from selling the other. You commit nothing.
+2. **No possible loss** — not *unlikely*. There is no future state in which you end down.
+3. **A positive chance of profit.**
+
+If all three hold, the price that permitted it is wrong, and wrong in a way that requires nobody to hold an
+opinion about the future. Which is the point: **it gives a second way to price things, unlike the first.**
+
+- **Discounting** (§1 §3) forecasts cash flows and picks a discount rate. It needs estimates and a view on
+  risk. Two careful people get two answers.
+- **No-arbitrage** observes that if the asset traded elsewhere, free money would exist. It needs no
+  forecast. Two careful people get the **same** answer.
+
+The underlying rule is the **law of one price**: two things with identical payoffs must have identical
+prices. A forward contract and a borrow-convert-lend package have identical payoffs, so they cost the same.
+This is why §2.3 could state the forward to four decimals without knowing anything about Singapore, and why
+CIP is an **identity** rather than a theory.
+
+**The right panel of Figure 7 is the whole argument in one line.** Suppose a dealer quotes the six-month
+forward at 1.2700 instead of the fair 1.261613. Borrow SGD 1,277,500 at 1.70% (you will owe 1,288,359),
+convert at spot, invest at 4.24% to reach USD 1,021,200, sell that forward at 1.2700 for SGD 1,296,924, repay
+the loan: **SGD 8,565, certain, per million dollars.** Nothing you put up, nothing you can lose, and nothing
+in it depends on the exchange rate. On USD 100 million it is 856,525. Which is why 1.2700 cannot survive as
+a quote.
+
+**The property that makes it useful is that it destroys itself.** Real arbitrage is rare and tiny, yet
+no-arbitrage is the most reliable tool in finance, and both are true for the same reason. The argument never
+assumed arbitrageurs are abundant — only that *if* an opportunity appeared it would be taken, and taking it
+closes it. The prediction is not "arbitrage happens" but **"prices are already where arbitrage would have
+pushed them."**
+
+**Most things called arbitrage are not.** Merger arbitrage (the deal can break), statistical arbitrage
+("usually converges" is the opposite of the definition), and — directly relevant — **the carry trade in
+§10b and §10c, which fails condition 2 completely.** The test is one question: *what happens in the worst
+case?* If the answer is "I lose money," it is not arbitrage whatever it is called. **This section's own
+covered-versus-uncovered distinction is that test applied to one trade**, and the single word *covered* is
+what turns a bet into an identity.
+
+**And the limits, which are where the idea earns its keep.** Textbook arbitrage assumes unlimited borrowing,
+no collateral and the ability to hold to maturity. Reality intrudes in two places, both already in this
+material:
+
+- **Funding.** A trade that is certain *at maturity* can move against you *along the way*, and a margin call
+  does not wait to be proved wrong. That is §4.2's Metallgesellschaft and §3 §7's LDI — and LTCM in 1998 was
+  run by the people who wrote the theory.
+- **Balance sheet is not free.** Post-2008 capital rules make that borrow-convert-lend trade consume real
+  bank capacity, so **CIP has visibly failed for fifteen years**. The residual is §2.5's **cross-currency
+  basis**, and it persists precisely because exploiting it stopped being free. An identity derived from
+  "free money cannot exist" broke exactly when the money stopped being free — which is the most instructive
+  single fact available about arbitrage.
+
+### 10e — Close-out netting, shown rather than asserted
+
+§5.1 claimed a factor of about 7 and an 86% reduction, and showed neither. Here is the mechanism, which is
+the only part worth remembering.
+
+With any one dealer you do not have a trade, you have thousands, built up over years. Some are in your
+favour today and some against.
+
+**Table 11** — a toy book with one counterparty, at the moment they default.
+
+| Trade | Mark-to-market to you | Without netting | With netting |
+|---|---|---|---|
+| A | **+100** | you are an unsecured creditor for 100 | |
+| B | −90 | you must pay 90 in full | |
+| C | **+60** | unsecured creditor for 60 | |
+| D | −55 | you must pay 55 in full | |
+| **Total** | **net +15** | **exposure 160** | **exposure 15** |
+
+Without netting each contract stands alone and the administrator does something that sounds outrageous and
+is ordinary insolvency practice: **cherry-picking.** They enforce B and D, where you owe, and disclaim A and
+C, where the estate owes you — leaving you in the queue of unsecured creditors at perhaps twenty cents.
+Your exposure is the **sum of the positives, 160**, and you pay out 145 besides.
+
+With an **ISDA Master Agreement** in place, A through D are not four contracts. Two clauses do the work:
+**Single Agreement** (Section 1(c)), under which every confirmation forms one contract with the master — so
+there is nothing to cherry-pick — and **early termination** (Section 6), under which a default terminates
+everything at once, values each transaction at replacement cost, and sums them to a **single Early
+Termination Amount**. Exposure collapses to **15**.
+
+**160 to 15.** Nothing was hedged, no collateral moved, no capital was raised. The number changed because
+the legal packaging changed — which is the §1 repo observation exactly: a repo is economically a secured
+loan written as a **sale and repurchase**, so on default you already own the collateral and need no court's
+permission. In both cases the protection comes from **the form of the document**.
+
+**Which is also the fragility.** The protection is only as good as the insolvency law where the counterparty
+fails, so ISDA commissions and annually updates **netting opinions for roughly 80 jurisdictions**, and Basel
+lets a bank capitalise the *net* exposure only where enforceability is supported — a direct financial reason
+to book derivatives in netting-friendly places. In the United States the Bankruptcy Code's **safe harbours**
+exempt swaps and repos from the automatic stay. The system was tested on Lehman in September 2008, across
+roughly a million derivative transactions, and it worked; litigation over the Section 2(a)(iii) "walkaway"
+question then ran for most of a decade.
+
+One qualifier §5.1 should have carried: **gross credit exposure is after netting but before collateral.**
+With variation margin now near-universal, the genuinely uncollateralised residual is a fraction of USD 3.0
+trillion again. The full chain is 846 → 21.8 → 3.0 → smaller still.
+
+### 10f — AIG, which §5.2 named in half a sentence
+
+**What was sold.** AIG Financial Products — a unit of roughly 370 people, run largely out of London,
+attached to the world's largest insurer — had written on the order of **USD 500 billion notional** of credit
+protection by end-2007. The lethal piece was about **USD 78 billion of protection on multi-sector CDOs**
+backed substantially by subprime mortgages. Three features mattered: the book was **one-directional**, so
+§5.1's netting had nothing to net; it was written on **super-senior** tranches, above AAA, which models put
+at approximately zero default probability; and it was not 78 billion of independent risks but **one bet on
+one macroeconomic outcome, written 78 billion times.** Joseph Cassano, who ran AIGFP, told an August 2007
+earnings call that he could not *"see a scenario within any kind of realm of reason that would see us losing
+one dollar in any of those transactions."*
+
+**What actually killed it, and this is the part that surprises people: almost none of those CDOs had
+defaulted when AIG failed.** The contracts obliged AIG to post collateral when the **mark-to-market** moved
+against it *or* when **its own credit rating** was downgraded. Goldman Sachs made the first call in July
+2007, about USD 1.8 billion, and the calls never stopped. On **15 September 2008**, the day after Lehman,
+S&P and Moody's downgraded AIG; the rating triggers fired, tens of billions became payable at once, and the
+Federal Reserve lent **USD 85 billion** the following day against an eventual commitment near USD 182
+billion. (A second hole, usually forgotten: AIG's insurance subsidiaries ran a securities-lending programme
+and had invested the cash collateral in subprime RMBS — roughly another 20 billion of the same bet, in a
+different department.)
+
+**Where the wrong-way risk is, and it runs both ways.** For the *counterparties*: they had bought protection
+against a systemic housing collapse from a single seller, but the only scenario in which it pays is a
+systemic housing collapse — **the event that validates the claim is the event that destroys the insurer.**
+Not merely correlated; the same event. That protection was worth approximately nothing at the moment it was
+needed, which is why the Fed effectively paid those claims instead. For *AIG*: the downgrade trigger meant
+the obligation grew **because** the ability to pay shrank. A feedback loop with no fixed point, and the
+reason rating triggers in collateral agreements are now regarded as a design error.
+
+**The closing irony, and it is §4.2's sentence again.** Most of those super-senior positions recovered.
+**Maiden Lane III**, the Fed vehicle that bought the underlying CDOs for about 29 billion, repaid its loan
+and turned a profit. The credit models were broadly right; the **liquidity** assumption was fatally wrong.
+AIG did not need to be solvent at maturity, it needed to be solvent on Tuesday. That is
+**Metallgesellschaft 1993 and UK LDI 2022, word for word** — *you can be right and still be closed out* —
+and AIG is the largest instance ever recorded. Two conditions made it possible, both since changed: the
+Commodity Futures Modernization Act of 2000 placed these swaps outside regulation, and AIG's federal
+supervisor was the **Office of Thrift Supervision**, a savings-and-loan regulator, because AIG happened to
+own a small thrift. §5.2's clearing and margin mandates exist to make an unmargined, one-way, 500-billion
+book impossible to accumulate again — **the problem was never that AIG's view was wrong, it was that nobody
+was collecting collateral from AIG on the way in.**
+
+### 10g — What this session changes
+
+**The §3 §12 diagnosis held for four of the six**, which is a useful confirmation rather than a repetition:
+*fully hedged*, *arbitrage*, the netting bullet and AIG were all surface the material used without binding.
+The calibration from that section — zero friction on concepts, all friction on unexplained surface — was
+right, and this section was written against it and still left four.
+
+**But the ordering of the *arbitrage* question refines it.** The word appears in §2.3, and you read past it
+through §3, §4 and §5. You asked only after §10b — after you had built a trade of your own and needed to
+know whether it qualified. So the trigger is not *first use*. It is **first use where you have to act on
+it.** A term can sit unbound while it is scenery; it halts the read the moment it becomes load-bearing for
+something you are doing. That is a more demanding test than rule 9's "expand on first use," because it
+cannot be satisfied by a glossary — it requires knowing which terms the reader will eventually need to
+*use*, and binding those properly.
+
+**And the new half of the session is the thing to carry forward.** Questions 2 and 3 are one move: *remove
+the hedge and tell me what happens*, then *someone is paying for this, show me the ledger*. Both are
+conservation reasoning, and conservation is the correct default — it is what caught the fact that a
+persistent profit demands an account.
+
+What it does not prepare you for is that **in finance the ledger balances in three different ways, and only
+one of them is person-to-person.** The FX leg balanced across *time*, the interest leg did not balance at
+all because it was never a transfer, and the residual balanced through a *policy* whose cost fell on
+households who never traded anything. A physicist's instinct would look for the counterparty and find none,
+and conclude either that the profit is impossible or that someone is being robbed. **Neither is right, and
+knowing which of the three you are looking at is most of the skill in reading a financial claim.**
+
+**Table 12** — the questions this session turned into standing habits.
+
+| When you meet | Ask |
+|---|---|
+| A strategy with a persistent profit | *Is this a transfer, a risk premium, or a subsidy? One of the three.* |
+| A hedged position | *What exactly is covered — the principal, or the maturity amount?* |
+| A no-arbitrage claim | *What is the worst case? If I can lose, this is not arbitrage.* |
+| A risk statistic that shrank | *What mechanism shrank it, and under what jurisdiction does that mechanism hold?* |
+| A named example in a subordinate clause | *Does the story actually say what the clause claims?* |
+
+The last row is the one this section failed four times.
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 Derivatives vocabulary diverges between the two Chinese markets more than any other topic in this module,
@@ -1097,7 +1417,7 @@ from state-planned commodity exchanges. Where the split is genuine it is marked.
 ---
 
 ### What's next
-🔵 **PREPARED 2026-09-22.** You now hold the instruments that are **not** claims on an issuer: **the money
+✅ **FINALIZED 2026-10-02.** You now hold the instruments that are **not** claims on an issuer: **the money
 market** as the funding layer every crisis actually runs through, **FX** read down to the pip and understood
 as a funding market rather than a currency-view market — with **covered interest parity** turning a forward
 rate into arithmetic and finally pricing the E03 §4 regime in basis points, **commodities** as the one asset
@@ -1105,8 +1425,11 @@ class with a storage cost, where the shape of the curve is a return and an index
 **derivatives** as four blocks divided by one question (obligation or right) with margin rather than venue
 separating a future from a forward, **the measurement problem** that makes the headline number wrong by a
 factor of 280, and **Singapore** as the neutral venue whose strength and whose weak IPO pipeline are one
-fact. Read it and bring your questions — **§11 Applied** will be added from that session, exactly as §12 was
-in E06 §3.
+fact. **§10 Applied** is the session you drove through it, and it added a seventh figure: the §2.3 trade
+with the hedge removed, whose breakeven turns out to be the forward rate itself. It also closes two things
+the body left open — **what *arbitrage* actually means**, which every pricing argument here rests on, and
+**where a persistent profit comes from**, which is the question that distinguishes a transfer, a risk
+premium and a subsidy.
 
 **This closes Module E06.** From here the module's three instrument sections and this tour give you
 everything you need to read a market report and know which claim is being described, what it is senior or
