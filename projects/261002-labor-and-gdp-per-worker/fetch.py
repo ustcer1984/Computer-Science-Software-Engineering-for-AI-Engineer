@@ -31,3 +31,7 @@ get("https://api.imf.org/external/sdmx/2.1/data/IMF.RES,WEO/TWN.LE+LUR+NGDP_R+LP
 # Taiwan: UN WPP 2024 population by age (estimates to 2023, medium-variant projections after)
 get("https://ourworldindata.org/grapher/population-by-age-group-with-projections.csv"
     "?country=TWN&csvType=filtered", "owid_twn_population_by_age.csv")
+
+# China: births per year (UN WPP 2024) — for the cohort analysis in china_cohorts.py
+get("https://ourworldindata.org/grapher/number-of-births-per-year.csv"
+    "?country=CHN&csvType=filtered", "owid_chn_births.csv")
