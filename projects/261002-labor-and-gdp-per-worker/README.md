@@ -109,6 +109,40 @@ $$\Delta W_t \approx \underbrace{N_{t-15}}_{\text{满 15 岁进入}} \;-\; \unde
 1. **2024–25 年的数字是预测值。** UN WPP 2024 在 2023 年以后为中方案预测，但方向主要由已经出生的队列决定，比较可靠。
 2. **中国官方口径不同。** 官方常用 16–59 岁作为劳动年龄；按此口径，出生低谷一代在 60 岁退出，即 2019–2021 年，回升出现的时间会比本图早几年，不要与本图直接比较。
 
+### Q：新加坡和沙特的劳动年龄人口增速为什么起伏巨大？和移民政策有关吗？
+
+**是的，主要由外籍劳工政策驱动，同时受经济周期影响。** 两国人口中外籍比例都很高：新加坡约 30% 是非居民，沙特 2022 年人口普查中约 42% 是非沙特人。这些外籍人口绝大多数是凭工作准证入境的劳动年龄人士，有工作才来、没工作就走。因此两国的劳动年龄人口主要随**用工需求与签证政策**变化，而不是随出生人数变化——这与中国那一问中的“出生队列”机制完全不同。
+
+![新加坡与沙特：劳动年龄人口增速与政策事件](charts/sg_sa_migration.png)
+
+**新加坡（15–64 岁人口年增长率，%）**
+
+| 时期 | 增长率 | 原因 |
+|---|---|---|
+| 2002–03 | 0.95 → **−1.39** | 互联网泡沫后的衰退，加上 SARS，外籍劳工减少 |
+| 2004–08 | 1.6 → **+6.5** | 经济繁荣、综合度假村等大型工程建设，外劳政策宽松，非居民人口快速增加 |
+| 2009 | 3.7 | 全球金融危机，增速下滑 |
+| 2011–2019 | 2.4 → **≈0** | 2011 年大选后外劳政策明显收紧：提高外劳税、降低外劳配额，2014 年推出公平考量框架 |
+| 2020–21 | −1.1 → **−4.9** | 疫情封关。2021 年 6 月非居民人口减少 [10.7%](https://www.population.gov.sg/files/media-centre/publications/population-in-brief-2021.pdf)，总人口降到 545 万 |
+| 2022–23 | **+3.0 → +4.7** | 开放边境后，建筑和服务业补充人手，劳工回流 |
+| 2024–25 | 1.4 → 0.5 | 回流基本结束，增速回到正常水平 |
+
+背景：新加坡本地居民本身也在老龄化、生育率极低，所以外劳政策一收紧，劳动年龄人口增速就会马上接近零（如 2017–18 年）。
+
+**沙特（15–64 岁人口年增长率，%）**
+
+| 时期 | 增长率 | 原因 |
+|---|---|---|
+| 2000–2016 | 每年约 **+5～7** | 油价高涨、大规模基建，外籍劳工持续大量进入 |
+| 2014 | 3.1（低于前后几年） | 2013 年起清查非法劳工、推行沙特化配额制度，大量非法滞留的外劳离境 |
+| **2017–18** | **−0.4 → −3.3** | 2017 年 7 月开始征收外籍家属费，2018 年起再对外籍员工征税，此后逐年加码。官方数据显示 2017 年后至少 [70 万外籍人离境](https://www.middleeasteye.net/news/saudi-levy-foreign-workers-pushes-thousands-leave-country)；另有估计称 2017–2020 年外劳和家属共约 150 万人离开 |
+| 2022–25 | 每年约 **+5** | “2030 愿景”大型项目（如 NEOM）开工，外劳重新大量进入 |
+
+**需要注意的数据问题：**
+
+1. **部分剧烈跳动可能来自数据本身，而不是真实变化。** 沙特 2010 年（+0.25%）以及 2020 年 +5.2%、2021 年 −2.2% 的反复（图中标 “?”），很可能是联合国人口估算在 2010 年和 2022 年两次人口普查之间修订、插值留下的痕迹。尤其 2020 年，疫情期间外劳实际上在离境，+5.2% 不太可信。
+2. **这些起伏也会影响人均 GDP 图。** 外劳以低技能、低工资为主，大量进入时会拉低“每就业人员 GDP”。所以沙特在图 4 里年均 −1.58%，一部分原因是就业结构在变，不完全代表本地人的生产率在下降。
+
 ## 数据来源
 
 | 内容 | 来源 |
@@ -117,6 +151,7 @@ $$\Delta W_t \approx \underbrace{N_{t-15}}_{\text{满 15 岁进入}} \;-\; \unde
 | 台湾：就业人数、不变价 GDP | [IMF World Economic Outlook，2026 年 4 月版（SDMX API）](https://api.imf.org/external/sdmx/2.1/data/IMF.RES,WEO/TWN.LE+LUR+NGDP_R+LP.A)：`LE`、`NGDP_R`。基于主计总处官方统计（2024 年就业 1,160 万人，与[主计总处/央行报告](https://www.cbc.gov.tw/dl-215893-af39cb14b0044d1cb05a60864ec8d1f1.html)一致） |
 | 台湾：15–64 岁人口 | [UN WPP 2024，经 Our World in Data](https://ourworldindata.org/grapher/population-by-age-group-with-projections)（总人口 − 65 岁以上 − 15 岁以下） |
 | 中国：每年出生人数（问答部分） | [UN WPP 2024，经 Our World in Data](https://ourworldindata.org/grapher/number-of-births-per-year)；2024、2025 年为国家统计局公布数：[954 万](https://weekly.caixin.com/2025-01-25/102283349.html)、[792 万](https://news.sina.cn/gn/2026-01-19/detail-inhhuziz1397767.d.html?vt=4) |
+| 新加坡、沙特：政策与事件（问答部分） | [Population in Brief 2021](https://www.population.gov.sg/files/media-centre/publications/population-in-brief-2021.pdf)；[Bloomberg（2021-09）](https://www.bloomberg.com/news/articles/2021-09-28/singapore-population-shrinks-to-5-45m-on-drop-in-foreigners)；[Al Arabiya：沙特外籍家属费（2017-07）](https://english.alarabiya.net/business/economy/2017/07/03/Saudi-Arabia-introduces-new-tax-for-expatriates)；[Middle East Eye：外劳离境](https://www.middleeasteye.net/news/saudi-levy-foreign-workers-pushes-thousands-leave-country)；[Strategic Gears：沙特外籍税分析](https://engine.strategicgears.com/files/Strategic-Gears-Expat-Levy-Report.pdf) |
 
 原始下载文件存放在 [data/raw/](data/raw/)。
 
@@ -135,4 +170,5 @@ $$\Delta W_t \approx \underbrace{N_{t-15}}_{\text{满 15 岁进入}} \;-\; \unde
 uv run --no-project --with pandas --with matplotlib python fetch.py     # 可选：重新下载最新数据到 data/raw/
 uv run --no-project --with pandas --with matplotlib python analyze.py   # 计算并输出 data/processed/ 与 charts/
 uv run --no-project --with pandas --with matplotlib python china_cohorts.py  # 问答部分的中国出生队列图
+uv run --no-project --with pandas --with matplotlib python sg_sa_migration.py  # 问答部分的新加坡/沙特政策事件图（需先运行 analyze.py）
 ```
