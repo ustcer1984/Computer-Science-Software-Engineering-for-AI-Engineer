@@ -9,7 +9,10 @@
 > constraints are a correctness tool rather than paperwork, how `NULL` breaks ordinary logic, the small algebra that
 > every query compiles into, and how to model relationships without the four classic anti-patterns. Ch1 §2 builds
 > normalization on this; Ch1 §3 shows how the algebra becomes an execution plan; Ch1 §4 opens the B-tree index.
-> **Status:** 🔵 PREPARED 2026-09-28 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-10-05 (body prepared 2026-09-28) — **opens M03.** One question, on §9's checklist: *"Do
+> you mean the foreign-key column in the parent table should be indexed? What is actually happening when a column is
+> indexed?"* — answered and measured on PostgreSQL 18 in §12 (it is the **child** table; 2,859 ms → 0.26 ms). It also
+> corrected the body: "a cascade locks a table" is Oracle's behaviour, not PostgreSQL's (§9 reworded).
 > **Prerequisites:** none inside the module. Helpful: **M01 Ch3 §3** (races — §4 and §5 turn on one), **M02 Ch2 §1**
 > (idempotency keys, which are a unique constraint in disguise), and the 2026-06-26 reading on storage engines, which
 > compared B-trees with LSM (log-structured merge) trees one layer *below* this section.
@@ -398,7 +401,8 @@ on the referencing column.** The PostgreSQL manual says so directly. The referen
 the referencing side has one only if you create it. Without it, every delete or key update on the parent must find the
 children by a **sequential scan** of the child table — so deleting one user from a table with ten million battles reads
 ten million rows, and a cascade does it once per level. The rule of thumb: **index every foreign-key column** unless you
-have measured that you do not need to (`CREATE INDEX ON battle (user_id);`).
+have measured that you do not need to (`CREATE INDEX ON battle (user_id);`). §12 measures the difference on ten million
+rows and explains what the index physically is.
 
 Two honest caveats. Very high-write systems sometimes drop foreign keys for throughput, and sharded databases often
 cannot enforce them across shards (Ch4) — both are deliberate trades, made knowing that integrity then becomes a batch
@@ -826,8 +830,9 @@ on, aggregate, or need to keep consistent, because every guarantee in §3–§5 
   leaderboards or counts that are split between two rows with the same name.
 - **Orphan rows.** Relationships checked in application code instead of with a foreign key (§4) — a check-then-act
   race. The tell: joins that drop rows, and `None` where a parent should be.
-- **Deleting one parent takes seconds, or a cascade locks a table.** An unindexed foreign-key column (§4). The tell: a
-  sequential scan of the child table in the plan of a `DELETE` on the parent.
+- **Deleting one parent takes seconds.** An unindexed foreign-key column on the *child* table (§4, §12). The tell: in
+  `EXPLAIN ANALYZE` of a `DELETE` on the parent, a large `Trigger for constraint …_fkey` time — the child-table scan
+  runs inside that trigger, so it does not appear as a plan node.
 - **A business rule violated "impossibly".** An invariant enforced only in code, raced by a second worker (§5). Fix:
   `UNIQUE`, a partial unique index, `CHECK` or an exclusion constraint.
 - **An anti-join returns nothing.** `NOT IN` against a sub-query containing a `NULL` (§6). Use `NOT EXISTS`.
@@ -888,7 +893,7 @@ on, aggregate, or need to keep consistent, because every guarantee in §3–§5 
 6. **An unindexed foreign-key column in a child table** (§4). The delete must check or cascade to children, and without
    an index on the referencing column that means a sequential scan of the child table (once per referencing table, and
    once per cascade level). Confirm with `EXPLAIN ANALYZE DELETE …` (inside a transaction you roll back) and look for a
-   sequential scan or a slow foreign-key trigger on the child; fix with `CREATE INDEX ON child (parent_id);`. PostgreSQL
+   large `Trigger for constraint …_fkey` time — the child scan runs inside that trigger (§12 measures it); fix with `CREATE INDEX ON child (parent_id);`. PostgreSQL
    documents that foreign keys do not create this index automatically.
 7. **At least one `banned.user_id` is `NULL`** (§6). `x NOT IN (…, NULL)` includes `x <> NULL`, which is UNKNOWN, so no
    row's condition is TRUE and `WHERE` keeps nothing — silently. Write it as `SELECT * FROM users u WHERE NOT EXISTS
@@ -973,6 +978,120 @@ When you are done: `docker rm -f m03`.
 
 ---
 
+## 12. Applied — which table gets the index, and what an index physically is
+
+*(The session, 2026-10-05. He read §9's bullet "Deleting one parent takes seconds… an unindexed foreign-key column"
+and asked: "Do you mean the foreign-key column in the parent table should be indexed? What is actually happening when
+a column is indexed?" The numbers below were measured on PostgreSQL 18 for this answer, not estimated.)*
+
+### 12a. The index goes on the child — the parent already has one
+
+The question is natural, because "foreign-key column" does not say which table. It is the column the `REFERENCES`
+clause is written on, and that lives in the **child**:
+
+```
+app_user  (parent)                      battle  (child)
+user_id   PRIMARY KEY  ◄──────────────  user_id   REFERENCES app_user (user_id)
+  └─ indexed automatically: a key         └─ NOT indexed, unless you write
+     always gets a unique index              CREATE INDEX ON battle (user_id);
+```
+
+- **The parent side is always indexed.** PostgreSQL only lets a foreign key reference a `PRIMARY KEY` or `UNIQUE`
+  column, and both create a unique index. That is why *inserting* a battle — "does user 4 exist?" — is always fast.
+- **The child side is indexed only if you create one.** The PostgreSQL manual says so in its section on foreign keys.
+  **MySQL's InnoDB engine is the exception:** it requires an index on the referencing columns and creates one
+  automatically. People who learned on MySQL therefore never meet this trap — until they move to PostgreSQL.
+
+**Why a parent delete reads the child at all.** `DELETE FROM app_user WHERE user_id = 4` cannot finish until the
+database knows which battles reference user 4: with `NO ACTION` or `RESTRICT` it must prove there are none, and with
+`CASCADE` it must find them all to delete them. PostgreSQL implements this as a system trigger that runs, roughly,
+`SELECT 1 FROM battle WHERE user_id = 4 FOR KEY SHARE`. Without an index on `battle.user_id`, that query has one
+possible plan: read the whole table.
+
+### 12b. What the index is
+
+A PostgreSQL table — the **heap** — stores rows in 8 KB pages in **no useful order**. Finding the rows with
+`user_id = 4` in the heap means reading every page.
+
+An **index** is a second, separate structure stored beside the table. The default kind is a **B-tree**: a sorted copy
+of the indexed column's values, each paired with a pointer to its row's physical location (a page number and a slot
+within the page, together called a **TID**, tuple identifier). The sorted values are arranged as a shallow tree of
+pages:
+
+```
+                 B-tree on battle (user_id)                  heap: the table itself, unordered
+                  ┌──────────────────────┐
+     root         │  ..  |  50,000  |  ..│                   page 0      (b=1,  user=2) (b=2, user=3) …
+                  └───┬──────────┬───────┘                   page 1      …
+     internal   ┌─────┴───┐  ┌───┴─────┐                     …
+                │ 1..300  │  │ 301..   │  …                  page 78,113 (b=…, user=4) …
+                └────┬────┘  └─────────┘                     …
+     leaf       user 4 → (page 0, slot 7), (page 78,113, slot 3), …   ──►  fetch only those pages
+```
+
+**A lookup** descends from the root to one leaf, comparing the search value at each level, and then reads only the
+heap pages the leaf points to. Because each page holds hundreds of entries, the tree stays very shallow: its depth
+grows as $\log n$ with a base in the hundreds, so a lookup costs $O(\log n)$ page reads instead of the $O(n)$ of a
+full scan. Ch1 §4 opens the structure properly — the page layout, splits, and why random UUIDs hurt it.
+
+**The cost is paid on writes.** The index is a copy that must stay in step with the table: every `INSERT` into
+`battle` also inserts an index entry, every `DELETE` eventually removes one, an `UPDATE` that changes `user_id` does
+both, and the index occupies disk and memory. That is why you do not index every column — only the ones you search by.
+A foreign-key column nearly always is one: apart from the delete check, "show me this user's battles" is probably the
+most common query on the table, and every join between the two tables matches on that same column.
+
+### 12c. Measured: ten million battles
+
+The schema of §4, PostgreSQL 18 in Docker on a laptop: 100,000 users, 10 million battles (100 per user), then
+`EXPLAIN ANALYZE` of deleting a user who has **no** battles — the cheapest possible case, since nothing cascades.
+
+**Table 7** — the same parent delete before and after `CREATE INDEX ON battle (user_id)`.
+
+| | Without the index | With the index |
+|---|---|---|
+| `Trigger for constraint battle_user_id_fkey` time | **2,859 ms** | **0.26 ms** |
+| What the trigger did | read all 192,308 heap pages (1.5 GB) | descended a 3-level B-tree to one leaf |
+| Size of what it reads | the whole table | the index is 8,366 pages (65 MB); the lookup touches about 3 |
+
+Three things in that output are worth knowing:
+
+- **The slow part is invisible in the plan tree.** The plan shows only a fast scan of `app_user`; the child-table scan
+  runs inside the foreign-key trigger and appears as one line, `Trigger for constraint …: time=2858.763`. Anyone
+  looking for a `Seq Scan on battle` node will not find it — which is why §9's tell now names the trigger line.
+- **The factor is about 11,000, and it grows with the child table.** The unindexed cost is proportional to the number
+  of battles; the indexed cost is proportional to the depth of the tree — 3 levels here, and one more level only each
+  time the table grows a few hundred times. One delete taking three seconds is an annoyance; a nightly job deleting 10,000 expired users becomes
+  eight hours.
+- **This index is a quarter the size of the primary key's.** The primary-key index on the same table is 27,421 pages
+  (214 MB) because every `battle_id` is distinct. Each `user_id` value appears 100 times, and since version 13
+  PostgreSQL B-trees store a repeated value once with a list of row pointers (**deduplication**). An index on a
+  low-distinct foreign-key column is cheaper than intuition suggests.
+
+### 12d. A correction to the body: PostgreSQL does not lock the child table
+
+§9 originally said an unindexed foreign key means "a cascade locks a table". That is **Oracle's** behaviour, stated
+in its documentation: when the child's foreign-key column has no index and a parent key is deleted or updated,
+Oracle takes a **full table lock on the child**, so other sessions can still read the child table but cannot modify it
+until the statement completes. That is where the "unindexed foreign keys lock tables" folklore comes from, and it is
+true there.
+
+**PostgreSQL locks rows, not the table.** Its trigger locks only the child rows it finds (`FOR KEY SHARE`), and the
+delete locks the parent row. What hurts is **duration**: the scan makes the delete's transaction last seconds instead
+of microseconds, and anything that needs the same rows — a new battle being inserted for user 4, say — waits for the
+whole of it. Under load that queueing can *look* like a table lock, but writers touching other users are unaffected.
+§9's bullet now says only what is true for PostgreSQL.
+
+### 12e. What the session teaches
+
+- **"Which table?" is the first question for any column-level rule.** A foreign key has two ends; the guarantee lives
+  at one and the cost at the other. The index you are told to add is on the end you write the constraint on.
+- **An index is a sorted copy plus pointers, bought with write cost.** Every indexing decision in Ch1 §4 and M03 Ch4 is
+  that trade: reads by a column you search, against inserts and updates paying to keep the copy current.
+- **Measure in the database you run.** The same advice — "unindexed foreign keys lock tables" — is a fact in Oracle and
+  folklore in PostgreSQL, and only one of them is the system you operate.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -1026,6 +1145,12 @@ When you are done: `docker rm -f m03`.
   <https://www.postgresql.org/docs/current/sql-select.html>
 - PostgreSQL documentation — *UUID Functions* (`uuidv4()` and the version 7 `uuidv7()`) —
   <https://www.postgresql.org/docs/current/functions-uuid.html>
+- PostgreSQL documentation — *B-Tree Indexes* (structure and deduplication, used in §12) —
+  <https://www.postgresql.org/docs/current/btree.html>
+- Oracle — *Database Concepts*, "Locks and Foreign Keys" (the full child-table lock with an unindexed foreign key,
+  §12d) — <https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/data-concurrency-and-consistency.html>
+- MySQL documentation — *FOREIGN KEY Constraints* (InnoDB creates the referencing-side index automatically) —
+  <https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html>
 - PostgreSQL wiki — *Don't Do This* (including "Don't use `NOT IN`") — <https://wiki.postgresql.org/wiki/Don't_Do_This>
 - RFC 9562 — *Universally Unique IDentifiers (UUIDs)* (version 7's time-ordered layout) —
   <https://www.rfc-editor.org/rfc/rfc9562>
