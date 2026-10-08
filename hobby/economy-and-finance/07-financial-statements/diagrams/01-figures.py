@@ -30,6 +30,17 @@ transaction list so the text and the picture cannot drift apart.
          dividends and tax withheld on vesting shares. Earning 112 billion
          raised book equity by 16.8 billion. All figures from the FY2025 10-K
          via the SEC XBRL API; the waterfall closes exactly.
+  fig6 — ADDED AT FINALIZE for §10 Applied (figure 5 is the Mermaid
+         one-pager in §7). WHAT ACTUALLY DRIVES BOOK EQUITY NEGATIVE, and
+         what does not. Left: cumulative net income against cumulative
+         buybacks plus dividends, FY2011-FY2025, for Starbucks and
+         McDonald's — both returned far more than they earned, and the
+         excess is the size of the hole. Right: gross property, plant and
+         equipment against accumulated depreciation for the same two, which
+         is the learner's proposed third mechanism measured rather than
+         asserted: real, but an order of magnitude too small at Starbucks,
+         and pointing the wrong way for leasehold improvements. Source: SEC
+         XBRL companyconcept API, 10-K values, annual periods only.
   fig4 — PROFIT IS NOT CASH, AND THE GAP IS NOT FRAUD. Netflix 2013-2021: net
          income positive and rising every single year while operating cash
          flow ran deeply negative, reaching -2,887m in 2019 against reported
@@ -339,6 +350,98 @@ def fig4():
           f"{sum(1 for v in NFLX_NI if v > 0)})")
 
 
+# ------------------------------------------------------------------- fig 6
+# Added at FINALIZE (2026-10-08) for §10 Applied. Figure 5 is the Mermaid
+# one-pager in §7, so the next matplotlib figure is 6.
+#
+# SEC XBRL companyconcept API, 10-K values, annual periods only (durations
+# between 330 and 400 days — without that filter the series silently mixes
+# in fourth-quarter figures, which is a trap worth recording here).
+# Cumulative FY2011-FY2025, USD millions.
+PAYOUT = {
+    "Starbucks": dict(
+        ni=39_434, buyback=33_245, dividend=23_470, eq_open=3_675, eq_close=-8_097,
+        ppe_gross=19_842.7, ppe_accdep=11_349.2),
+    "McDonald's": dict(
+        ni=91_377, buyback=56_678, dividend=54_410, eq_open=14_634, eq_close=-1_791,
+        ppe_gross=49_290.0, ppe_accdep=21_049.0),
+}
+
+
+def fig6():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13.4, 5.9),
+                                   gridspec_kw={"width_ratios": [1.2, 1]})
+
+    names = list(PAYOUT)
+    x = np.arange(len(names)); w = 0.34
+    ni = np.array([PAYOUT[n]["ni"] for n in names]) / 1000
+    bb = np.array([PAYOUT[n]["buyback"] for n in names]) / 1000
+    dv = np.array([PAYOUT[n]["dividend"] for n in names]) / 1000
+
+    ax1.bar(x - w / 2, ni, width=w, color=C3, label="Cumulative net income")
+    ax1.bar(x + w / 2, bb, width=w, color=C2, label="Cumulative buybacks")
+    ax1.bar(x + w / 2, dv, width=w, bottom=bb, color=C4, label="Cumulative dividends")
+    for i, n in enumerate(names):
+        ax1.text(i - w / 2, ni[i] + 2.2, f"{ni[i]:,.1f}", ha="center", fontsize=11)
+        ax1.text(i + w / 2, bb[i] + dv[i] + 2.2, f"{bb[i] + dv[i]:,.1f}", ha="center",
+                 fontsize=11, fontweight="bold")
+        ax1.annotate("", xy=(i + w / 2, bb[i] + dv[i]), xytext=(i - w / 2, ni[i]),
+                     arrowprops=dict(arrowstyle="<->", color=GREY, lw=1.5))
+        side = -1 if i == 0 else 1          # keep the note clear of the next pair
+        ax1.text(i + side * (w / 2 + 0.24), (ni[i] + bb[i] + dv[i]) / 2,
+                 f"returned {bb[i] + dv[i] - ni[i]:,.1f}\nmore than earned",
+                 ha="right" if side < 0 else "left", va="center",
+                 fontsize=10.2, color=GREY)
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(
+        [f"{n}\nequity {PAYOUT[n]['eq_open'] / 1000:+,.1f} -> {PAYOUT[n]['eq_close'] / 1000:+,.1f}"
+         for n in names], fontsize=11.4)
+    ax1.set_xlim(-1.18, 1.96)
+    ax1.set_ylabel("USD billion, cumulative FY2011-FY2025")
+    ax1.set_ylim(0, 142)
+    ax1.set_title("What actually drove book equity below zero",
+                  fontsize=12.6, fontweight="bold")
+    ax1.legend(fontsize=10.2, loc="upper left")
+    ax1.grid(axis="y", alpha=0.25)
+    ax1.spines[["top", "right"]].set_visible(False)
+
+    # right: the proposed mechanism, measured
+    y = np.arange(len(names))
+    gross = np.array([PAYOUT[n]["ppe_gross"] for n in names]) / 1000
+    accd = np.array([PAYOUT[n]["ppe_accdep"] for n in names]) / 1000
+    net = gross - accd
+    ax2.barh(y, net, height=0.46, color=C1, label="Net book value")
+    ax2.barh(y, accd, height=0.46, left=net, color="#bdbdbd",
+             label="Accumulated depreciation")
+    for i, n in enumerate(names):
+        ax2.text(net[i] / 2, i, f"{net[i]:,.1f}", ha="center", va="center",
+                 color="white", fontsize=11, fontweight="bold")
+        ax2.text(net[i] + accd[i] / 2, i, f"{accd[i]:,.1f}", ha="center", va="center",
+                 color="#333333", fontsize=11)
+        ax2.text(gross[i] + 1.1, i, f"{accd[i] / gross[i] * 100:.0f}% written off",
+                 va="center", fontsize=10.6, color=GREY)
+    ax2.set_yticks(y); ax2.set_yticklabels(names, fontsize=12)
+    ax2.set_xlim(0, 68)
+    ax2.set_xlabel("Property, plant and equipment (USD billion)")
+    ax2.set_title("The proposed third mechanism, measured",
+                  fontsize=12.6, fontweight="bold")
+    ax2.legend(fontsize=10.0, loc="upper right")
+    ax2.grid(axis="x", alpha=0.25)
+    ax2.spines[["top", "right"]].set_visible(False)
+    ax2.invert_yaxis()
+
+    fig.tight_layout()
+    save(fig, 6)
+    for n in names:
+        d = PAYOUT[n]
+        assert abs(d["ppe_gross"] - d["ppe_accdep"] - (d["ppe_gross"] - d["ppe_accdep"])) < 1e-9
+        excess = d["buyback"] + d["dividend"] - d["ni"]
+        drop = d["eq_close"] - d["eq_open"]
+        print(f"  ({n}: returned {excess:,.0f} more than earned; equity moved {drop:,.0f}; "
+              f"residual {excess + drop:,.0f} = share-based comp, issuance and OCI; "
+              f"PPE {d['ppe_accdep'] / d['ppe_gross'] * 100:.0f}% written off)")
+
+
 if __name__ == "__main__":
-    fig1(); fig2(); fig3(); fig4()
+    fig1(); fig2(); fig3(); fig4(); fig6()
     print("done")

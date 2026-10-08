@@ -10,8 +10,10 @@
 > there is one statement for each, how the income statement is **welded** to the balance sheet, and
 > **accrual** — the single decision that makes accounting useful and makes it arguable. §2 through §5 then
 > take the statements one at a time, and none of them will make sense without this.
-> **Status:** 🔵 **PREPARED 2026-10-02** — body drafted, awaiting your read; **§10 Applied** will be added
-> once you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed
+> **Status:** ✅ **FINALIZED 2026-10-08** — prepared 2026-10-02, read 2026-10-08, and **§10 Applied** is that
+> session: where the other half of the bank's entry went, and a third mechanism for negative book equity that
+> you derived from §5.2 before the section got round to it — then measured (Figure 6) against the one that
+> actually did the damage. Math in LaTeX, quantitative relationships drawn as real computed
 > figures (three of them from filed accounts), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -312,6 +314,11 @@ than nothing.
 > 2. **The valuable assets are not on the balance sheet at all.** The brand, the store locations, the
 >    customer habit — §2.1 excluded all of them, because they were not *purchased in a past event*. An
 >    acquired brand appears; a self-built one does not.
+> 3. **And the assets that *are* recorded can be recorded at the wrong number.** Depreciation is an
+>    allocation rather than a valuation (§5.2), and under historical cost an asset is written **down** when
+>    impaired and never written **up** — so a long-lived estate drifts below its economic value in one
+>    direction only. §10b measures this against mechanism 1 and shows it is the smaller effect here, and the
+>    larger one at a company that owns land.
 >
 > **So book equity is not what the company is worth, and was never trying to be.** It is a bookkeeping
 > residual of historical transactions. The market's answer to "what is it worth" is computed somewhere else
@@ -370,8 +377,21 @@ that people try to attach a meaning to the words. **Do not.**
 > or directional content whatsoever.
 
 The reason your bank statement seems to contradict this is that it is written from **the bank's** point of
-view. Your deposit is the bank's liability; money arriving increases that liability; and increases to a
-liability are credits. "Your account has been credited" is the bank correctly describing *its own* books.
+view, and that it names **one account** rather than describing a transaction. When S\$500 arrives in your
+account, the bank records this:
+
+> **Dr** Cash and balances with the central bank *(asset)* &nbsp; **500**
+> **Cr** Customer deposits — your name *(liability)* &nbsp; **500**
+
+Both halves are there, and the first of them is an ordinary **debit to an asset**. But *"your account"* is
+the second line only — the liability carrying your name — and that is the line the letter reports. The
+matching debit went somewhere that is not yours, so nobody writes to you about it.
+
+> **Debit and credit are properties of an entry in one account. They are never properties of a
+> transaction.** Every transaction has both, by §3.1. So "is this a debit or a credit?", asked of a whole
+> transaction, is a malformed question — the only answerable form is **"a debit to *what*?"** Keep that in
+> front of you and the notation stops being able to confuse you. §10a works the case through, including the
+> variant where the bank credits you *interest* and no asset moves at all.
 
 From the positional definition plus the equation, the rules follow with no memorisation:
 
@@ -673,6 +693,12 @@ And the one that quietly does the most damage if misread:
 > (straight-line? reducing balance?) are all **estimates made by management**, disclosed in the notes, and
 > changing any one of them changes reported profit without changing a single cash flow or a single machine.
 > That is not fraud; it is the system working as designed. It is also exactly why E07 §5 exists.
+>
+> **And follow it one step further, because §2.4 depends on it.** If the carrying amount was never a claim
+> about value, then the *sum* of the carrying amounts is not a claim about the company's value either — so
+> **the residual computed from them is not either.** Under historical cost an asset is written down when
+> impaired and never written up, so the drift runs one way. §10b sizes that effect against the distributions
+> of §2.4 on the two companies in question.
 
 ### 5.3 The price of accrual, stated plainly
 
@@ -886,11 +912,14 @@ flowchart TD
    **bank's liability** to you, liabilities sit on the right of the equation, and increases to them are
    credits. The sentence describes **the bank's books**, correctly, from the bank's point of view. Your own
    books, if you kept them, would record a **debit** to an asset.
-3. The two mechanisms (§2.4): **cumulative distributions exceeding cumulative retained earnings** — years of
-   buybacks and dividends mechanically drive the residual below zero — and **the most valuable assets never
-   being recorded**, because a self-built brand, store network and customer habit are not purchased in a past
-   event. Instead of book equity, look at **whether it generates cash, whether it can service its debt, and
-   when that debt matures.** Insolvency is about paying obligations as they fall due, not about a residual.
+3. Three mechanisms (§2.4). **Cumulative distributions exceeding cumulative retained earnings** — years of
+   buybacks and dividends mechanically drive the residual below zero, and at Starbucks this is the whole of
+   it: 17.3 billion returned beyond what was earned over FY2011–FY2025 (§10b). **The most valuable assets
+   never being recorded**, because a self-built brand, store network and customer habit are not purchased in
+   a past event. And **the recorded assets being carried at the wrong number**, since depreciation is an
+   allocation and historical cost never writes up (§5.2, §10b). Instead of book equity, look at **whether it
+   generates cash, whether it can service its debt, and when that debt matures.** Insolvency is about paying
+   obligations as they fall due, not about a residual.
 4. On 1 January: **cash +1,200,000, deferred revenue (a liability) +1,200,000. No revenue, no profit.** The
    company has been paid for a service it still owes (§5.2). By 31 March, three months have been earned, so
    **S\$300,000 has moved from deferred revenue to revenue**; the liability stands at S\$900,000, and profit
@@ -953,7 +982,10 @@ flowchart TD
    any company, find the CIK (Apple is 0000320193) and fetch:
    `https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/Assets.json`. Swap `Assets` for
    `Liabilities`, `StockholdersEquity`, `NetIncomeLoss` or
-   `NetCashProvidedByUsedInOperatingActivities`. Every figure in Figures 1, 3 and 4 came from exactly this.
+   `NetCashProvidedByUsedInOperatingActivities`. Every figure in Figures 1, 3, 4 and 6 came from exactly this.
+   ⚠ **Filter on period length.** A `10-K` filing tags fourth-quarter facts as well as annual ones, so a
+   naive read of a flow concept silently mixes the two; require the duration between `start` and `end` to be
+   roughly a year. Getting this wrong nearly doubled a number in §10b before it was caught.
 3. **Find a deferred revenue balance.** Pick any subscription or software company and locate deferred (or
    "contract") liabilities on the balance sheet. Express it as a share of annual revenue. That fraction is
    roughly how much of next year's revenue is already paid for.
@@ -964,6 +996,197 @@ flowchart TD
    check column computing $A - L - E$. Enter the transactions from Table 4. The check column should be zero
    on every row; if it is not, you have made a one-sided entry, which is the error double-entry exists to
    catch.
+
+---
+
+## 10. Applied — two halves of two-sided things, and the difference between a mechanism and a cause
+
+Two questions, and they are the same question asked about two different passages. **In each case the
+material stated one half of something that has two halves, and in each case you reconstructed the missing
+half yourself and brought it to be checked.**
+
+That is a different move from the two preceding sections. In E06 §3 you **stopped** at terms the material
+had not bound. In E06 §4 you stopped again, and also ran a conservation check on a profit. Here you did not
+stop at all: you took the constraint the section had just given you, **ran it**, got an answer the prose had
+not stated, and asked whether the answer was right.
+
+Both times it was. And both times the useful thing to add was not confirmation — it was the part you could
+not have derived from the page.
+
+**Table 8** — the two questions, the gap behind each, and where the answer now lives.
+
+| You asked | What the section gave | What it left out | Answer |
+|---|---|---|---|
+| *"L up and E flat, then A also up, right? Then why cannot call it debit to asset on bank's book?"* | the **credit** to the bank's deposit liability | the matching **debit**, which is exactly the entry you had deduced must exist | §3.2, rewritten; §10a |
+| *"Depreciation reduced its book value to 0, but the machine still has a resale value"* | two mechanisms for negative equity | **a third**, which §5.2 had already supplied the principle for | §2.4, §5.2; §10b, **Figure 6** |
+
+### 10a — Where the other half of the entry went
+
+**You were right, and the debit to an asset is there.** §3.2 as originally written said that your deposit is
+the bank's liability and that increases to a liability are credits — and then stopped, which left you
+holding one entry and correctly refusing to believe that a transaction could have only one.
+
+The bank's actual entry, when S\$500 arrives in your account:
+
+> **Dr** Cash and balances with the central bank *(asset)* &nbsp; **500**
+> **Cr** Customer deposits — your name *(liability)* &nbsp; **500**
+
+Assets +500, liabilities +500, equity flat. Precisely the reasoning you did from $A = L + E$. The top line
+**is** a debit to an asset on the bank's own books.
+
+**So why does the letter say "credited"?** Because *"your account"* names **one account**, not the
+transaction. The bank is not reporting what happened to its balance sheet; it is reporting the state of one
+ledger account — the liability carrying your name. That account received a credit entry. The matching debit
+landed in a different account, which is not yours, and about which the bank has no reason to write to you.
+
+The rule §3.2 should have stated outright, and now does:
+
+> **Debit and credit are properties of an entry in one account. They are never properties of a
+> transaction.** Every transaction has both — that *is* double-entry (§3.1). So "is this a debit or a
+> credit?", asked of a whole transaction, is a malformed question. The answer is always *both, in different
+> places*, and the only meaningful form of the question is "a debit **to what**?"
+
+**Table 9** — the same S\$500, on two ledgers, on opposite sides.
+
+| | The bank's books | Your books |
+|---|---|---|
+| What the deposit balance is | a **liability** — it owes you | an **asset** — the bank owes you |
+| The entry in that account | **Cr** Customer deposits 500 | **Dr** Bank account 500 |
+| Where the other half goes | **Dr** Cash or reserves 500 | **Cr** whatever the money came from |
+
+Which makes your instinct right twice over: it is a debit to an asset on the bank's books *and* a debit to
+an asset on yours. The one account where it is a credit is the one account the letter was describing.
+
+**And one sharpening, because your inference carried a hidden premise.** You wrote *"L up and E flat, then A
+also up"* — correct **given** that equity is flat, and in the deposit case it is. It is not always. If the
+bank credits you S\$500 of **interest**:
+
+> **Dr** Interest expense *(reduces equity)* &nbsp; **500**
+> **Cr** Customer deposits *(liability)* &nbsp; **500**
+
+**No asset moves at all.** Liabilities up, equity down, and your account was credited by the same amount.
+The identity constrains the **totals**; it says nothing about **which** accounts move — which is the lower
+panel of Figure 2, arriving in a case you built yourself.
+
+### 10b — A third mechanism, and why it is not the cause
+
+Your second question proposed a third route to negative book equity: **depreciation writes an asset down to
+zero while the asset is still worth something.**
+
+**It is real, it is correct, and §5.2 had already handed you the principle** — *depreciation is an
+allocation, not a valuation* — without the section ever following it through to the balance sheet. So this
+is the material's omission, not a leap on your part. The mechanism has a name and a reason:
+
+> **Historical cost plus asymmetric prudence.** If an asset's recoverable amount falls below its carrying
+> amount, **impairment is mandatory**. If it rises above, under US GAAP **nothing happens, ever** — there is
+> no write-up for property, plant and equipment. The asymmetry is deliberate: a write-down can be compelled
+> by evidence, whereas a write-up would let management mark its own assets. The price is that a long-lived
+> asset base **drifts below its economic value, systematically and in one direction only**, and a fully
+> depreciated machine still in service is the terminal case.
+
+Note that this is a *different* failure from §2.4's second mechanism. There, the valuable things were
+**never recorded**. Here the asset *is* on the balance sheet, carried at a precise-looking number that is
+not a value. That is arguably the more misleading of the two.
+
+**Now size it, because a mechanism being real and a mechanism being the cause are different claims — and
+the distance between them is arithmetic.**
+
+![Two panels testing what produced negative book equity at Starbucks and McDonald's. The left panel compares cumulative net income over fiscal years 2011 to 2025 with cumulative buybacks plus dividends over the same period: Starbucks earned 39.4 billion US dollars and returned 56.7 billion, which is 17.3 billion more than it earned, while its equity moved from plus 3.7 billion to minus 8.1 billion; McDonald's earned 91.4 billion and returned 111.1 billion, 19.7 billion more than earned, with equity moving from plus 14.6 billion to minus 1.8 billion. The right panel shows gross property, plant and equipment split into net book value and accumulated depreciation: Starbucks has 8.5 billion net against 11.3 billion written off, 57 percent of gross, and McDonald's has 28.2 billion net against 21.0 billion written off, 43 percent of gross.](diagrams/01-accounting-equation-and-double-entry-fig6.svg)
+
+**Figure 6** — the payout mechanism and the depreciation mechanism, measured against each other on the two companies in question.
+
+**Table 10** — fifteen years of filed figures, FY2011 to FY2025. USD billions.
+
+| | Starbucks | McDonald's |
+|---|---|---|
+| Cumulative net income | 39.4 | 91.4 |
+| Cumulative buybacks | 33.2 | 56.7 |
+| Cumulative dividends | 23.5 | 54.4 |
+| **Returned beyond what it earned** | **17.3** | **19.7** |
+| Equity, start of window | +3.7 | +14.6 |
+| Equity, end of window | **−8.1** | **−1.8** |
+| *Change in equity* | *−11.8* | *−16.4* |
+
+The payout mechanism alone over-explains both holes; the gap between the excess distribution and the
+actual fall in equity is share-based compensation, share issuance and OCI, which run the other way.
+**Distributions are the cause. Nothing else needs to be invoked.**
+
+Against that, the right panel of Figure 6 sizes your mechanism:
+
+- **Starbucks**: gross PP&E 19.8bn, accumulated depreciation 11.3bn, net 8.5bn — the books say the estate is
+  **57% written off**. Even on the absurd assumption that the true value equals original cost, the hidden
+  value is about 11bn, against a 17.3bn payout excess.
+- **And at Starbucks it probably points the wrong way.** Its PP&E is largely **leasehold improvements and
+  store fit-out** inside premises it does not own. A fit-out cannot be removed and is worth close to nothing
+  on exit, so for that asset class the carrying amount tends to *overstate* realisable value. Your coffee
+  machine has a resale market. A counter bolted into a leased unit does not.
+
+**Where the mechanism genuinely is enormous is McDonald's**, and for a reason the Starbucks case hides:
+**land is never depreciated — and never written up either.** McDonald's holds corner sites bought in the
+1960s, 70s and 80s, carried at what was paid for them in nominal dollars, forever. Gross PP&E of 49.3bn with
+21.0bn written off understates that estate by a margin nobody can read off the balance sheet. It still is
+not what drove equity to −1.8bn; it is what makes −1.8bn an even worse description of the company than it
+looks.
+
+> **A correction to something said in the session, since it was a number you might have carried away.** I
+> first put Starbucks' payout excess at about **30.5 billion**. That came from an unfiltered pull of the SEC
+> XBRL series, which silently mixes fourth-quarter figures in with annual ones unless you filter on period
+> duration. **The correct figure is 17.3 billion**, and it is what Figure 6 and Table 10 use. The conclusion
+> is unchanged — the excess still exceeds the hole — but the number was wrong by nearly a factor of two, and
+> §9's exercise now warns about the same trap.
+
+**Two consequences worth carrying forward.**
+
+**A diagnostic, free of charge.** Accumulated depreciation ÷ gross PP&E reads as *how far through its assumed
+life the asset base is* — Starbucks 57%, McDonald's 43%. A ratio that climbs year after year means assets
+are being run harder and replaced more slowly, and the bill arrives later as capital expenditure.
+
+**And the effect's mirror image, on the income statement.** A fully depreciated machine still earning revenue
+**carries no depreciation charge at all.** Reported profit rises, and return on assets rises, with no
+operational improvement whatsoever — purely because the asset base aged. So the same mechanism that makes
+the balance sheet understate makes the income statement **overstate**, which is E08 §1's problem and a
+genuine earnings-quality trap.
+
+**One rulebook split, which §1.2 predicts.** IFRS permits a **revaluation model** for PP&E (IAS 16) and fair
+value for investment property (IAS 40). US GAAP permits neither. Starbucks and McDonald's are US filers and
+**cannot** write up even if they wished to, whereas a Singapore or Hong Kong property company's balance
+sheet genuinely does carry buildings at market. Your mechanism is therefore partly a *jurisdictional* fact,
+not only an accounting one.
+
+### 10c — What this session changes
+
+**The shape has moved on from v55 and v58, and the move is worth naming.**
+
+- **E06 §3**: you stopped at terms the material used without binding. *An unbound symbol halts the read.*
+- **E06 §4**: you stopped again — and also took a result and ran a **conservation check** on it.
+- **Here**: you did not stop. Both times you **ran the constraint the section had just given you, derived
+  the piece the prose had omitted, and brought the derivation to be adjudicated.**
+
+Question one was $A = L + E$ applied to a sentence about a bank. Question two was §5.2's *allocation, not a
+valuation* applied to §2.4's residual. Neither required a word that was missing; both required a **step that
+was missing**, and you took it.
+
+**The teaching implication is specific. You are now reasoning from the identities rather than from the
+prose**, so a constraint stated loosely will be run anyway and will produce a wrong answer with full
+confidence. Conversely, where a passage states only one side of a two-sided mechanism, you will reconstruct
+the other side correctly — which means the material's job is no longer to supply it but to supply **what you
+cannot derive**: the specific account it landed in, the hidden premise, the magnitude.
+
+**And the recurring service this section owed you is *sizing*.** Your depreciation mechanism was right, and
+the honest response was not "yes" but "yes, and it is about an order of magnitude too small here, and it
+points the wrong way for this asset class, and here is the company where it is enormous." That is the same
+service E06 §4 §10c owed on the carry trade — a correct causal story, then the arithmetic that says whether
+it is *the* cause.
+
+**Table 11** — the questions this session turned into standing habits.
+
+| When you meet | Ask |
+|---|---|
+| A sentence describing one entry | *A debit to what? Every entry has a partner, and the partner is the information.* |
+| A conclusion you derived from an identity | *What premise did I hold fixed, and is it actually fixed here?* |
+| A mechanism that explains a result | *Is it the cause, or merely a contributor? Size it against the alternatives.* |
+| A carrying amount | *Is this a value, or an allocation that has drifted? Which way does it drift for this asset?* |
+| A ratio built on book equity | *Who controls the denominator, and what have they been doing to it?* |
 
 ---
 
@@ -1046,7 +1269,7 @@ and American practice. Where the split is genuine rather than script it is marke
 ---
 
 ### What's next
-🔵 **PREPARED 2026-10-02.** You now have the machinery: **a report is a constrained self-description**, not a
+✅ **FINALIZED 2026-10-08.** You now have the machinery: **a report is a constrained self-description**, not a
 measurement; **the balance sheet is a state and the other statements are flows**; **assets equal liabilities
 plus equity because equity is defined as the difference**, so a balanced book proves consistency and never
 truth; **double-entry is one rule** with exactly two transaction shapes, and debits and credits are
@@ -1055,7 +1278,12 @@ year's movement in one equity account**, which is why Apple can earn 112 billion
 and **accrual buys comparability at the price of judgement**, with capitalise-or-expense as the largest
 single lever and Netflix as proof that a profit-versus-cash gap is a question rather than a verdict.
 
+**§10 Applied** is the session you drove through it, and it added a sixth figure: the two mechanisms for
+negative book equity, measured against each other on Starbucks and McDonald's. It also closes two things the
+body left half-stated — **where the bank's matching debit goes**, which is the entry you deduced must exist
+before anyone showed it to you, and **the third route to negative equity**, which §5.2 had supplied the
+principle for and §2.4 had not collected.
+
 **This opens Module E07.** Next, **§2 — the income statement**: revenue down to profit, what each margin
 actually measures, which lines are the business and which are the financing and the tax code, and why the
-"bottom line" is the least informative number on the page. Read this one and bring your questions —
-**§10 Applied** will be added from that session, exactly as the Applied section was in E06 §4.
+"bottom line" is the least informative number on the page.
