@@ -356,8 +356,9 @@ per row, priced at `cost=0.00..139429.91`. With the defaults:
 
 $$139429.91 = p \cdot 1 + 5000000 \cdot (0.01 + 1 \cdot 0.0025) = p + 62500$$
 
-so $p = 76929.91$ pages — the table occupies about 76,930 pages of 8 KB, about 600 MB, which is exactly what the
-catalog says. The cost model is not a black box: it is arithmetic on page counts, row estimates and five constants.
+so $p = 76929.91$ pages — about 76,930 pages of 8 KB, or about 600 MB, which hands-on step 1 asks you to confirm
+with `SELECT relpages FROM pg_class`. The cost model is not a black box: it is arithmetic on page counts, row
+estimates and five constants.
 
 **Table 2** — PostgreSQL's cost constants, their defaults, and what each assumes.
 
