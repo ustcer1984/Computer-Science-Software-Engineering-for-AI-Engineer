@@ -1,0 +1,22 @@
+outer_rows,method,est_cost,median_ms,planner_choice
+1,nestloop,16.89,0.054,Nested Loop
+1,hashjoin,145681.17,158.468,Nested Loop
+1,mergejoin,219286.26,215.549,Nested Loop
+10,nestloop,93.10,0.046,Nested Loop
+10,hashjoin,145681.53,158.138,Nested Loop
+10,mergejoin,219286.70,233.615,Nested Loop
+100,nestloop,855.18,0.171,Nested Loop
+100,hashjoin,145685.13,159.599,Nested Loop
+100,mergejoin,219292.78,329.126,Nested Loop
+1000,nestloop,8294.06,2.443,Nested Loop
+1000,hashjoin,145732.97,205.221,Nested Loop
+1000,mergejoin,219380.18,329.336,Nested Loop
+10000,nestloop,71451.79,26.280,Nested Loop
+10000,hashjoin,146231.45,206.723,Nested Loop
+10000,mergejoin,220423.14,328.959,Nested Loop
+100000,nestloop,348684.49,248.506,Hash Join
+100000,hashjoin,151312.05,295.120,Hash Join
+100000,mergejoin,232604.25,361.022,Hash Join
+1000000,nestloop,829528.00,2448.626,Hash Join
+1000000,hashjoin,329684.71,1346.924,Hash Join
+1000000,mergejoin,367089.38,739.730,Hash Join

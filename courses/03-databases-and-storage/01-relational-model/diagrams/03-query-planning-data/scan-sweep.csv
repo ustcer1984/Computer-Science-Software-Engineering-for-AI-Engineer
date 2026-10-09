@@ -1,0 +1,61 @@
+column,fraction,method,est_cost,median_ms,planner_choice
+r,0.000001,seq,139429.91,133.162,Index Scan
+r,0.000001,index,24.52,0.020,Index Scan
+r,0.000001,bitmap,24.41,0.021,Index Scan
+r,0.00001,seq,139429.91,133.969,Bitmap Heap Scan
+r,0.00001,index,209.31,0.032,Bitmap Heap Scan
+r,0.00001,bitmap,205.53,0.037,Bitmap Heap Scan
+r,0.0001,seq,139429.91,133.471,Bitmap Heap Scan
+r,0.0001,index,2057.27,0.194,Bitmap Heap Scan
+r,0.0001,bitmap,1933.86,0.261,Bitmap Heap Scan
+r,0.001,seq,139429.91,132.125,Bitmap Heap Scan
+r,0.001,index,19956.94,4.346,Bitmap Heap Scan
+r,0.001,bitmap,16194.99,4.427,Bitmap Heap Scan
+r,0.003,seq,139429.91,136.994,Bitmap Heap Scan
+r,0.003,index,56258.16,12.578,Bitmap Heap Scan
+r,0.003,bitmap,38434.43,12.788,Bitmap Heap Scan
+r,0.01,seq,139429.91,139.461,Bitmap Heap Scan
+r,0.01,index,154782.96,44.653,Bitmap Heap Scan
+r,0.01,bitmap,73541.74,37.409,Bitmap Heap Scan
+r,0.03,seq,139429.91,150.528,Bitmap Heap Scan
+r,0.03,index,304152.19,131.501,Bitmap Heap Scan
+r,0.03,bitmap,115805.22,151.145,Bitmap Heap Scan
+r,0.1,seq,139429.91,192.200,Bitmap Heap Scan
+r,0.1,index,319287.49,408.832,Bitmap Heap Scan
+r,0.1,bitmap,122194.56,216.980,Bitmap Heap Scan
+r,0.3,seq,139429.91,300.651,Seq Scan
+r,0.3,index,342672.21,1168.890,Seq Scan
+r,0.3,bitmap,141129.60,369.367,Seq Scan
+r,1.0,seq,139429.91,617.889,Seq Scan
+r,1.0,index,424005.57,3768.900,Seq Scan
+r,1.0,bitmap,206985.53,825.778,Seq Scan
+c,0.000001,seq,139429.91,139.354,Index Scan
+c,0.000001,index,8.52,0.019,Index Scan
+c,0.000001,bitmap,24.41,0.020,Index Scan
+c,0.00001,seq,139429.91,137.890,Index Scan
+c,0.00001,index,9.39,0.026,Index Scan
+c,0.00001,bitmap,221.13,0.027,Index Scan
+c,0.0001,seq,139429.91,139.136,Index Scan
+c,0.0001,index,25.99,0.095,Index Scan
+c,0.0001,bitmap,2057.87,0.083,Index Scan
+c,0.001,seq,139429.91,137.045,Index Scan
+c,0.001,index,216.03,0.776,Index Scan
+c,0.001,bitmap,17101.95,0.719,Index Scan
+c,0.003,seq,139429.91,137.864,Index Scan
+c,0.003,index,639.22,2.282,Index Scan
+c,0.003,bitmap,40175.84,2.130,Index Scan
+c,0.01,seq,139429.91,144.802,Index Scan
+c,0.01,index,2108.41,7.896,Index Scan
+c,0.01,bitmap,75074.86,7.242,Index Scan
+c,0.03,seq,139429.91,154.539,Index Scan
+c,0.03,index,6024.22,23.256,Index Scan
+c,0.03,bitmap,115737.95,23.667,Index Scan
+c,0.1,seq,139429.91,183.980,Index Scan
+c,0.1,index,19342.89,76.035,Index Scan
+c,0.1,bitmap,122216.50,75.315,Index Scan
+c,0.3,seq,139429.91,280.421,Index Scan
+c,0.3,index,58315.17,232.113,Index Scan
+c,0.3,bitmap,141178.65,222.881,Index Scan
+c,1.0,seq,139429.91,625.052,Seq Scan
+c,1.0,index,192914.11,762.328,Seq Scan
+c,1.0,bitmap,206661.53,752.719,Seq Scan
