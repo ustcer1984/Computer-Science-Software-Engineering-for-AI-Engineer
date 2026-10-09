@@ -9,7 +9,11 @@
 > forms as what they really are: a list of the specific ways a table can repeat itself, each with the decomposition that
 > removes it. It then does the part textbooks often skip: **when to put the redundancy back on purpose**, and the rules
 > that keep a deliberate copy from becoming a bug.
-> **Status:** 🔵 PREPARED 2026-10-05 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-10-09 (body prepared 2026-10-05). One question, on §8: *"normalization makes reads
+> expensive and materialized view is a solution. But cache (either inside DB or at API level) is another solution,
+> right? Show me the criteria on solution selection."* — answered in §12: PostgreSQL has no result cache (only pages),
+> MySQL removed its query cache in 8.0, and the choice between a materialized view, an application cache and an HTTP
+> cache comes down to eight ordered criteria, led by staleness tolerance and how many distinct results there are.
 > **Prerequisites:** **Ch1 §1** (keys, foreign keys, constraints, the relational algebra — especially projection and
 > join). Helpful: M01 Ch3 §3 (races), because §8's counters are a race waiting to happen.
 
@@ -1003,6 +1007,95 @@ When you are done: `docker rm -f m03n`.
 
 ---
 
+## 12. Applied — materialized view or cache? The selection criteria
+
+*(The session, 2026-10-09. He read §8 and asked: "I understand that normalization makes reads expensive and
+materialized view is a solution. But cache (either inside DB or at API level) is another solution, right? Show me the
+criteria on solution selection." Yes — and the answer starts by correcting what "a cache inside the database" does.)*
+
+### 12a. There is no result cache inside PostgreSQL
+
+PostgreSQL caches **data pages** in memory (`shared_buffers`), not **query results**. A cached page saves the disk read,
+but the join and the aggregation still run in full on every execution. Figure 4's 146 ms read was already served almost
+entirely from memory; nearly all of it was join and aggregation work, and a bigger page cache would not have touched it.
+
+MySQL did once have a result cache, and its history is the argument against one. MySQL's query cache stored the result
+of each `SELECT` and threw away every cached result for a table whenever that table changed. Under concurrent writes the
+invalidation itself became the bottleneck, and MySQL **removed the query cache in version 8.0**, saying it "has serious
+scalability issues and it can easily become a severe bottleneck." So the real options are three:
+
+- **precompute inside the database** — a materialized view, a summary table, a trigger-maintained column;
+- **cache outside it** — in-process memory, Redis, an HTTP or CDN (content delivery network) cache;
+- **make the query itself cheaper** — an index, a better plan (Ch1 §3), a read replica.
+
+### 12b. What actually differs
+
+**Table 6** — a materialized view, an application cache and an HTTP cache, side by side.
+
+| | Materialized view / summary table | Application cache (in-process, Redis) | HTTP / CDN cache |
+|---|---|---|---|
+| **What is stored** | one precomputed result over **all** the data | a result per request key, filled lazily | whole responses, per URL |
+| **When it is filled** | on refresh — scheduled, or triggered by writes | on the first miss of each key | on the first request for each URL |
+| **Staleness** | until the next refresh — a bound you choose | until the TTL (time to live) expires or the key is invalidated | until the TTL expires; purges are slow and coarse |
+| **Cost of a refresh** | PostgreSQL recomputes the **whole** view, so it grows with total data | one query per missed key | one request per missed URL |
+| **Queryable with SQL afterwards?** | **yes** — it is a table: index it, filter it, join it | no — an opaque value behind a key | no |
+| **Sees your own write at once?** | no, unless refreshed in the same transaction | no, unless your write invalidates the key | no |
+| **Typical failure** | the refresh grows slower as the data grows | stampede on a miss, stale data after a missed invalidation, cold start | a stale response served to everyone |
+| **Who keeps it correct** | the database | **your code, on every write path** | the TTL, plus your purge calls |
+
+### 12c. The criteria, in the order to ask them
+
+1. **Is the read still slow once it is indexed and planned properly?** Fix the query first — Ch1 §3 and §4. Many "we need
+   a cache" reads are one missing index. Cache only what is slow when the query is right.
+2. **How stale may the answer be?** This decides more than anything else. **Zero** (a balance, a permission, "did my
+   vote count?"): no cache — make the query fast, or maintain the derived value in the **same transaction** as the write
+   (§8b). **Seconds to minutes** (leaderboards, dashboards, counts): a materialized view or a TTL cache. **Hours**
+   (reports): a scheduled refresh, or a separate analytics store.
+3. **Is the result shared by everyone or different per request?** **Few distinct results read by everyone** — one
+   leaderboard, a top-ten list — suit a **materialized view**: computed once for all readers, with no hit rate to worry
+   about. **Many distinct results with a hot subset** — a model's page, a user's profile — suit a **key-based cache**; a
+   view would have to precompute every key, cold ones included. **A different result every time** — search with
+   arbitrary filters — gets almost no hits; make the query fast instead.
+4. **What hit rate will it get?** A cache only saves time on hits. With hit rate $h$, the expected read time is
+   $t \approx h \cdot t_{\text{cache}} + (1 - h) \cdot t_{\text{db}}$, and frequent writes force invalidations that
+   push $h$ down. When data changes about as often as it is read, a cache
+   mostly adds a network round trip to every miss.
+5. **How expensive is the full recompute compared with the refresh interval?** A materialized view recomputes
+   *everything*, which suits aggregates over large data refreshed every minute or more. When the full recompute itself
+   gets too slow, switch to a **summary table updated incrementally** in the write transaction (`wins = wins + 1`).
+6. **How many write paths would have to invalidate it?** Every path that changes the source must invalidate the cache —
+   the API, bulk imports, migrations, cascade deletes. If you cannot list them all, prefer what the database maintains
+   (a materialized view, a trigger, a generated column), or a short TTL that caps the damage. This is Table 5's last rule
+   applied to caches.
+7. **Will you need SQL over the result?** If you will filter, sort or join the precomputed data, it must live in the
+   database as a view or summary table; a cache value can only be fetched by its key.
+8. **What happens when it is empty?** After a deploy, a Redis restart, or the expiry of a hot key, can the database take
+   every request missing at once? If not, you need **request coalescing** (one recompute per key while the others wait),
+   jittered TTLs, or a pre-warmed view. It is the thundering-herd shape of M02 Ch4 §2's reconnect storm.
+
+### 12d. Applied to the evaluation service
+
+**Table 7** — one choice per read path, with the criterion that decided it.
+
+| Read | Choice | Deciding criterion |
+|---|---|---|
+| Global leaderboard | **materialized view** refreshed every 1–5 minutes with `CONCURRENTLY` — or a Bradley–Terry fit written to a table by a job | one result shared by all; minutes of staleness acceptable; rebuildable from the votes |
+| A model's detail page | **application cache** with a short TTL, plus an HTTP `Cache-Control` header | many keys, a hot subset, staleness acceptable; invalidate on edit |
+| "My battles" history | **no cache** — an index on `vote (voter_email)` | different per user, and the user must see their new vote at once |
+| "Was my vote recorded?" | **no cache** — read the source | read-your-own-writes is the whole point |
+| Battle count shown on every model | **summary column** updated atomically in the vote transaction, plus a nightly reconciliation | must be exact and cheap; incremental beats a full recompute |
+
+### 12e. What the session teaches
+
+- **A cache and a materialized view are both derived data,** so all five of Table 5's rules apply to both. What differs
+  is **who refreshes the copy, at what granularity, and whether SQL can still reach it.**
+- **Freshness first, sharing second.** Most of the decision falls out of two questions — how stale may it be, and how many
+  distinct answers are there — before performance enters at all.
+- **The cheapest cache is the query you fixed.** Criterion 1 comes first because a correct index removes the need for a
+  copy, and a copy you never create can never drift.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -1027,6 +1120,8 @@ When you are done: `docker rm -f m03n`.
 | Source of truth | 唯一可信来源 | 單一事實來源 | |
 | Star schema | 星型模式 | 星型結構描述 | ⚠ schema: 模式 ↔ **結構描述** |
 | Fact table / dimension table | 事实表 / 维度表 | 事實資料表 / 維度資料表 | |
+| Cache / cache invalidation | 缓存 / 缓存失效 | 快取 / 快取失效 | ⚠ 缓存 ↔ **快取** — a very common split |
+| Hit rate | 命中率 | 命中率 | |
 
 ---
 
@@ -1064,13 +1159,15 @@ When you are done: `docker rm -f m03n`.
 - PostgreSQL documentation — *Materialized Views* and *REFRESH MATERIALIZED VIEW* (`CONCURRENTLY` and its
   unique-index requirement) — <https://www.postgresql.org/docs/current/rules-materializedviews.html> ·
   <https://www.postgresql.org/docs/current/sql-refreshmaterializedview.html>
+- MySQL — *MySQL 8.0: Retiring Support for the Query Cache* (Matt Lord, 30 May 2017; §12a) —
+  <https://dev.mysql.com/blog-archive/mysql-8-0-retiring-support-for-the-query-cache/>
 - PostgreSQL documentation — *Generated Columns* —
   <https://www.postgresql.org/docs/current/ddl-generated-columns.html>
 
 ### What's next
 
-**Ch1 §3 — How a query is planned and executed.** This section and Ch1 §1 have been about what the schema *means*. Ch1
-§3 is about what the database *does* with a query against it: how the relational algebra of Ch1 §1 §7 becomes a tree
+**Ch1 §3 — How a query is planned and executed.** This section and Ch1 §1 have been about what the schema *means*.
+Ch1 §3 is about what the database *does* with a query against it: how the relational algebra of Ch1 §1 §7 becomes a tree
 of physical operators, how the planner chooses between a sequential scan and an index, between nested-loop, hash and
 merge joins, and why its choice depends on row-count estimates — which is how Figure 4's two-join read came to cost
 146 ms, and how to read `EXPLAIN ANALYZE` to find out why. Then Ch1 §4 opens the B-tree index itself.
