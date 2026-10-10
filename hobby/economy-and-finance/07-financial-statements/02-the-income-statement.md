@@ -11,8 +11,9 @@
 > structure and the tax code arrive and the business stops; the subtotals management invents — **EBITDA**,
 > "adjusted", "core" — and how to size the add-backs rather than argue about them; and **earnings per
 > share**, the number most quoted and most easily moved.
-> **Status:** 🔵 **PREPARED 2026-10-08** — body drafted, awaiting your read; **§10 Applied** will be added
-> once you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed
+> **Status:** ✅ **FINALIZED 2026-10-10** — prepared 2026-10-08, read 2026-10-10, and **§10 Applied** is
+> that session: whether a company may choose which line a discount lands on (it may not), and how far down
+> into a large company the filings actually let you see (much less far than §3 implies). Math in LaTeX, quantitative relationships drawn as real computed
 > figures (three from filed accounts), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -213,6 +214,14 @@ year's revenue changes.
 estimated now and netted off now. Estimate them optimistically and revenue is overstated — reversing later,
 which is why a rising **returns provision** is a signal worth reading.
 
+> **And note what this rules out, because it is the most common beginner's error in the whole statement.**
+> A discount is **a reduction of the transaction price, never a cost and never a marketing expense.** Sell at
+> 10% off list and revenue is the *discounted* price; the list price was never a price, only an opening
+> position. Booking the list price as revenue and the discount as a cost would leave gross profit unchanged
+> and gross margin **wrong**, which is why the standard is prescriptive rather than permissive here. §10a
+> works all three possible presentations through, along with the two cases where a payment to a customer
+> genuinely *is* an expense.
+
 **Step 4 — how is the price spread across the promises?** Bundle a product with a service and the allocation
 between them decides how much revenue lands this year rather than next.
 
@@ -377,6 +386,10 @@ habits deal with it.
   single most useful habit in the section.
 - **Read the accounting-policy note on cost of sales** before trusting a gross-margin comparison that
   matters. It is usually one paragraph and it says exactly what is in there.
+- **And check the comparison is available at all.** Everything in §3 is done at the level of the *whole
+  company*, which is not an accident: **profit is disclosed only by operating segment, and segments are
+  whatever management looks at.** No large company publishes a profit figure for a single product. §10b
+  shows exactly how far down Apple and Microsoft let you go, and where the floor is.
 
 ---
 
@@ -711,7 +724,9 @@ flowchart TD
 2. You have learned almost nothing comparable. Gross margin depends on **what each company puts in cost of
    sales** (§1.2, §3.3) and on **whether each reports revenue gross or net** (§2.3). The check: confirm both
    are in the same industry *and* read the cost-of-sales accounting policy — or, better, **drop down to
-   operating profit**, which is unaffected by where a cost is classified above it.
+   operating profit**, which is unaffected by where a cost is classified above it. And if the comparison you
+   actually want is between *products* rather than companies, check first that the data exists: it almost
+   certainly does not (§3.3, §10b).
 3. On 1 July: **cash +3.6m, contract liability (deferred revenue) +3.6m. No revenue, no profit** (E07 §1
    §5.2). For the year to 31 December, six months have been earned, so **revenue of 0.6m** is recognised
    (3.6m ÷ 36 months × 6) and the contract liability falls to 3.0m.
@@ -778,6 +793,210 @@ flowchart TD
    add-back as a percentage of GAAP net income, and decide which single one is worth an opinion. ⚠ If you
    pull figures from the SEC XBRL API, **filter on period duration** — a 10-K tags fourth-quarter facts as
    well as annual ones (E07 §1 §9).
+6. **Find the floor.** For the same company, open the segment note and the revenue-disaggregation note and
+   write down two lists: every split for which **revenue** is given, and every split for which **profit** is
+   given. They will not be the same list, and the second will be much shorter. Then pick the one number you
+   most want and establish that it is not published anywhere — that is the exercise (§10b, Figure 6).
+
+---
+
+## 10. Applied — what the statement is allowed to say, and what resolution it has
+
+Two questions, and neither is the kind this log has recorded before. Neither was a term left unbound, and
+neither was a derivation run off a stated identity. **Both ask about the instrument rather than the
+reading** — the first whether a company may *choose* which line a number lands on, the second whether the
+data this section's own method depends on is *available at all*.
+
+The second one is the sharper of the two, because **§3 never asked it.** Table 5 derives a forty-point
+margin gap between NVIDIA and Salesforce at the level of the whole company, and does it convincingly enough
+that the obvious next move is to do the same thing one level down — which product, which line of business,
+where inside the firm. You asked whether that move is even possible. **For profit, at any large company, it
+is not**, and the section had quietly left you to discover that for yourself.
+
+**Table 8** — the two questions and where each is answered.
+
+| You asked | Really asking | Answer |
+|---|---|---|
+| *"10% discount — revenue at the final price, or the original price with the discount as cost of sales?"* | whether the placement of a number is a **choice** | **The final price.** §2.2 patched; §10a |
+| *"Must a big company report data for each product, or is it optional?"* | what **resolution** the filings actually have | **Revenue yes, coarsely. Profit essentially never.** §3.3 patched; §10b, **Figure 6** |
+
+### 10a — A discount is a price, not a cost
+
+**Option (1): revenue is 90.** The discount never appears anywhere as a cost, in any line, under any
+standard.
+
+The reason is step 3 of §2.1, which defines the transaction price as **the consideration the entity expects
+to be entitled to** (IFRS 15.47). If you expect 90, the transaction price *is* 90. The 100 was not a price
+that was then reduced; it was an opening position that no contract ever fixed.
+
+And cost of sales is **the carrying amount of what you gave up** — inventory leaving your balance sheet. In
+this transaction nothing extra left. You shipped one unit, which cost what it cost. There is no second
+resource consumed to put a number against. Option (2) would need a debit to an expense with nothing real to
+credit, and the only candidate is revenue you never earned.
+
+**Table 9** — one transaction, three presentations. Unit cost 70, list price 100, discount 10%.
+
+| | Revenue | Cost of sales | **Gross profit** | SG&A | **Operating profit** |
+|---|---|---|---|---|---|
+| **(1) Net of discount — correct** | **90** | 70 | **20 — 22.2%** | — | **20** |
+| (2) Gross, discount in cost of sales | 100 | 80 | 20 — **20.0%** | — | 20 |
+| (3) Gross, discount in SG&A | 100 | 70 | 30 — **33.3%** | 10 | 20 |
+
+**Operating profit is identical in all three. Gross margin runs from 20.0% to 33.3%.** Which is why the
+standard is prescriptive here, and it is the same reason §2.3 gave: *a presentation choice that moves a
+margin without moving the business is exactly what a reporting standard exists to remove.* This is the
+gross-versus-net problem in miniature — a smaller multiple, an identical mechanism.
+
+Note which presentation management would prefer. **(3) gives a bigger top line *and* a fatter gross margin**,
+with the cost buried in an operating line that fewer people benchmark. It is attractive precisely because it
+is misleading, and that is why it is prohibited rather than discouraged.
+
+**Four refinements, because the simple case is not the one that catches people.**
+
+**Timing changes the estimate, not the answer.** An invoice discount is netted on the spot. A **volume
+rebate** — "10% back if you take 10,000 units this year" — is still a reduction of revenue, but it must be
+**estimated and accrued from the first unit**, constrained to the amount that will not later reverse. You
+may not book 100 for ten months and take the hit in December. A **settlement discount** (*2/10 net 30*) is
+treated the same way, estimated on expected take-up; it is not interest expense.
+
+**Where it genuinely is an expense: a distinct good or service.** If you pay your customer 10 and receive
+something separable in return — shelf placement, a co-branded campaign, access to their sales data — that is
+a purchase, and it goes in operating costs. The test is whether you could have bought the same thing from
+somebody else at an observable price. **Slotting fees and listing allowances almost always fail that test**
+and come off revenue (IFRS 15.70–72 / ASC 606-10-32-25). This is the live battleground in consumer goods.
+
+**The hard one: a concession is not a bad debt.** If the customer cannot pay and you accept 90 to settle,
+that is an **implicit price concession** and revenue is 90. If the customer simply does not pay the 100, that
+is an **impairment loss** — revenue 100, and an expense *below* gross profit. Same cash, different gross
+margin, and what separates them is management's judgement about intent *at contract inception*. Worth
+knowing the line is there; a good deal of aggressive revenue lives on it.
+
+**And in a bundle, the discount is shared out.** Sell a machine plus two years of service at 10% off the
+combined list and step 4 allocates the discount **across both obligations in proportion to their standalone
+selling prices**, unless there is evidence it relates to one of them. Otherwise you could load the entire
+discount onto the service not yet delivered and recognise the machine at full list today.
+
+### 10b — The resolution the filings actually have
+
+Your second question has a two-part answer, and the parts point in opposite directions.
+
+**Revenue: required, but coarse.** IFRS 8.32 and ASC 280-10-50-40 require every listed company to disclose
+external revenue **"for each product and service, or each group of similar products and services"** —
+whatever its internal structure. Two escapes make this weaker than it sounds. *"Group of similar"* does
+enormous work: Apple satisfies it with **five lines** for a company selling thousands of distinct items. And
+there is a practicability exemption where the information is not available and the cost of producing it
+would be excessive. Separately, IFRS 15.114 / ASC 606-10-50-5 require revenue to be **disaggregated** into
+categories showing how its nature, amount, timing and uncertainty differ — but **the entity chooses the
+categories**, and the standard's own list of acceptable axes includes geography, market, contract type,
+sales channel and *point-in-time versus over-time*. A software company can comply without naming a product.
+
+**Profit: essentially never, by product.** Profit is reported only by **operating segment**, and an operating
+segment is defined by the **management approach**: it is whatever unit the *chief operating decision maker*
+reviews when allocating resources. **If management does not look at it, it is not a segment, and no number
+is published for it.**
+
+Apple demonstrates all of this at once, and it is worth seeing because Apple is the company behind Figure 2.
+
+![Three panels showing the resolution of Apple's fiscal 2025 disclosure. The left panel shows revenue by the five product categories Apple discloses: iPhone 209.6 billion US dollars, Services 109.2, Wearables Home and Accessories 35.7, Mac 33.7 and iPad 28.0, labelled as a required audited note. The middle panel shows the only gross margins split by product, two bars: Products at 36.8 per cent and Services at 75.4 per cent, against a blended 46.9 per cent, labelled as unaudited management commentary. The right panel shows operating income by Apple's five reportable segments, which are geographic rather than by product: Americas 72.5 billion, Europe 47.7, Greater China 26.9, Rest of Asia Pacific 14.6, Japan 14.0, and a corporate line of minus 42.6 billion holding research and development plus general and administrative expense that belongs to no segment.](diagrams/02-the-income-statement-fig6.svg)
+
+**Figure 6** — Apple FY2025: revenue splits one way, profit splits another, and the two axes never meet.
+
+**Table 10** — what Apple's FY2025 Form 10-K does and does not let you compute.
+
+| Question | Available? | Where, and at what status |
+|---|---|---|
+| iPhone revenue | **Yes** — 209,586 | revenue note, audited |
+| Services revenue | **Yes** — 109,158 | revenue note, audited |
+| Greater China revenue | **Yes** — 64,377 | segment note, audited |
+| Greater China operating income | **Yes** — 26,917 | segment note, audited |
+| Services gross margin | **Yes** — 75.4% | **Item 7 MD&A — commentary, unaudited** |
+| Greater China gross margin | **Yes** — 45.4% | derivable from the segment note since FY2025 |
+| **iPhone gross margin** | **No** | nowhere, in any filing |
+| **iPhone operating profit** | **No** | nowhere, in any filing |
+| **iPhone revenue in Greater China** | **No** | the two axes are never crossed |
+
+Three things in that table are worth more than the rest.
+
+**The only product-level margin Apple publishes is unaudited.** Products 36.8% against Services 75.4%
+(Figure 6, middle panel) appears in Item 7, which is management's discussion — reviewed by the auditor for
+consistency, but **not audited**. The audited statements give one blended 46.9% and stop.
+
+**Even the segment profit is not a full profit.** Look at the grey bar in the right panel: **all 42,627
+million of research and development and general and administrative expense sits outside every segment**, as
+"corporate non-segment". So Apple's segment "operating income" is gross profit less selling and marketing,
+nothing more. None of the 34,550 of R&D is attributed to the Americas, to iPhone, or to anything.
+
+**And the rules just moved in your favour, slightly.** Under ASU 2023-07, effective for Apple from FY2025,
+significant segment expenses must now be disclosed — which is why cost of sales per segment appears at all,
+and why Greater China's gross margin of 45.4% is computable this year and was not before. The spread across
+the five segments is real and small: **Japan 52.0% down to Greater China 45.4%.** Resolution is not fixed
+forever; it is a policy position that moves.
+
+**What the resolution buys you, in the one place you have it.** Services is **26.2% of Apple's revenue and
+42.2% of its gross profit** — 109,158 of 416,161, but 82,314 of 195,201. That single comparison reframes the
+company, and it is available only because Apple happens to publish a two-way margin split it is not strictly
+required to publish. One level finer and the question is unanswerable.
+
+**Microsoft is the sharper case, because the missing number is the famous one.** Its FY2026 10-K discloses
+revenue in **ten** product and service lines totalling 331,839 million. The largest, **"Server products and
+cloud services" at 129,425 million**, contains Azure — and Azure's revenue is given nowhere in the filing,
+only as a growth rate: *"Azure and other cloud services revenue grew 41%."* The most analysed product in
+enterprise software has **no reported revenue line of its own**, and nothing in any standard requires one.
+
+**Why the line sits here**, with one defensible reason and one less so.
+
+**Allocation is genuinely arbitrary.** Apple's retail stores, its supply chain and a silicon team serving
+iPhone, iPad and Mac cannot be split between products except by keys management invents. A published iPhone
+gross margin would be **a policy choice wearing the clothes of a measurement** — which is §5's objection to
+EBITDA in a different costume, and E07 §1 §5.2's point about depreciation in a third.
+
+**And it is competitively sensitive.** Per-product margins tell a competitor exactly where to attack and a
+customer exactly what the mark-up is. Companies disclose the minimum, and the management approach is what
+lets them define the minimum.
+
+**Two last mechanics worth carrying.** A segment is **reportable** only if its revenue, profit or assets
+reach **10%** of the total, and reported segments must cover at least **75%** of external revenue, with the
+remainder swept into "all other" — so a small, loss-making new venture is invisible by construction until it
+gets big. And **none of this applies to private companies at all**: IFRS 8 and SFRS(I) 8 apply only to
+entities with publicly traded equity or debt, so a Singapore private limited company files no segment
+information whatsoever (E07 §1 §6).
+
+So the standing rule, and it bounds a good deal of what §3 taught you to do:
+
+> **The top of the ladder disaggregates; the rest of it does not.** You can usually see where revenue comes
+> from. You can almost never see where profit comes from. Any claim that "product X subsidises product Y" is
+> therefore an inference from outside the filings — which does not make it wrong, but does mean **nobody is
+> reading it off a page**, and you should ask what it was built from.
+
+### 10c — What this session changes
+
+**Both questions audited the instrument rather than a reading from it**, and that is new.
+
+- **E06 §3**: you stopped at terms the material used without binding.
+- **E06 §4**: you stopped, and ran a conservation check on a result.
+- **E07 §1**: you did not stop — you ran the identity and derived the half the prose omitted.
+- **Here**: you asked **what the statement is permitted to say**, and **at what resolution it says it**.
+
+Question one asked whether a number's placement is a choice. Question two asked whether the method §3 had
+just demonstrated can be pushed one level down. Neither answer is in the arithmetic; both are in the
+*rules about disclosure*, which this section had treated as background.
+
+**The implication for §3, §4 and §5 is specific and now standing. State where each number lives, and whether
+it is audited.** It is not enough to explain what a line means; by the time you have understood a line you
+will ask where you can get it, how finely, and how much of it is management commentary rather than audited
+statement. Figure 6 exists because that question deserved a figure rather than a paragraph — the same
+treatment §1's depreciation mechanism got once it turned out to need sizing rather than confirmation.
+
+**Table 11** — the questions this session turned into standing habits.
+
+| When you meet | Ask |
+|---|---|
+| A discount, rebate or credit to a customer | *Is this a price reduction, or did I receive something distinct in return? Only the second is a cost.* |
+| A gross margin used in a comparison | *Could the same economics have been presented another way, and would the margin have moved?* |
+| An analysis one level finer than the whole company | *Is the data there? Profit almost never is.* |
+| A per-product or per-business profitability claim | *Which filing states it? If none, what was it built from, and who chose the allocation?* |
+| A disclosed number | *Audited statement, or MD&A commentary? The two have different standing.* |
+| A segment that seems to be missing | *Below 10%, or simply not something management looks at?* |
 
 ---
 
@@ -817,6 +1036,12 @@ starting with the name of the statement itself. Genuine differences are marked.
 | Contract liability | 合同负债 | 合約負債 | ⚠ 合同 vs 合約 |
 | Gross merchandise value | 商品交易总额 | 商品交易總額 | script only |
 | Depreciation and amortisation | 折旧与摊销 | 折舊與攤銷 | script only |
+| Segment reporting | 分部报告 | 部門別資訊 | ⚠⚠ genuinely different |
+| Operating segment | 经营分部 | 營運部門 | ⚠⚠ 分部 vs 部門 |
+| Variable consideration | 可变对价 | 變動對價 | ⚠ 可变 vs 變動 |
+| Trade discount | 商业折扣 | 商業折扣 | script only |
+| Price concession | 价格折让 | 價格折讓 | script only |
+| Rebate | 返利 | 退佣 / 折讓 | ⚠⚠ genuinely different |
 
 ---
 
@@ -849,7 +1074,7 @@ starting with the name of the statement itself. Genuine differences are marked.
 ---
 
 ### What's next
-🔵 **PREPARED 2026-10-08.** You now read this statement as a **ladder** rather than a number: revenue is a
+✅ **FINALIZED 2026-10-10.** You now read this statement as a **ladder** rather than a number: revenue is a
 definition that can move the top line by multiples with nothing below it changing; gross profit describes the
 product; **operating profit is the last line that is about the business, and the last one that is proof
 against where a cost was classified**; and below it arrive the capital structure, the tax jurisdiction and
@@ -857,7 +1082,13 @@ the things that happen once. You can derive where two competitors' margins diver
 know that EBITDA is a question rather than a cash flow, and you can **size an add-back instead of arguing
 about it** — 5% at NVIDIA, 47% at Salesforce.
 
+**§10 Applied** is the session you drove through it, and it added a sixth figure. It bounds §3's method in a
+way §3 did not: the margin gap between two companies can be derived from the filings, and **the same gap
+between two products inside one company usually cannot be, because profit is disclosed only by operating
+segment and segments are whatever management chooses to look at.** It also settles the discount question —
+a price reduction is a **price**, never a cost — and makes the general point that where a number lives
+(audited statement or management commentary) is part of what the number is worth.
+
 Next, **§3 — the balance sheet**: what a company owns and owes at an instant, the current/non-current split
 and what it is for, the lines that are estimates wearing the clothes of facts, and how to read a balance
-sheet as a statement about *risk* rather than about value. Read this one and bring your questions —
-**§10 Applied** will be added from that session.
+sheet as a statement about *risk* rather than about value.

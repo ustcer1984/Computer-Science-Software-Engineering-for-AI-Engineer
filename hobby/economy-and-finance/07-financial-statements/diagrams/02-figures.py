@@ -296,6 +296,112 @@ def fig1():
           f"{g['net']:.1f})")
 
 
+# ------------------------------------------------------------------- fig 6
+# Apple FY2025 (year ended 27 September 2025), Form 10-K, accession
+# 0000320193-25-000079. Three different resolutions in one filing.
+#
+#   revenue   -> five PRODUCT categories   (Note: Revenue, disaggregation,
+#                required by ASC 280-10-50-40 / IFRS 8.32)
+#   margin    -> two product groupings     (Item 7 MD&A, UNAUDITED commentary)
+#   profit    -> five GEOGRAPHIC segments  (Note: Segment Information, the
+#                management approach -- these are the units the CODM reviews)
+#
+# The point of the figure is that the product axis and the profit axis never
+# intersect: no filing anywhere states an operating profit for iPhone.
+AAPL_PRODUCTS = [("iPhone", 209_586), ("Services", 109_158),
+                 ("Wearables, Home\nand Accessories", 35_686),
+                 ("Mac", 33_708), ("iPad", 28_023)]
+AAPL_GM = [("Products", 112_887, 307_003), ("Services", 82_314, 109_158)]
+# segment: (name, net sales, cost of sales, selling & marketing, operating income)
+AAPL_SEG = [("Americas", 178_353, 95_699, 10_174, 72_480),
+            ("Europe", 111_032, 58_617, 4_676, 47_739),
+            ("Greater China", 64_377, 35_141, 2_319, 26_917),
+            ("Rest of Asia\nPacific", 33_696, 17_724, 1_386, 14_586),
+            ("Japan", 28_703, 13_779, 969, 13_955)]
+AAPL_CORP = 42_627          # R&D 34,550 + G&A 8,077, attributed to NO segment
+
+
+def fig6():
+    fig, (ax1, ax2, ax3) = plt.subplots(
+        1, 3, figsize=(16.4, 6.0), gridspec_kw=dict(width_ratios=[1.15, 0.75, 1.15]))
+
+    # --- panel 1: revenue, five product categories ------------------------
+    names = [n for n, _ in AAPL_PRODUCTS]
+    vals = [v / 1000 for _, v in AAPL_PRODUCTS]
+    y = np.arange(len(names))[::-1]
+    ax1.barh(y, vals, height=0.6, color=C1)
+    for yy, v in zip(y, vals):
+        ax1.text(v + 4, yy, f"{v:,.1f}", va="center", fontsize=11.2, color=C1,
+                 fontweight="bold")
+    ax1.set_yticks(y); ax1.set_yticklabels(names, fontsize=10.8)
+    ax1.set_xlim(0, 248)
+    ax1.set_xlabel("USD billions")
+    ax1.set_title("REVENUE — five product categories\n(required, audited note)",
+                  fontsize=12.0, fontweight="bold")
+    ax1.grid(axis="x", alpha=0.25)
+    ax1.spines[["top", "right"]].set_visible(False)
+
+    # --- panel 2: gross margin, two groupings -----------------------------
+    gnames = [n for n, _, _ in AAPL_GM]
+    gpct = [100 * g / s for _, g, s in AAPL_GM]
+    ax2.bar(np.arange(2), gpct, width=0.5, color=[C4, C3])
+    for i, p in enumerate(gpct):
+        ax2.text(i, p + 1.6, f"{p:.1f}%", ha="center", fontsize=12.4,
+                 fontweight="bold", color=[C4, C3][i])
+    ax2.axhline(100 * 195_201 / 416_161, color=GREY, lw=1.4, ls="--")
+    ax2.text(-0.42, 100 * 195_201 / 416_161 + 1.4, "blended 46.9%", ha="left",
+             va="bottom", fontsize=10.2, color=GREY)
+    ax2.set_xticks(np.arange(2)); ax2.set_xticklabels(gnames, fontsize=11.2)
+    ax2.set_ylim(0, 92)
+    ax2.set_ylabel("Gross margin, per cent of that grouping's sales")
+    ax2.set_title("MARGIN — two groupings only\n(MD&A commentary, UNAUDITED)",
+                  fontsize=12.0, fontweight="bold")
+    ax2.grid(axis="y", alpha=0.25)
+    ax2.spines[["top", "right"]].set_visible(False)
+
+    # --- panel 3: operating income, five geographic segments --------------
+    snames = [s[0] for s in AAPL_SEG] + ["Corporate\n(R&D + G&A)"]
+    sop = [s[4] / 1000 for s in AAPL_SEG] + [-AAPL_CORP / 1000]
+    y3 = np.arange(len(snames))[::-1]
+    cols = [C2] * len(AAPL_SEG) + [GREY]
+    ax3.barh(y3, sop, height=0.6, color=cols)
+    for yy, v in zip(y3, sop):
+        ax3.text(v + (3 if v > 0 else -3), yy, f"{v:,.1f}", va="center",
+                 ha="left" if v > 0 else "right", fontsize=11.2,
+                 fontweight="bold", color=C2 if v > 0 else GREY)
+    ax3.axvline(0, color="black", lw=1.0)
+    ax3.set_yticks(y3); ax3.set_yticklabels(snames, fontsize=10.8)
+    ax3.set_xlim(-62, 96)
+    ax3.set_xlabel("Operating income, USD billions")
+    ax3.set_title("PROFIT — five segments, but by GEOGRAPHY\n"
+                  "(required, audited note)", fontsize=12.0, fontweight="bold")
+    ax3.grid(axis="x", alpha=0.25)
+    ax3.spines[["top", "right"]].set_visible(False)
+
+    fig.suptitle("Apple FY2025: revenue splits one way, profit splits another, "
+                 "and the two axes never meet",
+                 fontsize=13.4, fontweight="bold", y=0.995)
+    fig.tight_layout(rect=(0, 0, 1, 0.965))
+    save(fig, 6)
+
+    # --- self-checks against the filing -----------------------------------
+    assert sum(v for _, v in AAPL_PRODUCTS) == 416_161
+    assert sum(s[1] for s in AAPL_SEG) == 416_161
+    assert sum(g for _, g, _ in AAPL_GM) == 195_201
+    assert AAPL_GM[0][2] + AAPL_GM[1][2] == 416_161          # products + services
+    assert sum(s[4] for s in AAPL_SEG) - AAPL_CORP == 133_050
+    for _, sales, cogs, sm, op in AAPL_SEG:
+        assert sales - cogs - sm == op                        # segment profit is
+    serv_rev = 109_158 / 416_161                              # gross profit - S&M
+    serv_gp = 82_314 / 195_201
+    print(f"  (Services is {100 * serv_rev:.1f}% of revenue but "
+          f"{100 * serv_gp:.1f}% of gross profit; "
+          f"segment gross margins range "
+          f"{min(100 * (s[1] - s[2]) / s[1] for s in AAPL_SEG):.1f}%-"
+          f"{max(100 * (s[1] - s[2]) / s[1] for s in AAPL_SEG):.1f}%; "
+          f"ALL {AAPL_CORP:,} of R&D and G&A sits outside every segment)")
+
+
 if __name__ == "__main__":
-    fig1(); fig2(); fig3(); fig4()
+    fig1(); fig2(); fig3(); fig4(); fig6()
     print("done")
