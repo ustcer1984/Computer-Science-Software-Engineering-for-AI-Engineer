@@ -9,8 +9,9 @@
 > wearing the clothes of facts, where the **maturity** information lives (not on the page you are looking at),
 > why the **current ratio** is a far weaker instrument than its reputation, and what book equity is genuinely
 > good for once you have accepted that it is not a valuation.
-> **Status:** 🔵 **PREPARED 2026-10-10** — body drafted, awaiting your read; **§10 Applied** will be added once
-> you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed figures
+> **Status:** ✅ **FINALIZED 2026-10-14** — prepared 2026-10-10, read 2026-10-14, and **§10 Applied** records
+> that the read produced **no questions** — the first time in this module — along with what that is and is not
+> evidence for, and the three claims §4 will stress first. Math in LaTeX, quantitative relationships drawn as real computed figures
 > (all five from filed accounts), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -986,6 +987,54 @@ number out of that API.
 
 ---
 
+## 10. Applied — the read that produced no questions
+
+**This section is short, because the session was.** You read §3 on 2026-10-14 and raised nothing. That has not
+happened before in this module, and the honest thing to do with it is record it and say precisely what it is
+and is not evidence for — rather than treat silence as a grade.
+
+**What it is evidence for.** Every previous section in E07 produced at least one question, and in each case the
+question landed on something the material had stated loosely or left half-finished: a missing debit (§1 §10a),
+a mechanism supplied but not carried through (§1 §10b), a placement that looked like a choice (§2 §10a), a
+method taught without its ceiling (§2 §10b). §3 was written deliberately against that last finding — **every
+number placed as face, note or management commentary, and every method's ceiling stated at the moment the
+method was taught**: the current ratio as a prompt rather than a conclusion (§3.2), the cash conversion cycle's
+closing-balance distortion (§5.1), price-to-book as a price on nothing in particular (§4.2). The questions that
+would have arrived are the ones those sentences were written to pre-empt.
+
+**What it is not evidence for.** A zero-question read is weak evidence, and it has at least three causes that
+look identical from here:
+
+1. The material anticipated the questions. *(What the paragraph above argues.)*
+2. The material was read less closely than usual — a long section, read in one sitting, at the end of a week.
+3. **The material was pitched below where a question would form.** A section that asserts rather than argues
+   produces agreement, not questions, and agreement is not understanding.
+
+**Nothing in the session distinguishes these**, so no body change has been made. Patching a section on the
+basis of silence would be guessing, and the previous three Applied sections were all driven by something
+specific you said.
+
+**What distinguishes them is §4.** Rather than ask you to self-assess, the useful move is to name the three
+claims in §3 that the next section will immediately put weight on. If one of them did not land, it will fail
+there, visibly, rather than stay silent.
+
+**Table 10** — the three §3 claims §4 stresses first, and what each one looks like if it did not land.
+
+| §3 claim | Where §4 puts weight on it | How you will know it did not land |
+|---|---|---|
+| **Working capital is the gap between profit and cash** (§5.1, the cash conversion cycle) | the indirect method's whole middle section **is** the period-on-period change in §3's receivables, inventory and payables | the reconciliation from net income to operating cash flow will read as a list of arbitrary adjustments rather than as two balance sheets differenced |
+| **A balance sheet is a state and can be posed** (§1.1, Repo 105) | §4's central claim is that the cash flow statement is **the hardest of the three to pose**, because it covers 365 days rather than one | "cash is a fact" will feel like a slogan rather than a structural consequence |
+| **Depreciation is an allocation of a past payment, not a current cost** (§2.1, and E07 §1 §5.2) | the largest add-back in the operating section, and the entire reason operating cash flow exceeds net income at a capital-heavy company | Oracle's and Microsoft's cash statements will look healthier than they are, because the add-back will read as good news |
+
+**And one standing note for the sections after this.** The calibration log has recorded a progression —
+halting at unbound terms, then conservation checks, then deriving omitted halves, then auditing the
+instrument. **A quiet read does not continue that progression and does not break it.** It is one observation.
+If §4 also produces nothing, that is a pattern worth acting on, and the action would be to make the material
+**more arguable** — to state the contested cases as contested rather than resolving them in the prose — since
+cause (3) above is the only one of the three that the material itself can do anything about.
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 The balance sheet's vocabulary splits between the two Chinese markets less than the income statement's, but
@@ -1067,15 +1116,19 @@ marked.
 ---
 
 ### What's next
-🔵 **PREPARED 2026-10-10.** You can now read a balance sheet as **a statement about obligations** rather than a
+✅ **FINALIZED 2026-10-14.** You can now read a balance sheet as **a statement about obligations** rather than a
 score: you know that total assets adds up numbers measured on different scales, that the word "assets" covers
 five unrelated things, that goodwill is a residual made larger by bad decisions and that it exceeds book
 equity at a surprising number of large companies, that the maturity information is in the notes rather than on
 the face, that the current ratio is a prompt rather than a conclusion, and that the cash conversion cycle
 tells you who is financing whom.
 
+**§10 Applied** is the session you drove through it, and it is the shortest in the module: you raised nothing.
+It records that plainly, declines to patch the body on the basis of silence, and names instead the three
+claims here that the next section puts weight on first — so that anything which did not land fails visibly
+there rather than staying quiet.
+
 Next, **§4 — the cash flow statement**: the one statement that is hard to pose, why operating cash flow and
 net income diverge and what each kind of divergence means, the three sections and what gets classified where
 (which is less settled than it sounds), free cash flow and who defines it, and why this is the statement to
-read first when something looks wrong. Read this one and bring your questions — **§10 Applied** will be added
-from that session.
+read first when something looks wrong.
