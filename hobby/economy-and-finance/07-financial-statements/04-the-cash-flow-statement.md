@@ -213,9 +213,9 @@ Payables rising means you bought and have not paid: add.
 Most companies report operating cash flow *above* net income, because depreciation is added back. NVIDIA, in
 the most profitable year any company has ever had, reported it **below**.
 
-![A waterfall chart reconciling NVIDIA's fiscal 2026 net income of 120.1 billion US dollars to operating cash flow of 102.7 billion. The non-cash adjustments are stock-based compensation plus 6.4, depreciation and amortisation plus 2.8, gains on securities minus 8.9, deferred income taxes minus 1.4 and other minus 0.3, netting to minus 1.4 billion. The working capital movements are accounts receivable minus 15.4, inventories minus 11.3, prepaid and other assets plus 0.6, accounts payable plus 3.1, accrued liabilities plus 5.3 and other long-term liabilities plus 1.8, netting to minus 15.9 billion, which is substantially the whole of the gap.](diagrams/04-the-cash-flow-statement-fig2.svg)
+![A waterfall chart reconciling NVIDIA's fiscal 2026 net income of 120.1 billion US dollars to operating cash flow of 102.7 billion. The non-cash adjustments are stock-based compensation plus 6.4, depreciation and amortisation plus 2.8, gains on securities minus 8.9, deferred income taxes minus 1.4 and other minus 0.3, netting to minus 1.4 billion. The working capital movements are accounts receivable minus 15.4, inventories minus 11.3, prepaid and other assets plus 0.6, accounts payable plus 3.1, accrued liabilities plus 5.3 and other long-term liabilities plus 1.8, netting to minus 15.9 billion, which is substantially the whole of the gap.](diagrams/04-the-cash-flow-statement-fig1.svg)
 
-**Figure 2** — NVIDIA FY2026: the non-cash adjustments nearly cancel, and working capital accounts for the gap.
+**Figure 1** — NVIDIA FY2026: the non-cash adjustments nearly cancel, and working capital accounts for the gap.
 
 **Table 2** — the same reconciliation in filed figures. NVIDIA FY2026, year ended 25 January 2026. USD millions.
 
@@ -467,9 +467,9 @@ well-known accounting failures.
 
 Here is the current state of three numbers that used to be uninteresting.
 
-![A grouped bar chart of six companies showing net income, operating cash flow and free cash flow for the most recent fiscal year, in US dollar billions. Oracle fiscal 2026 has net income 17, operating cash flow 32 and free cash flow minus 24. Microsoft fiscal 2026 has 134, 183 and 67. NVIDIA fiscal 2026 has 120, 103 and 97, with operating cash flow below net income. Apple fiscal 2025 has 112, 111 and 99. Costco fiscal 2026 has 9, 16 and 9. Salesforce fiscal 2026 has 7, 15 and 14.](diagrams/04-the-cash-flow-statement-fig1.svg)
+![A grouped bar chart of six companies showing net income, operating cash flow and free cash flow for the most recent fiscal year, in US dollar billions. Oracle fiscal 2026 has net income 17, operating cash flow 32 and free cash flow minus 24. Microsoft fiscal 2026 has 134, 183 and 67. NVIDIA fiscal 2026 has 120, 103 and 97, with operating cash flow below net income. Apple fiscal 2025 has 112, 111 and 99. Costco fiscal 2026 has 9, 16 and 9. Salesforce fiscal 2026 has 7, 15 and 14.](diagrams/04-the-cash-flow-statement-fig2.svg)
 
-**Figure 1** — three numbers for the same year at six companies, and they do not agree.
+**Figure 2** — three numbers for the same year at six companies, and they do not agree.
 
 **Table 5** — the same six, from each company's most recent Form 10-K. USD millions, and the two ratios.
 
@@ -512,7 +512,7 @@ decade. This is E07 §1 §5.3's capitalise-or-expense lever operating entirely l
 clearest single reason the cash flow statement exists.
 
 It is also the balance-sheet story of §3 arriving as a flow: Oracle's property, plant and equipment went from
-43,522 to **99,957** in one year, and its debt principal to **130,105** (§3, Figure 4 and Table 6).
+43,522 to **99,957** in one year, and its debt principal to **130,105** (E07 §3, its Figure 4 and Table 6).
 
 ### 5.3 The third check: where did the cash actually come from?
 

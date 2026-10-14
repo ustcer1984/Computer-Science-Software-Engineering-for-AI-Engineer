@@ -10,17 +10,21 @@ CONSOLIDATED STATEMENTS OF CASH FLOWS, with the multi-year series taken from
 the SEC XBRL companyconcept API filtered to 10-K duration facts of 330-400
 days (the trap recorded in E07 §1 §10b).
 
-  fig1 — THREE NUMBERS, THREE DIFFERENT STORIES. Net income, operating cash
-         flow and free cash flow for six companies, most recent full year.
-         Two teaching cases: ORACLE, whose free cash flow is MINUS 23.7bn
-         on net income of 17.1bn, and NVIDIA, whose OPERATING CASH FLOW IS
-         BELOW NET INCOME despite a 55.6% net margin.
-  fig2 — WHERE THE 17bn WENT. NVIDIA FY2026 reconciled from net income
-         120,067 to operating cash flow 102,718. The non-cash adjustments
-         net to roughly nothing; the whole of the gap is WORKING CAPITAL,
-         and almost all of that is receivables and inventory -- which is
-         E07 §3 §5.1's cash conversion cycle of +133 days, seen from the
-         other side.
+  Figures are numbered in DOCUMENT order, which is not the order the data
+  suggests: the reconciliation is taught in §2 and the cross-section in §5.
+
+  fig1 — WHERE THE 17bn WENT (§2.2). NVIDIA FY2026 reconciled from net
+         income 120,067 to operating cash flow 102,718. The non-cash
+         adjustments net to roughly nothing; the whole of the gap is
+         WORKING CAPITAL, and almost all of that is receivables and
+         inventory -- which is E07 §3 §5.1's cash conversion cycle of
+         +133 days, seen from the other side.
+  fig2 — THREE NUMBERS, THREE DIFFERENT STORIES (§5.2). Net income,
+         operating cash flow and free cash flow for six companies, most
+         recent full year. Two teaching cases: ORACLE, whose free cash flow
+         is MINUS 23.7bn on net income of 17.1bn, and NVIDIA, whose
+         OPERATING CASH FLOW IS BELOW NET INCOME despite a 55.6% net
+         margin.
   fig3 — THE CAPEX LINE THAT ATE THE FREE CASH FLOW. Capital expenditure as
          a share of operating cash flow, Oracle and Microsoft, FY2020 to
          FY2026. Oracle crosses 100% in FY2025 and reaches 174% in FY2026;
@@ -58,62 +62,6 @@ def save(fig, n):
 
 
 # ------------------------------------------------------------------- fig 1
-# name, fiscal year label, net income, operating cash flow, capital expenditure
-TRIPLE = [
-    ("Oracle",     "FY2026",  17_087,  31_977,  55_663),
-    ("Microsoft",  "FY2026", 133_749, 182_935, 115_948),
-    ("NVIDIA",     "FY2026", 120_067, 102_718,   6_042),
-    ("Apple",      "FY2025", 112_010, 111_482,  12_715),
-    ("Costco",     "FY2026",   9_226,  15_817,   6_435),
-    ("Salesforce", "FY2026",   7_457,  14_996,     594),
-]
-
-
-def fig1():
-    fig, ax = plt.subplots(figsize=(13.4, 6.4))
-    names = [f"{n}\n{fy}" for n, fy, *_ in TRIPLE]
-    ni = [r[2] / 1000 for r in TRIPLE]
-    ocf = [r[3] / 1000 for r in TRIPLE]
-    fcf = [(r[3] - r[4]) / 1000 for r in TRIPLE]
-    x = np.arange(len(names)); w = 0.26
-
-    ax.bar(x - w, ni, width=w, color=C1, label="Net income")
-    ax.bar(x, ocf, width=w, color=C3, label="Operating cash flow")
-    ax.bar(x + w, fcf, width=w, color=C4, label="Free cash flow (operating − capital expenditure)")
-    for i in range(len(names)):
-        for off, v, col in ((-w, ni[i], C1), (0, ocf[i], C3), (w, fcf[i], C4)):
-            ax.text(x[i] + off, v + (4 if v >= 0 else -4), f"{v:,.0f}",
-                    ha="center", va="bottom" if v >= 0 else "top",
-                    fontsize=9.8, fontweight="bold",
-                    color=C2 if v < 0 else col)
-    ax.axhline(0, color="black", lw=1.0)
-    ax.annotate("free cash flow is NEGATIVE:\ncapex exceeded every dollar\nthe business generated",
-                xy=(0 + w, fcf[0]), xytext=(0.52, -70),
-                fontsize=10.2, color=C2, ha="left",
-                arrowprops=dict(arrowstyle="->", color=C2, lw=1.5))
-    ax.annotate("operating cash flow BELOW net income,\nat a 55.6% net margin (see Figure 2)",
-                xy=(2, ocf[2]), xytext=(2.45, 148),
-                fontsize=10.2, color=GREY, ha="left",
-                arrowprops=dict(arrowstyle="->", color=GREY, lw=1.4))
-
-    ax.set_xticks(x); ax.set_xticklabels(names, fontsize=10.8)
-    ax.set_ylim(-95, 215)
-    ax.set_ylabel("USD billions")
-    ax.set_title("Three numbers for the same year, and they do not agree",
-                 fontsize=13.2, fontweight="bold")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=3,
-              fontsize=10.6, frameon=False)
-    ax.grid(axis="y", alpha=0.25)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout()
-    save(fig, 1)
-    assert fcf[0] < 0 and ocf[2] < ni[2]
-    print("  (" + "; ".join(
-        f"{r[0]} OCF/NI {r[3] / r[2]:.2f}, FCF/NI {(r[3] - r[4]) / r[2]:+.2f}"
-        for r in TRIPLE) + ")")
-
-
-# ------------------------------------------------------------------- fig 2
 # NVIDIA FY2026 (year ended 25 January 2026), Form 10-K, as filed.
 NVDA_BRIDGE = [
     ("Net income", 120_067, "start"),
@@ -133,7 +81,7 @@ NVDA_BRIDGE = [
 COL = {"start": C1, "nc": C5, "wc": C4, "end": C3}
 
 
-def fig2():
+def fig1():
     fig, ax = plt.subplots(figsize=(14.6, 6.6))
     labels = [a for a, _, _ in NVDA_BRIDGE]
     x = np.arange(len(labels))
@@ -170,10 +118,66 @@ def fig2():
     ax.grid(axis="y", alpha=0.25)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
-    save(fig, 2)
+    save(fig, 1)
     assert abs((120_067 + nc + wc) - 102_718) < 1e-6
     print(f"  (non-cash {nc:+,}; working capital {wc:+,}; "
           f"receivables and inventory alone {-15_399 - 11_324:+,})")
+
+
+# ------------------------------------------------------------------- fig 2
+# name, fiscal year label, net income, operating cash flow, capital expenditure
+TRIPLE = [
+    ("Oracle",     "FY2026",  17_087,  31_977,  55_663),
+    ("Microsoft",  "FY2026", 133_749, 182_935, 115_948),
+    ("NVIDIA",     "FY2026", 120_067, 102_718,   6_042),
+    ("Apple",      "FY2025", 112_010, 111_482,  12_715),
+    ("Costco",     "FY2026",   9_226,  15_817,   6_435),
+    ("Salesforce", "FY2026",   7_457,  14_996,     594),
+]
+
+
+def fig2():
+    fig, ax = plt.subplots(figsize=(13.4, 6.4))
+    names = [f"{n}\n{fy}" for n, fy, *_ in TRIPLE]
+    ni = [r[2] / 1000 for r in TRIPLE]
+    ocf = [r[3] / 1000 for r in TRIPLE]
+    fcf = [(r[3] - r[4]) / 1000 for r in TRIPLE]
+    x = np.arange(len(names)); w = 0.26
+
+    ax.bar(x - w, ni, width=w, color=C1, label="Net income")
+    ax.bar(x, ocf, width=w, color=C3, label="Operating cash flow")
+    ax.bar(x + w, fcf, width=w, color=C4, label="Free cash flow (operating − capital expenditure)")
+    for i in range(len(names)):
+        for off, v, col in ((-w, ni[i], C1), (0, ocf[i], C3), (w, fcf[i], C4)):
+            ax.text(x[i] + off, v + (4 if v >= 0 else -4), f"{v:,.0f}",
+                    ha="center", va="bottom" if v >= 0 else "top",
+                    fontsize=9.8, fontweight="bold",
+                    color=C2 if v < 0 else col)
+    ax.axhline(0, color="black", lw=1.0)
+    ax.annotate("free cash flow is NEGATIVE:\ncapex exceeded every dollar\nthe business generated",
+                xy=(0 + w, fcf[0]), xytext=(0.52, -70),
+                fontsize=10.2, color=C2, ha="left",
+                arrowprops=dict(arrowstyle="->", color=C2, lw=1.5))
+    ax.annotate("operating cash flow BELOW net income,\nat a 55.6% net margin (see Figure 1)",
+                xy=(2, ocf[2]), xytext=(2.45, 148),
+                fontsize=10.2, color=GREY, ha="left",
+                arrowprops=dict(arrowstyle="->", color=GREY, lw=1.4))
+
+    ax.set_xticks(x); ax.set_xticklabels(names, fontsize=10.8)
+    ax.set_ylim(-95, 215)
+    ax.set_ylabel("USD billions")
+    ax.set_title("Three numbers for the same year, and they do not agree",
+                 fontsize=13.2, fontweight="bold")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=3,
+              fontsize=10.6, frameon=False)
+    ax.grid(axis="y", alpha=0.25)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    save(fig, 2)
+    assert fcf[0] < 0 and ocf[2] < ni[2]
+    print("  (" + "; ".join(
+        f"{r[0]} OCF/NI {r[3] / r[2]:.2f}, FCF/NI {(r[3] - r[4]) / r[2]:+.2f}"
+        for r in TRIPLE) + ")")
 
 
 # ------------------------------------------------------------------- fig 3
