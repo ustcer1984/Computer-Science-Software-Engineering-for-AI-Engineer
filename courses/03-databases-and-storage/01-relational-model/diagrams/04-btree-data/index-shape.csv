@@ -1,0 +1,5 @@
+key_type,index_mb,tree_level,internal_pages,leaf_pages,avg_leaf_density_pct,leaf_fragmentation_pct,total_load_s,wal_mb
+bigint sequential,214,2,97,27323,90.04,0,8.6,1321
+uuid v7,301,2,189,38315,89.99,0,13.9,1485
+uuid v4,392,2,234,49926,69.14,49.89,44.5,2035
+uuid v4 after REINDEX,301,,,,89.99,,,
