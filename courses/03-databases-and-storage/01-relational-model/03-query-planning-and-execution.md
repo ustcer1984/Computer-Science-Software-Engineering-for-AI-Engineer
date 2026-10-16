@@ -3,13 +3,17 @@
 > **Module:** Databases & Storage (from first principles)
 > **Chapter:** The relational model from the ground up — relations, keys, normalization, how a query is planned and
 > executed, B-tree indexes
-> **Section:** Ch1 §1 promised that SQL (Structured Query Language) is declarative — you say *what*, the database decides *how* — and Ch1 §2 §12
-> made "is the query still slow once it is planned properly?" the first question before any cache. This section opens
+> **Section:** Ch1 §1 promised that SQL (Structured Query Language) is declarative — you say *what*, the database
+> decides *how* — and Ch1 §2 §12 made "is the query still slow once it is planned properly?" the first question before
+> any cache. This section opens
 > the box. It follows a query from text to rows; shows the executor as a tree of small operators; teaches you to read
 > `EXPLAIN ANALYZE` line by line on a real plan; explains how the planner estimates row counts and costs, and exactly
 > where those estimates go wrong; and measures, on PostgreSQL 18, when an index beats a full scan, which of the three
 > join algorithms wins at which size, and what a single bad estimate costs — 22 seconds instead of 147 milliseconds.
-> **Status:** 🔵 PREPARED 2026-10-09 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-10-16 (body prepared 2026-10-09). Four questions — what a bitmap is, the three join
+> algorithms in detail, whether this applies beyond PostgreSQL, and whether you can customize the plan — are answered in
+> §12, with every vendor-specific claim checked against that vendor's documentation. Checking them also corrected the
+> body: PostgreSQL 19 adds the `pg_plan_advice` module, so "no hints in core" now carries a version (§8b).
 > **Prerequisites:** **Ch1 §1** (the relational algebra of §7 — this section is where it becomes physical) and **Ch1 §2**
 > (its Figure 4 query is the worked example here). Ch1 §1 §12 met a B-tree in passing; Ch1 §4 opens it properly.
 
@@ -376,9 +380,9 @@ Two consequences follow, and both matter in §6:
 - **An index scan's cost depends on physical order.** Fetching 10,000 rows through an index means up to 10,000
   random page reads if the matching rows are scattered, but perhaps 100 sequential ones if they sit together. The
   planner interpolates between those two extremes using the column's **correlation** statistic (§5).
-- **The constants describe hardware, and the defaults describe old hardware.** On solid-state drives (SSDs) or with the working set in
-  memory, a random read costs little more than a sequential one, and many installations set `random_page_cost` near
-  1.1. §6 measures what that changes — it fixes some choices and breaks others.
+- **The constants describe hardware, and the defaults describe old hardware.** On solid-state drives (SSDs) or with
+  the working set in memory, a random read costs little more than a sequential one, and many installations set
+  `random_page_cost` near 1.1. §6 measures what that changes — it fixes some choices and breaks others.
 
 **What the cost model is not good at** is anything the formula does not contain: CPU cache effects, contention with
 other queries, the speed of a particular function. That is why the planner can price two plans correctly in its own
@@ -662,7 +666,7 @@ is unstable, these two settings are where to look.
 |---|---|
 | **Cardinality misestimate** | a large gap between a plan node's estimated and actual row counts |
 | **Stale statistics** | statistics gathered before the data changed substantially — after a bulk load, typically |
-| **Optimizer hint** | an instruction embedded in a query telling the planner which plan to use; core PostgreSQL has none |
+| **Optimizer hint** | an instruction embedded in a query telling the planner which plan to use; core PostgreSQL has none through version 18 |
 | **`pg_stat_statements`** | an extension that records execution statistics for every distinct query shape |
 | **`auto_explain`** | a module that logs the plans of queries slower than a threshold, as they run in production |
 
@@ -727,9 +731,10 @@ create statistics, re-run `EXPLAIN` and check that the estimate actually moved.*
 | **Cost constants that do not match the hardware** (§6, §7) | correct row estimates, and still the slower plan | adjust `random_page_cost` and `effective_cache_size`, then re-check |
 | **Too many joined tables** (§7a) | plans that change between runs for the same query | raise `join_collapse_limit` or `geqo_threshold` with care, or simplify the query |
 
-Two things are deliberately missing from the fixes column. **Optimizer hints:** core PostgreSQL has none, by design —
-the project's position is that a hint freezes a plan that will be wrong when the data changes, and fixing the estimate
-fixes every query that depends on it. (The `pg_hint_plan` extension exists for emergencies.) And **`WITH` as an
+Two things are deliberately missing from the fixes column. **Optimizer hints:** core PostgreSQL has none through
+version 18, by design — the project's position is that a hint freezes a plan that will be wrong when the data changes,
+and fixing the estimate fixes every query that depends on it. (The `pg_hint_plan` extension exists for emergencies, and
+PostgreSQL 19 adds a plan-advice module; §12d covers both.) And **`WITH` as an
 optimization fence:** before version 12 a common table expression was always computed separately, which people used to
 force a plan; since 12 it is inlined unless you write `MATERIALIZED`, so old advice about CTEs is often obsolete.
 
@@ -935,6 +940,277 @@ When you are done: `docker rm -f m03q`.
 
 ---
 
+## 12. Applied — captured from our session Q&A
+
+*(The session, 2026-10-16. Four questions: what a bitmap is (from §6's bitmap heap scan); a request for a detailed
+explanation of §7's three join algorithms; whether this section applies only to PostgreSQL; and whether you can
+customize the plan instead of letting the database choose. Checking the answers against vendor documentation also
+corrected the body: PostgreSQL 19 adds plan advice, so §8b's "core PostgreSQL has none" now carries a version.)*
+
+### 12a. What a bitmap is
+
+A **bitmap** is a sequence of bits, one per item, each answering yes or no: "is item $i$ in the set?". A million items
+fit in 125 KB, and union and intersection are bitwise `OR` and `AND` over whole machine words — very fast.
+
+A **bitmap heap scan** uses one to fix the weakness of an index scan. It runs in two phases, which is why it appears
+as two plan nodes:
+
+```
+Bitmap Heap Scan on vote_sheet           ← phase 2: read the marked pages, in physical order
+  Recheck Cond: (model_a = 'model-1')
+  Heap Blocks: exact=20912
+  ->  Bitmap Index Scan on vs_ma         ← phase 1: walk the index, set bits, read no table pages
+        Index Cond: (model_a = 'model-1')
+```
+
+**Phase 1** walks the index and records every matching row's location as a bit, grouped by heap page, without
+fetching any rows. **Phase 2** visits the marked pages **in page order**, each **once**. A plain index scan fetches in
+*index* order, which on a randomly ordered column jumps around the table and can read the same page repeatedly:
+
+```
+index scan:   page 812 → page 3 → page 5,041 → page 3 again → page 77 → page 812 again …
+bitmap scan:  page 3 → page 77 → page 812 → page 5,041 …     (each page once, ascending)
+```
+
+That is its position in Figure 3: as fast as an index scan for a handful of rows, faster in the middle (37 ms against
+43 ms at 1%), and far more graceful at the top (860 ms against 3.6 s for every row). Its price is that the bitmap must
+be complete before the first row comes out, so `LIMIT 10` cannot stop it early.
+
+Two further consequences:
+
+- **It can combine indexes.** Bitmaps from different indexes can be ANDed or ORed, so `WHERE a = 1 OR b = 2` can use two
+  separate single-column indexes through a `BitmapOr` node — something a plain index scan cannot do.
+- **It can become lossy.** The bitmap must fit in `work_mem`; when it would not, PostgreSQL keeps only "something on
+  this page matches" for some pages, the plan reports `Heap Blocks: exact=… lossy=…`, and every row on a lossy page is
+  re-tested — that is what `Recheck Cond` is for. A large `lossy` count means the bitmap ran out of memory.
+
+**Not to be confused with a bitmap *index*.** Oracle and many analytics databases store a permanent bitmap per distinct
+value of a column, suited to low-cardinality columns in read-mostly warehouses. PostgreSQL has no stored bitmap index;
+its bitmaps are built in memory for one query, from ordinary indexes, and discarded.
+
+### 12b. The three join algorithms, step by step
+
+The same toy inputs throughout — four votes (outer) joined to four battles (inner) on `battle_id`:
+
+```
+vote (outer)          battle (inner)
+ v1  3                 1  orca-7b
+ v2  1                 2  heron-70b
+ v3  3                 3  kite-8b
+ v4  2                 4  swift-3b
+```
+
+Write $N$ for the outer row count and $M$ for the inner.
+
+**Nested loop — two nested `for` loops.**
+
+```python
+for v in vote:                  # once
+    for b in battle:            # once PER OUTER ROW
+        if b.battle_id == v.battle_id:
+            emit(v, b)
+```
+
+Naively the inner loop is a full scan: every outer row compares with all four battles, $N \cdot M = 16$ comparisons.
+That is §8a's disaster — `Rows Removed by Join Filter: 500000000` and `loops=5000` on an inner sequential scan. With an
+**index** on the inner join column the inner loop becomes one B-tree descent of about three pages, whatever $M$ is, so
+the cost grows with $N$ alone. That version is what made Figure 4's one-row join take 0.05 ms against a
+5,000,000-row table. It is fully pipelined — it emits the first match immediately, so `LIMIT` stops it early — needs no
+extra memory, and is the only one of the three that evaluates **any** join condition (`<`, `BETWEEN`, a function, a
+geometric overlap), because the inner loop simply tests an expression. `Memoize` (PostgreSQL 14+) can sit above the
+inner side and cache results per key, so repeated outer keys (v1 and v3 are both battle 3) are answered from memory.
+
+**Hash join — build, then probe.**
+
+```python
+table = {}
+for b in battle:                                    # BUILD: read the inner input once
+    table.setdefault(hash(b.battle_id), []).append(b)
+for v in vote:                                      # PROBE: stream the outer input once
+    for b in table.get(hash(v.battle_id), []):
+        if b.battle_id == v.battle_id:              # re-check: different keys can share a bucket
+            emit(v, b)
+```
+
+With hash = `battle_id mod 2`, battles 2 and 4 land in bucket 0 and battles 1 and 3 in bucket 1; each vote then
+compares only with its bucket. With enough buckets a probe is constant time, so the whole join costs about $O(N + M)$
+and needs no index. It needs **equality**, because a hash sends equal keys to the same bucket and says nothing about
+nearby keys. The planner builds on the side it estimates smaller — the child under the `Hash` node — which is one
+reason a wrong estimate hurts.
+
+When the build side exceeds `work_mem`, the join splits into **batches** by a few bits of the hash: batch 0 stays in
+memory, the other batches of *both* inputs go to temporary files, and each pair of files is then joined in turn. Every
+matching pair lands in the same batch, so nothing is lost; the cost is writing and re-reading part of both inputs once —
+the `Batches: 4` and `temp read=3453 written=3453` of §3. Its fixed cost is the build: even one outer row pays to read
+the whole build input, which is why Figure 4's one-row hash join took 158 ms.
+
+**Merge join — sort both, walk in step.**
+
+```python
+v, b = sorted(vote), sorted(battle)        # free if an index delivers sorted input
+i = j = 0
+while i < len(v) and j < len(b):
+    if   v[i].key < b[j].key: i += 1       # outer behind: advance outer
+    elif v[i].key > b[j].key: j += 1       # inner behind: advance inner
+    else: emit(v[i], b[j]); i += 1         # equal: emit (duplicates: see below)
+```
+
+On sorted inputs (votes 1, 2, 3, 3 against battles 1, 2, 3, 4) both pointers only move forward, and battle 4 is never
+read once the outer side runs out: the walk costs $O(N + M)$. If the **inner** side has a run of equal keys, the
+executor *marks* where the run starts and *restores* to the mark for each further outer row with that key, which needs
+a rewindable inner input — the `Materialize` node §7 measured under the merge join's sorted side. Sorting an unsorted
+input costs $O(N \log N)$. Memory is needed only for sorting, which spills gracefully, and the output comes out sorted
+by the join key, so a matching `ORDER BY` is free. PostgreSQL implements it only for equality operators that define a
+consistent order. In Figure 4 it won at a million outer rows (740 ms against the hash join's 1,347 ms) because the
+inner side arrived sorted from the primary-key index.
+
+**Table 7** — the three join algorithms side by side.
+
+| | Nested loop (with index) | Hash join | Merge join |
+|---|---|---|---|
+| **Core idea** | for each outer row, look up matches | hash one side, probe with the other | sort both, walk in step |
+| **Cost** | $N$ × one index descent | $N + M$ | $N + M$, plus sorting what is unsorted |
+| **Needs** | ideally an index on the inner join column | `=` and memory for the build side | `=` and sorted inputs, or a sort |
+| **First row out** | immediately | after the whole build side | after any sorts; immediately if none |
+| **Memory** | none | the hash table, spilling into batches | only for sorting |
+| **Join conditions** | anything | `=` only | `=` only |
+| **Classic failure** | $N$ underestimated, so a few lookups become millions, or an inner scan repeats (§8a) | build side underestimated, heavy spilling | a huge sort a hash join would have avoided |
+
+A one-line summary: **a nested loop pays per outer row; a hash join pays per row of both inputs plus an entry fee for
+the build; a merge join pays per row of both inputs plus the cost of getting them sorted.** The planner chooses by
+estimating $N$ and $M$, which is why the row estimate matters more than anything else in a plan.
+
+### 12c. Does this apply only to PostgreSQL?
+
+**The ideas transfer; the syntax and specific behaviours do not.** Every major relational database descends from System
+R's design (§7a) — parse, cost-based planning from per-column statistics, the same scan and join strategies, an
+`EXPLAIN`. What transfers unchanged: reading estimate against actual first, the independence assumption and correlated
+columns, sargability, the selectivity crossover, the three join trade-offs, stale statistics after bulk loads. What
+differs is checked against each vendor's documentation below.
+
+**Table 8** — where the major engines differ, on the points that change how you read a plan.
+
+| | PostgreSQL | MySQL (InnoDB) | SQL Server | Oracle | SQLite |
+|---|---|---|---|---|---|
+| **Table storage** | heap + separate indexes | **clustered**: rows live in the primary-key B-tree; secondary indexes store the primary key | heap or clustered index | heap by default; index-organized tables optional | B-tree keyed on rowid |
+| **Join algorithms** | nested loop, hash, merge | nested loop and its variants; hash join since 8.0.18 (block nested loop removed in 8.0.20) | all three, plus **adaptive joins** (2017+) | all three, plus **adaptive plans** | **nested loops only** |
+| **Bitmap-like scans** | bitmap heap scan, `BitmapAnd`/`BitmapOr` | Index Merge (combine range scans); Multi-Range Read (sort keys, then fetch in primary-key order) | — | stored bitmap indexes (a different thing, §12a) | — |
+| **Multi-column statistics** | `CREATE STATISTICS` | histograms, managed with `ANALYZE TABLE` | the estimator assumes columns may be correlated | column-group extended statistics | `sqlite_stat4` samples |
+| **Optimizer hints** | none in core through 18; plan advice module in 19 (§12d) | yes, `/*+ … */` | yes, `OPTION (…)` and table hints | extensive | — |
+| **Plan reuse problem** | generic plans for prepared statements (§1) | — | one cached plan per parameterized query → **parameter sniffing** | one shared cursor per statement → bind-variable sensitivity | — |
+| **Runtime self-correction** | essentially none | little | adaptive joins, Query Store plan forcing, Parameter Sensitive Plan optimization (2022+) | adaptive plans, adaptive cursor sharing, SQL plan baselines | — |
+| **Actual-execution plan** | `EXPLAIN ANALYZE` | `EXPLAIN ANALYZE` (8.0.18+) | actual execution plan; Query Store | `DBMS_XPLAN.DISPLAY_CURSOR` | `EXPLAIN QUERY PLAN` (estimates only) |
+
+Four differences that change how you reason:
+
+1. **Clustered storage.** In InnoDB the table *is* the primary-key B-tree, so primary-key ranges behave like Figure 3's
+   ordered column `c` and stay cheap far past 3%. A secondary index stores the primary key rather than a row location,
+   so each lookup through it descends **two** B-trees — the secondary crossover is lower than PostgreSQL's, and covering
+   indexes are worth more (Ch1 §4).
+2. **Shared plan caches.** SQL Server and Oracle cache plans for every query and reuse them across sessions, compiled
+   for whichever parameter values arrived first. That is **parameter sniffing** in SQL Server's vocabulary — §1's
+   generic-plan trap, at the scale of the whole server. SQL Server 2022's Parameter Sensitive Plan optimization keeps
+   several cached plans for one parameterized statement; Oracle's answer is adaptive cursor sharing.
+3. **Runtime adaptation.** SQL Server's adaptive join defers the choice between hash join and nested loop until the
+   first input has been scanned and its rows counted; Oracle's adaptive plans do the same through a statistics
+   collector. Either would have defused §8a, where an estimate of 1 met 5,000 rows. PostgreSQL's answer is to fix the
+   estimate, which is why §5 and §8 dwell on statistics.
+4. **Estimation assumptions.** Since SQL Server 2014 its estimator no longer assumes independence — the documentation's
+   phrase is "Independence becomes Correlation" — so §5's vote-sheet case starts less badly underestimated. The habit is
+   the same everywhere: check estimate against actual.
+
+**Analytical, columnar engines** (Snowflake, BigQuery, DuckDB, ClickHouse, Redshift) change two more things: execution
+is **vectorized**, passing batches of values between operators instead of one row per call, and there are usually no
+B-tree indexes — each block stores the minimum and maximum of its values and the engine skips blocks that cannot
+match. Joins are mostly hash joins; §6's access-path question becomes "how many blocks can be skipped". Statistics,
+estimate-versus-actual and join ordering still apply.
+
+**Meeting a new engine, check four things first:** is the table clustered; are plans cached across sessions, and keyed
+on what; does it adapt at run time; which join algorithms does it actually have (SQLite has only nested loops).
+
+### 12d. Can you customize the plan?
+
+**You can steer it, from gentle to absolute, but SQL has no way to hand over a written-out plan** — that separation is
+Codd's data independence (Ch1 §1 §1), and it is why a query keeps working as the data changes. (Doing the procedure in
+application code — fetch the ids, then query each one — *is* hand-planning, and it is how ORMs produce the one-query-per-
+row "N+1" problem.) The ladder, in the order to try it:
+
+**Level 1 — fix what the planner believes.** `ANALYZE`, a higher statistics target, `CREATE STATISTICS` (§5, §8a). The
+planner then chooses well by itself, and keeps choosing well as the data changes. This turned 22 seconds into 147 ms.
+
+**Level 2 — change what is possible.** Add an index, a partial index or an expression index; rewrite the condition to
+be sargable (§6a); split an `OR` across columns into a `UNION`; compute a sub-result separately with
+`WITH … AS MATERIALIZED (…)`; or force the join order exactly as written with `SET LOCAL join_collapse_limit = 1`.
+
+**Level 3 — switch strategies off for one transaction.** The `enable_*` settings make an operator so expensive in the
+planner's eyes that it is avoided whenever an alternative exists:
+
+```sql
+BEGIN;
+SET LOCAL enable_nestloop = off;     -- this transaction only
+SELECT … ;
+COMMIT;
+```
+
+Every forced line in Figures 3 and 4 was made this way. Scope them narrowly — `SET LOCAL` for a transaction, `SET` for a
+session, `ALTER FUNCTION … SET` for one function, `ALTER ROLE … SET` for a role. They are blunt (every join in the
+query), they are preferences rather than commands (with no alternative, the disabled operator is used anyway), and they
+are best as diagnostics: "is the hash join actually faster?"
+
+**Level 4 — name the exact plan.** The PostgreSQL wiki states the project's position: it will not implement hints "in
+the exact ways they are commonly implemented on other databases", and lists why — hints are hard to maintain, become
+harmful after upgrades, do not scale with data size ("the hint that's right when a table is small is likely to be wrong
+when it gets larger"), and are usually unnecessary because the optimizer is usually right. Two tools exist anyway:
+
+- **`pg_hint_plan`**, a long-standing extension, available on Amazon RDS for PostgreSQL (version 1.8.0 on PostgreSQL 18):
+
+  ```sql
+  /*+ Leading((ev tag)) HashJoin(ev tag) SeqScan(tag) Rows(ev tag #5000) */
+  SELECT count(*) FROM ev JOIN tag ON tag.ev_id = ev.id WHERE … ;
+  ```
+
+  `Rows` is the interesting one: it **corrects the estimate** and leaves the operator to the planner.
+- **`pg_plan_advice`**, a supplied module new in **PostgreSQL 19** (at release candidate as of this writing).
+  `EXPLAIN (PLAN_ADVICE)` prints the chosen plan as an advice string — `JOIN_ORDER(f d) HASH_JOIN(d) SEQ_SCAN(f d)` —
+  and setting `pg_plan_advice.advice` to all or part of that string constrains later planning, with `EXPLAIN` reporting
+  for each item whether it was applied (`/* matched */`). Its companion **`pg_stash_advice`** stores advice and applies
+  it automatically by query. The module's own documentation repeats the warning: if the data distribution changes,
+  advice can stop the planner from adapting.
+
+MySQL (`/*+ JOIN_ORDER(…) HASH_JOIN(…) */`, `FORCE INDEX`), SQL Server (`OPTION (…)`) and Oracle (`/*+ LEADING(…)
+USE_HASH(…) */`) have hints built in.
+
+**Level 5 — pin a known-good plan without touching the query.** SQL Server's Query Store can force a previous plan for
+a regressed query; Oracle's SQL plan baselines restrict a statement to accepted plans; Aurora PostgreSQL has Query Plan
+Management (`apg_plan_mgmt`); PostgreSQL 19's `pg_stash_advice` brings the idea to the open-source engine.
+
+**Table 9** — which level to use for which goal.
+
+| You want to… | Use | Why |
+|---|---|---|
+| fix a plan that is bad because of an estimate | Level 1 | the planner keeps adapting as the data changes |
+| make a good plan possible | Level 2 | adds a route without removing the planner's choice |
+| check whether another plan is really faster | Level 3 in a test | exactly how Figures 3 and 4 were made |
+| survive tonight's incident | Level 3 or 4, narrowly scoped | fast — write down why, and when to remove it |
+| control one join in one query permanently | Level 4 | precise, and frozen; re-check as the data grows |
+| fix a query whose text you cannot edit | Level 5, or Level 3 on the role or function | the SQL stays untouched |
+
+**Every level above 2 trades adaptivity for control.** When you force something, record why next to it, pin it with a
+test that checks the plan, and prefer correcting the estimate over dictating the operator.
+
+### 12e. What the session teaches
+
+- **A plan node is a data structure plus an access pattern.** The bitmap, the hash table and the sorted walk are why
+  the three scans and three joins have the cost shapes Figures 3 and 4 measured — knowing the mechanism lets you predict
+  the curve.
+- **The concepts are portable; the defaults are not.** Clustering, plan caching and runtime adaptation differ by engine
+  and change what a given plan means. Check those first in any new database.
+- **Steer through the estimate before the operator.** Statistics fix every query that depends on them; a hint fixes one
+  query, today.
+- **Check the version.** "Core PostgreSQL has no hints" was true for twenty years and stops being true in version 19.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -956,6 +1232,10 @@ When you are done: `docker rm -f m03q`.
 | Prepared statement | 预处理语句 / 预编译语句 | 預備陳述式 | ⚠ genuinely different; 陳述式 is Microsoft's 台灣 term for "statement" |
 | Correlation | 相关性 | 相關性 | |
 | Sargable | 可利用索引的（谓词） | 可使用索引的（述詞） | no settled term in either; ⚠ 谓词 ↔ **述詞** (predicate) |
+| Bitmap | 位图 | 點陣圖 | ⚠ genuinely different words |
+| Optimizer hint | 优化器提示 | 最佳化工具提示 | ⚠ follows the 优化 ↔ 最佳化 split |
+| Parameter sniffing | 参数嗅探 | 參數探查 | ⚠ 嗅探 ↔ **探查** in Microsoft's 台灣 documentation |
+| Clustered index | 聚集索引 | 叢集索引 | ⚠ 聚集 ↔ **叢集** |
 
 ---
 
@@ -988,6 +1268,32 @@ When you are done: `docker rm -f m03q`.
   9(3), 2015 — estimation errors that grow exponentially with joins, and systematic underestimation (§5, §8) —
   <https://www.vldb.org/pvldb/vol9/p204-leis.pdf>
 - `pg_hint_plan` — the optimizer-hint extension mentioned in §8b — <https://github.com/ossc-db/pg_hint_plan>
+- PostgreSQL wiki — *Optimizer Hints Discussion* (the project's stance and its list of problems with hints, §12d) —
+  <https://wiki.postgresql.org/wiki/OptimizerHintsDiscussion>
+- PostgreSQL 19 documentation — *pg_plan_advice* and *pg_stash_advice* (§12d) —
+  <https://www.postgresql.org/docs/19/pgplanadvice.html> · <https://www.postgresql.org/docs/19/pgstashadvice.html>
+- Amazon RDS — *Extension versions for Amazon RDS for PostgreSQL* (`pg_hint_plan` 1.8.0 on PostgreSQL 18) —
+  <https://docs.aws.amazon.com/AmazonRDS/latest/PostgreSQLReleaseNotes/postgresql-extensions.html> · and Aurora
+  PostgreSQL *Query Plan Management* —
+  <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Optimize.html>
+- MySQL 8.0/8.4 Reference Manual — *Hash Join Optimization* (8.0.18; block nested loop removed in 8.0.20), *Nested-Loop
+  Join Algorithms*, *Clustered and Secondary Indexes*, *Index Merge*, *Multi-Range Read*, *Optimizer Hints* —
+  <https://dev.mysql.com/doc/refman/8.0/en/hash-joins.html> · <https://dev.mysql.com/doc/refman/8.4/en/nested-loop-joins.html> ·
+  <https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html> · <https://dev.mysql.com/doc/refman/8.4/en/index-merge-optimization.html> ·
+  <https://dev.mysql.com/doc/refman/8.4/en/mrr-optimization.html> · <https://dev.mysql.com/doc/refman/8.4/en/optimizer-hints.html>
+- Microsoft — SQL Server *Intelligent Query Processing* (adaptive joins), *Parameter Sensitive Plan optimization*,
+  *Cardinality Estimation* ("Independence becomes Correlation"), *Query Store usage scenarios* (plan forcing) —
+  <https://learn.microsoft.com/en-us/sql/relational-databases/performance/intelligent-query-processing-details> ·
+  <https://learn.microsoft.com/en-us/sql/relational-databases/performance/parameter-sensitive-plan-optimization> ·
+  <https://learn.microsoft.com/en-us/sql/relational-databases/performance/cardinality-estimation-sql-server> ·
+  <https://learn.microsoft.com/en-us/sql/relational-databases/performance/query-store-usage-scenarios>
+- Oracle Database 23 — *Query Optimizer Concepts* (adaptive query plans), *Cursor Sharing* (adaptive cursor sharing),
+  *SQL Plan Management* (plan baselines) —
+  <https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/query-optimizer-concepts.html> ·
+  <https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/improving-rwp-cursor-sharing.html> ·
+  <https://docs.oracle.com/en/database/oracle/oracle-database/23/tgsql/overview-of-sql-plan-management.html>
+- SQLite — *The SQLite Query Optimizer Overview* ("SQLite implements joins as nested loops") —
+  <https://www.sqlite.org/optoverview.html>
 
 ### What's next
 
