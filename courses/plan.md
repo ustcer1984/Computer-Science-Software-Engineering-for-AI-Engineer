@@ -6,7 +6,7 @@
 
 Author of plan: Claude (calibrated against your self-description + a survey of `aquarium-main` and
 `arena-concept-experiment`).
-Last updated: 2026-06-13
+Last updated: 2026-10-22
 
 ---
 
@@ -175,11 +175,19 @@ actual order. Folder paths follow your numbering convention.
 - **Ch2 — Building evals:** datasets, metrics, LLM-as-judge (and its pitfalls).
 - **Ch3 — Guardrails & tracing in production:** generalizing your SEA-Guard + Langfuse setup; A/B testing.
 
+### M16 — Programming Languages Compared  ·  `courses/16-programming-languages-compared/`
+*Why for you: added 2026-10-22 at your request, **low priority**. You want the design philosophy behind the major
+languages — why each exists, what it trades away, and how to pick one for a task — **not** their syntax or packages.*
+- **Ch1 — What a language decides:** the design axes every language must settle — execution model (compiled / interpreted / VM / JIT), type system, memory management (manual / GC / ref-counting / ownership), concurrency model, paradigm, error handling.
+- **Ch2 — The families and their philosophies:** C/C++ (trust the programmer, zero-cost abstraction) · Java/C#/Kotlin (managed runtimes) · Python/Ruby (readability, productivity) · JavaScript/TypeScript (the web's accident and its repair) · Go (simplicity at scale) · Rust (safety without a GC) · functional languages (Haskell, OCaml, Erlang/Elixir, Lisp/Clojure) · domain languages (SQL, R, Julia) — the problem each was built to solve and its pros and cons.
+- **Ch3 — The trade-offs across languages:** performance vs productivity, safety vs control, expressiveness vs simplicity, ecosystem and tooling gravity, how languages interoperate (FFI, Python on top of C/Rust).
+- **Ch4 — Choosing a language for a task:** a decision method (constraints → candidates → deciding factors), applied to real cases (services, data/ML, systems, frontend, scripting).
+
 ---
 
 ## Interleaved study sequence
 
-Six phases, foundations-first. Within a phase, study the listed module-chapters **in parallel** (a
+Seven phases, foundations-first. Within a phase, study the listed module-chapters **in parallel** (a
 little of each per week) rather than strictly top-to-bottom. Durations assume ~2–3 hrs/day on the
 course track and are estimates, not deadlines. **You can redirect at any phase boundary — or mid-phase.**
 
@@ -219,6 +227,11 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 - Refactor a monolith using M04/M05/M06, or implement a real improvement the course surfaced.
 - Run a full system-design exercise on one of your apps (M07).
 - Remaining chapters: **M12 Ch2–3, M13 Ch3–4, M14 Ch3–4.**
+
+### Phase 7 — Programming languages compared  *(low priority; starts only after Phases 1–6 are done)*
+- **M16** — design philosophy of the major languages, their pros and cons, and how to choose one
+  *(added 2026-10-22. Builds on M01 Ch1 (execution model), M01 Ch2 (memory), M05 Ch1 (type systems) and
+  M11 Ch2 (JavaScript), so it can be pitched comparatively without re-teaching those)*
 
 ---
 
@@ -288,6 +301,10 @@ Apply everything to real code (remembering the repos may have moved on — re-su
 | M15 AI Eval/Obs | Ch1 Why eval is hard | ⬜ | | |
 | M15 | Ch2 Building evals | ⬜ | | |
 | M15 | Ch3 Guardrails/tracing | ⬜ | | |
+| M16 Languages Compared | Ch1 Design axes | ⬜ | | Low priority — Phase 7, after the current plan is done. |
+| M16 | Ch2 Families & philosophies | ⬜ | | |
+| M16 | Ch3 Trade-offs | ⬜ | | |
+| M16 | Ch4 Choosing a language | ⬜ | | |
 
 ---
 

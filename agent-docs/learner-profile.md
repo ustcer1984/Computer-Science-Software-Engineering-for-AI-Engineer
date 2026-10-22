@@ -46,6 +46,7 @@ read the history only for the chronological "how we got here" trail.
 - Become a full-stack developer **and architect**.
 - Understand all model types (LLM, image, multimodal, audio) and apply them in agentic frameworks.
 - Stay current on latest tech / tool stacks.
+- (Low priority, added 2026-10-22) Understand the **design philosophy** of the major programming languages, their pros and cons, and how to choose one for a task — not their syntax or packages. Scheduled as M16 / Phase 7 in `courses/plan.md`, after the current plan.
 
 ## Calibrated skill map
 
