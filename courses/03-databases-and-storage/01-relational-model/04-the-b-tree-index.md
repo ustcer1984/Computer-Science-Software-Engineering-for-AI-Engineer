@@ -11,7 +11,9 @@
 > UUIDs, what a multi-column index can and cannot answer (including PostgreSQL 18's new skip scan, about 1,850× faster
 > than PostgreSQL 17 on one query), when an index can skip the table entirely, and what every index costs on every
 > write. It closes Ch1.
-> **Status:** 🔵 PREPARED 2026-10-16 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-10-24 (body prepared 2026-10-16). Two questions — what `VACUUM` is, and how $k$ and
+> $f$ are chosen and whether a hard disk and an SSD (solid-state drive) would want different values — are answered in
+> §14, with new measurements on PostgreSQL 18 (Table 7, Table 8) and Gray and Graefe's page-size model (Figure 4).
 > **Prerequisites:** **Ch1 §3** (access paths, `EXPLAIN ANALYZE`, bitmap scans — §12a there) and **Ch1 §1 §12** (the
 > first look at a B-tree, and why a foreign-key column needs one). Ch1 §1 §3's UUID advice gets its mechanism in §4.
 
@@ -878,6 +880,152 @@ When you are done: `docker rm -f m03b`.
 
 ---
 
+## 14. Applied — captured from our session Q&A
+
+*(The session, 2026-10-24. Two questions: what `VACUUM` is — §5 and §8 lean on it without explaining it — and how
+§1's $k$ and $f$ are chosen, and whether a hard disk and a solid-state drive would want different values. Both answers
+were measured on PostgreSQL 18 for this section, and the second is checked against Gray and Graefe's published
+page-size model.)*
+
+### 14a. What `VACUUM` is
+
+**It is PostgreSQL's garbage collector for row versions.** The command is spelled `VACUUM`, with one C and two Us.
+
+The reason it has to exist is §5's first sentence: PostgreSQL never updates a row in place. An `UPDATE` writes a new
+version and leaves the old one, because a transaction that started earlier may still need to read the old value; a
+`DELETE` only marks the row as ended. This is MVCC (multi-version concurrency control), and M03 Ch2 is about what it
+buys. What it costs is that **nothing removes the old version at the moment it stops being needed**. Once no running
+transaction can see it, it is a **dead tuple** — still occupying heap space, still pointed at by an entry in every
+index. Something has to come back later and clean up. That is `VACUUM`, and it does four jobs:
+
+1. **Removes dead tuples** from the heap and **their entries from every index**, and records the freed space so later
+   inserts and updates can reuse it.
+2. **Sets the visibility map** — §8's one bit per heap page meaning "every row here is visible to everyone". Only
+   `VACUUM` sets it; any change to a page clears it. That is why an index-only scan "is only as good as the last
+   `VACUUM`".
+3. **Freezes old rows.** PostgreSQL stamps each row version with a 32-bit transaction ID (XID), and that counter wraps
+   around after about four billion transactions. `VACUUM` marks sufficiently old rows as visible to every future
+   transaction, so a wrapped counter cannot make them look like they come from the future. A database that is never
+   vacuumed eventually stops accepting writes to protect itself; this is the one `VACUUM` job that is not optional.
+4. **Refreshes planner statistics** if you write `VACUUM ANALYZE` — the statistics of Ch1 §3 §5. Plain `VACUUM` does
+   not.
+
+**Table 7** — `VACUUM` at work on 10,000,000 rows, 2,000,000 of them updated (PostgreSQL 18, autovacuum off).
+
+| Step | Heap | Primary-key index | Dead tuples | Heap free space | All-visible pages |
+|---|---|---|---|---|---|
+| after the load and a first `VACUUM` | 422 MB | 214 MB | 0 | — | all |
+| `UPDATE` 2,000,000 rows (ids 1–2,000,000) | 507 MB | 257 MB | 2,000,000 | 0.3% | 43,243 of 64,865 |
+| `VACUUM` (0.61 s) | 507 MB | 257 MB | **0** | **16.9%** | **64,865 of 64,865** |
+| `UPDATE` 2,000,000 other rows (ids 8,000,001–10,000,000) | **507 MB** | **300 MB** | 2,000,000 | — | — |
+| `VACUUM FULL` | 422 MB | 214 MB | 0 | — | — |
+
+The table has a `bigint` primary key, and the updates change a column no index covers. Four things to read off it:
+
+- **Every update grew the index.** The column changed was not indexed, yet none of the 2,000,000 updates was HOT
+  (heap-only tuple, §5): the heap pages were full, so each new version went to another page and needed a new
+  primary-key entry. That is §5's argument for a table `fillfactor` below 100.
+- **`VACUUM` does not shrink files.** Nothing got smaller in row 3. It turned 2,000,000 dead rows into 16.9% free space
+  inside the existing heap pages and set every visibility bit. The space is reusable, not returned to the operating
+  system.
+- **The heap reuses free space anywhere; an index reuses it only for the right keys.** In row 4 the next 2,000,000
+  updates fit into the freed heap space — the heap has no order, so a new version can go on any page with room — and the
+  heap did not grow at all. The index grew by another 43 MB, because the freed entries sat in leaves for ids 1 to
+  2,000,000 and the new entries belonged in leaves for ids above 8,000,000. That is §5's "space freed inside a page is
+  reused for new keys in that page's range", in numbers.
+- **`VACUUM FULL` is the one that shrinks**, by rewriting the table and its indexes into new files. It holds an
+  exclusive lock for the duration, so no reads or writes happen meanwhile. On a live system the online tools are
+  `REINDEX CONCURRENTLY` for an index (§5) and the `pg_repack` extension for a table.
+
+**Who runs it.** You rarely type `VACUUM` in production. The **autovacuum** daemon checks every database once a minute
+and vacuums any table whose dead tuples exceed
+
+$$\text{threshold} = 50 + 0.2 \times \text{rows in the table}$$
+
+which for this 10,000,000-row table is about 2,000,050 — the size of the bulk update above. PostgreSQL 18 adds a cap,
+`autovacuum_vacuum_max_threshold`, of 100,000,000, so a billion-row table no longer waits for 200 million dead rows.
+For a large table with heavy updates, the usual fix is a lower scale factor for that table (for example
+`ALTER TABLE votes SET (autovacuum_vacuum_scale_factor = 0.02)`), so it is vacuumed in small, frequent passes.
+
+**What stops it.** `VACUUM` can remove a version only when **no** running transaction could still see it. One
+transaction left open — a forgotten `BEGIN` in a console, a stuck job, a replica reporting an old snapshot — holds back
+cleanup for the whole database. Measured with one idle `REPEATABLE READ` transaction open during an update of 1,000,000
+rows, `VACUUM VERBOSE` reported:
+
+```
+tuples: 0 removed, 11000000 remain, 1000000 are dead but not yet removable
+```
+
+Nothing was removed. This is the most common reason a PostgreSQL database bloats with autovacuum switched on, and the
+check is to look for old transactions in `pg_stat_activity` (its `xact_start` column).
+
+### 14b. How $k$ and $f$ are chosen — and whether the disk type should change them
+
+**Nobody chooses them. They follow from the page size and the size of an entry**, and the page size is the only one of
+these anyone chooses — once, for the whole server.
+
+For §1's `bigint` primary key on 8 KB pages, measured with `bt_page_stats` on the same 10,000,000-row index:
+
+**Table 8** — where $k = 366$ and $f = 282$ come from (PostgreSQL 18, 8 KB pages).
+
+| Quantity | Value | Where it comes from |
+|---|---|---|
+| Usable bytes per page | 8,152 | 8,192 minus a 24-byte page header and a 16-byte B-tree trailer |
+| Bytes per leaf entry | 20 | an 8-byte tuple header holding the 6-byte row pointer (TID, tuple identifier), the 8-byte key, and a 4-byte slot in the page's item array |
+| Entries in a full page | about 407 | 8,152 ÷ 20 |
+| Leaf pages, filled to 90% | **367 entries, 808 bytes free** | the leaf fillfactor of 90 (§2); one entry is the high key, leaving $k = 366$ keys |
+| Internal pages, filled to 70% | **286 entries, 2,444 bytes free** | a fixed 70% for internal pages, compiled into PostgreSQL, applied on build and on rightmost splits |
+| Fan-out $f$ | **282** | 27,323 leaves ÷ 97 internal pages |
+
+So $k$ and $f$ move when the **entry** changes size, never because of the device: a 16-byte `uuid` key or a two-column
+key makes each entry larger and both numbers smaller, and a lower `fillfactor` lowers $k$. The page size itself is a
+**compile-time constant** in PostgreSQL (`--with-blocksize`, 1 to 32 KB, default 8 KB) and is almost never changed.
+Other engines fix it when the database is created: InnoDB's `innodb_page_size` defaults to 16 KB, SQL Server always
+uses 8 KB, SQLite stores it per database file. None of them adapt it to the drive.
+
+**Your intuition is right in theory, though — the best page size does depend on the device.** Jim Gray and Goetz
+Graefe gave the standard way to compute it. A page read costs one access time; what it buys is how far it narrows the
+search, which is $\log_{2}$ of the entries on the page (a binary search inside it). So the best page maximizes
+
+$$\frac{\log_{2}(\text{entries per page})}{\text{latency} + \text{page size} / \text{bandwidth}}$$
+
+Small pages waste the fixed latency; large pages spend transfer time for only a logarithmic gain. Graefe's 2009 paper
+ran this with 20-byte entries at 70% fill — the numbers in Table 8 — and found about **256 KB for a hard disk and 2 KB
+for the flash drives of 2007**. Figure 4 redraws his model and adds a modern NVMe (Non-Volatile Memory Express) drive
+with illustrative numbers.
+
+![Three curves of search progress per second of I/O against B-tree page size from 512 bytes to 2 megabytes, each normalized to its own maximum. The 2007 flash disk peaks at about 2 KB, an illustrative modern NVMe SSD at about 38 KB, and the 2007 hard disk at about 395 KB. Vertical lines mark PostgreSQL's 8 KB page and InnoDB's 16 KB page; at 8 KB the curves are at roughly 0.66 (hard disk), 0.77 (flash) and 0.88 (NVMe) of their best.](diagrams/04-btree-fig4.svg)
+
+**Figure 4** — the B-tree page size that gives the most search progress per second of I/O, by device, in Gray and
+Graefe's node-utility model: a hard disk wants pages around 50 times larger than 8 KB, 2007-era flash about 4 times
+smaller, and a modern NVMe drive about 5 times larger.
+
+Two things in Figure 4 go against intuition. **A faster device does not simply want smaller pages.** The 2007 flash
+drive had low latency and also low bandwidth, so transfer time dominated and small pages won; a modern NVMe drive has
+high bandwidth too, so its optimum moves back up to tens of kilobytes. And **every curve is flat near its top**: 8 KB
+gets between two thirds and nine tenths of the best search rate on all three devices. That flatness is why one page
+size has survived three generations of storage.
+
+**Why real systems still do not tune it per device** — the model counts one lookup's I/O and nothing else:
+
+1. **The upper levels are cached anyway.** The root and the 96 internal pages of a 10,000,000-key index are touched by
+   every lookup and stay in memory, so a lookup usually misses at most once — at the leaf. The model optimizes a cost
+   that a warm system mostly does not pay.
+2. **Height moves in whole levels, and slowly.** Doubling to 16 KB gives about $k = 735$ and $f = 572$, so three
+   levels hold about 240 million keys instead of 29 million (Figure 1). For most tables the height stays the same.
+3. **Every page you write is written whole.** An update changes one 20-byte entry and dirties the whole page. The first
+   change after a checkpoint writes a full page image to the WAL (write-ahead log, §4's full-page write), and the page
+   is later written back whole. Larger pages mean more bytes written and more WAL per change.
+4. **Large pages waste cache on random access.** A point lookup wants one entry; a 256 KB page fills 256 KB of memory
+   to deliver it, so under random access the cache holds fewer useful entries.
+
+**What does change between a hard disk and an SSD (solid-state drive)** is the planner's cost model, not the page.
+`random_page_cost` defaults to 4.0, which assumes a random read costs four times a sequential one, as on a hard disk.
+On SSDs, or with the working set in memory, it is commonly set to about 1.1, and Ch1 §3 §6 and Ch1 §3 §7 measured
+what that changes: some plans get faster, one got slower.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -900,6 +1048,9 @@ When you are done: `docker rm -f m03b`.
 | Partial index | 部分索引 | 部分索引 / 篩選索引 | ⚠ Microsoft's 台灣 SQL Server term is 篩選索引 (filtered index) |
 | Expression index | 表达式索引 | 運算式索引 | ⚠ 表达式 ↔ **運算式** |
 | Write amplification | 写放大 | 寫入放大 | |
+| Dead tuple | 死元组 | 死元組 / 失效元組 | |
+| Vacuum (garbage collection of row versions) | 清理 (VACUUM) | 清理 (VACUUM) | usually left as `VACUUM` in both |
+| Transaction ID wraparound | 事务 ID 回卷 | 交易 ID 回繞 | ⚠ 事务 ↔ **交易** (transaction) |
 
 ---
 
@@ -930,6 +1081,13 @@ When you are done: `docker rm -f m03b`.
 - PostgreSQL documentation — *pageinspect* and *pgstattuple* (the tools behind §2 and Table 1) —
   <https://www.postgresql.org/docs/current/pageinspect.html> ·
   <https://www.postgresql.org/docs/current/pgstattuple.html>
+- J. Gray and G. Graefe — *The Five-Minute Rule Ten Years Later, and Other Computer Storage Rules of Thumb*, SIGMOD
+  Record 26(4), 1997 — node utility and the optimal index page size (§14b) — <https://arxiv.org/abs/cs/9809005>
+- G. Graefe — *The Five-Minute Rule 20 Years Later (and How Flash Memory Changes the Rules)*, Communications of the ACM
+  52(7), 2009 — Tables 4 and 5, about 256 KB for disk and 2 KB for flash (§14b, Figure 4) —
+  <https://doi.org/10.1145/1538788.1538805>
+- PostgreSQL documentation — *Routine Vacuuming* (dead tuples, the visibility map, transaction ID wraparound,
+  autovacuum thresholds) — <https://www.postgresql.org/docs/current/routine-vacuuming.html>
 - pgvector — *Open-source vector similarity search for Postgres* (HNSW and IVFFlat approximate indexes) —
   <https://github.com/pgvector/pgvector>
 
