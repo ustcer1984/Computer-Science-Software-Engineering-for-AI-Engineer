@@ -1,0 +1,7 @@
+synchronous_commit,rep,acknowledged,survived,lost
+off,1,752903,749270,3633
+on,1,7316,7319,-3
+off,2,751496,746799,4697
+on,2,6968,6970,-2
+off,3,722454,719068,3386
+on,3,7328,7331,-3
