@@ -882,10 +882,10 @@ When you are done: `docker rm -f m03b`.
 
 ## 14. Applied — captured from our session Q&A
 
-*(The session, 2026-10-24. Two questions: what `VACUUM` is — §5 and §8 lean on it without explaining it — and how
-§1's $k$ and $f$ are chosen, and whether a hard disk and a solid-state drive would want different values. Both answers
-were measured on PostgreSQL 18 for this section, and the second is checked against Gray and Graefe's published
-page-size model.)*
+*(The session, 2026-10-24. Two questions: what `VACUUM` is — §5 and §8 lean on it without explaining it — and how §1's
+keys per leaf and fan-out are chosen, and whether a hard disk and a solid-state drive would want different values.
+Both answers were measured on PostgreSQL 18 for this section, and the second is checked against Gray and Graefe's
+published page-size model.)*
 
 ### 14a. What `VACUUM` is
 
