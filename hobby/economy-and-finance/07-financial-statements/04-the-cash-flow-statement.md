@@ -9,8 +9,9 @@
 > rather than a verdict, where the classification boundaries are softer than they look, what "free cash flow"
 > means given that **no standard defines it**, and why this is the statement to open first when something
 > about a company feels wrong.
-> **Status:** 🔵 **PREPARED 2026-10-14** — body drafted, awaiting your read; **§10 Applied** will be added once
-> you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed figures
+> **Status:** ✅ **FINALIZED 2026-10-27** — prepared 2026-10-14, read 2026-10-27, and **§10 Applied** records
+> the **second quiet read in a row**, which §3 had said in advance would be a pattern worth acting on, and what
+> §5 does differently because of it. Math in LaTeX, quantitative relationships drawn as real computed figures
 > (all four from filed accounts), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -776,6 +777,55 @@ spending stopped. Read the face of the statement to confirm which line you want 
 
 ---
 
+## 10. Applied — the second quiet read, and what changes because of it
+
+**You read §4 on 2026-10-27 and raised nothing.** That is the second silent read in a row. E07 §3 §10 made a
+commitment in advance for exactly this case: if §4 also produced nothing, that would be a pattern worth acting
+on, and the action would be to make the material **more arguable**. This section keeps that commitment. It
+also keeps the other one: **no change to the body of §4**, because patching a section on the strength of
+silence is still guessing.
+
+**What two quiet reads say that one did not.** E07 §3 §10 listed three causes that look the same from here:
+the material anticipated the questions, the read was lighter than usual, or the material was pitched below
+the point where a question forms. Two reads in a row shift them only a little:
+
+- **§3's forward test came back clean, and that is weak evidence.** The forward-test table in E07 §3 §10 named three claims that
+  would break visibly in §4 if they had not landed: working capital as the gap between profit and cash, a
+  statement being posable, and depreciation as an allocation. §4 leaned on all three, in §2.1, §1.2 and
+  §2.2, and none of them drew a question. That counts for them having landed. It counts only weakly, because
+  a claim that fails to land shows up as confusion, and confusion nobody voices looks exactly like silence.
+- **A one-off lighter read explains one quiet session well and two less well.** It is still possible. It is
+  no longer the easy explanation.
+- **Nothing yet separates the first cause from the third.** But the third is the only one the material can
+  act on, and acting on it costs little if the first is true. A reader who already understood loses nothing
+  when a contested case is left open instead of settled for them.
+
+**So §5 is written differently, in three concrete ways.**
+
+1. **Every content section ends in a *Contested* box.** Each one poses a question that informed people
+   disagree on, gives the strongest case for each side with a number attached, says what the evidence
+   settles and what it leaves open, and says where the section comes down and under what condition that
+   position would be wrong.
+2. **Several self-check questions ask for a position, not a fact.** Their answers give the defensible
+   positions and the conditions that favour each one, not a single right answer.
+3. **The cases are ones where the outcome is genuinely open**, or where two audited companies reached
+   **opposite conclusions on the same question in the same quarter**. Any agreement then has to be argued
+   for, not taken from the prose.
+
+**Table 8** — the three §4 claims §5 puts weight on first, and what each looks like if it did not land.
+
+| §4 claim | Where §5 puts weight on it | How you will know it did not land |
+|---|---|---|
+| **Cash is a fact; which box it goes in is a decision** (§1.2, §3) | the notes are where those decisions are written down: the accounting policy note and the critical estimates | the policy note will read as boilerplate, not as the place where the classification choices are declared |
+| **A five-year cash conversion below 1 is a warning only if the business is not growing** (§2.3, §5.1) | Super Micro Computer: over five years, cumulative operating cash flow of −7.4 billion against net income of +5.4 billion, while revenue grew from 5.2 to 39.1 billion, with an auditor resignation partway through | you will want to call it fraud, or call it growth, and §4's own rule says the gap alone cannot decide between them |
+| **"Free cash flow" is defined by nobody, so ask who defined it** (§4) | every non-GAAP measure, with share-based compensation as the largest single adjustment | "adjusted" figures will read as corrections to GAAP rather than as measures the company defined for itself |
+
+**And one request, which is not a self-assessment.** §5's *Contested* boxes each state a position. **If you
+disagree with where one comes down, that disagreement is the most useful thing you can bring to the
+session**, more useful than a question, because it is the one signal that cause (3) cannot produce.
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 The cash flow statement's vocabulary is where 大陆 and 台灣 diverge most sharply in this module, beginning
@@ -839,7 +889,7 @@ with the word *cash flow* itself. Genuine differences are marked.
 ---
 
 ### What's next
-🔵 **PREPARED 2026-10-14.** You now have all three statements. You can read the cash flow statement as **an
+✅ **FINALIZED 2026-10-27.** You now have all three statements. You can read the cash flow statement as **an
 attribution of the change in one balance-sheet line**, tell a non-cash adjustment from a working-capital
 movement and know that the second is §3's cash conversion cycle expressed as a flow, name the three
 classification levers that survive the fact that cash is a fact, compute free cash flow while knowing that
@@ -849,5 +899,8 @@ and the financing section that states capital allocation in plain numbers.
 Next, **§5 — the notes, and reading for what is not said**: the sections of an annual report that carry the
 information the statements compress away, how to read an audit opinion and what a *key audit matter* is
 actually telling you, the specific red flags that have preceded real failures, and how to assemble the three
-statements plus the notes into a single judgement about a company. It closes the module. Read this one and
-bring your questions — **§10 Applied** will be added from that session.
+statements plus the notes into a single judgement about a company. It closes the module.
+
+**§10 Applied** records the session: a second quiet read, a commitment made in E07 §3 §10 kept, and the three
+ways §5 is written differently because of it. It leaves **contested cases open** where E07 has so far settled
+them, and asks for your **disagreements**, not only your questions.
