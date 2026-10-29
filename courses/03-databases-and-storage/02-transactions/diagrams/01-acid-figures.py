@@ -10,6 +10,10 @@ Figure 2 (commit-cost.csv): what a commit costs. Left: rows committed per second
       against the number of concurrent clients, each committing one row.
 Figure 4 (lost-update.csv): 8 clients each add 1 to the same counter 2,000 times;
       the final value per method, against the 16,000 it should be.
+Figure 5 (rr-max-tries.csv, added 2026-10-29 for the §11 Applied answer): the
+      REPEATABLE READ version of Figure 4 run with pgbench --max-tries from 1 (no
+      retry) to 1000 — increments committed versus increments that ended in an
+      error, and the attempts each committed increment took.
 
 Run:  .venv/bin/python 01-acid-figures.py
 """
@@ -117,5 +121,40 @@ ax.set_title("Lost updates: 8 clients each add 1 to the same row 2,000 times (Po
 ax.grid(axis="y", alpha=0.25)
 fig.tight_layout()
 out = os.path.join(HERE, "01-acid-fig4.svg")
+fig.savefig(out, format="svg", bbox_inches="tight")
+print("wrote", out)
+
+# =============================================================================
+# Figure 5 — REPEATABLE READ: what the retry limit changes
+# =============================================================================
+by = defaultdict(list)
+for r in rows("rr-max-tries.csv"):
+    by[int(r["max_tries"])].append(r)
+limits = sorted(by)
+fig, ax = plt.subplots(figsize=(11.0, 4.9))
+for i, t in enumerate(limits):
+    rs = by[t]
+    ok = statistics.median(int(r["final"]) for r in rs)
+    bad = statistics.median(int(r["failed"]) for r in rs)
+    attempts = statistics.median((16000 + int(r["total_retries"])) / int(r["final"]) for r in rs)
+    ax.bar(i, ok, color=GREEN, width=0.62, label="committed: in the counter" if i == 0 else None)
+    ax.bar(i, bad, bottom=ok, color=ORANGE, width=0.62,
+           label="failed with an error reported to the client" if i == 0 else None)
+    ax.text(i, ok / 2, f"{ok:,.0f}", ha="center", va="center", fontsize=9.5, color="white")
+    if bad:
+        ax.text(i, ok + bad / 2, f"{bad:,.0f}", ha="center", va="center", fontsize=9.5, color="white")
+    ax.text(i, 16450, f"{attempts:.1f} attempts\nper commit", ha="center", fontsize=8.6, color=GREY)
+ax.axhline(16000, color=INK, lw=1, ls="--")
+ax.set_xticks(range(len(limits)))
+ax.set_xticklabels([("1 (no retry)" if t == 1 else str(t)) for t in limits], fontsize=9.5)
+ax.set_xlabel("pgbench --max-tries: attempts allowed per increment")
+ax.set_ylim(0, 20600)
+ax.set_ylabel("increments out of 16,000")
+ax.set_title("REPEATABLE READ, 8 clients, one row: every increment either commits or fails loudly — none is lost silently",
+             fontsize=10.5, color=INK)
+ax.grid(axis="y", alpha=0.25)
+ax.legend(loc="upper center", ncol=2, fontsize=9, framealpha=0.95)
+fig.tight_layout()
+out = os.path.join(HERE, "01-acid-fig5.svg")
 fig.savefig(out, format="svg", bbox_inches="tight")
 print("wrote", out)

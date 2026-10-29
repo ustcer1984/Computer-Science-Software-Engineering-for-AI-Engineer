@@ -10,7 +10,9 @@
 > (the server is killed mid-load on camera), what that durability costs per commit and how group commit and batching
 > buy it back, and then measures the race a transaction does **not** fix by default: eight clients adding 1 to the same
 > counter 16,000 times end at 2,000. It opens Ch2.
-> **Status:** 🔵 PREPARED 2026-10-24 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-10-29 (body prepared 2026-10-24). One question — what the "REPEATABLE READ + retry"
+> bar of Figure 4 actually does — is answered in §11, with a two-session trace (Table 7) and new measurements of what
+> the retry limit changes (Figure 5, Table 8) on PostgreSQL 18.
 > **Prerequisites:** **Ch1 §4 §5** and **Ch1 §4 §14a** (row versions, dead tuples, `VACUUM`) and **M01 Ch3 §3** (races
 > and atomicity in a program). Ch1 §1's check-then-act race comes back in §6.
 
@@ -566,7 +568,9 @@ without any error.
 ![A bar chart of the counter's final value after 16,000 increments by 8 clients. Reading then writing in autocommit gave about 2,593 with synchronous_commit off and exactly 2,000 with it on; reading then writing inside BEGIN and COMMIT also gave 2,000. UPDATE with n = n + 1, SELECT FOR UPDATE then write, and REPEATABLE READ with retries each gave 16,000, matching a dashed line marking the correct answer.](diagrams/01-acid-fig4.svg)
 
 **Figure 4** — the same 16,000 increments written six ways (PostgreSQL 18, 8 clients, medians of three runs): the
-three read-then-write versions lost between 84% and 88% of the increments; the three correct versions lost none.
+three read-then-write versions lost between 84% and 88% of the increments; the three correct versions lost none. The
+last bar is the read-then-write code run at the stricter REPEATABLE READ isolation level, which rejects a stale write
+with an error, plus a client loop that re-runs each rejected transaction (§11 takes it apart).
 
 Four findings, in order of how often they matter:
 
@@ -583,8 +587,9 @@ Four findings, in order of how often they matter:
 3. **When the computation has to happen in the application — a decision, a large language model's (LLM's) answer, anything SQL cannot do —
    lock the row when you read it, or let the database detect the conflict.** `SELECT … FOR UPDATE` takes the row lock at
    read time, so the second client waits at its `SELECT` and reads the first one's result. REPEATABLE READ takes no
-   lock; instead the second writer is aborted with `could not serialize access due to concurrent update`, and the
-   application retries — here `pgbench` retried 1,356 to 1,475 times per 16,000 increments. In one of the three runs a
+   lock when it reads; instead the second writer is aborted with `could not serialize access due to concurrent update`,
+   and the application retries — here `pgbench` reported 1,356 to 1,475 transactions retried per 16,000 increments
+   (§11 takes this version apart). In one of the three runs a
    single transaction ended in an error that was reported to the client: the counter ended at 15,999, but **nothing
    was lost silently**, which is the property that matters. The choice between the two is the
    classic pessimistic-versus-optimistic trade, and it is Ch2 §3 and Ch2 §4's subject.
@@ -880,6 +885,153 @@ time the same `UPDATE` with `\timing on`, and from a third run
 `SET idle_in_transaction_session_timeout = '10s'` in a fresh session, leave a transaction open, and watch it be ended.
 
 When you are done: `docker rm -f m03t && docker volume rm m03t-data`.
+
+---
+
+## 11. Applied — captured from our session Q&A
+
+*(The session, 2026-10-29. One question, asked about the last bar of Figure 4: what is "REPEATABLE READ + retry"? §6
+finding 3 described it in two sentences; this section takes it apart. Everything here was measured for this section on
+PostgreSQL 18.6, and the raw data is in `diagrams/01-acid-data/`.)*
+
+### 11a. What it is: the broken code, a stricter level, and a loop
+
+**It is the read-then-write code that lost 87% of the increments, unchanged, run at a stricter isolation level, with
+the client re-running any transaction the database rejects.** The script `pgbench` ran was:
+
+```sql
+BEGIN ISOLATION LEVEL REPEATABLE READ;
+SELECT n AS cur FROM counter WHERE id = 1 \gset
+UPDATE counter SET n = :cur + 1 WHERE id = 1;
+COMMIT;
+```
+
+and `--max-tries=1000` told `pgbench` to run the whole script again, up to 1,000 times, whenever it failed with a
+serialization error. In application code the loop is yours to write:
+
+```python
+for attempt in range(MAX_TRIES):
+    try:
+        with conn.transaction():                       # BEGIN … COMMIT, or ROLLBACK on exception
+            conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ")
+            n = conn.execute("SELECT n FROM counter WHERE id = 1").fetchone()[0]   # read inside the loop
+            conn.execute("UPDATE counter SET n = %s WHERE id = 1", (n + 1,))
+        break
+    except psycopg.errors.SerializationFailure:        # SQLSTATE 40001
+        continue                                       # a fresh transaction, a fresh read
+else:
+    raise RuntimeError("gave up after MAX_TRIES attempts")   # report it; never swallow it
+```
+
+The two halves do different jobs. **REPEATABLE READ detects the conflict and refuses the stale write; the retry turns
+that refusal into a correct result.** Neither works alone: without the stricter level the stale write succeeds (the
+red bars), and without the retry the refused increments are simply gone, though not silently (§11c).
+
+### 11b. What happens at the moment of collision
+
+Two sessions replayed Figure 3's collision on PostgreSQL 18: both read `n = 4`; A updates it to 5 and holds its
+transaction open for two seconds; B then tries to write its own 5. Here is what session B saw at each level.
+
+**Table 7** — the same collision seen from session B, at each isolation level (PostgreSQL 18.6).
+
+| Step | READ COMMITTED | REPEATABLE READ |
+|---|---|---|
+| B: `SELECT n` | 4 | 4 |
+| B: `UPDATE … SET n = 5`, while A holds the row | waits 1.42 s for A's row lock | waits 1.40 s for A's row lock |
+| A commits; B's `UPDATE` resumes | `UPDATE 1`: B writes 5 over A's 5 | `ERROR: 40001: could not serialize access due to concurrent update` |
+| B: anything else, then `COMMIT` | `COMMIT` | every statement refused (`25P02: current transaction is aborted`); `COMMIT` replies `ROLLBACK` |
+| Final value | 5 — one increment lost, no error | 5 — one increment refused, B told so |
+| Same, but A rolls back instead of committing | B writes 5 | B waits, then writes 5 and commits — no error |
+
+Four things to read off it:
+
+- **Both levels wait.** An `UPDATE` always takes the row lock (§6 finding 2), so B blocks on A's uncommitted change
+  either way. The difference is what B does when A finishes. READ COMMITTED re-reads the newest committed row, finds it
+  still matches `WHERE id = 1`, and applies B's `SET n = 5` to it; because B computed 5 in the application, that
+  overwrites A's work. REPEATABLE READ notices that the row B is about to change was **changed and committed after
+  B's snapshot was taken** — B has been working from a version of the world that is no longer true — and aborts B
+  instead. This rule is called **first-updater-wins**: the first transaction to change a row keeps its change, and a
+  concurrent one that read the old version may not overwrite it.
+- **The snapshot is what makes the check possible.** A REPEATABLE READ transaction sees the database as it was at its
+  **first statement** (not at `BEGIN`), for its whole life. That is how the anomaly table (Table 4) can say it prevents
+  non-repeatable reads — and it is also why PostgreSQL can tell that B's read is stale: the row's newest version was
+  created by a transaction B's snapshot does not include. Ch2 §3 opens up how a snapshot is represented.
+- **Only a committed conflict counts.** If A rolls back, A's change never happened, B's snapshot is still accurate,
+  and B's update goes through. So a REPEATABLE READ transaction is never aborted because of something that did not
+  end up in the database.
+- **After the error the transaction is dead, so a retry must start again from `BEGIN`.** PostgreSQL refuses every
+  further statement until the client ends the transaction (§2's aborted state). You cannot retry only the `UPDATE`; the
+  retry must re-run the read too, in a new transaction with a new snapshot, or it would write the same stale 5 again.
+  That is why the loop in §11a puts the `SELECT` **inside** the loop.
+
+The error carries SQLSTATE `40001` — SQLSTATE being the SQL standard's five-character error code, and `40001` its code
+for `serialization_failure`. Retry on that code, not on the message text, which differs between versions and
+languages. SERIALIZABLE (Ch2 §2) uses the same code for the conflicts it detects, so the same loop serves both levels.
+
+### 11c. What the retry buys, measured
+
+To separate the two halves, the REPEATABLE READ version of Figure 4 was run again with the retry limit varied from 1
+(no retry at all) to 1,000.
+
+![A stacked bar chart of 16,000 increments by 8 clients at REPEATABLE READ, for pgbench max-tries of 1, 2, 3, 5, 10 and 1000. With one try, about 2,010 increments committed and 13,990 failed with an error; with 2 tries, 3,687 and 12,313; with 3, 5,023 and 10,977; with 5, 7,143 and 8,857; with 10, 10,224 and 5,776; with 1000, all 16,000 committed. Each bar reaches exactly 16,000. Above each bar, attempts per committed increment are between 7.4 and 8.0.](diagrams/01-acid-fig5.svg)
+
+**Figure 5** — the REPEATABLE READ counter at six retry limits (PostgreSQL 18, 8 clients, medians of three runs):
+committed plus failed is exactly 16,000 every time; the retry limit only moves increments from failed to committed.
+
+- **With no retry, REPEATABLE READ "loses" as much as READ COMMITTED did** — the counter ended at 2,009 to 2,014, much
+  like Figure 4's 2,000. The difference is that `pgbench` reported 13,986 to 13,991 failed transactions, and the
+  counter plus the failures came to exactly 16,000 in **every one of the 18 runs**. That is the property §6 called the
+  one that matters: no increment disappeared without someone being told.
+- **The retry is what turns errors into increments.** Each step up in the limit moves failures into the counter, and
+  with 1,000 tries there were none left.
+- **Optimistic concurrency pays in wasted attempts, and on a hot row it pays a lot.** Eight clients on one row needed
+  about 7.4 to 8 attempts for every increment that committed — which is roughly what you would expect if, each time
+  the eight read the same value, only one of them could win. A `FOR UPDATE` version makes the seven others wait
+  instead of doing work that is thrown away, and needed no retries at all.
+
+The average hides how unevenly that cost falls. One more run with 1,000 tries logged every transaction:
+
+**Table 8** — retries needed per increment, one `--max-tries=1000` run of 16,000 increments (PostgreSQL 18.6).
+
+| Retries before the increment committed | Increments | Share |
+|---|---|---|
+| 0 — committed first time | 13,794 | 86.2% |
+| 1 to 8 | 671 | 4.2% |
+| 9 to 99 | 1,241 | 7.8% |
+| 100 or more | 294 | 1.8% |
+| Worst single increment | 938 retries, 1.77 s | |
+
+The median increment was never retried, the 90th percentile needed 8 retries and the 99th needed 140. The 294
+increments that needed 100 or more — under 2% of them — account for **52% of all 100,410 retries**. The same few
+transactions kept losing the race while others went through first time. This is **starvation**, and it is the
+characteristic failure mode of optimistic concurrency under contention. It is also how the 15,999 in §6 happened: an
+increment that loses 1,000 races in a row runs out of tries. It explains why the two lines `pgbench` prints are so
+different — `number of transactions retried` counts increments that needed any retry (2,206 here; §6's 1,356 to
+1,475 came from this line), while `total number of retries` counts every attempt (100,410).
+
+### 11d. When to reach for it
+
+Of the three correct bars in Figure 4, prefer them in this order:
+
+1. **`UPDATE … SET n = n + 1`** whenever the change can be written in SQL — no lock you manage, no retry (§6 finding 2).
+2. **`SELECT … FOR UPDATE`** when the computation must happen in the application and the row is **contended**: losers
+   wait rather than redo work, and nobody starves behind a stream of winners.
+3. **REPEATABLE READ (or SERIALIZABLE) with a retry loop** when conflicts are **rare** — many rows, few writers per
+   row — so almost every transaction commits first time and taking no lock on reads is pure gain; or when you need
+   the transaction's other guarantee, a consistent snapshot across several reads. It suits a slow computation badly:
+   one that takes seconds, such as an LLM call, would be thrown away and redone on every conflict — and should not be
+   inside a transaction in the first place (§7).
+
+Three rules for writing the loop, from 11b and 11c:
+
+- **Put the read inside the loop.** A retry that reuses a value read before the loop writes the stale value again —
+  the lost update is back, with extra steps.
+- **Bound it, back off, and surface the final failure.** A limit (with a short randomised sleep between attempts, so
+  the losers do not collide again in lockstep) keeps a starving transaction from spinning forever; when the limit is
+  reached, raise an error the caller sees. Swallowing it turns REPEATABLE READ back into a silent lost update.
+- **Make the work inside the transaction safe to repeat.** The database part is rolled back on every failed attempt,
+  but nothing else is: an email sent or an HTTP call made inside the loop happens once per attempt. Keep external
+  effects out of the transaction (§7), or make them idempotent (§4).
 
 ---
 
