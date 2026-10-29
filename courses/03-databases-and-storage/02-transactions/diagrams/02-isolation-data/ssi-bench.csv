@@ -1,0 +1,58 @@
+workload,variant,level,accounts,rep,committed,failed,serialization_failures,deadlocks,tps
+transfer,pk,read committed,10,1,227,14,0,14,20.599965
+transfer,pk,read committed,10,2,425,10,0,10,42.382055
+transfer,pk,read committed,10,3,312,12,0,12,28.308622
+transfer,pk,repeatable read,10,1,386,595,584,11,38.457848
+transfer,pk,repeatable read,10,2,519,829,819,10,51.625307
+transfer,pk,repeatable read,10,3,224,324,313,11,22.339649
+transfer,pk,serializable,10,1,756,4156,4147,9,74.418817
+transfer,pk,serializable,10,2,418,2381,2372,9,37.671939
+transfer,pk,serializable,10,3,652,3855,3846,9,58.520484
+transfer,pk,read committed,100,1,26213,9,0,9,2490.982743
+transfer,pk,read committed,100,2,18710,9,0,9,1803.117147
+transfer,pk,read committed,100,3,20920,9,0,9,2008.725473
+transfer,pk,repeatable read,100,1,82158,17324,17316,8,8218.614876
+transfer,pk,repeatable read,100,2,36340,7495,7486,9,3334.465926
+transfer,pk,repeatable read,100,3,40185,8423,8414,9,4019.608608
+transfer,pk,serializable,100,1,40921,8495,8487,8,4080.054862
+transfer,pk,serializable,100,2,38710,8118,8109,9,3872.124465
+transfer,pk,serializable,100,3,9175,1886,1877,9,815.317048
+transfer,pk,read committed,1000,1,445331,2,0,2,44546.602075
+transfer,pk,read committed,1000,2,391400,3,0,3,39149.149156
+transfer,pk,read committed,1000,3,494155,1,0,1,49433.924023
+transfer,pk,repeatable read,1000,1,473472,10636,10635,1,47358.736588
+transfer,pk,repeatable read,1000,2,474590,10744,10743,1,47475.255527
+transfer,pk,repeatable read,1000,3,451176,10065,10064,1,45129.180148
+transfer,pk,serializable,1000,1,383726,8591,8591,0,38388.796233
+transfer,pk,serializable,1000,2,341708,7677,7677,0,34182.842615
+transfer,pk,serializable,1000,3,345901,7682,7682,0,34602.010012
+transfer,pk,read committed,10000,1,374175,0,0,0,37422.308767
+transfer,pk,read committed,10000,2,383833,0,0,0,38397.622313
+transfer,pk,read committed,10000,3,381139,0,0,0,38124.166838
+transfer,pk,repeatable read,10000,1,387660,880,880,0,38779.378886
+transfer,pk,repeatable read,10000,2,387396,917,917,0,38747.450233
+transfer,pk,repeatable read,10000,3,392580,897,897,0,39271.073340
+transfer,pk,serializable,10000,1,389818,877,877,0,38994.960799
+transfer,pk,serializable,10000,2,388865,856,856,0,38899.185024
+transfer,pk,serializable,10000,3,382809,835,835,0,38294.345145
+transfer,pk,read committed,100000,1,352715,0,0,0,35283.524625
+transfer,pk,read committed,100000,2,363769,0,0,0,36388.140297
+transfer,pk,read committed,100000,3,393610,0,0,0,39374.210047
+transfer,pk,repeatable read,100000,1,394967,86,86,0,39514.117823
+transfer,pk,repeatable read,100000,2,385474,83,83,0,38560.614723
+transfer,pk,repeatable read,100000,3,392510,85,85,0,39264.271324
+transfer,pk,serializable,100000,1,395325,101,101,0,39544.913148
+transfer,pk,serializable,100000,2,522005,108,108,0,52215.167240
+transfer,pk,serializable,100000,3,527023,122,122,0,52718.236723
+roster,index,repeatable read,1000,1,564330,3006,3006,0,56452.990004
+roster,index,repeatable read,1000,2,555446,3041,3041,0,55562.152084
+roster,index,repeatable read,1000,3,571107,3160,3160,0,57128.609819
+roster,index,serializable,1000,1,474994,33188,33188,0,47514.932631
+roster,index,serializable,1000,2,487290,31164,31164,0,48744.022908
+roster,index,serializable,1000,3,430839,23935,23935,0,43098.544886
+roster,noindex,repeatable read,1000,1,242029,1470,1470,0,24213.340793
+roster,noindex,repeatable read,1000,2,239124,1508,1508,0,23920.884738
+roster,noindex,repeatable read,1000,3,243650,1463,1463,0,24375.118112
+roster,noindex,serializable,1000,1,29184,164261,164261,0,2919.295348
+roster,noindex,serializable,1000,2,28352,162125,162125,0,2836.238347
+roster,noindex,serializable,1000,3,28360,161463,161463,0,2837.078090

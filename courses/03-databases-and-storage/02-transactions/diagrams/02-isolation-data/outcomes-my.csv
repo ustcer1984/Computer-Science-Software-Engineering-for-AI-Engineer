@@ -1,0 +1,57 @@
+case,engine,level,final,errors,blocked
+dirty write,my,READ UNCOMMITTED,"(1, 12), (2, 22)",,1
+dirty write,my,READ COMMITTED,"(1, 12), (2, 22)",,1
+dirty write,my,REPEATABLE READ,"(1, 12), (2, 22)",,1
+dirty write,my,SERIALIZABLE,"(1, 12), (2, 22)",,1
+dirty read,my,READ UNCOMMITTED,"(1, 10), (2, 20)",,0
+dirty read,my,READ COMMITTED,"(1, 10), (2, 20)",,0
+dirty read,my,REPEATABLE READ,"(1, 10), (2, 20)",,0
+dirty read,my,SERIALIZABLE,"(1, 10), (2, 20)",,1
+non-repeatable read,my,READ UNCOMMITTED,"(1, 12), (2, 20)",,0
+non-repeatable read,my,READ COMMITTED,"(1, 12), (2, 20)",,0
+non-repeatable read,my,REPEATABLE READ,"(1, 12), (2, 20)",,0
+non-repeatable read,my,SERIALIZABLE,"(1, 12), (2, 20)",,1
+read skew,my,READ UNCOMMITTED,"(1, 12), (2, 18)",,0
+read skew,my,READ COMMITTED,"(1, 12), (2, 18)",,0
+read skew,my,REPEATABLE READ,"(1, 12), (2, 18)",,0
+read skew,my,SERIALIZABLE,"(1, 12), (2, 18)",,1
+phantom,my,READ UNCOMMITTED,"(1, 10), (2, 20), (3, 30)",,0
+phantom,my,READ COMMITTED,"(1, 10), (2, 20), (3, 30)",,0
+phantom,my,REPEATABLE READ,"(1, 10), (2, 20), (3, 30)",,0
+phantom,my,SERIALIZABLE,"(1, 10), (2, 20), (3, 30)",,1
+lost update,my,READ UNCOMMITTED,"(1, 11), (2, 20)",,1
+lost update,my,READ COMMITTED,"(1, 11), (2, 20)",,1
+lost update,my,REPEATABLE READ,"(1, 11), (2, 20)",,1
+lost update,my,SERIALIZABLE,"(1, 11), (2, 20)",T2: UPDATE test SET value = 11 WHERE id = 1  ->  ERROR 1213: Deadlock found when trying to get lock; try restarting transaction,1
+update in SQL,my,READ UNCOMMITTED,"(1, 12), (2, 20)",,1
+update in SQL,my,READ COMMITTED,"(1, 12), (2, 20)",,1
+update in SQL,my,REPEATABLE READ,"(1, 12), (2, 20)",,1
+update in SQL,my,SERIALIZABLE,"(1, 11), (2, 20)",T2: UPDATE test SET value = value + 1 WHERE id = 1  ->  ERROR 1213: Deadlock found when trying to get lock; try restarting transaction,1
+write skew,my,READ UNCOMMITTED,"(1, 11), (2, 21)",,0
+write skew,my,READ COMMITTED,"(1, 11), (2, 21)",,0
+write skew,my,REPEATABLE READ,"(1, 11), (2, 21)",,0
+write skew,my,SERIALIZABLE,"(1, 11), (2, 20)",T2: UPDATE test SET value = 21 WHERE id = 2  ->  ERROR 1213: Deadlock found when trying to get lock; try restarting transaction,1
+write skew on a predicate,my,READ UNCOMMITTED,"(1, 10), (2, 20), (3, 30), (4, 42)",,0
+write skew on a predicate,my,READ COMMITTED,"(1, 10), (2, 20), (3, 30), (4, 42)",,0
+write skew on a predicate,my,REPEATABLE READ,"(1, 10), (2, 20), (3, 30), (4, 42)",,0
+write skew on a predicate,my,SERIALIZABLE,"(1, 10), (2, 20), (3, 30)","T2: INSERT INTO test VALUES (4, 42)  ->  ERROR 1213: Deadlock found when trying to get lock; try restarting transaction",1
+doctors on call,my,READ UNCOMMITTED,"(alice, 0), (bob, 0)",,0
+doctors on call,my,READ COMMITTED,"(alice, 0), (bob, 0)",,0
+doctors on call,my,REPEATABLE READ,"(alice, 0), (bob, 0)",,0
+doctors on call,my,SERIALIZABLE,"(alice, 0), (bob, 1)",Bob: UPDATE doctors SET on_call = false WHERE name = 'bob'  ->  ERROR 1213: Deadlock found when trying to get lock; try restarting transaction,1
+read-only anomaly,my,READ UNCOMMITTED,"(x, -11), (y, 20)",,0
+read-only anomaly,my,READ COMMITTED,"(x, -11), (y, 20)",,0
+read-only anomaly,my,REPEATABLE READ,"(x, -11), (y, 20)",,0
+read-only anomaly,my,SERIALIZABLE,"(x, -11), (y, 0)",T1: ... UPDATE bank SET bal = bal + 20 WHERE k = 'y'  ->  ERROR 1213: Deadlock found when trying to get lock; try restarting transaction  (returned),2
+"read-only anomaly, without T3",my,READ UNCOMMITTED,"(x, -11), (y, 20)",,0
+"read-only anomaly, without T3",my,READ COMMITTED,"(x, -11), (y, 20)",,0
+"read-only anomaly, without T3",my,REPEATABLE READ,"(x, -11), (y, 20)",,0
+"read-only anomaly, without T3",my,SERIALIZABLE,"(x, -11), (y, 20)",,1
+phantom seen by a write,my,READ UNCOMMITTED,"(1, 10), (2, 20), (3, 33)",,0
+phantom seen by a write,my,READ COMMITTED,"(1, 10), (2, 20), (3, 33)",,0
+phantom seen by a write,my,REPEATABLE READ,"(1, 10), (2, 20), (3, 33)",,0
+phantom seen by a write,my,SERIALIZABLE,"(1, 10), (2, 20), (3, 30)",,1
+error mid-transaction,my,READ UNCOMMITTED,"(1, 11), (2, 20)","T1: INSERT INTO test VALUES (2, 99)  ->  ERROR 1062: Duplicate entry '2' for key 'test.PRIMARY'",0
+error mid-transaction,my,READ COMMITTED,"(1, 11), (2, 20)","T1: INSERT INTO test VALUES (2, 99)  ->  ERROR 1062: Duplicate entry '2' for key 'test.PRIMARY'",0
+error mid-transaction,my,REPEATABLE READ,"(1, 11), (2, 20)","T1: INSERT INTO test VALUES (2, 99)  ->  ERROR 1062: Duplicate entry '2' for key 'test.PRIMARY'",0
+error mid-transaction,my,SERIALIZABLE,"(1, 11), (2, 20)","T1: INSERT INTO test VALUES (2, 99)  ->  ERROR 1062: Duplicate entry '2' for key 'test.PRIMARY'",0

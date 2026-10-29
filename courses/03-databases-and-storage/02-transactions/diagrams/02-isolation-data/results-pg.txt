@@ -1,0 +1,582 @@
+### dirty write — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  (blocked)
+  T1: UPDATE test SET value = 21 WHERE id = 2  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = 12 WHERE id = 1  ->  UPDATE 1  (returned)
+  T2: UPDATE test SET value = 22 WHERE id = 2  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 22)
+
+### dirty write — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  (blocked)
+  T1: UPDATE test SET value = 21 WHERE id = 2  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = 12 WHERE id = 1  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: UPDATE test SET value = 22 WHERE id = 2  ->  ERROR 25P02: current transaction is aborted, commands ignored until end of transaction block
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 11), (2, 21)
+
+### dirty write — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  (blocked)
+  T1: UPDATE test SET value = 21 WHERE id = 2  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = 12 WHERE id = 1  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: UPDATE test SET value = 22 WHERE id = 2  ->  ERROR 25P02: current transaction is aborted, commands ignored until end of transaction block
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 11), (2, 21)
+
+### dirty read — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: UPDATE test SET value = 101 WHERE id = 1  ->  UPDATE 1
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: ROLLBACK  ->  ROLLBACK
+  T2: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20)
+
+### dirty read — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: UPDATE test SET value = 101 WHERE id = 1  ->  UPDATE 1
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: ROLLBACK  ->  ROLLBACK
+  T2: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20)
+
+### dirty read — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: UPDATE test SET value = 101 WHERE id = 1  ->  UPDATE 1
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: ROLLBACK  ->  ROLLBACK
+  T2: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20)
+
+### non-repeatable read — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT value FROM test WHERE id = 1  ->  (12)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 20)
+
+### non-repeatable read — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 20)
+
+### non-repeatable read — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 20)
+
+### read skew — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 18 WHERE id = 2  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT value FROM test WHERE id = 2  ->  (18)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 18)
+
+### read skew — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 18 WHERE id = 2  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT value FROM test WHERE id = 2  ->  (20)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 18)
+
+### read skew — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: UPDATE test SET value = 12 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 18 WHERE id = 2  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT value FROM test WHERE id = 2  ->  (20)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 18)
+
+### phantom — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  (3, 30)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 30)
+
+### phantom — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T1: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 30)
+
+### phantom — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: COMMIT  ->  COMMIT
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T1: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 30)
+
+### lost update — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 11 WHERE id = 1  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1  (returned)
+  T2: COMMIT  ->  COMMIT
+  final: (1, 11), (2, 20)
+
+### lost update — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 11 WHERE id = 1  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = 11 WHERE id = 1  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 11), (2, 20)
+
+### lost update — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 11 WHERE id = 1  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = 11 WHERE id = 1  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 11), (2, 20)
+
+### update in SQL — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: UPDATE test SET value = value + 1 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = value + 1 WHERE id = 1  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = value + 1 WHERE id = 1  ->  UPDATE 1  (returned)
+  T2: SELECT value FROM test WHERE id = 1  ->  (12)
+  T2: COMMIT  ->  COMMIT
+  final: (1, 12), (2, 20)
+
+### update in SQL — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: UPDATE test SET value = value + 1 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = value + 1 WHERE id = 1  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = value + 1 WHERE id = 1  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: SELECT value FROM test WHERE id = 1  ->  ERROR 25P02: current transaction is aborted, commands ignored until end of transaction block
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 11), (2, 20)
+
+### update in SQL — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT value FROM test WHERE id = 1  ->  (10)
+  T2: SELECT value FROM test WHERE id = 1  ->  (10)
+  T1: UPDATE test SET value = value + 1 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = value + 1 WHERE id = 1  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... UPDATE test SET value = value + 1 WHERE id = 1  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: SELECT value FROM test WHERE id = 1  ->  ERROR 25P02: current transaction is aborted, commands ignored until end of transaction block
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 11), (2, 20)
+
+### write skew — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE id IN (1, 2)  ->  (1, 10), (2, 20)
+  T2: SELECT id, value FROM test WHERE id IN (1, 2)  ->  (1, 10), (2, 20)
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 21 WHERE id = 2  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: COMMIT  ->  COMMIT
+  final: (1, 11), (2, 21)
+
+### write skew — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE id IN (1, 2)  ->  (1, 10), (2, 20)
+  T2: SELECT id, value FROM test WHERE id IN (1, 2)  ->  (1, 10), (2, 20)
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 21 WHERE id = 2  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: COMMIT  ->  COMMIT
+  final: (1, 11), (2, 21)
+
+### write skew — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE id IN (1, 2)  ->  (1, 10), (2, 20)
+  T2: SELECT id, value FROM test WHERE id IN (1, 2)  ->  (1, 10), (2, 20)
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T2: UPDATE test SET value = 21 WHERE id = 2  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: COMMIT  ->  ERROR 40001: could not serialize access due to read/write dependencies among transactions
+  final: (1, 11), (2, 20)
+
+### write skew on a predicate — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T1: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: INSERT INTO test VALUES (4, 42)  ->  INSERT 0 1
+  T1: COMMIT  ->  COMMIT
+  T2: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 30), (4, 42)
+
+### write skew on a predicate — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T1: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: INSERT INTO test VALUES (4, 42)  ->  INSERT 0 1
+  T1: COMMIT  ->  COMMIT
+  T2: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 30), (4, 42)
+
+### write skew on a predicate — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T1: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: INSERT INTO test VALUES (4, 42)  ->  INSERT 0 1
+  T1: COMMIT  ->  COMMIT
+  T2: COMMIT  ->  ERROR 40001: could not serialize access due to read/write dependencies among transactions
+  final: (1, 10), (2, 20), (3, 30)
+
+### doctors on call — pg READ COMMITTED
+  Alice: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  Alice: SELECT count(*) FROM doctors WHERE on_call  ->  (2)
+  Bob: SELECT count(*) FROM doctors WHERE on_call  ->  (2)
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice'  ->  UPDATE 1
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob'  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: COMMIT  ->  COMMIT
+  final: (alice, False), (bob, False)
+
+### doctors on call — pg REPEATABLE READ
+  Alice: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  Alice: SELECT count(*) FROM doctors WHERE on_call  ->  (2)
+  Bob: SELECT count(*) FROM doctors WHERE on_call  ->  (2)
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice'  ->  UPDATE 1
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob'  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: COMMIT  ->  COMMIT
+  final: (alice, False), (bob, False)
+
+### doctors on call — pg SERIALIZABLE
+  Alice: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  Alice: SELECT count(*) FROM doctors WHERE on_call  ->  (2)
+  Bob: SELECT count(*) FROM doctors WHERE on_call  ->  (2)
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice'  ->  UPDATE 1
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob'  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: COMMIT  ->  ERROR 40001: could not serialize access due to read/write dependencies among transactions
+  final: (alice, False), (bob, True)
+
+### read-only anomaly — pg READ COMMITTED
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 0)
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: UPDATE bank SET bal = bal + 20 WHERE k = 'y'  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T3: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T3: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 20)
+  T3: COMMIT  ->  COMMIT
+  T2: UPDATE bank SET bal = bal - 11 WHERE k = 'x'  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  final: (x, -11), (y, 20)
+
+### read-only anomaly — pg REPEATABLE READ
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 0)
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: UPDATE bank SET bal = bal + 20 WHERE k = 'y'  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T3: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T3: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 20)
+  T3: COMMIT  ->  COMMIT
+  T2: UPDATE bank SET bal = bal - 11 WHERE k = 'x'  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  final: (x, -11), (y, 20)
+
+### read-only anomaly — pg SERIALIZABLE
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 0)
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: UPDATE bank SET bal = bal + 20 WHERE k = 'y'  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T3: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T3: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 20)
+  T3: COMMIT  ->  COMMIT
+  T2: UPDATE bank SET bal = bal - 11 WHERE k = 'x'  ->  ERROR 40001: could not serialize access due to read/write dependencies among transactions
+  T2: COMMIT  ->  ROLLBACK
+  final: (x, 0), (y, 20)
+
+### read-only anomaly, without T3 — pg READ COMMITTED
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 0)
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: UPDATE bank SET bal = bal + 20 WHERE k = 'y'  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: UPDATE bank SET bal = bal - 11 WHERE k = 'x'  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  final: (x, -11), (y, 20)
+
+### read-only anomaly, without T3 — pg REPEATABLE READ
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 0)
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: UPDATE bank SET bal = bal + 20 WHERE k = 'y'  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: UPDATE bank SET bal = bal - 11 WHERE k = 'x'  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  final: (x, -11), (y, 20)
+
+### read-only anomaly, without T3 — pg SERIALIZABLE
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: SELECT k, bal FROM bank ORDER BY k  ->  (x, 0), (y, 0)
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: UPDATE bank SET bal = bal + 20 WHERE k = 'y'  ->  UPDATE 1
+  T1: COMMIT  ->  COMMIT
+  T2: UPDATE bank SET bal = bal - 11 WHERE k = 'x'  ->  UPDATE 1
+  T2: COMMIT  ->  COMMIT
+  final: (x, -11), (y, 20)
+
+### phantom seen by a write — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: COMMIT  ->  COMMIT
+  T1: UPDATE test SET value = value + 3 WHERE value % 3 = 0  ->  UPDATE 1
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  (3, 33)
+  T1: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 33)
+
+### phantom seen by a write — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: COMMIT  ->  COMMIT
+  T1: UPDATE test SET value = value + 3 WHERE value % 3 = 0  ->  UPDATE 0
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T1: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 30)
+
+### phantom seen by a write — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: INSERT INTO test VALUES (3, 30)  ->  INSERT 0 1
+  T2: COMMIT  ->  COMMIT
+  T1: UPDATE test SET value = value + 3 WHERE value % 3 = 0  ->  UPDATE 0
+  T1: SELECT id, value FROM test WHERE value % 3 = 0  ->  no rows
+  T1: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 20), (3, 30)
+
+### error mid-transaction — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T1: INSERT INTO test VALUES (2, 99)  ->  ERROR 23505: duplicate key value violates unique constraint "test_pkey"
+  T1: COMMIT  ->  ROLLBACK
+  final: (1, 10), (2, 20)
+
+### error mid-transaction — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T1: INSERT INTO test VALUES (2, 99)  ->  ERROR 23505: duplicate key value violates unique constraint "test_pkey"
+  T1: COMMIT  ->  ROLLBACK
+  final: (1, 10), (2, 20)
+
+### error mid-transaction — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: UPDATE test SET value = 11 WHERE id = 1  ->  UPDATE 1
+  T1: INSERT INTO test VALUES (2, 99)  ->  ERROR 23505: duplicate key value violates unique constraint "test_pkey"
+  T1: COMMIT  ->  ROLLBACK
+  final: (1, 10), (2, 20)
+
+### re-check surprise — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: UPDATE website SET hits = hits + 1  ->  UPDATE 2
+  T2: DELETE FROM website WHERE hits = 10  ->  (blocked)
+  T2: ... DELETE FROM website WHERE hits = 10  ->  DELETE 0  (returned)
+  T1: COMMIT  ->  COMMIT
+  T2: COMMIT  ->  COMMIT
+  final: (1, 10), (2, 11)
+
+### re-check surprise — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: UPDATE website SET hits = hits + 1  ->  UPDATE 2
+  T2: DELETE FROM website WHERE hits = 10  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... DELETE FROM website WHERE hits = 10  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 10), (2, 11)
+
+### re-check surprise — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: UPDATE website SET hits = hits + 1  ->  UPDATE 2
+  T2: DELETE FROM website WHERE hits = 10  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... DELETE FROM website WHERE hits = 10  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 10), (2, 11)
+
+### doctors, FOR UPDATE — pg READ COMMITTED
+  Alice: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  Alice: SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  (2)
+  Bob: SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  (blocked)
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: ... SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  (1)  (returned)
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 0
+  Bob: COMMIT  ->  COMMIT
+  final: (alice, False), (bob, True)
+
+### doctors, FOR UPDATE — pg REPEATABLE READ
+  Alice: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  Alice: SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  (2)
+  Bob: SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  (blocked)
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Bob: ... SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  Alice: COMMIT  ->  COMMIT
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  ERROR 25P02: current transaction is aborted, commands ignored until end of transaction block
+  Bob: COMMIT  ->  ROLLBACK
+  final: (alice, False), (bob, True)
+
+### doctors, FOR UPDATE — pg SERIALIZABLE
+  Alice: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  Alice: SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  (2)
+  Bob: SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  (blocked)
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: ... SELECT count(*) FROM (SELECT 1 FROM doctors WHERE on_call FOR UPDATE) s  ->  ERROR 40001: could not serialize access due to concurrent update  (returned)
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  ERROR 25P02: current transaction is aborted, commands ignored until end of transaction block
+  Bob: COMMIT  ->  ROLLBACK
+  final: (alice, False), (bob, True)
+
+### doctors, one statement — pg READ COMMITTED
+  Alice: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: COMMIT  ->  COMMIT
+  final: (alice, False), (bob, False)
+
+### doctors, one statement — pg REPEATABLE READ
+  Alice: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: COMMIT  ->  COMMIT
+  final: (alice, False), (bob, False)
+
+### doctors, one statement — pg SERIALIZABLE
+  Alice: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  Bob: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  Alice: UPDATE doctors SET on_call = false WHERE name = 'alice' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Bob: UPDATE doctors SET on_call = false WHERE name = 'bob' AND (SELECT count(*) FROM doctors WHERE on_call) >= 2  ->  UPDATE 1
+  Alice: COMMIT  ->  COMMIT
+  Bob: COMMIT  ->  ERROR 40001: could not serialize access due to read/write dependencies among transactions
+  final: (alice, False), (bob, True)
+
+### double booking, exclusion constraint — pg READ COMMITTED
+  T1: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL READ COMMITTED  ->  BEGIN
+  T1: SELECT count(*) FROM booking WHERE room = 1 AND during && '[2026-11-02 10:00, 2026-11-02 11:00)'  ->  (0)
+  T2: SELECT count(*) FROM booking WHERE room = 1 AND during && '[2026-11-02 10:30, 2026-11-02 11:30)'  ->  (0)
+  T1: INSERT INTO booking VALUES (1, '[2026-11-02 10:00, 2026-11-02 11:00)')  ->  INSERT 0 1
+  T2: INSERT INTO booking VALUES (1, '[2026-11-02 10:30, 2026-11-02 11:30)')  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... INSERT INTO booking VALUES (1, '[2026-11-02 10:30, 2026-11-02 11:30)')  ->  ERROR 23P01: conflicting key value violates exclusion constraint "booking_room_during_excl"  (returned)
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 10:00:00, 11:00:00)
+
+### double booking, exclusion constraint — pg REPEATABLE READ
+  T1: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL REPEATABLE READ  ->  BEGIN
+  T1: SELECT count(*) FROM booking WHERE room = 1 AND during && '[2026-11-02 10:00, 2026-11-02 11:00)'  ->  (0)
+  T2: SELECT count(*) FROM booking WHERE room = 1 AND during && '[2026-11-02 10:30, 2026-11-02 11:30)'  ->  (0)
+  T1: INSERT INTO booking VALUES (1, '[2026-11-02 10:00, 2026-11-02 11:00)')  ->  INSERT 0 1
+  T2: INSERT INTO booking VALUES (1, '[2026-11-02 10:30, 2026-11-02 11:30)')  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... INSERT INTO booking VALUES (1, '[2026-11-02 10:30, 2026-11-02 11:30)')  ->  ERROR 23P01: conflicting key value violates exclusion constraint "booking_room_during_excl"  (returned)
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 10:00:00, 11:00:00)
+
+### double booking, exclusion constraint — pg SERIALIZABLE
+  T1: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T2: BEGIN ISOLATION LEVEL SERIALIZABLE  ->  BEGIN
+  T1: SELECT count(*) FROM booking WHERE room = 1 AND during && '[2026-11-02 10:00, 2026-11-02 11:00)'  ->  (0)
+  T2: SELECT count(*) FROM booking WHERE room = 1 AND during && '[2026-11-02 10:30, 2026-11-02 11:30)'  ->  (0)
+  T1: INSERT INTO booking VALUES (1, '[2026-11-02 10:00, 2026-11-02 11:00)')  ->  INSERT 0 1
+  T2: INSERT INTO booking VALUES (1, '[2026-11-02 10:30, 2026-11-02 11:30)')  ->  (blocked)
+  T1: COMMIT  ->  COMMIT
+  T2: ... INSERT INTO booking VALUES (1, '[2026-11-02 10:30, 2026-11-02 11:30)')  ->  ERROR 23P01: conflicting key value violates exclusion constraint "booking_room_during_excl"  (returned)
+  T2: COMMIT  ->  ROLLBACK
+  final: (1, 10:00:00, 11:00:00)
+
