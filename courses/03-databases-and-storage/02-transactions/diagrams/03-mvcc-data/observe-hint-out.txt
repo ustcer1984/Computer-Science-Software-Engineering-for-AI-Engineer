@@ -1,0 +1,5 @@
+data_checksums = on | wal_log_hints = off
+   scan 1: Buffers: shared hit=4425 dirtied=4425                   WAL written   36,460,856 bytes   Execution Time: 45.891 ms
+   scan 2: Buffers: shared hit=4425                                WAL written            0 bytes   Execution Time: 19.419 ms
+   after VACUUM: Buffers: shared hit=4425
+   table size: 35 MB

@@ -1,0 +1,26 @@
+-- who is blocked by whom (pg_stat_activity + pg_blocking_pids)
+   (2327, 'worker-a', [], 'Client:ClientRead', 'idle in transaction', Decimal('1.8'), "UPDATE orders SET status = 'paid' WHERE id = 1")
+   (2328, 'worker-b', [2327], 'Lock:transactionid', 'active', Decimal('1.8'), "UPDATE orders SET status = 'void' WHERE id = 1")
+   (2329, 'migration', [2327, 2328], 'Lock:relation', 'active', Decimal('1.5'), 'ALTER TABLE orders ADD COLUMN note text')
+-- the same, from pg_locks: what each one holds or wants
+   ('migration', 'transactionid', '6675329', 'ExclusiveLock', True)
+   ('migration', 'relation', 'orders', 'AccessExclusiveLock', False)
+   ('worker-a', 'relation', 'orders', 'RowExclusiveLock', True)
+   ('worker-a', 'transactionid', '6675327', 'ExclusiveLock', True)
+   ('worker-b', 'relation', 'orders', 'RowExclusiveLock', True)
+   ('worker-b', 'transactionid', '6675328', 'ExclusiveLock', True)
+   ('worker-b', 'tuple', 'orders', 'ExclusiveLock', True)
+   ('worker-b', 'transactionid', '6675327', 'ShareLock', False)
+-- server log (log_lock_waits = on, deadlock_timeout = 1s):
+2026-11-02 10:23:21.185 UTC [2328] LOG:  process 2328 still waiting for ShareLock on transaction 6675327 after 1000.096 ms
+2026-11-02 10:23:21.185 UTC [2328] DETAIL:  Process holding the lock: 2327. Wait queue: 2328.
+2026-11-02 10:23:21.185 UTC [2328] CONTEXT:  while updating tuple (0,1) in relation "orders"
+2026-11-02 10:23:21.185 UTC [2328] STATEMENT:  UPDATE orders SET status = 'void' WHERE id = 1
+2026-11-02 10:23:21.485 UTC [2329] LOG:  process 2329 still waiting for AccessExclusiveLock on relation 18251 of database 5 after 1000.153 ms
+2026-11-02 10:23:21.485 UTC [2329] DETAIL:  Processes holding the lock: 2327, 2328. Wait queue: 2329.
+2026-11-02 10:23:21.485 UTC [2329] STATEMENT:  ALTER TABLE orders ADD COLUMN note text
+2026-11-02 10:23:22.002 UTC [2328] LOG:  process 2328 acquired ShareLock on transaction 6675327 after 1816.588 ms
+2026-11-02 10:23:22.002 UTC [2328] CONTEXT:  while updating tuple (0,1) in relation "orders"
+2026-11-02 10:23:22.002 UTC [2328] STATEMENT:  UPDATE orders SET status = 'void' WHERE id = 1
+2026-11-02 10:23:22.005 UTC [2329] LOG:  process 2329 acquired AccessExclusiveLock on relation 18251 of database 5 after 1519.740 ms
+2026-11-02 10:23:22.005 UTC [2329] STATEMENT:  ALTER TABLE orders ADD COLUMN note text

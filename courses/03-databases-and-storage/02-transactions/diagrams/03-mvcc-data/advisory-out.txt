@@ -1,0 +1,48 @@
+1. Scope ----------------------------------------------------------------------------------
+   A: pg_advisory_lock(1) outside a transaction  -> 
+   B: pg_try_advisory_lock(1)                    -> False
+   A: BEGIN; pg_advisory_lock(2); ROLLBACK;  B: pg_try_advisory_lock(2) -> False   (the session lock survived the rollback)
+   A: BEGIN; pg_advisory_xact_lock(3);       B: pg_try_advisory_lock(3) -> False
+   A: COMMIT;                                B: pg_try_advisory_lock(3) -> True
+   A: pg_advisory_unlock_all(); 
+2. Stacking (re-entrant, counted) ---------------------------------------------------------
+   A: lock(9) twice; unlock(9) once -> True ; B: try(9) -> False
+   A: unlock(9) again -> True ; B: try(9) -> True
+   A: unlock(10), never taken -> False   notice: ["WARNING: you don't own a lock of type ExclusiveLock"]
+3. Blocking vs try, shared vs exclusive, and what pg_locks shows ----------------------------
+   (2299, 'advisory', 0, 42, 1, 'ExclusiveLock', True, 'Client', 'ClientRead')
+   (2300, 'advisory', 0, 42, 1, 'ExclusiveLock', False, 'Lock', 'advisory')
+   pg_blocking_pids(2300) = [2299]  A's pid = 2299
+   B's blocking pg_advisory_lock(42) returned after 1.01 s, when A unlocked
+   A holds shared(43): B try shared -> True ; B try exclusive -> False
+   key spaces: A lock(bigint 1) -> True ; B lock(int 0, int 1) -> True
+     pg_locks row: classid, objid, objsubid = (0, 1, 1)
+     pg_locks row: classid, objid, objsubid = (0, 1, 2)
+4. Advisory locks live in the shared lock table: how many fit in one transaction ------------
+   max_locks_per_transaction = 64 , max_connections = 100 , max_prepared_transactions = 0
+   largest number of advisory locks one transaction could take: 14,672; one more ->
+   ERROR: out of shared memory | HINT: You might need to increase "max_locks_per_transaction".
+   a claim query with ORDER BY random() (sort, so the filter runs on every row) holds 1000 advisory locks for 1 row returned
+5. Hashing names to keys: collisions among 200,000 distinct names -------------------------
+   hashtext (32-bit):          3 collisions   (birthday estimate n^2/2^33 = 4.66)
+   hashtextextended (64-bit):  0 collisions   (estimate 1.1e-09)
+     e.g. hashtext('job:11352') = hashtext('job:189279') = 3417513
+     e.g. hashtext('job:43347') = hashtext('job:6955') = 408267860
+6. A session lock that outlives a request (a warm Lambda container) ------------------------
+   invocation 1 on container A: raised TimeoutError('downstream call timed out')
+   invocation 2 on container B: skipped: locked
+   invocation 3 on container A: raised TimeoutError('downstream call timed out')
+   invocation 4 on container B: skipped: locked
+   advisory locks still held (container A's connection is idle, the request is long over): 1
+   container A's connection, idle: ('idle', datetime.timedelta(microseconds=127))
+   with idle_session_timeout = 3s on that session, the server closed it and the lock went after 3.0 s
+   invocation 5 on container B: handler -> acquired the lock, then raised TimeoutError('downstream call timed out')
+   xact-scoped version, invocation 1: raised TimeoutError('downstream call timed out'); locks held afterwards: 0
+   xact-scoped version, invocation 2: raised TimeoutError('downstream call timed out'); locks held afterwards: 0
+7. Through PgBouncer in transaction mode (default_pool_size = 2) -------------------------
+   client X: try_lock(42) -> True   (ran on server backend 2305)
+   client Y: try_lock(42) -> True   (ran on server backend 2305)
+   client Y: BEGIN ... (holds server backend 2305 for its transaction)
+   client X: unlock(42) -> False   (ran on server backend 2306)  notice: ["WARNING: you don't own a lock of type ExclusiveLock"]
+   client Z: try_lock(42) -> False   (ran on server backend 2306)
+   pg_locks on the server: advisory lock 42 held by backend 2305

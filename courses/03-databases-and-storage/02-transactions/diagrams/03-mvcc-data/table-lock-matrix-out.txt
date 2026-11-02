@@ -1,0 +1,8 @@
+ACCESS SHARE             . . . . . . . X
+ROW SHARE                . . . . . . X X
+ROW EXCLUSIVE            . . . . X X X X
+SHARE UPDATE EXCLUSIVE   . . . X X X X X
+SHARE                    . . X X . X X X
+SHARE ROW EXCLUSIVE      . . X X X X X X
+EXCLUSIVE                . X X X X X X X
+ACCESS EXCLUSIVE         X X X X X X X X

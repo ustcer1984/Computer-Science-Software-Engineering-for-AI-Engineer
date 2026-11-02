@@ -1,0 +1,28 @@
+SELECT * FROM st WHERE id = 1                                            st:AccessShareLock
+SELECT * FROM st WHERE id = 1 FOR UPDATE                                 st:RowShareLock
+SELECT * FROM st WHERE id = 1 FOR SHARE                                  st:RowShareLock
+INSERT INTO st VALUES (0, 0, 0)                                          st:RowExclusiveLock
+UPDATE st SET v = v WHERE id = 1                                         st:RowExclusiveLock
+DELETE FROM st WHERE id = 1                                              st:RowExclusiveLock
+MERGE INTO st USING (SELECT 5 AS id) s ON st.id = s.id WHEN MATCHED TH   st:RowExclusiveLock
+ANALYZE st                                                               st:ShareUpdateExclusiveLock
+CREATE INDEX ON st (w)                                                   st:ShareLock
+ALTER TABLE st ADD COLUMN x int                                          st:AccessExclusiveLock
+ALTER TABLE st ADD COLUMN y int DEFAULT 7                                st:AccessExclusiveLock
+ALTER TABLE st ALTER COLUMN w SET STATISTICS 500                         st:ShareUpdateExclusiveLock
+ALTER TABLE st ADD CONSTRAINT w_pos CHECK (w > 0) NOT VALID              st:AccessExclusiveLock
+ALTER TABLE st SET (fillfactor = 90)                                     st:ShareUpdateExclusiveLock
+CREATE TRIGGER t BEFORE UPDATE ON st FOR EACH ROW EXECUTE FUNCTION sup   st:ShareRowExclusiveLock
+ALTER TABLE c2 ADD CONSTRAINT fk FOREIGN KEY (pid) REFERENCES p2 NOT V   c2:AccessShareLock, c2:ShareRowExclusiveLock, p2:AccessShareLock, p2:ShareRowExclusiveLock
+REFRESH MATERIALIZED VIEW mv                                             mv:AccessExclusiveLock, mv:ExclusiveLock, mv:ShareLock
+TRUNCATE st                                                              st:AccessExclusiveLock, st:ShareLock
+DROP TABLE st                                                            st:AccessExclusiveLock
+ALTER TABLE st VALIDATE CONSTRAINT w_pos                                 st:ShareUpdateExclusiveLock
+VACUUM st                                                                st:ShareUpdateExclusiveLock
+VACUUM FULL st                                                           st:AccessExclusiveLock, st:ShareLock
+CLUSTER st USING st_pkey                                                 st:AccessExclusiveLock, st:ShareLock
+CREATE INDEX CONCURRENTLY st_w ON st (w)                                 st:ShareUpdateExclusiveLock
+REINDEX INDEX CONCURRENTLY st_w                                          st:ShareUpdateExclusiveLock
+DROP INDEX CONCURRENTLY st_w                                             
+REINDEX TABLE st                                                         st:ShareLock
+ALTER TABLE st ALTER COLUMN w TYPE bigint                                st:AccessExclusiveLock, st:ShareLock

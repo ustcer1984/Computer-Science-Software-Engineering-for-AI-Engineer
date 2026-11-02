@@ -1,0 +1,165 @@
+====================================================================================================
+1. Three rows inserted by one transaction; the header before anyone has read them
+====================================================================================================
+-- SELECT pg_current_xact_id() AS my_xid
+   my_xid
+   1013
+-- page 0, straight after the commit (no reader yet) — note: no XMIN_COMMITTED hint
+   lp | t_xmin | t_xmax | t_ctid | flags
+   1 | 1013 | 0 | (0,1) | HEAP_XMAX_INVALID
+   2 | 1013 | 0 | (0,2) | HEAP_XMAX_INVALID
+   3 | 1013 | 0 | (0,3) | HEAP_XMAX_INVALID
+-- a reader's view with system columns
+   ctid | xmin | xmax | id | bal
+   (0,1) | 1013 | 0 | 1 | 100
+   (0,2) | 1013 | 0 | 2 | 200
+   (0,3) | 1013 | 0 | 3 | 300
+-- page 0 after that first read — the reader set the hint bit HEAP_XMIN_COMMITTED
+   lp | t_xmin | t_xmax | t_ctid | flags
+   1 | 1013 | 0 | (0,1) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+   2 | 1013 | 0 | (0,2) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+   3 | 1013 | 0 | (0,3) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+
+====================================================================================================
+2. An UPDATE writes a new version; the old one gets xmax. Another session sees the old one until COMMIT
+====================================================================================================
+-- SELECT pg_current_xact_id() AS updater_xid
+   updater_xid
+   1014
+-- page 0 while the UPDATE is uncommitted
+   lp | t_xmin | t_xmax | t_ctid | flags
+   1 | 1013 | 1014 | (0,4) | HEAP_XMIN_COMMITTED HEAP_HOT_UPDATED
+   2 | 1013 | 0 | (0,2) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+   3 | 1013 | 0 | (0,3) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+   4 | 1014 | 0 | (0,4) | HEAP_XMAX_INVALID HEAP_UPDATED HEAP_ONLY_TUPLE
+-- the updater's own view
+   ctid | xmin | xmax | id | bal
+   (0,4) | 1014 | 0 | 1 | 150
+   (0,2) | 1013 | 0 | 2 | 200
+   (0,3) | 1013 | 0 | 3 | 300
+-- another session's view
+   ctid | xmin | xmax | id | bal
+   (0,1) | 1013 | 1014 | 1 | 100
+   (0,2) | 1013 | 0 | 2 | 200
+   (0,3) | 1013 | 0 | 3 | 300
+-- pg_xact_status(updater) — what pg_xact (the commit log) says
+   status
+   in progress
+-- pg_xact_status(updater) after COMMIT
+   status
+   committed
+-- another session's view after COMMIT
+   ctid | xmin | xmax | id | bal
+   (0,4) | 1014 | 0 | 1 | 150
+   (0,2) | 1013 | 0 | 2 | 200
+   (0,3) | 1013 | 0 | 3 | 300
+-- page 0 after COMMIT and a read: old version now XMAX_COMMITTED, i.e. dead to new snapshots
+   lp | t_xmin | t_xmax | t_ctid | flags
+   1 | 1013 | 1014 | (0,4) | HEAP_XMIN_COMMITTED HEAP_XMAX_COMMITTED HEAP_HOT_UPDATED
+   2 | 1013 | 0 | (0,2) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+   3 | 1013 | 0 | (0,3) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+   4 | 1014 | 0 | (0,4) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID HEAP_UPDATED HEAP_ONLY_TUPLE
+
+====================================================================================================
+3. An aborted UPDATE: nothing is undone; the new version simply belongs to an aborted xid
+====================================================================================================
+-- pg_xact_status(1015) after ROLLBACK
+   status
+   aborted
+-- reader's view
+   ctid | xmin | xmax | id | bal
+   (0,4) | 1014 | 0 | 1 | 150
+   (0,2) | 1013 | 1015 | 2 | 200
+   (0,3) | 1013 | 0 | 3 | 300
+-- page 0 after the reader passed: new version XMIN_INVALID (aborted), old one XMAX_INVALID
+   lp | t_xmin | t_xmax | t_ctid | flags
+   1 | 1013 | 1014 | (0,4) | HEAP_XMIN_COMMITTED HEAP_XMAX_COMMITTED HEAP_HOT_UPDATED
+   2 | 1013 | 1015 | (0,5) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID HEAP_HOT_UPDATED
+   3 | 1013 | 0 | (0,3) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID
+   4 | 1014 | 0 | (0,4) | HEAP_XMIN_COMMITTED HEAP_XMAX_INVALID HEAP_UPDATED HEAP_ONLY_TUPLE
+   5 | 1015 | 0 | (0,5) | HEAP_XMIN_INVALID HEAP_XMAX_INVALID HEAP_UPDATED HEAP_ONLY_TUPLE
+
+====================================================================================================
+4. A snapshot: pg_current_snapshot() = xmin:xmax:in-progress list
+====================================================================================================
+   in progress: C = 1016, A = 1018;  committed: D = 1017
+-- B (read-only so far) takes a snapshot
+   snap | my_xid
+   1016:1018:1016 | NULL
+-- rows 10-12 as B sees them
+   id | xmin
+   11 | 1017
+-- visibility of each writer to B
+   c_visible | d_visible | a_visible
+   False | True | False
+-- B's snapshot after C and A commit (REPEATABLE READ: unchanged)
+   snap
+   1016:1018:1016
+-- rows 10-12 as B still sees them
+   id | xmin
+   11 | 1017
+
+====================================================================================================
+5. READ COMMITTED vs REPEATABLE READ differ only in WHEN the snapshot is taken
+====================================================================================================
+   READ COMMITTED   statement 1: snapshot 1019:1019:     bal=300   statement 2: snapshot 1020:1020:     bal=301
+   REPEATABLE READ  statement 1: snapshot 1020:1020:     bal=301   statement 2: snapshot 1020:1020:     bal=301
+
+====================================================================================================
+6. Transaction IDs are assigned lazily: a read-only transaction never gets one
+====================================================================================================
+-- after a SELECT
+   n | xid
+   6 | NULL
+-- after SELECT ... FOR SHARE (a row lock writes to the page)
+   xid
+   1021
+
+====================================================================================================
+7. Row locks live in the tuple header: xmax + infomask bits; two sharers => a MultiXact
+====================================================================================================
+   FOR KEY SHARE      locker xid 1022:  xmax=1022  flags: HEAP_XMAX_KEYSHR_LOCK HEAP_XMAX_LOCK_ONLY HEAP_XMIN_COMMITTED HEAP_UPDATED HEAP_ONLY_TUPLE
+   FOR SHARE          locker xid 1023:  xmax=1023  flags: HEAP_XMAX_KEYSHR_LOCK HEAP_XMAX_EXCL_LOCK HEAP_XMAX_LOCK_ONLY HEAP_XMIN_COMMITTED HEAP_UPDATED HEAP_ONLY_TUPLE
+   FOR NO KEY UPDATE  locker xid 1024:  xmax=1024  flags: HEAP_XMAX_EXCL_LOCK HEAP_XMAX_LOCK_ONLY HEAP_XMIN_COMMITTED HEAP_UPDATED HEAP_ONLY_TUPLE
+   FOR UPDATE         locker xid 1025:  xmax=1025  flags: HEAP_XMAX_EXCL_LOCK HEAP_XMAX_LOCK_ONLY HEAP_XMIN_COMMITTED HEAP_UPDATED HEAP_KEYS_UPDATED HEAP_ONLY_TUPLE
+-- two sessions FOR SHARE on row 3: xmax is now a MultiXact ID
+   t_xmax | flags
+   13 | HEAP_XMAX_KEYSHR_LOCK HEAP_XMAX_EXCL_LOCK HEAP_XMAX_LOCK_ONLY HEAP_XMIN_COMMITTED HEAP_XMAX_IS_MULTI HEAP_UPDATED HEAP_ONLY_TUPLE
+-- pgrowlocks('acct')
+   locked_row | locker | multi | xids | modes
+   (0,10) | 13 | True | ['1026', '1027'] | ['For Share', 'For Share']
+-- pg_locks holds no per-row entry for those locks (only each transaction's own xid lock)
+   locktype | mode | granted
+   transactionid | ExclusiveLock | True
+   transactionid | ExclusiveLock | True
+
+====================================================================================================
+8. Locking rows writes: WAL generated by reading 100,000 rows, plain vs FOR UPDATE / FOR SHARE
+====================================================================================================
+   SELECT count(*) FROM big                                   WAL          0 bytes       2.1 ms
+   SELECT count(*) FROM (SELECT * FROM big FOR SHARE) s       WAL  5,620,048 bytes      26.1 ms
+   SELECT count(*) FROM (SELECT * FROM big FOR UPDATE) s      WAL  5,616,504 bytes      25.6 ms
+
+====================================================================================================
+9. Row-lock conflict table, measured: holder takes mode X on row 1, requester tries mode Y NOWAIT
+====================================================================================================
+   holder \ requester        FOR KEY SHARE          FOR SHARE  FOR NO KEY UPDATE         FOR UPDATE
+   FOR KEY SHARE                        ok                 ok                 ok           CONFLICT
+   FOR SHARE                            ok                 ok           CONFLICT           CONFLICT
+   FOR NO KEY UPDATE                    ok           CONFLICT           CONFLICT           CONFLICT
+   FOR UPDATE                     CONFLICT           CONFLICT           CONFLICT           CONFLICT
+   and the row-lock mode each write statement takes (holder) vs FOR KEY SHARE (requester):
+   UPDATE non-key column                ok           CONFLICT           CONFLICT           CONFLICT
+   UPDATE key column              CONFLICT           CONFLICT           CONFLICT           CONFLICT
+   DELETE                         CONFLICT           CONFLICT           CONFLICT           CONFLICT
+
+====================================================================================================
+10. Foreign keys: a child INSERT takes FOR KEY SHARE on the parent row
+====================================================================================================
+-- parent row locks while the child INSERT is open
+   locked_row | multi | modes
+   (0,1) | False | ['For Key Share']
+   parent holder: UPDATE parent SET credits = credits + 1 (non-key)    -> child INSERT: ok
+   parent holder: SELECT ... FOR NO KEY UPDATE                         -> child INSERT: ok
+   parent holder: SELECT ... FOR UPDATE                                -> child INSERT: BLOCKED (still waiting after 1 s)
+   parent holder: UPDATE parent SET id = 2 (key column)                -> child INSERT: BLOCKED (still waiting after 1 s)

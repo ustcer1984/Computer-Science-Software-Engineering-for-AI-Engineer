@@ -1,0 +1,5 @@
+('no DDL', 'long reader commits', 8.0004057189999)
+('DDL, no lock_timeout', 'long reader commits', 8.000959238999712)
+('DDL, no lock_timeout', 'ALTER done', 8.011485701999845, 6.0114182449997315)
+('DDL, lock_timeout 200 ms + retry', 'long reader commits', 8.000475109000035)
+('DDL, lock_timeout 200 ms + retry', 'ALTER done after 6 tries', 8.020232902001226)
