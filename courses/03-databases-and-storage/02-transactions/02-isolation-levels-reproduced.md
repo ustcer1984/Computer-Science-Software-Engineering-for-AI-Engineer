@@ -11,7 +11,10 @@
 > skew that only SERIALIZABLE stops, the read-only transaction that sees an impossible state, the retry loop
 > SERIALIZABLE requires, and the places where MySQL, SQL Server and Oracle use the same level names for different
 > guarantees.
-> **Status:** 🔵 PREPARED 2026-10-29 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-11-02 (body prepared 2026-10-29). No question on the body; your audit of three
+> production backends is in §12: four questions to ask of code that writes (Table 7), what the audit found (Table 8),
+> and two traps measured on PostgreSQL 18, `TRUNCATE` under REPEATABLE READ (Table 9) and an error swallowed inside a
+> transaction. Body fix: Table 1 now points the error-mid-transaction row at §7.
 > **Prerequisites:** **Ch2 §1 §6** (the anomalies, Table 4, the lost update measured) and **Ch2 §1 §11** (what
 > REPEATABLE READ does at the moment of a write conflict, and the retry loop). **Ch1 §4 §14a** for row versions and
 > `VACUUM`.
@@ -99,7 +102,7 @@ table `test (id, value)` holding `(1, 10)` and `(2, 20)`, unless it says otherwi
 | **Write skew, inserts** | T1 and T2 both select `WHERE value % 3 = 0` (none); each inserts a matching row; both commit | two rows where each checked there were none | serially, the second would see the first's row |
 | **Read-only anomaly** | three transactions; §3 traces it | a read-only report sees a state no serial order passes through | §3 |
 | **Re-check surprise** (PostgreSQL only) | T1 adds 1 to every row; T2 deletes `WHERE hits = 10`; T1 commits | T2 deletes nothing | a row had `hits = 10` both before and after T1 |
-| **Error mid-transaction** | T1 updates row 1, then hits a duplicate-key error, then commits | half of T1 committed | not an isolation anomaly: an atomicity one (§6) |
+| **Error mid-transaction** | T1 updates row 1, then hits a duplicate-key error, then commits | half of T1 committed | not an isolation anomaly: an atomicity one (§7) |
 
 **How the harness runs a schedule.** Each session is its own database connection in its own thread. Statements are
 issued in the order written. If a statement has not returned after one second it is recorded as **blocked**, and the
@@ -888,6 +891,149 @@ primary key, and `COMMIT;`, then check what was saved. Do the same on PostgreSQL
 room, then for different rooms, then two that touch at an endpoint (`[10:00, 11:00)` and `[11:00, 12:00)`).
 
 When you are done: `docker rm -f iso-pg iso-my`.
+
+---
+
+## 12. Applied — captured from our session Q&A
+
+*(The session, 2026-11-02. Two remarks rather than a question. First: the matrix is hard to memorise, but it is worth
+knowing the traps exist and that engines differ. Second: you asked for the three production backends you work on to be
+checked for isolation risks. All three are Python services on AWS (Amazon Web Services) Lambda over PostgreSQL. The audit
+was read-only, and its results are reported here as patterns, not as names or files. The two traps in §12c were
+measured for this section on PostgreSQL 18.6 with psycopg 3.3.6; the script and its output are
+`diagrams/02-isolation-data/applied.py` and `applied-out.txt`.)*
+
+### 12a. What to keep in your head, and what to look up
+
+**You do not need the matrix.** Figure 1 has more than a hundred cells, and every one of them follows from three rules:
+a snapshot per statement (READ COMMITTED, §2), a snapshot per transaction (REPEATABLE READ, §3), and a conflict detector
+on top (SERIALIZABLE, §4). Keep those three. Look up the rest, and look up Table 5 every time you meet a new engine,
+because the names are the part that lies.
+
+What turned out to matter in real code was not the level at all. It was four questions, asked of every piece of code
+that writes. They are the ones the audit used.
+
+**Table 7** — four questions to ask of any code that writes, what each one catches, and where to look for it.
+
+| Question | What a "yes" can lead to | Where it shows up in the code |
+|---|---|---|
+| **1. Where does the transaction begin and end?** | each statement commits on its own, so readers see the work half done | `autocommit=True`, one `commit()` per step, a job that commits a load and then commits its status separately |
+| **2. Does it read a value, then write based on it?** | lost update (Ch2 §1 §6), write skew (§3) | a `SELECT` followed by `UPDATE … WHERE id = %s` with no condition on what was read; a check like `used < limit` before the write |
+| **3. Can it run twice at the same time?** | two runs pick the same "next" value, or undo each other | scheduled jobs, admin buttons, double-clicks, queue redelivery, Lambda retries after a timeout |
+| **4. Does it also write somewhere the database cannot roll back?** | the database and the other store disagree | S3 (Simple Storage Service) objects, queue messages, caches, emails written next to a database change |
+
+Question 1 comes first because the other three only make sense inside a transaction. Code that runs every statement in
+autocommit has no multi-statement transaction for an isolation level to protect.
+
+### 12b. What the audit found
+
+The three backends were written by different people at different times, and all three run at PostgreSQL's default,
+READ COMMITTED. None sets a stricter level anywhere, and none retries `40001`. Here is what turned up, grouped by pattern.
+
+**Table 8** — the risks found in three production PostgreSQL backends, grouped by pattern, and whether a stricter
+isolation level alone would have prevented each.
+
+| Pattern found | Question | Effect | Would SERIALIZABLE alone fix it? | The fix used |
+|---|---|---|---|---|
+| A refresh job deletes a table, then refills it in batches over minutes, in autocommit | 1, 3 | readers, and a snapshot copied to S3, see an empty or half-filled table; two overlapping runs collide on the primary key (§12c, last two rows of Table 9) | **No.** Every statement is already its own transaction | one transaction for the delete and all the inserts, or fill a staging table and swap it in; plus a lock so only one run at a time |
+| A scheduled job with no claim: every minute it checks for pending work and does it | 3 | two runs that overlap compute the same "next revision" and write into the same place | **No.** Most of the work happens outside the database | claim a job row with a conditional `UPDATE`, or take `pg_try_advisory_lock` and exit if it returns false |
+| Status changes written as `UPDATE … WHERE id = %s` after a separate `SELECT` checked the old status | 2 | two admins acting at once both succeed; last write wins | **Only if** the check and the write are in one transaction | add `AND status = <expected>` to the `UPDATE` and check the row count |
+| A quota checked in one statement and incremented in another | 2 | parallel requests overshoot the limit | **Only if** both are in one transaction, plus a retry loop | one statement: `INSERT … ON CONFLICT DO UPDATE SET used = used + 1 WHERE used < limit RETURNING used` |
+| A data load commits, then the batch is marked done in a second transaction | 1 | readers in between see the new data labelled with the old version (read skew across two transactions, §2) | **No.** They are two transactions | mark the batch done inside the load transaction |
+| A database error caught and swallowed inside a transaction | 1 | the whole transaction is silently rolled back, then reported as a success (§12c) | **No.** This is atomicity, not isolation (§7) | a savepoint around the statement that may fail, or catch only non-database errors |
+| A database change and an S3 write or queue message, one after the other | 4 | a crash or a duplicate delivery leaves the two disagreeing, or a step runs twice | **No.** The database cannot roll back S3 | idempotency keys, conditional writes, and an outbox (Ch2 §4, planned) |
+
+**What was already right** was just as instructive, because the same code bases did each thing correctly somewhere
+else:
+
+- counters written as `SET n = n + 1`;
+- `INSERT … ON CONFLICT` upserts for "make sure this user row exists";
+- a primary key that turns a duplicate submission into a clean error;
+- job steps claimed with `SELECT … FOR UPDATE` and a check on which run owns them;
+- new identifiers handed out under an advisory lock.
+
+**The lesson is the one §9 ended on, now seen in production code: none of the serious findings would be fixed by
+raising the isolation level alone.** The worst ones were about where the transaction ends (question 1) and about two
+copies of a job running at once (question 3). An isolation level governs what happens inside one transaction, and most
+of this code did not have a multi-statement transaction to protect. This matches the ACIDRain finding of §3: 17 of the 22
+vulnerabilities it found would have survived SERIALIZABLE.
+
+### 12c. Two traps, measured
+
+Two findings are worth seeing run, because in both of them the obvious fix makes things worse.
+
+**Trap 1: `TRUNCATE` is not MVCC-safe, so a stricter level can show an empty table.** One of the backends reloads its
+catalogue with `TRUNCATE` followed by `COPY`, all in one transaction, and readers ask a small status table which
+version they are reading before they read the catalogue. The obvious fix for a reader that mixes versions is
+REPEATABLE READ: take one snapshot and read everything from it. Here is what that does. A reader took its snapshot
+(by reading the status table), then a reload replaced 100 rows of version 1 with 120 rows of version 2 and committed,
+then the reader read the catalogue.
+
+**Table 9** — what a reader sees after a concurrent reload commits, by isolation level and by how the reload empties
+the table, plus a refresh done in autocommit (PostgreSQL 18.6).
+
+| Reader's level | Reload empties the table with | Rows the reader sees | Versions in those rows |
+|---|---|---|---|
+| READ COMMITTED | `TRUNCATE` | 120 | 2 only |
+| READ COMMITTED | `DELETE` | 120 | 2 only |
+| **REPEATABLE READ** | **`TRUNCATE`** | **0** | — |
+| REPEATABLE READ | `DELETE` | 100 | 1 only |
+| READ COMMITTED, polling every 50 ms | `DELETE` + 5 inserts, autocommit | 0, 10, 20, 30, 40, 50 | the table empties, then refills in steps |
+| READ COMMITTED, polling every 50 ms | the same, in one transaction | 50 only | the old table until the commit, then the new one |
+
+The REPEATABLE READ reader saw an empty catalogue, a state that never existed in any committed version. The reason is
+that `DELETE` writes row versions, as Ch1 §4 §14a described, and an old snapshot can still see the old ones. `TRUNCATE`
+writes no row versions. It swaps the table's file for a new, empty one, and the old rows go with the old file. The new
+rows are in the new file, but they were written by a transaction that is not in the reader's snapshot, so they are
+invisible too. The PostgreSQL manual says it in one line: a transaction whose snapshot predates a `TRUNCATE` sees the
+table as empty. With `DELETE`, REPEATABLE READ works as §3 promised: all 100 old rows, all from version 1.
+
+So the fix for that reader is not a stricter level. It is to make the status and the data change together (mark the
+version inside the load transaction), and to take the table's lock before reading the status, so the reader waits for
+any reload in progress instead of reading across it.
+
+The last two rows show the refresh-job pattern of Table 8. In autocommit, a reader polling the table saw every
+intermediate state from empty to full. When the same statements ran inside one transaction, it saw only the old table
+or the new one. Two copies of the autocommit refresh started 0.1 s apart failed with `UniqueViolation`, and
+`pg_try_advisory_lock(42)` returned true to the first caller and false to the second. One line is enough to make a job
+run one copy at a time.
+
+**Trap 2: an error you catch inside a transaction rolls back everything, and nothing tells you.** This is psycopg 3's
+transaction block, with a statement that may fail and an `except` that the author meant as "skip this one":
+
+```python
+with conn.transaction():                          # BEGIN … COMMIT
+    conn.execute("UPDATE cat SET wave = 9 WHERE id = 1")
+    try:
+        conn.execute("SELECT 1/0")                # stands in for any statement that fails in the database
+    except psycopg.errors.DivisionByZero:
+        pass                                      # "skip it and carry on"
+# block exit: no exception
+```
+
+Measured: the block exits normally, **no exception is raised, and the `UPDATE` is gone**. Row 1 still has `wave = 1`.
+§7 showed the server side. After an error, PostgreSQL marks the whole transaction as failed and answers `COMMIT` with
+`ROLLBACK`; the test confirmed that the reply's status message is literally `ROLLBACK`. The new part is the client side:
+psycopg 3.3.6 sends the `COMMIT`, gets `ROLLBACK` back, and does not raise. The code that runs next believes the work
+was saved. In the audit, it went on to mark the batch as succeeded.
+
+PostgreSQL's all-or-nothing rule protects you only if the client notices. The fix is to give the risky statement a
+savepoint of its own, which in psycopg 3 is a nested block:
+
+```python
+with conn.transaction():
+    conn.execute("UPDATE cat SET wave = 9 WHERE id = 1")
+    try:
+        with conn.transaction():                  # SAVEPOINT … RELEASE, or ROLLBACK TO SAVEPOINT on error
+            conn.execute("SELECT 1/0")
+    except psycopg.errors.DivisionByZero:
+        pass                                      # only the inner block was undone
+```
+
+Measured: the `UPDATE` survives (`wave = 9`). The other fix is to catch only errors that did not come from the database,
+so that a database error ends the transaction loudly. Contrast this with MySQL in §7, where the same swallowed error
+leaves half the transaction to be committed. The two engines fail in opposite directions, and in both the client has
+to decide on purpose.
 
 ---
 

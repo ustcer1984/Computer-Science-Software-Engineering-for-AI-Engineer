@@ -17,3 +17,7 @@ PostgreSQL 18.6 (`postgres:18`) and MySQL 8.4.13 (`mysql:8.4`, InnoDB) in Docker
   does not dominate. *committed* and *failed* are pgbench's counts; *failed* splits into *serialization_failures*
   (`40001`) and *deadlocks* (`40P01`). The transfer table has a primary key on `id`; the roster table is run with and
   without a unique index on `(shift, doc)`.
+- `applied.py`, `applied-out.txt` — the measurements of §12c (added at finalize, 2026-11-02; PostgreSQL 18.6 and psycopg
+  3.3.6): a reader against a concurrent `TRUNCATE` or `DELETE` reload at READ COMMITTED and REPEATABLE READ (Table 9), a
+  database error swallowed inside `with conn.transaction()` with and without a savepoint, an autocommit refresh polled
+  by a reader, and two overlapping refreshes plus `pg_try_advisory_lock`. Usage: `python applied.py <dsn>`.

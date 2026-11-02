@@ -1,0 +1,16 @@
+E1  reader snapshot taken, then a reload (old 100 rows wave 1 -> new 120 rows wave 2) commits, then reader reads cat
+    READ COMMITTED   TRUNCATE  -> count, min wave, max wave = (120, 2, 2)
+    READ COMMITTED   DELETE    -> count, min wave, max wave = (120, 2, 2)
+    REPEATABLE READ  TRUNCATE  -> count, min wave, max wave = (0, None, None)
+    REPEATABLE READ  DELETE    -> count, min wave, max wave = (100, 1, 1)
+E2  error swallowed inside `with conn.transaction()`
+    plain    : exception at block exit = None; row 1 wave after = 1
+    savepoint: exception at block exit = None; row 1 wave after = 9
+    plain, nothing after the error: exception = None; wave = 1
+    raw COMMIT in aborted txn -> server status message: 'ROLLBACK'
+E3  autocommit refresh: DELETE, then insert 50 rows in 5 batches 0.2 s apart; a reader polls count(*)
+    distinct counts seen by the reader: [0, 10, 20, 30, 40, 50]
+    same refresh in one transaction: distinct counts seen = [50]
+E4  two overlapping refreshes in autocommit (DELETE, sleep, INSERT all)
+    errors: ['UniqueViolation']; rows after: 50
+    guard: pg_try_advisory_lock(42) -> first True, second False
