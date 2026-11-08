@@ -8,8 +8,9 @@
 > says and what it was never designed to say, the numbers a company **defines for itself**, the **red flags**
 > that preceded real failures *and how often each one is wrong*, and how to put all of it together into one
 > judgement about a company. It closes the module.
-> **Status:** 🔵 **PREPARED 2026-10-27** — body drafted, awaiting your read; **§11 Applied** will be added once
-> you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed figures
+> **Status:** ✅ **FINALIZED 2026-11-08** — prepared 2026-10-27, read 2026-11-08, and **§11 Applied** records
+> the **third quiet read in a row** — this time after a section built to be argued with — and what changes
+> because of it. Math in LaTeX, quantitative relationships drawn as real computed figures
 > (all four from filed accounts or a cited primary source), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -1008,6 +1009,61 @@ they usually agree, but Alphabet's differ by about 2 billion in 2025, so say whi
 
 ---
 
+## 11. Applied — a third quiet read, and a question about how you read
+
+**You read §5 on 2026-11-08 and raised nothing: no question, and no disagreement with any of the seven
+*Contested* boxes.** That is the third silent read in a row (E07 §3, §4, §5). It is also the first one after a
+section written specifically to draw disagreement out. So it tests something the first two could not.
+
+**What this read adds.** E07 §4 §10 bet on cause (3) — material pitched below where a question forms —
+because it was the only cause the material could act on. §5 acted on it: seven positions, each with the
+condition under which it would be wrong, and an explicit request to argue. Silence after that tells us
+something, though not everything:
+
+- **Cause (3), in the form §4 §10 assumed, is now weaker.** A section that asserts invites agreement. A
+  section that takes a position and names how it fails invites a reply. The reply did not come, so "it was
+  too settled to argue with" is no longer the easy explanation.
+- **Agreement is a real possibility, and it is not a failure.** Each box stated where it came down *and*
+  the condition that would reverse it. A careful reader can accept all seven without having anything to add,
+  especially if the conditions already matched his own view.
+- **There is a fourth cause the earlier sections did not list.** Your course-track reading of
+  2026-11-02 said it plainly about a reference-heavy section: *difficult to memorize all, but good to know
+  there are such traps.* If you read these sections **as a map to come back to** — keep the existence and
+  location of each trap, look up the rest when a real report needs it — then silence is the normal result of
+  that way of reading, not a sign the material missed. That would be a reasonable way to read §5, which is
+  mostly a catalogue.
+
+**What does not change.** The body of §5 stays as it is. The rule from E07 §3 §10 still holds: a section is
+not patched on the strength of silence.
+
+**What happens instead: a direct question, asked once.** The causes above cannot be told apart from inside
+the material, and two rounds of adjusting the material have not separated them. So the next step is to
+**ask how you read**. This is a question about process, not a self-assessment. It is asked in the session
+where §5 was finalized. Your answer decides how E08 is pitched (Table 10).
+
+**Table 10** — three ways of reading, and what each would change in E08.
+
+| If you read mainly… | Then E08 should… |
+|---|---|
+| **as a map** — keep where the traps are, look the rest up when needed | lead each section with a short reference card, and push the arguments into the self-check and the *Contested* boxes, which you can skip |
+| **closely, in one sitting, and agree** | keep the current shape, and make the self-checks harder to agree with: problems with a computed answer, not positions |
+| **closely, but the positions felt beside the point** | drop the *Contested* boxes, which were an experiment, and return to E07 §1–§2's shape, where you derived the missing half yourself |
+
+E08 §1 is prepared in the meantime in the current shape. It is cheap to re-cut once you answer.
+
+**The forward test continues.** E08 §1 is built from ratios, and every ratio is two numbers from E07. Three §5
+claims carry weight there, and each has a visible way of failing.
+
+**Table 11** — the three §5 claims E08 §1 leans on first, and what it looks like if one did not land.
+
+| §5 claim | Where E08 §1 puts weight on it | How you will know it did not land |
+|---|---|---|
+| **Every "adjusted" number is defined by the company** (§4) | EBITDA and the margins built on it, which no standard defines | an EBITDA margin will read as a standard ratio you can compare across companies |
+| **One sentence in a note can move operating income by 3.5–4.6%** (§3.2) | operating margin and return on assets across companies that depreciate the same servers over different lives | you will compare two margins without first asking how each company depreciates |
+| **Correlated flags count once** (§5.3) | ROE broken into margin × turnover × leverage (the DuPont identity) | a high ROE and a high margin will read as two pieces of good news when they share a numerator |
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 The auditing vocabulary is where the two markets diverge most sharply in the whole module — Taiwan uses **查核**
@@ -1073,7 +1129,7 @@ rather than 审计 for the audit of financial statements, and many of the terms 
 ---
 
 ### What's next
-🔵 **PREPARED 2026-10-27.** This closes **Module E07**. You can now read a company's report as a record of
+✅ **FINALIZED 2026-11-08.** This closes **Module E07**. You can now read a company's report as a record of
 **decisions**: you know that the notes carry the same audit standing as the statements, that a changed estimate
 is applied prospectively and is therefore visible only in one sentence of a note, that the audit report holds
 two opinions and a list of the hardest judgements, that an audit is not built to find fraud and finds 3% of it,
@@ -1086,5 +1142,6 @@ leverage and efficiency, each with its denominator stated and its ceiling stated
 whole of E07 underneath it — because every ratio is two numbers from these statements, and you now know where
 each one comes from and who decided it.
 
-Read this one and bring your questions — and, this time especially, **your disagreements with any of the seven
-*Contested* boxes**. **§11 Applied** will be added from that session.
+**§11 Applied** records the session: a third quiet read, this time after a section built to be argued with; a
+fourth possible cause (reading as a map); a direct question about how you read, whose answer sets E08's shape;
+and the three §5 claims E08 §1 puts weight on first (Table 11).
