@@ -58,10 +58,12 @@ across the line a Singapore REIT must not fall below.
 
 ### How this section is shaped
 
-E07 §5 §11 asked how you read, and E08 will be re-cut once you answer. Until then this section keeps E07 §5's
-shape, with one addition that suits the subject: **§1 opens with a reference card** (Table 1) of every ratio
-used, so the section can also be read as a map. Each content section still ends in a *Contested* box. If you
-disagree with where one comes down, say so.
+E07 §5 §11 asked how you read. Your answer (2026-11-08): **closely, in one sitting, and you agreed** — and you
+ask when something is unclear. So this section keeps E07 §5's shape: each content section ends in a
+*Contested* box. As E07 §5 §11 set out for that answer, the change is in §9: **every self-check now has a computed
+answer**, including the two that used to ask only for a position, so agreeing with the prose is not enough to
+answer them. **§1 also opens with a reference card** (Table 1) of every ratio used, because a ratio section
+needs one.
 
 ---
 
@@ -767,8 +769,11 @@ flowchart TD
    What did the buybacks do to each factor?
 7. Home Depot's ROE was −25,530% in FY2022, a year in which it earned 17.1 billion. Explain the number, and
    say what you would use instead.
-8. **Take a position**: Apple's ROIC is 104% or 276% depending on whether its long-term securities count as
-   spare cash. Which would you use, and what would make you change your mind?
+8. Apple's FY2026 operating income was 158,063 million and its effective tax rate 17.0%. Its average invested
+   capital, subtracting only cash and **short-term** securities, was 126.6 billion; its average **long-term**
+   marketable securities were 79.0 billion. Compute NOPAT and ROIC under both definitions. By what factor does
+   the one choice change the answer, and what single fact about the long-term securities would settle which
+   definition fits Apple?
 9. NVIDIA's cash conversion cycle is +97 days and Amazon's is −42. Each grew revenue a lot. Estimate which way
    growth moved each company's cash, and roughly by how much for Amazon.
 10. In Table 4, explain why IFRS 16 raises EBITDA, raises debt, and lowers interest coverage, all for the same
@@ -776,8 +781,11 @@ flowchart TD
     stops there?
 11. An S-REIT has an ICR of 2.4. Using the two shocks MAS requires it to disclose, estimate where it could land,
     and say what disclosure follows if it drops below 1.8.
-12. **Take a position**: a high ROE and a high net margin for the same company. Is that two pieces of good news
-    or one? Defend your answer with the DuPont identity, and say when it would be two.
+12. A company has revenue 1,000, net income 150, average assets 2,000 and average equity 250. (a) Compute its
+    net margin, asset turnover, ROA, equity multiplier and ROE, and check the identity. (b) At the start of the
+    next year it spends 150 of cash on buybacks; nothing else changes (ignore the lost interest income). Recompute
+    ROA and ROE. (c) How much of the change in ROE came from the business? Use the result to say whether a high
+    ROE and a high net margin are one piece of good news or two.
 
 <details>
 <summary><b>Answers</b> (open only after you have tried all twelve)</summary>
@@ -809,12 +817,13 @@ flowchart TD
    billion of profit divided by a tiny negative number gives an enormous negative ROE (§3.2). The number
    describes the denominator, not the business. Use **ROA** (23.1% that year) or **ROIC** (Table 3: 25.3% in
    FY2025), whose denominators do not cross zero.
-8. **A position, either way** (§2.3). *For 104% (short-term only):* long-term securities are held deliberately
-   for years and are part of how Apple runs its balance sheet, so they are not spare. *For 276%:* they are
-   liquid bonds that could be sold within days; the operating business does not need them, so they should not
-   dilute its return. **What should change your mind:** if Apple drew the long-term securities down to fund
-   buybacks or operations, that would show they behave like cash. Either way, **state the definition** next to
-   the number.
+8. **NOPAT $= 158{,}063 \times (1 - 0.170) \approx 131.2$ billion. ROIC $= 131.2 / 126.6 \approx 103.6\%$ with
+   short-term securities only, and $131.2 / (126.6 - 79.0) = 131.2 / 47.6 \approx 276\%$ with long-term
+   securities also treated as spare** (Table 3). One choice multiplies the answer by about **2.7**, because the
+   long-term securities are 62% of the narrower invested capital. **The fact that settles it is how Apple uses
+   them** (§2.3): if it sells them down to fund buybacks, dividends or operations, they behave like cash and the
+   276% definition fits; if it holds them to maturity as a permanent reserve, the 104% definition does. Either
+   way, **state the definition** next to the number.
 9. **NVIDIA's growth absorbed cash; Amazon's released it** (§4). With a positive cycle, more sales mean more
    receivables and inventory before the payables catch up: NVIDIA's inventory and receivables grew by 26.7
    billion. With a negative cycle, payables grow faster: Amazon's 79.0 billion of revenue growth at 42 days is
@@ -829,10 +838,14 @@ flowchart TD
     $2.4 / 1.25 = 1.92$; together $2.16 / 1.25 \approx 1.73$). Below **1.8**, the manager must have plans to
     improve the ICR and disclose them; below **1.5** it may not borrow more (§6, E07 §3 §6). Hedged or fixed-rate
     debt would soften the rate shock.
-12. **Mostly one** (§3.2). Net margin is the first factor of ROE, so a high margin *produces* part of a high ROE;
-    reading both as separate good news counts the margin twice. ROE's information beyond the margin is turnover
-    and leverage. **It is two pieces of news** only if the ROE is high for a *different* reason as well — high
-    turnover — and **it is bad news** if the extra comes mainly from a large equity multiplier.
+12. **(a) Net margin 15%, turnover 0.5, ROA 7.5%, equity multiplier 8, ROE 60%**, and $15\% \times 0.5 \times 8
+    = 60\%$ (§3.2). **(b) Assets fall to 1,850 and equity to 100: ROA $= 150 / 1{,}850 \approx 8.1\%$, ROE
+    $= 150 / 100 = 150\%$.** **(c) Almost none.** Profit did not change; ROA rose only because the asset base
+    shrank by the cash spent, and ROE rose two and a half times because the multiplier went from 8 to 18.5. So
+    ROE's information beyond the net margin is turnover and leverage, and the margin is already inside it:
+    **a high ROE and a high margin are one piece of good news, counted twice**, unless the ROE is also high
+    because of turnover. When the extra comes from the multiplier, as here, it is not good news about the
+    business at all.
 
 </details>
 
@@ -921,5 +934,5 @@ Next, **E08 §2 — common-size and trend analysis, and reading a whole annual r
 revenue or of assets, five and ten years at a time, and the order in which to read a 10-K or an SGX annual
 report from cover to notes — the method that turns this section's ratios and E07's statements into one reading.
 
-Read this one and bring your questions or disagreements, and your answer to E07 §5 §11's question about how you
-read, if you have not given it yet. **§11 Applied** will be added from that session.
+Read this one and bring any questions. **§11 Applied** will be added from that session, or will record a quiet
+read as what it is: a read in which nothing needed clarifying.

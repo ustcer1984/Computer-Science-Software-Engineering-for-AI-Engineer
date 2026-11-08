@@ -1051,6 +1051,13 @@ where §5 was finalized. Your answer decides how E08 is pitched (Table 10).
 
 E08 §1 is prepared in the meantime in the current shape. It is cheap to re-cut once you answer.
 
+**Your answer, the same day: the second row.** You read closely, in one sitting, and agreed; and *"I will ask
+question if I have doubt or need clarification."* That settles what three quiet reads meant: **cause (1) — the
+material answered the questions before they formed — together with agreement.** Two consequences. **A quiet read
+is now read as exactly that**, and the material is no longer tuned to provoke questions. And per Table 10, E08
+keeps this shape, with self-checks that need a computed answer rather than a position. E08 §1 was re-cut that
+way before you read it.
+
 **The forward test continues.** E08 §1 is built from ratios, and every ratio is two numbers from E07. Three §5
 claims carry weight there, and each has a visible way of failing.
 
