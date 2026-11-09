@@ -10,7 +10,10 @@
 > what they cost; and advisory locks, including the pattern you used in June and the two places it breaks — connection
 > poolers and long-lived AWS (Amazon Web Services) Lambda connections. Every trace and number below was measured; the scripts are committed in
 > `diagrams/03-mvcc-data/`.
-> **Status:** 🔵 PREPARED 2026-11-02 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-11-09 (body prepared 2026-11-02). Your two questions about hint bits and one about
+> upgrading on RDS are in §12: why the bits are not set at `INSERT` or `COMMIT` (Table 12, Figure 7), who else sets
+> them, including `VACUUM` and `COPY … FREEZE` (Table 13), and the three ways to upgrade on RDS and why `pg_upgrade`
+> leaves the row headers alone (Table 14).
 > **Prerequisites:** **Ch2 §2** (the three mechanisms under the isolation levels, write skew, the retry loop) and **Ch2
 > §1 §2** (a rolled-back transaction leaves its rows behind). **Ch1 §4 §14a** for `VACUUM`, dead tuples and transaction
 > ID wraparound — not re-taught here.
@@ -152,7 +155,8 @@ The first scan set a hint bit on every row, and because PostgreSQL 18 enables da
 hint bit for the first time after a checkpoint writes a full-page image of the page to the WAL, so that a torn write
 cannot leave a page whose checksum is wrong. A read-only query generated tens of megabytes of WAL. On a replica-backed
 system that is replication traffic; on a pay-per-I/O storage system it is a bill. `VACUUM` after a bulk load sets the
-bits (and the visibility map) once, in the background, instead of leaving it to the first unlucky reader.
+bits (and the visibility map) once, in the background, instead of leaving it to the first unlucky reader. Why the
+bits are not simply set at `COMMIT`, and everything else that can set them first: §12a and §12b.
 
 **Transaction IDs are assigned lazily.** A transaction gets an xid only when it first writes, including when it locks a
 row. A read-only transaction never takes one: `pg_current_xact_id_if_assigned()` returned NULL after a `SELECT` and
@@ -1250,6 +1254,171 @@ When you are done: `docker rm -f mvcc-pg`.
 
 ---
 
+## 12. Applied — captured from our session Q&A
+
+*(The session, 2026-11-09. Two questions about §1's hint bits, and one you flagged as unrelated: what happens when a
+PostgreSQL database on Amazon RDS (Relational Database Service) is upgraded. §12a and §12b were measured for this
+section on PostgreSQL 18.6 with psycopg 3.3.6, in the same Docker setup as the rest of the section; the script and its
+output are `diagrams/03-mvcc-data/applied.py`, `applied-commit-out.txt` and `applied-who-out.txt`. §12c is not measured,
+because it needs a real RDS instance; it was checked against the current AWS documentation on 2026-11-09.)*
+
+### 12a. Why the rows are not hinted when they are written
+
+**When a row is written, the fact a hint bit records does not exist yet.** `HEAP_XMIN_COMMITTED` means "the
+transaction that created this version committed", and `HEAP_XMIN_INVALID` means "it aborted". At `INSERT` time the
+creating transaction is still running and could go either way. There is no hint bit for "in progress". A row with
+neither bit set means "ask": the reader checks the list of running transactions and then `pg_xact`. Even the creating
+transaction's own reads leave the bits alone, because it recognises its own xid and needs no lookup. The last column of
+Table 12 shows it: straight after `COMMIT`, before anyone has read the table, row 1 carries only `XMAX_INVALID`.
+
+So the real question is the next one: **why not set the bits at `COMMIT`, when the answer becomes known?** Because
+then commit would cost time in proportion to the transaction's size, and a commit in PostgreSQL is deliberately cheap. It
+appends a commit record to the WAL (write-ahead log), flushes it, and sets two bits for the xid in `pg_xact`. Nothing in
+it depends on how many rows the transaction touched.
+
+**Table 12** — one transaction inserts N rows and commits; the commit time is the median of 5 runs, and "in shared buffers" counts the table's pages still cached in memory at the moment `COMMIT` runs (PostgreSQL 18.6, `shared_buffers` = 128 MB, `pg_buffercache`).
+
+| Rows written | `INSERT` | `COMMIT` | Table size | Pages | Pages still in shared buffers at `COMMIT` | Row 1's flags after `COMMIT` |
+|---|---|---|---|---|---|---|
+| 1 | < 1 ms | 0.49 ms | 8 kB | 1 | 1 (100%) | `XMAX_INVALID` only |
+| 10,000 | 10 ms | 0.89 ms | 0.5 MB | 55 | 55 (100%) | `XMAX_INVALID` only |
+| 100,000 | 40 ms | 2.50 ms | 4.4 MB | 541 | 541 (100%) | `XMAX_INVALID` only |
+| 1,000,000 | 390 ms | 2.93 ms | 44 MB | 5,406 | 5,406 (100%) | `XMAX_INVALID` only |
+| 5,000,000 | 1,890 ms | 2.54 ms | 221 MB | 27,028 | **16,350 (60%)** | `XMAX_INVALID` only |
+
+![Bar chart, log scale: insert time grows from under 1 ms to 1,890 ms as rows go from 1 to 5 million, while commit time stays between 0.5 and 2.9 ms](diagrams/03-mvcc-fig7.svg)
+
+**Figure 7** — the time to write the rows grows with the transaction; the time to commit them does not (Table 12 as a
+chart). The grey labels show how much of the table was still in memory when `COMMIT` ran.
+
+Writing 5,000,000 rows took 1.9 s; committing them took 2.5 ms, the same as committing 100,000. Now imagine a commit that
+also set the hint bits:
+
+- **It would have to visit every page the transaction wrote**: 27,028 pages for the 5M-row load. At `COMMIT`, 40% of
+  them had already been evicted from shared buffers to make room for the rest of the load. They would have to be read
+  back from disk, changed, and written again, while the client waits for `COMMIT` to return.
+- **It would write a lot of WAL.** With data checksums on (the PostgreSQL 18 default), the first hint-bit change to a
+  page after a checkpoint writes a full-page image, which is why Table 1's first scan of a 35 MB table wrote 36.5 MB of
+  WAL. A hinting commit of the 221 MB table would write on the order of 200 MB more, inside the commit.
+- **An abort would need the same visit**, to set `XMIN_INVALID` on every row. Today a rollback of any size is instant
+  (§1). Under that design it would cost as much as the transaction did.
+- **Some of the work would be wasted.** Rows that are deleted, or a table read once a week, would pay at commit for a
+  saving nobody collects.
+
+Deferring the bits moves that work from the one moment a client is guaranteed to be waiting (`COMMIT`) to whoever
+reads the row first, and spreads it out over time. **The hint bit is a cache of `pg_xact`, filled the first time
+someone needs the answer.** PostgreSQL is not alone in this. Oracle does the same under the name *delayed block
+cleanout*: at commit it cleans only a limited number of blocks still in its cache, and leaves the rest to the next
+reader, which is why an Oracle `SELECT` can also generate redo (Oracle's name for WAL).
+
+### 12b. Who else sets them: anyone who checks visibility first
+
+**Yes, `VACUUM` can set a row's hint bits before any `SELECT` reads it.** "The first reader" really means "the first
+backend that checks the row's visibility", and that can be a `SELECT`, the scan inside an `UPDATE` or `DELETE`, a
+uniqueness check, `CREATE INDEX`, opportunistic page pruning, or `VACUUM` and autovacuum. `VACUUM` has to decide for
+every row version on the pages it scans whether it is live, dead or in progress, so it does the same `pg_xact` lookup
+and writes the same bits. A freshly loaded page is not marked all-visible in the visibility map, so `VACUUM` does not
+skip it.
+
+To see it, the same 1,000,000-row table was loaded and checkpointed six times. Each time one "setter" ran first, and
+then the full scan of Table 1 ran:
+
+**Table 13** — who sets the hint bits after a bulk load, what it costs them, and what the next full scan then pays (PostgreSQL 18.6, data checksums on, 1,000,000 rows, 4,425 pages; flags are row 1's, read with `pageinspect`, which does not set them).
+
+| What runs first | Row 1's flags afterwards | WAL written by it | Then a full `SELECT count(*)`: pages dirtied · WAL · time |
+|---|---|---|---|
+| nothing — the `SELECT` is first | — | — | **4,425 of 4,425 · 36.5 MB** · 37.6 ms |
+| a `SELECT count(*)` | `XMIN_COMMITTED` | 36.5 MB | 0 · 0 · 18.0 ms |
+| `VACUUM` | `XMIN_COMMITTED` + `XMIN_INVALID` (frozen) | 39.1 MB | 0 · 0 · 16.1 ms |
+| `CREATE INDEX` | `XMIN_COMMITTED` | 56.8 MB (includes the index itself) | 0 · 0 · 18.5 ms |
+| autovacuum, triggered by the inserts (it started 21 s after the load) | `XMIN_COMMITTED` + `XMIN_INVALID` (frozen) | 39.4 MB | 0 · 0 · 17.7 ms |
+| nothing — the table was loaded with `COPY … FREEZE` | `XMIN_COMMITTED` + `XMIN_INVALID` (frozen) **from birth** | 0 | **0 of 4,432 · 0** · 14.5 ms |
+
+Three things to read from it:
+
+1. **The cost moves; it does not disappear.** Whoever goes first pays roughly the same WAL: 36–39 MB for a 35 MB table.
+   What you choose is *who* pays. Leaving it to the first `SELECT` puts it on a user's request. `VACUUM` straight after
+   the load puts it on the load job, and also sets the visibility map, which a `SELECT` never does (that is what makes
+   later index-only scans possible, Ch1 §4).
+2. **`VACUUM` went further and froze the rows.** Both `XMIN` bits set together mean *frozen*: the row is older than
+   every snapshot that can exist, so its `xmin` no longer matters (this is the protection against transaction ID
+   wraparound, Ch1 §4 §14a). PostgreSQL freezes a page early when it would have to write a full-page image of it anyway,
+   which, with checksums on, it does here.
+3. **Autovacuum got there on its own.** Since PostgreSQL 13, autovacuum also triggers on inserts, not only on dead rows
+   (`autovacuum_vacuum_insert_threshold`, default 1,000 rows plus `autovacuum_vacuum_insert_scale_factor`, default 20% of
+   the table). The test lowered the threshold and waited; with the defaults a freshly loaded 1M-row table also qualifies
+   at the next autovacuum round (`autovacuum_naptime`, default 1 minute). So a table that is loaded and never queried
+   still gets its hint bits set, but there is a window of up to a minute or so in which the first `SELECT` pays.
+
+**The exception: `COPY … FREEZE` writes rows that are already hinted and frozen.** That breaks §12a's rule ("the outcome
+is not known yet"), and it is allowed only when the table was created or truncated **in the same transaction** as the
+`COPY`. No other transaction can see such a table until this one commits, and if it aborts, the table (or the truncate)
+is rolled back with it, so the rows' fate cannot differ from the table's. The rows were born frozen, and nobody paid
+anything later. It is the fastest way to bulk-load into a new table, and the right default for a load-then-swap job:
+
+```sql
+BEGIN;
+CREATE TABLE prices_new (LIKE prices INCLUDING ALL);   -- or TRUNCATE prices; in the same transaction
+COPY prices_new FROM STDIN WITH (FREEZE);
+COMMIT;
+```
+
+When you cannot use it, run `VACUUM (ANALYZE)` straight after the load, as part of the job.
+
+### 12c. Upgrading PostgreSQL on Amazon RDS, and what happens to the row headers
+
+RDS treats the two kinds of version change differently. A **minor** version (16.4 → 16.8) has the same on-disk format,
+so the upgrade swaps the binaries and restarts. A **major** version (16 → 17) changes the system catalogues, so RDS runs
+PostgreSQL's `pg_upgrade`, or you use a blue/green deployment instead.
+
+**Table 14** — the three ways to move an RDS for PostgreSQL database to a newer version (AWS documentation, checked 2026-11-09).
+
+| | Minor version, in place | Major version, in place (`pg_upgrade`) | Major version, blue/green deployment |
+|---|---|---|---|
+| How it runs | new binaries, restart | precheck → snapshot → `pg_upgrade` → snapshot | a copy ("green") kept in sync by logical replication, upgraded and tested while the original ("blue") serves traffic, then a switchover |
+| Who starts it | you, or **auto minor version upgrade** in the maintenance window | always you; RDS never applies a major upgrade on its own | you |
+| Downtime | a restart. On a Multi-AZ (Availability Zone) **DB instance**, primary and standby are upgraded **at the same time** ("several minutes"); only a Multi-AZ **DB cluster** rolls readers first (about 35 s) | the whole upgrade, primary, standby and in-Region read replicas together | the switchover, usually under a minute |
+| Read replicas | must be upgraded before the source | in-Region replicas are upgraded with the primary; Multi-AZ DB cluster replicas are not | cross-Region and cascading replicas are not supported |
+| Way back | — | none in place: restore the pre-upgrade snapshot (writes since then are lost) | the old blue instance is kept until you delete it |
+
+**Before an in-place major upgrade:**
+
+- **Rehearse it.** Restore a snapshot to a throwaway instance and upgrade that first. It gives you a real downtime
+  figure and any precheck failure before production sees it. Failures land in `pg_upgrade_precheck.log`.
+- **Clear what blocks it**: open prepared transactions (`pg_prepared_xacts`), the `reg*` types other than `regclass` and
+  `regtype`, extensions the target version does not support, and logical replication slots. Slots must be dropped when
+  upgrading *from* versions before 17; from 17 on they can be kept on the primary.
+- **Have a parameter group for the new family** (`postgres17`, …). Custom settings do not carry over by themselves.
+- **Keep backup retention above 0**, or RDS takes no snapshots around the upgrade.
+
+**After it:** run `ANALYZE` in every database, because the AWS documentation says planner statistics are not carried
+over (PostgreSQL 18's own `pg_upgrade` can carry most of them, but `ANALYZE` is cheap insurance), and update each
+extension with `ALTER EXTENSION … UPDATE`, because the engine upgrade leaves them at the old version.
+
+**Blue/green has its own rules, all from logical replication:** DDL (data definition language, e.g. `CREATE TABLE`) and
+DCL (data control language, e.g. `GRANT`) are not replicated, and running either on blue puts green into "replication
+degraded", so you delete it and start again. Large objects are not replicated, and tables need a primary key (or
+`REPLICA IDENTITY FULL`) for `UPDATE` and `DELETE` to replicate. Sequences are brought level at switchover, not
+continuously. After switchover the new production instance's point-in-time recovery (PITR) history starts from when
+green was created, so keep blue for as long as you might need to restore to a moment before that.
+
+**How this connects to §1: `pg_upgrade` does not rewrite your data.** It dumps and restores only the schema, then
+copies, links or clones the data files as they are. To make that safe it also copies `pg_xact` from the old cluster and
+sets the new cluster's next transaction ID past the old one. Every `xmin` and `xmax` in every row header therefore
+keeps its meaning, and the hint bits already written stay valid. That is why an in-place major upgrade takes about as
+long for a 2 TB database as for a 2 GB one with the same schema. **What drives the time is the number of objects**
+(tables, indexes, sequences, large objects): a database with 100,000 small tables upgrades slowly even if it holds
+little data. It is also why a large number of large objects can make an upgrade run out of memory, which the AWS
+documentation warns about.
+
+**A correction to the chat answer.** In the session I said a Multi-AZ minor upgrade upgrades the standby first and
+fails over, so the downtime is about one failover. That is true only for a Multi-AZ **DB cluster** (two readable
+standbys). For the common Multi-AZ **DB instance**, the AWS documentation says RDS upgrades primary and standby
+simultaneously, for minor versions as well as major, and the database "might not be available for several minutes".
+Table 14 carries the documented version.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -1274,6 +1443,9 @@ When you are done: `docker rm -f mvcc-pg`.
 | Connection pool / pooler | 连接池 | 連線池 | ⚠ 连接 ↔ **連線** |
 | Foreign key | 外键 | 外部索引鍵 / 外鍵 | ⚠ 外键 ↔ **外部索引鍵** (Microsoft 台灣) |
 | Hash collision | 哈希冲突 | 雜湊衝突 | ⚠ 哈希 ↔ **雜湊** |
+| Freezing (a row version) | 冻结 | 凍結 | |
+| Major / minor version upgrade | 大版本升级 / 小版本升级 | 主要版本升級 / 次要版本升級 | ⚠ 大/小 ↔ **主要/次要** |
+| Blue/green deployment | 蓝绿部署 | 藍綠部署 | |
 
 ---
 
@@ -1319,6 +1491,16 @@ When you are done: `docker rm -f mvcc-pg`.
   connection) — <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-pinning.html>
 - M. Kleppmann — *Designing Data-Intensive Applications* (O'Reilly, 2017), chapter 7, *Transactions*, and chapter 8 on
   leases and fencing tokens — the "a lock held by a process that has paused" problem of §7
+- §12 — PostgreSQL 18 documentation: *`COPY`* (the `FREEZE` option and its same-transaction condition) —
+  <https://www.postgresql.org/docs/18/sql-copy.html> · *The Autovacuum Daemon* (insert-triggered vacuum) —
+  <https://www.postgresql.org/docs/18/routine-vacuuming.html#AUTOVACUUM> · *pg_upgrade* —
+  <https://www.postgresql.org/docs/18/pgupgrade.html>
+- §12c — AWS, RDS User Guide: *Upgrades of the RDS for PostgreSQL DB engine* —
+  <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.PostgreSQL.html> · *How to perform a
+  major version upgrade for RDS for PostgreSQL* —
+  <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.PostgreSQL.MajorVersion.Process.html> ·
+  *Limitations and considerations for blue/green deployments* —
+  <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/blue-green-deployments-considerations.html>
 
 ### What's next
 

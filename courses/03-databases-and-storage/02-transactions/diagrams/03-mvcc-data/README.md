@@ -33,4 +33,11 @@ PgBouncer 1.26.1 (`edoburu/pgbouncer`), 2026-11-02. Every script takes the DSN a
   X/Y/Z sequence through PgBouncer in transaction mode (run with
   `docker run -d --network host -v $PWD/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini …`, plus a `userlist.txt`).
 
-Figures 2, 4 and 5 are drawn from these files by `../03-mvcc-figures.py`.
+- `applied.py`, `applied-commit-out.txt`, `applied-who-out.txt` — §12 (2026-11-09, same setup): `commit`: one
+  transaction inserts 1 … 5,000,000 rows, `COMMIT` timed (median of 5), the table's pages counted in shared buffers at
+  that moment with `pg_buffercache`, and row 1's infomask read with `pageinspect` after commit (Table 12, Figure 7);
+  `who`: a 1,000,000-row table loaded and checkpointed six times, one setter run first (nothing, a `SELECT`, `VACUUM`,
+  `CREATE INDEX`, insert-triggered autovacuum, or a `COPY … FREEZE` load), then a full scan with pages dirtied and WAL
+  written (Table 13).
+
+Figures 2, 4 and 5 are drawn from these files by `../03-mvcc-figures.py`; Figure 7 by `../03-mvcc-applied-figures.py`.
