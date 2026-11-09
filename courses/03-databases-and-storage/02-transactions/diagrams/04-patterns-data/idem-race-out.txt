@@ -1,0 +1,4 @@
+none         pairs 500  charges  1000  duplicate charges  500  responses {'charged': 1000}  time taken by the non-charging request: -
+check-first  pairs 500  charges  1000  duplicate charges  500  responses {'charged': 1000}  time taken by the non-charging request: -
+key-in-txn   pairs 500  charges   500  duplicate charges    0  responses {'replayed': 500, 'charged': 500}  time taken by the non-charging request: median 55.6 ms, max 529.7 ms
+key-first    pairs 500  charges   500  duplicate charges    0  responses {'409': 500, 'charged': 500}  time taken by the non-charging request: median 1.7 ms, max 8.0 ms

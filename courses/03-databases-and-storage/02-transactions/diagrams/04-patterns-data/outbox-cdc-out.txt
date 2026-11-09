@@ -1,0 +1,11 @@
+-- what the slot emits (pg_logical_slot_get_changes); the aborted order 3 never appears
+   xid 680816: BEGIN 680816
+   xid 680816: table public.orders: INSERT: id[integer]:1 ok[boolean]:true
+   xid 680816: table public.outbox: INSERT: id[bigint]:1 event_id[uuid]:'00000000-0000-0000-0000-000000000001' order_id[integer]:1 n[integer]:1 created_at[timestamp 
+   xid 680816: COMMIT 680816
+   xid 680817: BEGIN 680817
+   xid 680817: table public.orders: INSERT: id[integer]:2 ok[boolean]:true
+   xid 680817: message: transactional: 1 prefix: order-events, sz: 31 content:{"order": 2, "type": "created"}
+   xid 680817: COMMIT 680817
+-- an idle slot holds WAL: 100,000 more outbox rows, nobody reading
+   WAL retained by slot 'demo': 22 MB (wal_status reserved); max_slot_wal_keep_size = -1

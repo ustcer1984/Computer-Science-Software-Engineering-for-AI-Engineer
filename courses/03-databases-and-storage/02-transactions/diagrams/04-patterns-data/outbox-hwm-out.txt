@@ -1,0 +1,3 @@
+rep 0: 4000 events committed | relay A (id > last_seen) delivered 1936, missed 2064 | relay B (sent_at IS NULL, SKIP LOCKED) delivered 4000, missed 0
+rep 1: 4000 events committed | relay A (id > last_seen) delivered 1961, missed 2039 | relay B (sent_at IS NULL, SKIP LOCKED) delivered 4000, missed 0
+rep 2: 4000 events committed | relay A (id > last_seen) delivered 1956, missed 2044 | relay B (sent_at IS NULL, SKIP LOCKED) delivered 4000, missed 0

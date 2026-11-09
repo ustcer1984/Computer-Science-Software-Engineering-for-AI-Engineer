@@ -1,0 +1,4 @@
+design,orders_committed,messages_published,lost,phantom,duplicate_deliveries,effects_naive,duplicate_effects_naive,effects_inbox,duplicate_effects_inbox,app_crashes,relay_crashes
+commit-then-publish,1953,1938,15,0,0,1938,0,1938,0,15,0
+publish-then-commit,1938,2000,0,62,0,2000,0,2000,0,15,0
+outbox,1938,2038,0,0,100,2038,100,1938,0,15,2

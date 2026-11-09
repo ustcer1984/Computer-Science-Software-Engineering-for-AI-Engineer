@@ -1,0 +1,13 @@
+design,rep,payments,charges,duplicate_charges,payments_charged_twice_or_more,client_ok,client_ok_replayed,client_409,client_gave_up,attempts,seconds
+none,0,500,596,96,83,500,0,0,0,596,5.9
+check-first,0,500,551,51,50,455,45,0,0,596,5.6
+key-in-txn,0,500,500,0,0,418,82,0,0,590,5.5
+key-first,0,500,500,0,0,418,75,79,7,654,5.8
+none,1,500,584,84,73,500,0,0,0,584,5.7
+check-first,1,500,548,48,47,465,35,0,0,583,5.6
+key-in-txn,1,500,500,0,0,423,77,0,0,589,5.6
+key-first,1,500,500,0,0,425,62,101,13,663,5.5
+none,2,500,592,92,79,500,0,0,0,592,6.0
+check-first,2,500,548,48,48,462,38,0,0,586,5.6
+key-in-txn,2,500,500,0,0,425,75,0,0,584,5.3
+key-first,2,500,500,0,0,419,74,105,7,679,5.6
