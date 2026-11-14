@@ -9,8 +9,9 @@
 > Several ratios were already taught where they first came up: the current ratio, the cash conversion cycle,
 > and three leverage ratios in E07 §3, EBITDA in E07 §2. They are not taught again here. They are placed in a
 > system, and the new work is the **returns** and the **decomposition**.
-> **Status:** 🔵 **PREPARED 2026-11-08** — body drafted, awaiting your read; **§11 Applied** will be added once
-> you have driven the session Q&A. Math in LaTeX, quantitative relationships drawn as real computed figures
+> **Status:** ✅ **FINALIZED 2026-11-14** — prepared 2026-11-08, read 2026-11-14 ("quite clear"), and **§11
+> Applied** answers the one question you raised: what negative equity means for a company and its shareholders.
+> Math in LaTeX, quantitative relationships drawn as real computed figures
 > (all three from filed Form 10-K figures), key terms glossed in 中文 (大陆/台灣), per
 > [`../../../agent-docs/authoring-conventions.md`](../../../agent-docs/authoring-conventions.md).
 
@@ -379,6 +380,9 @@ billion two years later, back to +3.3 billion, then to −1.7 billion). Look at 
 - When it is slightly negative, ROE is **enormously negative**: −25,530% in FY2022, when average equity was
   −67 million. A profitable year reported as a return of minus two hundred and fifty times.
 - Neither number means anything. **When equity is near zero, ROE measures the denominator, not the business.**
+
+What negative equity means for the company and its shareholders, and how to tell a payout-driven case from a
+loss-driven one, is §11.
 
 This is E07 §5 §5.3's point about correlated flags, arriving as an identity. A high ROE and a high net margin
 look like two pieces of good news. But net margin is the first factor of ROE: **they share a numerator**, and
@@ -872,6 +876,98 @@ after FY2023. Say which tag you used.
 
 ---
 
+## 11. Applied — what negative equity means, and for whom
+
+**You read §1 on 2026-11-14, found it "quite clear", and asked one question that went past it:** *how should
+you understand a company with negative equity, and what does it mean to its shareholders?* §3.2 used Home
+Depot's negative equity only to show that ROE breaks. It never said what the number is, how a company gets
+there, or whether a shareholder should worry. This section does.
+
+### 11a. What the number says, and what it does not
+
+Shareholders' equity is **assets minus liabilities at book value** (E07 §3). It is a residual, and it moves by
+one identity:
+
+$$\text{Equity}_{t} = \text{Equity}_{t-1} + \text{Net income} - \text{Dividends} - \text{Buybacks} + \text{New shares issued} \pm \text{Other}$$
+
+So equity goes below zero in only two ways: **the company paid out more than it earned plus what owners put in**,
+or **it lost more than that**. Either way, negative equity says something about the *history of flows*. It
+says little about what the company is worth, because book assets leave out most of what makes a good business
+valuable (a brand, a store network's location value, a customer base) and carry property at historical cost.
+McDonald's has had negative book equity every year since 2016, while its operating income grew to 12.4 billion
+in 2025.
+
+### 11b. Two routes, four real cases
+
+**Table 8** — four companies whose book equity went negative, from each Form 10-K. USD billions; "RE" is retained earnings, "TS" treasury stock, both at the low point.
+
+| Company | Equity before → first negative year | Low point | RE / TS at the low | Operating cash flow over the period | Route |
+|---|---|---|---|---|---|
+| McDonald's | +7.1 (2015) → −2.2 (2016) | −8.2 (2019) | +52.9 / 66.3 | positive every year, 5.6–10.6 | payouts: 17.3 of buybacks in 2015–16 |
+| Home Depot | +4.3 (FY2016) → −1.9 (FY2018) | −3.1 (FY2019) | +51.7 / 65.2 | positive every year, 9.4–21.2 | payouts, debt-funded (§3.2) |
+| Starbucks | +1.2 (FY2018) → −6.2 (FY2019) | −8.7 (FY2022) | **−8.5** / none | positive every year, 1.6–11.9 | payouts: 17.4 of buybacks in FY2018–19 against 8.1 of profit |
+| Boeing | +0.3 (2018) → −8.6 (2019) | −18.3 (2020) | +38.6 / 52.6 | **negative** in 2019, 2020, 2021 and 2024 | payouts first, then losses |
+
+Three readings.
+
+- **The first three are the payout route.** Each company earned steadily and generated cash every year. It
+  chose to hand back more than its book equity, usually by borrowing. Its equity is negative because of a
+  financing decision, not because the business failed.
+- **Boeing is both.** Between 2013 and 2019 it spent 43.5 billion on buybacks, which took equity down to
+  0.3 billion by the end of 2018: **the cushion was gone before anything went wrong.** Then the 737 MAX
+  grounding and the pandemic produced net losses of 35.7 billion over 2019–2024, with operating cash flow
+  negative in four of those six years. In late 2024 it sold about 24 billion of new shares, and equity was
+  back above zero by the end of 2025. That is the loss route, and it shows what the payout route costs: a
+  company with no book cushion has to raise one, at whatever price the market offers, when it needs one.
+- **The labels do not tell you the route — the flows do.** You might expect a payout-driven company to show
+  large treasury stock and positive retained earnings, and a loss-driven one an accumulated deficit. McDonald's
+  and Home Depot fit that. **Starbucks does not:** it retires the shares it buys back instead of holding them
+  as treasury stock, and charges the excess cost to retained earnings. So its *profitable* buybacks show up as
+  an **accumulated deficit** of 8.5 billion. Microsoft does the same. **To find the route, read the flows:**
+  net income and operating cash flow against dividends and buybacks, year by year, from the statement of
+  changes in equity and the financing section of the cash flow statement (E07 §4).
+
+### 11c. What it means for shareholders
+
+- **They owe nothing.** Shareholders have **limited liability**: the most they can lose is what they paid for
+  their shares. Negative equity never becomes a bill to the owners. The creditors bear the shortfall, if there
+  is one.
+- **The shares can still be worth a lot.** The share price reflects expected future cash flows, not book
+  value (E08 §3 will make this precise). A company with negative equity and strong, steady cash flow can be
+  worth far more than one with large positive equity and weak cash flow.
+- **In a liquidation, at book value, they would get nothing.** This matters only when the book values are
+  close to what the assets would fetch and the company might actually fail, which is the loss route. For
+  McDonald's it is hypothetical. For Boeing in 2020 it was the question the market was pricing.
+- **They are holding a leveraged position.** Payout-driven negative equity is the result of choosing high
+  leverage. If profit falls, the debt does not, so earnings per share and the share price swing more, and
+  there is no book cushion to absorb a bad year. That is the other side of the higher per-share returns the
+  buybacks produced.
+- **Lenders and the law may limit the payouts.** Covenants in the debt note can cap leverage or distributions.
+  Company law in many places restricts dividends to distributable profits or reserves. A shareholder counting
+  on continued buybacks should check whether either one binds.
+
+### 11d. How to read a company with negative equity
+
+**Table 9** — what to use instead of the ratios that break.
+
+| Breaks (equity in the denominator) | Use instead | Why it survives |
+|---|---|---|
+| ROE | ROA, ROIC (§2.2, §2.3) | the denominator does not cross zero |
+| Debt ÷ equity | net debt ÷ EBITDA, interest coverage (§5) | measures the debt against earnings, not against a residual |
+| Price ÷ book value | enterprise-value multiples (E08 §3) | uses the market's value, not the book's |
+| "Is equity positive?" | the flows in Table 8: operating cash flow against payouts and losses | separates the two routes |
+
+**The one-sentence version:** negative equity tells you how a company has been *financed*, not whether it is
+*healthy*. With strong, steady operating cash flow it is a decision to run on debt and return capital. With
+losses and negative operating cash flow it means the owners' cushion has gone. Read the flows to tell which.
+
+**The forward test set in E07 §5 §11, checked.** §1 put weight on three E07 §5 claims. Your question
+lands on the third, *correlated flags count once*: you went past the ROE that breaks to the equity underneath
+it, which is where §3.2 was pointing. Nothing in the read suggests the first two (company-defined adjusted
+numbers, and depreciation estimates moving margins) failed to land.
+
+---
+
 ## Key terms — English · 中文（中国大陆 / 台灣）
 
 Ratio vocabulary is where Taiwan's 報酬 (return) and Mainland's 收益/回报 diverge most visibly, and the two
@@ -901,6 +997,10 @@ markets often build the same ratio name from different words.
 | Lease liability | 租赁负债 | 租賃負債 | script only |
 | Aggregate leverage (S-REIT) | 总杠杆率 | 總槓桿比率 | ⚠ 率 vs 比率 |
 | Buyback | 股票回购 | 庫藏股買回 | ⚠⚠ Taiwan uses "treasury stock" |
+| Negative equity *(§11)* | 净资产为负 / 股东权益为负 | 股東權益為負 / 淨值為負 | ⚠ Mainland press often says 资不抵债 ("assets do not cover debts"), which implies **insolvency** — wrong for the payout route |
+| Accumulated deficit | 累计亏损 | 累積虧損 | script only |
+| Treasury stock | 库存股 | 庫藏股 | ⚠ 库存 vs 庫藏 |
+| Limited liability | 有限责任 | 有限責任 | script only |
 
 ---
 
@@ -923,7 +1023,7 @@ markets often build the same ratio name from different words.
 ---
 
 ### What's next
-🔵 **PREPARED 2026-11-08.** You can now read a ratio as two numbers and two decisions: name each half and the
+✅ **FINALIZED 2026-11-14.** You can now read a ratio as two numbers and two decisions: name each half and the
 statement it comes from, average a stock under a flow, compare a ratio with its own history and its peers but
 never with a number, split ROE into margin, turnover and leverage and see when the last one is doing the work,
 recognise when ROE has stopped meaning anything, treat ROIC's denominator as a definition, turn a cash
@@ -934,5 +1034,6 @@ Next, **E08 §2 — common-size and trend analysis, and reading a whole annual r
 revenue or of assets, five and ten years at a time, and the order in which to read a 10-K or an SGX annual
 report from cover to notes — the method that turns this section's ratios and E07's statements into one reading.
 
-Read this one and bring any questions. **§11 Applied** will be added from that session, or will record a quiet
-read as what it is: a read in which nothing needed clarifying.
+**§11 Applied** records the session: your question on negative equity — the two routes to it (payouts and
+losses), why the labels on the balance sheet do not tell them apart and the flows do (Starbucks), and what it
+means for a shareholder (Tables 8 and 9).
