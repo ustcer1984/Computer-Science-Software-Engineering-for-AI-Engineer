@@ -1,0 +1,11 @@
+loaded 10000 items into DynamoDB; write capacity consumed 20000 WCU (table + GSI)
+
+question | DynamoDB requests | items read | items returned | RCU | PostgreSQL rows | PG buffers | PG ms | PG plan
+1 one order, by its full key | 1 | 1 | 1 | 0.5 | 1.0 | 3 | 0.03 | Index Scan on orders
+2 customer c042's orders in June | 1 | 5 | 5 | 0.5 | 5.0 | 7 | 0.01 | Index Scan on orders
+3 customer c042's orders over 900 | 1 | 50 | 10 | 2.0 | 10.0 | 27 | 0.02 | Index Scan on orders
+4a every OPEN order (no index on status) | 3 | 10000 | 456 | 375.5 | 456.0 | 358 | 0.57 | Seq Scan on orders
+4b every OPEN order (GSI by_status) | 1 | 456 | 456 | 17.0 | (same SQL as 4a) | | |
+5 the 10 largest orders | 3 | 10000 | 10000 | 375.5 | 10.0 | 358 | 0.90 | Limit > Sort > Seq Scan on orders
+6 June orders of the 20 gold customers (a join) | 20 | 88 | 88 | 10.0 | 88.0 | 104 | 0.09 | Nested Loop > Seq Scan on customers > Index Scan on orders
+7 orders with amount between 500 and 510 | 3 | 10000 | 122 | 375.5 | 122.0 | 358 | 0.50 | Seq Scan on orders

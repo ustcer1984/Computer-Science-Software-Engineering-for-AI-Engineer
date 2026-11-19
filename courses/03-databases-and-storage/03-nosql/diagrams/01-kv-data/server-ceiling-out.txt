@@ -1,0 +1,12 @@
+redis P=1 rep=1 server_cpu_s=6.3800 wall_s=6.647 "GET","307644.97","0.153","0.024","0.151","0.263","0.303","1.167"
+redis P=16 rep=1 server_cpu_s=.88956 wall_s=1.155 "GET","1998001.88","0.329","0.080","0.295","0.471","0.535","2.431"
+pgbench c=16 rep=1 server_cpu_s=105.44 number of transactions actually processed: 2826524 tps = 282840.290805 (without initial connection time) 
+pgbench c=50 rep=1 server_cpu_s=147.31 number of transactions actually processed: 3049576 tps = 305612.466393 (without initial connection time) 
+redis P=1 rep=2 server_cpu_s=7.9372 wall_s=8.180 "GET","249968.73","0.191","0.024","0.175","0.319","0.383","2.119"
+redis P=16 rep=2 server_cpu_s=.93821 wall_s=1.153 "GET","1998001.88","0.343","0.096","0.335","0.471","0.543","2.423"
+pgbench c=16 rep=2 server_cpu_s=103.93 number of transactions actually processed: 2511981 tps = 251359.699151 (without initial connection time) 
+pgbench c=50 rep=2 server_cpu_s=146.90 number of transactions actually processed: 2840661 tps = 284555.478512 (without initial connection time) 
+redis P=1 rep=3 server_cpu_s=7.5735 wall_s=7.961 "GET","258031.22","0.183","0.040","0.167","0.311","0.359","2.255"
+redis P=16 rep=3 server_cpu_s=.88811 wall_s=1.151 "GET","1998001.88","0.326","0.104","0.327","0.447","0.495","0.895"
+pgbench c=16 rep=3 server_cpu_s=105.84 number of transactions actually processed: 2947382 tps = 294907.122800 (without initial connection time) 
+pgbench c=50 rep=3 server_cpu_s=148.62 number of transactions actually processed: 4744505 tps = 475068.373927 (without initial connection time) 

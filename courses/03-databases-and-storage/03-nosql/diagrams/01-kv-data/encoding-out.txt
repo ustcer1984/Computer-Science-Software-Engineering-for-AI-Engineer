@@ -1,0 +1,18 @@
+s:int      type=string encoding=int
+s:short    type=string encoding=embstr
+s:long     type=string encoding=raw
+l:small    type=list   encoding=listpack
+l:large    type=list   encoding=listpack
+h:small    type=hash   encoding=listpack
+h:large    type=hash   encoding=hashtable
+set:ints   type=set    encoding=intset
+set:small  type=set    encoding=listpack
+set:large  type=set    encoding=hashtable
+z:small    type=zset   encoding=listpack
+z:large    type=zset   encoding=skiplist
+hash-max-listpack-entries 512
+hash-max-listpack-value 64
+set-max-intset-entries 512
+set-max-listpack-entries 128
+zset-max-listpack-entries 128
+list-max-listpack-size -2

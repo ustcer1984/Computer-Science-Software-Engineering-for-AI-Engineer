@@ -1,0 +1,16 @@
+redis 8.10.3, dbsize 1000000
+-- rep 0
+KEYS *           command    646.3 ms | probe p50  0.119 ms max   115.4 ms  probes >10 ms: 5
+SCAN loop        command    952.3 ms | probe p50  0.123 ms max     2.6 ms  probes >10 ms: 0
+DEL bighash      command     67.4 ms | probe p50  0.116 ms max    64.7 ms  probes >10 ms: 1
+UNLINK bighash   command      1.1 ms | probe p50  0.115 ms max     2.1 ms  probes >10 ms: 0
+-- rep 1
+KEYS *           command    631.5 ms | probe p50  0.119 ms max   119.5 ms  probes >10 ms: 5
+SCAN loop        command    974.9 ms | probe p50  0.118 ms max     2.1 ms  probes >10 ms: 0
+DEL bighash      command     56.9 ms | probe p50  0.116 ms max    55.2 ms  probes >10 ms: 1
+UNLINK bighash   command      1.2 ms | probe p50  0.115 ms max     1.3 ms  probes >10 ms: 0
+-- rep 2
+KEYS *           command    671.5 ms | probe p50  0.112 ms max   138.3 ms  probes >10 ms: 5
+SCAN loop        command    916.0 ms | probe p50  0.133 ms max     2.9 ms  probes >10 ms: 0
+DEL bighash      command     69.6 ms | probe p50  0.115 ms max    68.5 ms  probes >10 ms: 1
+UNLINK bighash   command      1.4 ms | probe p50  0.116 ms max     1.5 ms  probes >10 ms: 0

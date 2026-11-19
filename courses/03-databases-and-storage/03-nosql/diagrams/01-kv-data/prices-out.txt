@@ -1,0 +1,12 @@
+AmazonDynamoDB ap-southeast-1, offer published 2026-11-11T15:36:12Z
+  APS1-TimedStorage-ByteHrs      0.0000000000 per GB-Mo              $0.00 per GB-Month of storage for first 25 free GB-Months
+  APS1-TimedStorage-ByteHrs      0.2850000000 per GB-Mo              $0.285 per GB-Month of storage used beyond first 25 free GB-Months
+  APS1-ReadRequestUnits          0.0000001425 per ReadRequestUnits   $0.1425 per million read request units (Asia Pacific (Singapore))
+  APS1-WriteRequestUnits         0.0000007100 per WriteRequestUnits  $0.71 per million write request units (Asia Pacific (Singapore))
+AmazonElastiCache ap-southeast-1, offer published 2026-11-18T17:45:28Z
+  cache.r7g.large  Valkey   13.07 GiB 0.2104000000 per Hrs  $0.2104 per Memory optimized r7g.large node hour running Valkey
+  cache.t4g.micro  Valkey     0.5 GiB 0.0192000000 per Hrs  $0.0192 per T4G Micro Cache node-hour (or partial hour) running Valkey
+  cache.t4g.small  Redis     1.37 GiB 0.0480000000 per Hrs  $0.048 per T4G Small Cache node-hour (or partial hour) running Redis
+  cache.t4g.micro  Redis      0.5 GiB 0.0240000000 per Hrs  $0.024 per T4G Micro Cache node-hour (or partial hour) running Redis
+  cache.r7g.large  Redis    13.07 GiB 0.2630000000 per Hrs  $0.263 per Memory optimized r7g.large node hour running Redis
+  cache.t4g.small  Valkey    1.37 GiB 0.0384000000 per Hrs  $0.0384 per T4G Small Cache node-hour (or partial hour) running Valkey

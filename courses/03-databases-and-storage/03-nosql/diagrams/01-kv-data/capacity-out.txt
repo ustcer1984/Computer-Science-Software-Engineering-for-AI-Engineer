@@ -1,0 +1,12 @@
+PutItem   500-byte value: 1.0 write units
+PutItem  1000-byte value: 1.0 write units
+PutItem  1500-byte value: 2.0 write units
+PutItem  5000-byte value: 5.0 write units
+GetItem 5 KB, eventually consistent: 1.0 read units
+GetItem 5 KB, strongly consistent:   2.0 read units
+GetItem of a key that does not exist: 0.5 read units
+Scan of the 4 items (8 KB in total): 1.0 read units, Count 4
+PutItem 401 KB: ClientError - Item size has exceeded the maximum allowed size
+Conditional PutItem that failed (attribute_not_exists on an existing key): ConditionalCheckFailedException
+TransactWriteItems, 2 small items: 2.0 write units
+TransactWriteItems with 101 items: ClientError - Member must have length less than or equal to 100

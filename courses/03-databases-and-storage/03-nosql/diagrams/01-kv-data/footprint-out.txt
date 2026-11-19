@@ -1,0 +1,3 @@
+redis no TTL  :   150.7 MiB for 1,000,000 keys =   158 bytes per key (payload 109 bytes)
+redis with TTL:   171.8 MiB for 1,000,000 keys =   180 bytes per key (payload 109 bytes)
+postgres: heap 135.3 MiB + index 50.3 MiB = 195 bytes per row on disk (cached in RAM only as far as shared_buffers / page cache allow)
