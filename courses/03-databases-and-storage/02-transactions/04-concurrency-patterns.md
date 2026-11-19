@@ -544,7 +544,7 @@ an `outbox` table, in the same transaction, so both commit or neither does. A se
 "The pattern" below. `outbox_bench.py crash` placed 2,000 orders each way, with the process "crashing" at the
 dangerous point 1% of the time and 2% of orders failing a deferred constraint at `COMMIT`:
 
-**Table 7** — 2,000 orders, 1% process crashes and 2% failing commits, three ways to "save and announce" (PostgreSQL 18.6; the broker is a second database reached on its own connection; `outbox-crash.csv`). "Outbox + relay" = the order and its message row committed in one transaction, published later by a separate relay process, which crashed in 5% of its batches.
+**Table 7** — 2,000 orders, 1% process crashes and 2% failing commits, three ways to "save and announce" (PostgreSQL 18.6; `outbox-crash.csv`). "Outbox + relay" = order and message row in one transaction, published later by a relay that crashed in 5% of batches.
 
 | Design | Orders committed | Messages published | **Lost** | **Phantom** | Duplicate deliveries | Duplicate effects at a naive consumer | … at a consumer with an inbox |
 |---|---|---|---|---|---|---|---|
