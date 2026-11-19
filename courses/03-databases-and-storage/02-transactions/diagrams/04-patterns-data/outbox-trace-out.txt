@@ -1,0 +1,10 @@
+| Step | Orders | Outbox rows | Broker messages | Naive consumer effects | Inbox consumer effects |
+|---|---|---|---|---|---|
+| 0. start | 0 | 0 (0 unsent) | 0 (0 distinct event_id) | 0 | 0 |
+| 1a. app inserted both rows, not committed (seen from outside) | 0 | 0 (0 unsent) | 0 (0 distinct event_id) | 0 | 0 |
+| 1b. app committed | 1 | 1 (1 unsent) | 0 (0 distinct event_id) | 0 | 0 |
+| 2. relay attempt 1: claimed 1, published, crashed before marking sent | 1 | 1 (1 unsent) | 1 (1 distinct event_id) | 0 | 0 |
+| 3. relay attempt 2: claimed 1 (still unsent), published again, marked sent | 1 | 1 (0 unsent) | 2 (1 distinct event_id) | 0 | 0 |
+| 3b. relay attempt 3: claimed 0, nothing to do | 1 | 1 (0 unsent) | 2 (1 distinct event_id) | 0 | 0 |
+| 4. both consumers read the 2 deliveries | 1 | 1 (0 unsent) | 2 (1 distinct event_id) | 2 | 1 |
+| 5. order 43's transaction failed; relay ran | 1 | 1 (0 unsent) | 2 (1 distinct event_id) | 2 | 1 |

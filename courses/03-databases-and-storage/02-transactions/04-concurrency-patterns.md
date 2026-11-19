@@ -12,7 +12,9 @@
 > database change and the message announcing it are committed together or not at all, and the **inbox** that makes the
 > receiving side safe against the duplicates the outbox produces. Every trace and number below was measured on
 > PostgreSQL 18.6 with psycopg 3.3.6; the scripts are committed in `diagrams/04-patterns-data/`.
-> **Status:** 🔵 PREPARED 2026-11-09 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-11-19 (body prepared 2026-11-09). Your question, what Table 7's third row "outbox +
+> relay" means, is answered in §9 with a measured step-by-step trace of one order, including a relay crash (Table 11,
+> Figure 7). Table 7 now introduces its third design before the table, not after it.
 > **Prerequisites:** **Ch2 §1 §6** (the lost update), **Ch2 §2** (READ COMMITTED's re-check, REPEATABLE READ's
 > first-updater-wins and SQLSTATE 40001, the retry loop) and **Ch2 §3 §5** (`FOR UPDATE SKIP LOCKED` and the claim row;
 > at-least-once).
@@ -533,10 +535,16 @@ There is no ordering of those two writes that is safe. Commit first and publish 
 the process is killed, the Lambda times out, the broker is briefly unreachable — leaves an order nobody downstream knows
 about. Publish first and commit second, and a crash, or a commit that fails, leaves a message about an order that does
 not exist. A commit can fail for many reasons: a deferred constraint, a serialization failure (Ch2 §2), a lost
-connection after the `COMMIT` was sent. `outbox_bench.py crash` placed 2,000 orders each way, with the process
-"crashing" at the dangerous point 1% of the time and 2% of orders failing a deferred constraint at `COMMIT`:
+connection after the `COMMIT` was sent.
 
-**Table 7** — 2,000 orders, 1% process crashes and 2% failing commits, three ways to "save and announce" (PostgreSQL 18.6; the broker is a second database reached on its own connection; `outbox-crash.csv`).
+The table below compares those two orderings with a third design, the one this section is about. **Outbox + relay**
+does not publish from the request at all. The application inserts the order *and* a row describing the message into
+an `outbox` table, in the same transaction, so both commit or neither does. A separate background process, the
+**relay**, then reads the unsent outbox rows, publishes them to the broker and marks them sent. The code is under
+"The pattern" below. `outbox_bench.py crash` placed 2,000 orders each way, with the process "crashing" at the
+dangerous point 1% of the time and 2% of orders failing a deferred constraint at `COMMIT`:
+
+**Table 7** — 2,000 orders, 1% process crashes and 2% failing commits, three ways to "save and announce" (PostgreSQL 18.6; the broker is a second database reached on its own connection; `outbox-crash.csv`). "Outbox + relay" = the order and its message row committed in one transaction, published later by a separate relay process, which crashed in 5% of its batches.
 
 | Design | Orders committed | Messages published | **Lost** | **Phantom** | Duplicate deliveries | Duplicate effects at a naive consumer | … at a consumer with an inbox |
 |---|---|---|---|---|---|---|---|
@@ -1001,6 +1009,103 @@ Read the changes with `SELECT * FROM pg_logical_slot_get_changes('s', NULL, 10);
 slot.
 
 When you are done: `docker rm -f patterns-pg`.
+
+---
+
+## 9. Applied — captured from our session Q&A
+
+*(The session, 2026-11-19. One question, asked from a table: what does "outbox + relay" in Table 7 mean? The table
+named the design about thirty lines before "The pattern" explained it; that order is now fixed in §3. The trace below
+was measured for this section on PostgreSQL 18.6 with psycopg 3.3.6, in the same Docker setup as the rest of the
+section; the script and its output are `diagrams/04-patterns-data/outbox_trace.py` and `outbox-trace-out.txt`.)*
+
+### 9a. The two words, one each
+
+The name is two parts, and each part does one job:
+
+- **Outbox**: a table in the *same* database as your business data. The request's transaction writes the order and a
+  row that says "announce order 42" side by side. One `COMMIT` makes both durable, and one failure removes both. The
+  message cannot be lost (it commits with the order) and cannot be a phantom (it disappears with the order).
+- **Relay**: a separate process that runs in a loop. It claims unsent outbox rows, publishes them to the broker, and
+  marks them sent. Other names for it are "message relay" and "outbox poller". A CDC (change data capture) tool such as
+  Debezium can play the same role by reading the WAL instead of polling (§3, "The alternative relay: read the WAL").
+
+The outbox removes the two-system write from the request. The relay still writes to two systems, the broker and the
+outbox's `sent_at`. But it can simply try again, because the outbox row stays there until it is marked sent.
+
+### 9b. One order, step by step, with one relay crash
+
+**Table 11** — one order through outbox + relay; the first relay attempt "crashes" (its connection is dropped) after publishing and before `UPDATE … SET sent_at` (PostgreSQL 18.6; `outbox-trace-out.txt`).
+
+| Step | Orders | Outbox rows | Broker messages | Naive consumer effects | Inbox consumer effects |
+|---|---|---|---|---|---|
+| 0. start | 0 | 0 | 0 | 0 | 0 |
+| 1a. app inserted the order and the outbox row, not yet committed (seen from another session) | 0 | 0 | 0 | 0 | 0 |
+| 1b. app committed | 1 | 1 (unsent) | 0 | 0 | 0 |
+| 2. relay attempt 1: claimed it, published, **crashed before marking sent** | 1 | 1 (**still unsent**) | 1 | 0 | 0 |
+| 3. relay attempt 2: claimed it again, published again, marked sent | 1 | 1 (sent) | **2 (1 distinct `event_id`)** | 0 | 0 |
+| 3b. relay attempt 3: nothing unsent, nothing published | 1 | 1 (sent) | 2 | 0 | 0 |
+| 4. both consumers read the 2 deliveries | 1 | 1 (sent) | 2 | **2** | **1** |
+| 5. order 43: its transaction fails after both inserts; the relay runs | 1 | 1 | 2 | 2 | 1 |
+
+<!-- DIAGRAM:START -->
+![Diagram 3](diagrams/04-concurrency-patterns-3.svg)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```mermaid
+sequenceDiagram
+    participant App as application
+    participant DB as PostgreSQL<br/>orders + outbox
+    participant R as relay
+    participant B as broker
+    participant C as consumer + inbox
+    App->>DB: BEGIN · INSERT order 42 · INSERT outbox row · COMMIT
+    R->>DB: claim unsent rows (FOR UPDATE SKIP LOCKED)
+    R->>B: publish event e1
+    Note over R: crash before UPDATE sent_at<br/>row lock released, row still unsent
+    R->>DB: claim unsent rows: e1 again
+    R->>B: publish e1 again
+    R->>DB: UPDATE sent_at · COMMIT
+    B->>C: e1
+    C->>C: e1 not in inbox: apply effect, record e1
+    B->>C: e1 (duplicate)
+    C->>C: e1 already in inbox: skip
+```
+
+</details>
+<!-- DIAGRAM:END -->
+
+**Figure 7** — Table 11 as a timeline. Only the application's transaction is atomic. The relay's crash costs a
+duplicate, never a loss, and the inbox turns the duplicate into a single effect.
+
+What each row shows:
+
+- **Steps 1a–1b: the message exists only once the order does.** Until `COMMIT`, nobody else can see either row, so
+  the relay cannot publish an order that might still roll back. Step 5 is the other half: order 43's transaction failed
+  after both inserts, and nothing was ever published for it. That is why Table 7's outbox row has 0 phantoms, and the
+  commit failures that caused 47 of the 62 phantoms in "publish, then commit" cannot happen here.
+- **Steps 2–3: a crash makes the relay repeat itself.** The relay published, then died before its `UPDATE` committed.
+  Its transaction rolled back, so `sent_at` stayed `NULL` and the row lock was released. The next attempt found the row
+  unsent and published it again. Table 7's 100 duplicates are exactly this, twice, with batches of 50.
+- **Step 4: the duplicate carries the same `event_id`.** The broker held two messages but one distinct `event_id`,
+  because the ID was generated when the outbox row was inserted, not when it was published. The naive consumer applied
+  the event twice. The inbox consumer recorded `event_id` in the same transaction as its effect, and skipped the
+  second copy.
+
+### 9c. What the relay changes in operation
+
+- **A dead relay delays messages; it does not lose them.** If the relay is down for an hour, orders still commit and
+  rows pile up unsent. When it returns, it publishes all of them. The thing to watch is the age of the oldest unsent
+  row, for example `SELECT now() - min(created_at) FROM outbox WHERE sent_at IS NULL`, alerting at a few minutes.
+- **The message arrives later than the commit.** With a polling relay, the delay is the polling interval plus one
+  batch. Code that needs the message to have gone out before replying to the user cannot use the outbox. It should
+  reply "accepted" and let the consumer catch up.
+- **Every consumer must cope with duplicates.** That is part of the contract, not a bug in the relay: the outbox gives
+  at-least-once delivery, and §4's inbox (or a naturally idempotent effect) makes it effectively once.
+- **Sent rows need cleaning up.** A nightly `DELETE FROM outbox WHERE sent_at < now() - interval '7 days'` keeps the
+  table small. The partial index on unsent rows already keeps the relay's query fast in the meantime.
 
 ---
 
