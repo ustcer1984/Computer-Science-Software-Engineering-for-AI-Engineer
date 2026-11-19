@@ -13,7 +13,9 @@
 > designed for it, lost updates and their fixes, and TTL (time to live) expiry. Redis 8.10, DynamoDB Local 3.3.2 and
 > PostgreSQL 18.6 ran on one laptop; the scripts are committed in `diagrams/01-kv-data/`. AWS (Amazon Web Services)
 > limits and prices were checked against the AWS documentation and the AWS Price List API on 2026-11-19.
-> **Status:** 🔵 PREPARED 2026-11-19 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-11-19 (body prepared 2026-11-19). Your three questions are answered in §12: how
+> Firestore compares with DynamoDB (Table 14), what Table 13's last row meant (the row now says "keep PostgreSQL"), and
+> where Redis or DynamoDB earn their place when PostgreSQL already works (Tables 15 and 16).
 > **Prerequisites:** **Ch1 §4** (B-tree indexes), **Ch2 §1** (durability, `fsync`, acknowledged commits lost in a
 > crash) and **Ch2 §4 §1–§2** (the version check, idempotency keys).
 
@@ -800,7 +802,7 @@ The decision, as a table:
 | Idempotency keys, deduplication records, per-user settings, session state that must survive | **DynamoDB** (with TTL for clean-up) | conditional put + TTL (Tables 10 and 11) |
 | A cache in front of a slower system, rate limiting, leaderboards, short-lived locks with a lease, pub/sub | **Redis** | server-side operations, sub-millisecond, cheap per operation (Figure 2, Table 9) |
 | The only copy of data you can't lose | **not Redis with defaults** | default image lost every acknowledged write on a kill (Table 4) |
-| A hot lookup that is already a primary-key `SELECT` | **probably nothing new** | same latency from the application (Figure 2); a cache adds invalidation |
+| A hot lookup that is already a primary-key `SELECT` | **keep PostgreSQL** (add no new store) | same 48 µs from the application (Figure 2a); a cache in front adds a second round trip on a miss and data to keep correct. It pays only if you batch lookups (195,000 vs 58,000/s) or the database's CPU is the limit (3.8 vs 37 µs per lookup, Figure 2b) |
 
 Most real systems use more than one. A common serverless shape is PostgreSQL as the system of record, DynamoDB for
 the high-rate, simply-keyed data that Lambda functions touch on every request (sessions, idempotency records, the
@@ -978,6 +980,122 @@ When you are done: `docker rm -f kv-redis kv-ddb`.
 
 ---
 
+## 12. Applied — captured from our session Q&A
+
+*(The session, 2026-11-19. Three questions: is Firestore similar to DynamoDB; what Table 13's last row, then worded
+"probably nothing new", meant; and, since PostgreSQL has been enough in every project so far, where Redis or DynamoDB
+would actually be needed. Firestore facts are from Google's Firestore documentation, checked 2026-11-19; two claims
+made in the chat were corrected against it before they went in here, and are marked below.)*
+
+### 12a. Firestore and DynamoDB: the same job, different data models
+
+**Firestore** is Google Cloud's (and Firebase's) serverless NoSQL database. In **role** it is DynamoDB's counterpart:
+fully managed, reached over HTTP (HyperText Transfer Protocol) or gRPC (Google's remote procedure call framework) with
+no connection pool, billed per operation, and scaling to zero. A team on Google Cloud reaches for it where an AWS team
+reaches for DynamoDB.
+
+In **data model** it is a different kind of store. DynamoDB does not look inside an item except through the keys and
+indexes you designed (§5). Firestore is a **document store**, the subject of Ch3 §2: it reads the fields inside each
+document and, in its Standard edition, indexes every field automatically.
+
+**Table 14** — Firestore (Standard edition, Native mode) against DynamoDB (Firestore facts from Google's documentation in References, checked 2026-11-19).
+
+| | DynamoDB | Firestore |
+|---|---|---|
+| Data model | table → item, found by partition key, optionally plus sort key | collection → document → subcollections: a tree of paths such as `users/42/orders/7` |
+| Largest record | 400 KB | 1 MiB (mebibyte, 1,048,576 bytes) |
+| Indexes | only those you design: the primary key and GSIs (global secondary indexes) | every field gets a single-field index automatically; you add composite indexes for queries that filter or sort on several fields |
+| A question the indexes don't cover | runs as a `Scan`, billed for every item read (Table 8) | **Standard edition:** the query is rejected with an error that links to "create this index". **Enterprise edition:** indexes are optional and the query runs as a full collection scan, like DynamoDB |
+| Consistency | eventually consistent reads by default; strongly consistent reads cost twice as much | strongly consistent |
+| Multi-record transactions | `TransactWriteItems`, up to 100 items (Table 10) | multi-document transactions, limited by time (270 s) and request size (10 MiB) rather than a document count |
+| Server-side increment (§6) | `UpdateItem … ADD` | `FieldValue.increment()` |
+| Change feed | DynamoDB Streams to a Lambda function | triggers to Cloud Functions, **plus real-time listeners** that push each change to subscribed clients |
+| Who connects | back-end code with IAM (Identity and Access Management) credentials | back ends, and also mobile and web clients directly, guarded by Security Rules, with an offline cache on the device |
+| Billing unit | read and write units, sized in KB (Table 6) | per document read, written or deleted, whatever its size up to 1 MiB |
+| TTL | deletes "within a few days" (Table 11) | deletes "typically within 24 hours", not guaranteed; expired documents still appear in queries until then |
+
+What carries over from this section:
+
+- **The cost rule is the same.** A query costs what it returns, not what the table holds, as long as an index serves
+  it. The Standard edition enforces this by refusing a query that has no index. DynamoDB lets the query run and bills
+  the scan (§5).
+- **Hot spots exist in both (§4).** Firestore splits busy key ranges automatically, but it can only split down to one
+  document. Google names sequential document IDs and a single heavily-updated document as the causes, and gives the
+  fix: spread the writes over several documents (a sharded counter). For a new collection it recommends the
+  "500/50/5" ramp: start at 500 operations per second, then add 50% every 5 minutes.
+- **There are still no joins.** Firestore's automatic indexes relax §5's "write the questions down first", but the
+  documents are still shaped around how the app reads them.
+
+*Corrected from the chat:* (1) "Google recommends about 1 sustained write per second per document" is not in the
+current documentation. Google says the maximum rate depends on the workload and that contention, latency and errors
+rise with it. (2) "A query with no index is rejected" holds for the **Standard** edition only. **Enterprise** edition
+databases create no indexes by default and scan instead. Firestore Enterprise also offers a MongoDB-compatible mode
+(documents up to 16 MiB), which links this question to Ch3 §2.
+
+### 12b. What "keep PostgreSQL" in Table 13 means
+
+The row was worded "probably nothing new", where "new" meant a new piece of infrastructure, not a new idea. If the hot
+lookup is already a primary-key `SELECT`, **do not add Redis or DynamoDB for it.** Figure 2a measured the two from
+Python: 20,238 against 20,561 lookups per second, p50 (median) 48 µs for both. From the application, a lookup is a
+network round trip plus client-library work, and the server's few microseconds are a small part of it. A cache in
+front costs a second round trip on every miss and a copy you have to keep correct when the row changes.
+
+"Probably" covered the three cases where Redis does pay, all from §2:
+
+- **You can batch.** Pipelined, Redis served 195,000 lookups per second against PostgreSQL's 58,000.
+- **Database CPU is the limit.** Redis spent 3.8 µs of server CPU per lookup and PostgreSQL 37 µs (Figure 2b). When
+  the database runs out of headroom, moving hot lookups to a cache relieves it, and the saving shows on the bill.
+- **The "lookup" is not really a primary-key `SELECT`.** If it is a join, an aggregate, a remote API call or an LLM
+  call, the thing you cache costs far more than 48 µs, and a cache hit saves all of it.
+
+The row now says this directly.
+
+### 12c. When PostgreSQL alone stops being enough
+
+PostgreSQL alone has been enough in every project so far, and for most applications that is the right answer. Each
+added store is another system to deploy, back up, monitor and keep consistent with the others. Teams usually add Redis
+or DynamoDB because PostgreSQL hit a specific limit, not because they chose NoSQL up front. These are the jobs where
+that happens, with public examples.
+
+**Table 15** — jobs where Redis earns its place.
+
+| Job | Public example | Why PostgreSQL is awkward for it |
+|---|---|---|
+| API rate limiting | Stripe's engineering post *Scaling your API with rate limiters* (token buckets in Redis) | every request updates a counter: in PostgreSQL that is a row update and a WAL (write-ahead log) record per request, with lock contention on popular keys. Redis does `INCR` plus `EXPIRE` in microseconds (§6, §7) |
+| Job queues | Sidekiq (Ruby), BullMQ (Node.js) and Celery's most common broker are all built on Redis | workers take jobs thousands of times a second. PostgreSQL can do it with `SELECT … FOR UPDATE SKIP LOCKED` (Ch2 §3), at the cost of row churn and `VACUUM` load |
+| Cache for an expensive result | Stack Overflow's architecture write-ups describe Redis as its shared cache tier | worth it when the cached thing is expensive: a rendered page, an aggregate, an LLM response. Not for a 48 µs primary-key read (§12b) |
+| Leaderboards and rankings | game leaderboards, "trending" lists | a sorted set gives the top N, or one member's rank, in $O(\log n)$. SQL ranks with `ORDER BY` over the table, or a materialised view you keep refreshing |
+| Short-lived locks with a lease | "only one worker processes this document", released automatically if the worker dies | `SET key value NX PX 30000` (§6). A PostgreSQL advisory lock (Ch2 §3) belongs to a connection, which fits serverless code poorly |
+| Streaming LLM output to clients | M02 Ch4 §2: chunks appended to a list or stream per answer, readers resume by position | appends and tail reads at token rate across many concurrent answers (Table 2) |
+
+**Table 16** — jobs where DynamoDB earns its place.
+
+| Job | Public example | Why PostgreSQL is awkward for it |
+|---|---|---|
+| Lambda functions at high concurrency | AWS's own serverless reference architectures | 1,000 concurrent invocations can mean 1,000 database connections. PostgreSQL needs RDS Proxy (a managed connection pooler) to survive that; DynamoDB has no connections (M02 Ch4 §2) |
+| Idempotency records | Powertools for AWS Lambda's idempotency utility (References) | a conditional put, "insert only if this request ID is new", plus TTL clean-up: one call, no migration, no purge job (Tables 10 and 11) |
+| Shopping carts, session state | the Dynamo paper (2007) was written for Amazon's shopping cart | always read by user ID, never joined, and must stay available at peak |
+| Very spiky traffic | sale days, ticket releases | on-demand mode needs no capacity planning, and the bill falls back with the traffic (Table 12) |
+| Chat and agent memory | LangChain ships both `DynamoDBChatMessageHistory` and `RedisChatMessageHistory` | the only question is "messages for session X, in order": one partition key plus one sort key (§5) |
+
+**Signs that a PostgreSQL-only design has hit one of these limits:**
+
+1. **"Too many connections"** errors from Lambda or other serverless code. Try RDS Proxy first, then DynamoDB for the
+   hot path.
+2. **A table that is all counters or short-lived rows** (rate limits, presence, locks) dominates your write load and
+   `VACUUM` time. Move it to Redis.
+3. **The same expensive query or LLM call** runs again and again with identical inputs. Cache it in Redis with a TTL
+   or a clear invalidation rule.
+4. **You are writing a job queue on top of a table.** Use a Redis-backed queue or a managed queue such as Amazon SQS
+   (Simple Queue Service).
+5. **Database CPU is saturated by simple key lookups** (Figure 2b). A cache, or a read replica (Ch3 §4), takes them
+   off the primary.
+
+If none of these is happening, using PostgreSQL alone is not a gap in the architecture. It is the simpler choice and
+the correct one.
+
+---
+
 ## Key terms (English · 大陆 简体 · 台灣 繁體)
 
 | English | 大陆 (简体) | 台灣 (繁體) | Note |
@@ -1036,6 +1154,15 @@ When you are done: `docker rm -f kv-redis kv-ddb`.
   — <https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/>
 - Powertools for AWS Lambda (Python) — *Idempotency* (DynamoDB conditional put + TTL) —
   <https://docs.aws.amazon.com/powertools/python/latest/utilities/idempotency/>
+- Google — Firestore documentation, used for §12a (Table 14), all checked 2026-11-19: *Usage and limits* —
+  <https://firebase.google.com/docs/firestore/quotas> · *Manage data retention with TTL policies* —
+  <https://firebase.google.com/docs/firestore/ttl> · *Understand reads and writes at scale* (hot spots, the 500/50/5
+  ramp) — <https://firebase.google.com/docs/firestore/understand-reads-writes-scale> · *Editions overview* (Standard
+  vs Enterprise, optional indexes) — <https://firebase.google.com/docs/firestore/editions> · *Transactions and batched
+  writes* — <https://firebase.google.com/docs/firestore/manage-data/transactions>
+- P. Tarjan (Stripe) — *Scaling your API with rate limiters* (2017), used in Table 15 — <https://stripe.com/blog/rate-limiters>
+  · N. Craver — *Stack Overflow: The Architecture — 2016 Edition* (Redis as the shared cache) —
+  <https://nickcraver.com/blog/2016/02/17/stack-overflow-the-architecture-2016-edition/>
 - M. Kleppmann — *Designing Data-Intensive Applications* (O'Reilly, 2017), chapter 3 (hash indexes, LSM-trees — log-structured merge trees — and
   B-trees) and chapter 6 (partitioning, skew and hot spots)
 
