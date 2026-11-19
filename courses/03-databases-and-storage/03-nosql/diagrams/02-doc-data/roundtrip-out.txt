@@ -1,0 +1,2 @@
+MongoDB ping        p50   84.5 us
+PostgreSQL SELECT 1 p50   38.1 us

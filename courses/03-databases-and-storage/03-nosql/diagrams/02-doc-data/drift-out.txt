@@ -1,0 +1,16 @@
+true answer: 5034 products cost more than 100
+
+MongoDB  find({price: {$gt: 100}})                    -> 4924   (strings and missing fields silently skipped)
+MongoDB  documents whose price is a string                  -> 100
+PG       (doc->>'price')::numeric > 100                     -> 4974   (->> returns text, so the strings cast; missing/misspelt are NULL and skipped)
+PG       (doc->'price')::numeric > 100                      -> ERROR: cannot cast jsonb string to type numeric
+PG       doc @? '$.price ? (@ > 100)'  (jsonpath, lax)      -> 4924   (a string is not > 100, so skipped)
+
+-- now enforce: price must exist and be a number
+MongoDB  insert with string price after collMod            -> rejected (Document failed validation)
+MongoDB  existing documents that violate the validator       -> 200 (collMod does not check existing data)
+MongoDB  update of an existing violator (name only)         -> rejected: strict validates every update
+PG       ADD CONSTRAINT ... CHECK                              -> ERROR: check constraint "price_is_number" of relation "drift" is violated by some row
+PG       ADD CONSTRAINT ... CHECK ... NOT VALID                -> added (new rows checked, old ones not)
+PG       insert with string price                           -> rejected (new row for relation "drift" violates check constraint "price_is_number")
+PG       VALIDATE CONSTRAINT                                -> ERROR: check constraint "price_is_number" of relation "drift" is violated by some row

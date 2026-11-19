@@ -1,0 +1,27 @@
+items: 500,000   JSON text, compact: 636 bytes per item on average
+
+== Table 3: storage per item, before secondary indexes ==
+MongoDB BSON (uncompressed, avgObjSize)      671 B/item
+MongoDB on disk (storageSize, snappy)        235 B/item   _id index 27 B/item
+PostgreSQL p_jsonb  heap+TOAST                  820 B/item   primary key 23 B/item   avg row 777 B
+PostgreSQL p_json   heap+TOAST                  688 B/item   primary key 23 B/item   avg row 668 B
+PostgreSQL p_cols   heap+TOAST                  550 B/item   primary key 23 B/item   avg row 531 B
+avg stored value: jsonb 749 B, json 640 B
+
+== Table 5: secondary index sizes (MB) ==
+MongoDB    _id_                13.0
+MongoDB    brand                3.1
+MongoDB    tags_multikey       12.5
+MongoDB    price                4.5
+MongoDB    brand_color          4.8
+PostgreSQL c_brand              3.5
+PostgreSQL c_brand_color        3.4
+PostgreSQL c_price             10.8
+PostgreSQL c_tags_gin           5.3
+PostgreSQL j_brand              3.5
+PostgreSQL j_brand_color        3.4
+PostgreSQL j_gin_ops          150.1
+PostgreSQL j_gin_path         118.7
+PostgreSQL j_price             10.8
+PostgreSQL p_cols_pkey         10.7
+PostgreSQL p_jsonb_pkey        10.7

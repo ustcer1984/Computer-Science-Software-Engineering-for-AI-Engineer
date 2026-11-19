@@ -1,0 +1,12 @@
+run 1
+MongoDB multi-document transaction       794 transfers/s   retries per transfer  0.54   total balance 10000
+MongoDB one document, one update       1,991 transfers/s   retries per transfer  0.00   total balance 10000
+PostgreSQL transaction, row locks        749 transfers/s   retries per transfer  0.00   total balance 10000
+run 2
+MongoDB multi-document transaction       804 transfers/s   retries per transfer  0.42   total balance 10000
+MongoDB one document, one update       1,590 transfers/s   retries per transfer  0.00   total balance 10000
+PostgreSQL transaction, row locks        778 transfers/s   retries per transfer  0.00   total balance 10000
+run 3
+MongoDB multi-document transaction       796 transfers/s   retries per transfer  0.42   total balance 10000
+MongoDB one document, one update       1,713 transfers/s   retries per transfer  0.00   total balance 10000
+PostgreSQL transaction, row locks        786 transfers/s   retries per transfer  0.00   total balance 10000

@@ -1,0 +1,10 @@
+    size store                               updates/s  log B/update  data-file B/update
+    1024 MongoDB $inc                              955           512               1,217
+    1024 PostgreSQL jsonb_set inside doc           547           512                 344
+    1024 PostgreSQL counter in own column          526           507                 344
+   16384 MongoDB $inc                              323           512               7,008
+   16384 PostgreSQL jsonb_set inside doc         1,302         9,405              10,830
+   16384 PostgreSQL counter in own column          535           249                  16
+  262144 MongoDB $inc                              571           512             203,057
+  262144 PostgreSQL jsonb_set inside doc           188       122,976             118,948
+  262144 PostgreSQL counter in own column        2,577           249                  16

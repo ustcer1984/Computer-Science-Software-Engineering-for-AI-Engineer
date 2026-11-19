@@ -1,0 +1,10 @@
+doc_bytes,store,updates_per_s,log_bytes_per_update,data_file_bytes_per_update
+1024,MongoDB $inc,955,512,1217
+1024,PostgreSQL jsonb_set inside doc,547,512,344
+1024,PostgreSQL counter in own column,526,507,344
+16384,MongoDB $inc,323,512,7008
+16384,PostgreSQL jsonb_set inside doc,1302,9405,10830
+16384,PostgreSQL counter in own column,535,249,16
+262144,MongoDB $inc,571,512,203057
+262144,PostgreSQL jsonb_set inside doc,188,122976,118948
+262144,PostgreSQL counter in own column,2577,249,16

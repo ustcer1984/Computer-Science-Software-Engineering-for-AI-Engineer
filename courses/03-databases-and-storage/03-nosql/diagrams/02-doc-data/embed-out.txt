@@ -1,0 +1,14 @@
+Q  layout                             p50 ms   p99 ms
+A  MongoDB embedded: find_one          0.134    0.286
+A  MongoDB referenced: 2 queries       0.313    0.621
+A  MongoDB referenced: $lookup         0.252    0.562
+A  PostgreSQL tables: JOIN             0.055    0.106
+A  PostgreSQL jsonb: one row           0.059    0.095
+B  MongoDB embedded: $unwind           1.817    3.505
+B  MongoDB referenced: $group          0.672    1.416
+B  PostgreSQL tables: SUM              0.190    0.253
+B  PostgreSQL jsonb: unnest            1.251    3.160
+
+MongoDB embedded:   507 B per order document; storage 12.6 MB incl. indexes
+MongoDB referenced: 45 B per order + 70 B per item; storage 32.1 MB incl. indexes
+PostgreSQL tables:  36.8 MB incl. indexes;  PostgreSQL jsonb: 51.2 MB incl. indexes

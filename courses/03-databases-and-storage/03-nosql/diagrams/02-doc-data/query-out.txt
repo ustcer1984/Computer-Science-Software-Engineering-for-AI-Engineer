@@ -1,0 +1,24 @@
+Q1 one item by id, whole document
+  Mongo _id                        p50     0.13 ms  p99     0.46 ms  keys       1 docs       1  EXPRESS_IXSCAN(_id_)
+  PG    jsonb, primary key         p50     0.05 ms  p99     0.19 ms  buffers       4  Index Scan(p_jsonb_pkey)
+  PG    columns, primary key       p50     0.06 ms  p99     0.12 ms  buffers       4  Index Scan(p_cols_pkey)
+Q2 brand = ? AND attrs.color = ?  (about 310 items), ids only
+  Mongo compound index             p50     1.03 ms  p99     1.76 ms  keys     349 docs     349  FETCH <- IXSCAN(brand_color)
+  PG    jsonb, expression index    p50     0.38 ms  p99     0.74 ms  buffers     317  Bitmap Heap Scan <- Bitmap Index Scan(j_brand_color)
+  PG    jsonb, GIN containment @>  p50     1.01 ms  p99     1.80 ms  buffers     371  Bitmap Heap Scan <- Bitmap Index Scan(j_gin_path)
+  PG    columns, B-tree            p50     0.37 ms  p99     1.12 ms  buffers     278  Bitmap Heap Scan <- Bitmap Index Scan(c_brand_color)
+Q3 has both tags ? and ?  (about 1,000 items), count
+  Mongo multikey index, $all       p50    20.62 ms  p99    21.67 ms  keys  22,397 docs  22,397  COUNT <- FETCH <- IXSCAN(tags_multikey)
+  PG    jsonb, GIN containment @>  p50     2.01 ms  p99     2.99 ms  buffers     860  Aggregate <- Bitmap Heap Scan <- Bitmap Index Scan(j_gin_path)
+  PG    columns, GIN on text[] @>  p50     1.83 ms  p99     2.70 ms  buffers     903  Aggregate <- Bitmap Heap Scan <- Bitmap Index Scan(c_tags_gin)
+Q4 price between ? and ?+1  (about 1,000 items), ids only
+  Mongo price index                p50     2.48 ms  p99     3.34 ms  keys   1,019 docs   1,019  FETCH <- IXSCAN(price)
+  PG    jsonb, expression index    p50     1.10 ms  p99     1.61 ms  buffers   1,018  Bitmap Heap Scan <- Bitmap Index Scan(j_price)
+  PG    jsonb, same, float param (trap) p50    91.33 ms  p99    97.58 ms  buffers  50,008  Gather <- Seq Scan
+  PG    jsonb, jsonpath (GIN cannot) p50    66.55 ms  p99    71.40 ms  buffers  50,008  Gather <- Seq Scan
+  PG    columns, B-tree            p50     1.02 ms  p99     1.71 ms  buffers     962  Bitmap Heap Scan <- Bitmap Index Scan(c_price)
+Q5 attrs.material = ? AND attrs.size = ?  (about 16,700 items), count, NO targeted index
+  Mongo no index -> collection scan p50   118.38 ms  p99   132.95 ms  keys       0 docs 500,000  COUNT <- COLLSCAN
+  PG    jsonb, ->> (no index)      p50    54.51 ms  p99    58.04 ms  buffers  50,008  Aggregate <- Gather <- Aggregate <- Seq Scan
+  PG    jsonb, GIN containment @>  p50    19.88 ms  p99    20.93 ms  buffers  14,408  Aggregate <- Bitmap Heap Scan <- Bitmap Index Scan(j_gin_path)
+  PG    columns (no index)         p50    37.03 ms  p99    39.32 ms  buffers  33,552  Aggregate <- Gather <- Aggregate <- Seq Scan
