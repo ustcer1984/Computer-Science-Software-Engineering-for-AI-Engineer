@@ -11,7 +11,8 @@
 > costs as documents grow, five queries and the plans each store chose, embedding against referencing, schema drift, and
 > a contended multi-document transaction. MongoDB 8.2.12 and PostgreSQL 18.6 ran on one laptop; the scripts are
 > committed in `diagrams/02-doc-data/`.
-> **Status:** 🔵 PREPARED 2026-11-19 — body written, awaiting your read and the Q&A.
+> **Status:** ✅ finalized 2026-11-20 (body prepared 2026-11-19). You read it with no questions, so the body stands as
+> prepared and there is no Applied section.
 > **Prerequisites:** **Ch1 §2** (normalization), **Ch1 §4** (B-tree indexes), **Ch2 §3** (MVCC — multi-version concurrency control — and row locks) and
 > **Ch3 §1** (access-pattern-first design, single-item atomicity).
 
