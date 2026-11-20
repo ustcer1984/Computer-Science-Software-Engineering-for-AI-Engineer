@@ -1,0 +1,5 @@
+users 1,000,000  edges 9,973,434  built in 7.2s
+out-degree mean 9.97 max 28
+in-degree  p50 7 p90 12 p99 47 p99.9 331 max 151,514 (user 871072)
+top-10 in-degrees: [np.int64(151514), np.int64(84023), np.int64(59449), np.int64(46230), np.int64(37479), np.int64(32407), np.int64(28107), np.int64(25206), np.int64(22330), np.int64(20645)]
+CSV written to /tmp/claude-1000/-home-zhangzhou-Desktop-Projects-zhangzhou-personal-assistant/bc71a6cc-62e5-422c-8858-c876d4c1f702/scratchpad/graphcsv in 14.3s total

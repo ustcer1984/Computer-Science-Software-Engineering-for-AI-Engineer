@@ -1,0 +1,74 @@
+CSR built in 7.6s: indptr 7.6 MiB + col 38.0 MiB
+empty round trip: Neo4j RETURN 1 p50 0.338 ms; PostgreSQL SELECT 1 p50 0.041 ms
+k=1 neo4j_bfs    p50      0.40 ms  p99      0.88 ms  reached(median)       9
+k=1 pg_bfs       p50      1.66 ms  p99      1.91 ms  reached(median)       9
+k=1 pg_cte       p50      0.08 ms  p99      0.08 ms  reached(median)       9
+k=1 csr          p50      0.26 ms  p99      0.27 ms  reached(median)       9
+k=1 neo4j_paths  p50      0.53 ms  p99      0.73 ms  reached(median)       9  paths(median) 9
+k=1 pg_paths     p50      0.06 ms  p99      0.08 ms  reached(median)       9  paths(median) 9
+k=2 neo4j_bfs    p50      0.55 ms  p99      1.10 ms  reached(median)      98
+k=2 pg_bfs       p50      2.11 ms  p99      3.59 ms  reached(median)      98
+k=2 pg_cte       p50      0.13 ms  p99      0.31 ms  reached(median)      98
+k=2 csr          p50      0.30 ms  p99      0.51 ms  reached(median)      98
+k=2 neo4j_paths  p50      0.47 ms  p99      0.88 ms  reached(median)      98  paths(median) 100
+k=2 pg_paths     p50      0.10 ms  p99      0.20 ms  reached(median)      98  paths(median) 100
+k=3 neo4j_bfs    p50      0.91 ms  p99      1.47 ms  reached(median)     918
+k=3 pg_bfs       p50      3.86 ms  p99      4.99 ms  reached(median)     918
+k=3 pg_cte       p50      0.55 ms  p99      0.93 ms  reached(median)     918
+k=3 csr          p50      0.37 ms  p99      0.46 ms  reached(median)     918
+k=3 neo4j_paths  p50      0.88 ms  p99      1.60 ms  reached(median)     918  paths(median) 1007
+k=3 pg_paths     p50      0.49 ms  p99      0.82 ms  reached(median)     918  paths(median) 1007
+k=4 neo4j_bfs    p50      4.27 ms  p99      7.87 ms  reached(median)    7995
+k=4 pg_bfs       p50     15.49 ms  p99     25.24 ms  reached(median)    7995
+k=4 pg_cte       p50      4.92 ms  p99      8.83 ms  reached(median)    7995
+k=4 csr          p50      1.48 ms  p99      2.40 ms  reached(median)    7995
+k=4 neo4j_paths  p50      3.75 ms  p99      6.14 ms  reached(median)    7995  paths(median) 10163
+k=4 pg_paths     p50      4.25 ms  p99      7.62 ms  reached(median)    7995  paths(median) 10165
+k=5 neo4j_bfs    p50     29.97 ms  p99     71.66 ms  reached(median)   62064
+k=5 pg_bfs       p50    116.44 ms  p99    187.39 ms  reached(median)   62064
+k=5 pg_cte       p50     45.93 ms  p99     84.51 ms  reached(median)   62064
+k=5 csr          p50      7.17 ms  p99     13.31 ms  reached(median)   62064
+k=5 neo4j_paths  p50     36.58 ms  p99     66.07 ms  reached(median)   62064  paths(median) 102379
+k=5 pg_paths     p50     50.95 ms  p99     98.47 ms  reached(median)   62064  paths(median) 102432
+k=6 neo4j_bfs    p50    245.37 ms  p99    438.35 ms  reached(median)  359596
+k=6 pg_bfs       p50    819.16 ms  p99   1581.49 ms  reached(median)  359596
+k=6 pg_cte       p50    379.52 ms  p99    609.88 ms  reached(median)  359596
+k=6 csr          p50     60.38 ms  p99    119.80 ms  reached(median)  359596
+k=6 neo4j_paths  p50    361.02 ms  p99    644.29 ms  reached(median)  359596  paths(median) 1029646
+k=6 pg_paths     p50    548.43 ms  p99    958.23 ms  reached(median)  359596  paths(median) 1030513
+
+Neo4j PROFILE k=3: ProduceResults <- EagerAggregation <- Filter <- VarLengthExpand(Pruning,BFS,All) <- NodeIndexSeek; total db hits 1,574
+PostgreSQL pg_cte k=3:
+    Aggregate  (cost=239.44..239.46 rows=1 width=8) (actual time=0.667..0.668 rows=1.00 loops=1)
+    Buffers: shared hit=283
+    ->  Recursive Union  (cost=0.00..198.25 rows=581 width=12) (actual time=0.003..0.488 rows=812.00 loops=1)
+    Buffers: shared hit=283
+    ->  Result  (cost=0.00..0.01 rows=1 width=12) (actual time=0.000..0.001 rows=1.00 loops=1)
+    ->  Nested Loop  (cost=0.43..19.24 rows=58 width=12) (actual time=0.009..0.096 rows=218.00 loops=4)
+    Buffers: shared hit=283
+    ->  WorkTable Scan on r r_1  (cost=0.00..0.22 rows=3 width=12) (actual time=0.004..0.005 rows=21.75 loops=4)
+    ->  Index Only Scan using follows_pkey on follows f  (cost=0.43..6.10 rows=19 width=16) (actual time=0.003..0.004 rows=10.02 loops=87)
+    Buffers: shared hit=283
+    ->  Sort  (cost=38.29..39.75 rows=581 width=8) (actual time=0.624..0.640 rows=812.00 loops=1)
+    Buffers: shared hit=283
+    ->  CTE Scan on r  (cost=0.00..11.62 rows=581 width=8) (actual time=0.004..0.568 rows=812.00 loops=1)
+    Buffers: shared hit=283
+    Execution Time: 0.692 ms
+
+Neo4j PROFILE k=5: ProduceResults <- EagerAggregation <- Filter <- VarLengthExpand(Pruning,BFS,All) <- NodeIndexSeek; total db hits 134,986
+PostgreSQL pg_cte k=5:
+    Aggregate  (cost=239.44..239.46 rows=1 width=8) (actual time=49.834..49.836 rows=1.00 loops=1)
+    Buffers: shared hit=23256
+    ->  Recursive Union  (cost=0.00..198.25 rows=581 width=12) (actual time=0.004..35.594 rows=57131.00 loops=1)
+    Buffers: shared hit=23256
+    ->  Result  (cost=0.00..0.01 rows=1 width=12) (actual time=0.001..0.001 rows=1.00 loops=1)
+    ->  Nested Loop  (cost=0.43..19.24 rows=58 width=12) (actual time=0.174..4.194 rows=11876.67 loops=6)
+    Buffers: shared hit=23256
+    ->  WorkTable Scan on r r_1  (cost=0.00..0.22 rows=3 width=12) (actual time=0.166..0.240 rows=1190.33 loops=6)
+    ->  Index Only Scan using follows_pkey on follows f  (cost=0.43..6.10 rows=19 width=16) (actual time=0.002..0.003 rows=9.98 loops=7142)
+    Buffers: shared hit=23256
+    ->  Sort  (cost=38.29..39.75 rows=581 width=8) (actual time=46.882..48.078 rows=57131.00 loops=1)
+    Buffers: shared hit=23256
+    ->  CTE Scan on r  (cost=0.00..11.62 rows=581 width=8) (actual time=0.007..41.490 rows=57131.00 loops=1)
+    Buffers: shared hit=23256
+    Execution Time: 49.878 ms

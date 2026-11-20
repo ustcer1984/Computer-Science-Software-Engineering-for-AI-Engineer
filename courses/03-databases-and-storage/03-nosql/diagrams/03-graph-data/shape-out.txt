@@ -1,0 +1,18 @@
+most-followed user 871072 has 151,514 followers; 151,514 users follow it; 256,193 users follow no account with over 1,000 followers
+
+A. co-followers (distinct users who follow something I follow)
+  follows only small accounts    answer median      187   Neo4j p50     0.82 ms   PostgreSQL p50     0.21 ms
+  follows the top account        answer median  160,164   Neo4j p50    52.02 ms   PostgreSQL p50    18.22 ms
+  Neo4j PROFILE for one top-account follower: 213,178 db hits
+   PG Buffers: shared hit=865, temp read=314 written=315
+
+B. reach ignoring direction (k hops), distinct users vs paths, one ordinary start user
+  k=1: Neo4j distinct 14 in 44 ms; Neo4j paths 14 in 35 ms; PostgreSQL UNION ALL CTE 14 rows in 1 ms
+  k=2: Neo4j distinct 274 in 42 ms; Neo4j paths 276 in 44 ms; PostgreSQL UNION ALL CTE 276 rows in 1 ms
+  k=3: Neo4j distinct 320,106 in 272 ms; Neo4j paths 558,811 in 174 ms; PostgreSQL UNION ALL CTE 559,269 rows in 135 ms
+
+C. whole-graph questions
+  average age per city       Neo4j p50     200.3 ms   PostgreSQL p50      34.5 ms
+  ten most-followed users    Neo4j p50    1735.4 ms   PostgreSQL p50    1616.3 ms
+  count all follow edges     Neo4j p50       0.7 ms   PostgreSQL p50      86.3 ms
+  Neo4j plan, most-followed: ProduceResults(0) <- Projection(10) <- Top(0) <- Projection(1000000) <- NodeByLabelScan(1000001)

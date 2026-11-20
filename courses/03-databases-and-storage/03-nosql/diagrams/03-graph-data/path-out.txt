@@ -1,0 +1,19 @@
+path lengths over 30 pairs: [5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8]
+median length 7.0; unreachable 0
+neo4j_shortest  p50      1.46 ms  p99      3.39 ms
+pg_bi           p50      9.83 ms  p99     21.93 ms
+pg_uni          p50   2671.14 ms  p99   6708.69 ms
+pg_cte  pair (969791,817241) length 7: 2840.2 ms (depth limit set to the known answer)
+pg_cte  pair (994685,303999) length 7: 3160.8 ms (depth limit set to the known answer)
+pg_cte  pair (935784,869943) length 6: 401.5 ms (depth limit set to the known answer)
+pg_cte  pair (87609,17906) length 6: 408.2 ms (depth limit set to the known answer)
+pg_cte  pair (620785,321644) length 7: 3043.1 ms (depth limit set to the known answer)
+pg_cte  median of 5 pairs 2840.2 ms
+
+Neo4j PROFILE pair (969791, 817241):
+   ProduceResults rows=1 dbHits=0
+     Projection rows=1 dbHits=0
+       ShortestPath rows=1 dbHits=5063
+         CartesianProduct rows=1 dbHits=0
+           NodeIndexSeek rows=1 dbHits=2
+           NodeIndexSeek rows=1 dbHits=2

@@ -1,0 +1,8 @@
+Neo4j store format: record-aligned-1.1
+-rw-r--r-- 1 neo4j neo4j  15015936 Nov 20 08:13 neostore.nodestore.db
+-rw-r--r-- 1 neo4j neo4j  67108864 Nov 20 08:13 neostore.propertystore.db
+-rw-r--r-- 1 neo4j neo4j    319488 Nov 20 08:13 neostore.relationshipgroupstore.db
+-rw-r--r-- 1 neo4j neo4j 402653184 Nov 20 08:13 neostore.relationshipstore.db
+513589248	.
+27746304	schema
+

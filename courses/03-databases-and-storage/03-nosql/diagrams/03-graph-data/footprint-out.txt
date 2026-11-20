@@ -1,0 +1,14 @@
+PostgreSQL: COPY 2.4s, indexes + VACUUM ANALYZE 4.9s
+  follows             421.2 MiB  rows 9,973,356
+  follows_dst_src     300.0 MiB  rows 9,973,356
+  follows_pkey        300.0 MiB  rows 9,973,356
+  users                42.2 MiB  rows 1,000,000
+  users_pkey           21.4 MiB  rows 1,000,000
+Neo4j store format: record-aligned-1.1
+-rw-r--r-- 1 neo4j neo4j  15015936 Nov 20 08:10 neostore.nodestore.db
+-rw-r--r-- 1 neo4j neo4j  67108864 Nov 20 08:10 neostore.propertystore.db
+-rw-r--r-- 1 neo4j neo4j    319488 Nov 20 08:10 neostore.relationshipgroupstore.db
+-rw-r--r-- 1 neo4j neo4j 402653184 Nov 20 08:10 neostore.relationshipstore.db
+512483328	.
+26640384	schema
+
